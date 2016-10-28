@@ -1,0 +1,1418 @@
+
+********************************************************************************
+
+  Project : SHTRIH-M JavaPOS fiscal printer driver
+  Company : SHTRIH-M www.shtrih-m.ru (095) 787-6090
+
+********************************************************************************
+
+  October, 20 2016, 15:50
+  deviceServiceVersion = 1013306
+	
+  [-] Fixed errors with fiscal receipt
+  
+********************************************************************************
+
+  October, 13 2016, 23:50
+  deviceServiceVersion = 1013305
+	
+  [+] Compiled with RXTX library
+  [+] Added parameter checkTotalEnabled to enable or disable totals compare
+  [+] Added parameter receiptNumberRequest to select getData(FPTR_GD_RECEIPT_NUMBER)
+      behavior: 
+	  0 - getData returns document number
+	  1 - getData returns fiscal document number from fiscal storage
+	  2 - getData returns receipt number from fiscal storage
+  
+********************************************************************************
+
+  October, 11 2016, 19:50
+  deviceServiceVersion = 1013304
+	
+  [-] Fixed eror with socket connection
+  [-] Fixed error with table writing
+  [-] Fixed error with different payment types
+  [-] Added directIO command SMFPTR_DIO_PRINT_DOC_END
+  
+********************************************************************************
+
+  September, 21 2016, 20:40
+  deviceServiceVersion = 1013300
+	
+  [-] Fixed error with power events
+  
+********************************************************************************
+
+  September, 17 2016, 20:00
+  deviceServiceVersion = 1013298
+	
+  [-] Fixed error with receipt subtotal discounts and charges
+  [-] Fixed error with day and receipt number
+  [+] Added discounts for receipt items
+  [+] Added writing administrator name to setPOSIID method
+  [-] Fixed error with socket connection
+
+********************************************************************************
+
+  September, 12 2016, 14:50
+  deviceServiceVersion = 1013292
+	
+  [-] Aded receipt open and cancel when printRecVoid called
+      to count cancelled receipts in fiscal printer
+
+********************************************************************************
+
+  September, 11 2016, 20:10
+  deviceServiceVersion = 1013290
+	
+  [-] Fixed errors with fiscal storage receipt
+  [-] Fixed error with Socket connection
+  
+********************************************************************************
+
+  September, 7 2016, 17:50
+  deviceServiceVersion = 1013286
+	
+  [+] Added method fsSale() to class ShtrihFiscalPrinter113
+  
+********************************************************************************
+
+  August, 31 2016, 20:20
+  deviceServiceVersion = 1013285
+	
+  [+] Added day open command
+  [+] Added directIO for writing tag
+  
+********************************************************************************
+
+  August, 12 2016, 14:20
+  deviceServiceVersion = 1013284
+	
+  [+] Added open fiscal day command before fiscal receipt
+  
+********************************************************************************
+
+  August, 05 2016, 21:50
+  deviceServiceVersion = 1013283
+	
+  [+] Added fiscal storage commands
+  [-] Added error codes text for fiscal storage commands
+  
+********************************************************************************
+
+  August, 04 2016, 19:30
+  deviceServiceVersion = 1013281
+	
+  [+] Added fiscal storage commands
+  [+] Added fiscal storage commands descriptions (commands.xml)
+  
+********************************************************************************
+
+  July, 12 2016, 22:20
+  deviceServiceVersion = 1013279
+	
+  [-] Fixed error with directIO(SMFPTR_DIO_COMMAND)
+  
+********************************************************************************
+
+  June, 23 2016, 14:20
+  deviceServiceVersion = 1013278
+	
+  [-] Fixed error with logo loading
+  [-] Changed directIO implementation. For compatibility use compatibilityLevel=1
+      <!-- Compatibility level, 0 - NONE, 1 - FULL -->
+		
+      <prop name="compatibilityLevel" type="String" value="0"/>
+  
+
+********************************************************************************
+
+  June, 20 2016, 17:00
+  deviceServiceVersion = 1013274
+	
+  [-] Fixed error with logo loading
+  
+********************************************************************************
+
+  June, 17 2016, 18:40
+  deviceServiceVersion = 1013273
+	
+  [+] Added log to cash drawer service object
+  [-] Fixed error with logo loading
+  
+********************************************************************************
+
+  May, 31 2016, 15:10
+  deviceServiceVersion = 1013272
+	
+  [-] Fixed error 1D barcode printing
+  
+********************************************************************************
+
+  May, 30 2016, 22:00
+  deviceServiceVersion = 1013271
+	
+  [-] Fixed error with image printing
+  
+********************************************************************************
+
+  May, 20 2016, 19:30
+  deviceServiceVersion = 1013270
+	
+  [-] Fixed error with fiscalReceiptType property
+  
+********************************************************************************
+
+  May, 17 2016, 13:40
+  deviceServiceVersion = 1013269
+	
+  [-] Fixed error with graphics printing
+  
+********************************************************************************
+
+  May, 4 2016, 19:40
+  deviceServiceVersion = 1013268
+	
+  [+] Added barcode parameters to print barcode from 
+      printRecMessage or printNormal methods
+  
+********************************************************************************
+
+  April, 13 2016, 11:20
+  deviceServiceVersion = 1013267
+	
+  [-] Fixed error with device search
+  
+********************************************************************************
+
+  March, 18 2016, 18:00
+  deviceServiceVersion = 1013265
+	
+  [+] Added 2D barcode support
+  
+********************************************************************************
+
+  March, 18 2016, 12:20
+  deviceServiceVersion = 1013264
+	
+  [-] Fixed error with GLOBUS receipt type
+  
+********************************************************************************
+
+  March, 15 2016, 14:20
+  deviceServiceVersion = 1013263
+	
+  [-] Fixed error with GLOBUS receipt type
+  
+********************************************************************************
+
+  February, 20 2016, 14:33
+  deviceServiceVersion = 1013260
+	
+  [+] Added 0xA1 error handling
+  [+] Added "-" sign to amount in storno items for GLOBUS receipt type
+  
+********************************************************************************
+
+  February, 08 2016, 13:40
+  deviceServiceVersion = 1013257
+	
+  [+] Added parameter "taxLettersEnabled" to enable or disable tax letters on 
+      GLOBUS receipt
+  
+********************************************************************************
+
+  December, 23 2015, 17:40
+  deviceServiceVersion = 1013251
+	
+  [-] Fixed error with graphics printing
+
+********************************************************************************
+
+  November, 13 2015, 17:00
+  deviceServiceVersion = 1013238
+	
+  [-] Fixed error in GLOBUS receipt type
+
+********************************************************************************
+
+  November, 9 2015, 13:30
+  deviceServiceVersion = 1013235
+	
+  [+] Added text line after graphics line barcode for NCR-001K fiscal printer
+
+********************************************************************************
+
+  November, 6 2015, 18:00
+  deviceServiceVersion = 1013234
+	
+  [-] Library rxtx changed to nrjavaserial
+
+********************************************************************************
+
+  November, 2 2015, 17:30
+  deviceServiceVersion = 1013231
+	
+  [-] Fixed error with XML Z report format
+
+********************************************************************************
+
+  August, 20 2015, 13:30
+  deviceServiceVersion = 1013220	
+
+  [-] Fixed error with refund receipt
+  [-] Fixed error with connection errors
+  [-] RXTX code removed, library used
+
+********************************************************************************
+
+  July, 10 2015, 14:30
+  deviceServiceVersion = 1013212
+
+  [-] Fixed error with logging
+  [-] Changed payment types configuration
+  [-] Disabled image printing in printNormal method in nonfiscal receipt
+
+********************************************************************************
+
+  April, 28 2015, 19:10
+  deviceServiceVersion = 1013204
+
+  [+] Added handling for errors 0xA0 and 0x67
+
+********************************************************************************
+
+  April, 10 2015, 22:10
+  deviceServiceVersion = 1013203
+
+  [-] Fixed errors with printing Globus receipt format
+  [+] Added saving fiscal memory totals when Z report saved to file (XML or CSV)
+
+********************************************************************************
+
+  March, 20 2015, 18:30
+  deviceServiceVersion = 1013201
+
+  [-] Fixed errors with logo printing
+  [+] Added reading Tax names for Globus receipt format
+  [+] Added parameter "centerHeader" to automatically center header and trailer lines
+  [+] Added fieldsFilesPath parameter to select and load fields file from this path
+
+********************************************************************************
+
+  February, 13 2015, 19:00
+  deviceServiceVersion = 1013194
+
+  [-] Fixed errors with logo printing
+
+********************************************************************************
+
+  February, 2 2015, 17:00
+  deviceServiceVersion = 1013193
+
+  [-] Fixed error with logo printing
+
+********************************************************************************
+
+  January, 28 2015, 15:00
+  deviceServiceVersion = 1013192
+
+  [+] Added printer model ASPD RR-01K
+
+********************************************************************************
+
+  January, 27 2015, 19:40
+  deviceServiceVersion = 1013191
+
+  [-] Fixed barcode checksum digit printing
+
+********************************************************************************
+
+  January, 26 2015, 17:40
+  deviceServiceVersion = 1013190
+
+  [+] jBarcode library added to project
+
+********************************************************************************
+
+  January, 26 2015, 15:10
+  deviceServiceVersion = 1013189
+
+  [-] Fixed error with cash drawer driver
+
+********************************************************************************
+
+  January, 23 2015, 13:40
+  deviceServiceVersion = 1013188
+
+  [+] Compiled for Java version 1.4 
+
+********************************************************************************
+
+  January, 22 2015, 11:40
+  deviceServiceVersion = 1013187
+
+  [+] Added receipt format processing
+
+********************************************************************************
+
+  December, 15 2014, 12:20
+  deviceServiceVersion = 1013186
+
+  [-] Fixed error with ESC codes processing
+
+********************************************************************************
+
+  December, 12 2014, 12:40
+  deviceServiceVersion = 1013185
+
+  [-] Fixed error XML loading
+
+********************************************************************************
+
+  December, 9 2014, 22:40
+  deviceServiceVersion = 1013184
+
+  [-] Fixed error with JPOS_SUE_POWER_OFFLINE event
+      Event was not sent if "No connection" error occured
+
+********************************************************************************
+
+  November, 27 2014, 19:40
+  deviceServiceVersion = 1013181
+
+  [-] Changed header and trailer printing
+
+********************************************************************************
+
+  November, 25 2014, 12:45
+  deviceServiceVersion = 1013180
+
+  [+] Added automatic trailer printing for fiscal receipts.
+      Device polling must be enabled.
+      <prop name="pollEnabled" type="String" value="1"/>
+
+
+  [+] Added parameter in jpos.xml "logoPosition". Valid values are:
+      SMFPTR_LOGO_AFTER_HEADER     = 0;
+      SMFPTR_LOGO_BEFORE_TRAILER   = 1;
+      SMFPTR_LOGO_AFTER_TRAILER    = 2;
+      SMFPTR_LOGO_AFTER_ADDTRAILER = 3;
+      SMFPTR_LOGO_BEFORE_HEADER    = 4;
+
+********************************************************************************
+
+  October, 16 2014, 20:25
+  deviceServiceVersion = 1013177
+
+  [+] Added device 21, YARUS-TK
+  [+] Added device 31, CUSTOM-PTK
+  [-] Fixed error with loading XML files
+  [+] Added ErrorEvent event for printer errors
+
+********************************************************************************
+
+  September, 25 2014, 15:02
+  deviceServiceVersion = 1013173
+
+  [-] Fixed error with receipt cut
+
+********************************************************************************
+
+  September, 23 2014, 21:30
+  deviceServiceVersion = 1013172
+
+  [-] Fixed error with small font for NCR-001K
+
+********************************************************************************
+
+  August, 21 2014, 12:30
+  deviceServiceVersion = 1013169
+
+  [-] Fixed error with XML file encoding
+
+********************************************************************************
+
+  August, 15 2014, 21:00
+  deviceServiceVersion = 1013167
+
+  [-] Fixed error with GLOBUS receipt format
+
+********************************************************************************
+
+  July, 24 2014, 18:00
+  deviceServiceVersion = 1013161
+
+  [+] Added protocol 2.0 implementation
+      To select protocol added parameter "protocolType" to jpos.xml file
+      <!-- ProtocolType, 0 - protocol 1, 1 - protocol 2 -->
+        
+      <prop name="protocolType" type="String" value="0"/>
+
+
+  [+] Added TCP port to connect to fiscal printer over network
+      Added parameter "portType" to select port
+      <!--  Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass --> 
+      <prop name="portType" type="String" value="2" /> 
+
+  [-] Fixed errors with XML files reading and writing
+
+********************************************************************************
+
+  July, 18 2014, 18:45
+  deviceServiceVersion = 1013160
+
+  [+] Added logging Throwable instead of Exception
+
+********************************************************************************
+
+  July, 10 2014, 16:30
+  deviceServiceVersion = 1013159
+
+  [-] Fixed errors with printing logo 
+
+********************************************************************************
+
+  June, 23 2014, 13:00
+  deviceServiceVersion = 1013157
+
+  [-] Fixed errors with GLOBUS receipt format
+
+********************************************************************************
+
+  June, 20 2014, 20:30
+  deviceServiceVersion = 1013156
+
+  [-] Fixed error with openReceipt command
+
+********************************************************************************
+
+  June, 16 2014, 18:30
+  deviceServiceVersion = 1013155
+
+  [+] Added date and time parameter to XML receipt report
+
+********************************************************************************
+
+  June, 16 2014, 16:50
+  deviceServiceVersion = 1013154
+
+  [+] Added parameter in jpos.xml file "openReceiptType"
+      Valid values are: 
+      0 - open receipt with first receipt item (printRecItem or printRecItemRefund)
+      1 - open receipt in beginFiscalReceipt method
+
+********************************************************************************
+
+  May, 27 2014, 17:40
+  deviceServiceVersion = 1013153
+
+  [-] Fixed error with preLine and postLine printing in GLOBUS receipt 
+
+********************************************************************************
+
+  May, 12 2014, 19:00
+  deviceServiceVersion = 1013152
+
+  [+] Added handling of error "0xA8, 168, EJ: Invalid date or time"
+  [+] Compiled with xerces-2.7.0.jar library
+
+********************************************************************************
+
+  April, 22 2014, 20:00
+  deviceServiceVersion = 1013151
+
+  [-] Fixed error with writing payment type names
+  [+] Added getData(FPTR_GD_GRAND_TOTAL) request support
+
+********************************************************************************
+
+  April, 4 2014, 17:00
+  deviceServiceVersion = 1013149
+
+  [+] Added saving receipt amount to XML file.
+      Added parameters to jpos.xml file:
+      "receiptReportEnabled" - enable saving data to XML file, default value is 0 (disabled)
+      "receiptReportFileName" - XML file name, default value is "ZCheckReport.xml"
+
+********************************************************************************
+
+  March, 20 2014, 19:00
+  deviceServiceVersion = 1013147
+
+  [-] Fixed error with GLOBUS receipt printng
+
+********************************************************************************
+
+  March, 7 2014, 20:20
+  deviceServiceVersion = 1013146
+
+  [-] Fixed error with Z report printing
+  [-] Fixed error with CashIn and CashOut receipts printing
+  [-] Fixed error with dayOpened property
+  [+] Added command timeout from commands.xml file
+  [+] Added monitoring commands support
+
+********************************************************************************
+
+  February 5 2014, 17:00
+  deviceServiceVersion = 1013142
+
+  [+] Compiled for Java 1.4
+
+********************************************************************************
+
+  January, 17 2014, 16:00
+  deviceServiceVersion = 1013142
+
+  [+] Added "Timeout" parameter to commands.xml to set timeout for each command.
+
+********************************************************************************
+
+  January, 10 2014, 20:30
+  deviceServiceVersion = 1013141
+
+  [+] Added CashDrawer jpox.xml parameter "drawerNumber"
+
+  [+] Added CashDrawer directIO codes SMCASH_DIO_GET_DRIVER_PARAMETER, 
+      SMCASH_DIO_SET_DRIVER_PARAMETER, SMCASH_DIO_OPEN_DRAWER, 
+      SMCASH_DIO_READ_DRAWER_STATE
+
+********************************************************************************
+
+  January, 9 2014, 14:00
+  deviceServiceVersion = 1013140
+
+  [-] Fixed "Day opened" issue
+  [+] Added NCR-001K printer model
+
+********************************************************************************
+
+  December, 25 2013, 13:00
+  deviceServiceVersion = 1013139
+
+  [+] Added GLOBUS text receipt support. For this was added parameter in jpos.xml
+      file "salesReceiptType". Valid values are: 0 - normal, 1 - GLOBUS text receipt
+
+********************************************************************************
+
+  November, 27 2013, 16:15
+  deviceServiceVersion = 1013138
+
+  [-] Fixed error with rounding and partial payments
+
+********************************************************************************
+
+  October, 21 2013, 16:40
+  deviceServiceVersion = 1013137
+
+  [-] Fixed error with reading models
+  [-] Fixed error with FreezeEvents property
+  [-] Class SerialPort moved to driver package, package SerialPort removed
+
+********************************************************************************
+
+  September, 23 2013, 17:00
+  deviceServiceVersion = 1013135
+
+  [+] Added cache for voided receipt items
+
+********************************************************************************
+
+  August, 28 2013, 19:30
+  deviceServiceVersion = 1013134
+
+  [-] Changed command timeout
+  [-] Fixed error with "dayOpened" property
+
+********************************************************************************
+
+  August, 21 2013, 17:30
+  deviceServiceVersion = 1013133
+
+  [-] Fixed error cashin and cashout receipt types
+
+********************************************************************************
+
+  August, 21 2013, 15:20
+  deviceServiceVersion = 1013132
+
+  [-] Fixed error with report printing. If report command succeeded, 
+      but some error occures on waiting for printing to complete or
+      on printing report trailer, this error was reported to application and
+      application do not know, if report succeeded or not.
+      Now this error do not reported to application. 
+      Application knows if report succeeded or not.
+      Note that report command can succeed, but report print is not completed
+      (for empty paper reson, for example). Report will be printed later.
+
+********************************************************************************
+
+  July, 29 2013, 13:00
+  deviceServiceVersion = 1013131
+
+  [-] Fixed error with EndFiscalReceipt method
+
+********************************************************************************
+
+  March, 27 2013, 11:30
+  deviceServiceVersion = 1013128
+
+  [-] Fixed error with cutMode parameter
+  [+] Added directIO command SMFPTR_DIO_CUT_PAPER
+  [+] Added parameter SMFPTR_DIO_PARAM_CUT_MODE to directIO commands 
+      SMFPTR_DIO_GET_DRIVER_PARAMETER and SMFPTR_DIO_SET_DRIVER_PARAMETER
+
+********************************************************************************
+
+  March, 1 2013, 16:30
+  deviceServiceVersion = 1013127
+
+  [-] Fixed errors
+  [+] Added directIO requests
+
+********************************************************************************
+
+  February, 4 2013, 19:00
+  deviceServiceVersion = 1013124
+
+  [-] Fixed error in getData(FPTR_GD_DAILY_TOTAL) request. 
+      Returned data had no decimal point.
+
+********************************************************************************
+
+  February, 1 2013, 13:50
+  deviceServiceVersion = 1013123
+
+  [+] Added optional parameters to getData(FPTR_GD_DAILY_TOTAL)
+      Valid values are:
+	  SMFPTR_DAILY_TOTAL_ALL  =  0, all payment types
+      SMFPTR_DAILY_TOTAL_CASH =  1, cash payment type
+      SMFPTR_DAILY_TOTAL_PT2  =  2, payment type 2
+      SMFPTR_DAILY_TOTAL_PT3  =  3, payment type 3
+      SMFPTR_DAILY_TOTAL_PT4  =  4, payment type 4
+	  
+  [-] Fixed error with logo printing on SHTRIH-FR-K printer.
+	  
+********************************************************************************
+
+  January, 28 2013, 20:00
+  deviceServiceVersion = 1013122
+
+  [+] Added directIO commands: 
+      SMFPTR_DIO_READ_DAY_STATUS,
+      SMFPTR_DIO_READ_LICENSE,
+      SMFPTR_DIO_IS_READY_FISCAL, 
+      SMFPTR_DIO_IS_READY_NONFISCAL
+
+  [+] Added device search on connection error. Added parameter "searchMode"
+      in jpos.xml file. Available values are: 0 - none, 
+      1 - search on connection error
+
+  [-] Changed getData(FPTR_GD_DAILY_TOTAL) request.
+
+********************************************************************************
+
+  January, 21 2013, 21:00
+  deviceServiceVersion = 1013121
+
+  [+] Aded parameter SMFPTR_LOGO_BEFORE_HEADER to print logo before header
+
+********************************************************************************
+
+  January, 10 2013, 18:00
+  deviceServiceVersion = 1013120
+
+  [-] Fixed deadlock error in release method when polling thread enabled.
+
+********************************************************************************
+
+  December, 17 2012, 18:00
+  deviceServiceVersion = 1013119
+
+  [-] Fixed error in request getData(FPTR_GD_DAILY_TOTAL)
+
+********************************************************************************
+
+  December, 11 2012, 19:00
+  deviceServiceVersion = 1013118
+
+  [+] Added parameter cutMode. Valid values are:
+      SmFptrConst.SMFPTR_CUT_MODE_AUTO     = 0 - autoselect
+      SmFptrConst.SMFPTR_CUT_MODE_DISABLED = 1 - cutting disabled
+
+********************************************************************************
+
+  December, 10 2012, 12:00
+  deviceServiceVersion = 1013117
+
+  [+] Added parameter tableMode. Valid values are:
+      SmFptrConst.SMFPTR_TABLE_MODE_AUTO     = 0 - autoselect
+      SmFptrConst.SMFPTR_TABLE_MODE_DISABLED = 1 - table write disabled
+
+********************************************************************************
+
+  December, 5 2012, 19:40
+  deviceServiceVersion = 1013116
+
+  [-] Fixed error with FlexCommand class
+
+********************************************************************************
+
+  November, 27 2012, 13:00
+  deviceServiceVersion = 1013115
+
+  [-] Fixed error with command synchronizing
+
+********************************************************************************
+
+  November, 7 2012, 17:00
+  deviceServiceVersion = 1013114
+
+  [-] Added buffer for Barcode DirectIO commands
+
+********************************************************************************
+
+  September, 21 2012, 15:00
+  deviceServiceVersion = 1013113
+
+  [-] Fixed error with string encoding in printRecMessage method
+
+********************************************************************************
+
+  September, 18 2012, 15:00
+  deviceServiceVersion = 1013112
+
+  [-] Fixed error with barcode printing
+
+********************************************************************************
+
+  September, 17 2012, 18:20
+  deviceServiceVersion = 1013111
+
+  [-] Fixed error with refund receipts
+
+********************************************************************************
+
+  August, 29 2012, 14:20
+  deviceServiceVersion = 1013110
+
+  [-] Fixed error with receipt number request, getData(FPTR_GD_RECEIPT_NUMBER)
+
+********************************************************************************
+
+  August, 8 2012, 21:00
+  deviceServiceVersion = 1013109
+
+  [+] Added Discount filter
+
+********************************************************************************
+
+  July, 23 2012, 17:30
+  deviceServiceVersion = 1013108
+
+  [+] Added DirectIO commands:
+      // Write device parameter
+      SMFPTR_DIO_WRITE_DEVICE_PARAMETER = 0x20;
+      // Read device parameter
+      SMFPTR_DIO_READ_DEVICE_PARAMETER = 0x21;
+      Device parameters for any model are stored in file Models.xml
+
+********************************************************************************
+
+  July, 23 2012, 16:00
+  deviceServiceVersion = 1013107
+
+  [+] Added jpos.xml file parameter autoOpenDrawer. 
+      <prop name="autoOpenDrawer" type="String" value="0" />  
+      Driver writes this parameter to printer table 1. 
+      If parameter 1, printer opens cash drawer on receipt close.
+
+********************************************************************************
+
+  July, 18 2012, 10:30
+  deviceServiceVersion = 1013106
+
+  [-] Fixed error with Z report document number.
+      If fiscal day closed, driver prints empty receipt,
+      saves registers to file and prints Z report.
+
+********************************************************************************
+
+  July, 13 2012, 19:00
+  deviceServiceVersion = 1013105
+
+  [-] Fixed error with device search
+
+********************************************************************************
+
+  June, 1 2012, 19:30
+  deviceServiceVersion = 1013104
+
+  [+] Added parameter in jpos.xml file maxReceiptNumber.
+      By default maxReceiptNumber=9999.
+
+********************************************************************************
+
+  April, 5 2012, 15:20
+  deviceServiceVersion = 1013103
+
+  [-] Fixed error with USB to serial converter under Windows 7
+
+********************************************************************************
+
+  February, 24 2012, 18:00
+  deviceServiceVersion = 1013102
+
+  [+] Added SHTRIH-M-PTK fiscal printer support
+
+********************************************************************************
+
+  January, 13 2012, 16:00
+  deviceServiceVersion = 1013101
+
+  [-] Fixed error with shared serial port.
+      Serial port is shared between all service objects.
+
+********************************************************************************
+
+  December, 20 2011, 19:00
+  deviceServiceVersion = 1013100
+
+  [-] Fixed error with negative amount
+  [+] Added saving ZReport data in CSV file format
+
+********************************************************************************
+
+  November, 11 2011, 17:40
+  deviceServiceVersion = 1013098
+
+  [-] Fixed error with fiscal printer communication
+
+********************************************************************************
+
+  November, 11 2011, 15:00
+  deviceServiceVersion = 1013097
+
+  [-] Fixed error with XML ZReport processing.
+
+********************************************************************************
+
+  November, 7 2011, 13:30
+  deviceServiceVersion = 1013096
+
+  [-] Fixed error with directIO request SMFPTR_DIO_READ_DAY_END.
+      Only long status request is used to get fiscal day status.
+
+********************************************************************************
+
+  October 11 2011, 12:30
+  deviceServiceVersion = 1013095
+
+  [-] Fixed error with getData(FPTR_GD_RECEIPT_NUMBER) request. 
+      Receipt number will be return as increased value if receipt 
+      closed in driver but not yet closed in fiscal printer.
+
+********************************************************************************
+
+  September 30 2011, 13:30
+  deviceServiceVersion = 1013094
+
+  [-] Fixed error with string encoding
+
+********************************************************************************
+
+  September 29 2011, 20:40
+  deviceServiceVersion = 1013093
+
+  [-] Fixed error with string encoding
+
+********************************************************************************
+
+  September 27 2011, 20:40
+  deviceServiceVersion = 1013092
+
+  [-] Fixed error with string encoding
+
+********************************************************************************
+
+  September 14 2011, 12:20
+  deviceServiceVersion = 1013091
+
+  [-] Fixed error with image printing
+
+********************************************************************************
+
+  September 13 2011, 21:20
+  deviceServiceVersion = 1013090
+
+  [-] Fixed error with graphics printing
+
+********************************************************************************
+
+  August 24 2011, 13:00
+  deviceServiceVersion = 1013089
+
+  [-] Fixed error with character encoding
+  [-] Fixed error with extra status update events
+
+********************************************************************************
+
+  June 07 2011, 22:30
+  deviceServiceVersion = 1013088
+
+  [-] Fixed errors with CheckHealth method
+
+********************************************************************************
+
+  11 March 2011, 15:30
+  deviceServiceVersion = 1013087
+
+  [-] Fixed errors with text parsing
+
+********************************************************************************
+
+  10 March 2011, 18:00
+  deviceServiceVersion = 1013086
+
+  [-] Fixed error with model SHTRIH-COMBO-FR-K
+
+********************************************************************************
+
+  10 March 2011, 17:00
+  deviceServiceVersion = 1009086
+
+  [-] Fixed error with receipt payments
+
+********************************************************************************
+
+  9 March 2011, 21:00
+  deviceServiceVersion = 1013085
+
+  [-] Fixed error with model SHTRIH-COMBO-FR-K
+
+********************************************************************************
+
+  4 March 2011, 20:30
+  deviceServiceVersion = 1009084
+
+  [-] Fixed error with header font
+  [-] Fixed error with space lines
+
+********************************************************************************
+
+  24 February 2011, 15:00
+  deviceServiceVersion = 1009083
+
+  [+] Created version for Java 1.3.1_b18
+
+********************************************************************************
+
+  28 January 2011, 13:00
+  deviceServiceVersion = 1009081
+
+  [+] Added XML ZReport
+
+********************************************************************************
+
+  14 January 2011, 15:00
+  deviceServiceVersion = 1013080
+
+  [-] Added zero price filter. Parameters are stored in jpos.xml.
+
+      <prop name="ZeroPriceFilterEnabled" type="String" value="1"/>
+        
+      <prop name="ZeroPriceFilterTime1" type="String" value="22:00"/>
+        
+      <prop name="ZeroPriceFilterTime2" type="String" value="11:00"/>
+        
+      <prop name="ZeroPriceFilterErrorText" type="String" value="Zero price disabled"/>
+
+
+      ZeroPriceFilterEnabled   - enables or disables filter.
+      ZeroPriceFilterTime1     - start time for the filter.
+      ZeroPriceFilterTime2     - end time for the filter.
+      ZeroPriceFilterErrorText - error message for application
+
+********************************************************************************
+
+  22 December 2010, 15:00
+  deviceServiceVersion = 1013079
+
+  [-] Fixed error in EndFiscalReceipt method
+      Exception was thrown from EndFiscalReceipt method 
+      when some error was occured after receipt closed.
+      Now exceptions receipt closed are swallowed.
+
+********************************************************************************
+
+  16 December 2010, 16:00
+  deviceServiceVersion = 1013078
+
+  [-] Fixed error in EndFiscalReceipt method
+
+********************************************************************************
+
+  14 December 2010, 17:00
+  deviceServiceVersion = 1013077
+
+  [-] Fixed error graphics printing
+
+********************************************************************************
+
+  15 October 2010, 12:30
+  deviceServiceVersion = 1013076
+
+  [-] Fixed error with StatusUpdateEvent
+  [+] Added automatic receipt reprinting after paper error
+
+********************************************************************************
+
+  8 October 2010, 18:30
+  deviceServiceVersion = 1013075
+
+  [+] Added command repeating
+
+********************************************************************************
+
+  17 September 2010, 14:30
+  deviceServiceVersion = 1013074
+
+  [+] Added error handler to fire status update events
+
+********************************************************************************
+
+  17 September 2010, 12:40
+  deviceServiceVersion = 1013073
+
+  [+] Added value 2, for parameter "statusCommand", SMFP_STATUS_COMMAND_DS = 2.
+      Status command will be selected by driver.
+
+********************************************************************************
+
+  10 September 2010, 16:00
+  deviceServiceVersion = 1013072
+
+  [-] Fixed error with printing empty lines.
+
+********************************************************************************
+
+  10 September 2010, 13:00
+  deviceServiceVersion = 1013071
+
+  [-] Fixed error with printing empty lines.
+
+********************************************************************************
+
+  10 September 2010, 11:30
+  deviceServiceVersion = 1013070
+
+  [-] Fixed error with printing empty lines.
+
+********************************************************************************
+
+  9 September 2010, 16:30
+  deviceServiceVersion = 1013069
+
+  [-] Fixed error with java.util.PropertyResourceBundle
+
+********************************************************************************
+
+  7 September 2010, 12:30
+  deviceServiceVersion = 1013068
+
+  [+] Compiled with Java 5.0
+
+********************************************************************************
+
+  15 July 2010, 19:00
+  deviceServiceVersion = 1013067
+
+  [-] Fixed errors
+
+********************************************************************************
+
+  14 July 2010, 14:40
+  deviceServiceVersion = 1013066
+
+  [+] Added printer models
+
+********************************************************************************
+
+  12 July 2010, 14:00
+  deviceServiceVersion = 1013065
+
+  [+] Added error code JPOS_EFPTR_DAY_END_REQUIRED to setDate method
+
+********************************************************************************
+
+  9 July 2010, 17:00
+  deviceServiceVersion = 1013064
+
+  [+] Added messages localization
+
+********************************************************************************
+
+  29 June 2010, 11:30
+  deviceServiceVersion = 1013063
+
+  [-] Changed error codes and messages
+
+********************************************************************************
+
+  14 May 2010, 15:00
+  deviceServiceVersion = 1013062
+
+  [+] Added parameter statusCommand. Values: 0 - 10h, 1 - 11h.
+  [+] Implemented DirectIO codes SMFPTR_DIO_COMMAND and SMFPTR_DIO_STRCOMMAND
+
+********************************************************************************
+
+  28 April 2010, 17:00
+  deviceServiceVersion = 1013061
+
+  [+] Added receipt type FPTR_RT_REFUND
+
+********************************************************************************
+
+  26 April 2010, 13:30
+  deviceServiceVersion = 1013060
+
+  [+] Implemented JavaPOS version 1.13
+
+********************************************************************************
+
+  14 April 2010, 21:00
+  deviceServiceVersion = 1009059
+
+  [-] Fixed error with setDate method
+
+********************************************************************************
+
+  14 April 2010, 17:30
+  deviceServiceVersion = 1009058
+
+  [-] Fixed error with logging driver properties
+
+********************************************************************************
+
+  14 April 2010, 12:00
+  deviceServiceVersion = 1009057
+
+  [-] Fixed error with cover opened status update event
+
+********************************************************************************
+
+  08 April 2010, 19:30
+  deviceServiceVersion = 1009056
+
+  [+] Added fiscal printer status processing code
+
+********************************************************************************
+
+  1 April 2010, 19:00
+  deviceServiceVersion = 1009055
+
+  [+] Changed barcode printing for "SHTRIH-FR-K" fiscal printer
+
+********************************************************************************
+
+  11 March 2010, 19:30
+  deviceServiceVersion = 1009054
+
+  [+] Added DirectIO codes to read cash and operation registers
+
+********************************************************************************
+
+  10 March 2010, 17:30
+  deviceServiceVersion = 1009053
+
+  [+] Corrected text printing
+
+********************************************************************************
+
+  04 March 2010, 22:50
+  deviceServiceVersion = 1009052
+
+  [+] Corrected Code39 printing
+
+********************************************************************************
+
+  04 March 2010, 22:00
+  deviceServiceVersion = 1009051
+
+  [+] Added DirectIO codes
+
+********************************************************************************
+
+  26 November 2009, 16:30
+  deviceServiceVersion = 1009050
+
+  [+] Changed FptrTest utility - added table commands.
+
+********************************************************************************
+
+  23 November 2009, 22:00
+  deviceServiceVersion = 1009049
+
+  [+] Added parameters in jpos.xml file: numHeaderLines, numTrailerLines
+      numHeaderLines - number of header lines to print. This number cannot
+      be less than minimum header line number for fiscal printer (usually 4).
+      numTrailerLines - number of trailer lines to print. This number can be zero.
+
+********************************************************************************
+
+  23 November 2009, 15:00
+  deviceServiceVersion = 1009048
+
+  [+] Fixed error with voided items
+
+********************************************************************************
+
+  20 November 2009, 17:00
+  deviceServiceVersion = 1009047
+
+  [+] Added command line utility FptrTest
+
+********************************************************************************
+
+  19 November 2009, 12:30
+  deviceServiceVersion = 1009046
+
+  [-] Changed tables reading and writing to CSV file in UTF-8 encoding
+
+********************************************************************************
+
+  17 November 2009, 21:00
+  deviceServiceVersion = 1009045
+
+  [+] Added automatic tables writing from CSV file
+
+********************************************************************************
+
+  16 November 2009, 23:00
+  deviceServiceVersion = 1009044
+
+  [-] printRecMessage bug fixed. Some lines was not cleared and 
+      was printed on next receipt.
+
+  [+] Added direct IO codes for selecting device for printReport and 
+      printPeriodicTotalsReport methods
+
+********************************************************************************
+
+  12 November 2009, 17:30
+  deviceServiceVersion = 1009043
+
+  [+] Corrected problem with russian characters
+  [+] Increased print speed
+  [+] Added image and logo loading and printing (see test)
+
+********************************************************************************
+
+  10 November 2009, 15:00
+  deviceServiceVersion = 1009042
+
+  [+] Added default string encoding read from property "sun.jnu.encoding"
+
+********************************************************************************
+
+  05 November 2009, 19:20
+  deviceServiceVersion = 1009041
+
+  [+] Added DirectIO code FPTR_DIO_READ_DAY_END
+
+********************************************************************************
+
+  29 October 2009, 20:00
+  deviceServiceVersion = 1009040
+
+  [-] Corrected write table and write payment names 
+
+********************************************************************************
+
+  26 October 2009, 11:00
+  deviceServiceVersion = 1009039
+
+  [+] Added DirectIO codes for read/write tables
+
+  [+] Added DirectIO codes for read/write payment names 
+
+  [+] Added automatic payment names writing on device initialization.
+      Payment names are defined in jpos.xml file
+
+********************************************************************************
+
+  15 October 2009, 13:40
+  deviceServiceVersion = 1009038
+
+  [-] Fixed error with receipt double cutting 
+  [-] Fixed error with printing trailer on reports
+
+********************************************************************************
+
+  13 October 2009, 13:40
+  deviceServiceVersion = 1009037
+
+  [-] Fixed error with additionalTrailer
+
+********************************************************************************
+
+  12 October 2009, 12:00
+  deviceServiceVersion = 1009036
+
+  [+] Added SetPOSID method support
+  [+] Added printRecItem and printRecRefund methods
+  [-] Fixed error with StatusUpdateEvent, IDLE
+  [+] Added additionalTrailer support
+
+********************************************************************************
+
+  April, 10 2008 21:00
+  deviceServiceVersion = 1009016
+
+  [-] Fixed error in method printRecTotal.
+
+********************************************************************************
+
+  April, 10 2007, 17:00
+  deviceServiceVersion = 1009015
+
+  [-] Fixed error in method printRecSubtotal.
+
+********************************************************************************
+
+  April, 7 2007, 11:05
+  deviceServiceVersion = 1009014
+
+  [*] Changed library log4j-1.2.12.jar instead of log4j-1.2.15.jar
+
+********************************************************************************
+
+  April, 4 2007, 13:10
+  deviceServiceVersion = 1009013
+
+  [-] Fixed text encoding error in method printRecItem
+
+********************************************************************************
+
+  April, 3 2007, 15:10
+  deviceServiceVersion = 1009012
+
+  [-] Fixed text encoding errors
+
+********************************************************************************
+
+  April, 2 2007, 16:40
+  deviceServiceVersion = 1009011
+
+  [-] Fixed text encoding errors
+
+********************************************************************************
+
+  September, 26 2007 15:40
+  deviceServiceVersion = 1009001
+
+  [ ] First version
+
+********************************************************************************

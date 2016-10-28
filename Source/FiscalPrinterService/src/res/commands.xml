@@ -1,0 +1,7494 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+	<Commands>
+		<Command>
+			<Code>1</Code>
+			<Name>Start dump</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Printer device code</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Data blocks count</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>2</Code>
+			<Name>Read dump block</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Device code</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Block number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Block data</Name>
+					<Size>32</Size>
+					<Type>2</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>3</Code>
+			<Name>End dump</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>13</Code>
+			<Name>Fiscalization, long RegID</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Old password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>New password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Registration ID</Name>
+					<Size>7</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Taxpayer ID</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Fiscalization number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Fiscalizations left</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Fiscalization day</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Fiscalization date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>14</Code>
+			<Name>Set long serial number</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Serial number</Name>
+					<Size>7</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>15</Code>
+			<Name>Get long serial number and long RegID</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Serial number</Name>
+					<Size>7</Size>
+					<Type>5</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>RegID</Name>
+					<Size>7</Size>
+					<Type>5</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>16</Code>
+			<Name>Get short ECR status</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>ECR flags</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>ECR mode</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>ECR submode</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Current receipt operations count (Low byte)</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Battery voltage</Name>
+					<Size>1</Size>
+					<Type>17</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Power supply voltage</Name>
+					<Size>1</Size>
+					<Type>18</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>FM error code</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>EJ error code</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Current receipt operations count (Hi byte)</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>17</Code>
+			<Name>Get ECR status</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>ECR firmware version</Name>
+					<Size>2</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>ECR firmware build</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>ECR firmware date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>ECR number in checkout line</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Current document transparent number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>ECR flags</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>ECR mode</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>ECR submode</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>ECR port</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>FM firmware version</Name>
+					<Size>2</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>FM firmware build</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>FM firmware date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Time</Name>
+					<Size>3</Size>
+					<Type>4</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>FM flags</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Serial number</Name>
+					<Size>4</Size>
+					<Type>5</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last closed day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Free FM records count</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Fiscalization count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Fiscalizations left count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Taxpayer ID</Name>
+					<Size>6</Size>
+					<Type>5</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>18</Code>
+			<Name>Print bold string</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Flags</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>String to print</Name>
+					<Size>20</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>19</Code>
+			<Name>Beep</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>20</Code>
+			<Name>Set port parameters</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Port number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Baudrate code</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Byte timeout</Name>
+					<Size>1</Size>
+					<Type>19</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>21</Code>
+			<Name>Read port parameters</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Port number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Baudrate code</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Byte timeout</Name>
+					<Size>1</Size>
+					<Type>19</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>22</Code>
+			<Name>Technological reset</Name>
+			<Timeout>60000</Timeout>
+			<InParams/>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>23</Code>
+			<Name>Print string</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Flags</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>String to print</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>24</Code>
+			<Name>Print document header</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Document name</Name>
+					<Size>30</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Document number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Document number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>25</Code>
+			<Name>Start print test</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Test period, min.</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>26</Code>
+			<Name>Read cash totalizer</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Cash totalizer number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Cash totalizer value</Name>
+					<Size>6</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>27</Code>
+			<Name>Read operation totalizer value</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Operation totalizer number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Operation totalizer value</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>28</Code>
+			<Name>Write license</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>License</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>29</Code>
+			<Name>Read license</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>License</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>30</Code>
+			<Name>Write table</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Table</Name>
+					<Size>1</Size>
+					<Type>14</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Row</Name>
+					<Size>2</Size>
+					<Type>15</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Field</Name>
+					<Size>1</Size>
+					<Type>16</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Value</Name>
+					<Size>0</Size>
+					<Type>13</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>31</Code>
+			<Name>Read table</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Table</Name>
+					<Size>1</Size>
+					<Type>14</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Row</Name>
+					<Size>2</Size>
+					<Type>15</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Field</Name>
+					<Size>1</Size>
+					<Type>16</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Value</Name>
+					<Size>0</Size>
+					<Type>13</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>32</Code>
+			<Name>Set decimal point position</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Decimal point position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>33</Code>
+			<Name>Set clock time</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Time</Name>
+					<Size>3</Size>
+					<Type>4</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>34</Code>
+			<Name>Set calendar date</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>35</Code>
+			<Name>Confirm date</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>36</Code>
+			<Name>Initialize tables with defaults</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>37</Code>
+			<Name>Cut paper</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Cut type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>38</Code>
+			<Name>Get font parameters</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Print width in dots</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Character width in dots</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Character heigth in dots</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Font count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>39</Code>
+			<Name>FM clear</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>40</Code>
+			<Name>Open cash drawer</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Cash drawer number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>41</Code>
+			<Name>Feed paper</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Flags</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Line number to feed</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>42</Code>
+			<Name>Eject slip</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Eject direction</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>43</Code>
+			<Name>End print test</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>44</Code>
+			<Name>Print operation totalizers report</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>45</Code>
+			<Name>Get table structure</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Table number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Table name</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Row count</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Field count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>46</Code>
+			<Name>Get field structure</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Table number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Field number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Field name</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Field type</Name>
+					<Size>1</Size>
+					<Type>12</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Field size</Name>
+					<Size>1</Size>
+					<Type>11</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Min field value</Name>
+					<Size>1</Size>
+					<Type>9</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Max field value</Name>
+					<Size>1</Size>
+					<Type>10</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>47</Code>
+			<Name>Print string with font</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Flags</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Font</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>String to print</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>64</Code>
+			<Name>Print X report</Name>
+			<Timeout>30000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>65</Code>
+			<Name>Print Z report</Name>
+			<Timeout>30000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>66</Code>
+			<Name>Print department report</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>67</Code>
+			<Name>Print tax report</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>80</Code>
+			<Name>Cash in</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Amount</Name>
+					<Size>5</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Document number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>81</Code>
+			<Name>Cash out</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Amount</Name>
+					<Size>5</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Document number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>82</Code>
+			<Name>Print document header</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>83</Code>
+			<Name>Print document footer</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Parameters</Name>
+					<Size>1</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>84</Code>
+			<Name>Print trailer</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>96</Code>
+			<Name>Set serial number</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Serial number</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>97</Code>
+			<Name>Initialize FM</Name>
+			<Timeout>20000</Timeout>
+			<InParams/>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>98</Code>
+			<Name>Get FM totals</Name>
+			<Timeout>30000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Request type</Name>
+					<Size>1</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Daily sales totals sum</Name>
+					<Size>8</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Daily buys totals sum</Name>
+					<Size>6</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Daily sale returns totals sum</Name>
+					<Size>6</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Daily buy returns totals sum</Name>
+					<Size>6</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>99</Code>
+			<Name>Get last FM record date</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>6</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last record type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>100</Code>
+			<Name>Get FM dates and days range</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Tax officer password</Name>
+					<Size>4</Size>
+					<Type>8</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>First day date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last day date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>First day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>101</Code>
+			<Name>Fiscalization</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Old password</Name>
+					<Size>4</Size>
+					<Type>8</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>New password</Name>
+					<Size>4</Size>
+					<Type>8</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>RegID</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>TaxID</Name>
+					<Size>6</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Fiscalization number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Fiscalizations left</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Fiscalization day</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Fiscalization date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>102</Code>
+			<Name>Fiscal report on dates</Name>
+			<Timeout>35000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Tax officer password</Name>
+					<Size>4</Size>
+					<Type>8</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Report type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>First day date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last day date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>First day date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last day date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>First day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>103</Code>
+			<Name>Fiscal report on days</Name>
+			<Timeout>20000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Tax officer password</Name>
+					<Size>4</Size>
+					<Type>8</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Report type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>First day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>First day date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last day date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>First day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>104</Code>
+			<Name>Stop full report</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Tax officer password</Name>
+					<Size>4</Size>
+					<Type>8</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>105</Code>
+			<Name>Get fiscalization parameters</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Tax officer password</Name>
+					<Size>4</Size>
+					<Type>8</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Fiscalization number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>RegID</Name>
+					<Size>5</Size>
+					<Type>5</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Taxpayer ID</Name>
+					<Size>6</Size>
+					<Type>5</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Fiscalization day</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Fiscalization date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>112</Code>
+			<Name>Open fiscal slip</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Document type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Slip duplicates type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Duplicate count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Spacing between original and 1-st duplicate</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Spacing between 1-st and 2-nd duplicate</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Spacing between 2-nd and 3-d duplicate</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Spacing between 3-d and 4-th duplicate</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Spacing between 4-th and 5-th duplicate</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Font number of fixed header</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Font number of document header</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Font number of EJ serial number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Font number of CRC value and CRC number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Vertical position of fixed header</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Vertical position of document header</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Vertical position of EJ serial number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Vertical position of duplicate marker</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Horizontal position of fixed header</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Horizontal position of document header</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Horizontal position of EJ serial number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Horizontal position of CRC value and CRC number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Horizontal position of duplicate marker</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Document number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>113</Code>
+			<Name>Open standard fiscal slip</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Document type</Name>
+					<Size>1</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Duplicate type</Name>
+					<Size>1</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Duplicate count</Name>
+					<Size>1</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Spacing between original and 1-st duplicate</Name>
+					<Size>1</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Spacing between 1-st and 2-nd duplicate</Name>
+					<Size>1</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Spacing between 2-nd and 3-d duplicate</Name>
+					<Size>1</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Spacing between 3-d and 4-th duplicate</Name>
+					<Size>1</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Spacing between 4-th and 5-th duplicate</Name>
+					<Size>1</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Document number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>114</Code>
+			<Name>Transaction on slip</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Quantitiy format</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Operation line count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text line number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Quantity times price line number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Sum line number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Department line number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text string font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Quantity font numter</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Multiplication sign font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Price font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Sum font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Department font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text string field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Quantity field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Price field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Sum field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Department field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text string field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Quantity times price field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Sum field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Department field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Vertical position of first transaction string</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Quantity</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Price</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Department</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>115</Code>
+			<Name>Standard transaction on slip</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Vertical position of first transaction string</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Quantity</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Price</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Department</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>116</Code>
+			<Name>Discount/charge on slip</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Transaction line count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text string line number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Transaction name line number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Sum line number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text string font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Transaction name font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Sum font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text string field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Sum field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text string field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Transaction name field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Sum field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Operation type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>First discount/charge element vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>117</Code>
+			<Name>Standard discount/charge on slip</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Operation type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>First discount/charge element vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>118</Code>
+			<Name>Close fiscal slip</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Transaction line count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Receipt total vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text string vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Cash payment vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 2 vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 3 vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 4 vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Change vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1 turnover vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2 turnover vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3 turnover vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4 turnover vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1 summ vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2 sum vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3 sum vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4 sum vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Receipt subtotal before discount vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Discount sum vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text string font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>"TOTAL" font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Receipt total font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>"CASH" font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Cash payment font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 2 name font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 2 sum font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 3 name font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 3 sum font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 4 name font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 4 sum font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>"CHANGE" font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Change sum font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1 name font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1 turnover font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1 rate font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1 sum font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2 name font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2 turnover font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2 rate font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2 sum font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3 name font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3 turnover font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3 rate font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3 sum font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4 name font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4 tunover font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4 rate font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4 sum font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>"SUBTOTAL" font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Receipt subtotal before discount font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>"DISCOUNT XX.XX %" font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Receipt discount value font number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text string field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Total sum field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Cash amount field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 1 value field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 2 value field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 3 value field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Change value field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1 name field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1 turnover field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1 rate field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1 sum field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2 name field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2 turnover field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2 rate field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2 sum field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3 name field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3 turnover field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3 rate field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3 sum field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4 name field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4 turnover fied character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4 rate field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4 sum field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Receipt subtotal before discount field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Percent receipt discount field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Receipt discount value field character count</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text string field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>"TOTAL" field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Total sum horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>"CASH" field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Cash sum field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 2 name field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 2 sum field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 3 name field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 3 sum field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 4 name field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 4 sum fieldhorizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>"CHANGE" field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Change sum field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1 name field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1 turnover field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1 rate field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1 sum field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2 name field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2 turnover field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2 rate field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2 sum field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3 name field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3 turnover field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3 rate field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3 sum field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4 name field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4 turnover field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4 rate field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4 sum field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>"TOTAL" field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Subtotal before discount field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>"DISCOUNT XX.XX %" field horizontal spacing</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Discount sum horizontal spacing </Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>First transaction line vertical position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Cash amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 2 value</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 3 value</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 4 value</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Receipt discount value 0 to 99.99 %</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Change</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>119</Code>
+			<Name>Close standard fiscal slip</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Vertical position of first transaction string</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Cash amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 2 value</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 3 value</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 4 value</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Receipt discount value 0 to 99.99 %</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Change</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>120</Code>
+			<Name>Slip configuration</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Slip width in printer steps</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Slip length in printer steps</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Print direction</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Line spacings</Name>
+					<Size>199</Size>
+					<Type>2</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>121</Code>
+			<Name>Standard slip configuration</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>122</Code>
+			<Name>Fill slip buffer with nonfiscal information</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Line number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Printing information</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>123</Code>
+			<Name>Clear slip buffer string</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Line number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>124</Code>
+			<Name>Clear slip buffer</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>125</Code>
+			<Name>Print slip</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Clear nonfiscal info</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Printing information type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>126</Code>
+			<Name>Common slip configuration</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Slip width in printer steps</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Slip length in printer steps</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Printing direction</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Line spacing in printer steps</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>128</Code>
+			<Name>Sale</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Quantity</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Price</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Department</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>129</Code>
+			<Name>Buy</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Quantity</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Price</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Department</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>130</Code>
+			<Name>Sale refund</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Quantity</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Price</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Department</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>131</Code>
+			<Name>Buy refund</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Quantity</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Price</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Department</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>132</Code>
+			<Name>Void transaction</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Quantity</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Price</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Department</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>133</Code>
+			<Name>Close receipt</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Cash amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 2 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 3 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Payment type 4 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Discount/charge</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Change</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>134</Code>
+			<Name>Discount</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>135</Code>
+			<Name>Charge</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>136</Code>
+			<Name>Cancel receipt</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>137</Code>
+			<Name>Receipt subtotal</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Receipt subtotal</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>138</Code>
+			<Name>Void discount</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>139</Code>
+			<Name>Void charge</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 1</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 2</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 3</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax 4</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>140</Code>
+			<Name>Print last receipt duplicate</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>141</Code>
+			<Name>Open receipt</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Document type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>160</Code>
+			<Name>EJ department report in dates range</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Report type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Department</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>First day date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last day date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>161</Code>
+			<Name>EJ department report in days range</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Report type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Department</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>First day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>162</Code>
+			<Name>EJ day report in dates range</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Report type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>First day date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last day date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>163</Code>
+			<Name>EJ day report in days range</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Report type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>First day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>164</Code>
+			<Name>Print day totals by EJ day number</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>165</Code>
+			<Name>Print document from EJ by CRC number</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>CRC number</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>166</Code>
+			<Name>Print EJ journal by day number</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>167</Code>
+			<Name>Stop full EJ report</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>168</Code>
+			<Name>Print EJ activation result</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>169</Code>
+			<Name>EJ activation</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>170</Code>
+			<Name>Close EJ archive</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>171</Code>
+			<Name>Get EJ serial number</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>EJ serial number</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>172</Code>
+			<Name>Interrupt EJ</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>173</Code>
+			<Name>Get EJ status by code 1</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Last document CRC</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last CRC date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last CRC time</Name>
+					<Size>3</Size>
+					<Type>4</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last CRC number</Name>
+					<Size>4</Size>
+					<Type>4</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>EJ number</Name>
+					<Size>5</Size>
+					<Type>4</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>EJ flags</Name>
+					<Size>1</Size>
+					<Type>4</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>174</Code>
+			<Name>Get EJ status by code 2</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Sales total</Name>
+					<Size>6</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Buys total</Name>
+					<Size>6</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Sales refund total</Name>
+					<Size>6</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Buys refund total</Name>
+					<Size>6</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>175</Code>
+			<Name>Test EJ archive</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>176</Code>
+			<Name>Continue printing</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>177</Code>
+			<Name>Get EJ version</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>EJ version</Name>
+					<Size>0</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>178</Code>
+			<Name>Initialize EJ</Name>
+			<Timeout>20000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>179</Code>
+			<Name>Read EJ report line</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Report line</Name>
+					<Size>0</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>180</Code>
+			<Name>Get EJ journal</Name>
+			<Timeout>40000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>ECR type</Name>
+					<Size>0</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>181</Code>
+			<Name>Get EJ document</Name>
+			<Timeout>40000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>CRC number</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>ECR type</Name>
+					<Size>0</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>182</Code>
+			<Name>Get department EJ report in dates range</Name>
+			<Timeout>150000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Report type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Department</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>First day date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last day date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>ECR type</Name>
+					<Size>0</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>183</Code>
+			<Name>Get EJ department report in days range</Name>
+			<Timeout>150000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Report type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Department</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>First day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>ECR type</Name>
+					<Size>0</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>184</Code>
+			<Name>Get EJ day report in dates range</Name>
+			<Timeout>100000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Report type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>First day date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last day date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>ECR type</Name>
+					<Size>0</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>185</Code>
+			<Name>Get EJ day report in days range</Name>
+			<Timeout>100000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Report type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>First day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Last day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>ECR type</Name>
+					<Size>0</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>186</Code>
+			<Name>Get EJ day totals by day number</Name>
+			<Timeout>40000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Day number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>ECR type</Name>
+					<Size>0</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>187</Code>
+			<Name>Get EJ activation result</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>ECR type</Name>
+					<Size>0</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>188</Code>
+			<Name>Set EJ error</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Admin password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Result code</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>192</Code>
+			<Name>Load graphics</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Line number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Graphics data</Name>
+					<Size>40</Size>
+					<Type>2</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>193</Code>
+			<Name>Print graphics</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Start line</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>End line</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>194</Code>
+			<Name>Print barcode</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Barcode</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>195</Code>
+			<Name>Print exteneded graphics</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Start line number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>End line number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>192</Code>
+			<Name>Load graphics</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Line number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Graphics data</Name>
+					<Size>40</Size>
+					<Type>2</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>197</Code>
+			<Name>Print line</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Repeat count</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Graphics data</Name>
+					<Size>0</Size>
+					<Type>2</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>200</Code>
+			<Name>Get line count in printing buffer</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Total line count</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Printed line count</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>201</Code>
+			<Name>Get line from printing buffer</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Line number</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Line data</Name>
+					<Size>0</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>202</Code>
+			<Name>Clear printing buffer</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>240</Code>
+			<Name>Change shutter position</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Shutter position</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>241</Code>
+			<Name>Discharge receipt from presenter</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Discharge type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>243</Code>
+			<Name>Set service center password</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Service center password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>New service center  password</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams/>
+		</Command>
+		<Command>
+			<Code>252</Code>
+			<Name>Get device type</Name>
+			<Timeout>10000</Timeout>
+			<InParams/>
+			<OutParams>
+				<Param>
+					<Name>Device type</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Device subtype</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Protocol version</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Protocol subversion</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Device model</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Device language</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Device name</Name>
+					<Size>0</Size>
+					<Type>1</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>253</Code>
+			<Name>Send commands to external device port</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Port number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>String of commands</Name>
+					<Size>0</Size>
+					<Type>2</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>224</Code>
+			<Name>Open day</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>225</Code>
+			<Name>Finish slip</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>226</Code>
+			<Name>Close nonfiscal document</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>228</Code>
+			<Name>Print attribute</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Atrribute number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+				<Param>
+					<Name>Attribute value</Name>
+					<Size>0</Size>
+					<Type>2</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Operator number</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>0</MaxValue>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>0xFF01</Code>
+			<Name>FS read status</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Flags</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Current document</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Document data received</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Fiscal day opened</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Warning flags</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Date</Name>
+					<Size>3</Size>
+					<Type>3</Type>
+				</Param>
+				<Param>
+					<Name>Time</Name>
+					<Size>2</Size>
+					<Type>20</Type>
+				</Param>
+				<Param>
+					<Name>Serial number</Name>
+					<Size>16</Size>
+					<Type>1</Type>
+				</Param>
+				<Param>
+					<Name>Document number</Name>
+					<Size>4</Size>
+					<Type>0</Type>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>0xFF02</Code>
+			<Name>FS read serial</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Serial number</Name>
+					<Size>16</Size>
+					<Type>1</Type>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>0xFF03</Code>
+			<Name>FS read expiration date</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Expiration date</Name>
+					<Type>3</Type>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>0xFF04</Code>
+			<Name>FS read version</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Version</Name>
+					<Type>1</Type>
+				</Param>
+				<Param>
+					<Name>Is serial version</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>0xFF05</Code>
+			<Name>FS start registration report</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+				<Param>
+					<Name>Report type</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+			</InParams>
+		</Command>
+		<Command>
+			<Code>0xFF06</Code>
+			<Name>FS print registration report</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+				<Param>
+					<Name>TaxID</Name>
+					<Type>1</Type>
+					<Size>12</Size>
+				</Param>
+				<Param>
+					<Name>Registration number</Name>
+					<Type>1</Type>
+					<Size>20</Size>
+				</Param>
+				<Param>
+					<Name>Tax system</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+				<Param>
+					<Name>Work mode</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Document number</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+				<Param>
+					<Name>Document digest</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>0xFF07</Code>
+			<Name>FS reset state</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+				<Param>
+					<Name>Request type</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+			</InParams>
+		</Command>		
+		<Command>
+			<Code>0xFF08</Code>
+			<Name>FS cancel document</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+			</InParams>
+		</Command>		
+		<Command>
+			<Code>0xFF09</Code>
+			<Name>FS read fiscalization</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Date</Name>
+					<Type>3</Type>
+				</Param>
+				<Param>
+					<Name>Time</Name>
+					<Type>20</Type>
+				</Param>
+				<Param>
+					<Name>TaxID</Name>
+					<Type>1</Type>
+					<Size>12</Size>
+				</Param>
+				<Param>
+					<Name>Registration number</Name>
+					<Type>1</Type>
+					<Size>20</Size>
+				</Param>
+				<Param>
+					<Name>Tax system code</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+				<Param>
+					<Name>Mode</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+				<Param>
+					<Name>Document number</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+				<Param>
+					<Name>Document digest</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>0xFF0A</Code>
+			<Name>FS find document</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+				<Param>
+					<Name>Document number</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Document type</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+				<Param>
+					<Name>Is ticket received</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>0xFF0B</Code>
+			<Name>FS open fiscal day</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Day number</Name>
+					<Type>0</Type>
+					<Size>2</Size>
+				</Param>
+				<Param>
+					<Name>Document number</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+				<Param>
+					<Name>Document digest</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>0xFF0C</Code>
+			<Name>FS write TLV data</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+				<Param>
+					<Name>TLV data</Name>
+					<Type>2</Type>
+				</Param>
+			</InParams>
+		</Command>
+		<Command>
+			<Code>0xFF0D</Code>
+			<Name>FS registration with discount/charge</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+				<Param>
+					<Name>Operation type</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+				<Param>
+					<Name>Quantity</Name>
+					<Type>0</Type>
+					<Size>5</Size>
+				</Param>
+				<Param>
+					<Name>Price</Name>
+					<Type>0</Type>
+					<Size>5</Size>
+				</Param>
+				<Param>
+					<Name>Discount</Name>
+					<Type>0</Type>
+					<Size>5</Size>
+				</Param>
+				<Param>
+					<Name>Charge</Name>
+					<Type>0</Type>
+					<Size>5</Size>
+				</Param>
+				<Param>
+					<Name>Department</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+				<Param>
+					<Name>Tax</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+				<Param>
+					<Name>Barcode</Name>
+					<Type>0</Type>
+					<Size>5</Size>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Type>1</Type>
+					<Size>0</Size>
+					<MinValue>0</MinValue>
+					<MaxValue>220</MaxValue>
+				</Param>
+			</InParams>
+		</Command>
+		<Command>
+			<Code>0xFF34</Code>
+			<Name>FS print registration report</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+				<Param>
+					<Name>Code</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Document number</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+				<Param>
+					<Name>Document digest</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+			</OutParams>
+		</Command>
+		<Command>
+			<Code>0xFF35</Code>
+			<Name>FS start correction receipt</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+			</InParams>
+		</Command>
+
+		<Command>
+			<Code>0xFF36</Code>
+			<Name>FS print correction receipt</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+				<Param>
+					<Name>Receipt total</Name>
+					<Type>0</Type>
+					<Size>5</Size>
+				</Param>
+				<Param>
+					<Name>Operation type</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Receipt number</Name>
+					<Type>0</Type>
+					<Size>2</Size>
+				</Param>
+				<Param>
+					<Name>Document number</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+				<Param>
+					<Name>Document digest</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+			</OutParams>
+		</Command>
+
+		<!-- Начать формирование отчёта о состоянии расчётов FF37H 
+Код команды FF37h . Длина сообщения: 6 байт.
+Пароль системного администратора: 4 байта
+Ответ:	    FF37h Длина сообщения: 1 байт.
+Код ошибки: 1 байт
+ -->
+
+		<Command>
+			<Code>0xFF37</Code>
+			<Name>FS start accounts report</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+			</InParams>
+		</Command>
+
+		<!-- Сформировать отчёт о состоянии расчётов FF38H
+Код команды FF38h . Длина сообщения: 6 байт.
+Пароль системного администратора: 4 байта
+Ответ:	    FF38h Длина сообщения: 16 байт.
+Код ошибки: 1 байт
+Номер ФД: 4 байта
+Фискальный признак: 4 байта
+Количество неподтверждённых документов: 4 байта
+Дата первого неподтверждённого документа: 3 байта ГГ,ММ,ДД
+ -->		
+
+		<Command>
+			<Code>0xFF38</Code>
+			<Name>FS print accounts report</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Document number</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+				<Param>
+					<Name>Document digest</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+				<Param>
+					<Name>Unconfirmed document number</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+				<Param>
+					<Name>First document date</Name>
+					<Type>3</Type>
+				</Param>
+			</OutParams>
+		</Command>
+
+		<!-- Получить статус информационного  обмена FF39H
+Код команды FF39h . Длина сообщения: 6 байт.
+Пароль системного администратора: 4 байта
+Ответ:	    FF39h Длина сообщения: 14 байт.
+Код ошибки: 1 байт
+Статус информационного обмена: 1 байт
+(0 – нет, 1 – да)
+Бит 0 – транспортное соединение установлено
+Бит 1 – есть сообщение для передачи в ОФД
+Бит 2 – ожидание ответного сообщения (квитанции) от ОФД
+Бит 3 – есть команда от ОФД
+Бит 4 – изменились настройки соединения с ОФД
+Бит 5 – ожидание ответа на команду от ОФД
+Состояние чтения сообщения: 1 байт 1 – да, 0 -нет
+Количество сообщений для ОФД: 2 байта
+Номер документа для ОФД первого в очереди: 4 байта
+Дата и время документа для ОФД первого в очереди: 5 байт
+ -->
+
+		<Command>
+			<Code>0xFF39</Code>
+			<Name>FS print accounts report</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Transmittion status</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+				<Param>
+					<Name>Receive status</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+				<Param>
+					<Name>Documents in queue</Name>
+					<Type>0</Type>
+					<Size>2</Size>
+				</Param>
+				<Param>
+					<Name>First document number</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+				<Param>
+					<Name>First document date</Name>
+					<Type>3</Type>
+				</Param>
+				<Param>
+					<Name>First document time</Name>
+					<Type>20</Type>
+				</Param>
+			</OutParams>
+		</Command>
+
+		<!-- Запрос квитанции о получении данных в ОФД по номеру  документа FF3CH
+Код команды FF3Сh . Длина сообщения: 11 байт.
+Пароль системного администратора: 4 байта
+Номер фискального документа: 4 байта
+Ответ:	    FF3Сh Длина сообщения: 1+N байт.
+Код ошибки: 1 байт
+Квитанция: N байт
+ --> 
+
+		<Command>
+			<Code>0xFF3C</Code>
+			<Name>FS read ticket</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+				<Param>
+					<Name>Document number</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Ticket data</Name>
+					<Type>2</Type>
+				</Param>
+			</OutParams>
+		</Command>
+
+		<!-- Начать закрытие фискального режима FF3DH
+Код команды FF3Dh . Длина сообщения: 6 байт.
+Пароль системного администратора: 4 байта
+Ответ:	    FF3Dh Длина сообщения: 1 байт.
+Код ошибки: 1 байт
+ -->
+
+		<Command>
+			<Code>0xFF3D</Code>
+			<Name>FS start close fiscal mode</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+			</InParams>
+		</Command>
+
+		<!-- Закрыть фискальный режим FF3EH
+Код команды FF3Eh . Длина сообщения: 6 байт.
+Пароль системного администратора: 4 байта
+Ответ:	    FF3Eh Длина сообщения: 9 байт.
+Код ошибки: 1 байт
+Номер ФД : 4 байта
+Фискальный признак: 4 байта
+ -->
+
+		<Command>
+			<Code>0xFF3E</Code>
+			<Name>FS close fiscal mode</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Document number</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+				<Param>
+					<Name>Document digest</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+			</OutParams>
+		</Command>
+
+		<!-- Запрос количества ФД на которые нет квитанции FF3FH
+Код команды FF3Fh . Длина сообщения: 6 байт.
+Пароль системного администратора: 4 байта
+Ответ:	    FF3Fh Длина сообщения: 3 байт.
+Код ошибки: 1 байт
+Количество неподтверждённых ФД : 2 байта
+ -->
+
+ 		<Command>
+			<Code>0xFF3F</Code>
+			<Name>FS read unconfirmed document count</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Document count</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+			</OutParams>
+		</Command>
+
+ 
+<!-- Запрос параметров текущей смены FF40H
+Код команды FF40h . Длина сообщения: 6 байт.
+Пароль системного администратора: 4 байта
+Ответ:	    FF40h Длина сообщения: 6 байт.
+Код ошибки: 1 байт
+Состояние смены: 1 байт
+Номер смены : 2 байта
+Номер чека: 2 байта -->
+ 
+ 		<Command>
+			<Code>0xFF40</Code>
+			<Name>FS read current day parameters</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Day number</Name>
+					<Type>0</Type>
+					<Size>2</Size>
+				</Param>
+				<Param>
+					<Name>Receipt number</Name>
+					<Type>0</Type>
+					<Size>2</Size>
+				</Param>
+			</OutParams>
+		</Command>
+ 
+<!-- Начать открытие смены FF41H
+Код команды FF41h . Длина сообщения: 6 байт.
+Пароль системного администратора: 4 байта
+Ответ:	    FF41h Длина сообщения: 1 байт.
+Код ошибки: 1 байт
+ -->
+
+ 		<Command>
+			<Code>0xFF41</Code>
+			<Name>FS start day open</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+			</InParams>
+		</Command>
+ 
+<!-- Начать закрытие смены FF42H
+Код команды FF42h . Длина сообщения: 6 байт.
+Пароль системного администратора: 4 байта
+Ответ:	    FF42h Длина сообщения: 1 байт.
+Код ошибки: 1 байт -->
+
+ 		<Command>
+			<Code>0xFF42</Code>
+			<Name>FS start day close</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+			</InParams>
+		</Command>
+
+<!-- Закрыть смену в ФН FF43H
+Код команды FF43h . Длина сообщения: 6 байт.
+Пароль системного администратора: 4 байт
+Ответ:    FF43h Длина сообщения: 11 байт.
+Код ошибки: 1 байт
+Номер только что закрытой смены: 2 байта
+Номер ФД :4 байта
+Фискальный признак: 4 байта -->
+		
+ 		<Command>
+			<Code>0xFF43</Code>
+			<Name>FS close day</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Day number</Name>
+					<Type>0</Type>
+					<Size>2</Size>
+				</Param>
+				<Param>
+					<Name>Document number</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+				<Param>
+					<Name>Document digest</Name>
+					<Type>0</Type>
+					<Size>4</Size>
+				</Param>
+			</OutParams>
+		</Command>
+
+<!-- Операция со скидками, надбавками и налогом FF44H
+Код команды FF44h . Длина сообщения:  254 байт.
+Пароль системного администратора: 4 байта
+Тип операции: 1 байт 
+1 – Приход, 
+2 – Возврат прихода,
+3 – Расход,
+4 – Возврат расхода 
+Количество: 5 байт 0000000000…9999999999
+Цена:             5 байт 0000000000…9999999999
+Скидка:         5 байт 0000000000…9999999999
+Надбавка:    5 байт 0000000000…9999999999
+Налог:           5 байт 0000000000…9999999999
+Номер отдела: 1 байт
+0…16 – режим свободной продажи, 255 – режим продажи по коду товара
+Налог:  1 байт
+Бит 1 «0» – нет, «1» – 1 налоговая группа
+Бит 2 «0» – нет, «1» – 2 налоговая группа
+Бит 3 «0» – нет, «1» – 3 налоговая группа
+Бит 4 «0» – нет, «1» – 4 налоговая группа
+Штрих-код: 5 байт  000000000000…999999999999
+Текст: 215 байта строка - название товара и скидки 
+
+Примечание: 	если строка начинается символами \\ то она 
+				передаётся на сервер ОФД но не печатается на кассе. 
+				Названия товара и скидки должны заканчиваться нулём (Нуль терминированные строки).
+				
+Примечание: 	налог является справочной информацией и передаётся извне в случае, 
+				когда касса не может его рассчитать сама.
+
+
+Ответ:    FF43h Длина сообщения: 1 байт.
+Код ошибки: 1 байт -->
+
+ 		<Command>
+			<Code>0xFF44</Code>
+			<Name>FS sale with tax amount</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Sysadmin password</Name>
+					<Type>6</Type>
+				</Param>
+				<Param>
+					<Name>Operation type</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+				<Param>
+					<Name>Quantity</Name>
+					<Type>0</Type>
+					<Size>5</Size>
+				</Param>
+				<Param>
+					<Name>Price</Name>
+					<Type>0</Type>
+					<Size>5</Size>
+				</Param>
+				<Param>
+					<Name>Discount amount</Name>
+					<Type>0</Type>
+					<Size>5</Size>
+				</Param>
+				<Param>
+					<Name>Charge amount</Name>
+					<Type>0</Type>
+					<Size>5</Size>
+				</Param>
+				<Param>
+					<Name>Tax amount</Name>
+					<Type>0</Type>
+					<Size>5</Size>
+				</Param>
+				<Param>
+					<Name>Department</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+				<Param>
+					<Name>Tax</Name>
+					<Type>0</Type>
+					<Size>1</Size>
+				</Param>
+				<Param>
+					<Name>Barcode</Name>
+					<Type>0</Type>
+					<Size>5</Size>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Type>1</Type>
+					<Size>0</Size>
+					<MinValue>0</MinValue>
+					<MaxValue>215</MaxValue>
+				</Param>
+			</InParams>
+		</Command>
+
+<!-- Закрытие чека расширенное вариант №2 FF45H
+Код команды FF45h . Длина сообщения:  131 байт.
+Пароль системного администратора: 4 байта
+Сумма наличных (5 байт) 0000000000…9999999999 
+Сумма типа оплаты 2 (5 байт) 0000000000…9999999999 
+Сумма типа оплаты 3 (5 байт) 0000000000…9999999999 
+Сумма типа оплаты 4 (5 байт) 0000000000…9999999999
+Сумма типа оплаты 5 (5 байт) 0000000000…9999999999
+Сумма типа оплаты 6 (5 байт) 0000000000…9999999999 
+Сумма типа оплаты 7 (5 байт) 0000000000…9999999999 
+Сумма типа оплаты 8 (5 байт) 0000000000…9999999999
+Сумма типа оплаты 9 (5 байт) 0000000000…9999999999
+Сумма типа оплаты 10 (5 байт) 0000000000…9999999999 
+Сумма типа оплаты 11 (5 байт) 0000000000…9999999999 
+Сумма типа оплаты 12 (5 байт) 0000000000…9999999999
+Сумма типа оплаты 13 (5 байт) 0000000000…9999999999
+Сумма типа оплаты 14 (5 байт) 0000000000…9999999999 
+Сумма типа оплаты 15 (5 байт) 0000000000…9999999999 
+Сумма типа оплаты 16 (5 байт) 0000000000…9999999999
+Скидка/Надбавка(в случае отрицательного значения) в % на чек от 0 до 99,99 % (2 байта со знаком) -9999…9999 
+Налог 1 (1 байт) «0» – нет, «1»…«4» – налоговая группа 
+Налог 2 (1 байт) «0» – нет, «1»…«4» – налоговая группа 
+Налог 3 (1 байт) «0» – нет, «1»…«4» – налоговая группа 
+Налог 4 (1 байт) «0» – нет, «1»…«4» – налоговая группа 
+Система налогообложения ( 1 байт) 
+Текст (40 байт) 
+
+Ответ:    FF45h Длина сообщения: 6 байт.
+Код ошибки: 1 байт
+Сдача ( 5 байт) 0000000000…9999999999
+ -->
+
+		<Command>
+			<Code>0xFF45</Code>
+			<Name>Close receipt 2</Name>
+			<Timeout>10000</Timeout>
+			<InParams>
+				<Param>
+					<Name>Operator password</Name>
+					<Size>4</Size>
+					<Type>7</Type>
+				</Param>
+				<Param>
+					<Name>Cash amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Payment type 2 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Payment type 3 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Payment type 4 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Payment type 5 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Payment type 6 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Payment type 7 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Payment type 8 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Payment type 9 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Payment type 10 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Payment type 11 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Payment type 12 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Payment type 13 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Payment type 14 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Payment type 15 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Payment type 16 amount</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Discount/charge</Name>
+					<Size>2</Size>
+					<Type>0</Type>
+					<MinValue>0</MinValue>
+					<MaxValue>9999</MaxValue>
+				</Param>
+				<Param>
+					<Name>Tax</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Tax system</Name>
+					<Size>1</Size>
+					<Type>0</Type>
+				</Param>
+				<Param>
+					<Name>Text</Name>
+					<Size>40</Size>
+					<Type>1</Type>
+				</Param>
+			</InParams>
+			<OutParams>
+				<Param>
+					<Name>Change</Name>
+					<Size>5</Size>
+					<Type>0</Type>
+				</Param>
+			</OutParams>
+		</Command>
+	</Commands>
+</root>

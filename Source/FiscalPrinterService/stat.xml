@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UPOSStat version="1.9.0"
+    xmlns="http://www.nrf-arts.org/IXRetail/namespace/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.nrf-arts.org/IXRetail/namespace/UPOSStat.xsd">
+    <Event>
+        <Parameter>
+            <Name>DrawerGoodOpenCount</Name>
+            <Value>123</Value>
+        </Parameter>
+        <Parameter>
+            <Name>DrawerFailedOpenCount</Name>
+            <Value>234</Value>
+        </Parameter>
+    </Event>
+    <Equipment>
+        <UnifiedPOSVersion>1.9</UnifiedPOSVersion>
+        <DeviceCategory UPOS="CashDrawer"/>
+        <ManufacturerName>SHTRIH-M</ManufacturerName>
+        <ModelName>Fiscal printer cash drawer</ModelName>
+        <SerialNumber>123</SerialNumber>
+        <FirmwareRevision>234</FirmwareRevision>
+        <Interface>RS232</Interface>
+        <InstallationDate>345</InstallationDate>
+    </Equipment>
+</UPOSStat>
