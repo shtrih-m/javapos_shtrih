@@ -137,6 +137,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
                                 PrinterConst.SMFPTR_E_NOCONNECTION,
                                 "nakCommandNumber >= maxNakCommandNumber");
                     }
+                    break;
                 default:
                     return;
             }
