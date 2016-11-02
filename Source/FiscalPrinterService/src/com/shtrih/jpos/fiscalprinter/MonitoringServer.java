@@ -236,6 +236,7 @@ public class MonitoringServer implements Runnable {
             return "WRONG_PARAM";
         int reg = service.getPrinter().readOperationRegister(Integer.parseInt(params[1]));
         String text = String.valueOf(reg);
-        return text;    }
+        return text;
+    }
 
 }
