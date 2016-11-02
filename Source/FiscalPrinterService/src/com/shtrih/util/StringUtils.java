@@ -35,7 +35,7 @@ public class StringUtils {
                 result.add(data);
                 data = "";
             } else {
-                data += c;
+                data += text.charAt(i);
             }
         }
         if (data.length() != 0) {
