@@ -450,7 +450,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         totalizerType = FPTR_TT_DAY;
         capUpdateStatistics = true;
         capStatisticsReporting = true;
-        deviceServiceVersion = deviceVersion113 + 308;
+        deviceServiceVersion = deviceVersion113 + 310;
         freezeEvents = true;
     }
 
@@ -2349,20 +2349,34 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         header.print();
     }
 
+    public void printNonFiscalDoc(String text) throws Exception {
+        PrinterStatus status = getPrinter().waitForPrinting();
+        if (status.getPrinterMode().isReceiptOpened()) {
+            getPrinter().sysAdminCancelReceipt();
+        }
+        getPrinter().waitForPrinting();
+        getPrinter().printText(text);
+        printDocEnd();
+    }
+
     private void printReportEnd() throws Exception {
         try {
-            getPrinter().waitForPrinting();
-            printer.printReceiptImage(SMFPTR_LOGO_BEFORE_TRAILER);
-            trailer.printRecMessages(printItems);
-            trailer.print();
-            printRecLine(" ");
-            printer.printReceiptImage(SMFPTR_LOGO_AFTER_TRAILER);
-            printer.printReceiptImage(SMFPTR_LOGO_AFTER_ADDTRAILER);
-            header.print();
+            printReportEnd2();
         } catch (Exception e) {
             // ignore print errors
             logger.error("printReportEnd: " + e.getMessage());
         }
+    }
+
+    private void printReportEnd2() throws Exception {
+        getPrinter().waitForPrinting();
+        printer.printReceiptImage(SMFPTR_LOGO_BEFORE_TRAILER);
+        trailer.printRecMessages(printItems);
+        trailer.print();
+        printRecLine(" ");
+        printer.printReceiptImage(SMFPTR_LOGO_AFTER_TRAILER);
+        printer.printReceiptImage(SMFPTR_LOGO_AFTER_ADDTRAILER);
+        header.print();
     }
 
     public void endNonFiscal() throws Exception {
@@ -3040,17 +3054,19 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             checkPrinterState(FPTR_PS_FISCAL_RECEIPT_ENDING);
 
             receipt.endFiscalReceipt(printHeader);
-            // Print may not respond for some time
-            sleep(getParams().recCloseSleepTime);
-            isInReceiptTrailer = true;
-            if (!receipt.getCapAutoCut()) {
-                try {
-                    getPrinter().waitForPrinting();
-                    printDocEnd();
-                    isInReceiptTrailer = false;
-                } catch (Exception e) {
-                    // ignore print errors because cashin is succeeded
-                    logger.error("endFiscalReceipt: " + e.getMessage());
+            if (!receipt.getDisablePrint()) {
+                // Print may not respond for some time
+                sleep(getParams().recCloseSleepTime);
+                isInReceiptTrailer = true;
+                if (!receipt.getCapAutoCut()) {
+                    try {
+                        getPrinter().waitForPrinting();
+                        printDocEnd();
+                        isInReceiptTrailer = false;
+                    } catch (Exception e) {
+                        // ignore print errors because cashin is succeeded
+                        logger.error("endFiscalReceipt: " + e.getMessage());
+                    }
                 }
             }
             setPrinterState(FPTR_PS_MONITOR);
@@ -4533,5 +4549,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void fsWriteTLV(byte[] data) throws Exception {
         receipt.fsWriteTLV(data);
+    }
+
+    public void disablePrint() throws Exception {
+        receipt.disablePrint();
     }
 }

@@ -45,6 +45,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private long total = 0;
     private int receiptType = 0;
     private boolean isOpened = false;
+    private boolean disablePrint = false;
     private String voidDescription = "";
     private final Vector items = new Vector();
     private final Vector recItems = new Vector();
@@ -90,10 +91,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             payments[i] = 0;
         }
         voidDescription = "";
+        disablePrint = false;
     }
 
     public void beginFiscalReceipt(boolean printHeader) throws Exception {
         clearReceipt();
+        getPrinter().openReceipt(receiptType);
+        getPrinter().waitForPrinting();
     }
 
     public void openReceipt(int receiptType) throws Exception {
@@ -200,15 +204,26 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void endFiscalReceipt(boolean printHeader) throws Exception {
         if (isOpened) {
             if (cancelled) {
+                try {
+                    PrinterStatus status = getDevice().waitForPrinting();
+                    if (!status.getPrinterMode().isReceiptOpened()) {
+                        getPrinter().openReceipt(receiptType);
+                    }
+                    getPrinter().waitForPrinting();
+                    getDevice().cancelReceipt();
+                    getPrinter().printText(voidDescription);
+                    getPrinter().printText(getParams().receiptVoidText);
+                } catch (Exception e) {
+                    logger.error("Cancel receipt: " + e.getMessage());
+                }
+                getFiscalDay().cancelFiscalRec();
+                clearReceipt();
+            } else {
                 PrinterStatus status = getDevice().waitForPrinting();
                 if (status.getPrinterMode().isReceiptOpened()) {
                     getDevice().cancelReceipt();
                 }
-                getPrinter().printText(voidDescription);
-                getPrinter().printText(getParams().receiptVoidText);
-                getFiscalDay().cancelFiscalRec();
-                clearReceipt();
-            } else {
+                getPrinter().waitForPrinting();
                 getPrinter().openReceipt(receiptType);
                 getPrinter().waitForPrinting();
 
@@ -216,6 +231,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 printReceiptItems();
 
                 correctPayments();
+                
+                if (disablePrint) {
+                    getDevice().disablePrint();
+                }
+                
                 CloseRecParams closeParams = new CloseRecParams();
                 closeParams.setSum1(payments[0]);
                 closeParams.setSum2(payments[1]);
@@ -344,7 +364,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         return S + line2;
     }
 
-    
     public void printRecSubtotal(long amount) throws Exception {
         checkTotal(getSubtotal(), amount);
         addTextItem(formatStrings(getParams().subtotalText,
@@ -569,7 +588,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void addPayment(long payment, long payType) throws Exception {
-        MethodParameter.checkRange(payType, 0, 3, "payType");
+        MethodParameter.checkRange(payType, 0, 15, "payType");
         payments[(int) payType] += payment;
     }
 
@@ -786,5 +805,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void fsWriteTLV(byte[] data) throws Exception {
         items.add(new FSTLVItem(data));
     }
+    
+    public void disablePrint() throws Exception {
+        disablePrint = true;
+    }
+    
+    public boolean getDisablePrint(){
+        return disablePrint;
+    }
 }
-

@@ -338,6 +338,14 @@ public class DirectIOHandler {
                 new DIOPrintDocEnd(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_FS_DISABLE_PRINT:
+                new DIODisablePrint(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PRINT_NON_FISCAL:
+                new DIOPrintNonFiscal(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)

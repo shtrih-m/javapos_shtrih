@@ -454,4 +454,7 @@ public interface SMFiscalPrinter {
     public void writeCasierName(String name) throws Exception;
 
     public void writeAdminName(String name) throws Exception;
+    
+    public void disablePrint() throws Exception;
 }
+

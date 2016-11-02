@@ -820,4 +820,6 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void writeAdminName(String name) throws Exception {
     }
 
+    public void disablePrint() throws Exception {
+    }
 }

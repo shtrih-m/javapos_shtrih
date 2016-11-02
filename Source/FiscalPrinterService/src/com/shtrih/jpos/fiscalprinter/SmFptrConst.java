@@ -410,6 +410,19 @@ public interface SmFptrConst {
      */
     public static final int SMFPTR_DIO_FS_WRITE_TLV = 0x36;
     
+    /**
+     * Disable receipt printing
+     */
+    public static final int SMFPTR_DIO_FS_DISABLE_PRINT = 0x37;
+    
+    /**
+     * Print non fiscal document 
+     * If receipt is opened - it will be cancelled 
+     */
+    public static final int SMFPTR_DIO_PRINT_NON_FISCAL = 0x38;
+    
+    
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

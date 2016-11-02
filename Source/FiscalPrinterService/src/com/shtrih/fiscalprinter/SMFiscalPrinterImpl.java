@@ -1460,8 +1460,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         field.setValue(fieldValue[0]);
     }
 
-    public void writeField(PrinterField field) throws Exception 
-    {
+    public void writeField(PrinterField field) throws Exception {
         check(writeTable(field.getTable(), field.getRow(), field.getField(),
                 field.getValue()));
     }
@@ -2416,8 +2415,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         execute(command);
         return command;
     }
-    
-            
+
     public FSReadSerial fsReadSerial() throws Exception {
         FSReadSerial command = new FSReadSerial();
         command.setSysPassword(sysPassword);
@@ -2564,5 +2562,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         execute(command);
         int operator = command.getStatus().getOperatorNumber();
         writeTable(SMFP_TABLE_CASHIER, operator, 2, name);
+    }
+
+    public void disablePrint() throws Exception {
+        // !!! write table and by name
+        writeTable(17, 1, 7, "1");
     }
 }

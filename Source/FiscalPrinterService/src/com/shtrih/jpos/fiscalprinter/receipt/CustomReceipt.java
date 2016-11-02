@@ -229,4 +229,11 @@ public abstract class CustomReceipt implements FiscalReceipt {
                     JPOS_EFPTR_BAD_ITEM_AMOUNT);
         }
     }
+
+    public void disablePrint() throws Exception {
+    }
+    
+    public boolean getDisablePrint(){
+        return false;
+    }
 }

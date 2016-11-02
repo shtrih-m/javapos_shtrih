@@ -1636,4 +1636,13 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void printDocEnd() throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_DOC_END, null, null);
     }
+    
+    public void printNonFiscalDoc(String text) throws JposException {
+        directIO(SmFptrConst.SMFPTR_DIO_PRINT_NON_FISCAL, null, text);
+    }
+    
+    public void disablePrint() throws JposException {
+        directIO(SmFptrConst.SMFPTR_DIO_FS_DISABLE_PRINT, null, null);
+    }
+    
 }

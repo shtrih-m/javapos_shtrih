@@ -138,6 +138,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
                                 "nakCommandNumber >= maxNakCommandNumber");
                     }
                     break;
+                    
                 default:
                     return;
             }
@@ -234,6 +235,9 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         int repeatCount = 0;
         while (true) {
             try {
+                if (repeatCount > 0){
+                    logger.debug("retry " + repeatCount + "...");
+                }
                 repeatCount++;
                 byte[] tx = command.encodeData();
                 int timeout = command.getTimeout();

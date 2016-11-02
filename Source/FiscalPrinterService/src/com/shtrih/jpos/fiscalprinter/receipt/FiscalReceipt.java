@@ -92,4 +92,8 @@ public interface FiscalReceipt {
     public void printNormal(int station, String data) throws Exception;
 
     public void fsWriteTLV(byte[] data) throws Exception;
+    
+    public void disablePrint() throws Exception;
+    
+    public boolean getDisablePrint();
 }

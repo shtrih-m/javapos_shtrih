@@ -166,4 +166,11 @@ public class NullReceipt implements FiscalReceipt {
     public void fsWriteTLV(byte[] data) throws Exception {
         notSupported();
     }
+    
+    public boolean getDisablePrint(){
+        return false;
+    }
+    
+    public void disablePrint() throws Exception{
+    }
 }
