@@ -26,6 +26,7 @@ import com.shtrih.fiscalprinter.command.FSReadFiscalization;
 import com.shtrih.fiscalprinter.command.FSReadStatus;
 import com.shtrih.fiscalprinter.command.LongPrinterStatus;
 import com.shtrih.util.StringUtils;
+import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -36,71 +37,90 @@ public class MonitoringServer implements Runnable {
     private final FiscalPrinterImpl service;
     private static CompositeLogger logger = CompositeLogger.getLogger(MonitoringServer.class);
 
-    private static final int ReadTimeout = 3000;
-    private static final int AcceptTimeout = 3000;
-
+    ServerSocket serverSocket = null;
+    Thread thread = null;
+    
     public MonitoringServer(FiscalPrinterImpl service) {
         this.service = service;
     }
 
     public boolean isStarted() {
-        return isStarted;
+        return serverSocket != null;
     }
 
     public void start(int port) {
+        stop();
         try {
             this.port = port;
-            Thread thread = new Thread(this);
+            serverSocket = new ServerSocket(port);            
+            thread = new Thread(this);
             thread.start();
-            isStarted = true;
         } catch (Exception e) {
             logger.error(e);
         }
     }
 
     public void stop() {
+        if (serverSocket == null)
+            return;
         try {
-            isStarted = false;
+            serverSocket.close();
+            thread.join();
+            serverSocket = null;
         } catch (Exception e) {
             logger.error(e);
         }
     }
 
+    class ClientSession implements Runnable {
+
+        public ClientSession(Socket s) {
+            this.socket = s;
+        }
+        @Override
+        public void run() {
+            try {
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(socket.getInputStream()));
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                Hello(out);
+                while(true) {
+                    String cmd = reader.readLine();
+                    if (cmd == null)
+                        continue;
+                    String answer = runCommand(cmd);
+                    out.println(answer);                
+                }
+            } catch (IOException e) {
+            }
+        }
+        
+        private void Hello(PrintWriter out) {
+            out.println("=============================");
+            out.println("  Welcome to Shtrih JavaPOS  ");
+            out.println("=============================");
+            out.println("Commands:");
+            out.println(" STATUS");
+            out.println(" INFO");            
+            out.println(" FN");
+            out.println(" FN_UNIXTIME");
+            out.println(" CNT_QUEUE");
+            out.println(" DATE_LAST");
+            out.println(" CASH_REG regNumber");  
+            out.println(" OPER_REG regNumber");  
+            out.println("=============================");
+        }
+        
+        Socket socket = null;
+    }
     
     public void run() {
         try {
-            ServerSocket serverSocket = new ServerSocket(port);
-            while (isStarted) {
-                try {
-                    serverSocket.setSoTimeout(AcceptTimeout);
-                    Socket socket = serverSocket.accept();
-                    InputStream sin = socket.getInputStream();
-                    try {
-                        socket.setSoTimeout(ReadTimeout);
-                        OutputStream sout = socket.getOutputStream();
-                        BufferedReader reader = new BufferedReader(
-                                new InputStreamReader(sin));
-                        BufferedWriter writer = new BufferedWriter(
-                                new OutputStreamWriter(sout));
-                        String command = reader.readLine();
-                        if (command != null) {
-                            String answer = runCommand(command);
-                            if (answer.length() > 0) {
-                                writer.write(answer);
-                                writer.newLine();
-                                writer.flush();
-                            }
-                        }
-                    } catch (IOException e) {
-                    }
-                    socket.shutdownOutput();
-                    while (sin.read() >= 0) {
-                    }
-                    socket.close();
-                } catch (IOException e) {
-                }
+            while (true){
+                Socket socket = serverSocket.accept();
+                Thread session = new Thread(new ClientSession(socket));
+                session.start();
             }
-            serverSocket.close();
         } catch (IOException e) {
             logger.error("run, ", e);
         }
