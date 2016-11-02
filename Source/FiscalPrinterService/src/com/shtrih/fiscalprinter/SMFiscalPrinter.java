@@ -23,7 +23,9 @@ import com.shtrih.fiscalprinter.command.ContinuePrint;
 import com.shtrih.fiscalprinter.command.DeviceMetrics;
 import com.shtrih.fiscalprinter.command.EndFiscalReceipt;
 import com.shtrih.fiscalprinter.command.EndTest;
+import com.shtrih.fiscalprinter.command.FSReadCommStatus;
 import com.shtrih.fiscalprinter.command.FSReadDayParameters;
+import com.shtrih.fiscalprinter.command.FSReadFiscalization;
 import com.shtrih.fiscalprinter.command.FSReadStatus;
 import com.shtrih.fiscalprinter.command.FlexCommands;
 import com.shtrih.fiscalprinter.command.IPrinterEvents;
@@ -456,5 +458,9 @@ public interface SMFiscalPrinter {
     public void writeAdminName(String name) throws Exception;
     
     public void disablePrint() throws Exception;
+    
+    public FSReadFiscalization fsReadFiscalization() throws Exception;
+    
+    public FSReadCommStatus fsReadCommStatus() throws Exception;    
 }
 

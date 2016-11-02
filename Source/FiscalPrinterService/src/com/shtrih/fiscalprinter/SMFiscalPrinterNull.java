@@ -15,7 +15,9 @@ import com.shtrih.fiscalprinter.command.ContinuePrint;
 import com.shtrih.fiscalprinter.command.DeviceMetrics;
 import com.shtrih.fiscalprinter.command.EndFiscalReceipt;
 import com.shtrih.fiscalprinter.command.EndTest;
+import com.shtrih.fiscalprinter.command.FSReadCommStatus;
 import com.shtrih.fiscalprinter.command.FSReadDayParameters;
+import com.shtrih.fiscalprinter.command.FSReadFiscalization;
 import com.shtrih.fiscalprinter.command.FSReadStatus;
 import com.shtrih.fiscalprinter.command.FSWriteTLV;
 import com.shtrih.fiscalprinter.command.FlexCommands;
@@ -822,4 +824,11 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
 
     public void disablePrint() throws Exception {
     }
+    public FSReadFiscalization fsReadFiscalization() throws Exception {
+        return null;
+    }
+    
+    public FSReadCommStatus fsReadCommStatus() throws Exception {
+        return null;
+    } 
 }

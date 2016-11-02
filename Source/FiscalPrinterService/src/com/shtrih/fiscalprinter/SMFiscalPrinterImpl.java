@@ -2496,6 +2496,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command;
     }
 
+    public FSReadCommStatus fsReadCommStatus() throws Exception {
+        FSReadCommStatus command = new FSReadCommStatus();
+        command.setSysPassword(sysPassword);
+        execute(command);
+        return command;
+    }    
+        
     public String getErrorText(int code) throws Exception {
         String key = "PrinterError" + Hex.toHex((byte) code);
         if ((capFiscalStorage) && (code < 0x20)) {
