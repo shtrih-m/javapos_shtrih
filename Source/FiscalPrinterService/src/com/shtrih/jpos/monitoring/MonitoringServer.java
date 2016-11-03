@@ -10,13 +10,16 @@ package com.shtrih.jpos.monitoring;
  * @author V.Kravtsov
  */
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import com.shtrih.util.CompositeLogger;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
-import java.io.PrintWriter;
+import com.shtrih.util.CompositeLogger;
 
 public class MonitoringServer implements Runnable {
 
@@ -25,75 +28,71 @@ public class MonitoringServer implements Runnable {
     private final FiscalPrinterImpl service;
     private static CompositeLogger logger = CompositeLogger.getLogger(MonitoringServer.class);
 
-    ServerSocket serverSocket = null;
-    Thread thread = null;
-    
+    private static final int ReadTimeout = 3000;
+    private static final int AcceptTimeout = 3000;
+
     public MonitoringServer(FiscalPrinterImpl service) {
         this.service = service;
     }
 
     public boolean isStarted() {
-        return serverSocket != null;
+        return isStarted;
     }
 
     public void start(int port) {
-        stop();
         try {
             this.port = port;
-            serverSocket = new ServerSocket(port);            
-            thread = new Thread(this);
+            Thread thread = new Thread(this);
             thread.start();
+            isStarted = true;
         } catch (Exception e) {
             logger.error(e);
         }
     }
 
     public void stop() {
-        if (serverSocket == null)
-            return;
         try {
-            serverSocket.close();
-            thread.join();
-            serverSocket = null;
+            isStarted = false;
         } catch (Exception e) {
             logger.error(e);
         }
     }
 
-    class ClientSession implements Runnable {
-
-        public ClientSession(Socket s) {
-            this.socket = s;
-        }
-        @Override
-        public void run() {
-            try {
-                BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(socket.getInputStream()));
-                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                MonitoringCommands.Help(out);
-                while(true) {
-                    String cmd = reader.readLine();
-                    if (cmd == null)
-                        continue;
-                    String answer = MonitoringCommands.runCommand(cmd, service);
-                    out.println(answer);                
-                }
-            } catch (IOException e) {
-            }
-        }
-        
-        Socket socket = null;
-    }
     
-    @Override
     public void run() {
         try {
-            while (true){
-                Socket socket = serverSocket.accept();
-                Thread session = new Thread(new ClientSession(socket));
-                session.start();
+            ServerSocket serverSocket = new ServerSocket(port);
+            while (isStarted) {
+                try {
+                    serverSocket.setSoTimeout(AcceptTimeout);
+                    Socket socket = serverSocket.accept();
+                    InputStream sin = socket.getInputStream();
+                    try {
+                        socket.setSoTimeout(ReadTimeout);
+                        OutputStream sout = socket.getOutputStream();
+                        BufferedReader reader = new BufferedReader(
+                                new InputStreamReader(sin));
+                        BufferedWriter writer = new BufferedWriter(
+                                new OutputStreamWriter(sout));
+                        String command = reader.readLine();
+                        if (command == null)
+                            continue;
+                        String answer = MonitoringCommands.runCommand(command, service);
+                        if (answer.length() > 0) {
+                            writer.write(answer);
+                            writer.newLine();
+                            writer.flush();
+                        }
+                    } catch (IOException e) {
+                    }
+                    socket.shutdownOutput();
+                    while (sin.read() >= 0) {
+                    }
+                    socket.close();
+                } catch (IOException e) {
+                }
             }
+            serverSocket.close();
         } catch (IOException e) {
             logger.error("run, ", e);
         }
