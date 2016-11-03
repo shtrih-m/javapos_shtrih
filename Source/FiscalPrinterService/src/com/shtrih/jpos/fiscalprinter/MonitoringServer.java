@@ -109,6 +109,7 @@ public class MonitoringServer implements Runnable {
             out.println(" CASH_REG regNumber");  
             out.println(" OPER_REG regNumber");  
             out.println("=============================");
+            out.println("");
         }
         
         Socket socket = null;
@@ -194,7 +195,7 @@ public class MonitoringServer implements Runnable {
     private String getFNText() throws Exception {
         FSReadStatus status = service.getPrinter().fsReadStatus();
         FSReadFiscalization param = service.getPrinter().fsReadFiscalization();
-        String text = status.getFsSerial() + ";" + param.getDate() + ";"
+        String text = status.getFsSerial().trim() + "," + param.getDate() + ","
                 + param.getTime();
         return text;
     }
@@ -202,10 +203,11 @@ public class MonitoringServer implements Runnable {
     private String getFNUnixTimeText() throws Exception {
         FSReadFiscalization param = service.getPrinter().fsReadFiscalization();
         Calendar calendar = Calendar.getInstance();
-        calendar.set(param.getDate().getYear(), param.getDate().getMonth(), 
+        calendar.set(param.getDate().getYear() + 2000, param.getDate().getMonth() - 1, 
                 param.getDate().getDay(), param.getTime().getHour(), 
                 param.getTime().getMin(), param.getTime().getSec());
-        String text = String.valueOf(calendar.getTimeInMillis() / 1000);
+        calendar.set(Calendar.MILLISECOND, 0);
+        String text = String.valueOf(calendar.getTimeInMillis() / 1000L);
         return text;
     }
 
@@ -217,7 +219,7 @@ public class MonitoringServer implements Runnable {
 
     private String getDateLastText() throws Exception {
         FSReadCommStatus status = service.getPrinter().fsReadCommStatus();
-        String text = status.getDocumentDate() + ";" + status.getDocumentTime();
+        String text = status.getDocumentDate() + "," + status.getDocumentTime();
         return text;
     }
 
