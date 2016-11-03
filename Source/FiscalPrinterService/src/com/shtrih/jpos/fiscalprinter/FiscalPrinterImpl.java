@@ -156,6 +156,7 @@ import com.shtrih.util.LogWriter;
 import com.shtrih.util.StringUtils;
 import com.shtrih.util.SysUtils;
 import com.shtrih.fiscalprinter.model.XmlModelsWriter;
+import com.shtrih.jpos.monitoring.MonitoringServer;
 
 public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         JposConst, JposEntryConst, FiscalPrinterConst, SmFptrConst,
