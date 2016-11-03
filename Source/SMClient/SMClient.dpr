@@ -107,15 +107,23 @@ begin
   Timeout := 3000;
   IsUnixTime := False;
   Request := ParamStr(3);
-  for i := 4 to ParamCount do
-  begin
-    Param := Trim(ParamStr(i));
-    if AnsiCompareText(Param, 'unixtime') = 0 then
+  if (Request = 'OPER_REG') or (Request = 'CASH_REG') then begin
+    for i := 4 to ParamCount do
     begin
-      IsUnixTime := True;
-    end else
+      Request := Request + ' ' + Trim(ParamStr(i));
+    end;
+  end
+  else begin
+    for i := 4 to ParamCount do
     begin
-      Timeout := StrToInt(Trim(Copy(Param, 3, Length(Param))));
+      Param := Trim(ParamStr(i));
+      if AnsiCompareText(Param, 'unixtime') = 0 then
+      begin
+        IsUnixTime := True;
+      end else
+      begin
+        Timeout := StrToInt(Trim(Copy(Param, 3, Length(Param))));
+      end;
     end;
   end;
 
