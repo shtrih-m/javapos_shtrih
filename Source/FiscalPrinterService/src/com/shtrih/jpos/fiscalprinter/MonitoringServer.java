@@ -177,10 +177,10 @@ public class MonitoringServer implements Runnable {
         LongPrinterStatus status = service.getLongStatus();
         String text = service.getDeviceMetrics().getDeviceName() + ","
                 + status.getSerial() + ",";
-        if (status.getPrinterFlags().isEJPresent())
-            text += service.getEJStatus().getSerialNumber();
-        else
+        if (service.getPrinter().getCapFiscalStorage())
             text += service.getPrinter().fsReadStatus().getFsSerial();
+        else
+            text += service.getEJStatus().getSerialNumber();       
         return text;
     }
 
