@@ -77,6 +77,13 @@ public class CommandInputStream {
         return new PrinterDate(day, month, year);
     }
 
+    public PrinterDate readDateYMD() {
+        int year = readByte();
+        int month = readByte();
+        int day = readByte();
+        return new PrinterDate(day, month, year);
+    }    
+    
     public EJDate readEJDate() {
         int year = readByte();
         int month = readByte();

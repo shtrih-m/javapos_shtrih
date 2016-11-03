@@ -23,9 +23,9 @@ import com.shtrih.util.BitUtils;
  * Дата и время DATE_TIME (5 байт)
  * ИНН ASCII (12 байт)
  * Регистрационный номер ККТ ASCII (20 байт)
- * Номер ФН ASCII (16 байт)
  * Код налогообложения ( 1 байт)
  * Режим работы ( 1 байт)
+ * Причина перерегистрации ( 1 байт)
  * Номер ФД (4 байта)
  * Фискальный признак ( 4 байт)
  *
@@ -55,9 +55,9 @@ public class FSReadFiscalization extends PrinterCommand {
     private PrinterTime time;
     private String taxID;
     private String regID;
-    private String serial;
     private int taxSystemCode;
     private int mode;
+    private int reasonCode;
     private long docNumber;
     private long macNumber;
 
@@ -77,13 +77,13 @@ public class FSReadFiscalization extends PrinterCommand {
     }
 
     public void decode(CommandInputStream in) throws Exception {
-        setDate(in.readDate());
-        setTime(in.readTime());
+        setDate(in.readDateYMD());
+        setTime(in.readTime2());
         setTaxID(in.readString(12));
         setRegID(in.readString(20));
-        setSerial(in.readString(16));
         setTaxSystemCode(in.readByte());
         setMode(in.readByte());
+        setReasonCode(in.readByte());
         setDocNumber(in.readLong(4));
         setMacNumber(in.readLong(4));
     }
@@ -145,20 +145,6 @@ public class FSReadFiscalization extends PrinterCommand {
     }
 
     /**
-     * @return the serial
-     */
-    public String getSerial() {
-        return serial;
-    }
-
-    /**
-     * @param serial the serial to set
-     */
-    public void setSerial(String serial) {
-        this.serial = serial;
-    }
-
-    /**
      * @return the taxSystemCode
      */
     public int getTaxSystemCode() {
@@ -186,6 +172,20 @@ public class FSReadFiscalization extends PrinterCommand {
         this.mode = mode;
     }
 
+    /**
+     * @return the reasonCode
+     */
+    public int getReasonCode() {
+        return reasonCode;
+    }
+
+    /**
+     * @param reasonCode the reasonCode to set
+     */
+    public void setReasonCode(int reasonCode) {
+        this.reasonCode = reasonCode;
+    }
+    
     /**
      * @return the docNumber
      */
