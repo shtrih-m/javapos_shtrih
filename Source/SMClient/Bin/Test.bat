@@ -1,0 +1,4 @@
+@ECHO OFF
+SMClient.exe 127.0.0.1 50000 INFO
+SMClient.exe 127.0.0.1 50000 ECTP
+SMClient.exe 127.0.0.1 50000 ECTP unixtime
