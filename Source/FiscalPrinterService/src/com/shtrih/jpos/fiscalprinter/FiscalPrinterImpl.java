@@ -156,7 +156,7 @@ import com.shtrih.util.LogWriter;
 import com.shtrih.util.StringUtils;
 import com.shtrih.util.SysUtils;
 import com.shtrih.fiscalprinter.model.XmlModelsWriter;
-import com.shtrih.jpos.monitoring.MonitoringServer;
+import com.shtrih.jpos.monitoring.MonitoringServerX5;
 
 public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         JposConst, JposEntryConst, FiscalPrinterConst, SmFptrConst,
@@ -301,7 +301,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private boolean isLicenseValid = false;
     private EJStatus statusEJ = null;
     private EJActivation aEJActivation = new EJActivation();
-    private final MonitoringServer monitoringServer = new MonitoringServer(this);
+    private final MonitoringServerX5 monitoringServer = new MonitoringServerX5(this);
     private int receiptType = 0;
     private boolean isRecPresent = true;
     private boolean inAfterCommand = false;

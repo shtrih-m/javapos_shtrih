@@ -18,17 +18,17 @@ import com.shtrih.util.CompositeLogger;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import java.io.PrintWriter;
 
-public class MonitoringServer2 implements Runnable {
+public class MonitoringServerTelnet implements Runnable {
 
     private int port = 0;
     private boolean isStarted = false;
     private final FiscalPrinterImpl service;
-    private static CompositeLogger logger = CompositeLogger.getLogger(MonitoringServer.class);
+    private static CompositeLogger logger = CompositeLogger.getLogger(MonitoringServerTelnet.class);
 
     ServerSocket serverSocket = null;
     Thread thread = null;
     
-    public MonitoringServer2(FiscalPrinterImpl service) {
+    public MonitoringServerTelnet(FiscalPrinterImpl service) {
         this.service = service;
     }
 

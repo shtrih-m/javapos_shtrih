@@ -21,17 +21,17 @@ import java.net.Socket;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import com.shtrih.util.CompositeLogger;
 
-public class MonitoringServer implements Runnable {
+public class MonitoringServerX5 implements Runnable {
 
     private int port = 0;
     private boolean isStarted = false;
     private final FiscalPrinterImpl service;
-    private static CompositeLogger logger = CompositeLogger.getLogger(MonitoringServer.class);
+    private static CompositeLogger logger = CompositeLogger.getLogger(MonitoringServerX5.class);
 
     private static final int ReadTimeout = 3000;
     private static final int AcceptTimeout = 3000;
 
-    public MonitoringServer(FiscalPrinterImpl service) {
+    public MonitoringServerX5(FiscalPrinterImpl service) {
         this.service = service;
     }
 
