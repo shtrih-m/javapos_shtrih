@@ -123,7 +123,7 @@ public class FptrParameters {
     public boolean checkTotalEnabled = false; 
     public int receiptNumberRequest = SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER; 
     public boolean forbidDiscountsFS = true;
-    
+    public boolean allowDiscountsWorkaroundFS = false;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -282,6 +282,8 @@ public class FptrParameters {
             SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER); 
         
         forbidDiscountsFS = reader.readBoolean("forbidDiscountsFS", true);
+        allowDiscountsWorkaroundFS = reader.readBoolean("allowDiscountsWorkaroundFS", false);
+
         // paymentNames
         String paymentName;
         String propertyName;
