@@ -20,6 +20,14 @@
   
 ********************************************************************************
 
+  November, 7 2016, 17:54
+  deviceServiceVersion = 1013307
+
+  [+] Added new commands to monitoring service  
+  [+] New jpos.xml option "forbidDiscountsFS" - to fully forbid all discount capabilities in driver with FS printers
+  [+] New jpos.xml option "allowDiscountsWorkaroundFS" - allow discount workaround for some clients with FS printers
+  
+********************************************************************************
   October, 20 2016, 15:50
   deviceServiceVersion = 1013306
 	
