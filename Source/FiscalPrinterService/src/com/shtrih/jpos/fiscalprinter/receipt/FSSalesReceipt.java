@@ -377,6 +377,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecItemAdjustment(int adjustmentType, String description,
             long amount, int vatInfo) throws Exception {
+        if(getParams().forbidDiscountsFS){
+            throw new JposException(JposConst.JPOS_E_ILLEGAL,
+                        Localizer.getString(Localizer.methodNotSupported)
+                        + "adjustments forbidden with FS");
+        }
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
                 printDiscount(amount, vatInfo, description);
@@ -405,7 +410,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecSubtotalAdjustment(int adjustmentType,
             String description, long amount) throws Exception {
-
+        if (getParams().forbidDiscountsFS) {
+            throw new JposException(JposConst.JPOS_E_ILLEGAL,
+                    Localizer.getString(Localizer.methodNotSupported)
+                    + "adjustments forbidden with FS");
+        }
         checkAdjustment(adjustmentType, amount);
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
@@ -468,6 +477,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecPackageAdjustment2(int adjustmentType,
             String vatAdjustment, int factor) throws Exception {
+        if (getParams().forbidDiscountsFS) {
+            throw new JposException(JposConst.JPOS_E_ILLEGAL,
+                    Localizer.getString(Localizer.methodNotSupported)
+                    + "adjustments forbidden with FS");
+        }
         PackageAdjustments adjustments = new PackageAdjustments();
         adjustments.parse(vatAdjustment);
         checkAdjustments(adjustmentType, adjustments);
@@ -507,6 +521,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecSubtotalAdjustVoid(int adjustmentType, long amount)
             throws Exception {
+        if (getParams().forbidDiscountsFS) {
+            throw new JposException(JposConst.JPOS_E_ILLEGAL,
+                    Localizer.getString(Localizer.methodNotSupported)
+                    + "adjustments forbidden with FS");
+        }
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
                 printTotalDiscount(amount, 0, "");
@@ -537,6 +556,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecItemAdjustmentVoid(int adjustmentType,
             String description, long amount, int vatInfo) throws Exception {
+        if (getParams().forbidDiscountsFS) {
+            throw new JposException(JposConst.JPOS_E_ILLEGAL,
+                    Localizer.getString(Localizer.methodNotSupported)
+                    + "adjustments forbidden with FS");
+        }
         checkAdjustment(adjustmentType, amount);
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:

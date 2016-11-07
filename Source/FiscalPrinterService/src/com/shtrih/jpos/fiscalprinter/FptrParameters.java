@@ -122,6 +122,7 @@ public class FptrParameters {
     public boolean checkTotal = false; 
     public boolean checkTotalEnabled = false; 
     public int receiptNumberRequest = SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER; 
+    public boolean forbidDiscountsFS = true;
     
 
     public FptrParameters() throws Exception {
@@ -280,6 +281,7 @@ public class FptrParameters {
         receiptNumberRequest = reader.readInteger("receiptNumberRequest", 
             SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER); 
         
+        forbidDiscountsFS = reader.readBoolean("forbidDiscountsFS", true);
         // paymentNames
         String paymentName;
         String propertyName;
