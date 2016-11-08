@@ -168,7 +168,8 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printBarcodes() {
-        printQRCode();
+        //printQRCode();
+        printCode128();
         //printAllBarcodes();
     }
 
@@ -189,6 +190,23 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    public void printCode128() {
+        try {
+            PrinterBarcode barcode = new PrinterBarcode();
+            barcode.setTextFont(1);
+            barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_NOTPRINTED);
+            barcode.setBarWidth(2);
+            barcode.setHeight(100);
+            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
+            barcode.setLabel("CODE128: 0010004211016101000026");
+            barcode.setText("0010004211016101000026");
+            barcode.setType(SmFptrConst.SMFPTR_BARCODE_CODE128);
+            printer.printBarcode(barcode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void printAllBarcodes() {
         try {
             PrinterBarcode barcode = new PrinterBarcode();

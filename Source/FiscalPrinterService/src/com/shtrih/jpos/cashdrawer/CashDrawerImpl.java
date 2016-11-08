@@ -297,7 +297,7 @@ public class CashDrawerImpl extends DeviceService implements
     }
 
     public int getDeviceServiceVersion() throws JposException {
-        int deviceServiceVersion = deviceVersion113 + 310;
+        int deviceServiceVersion = deviceVersion113 + 311;
         logger.debug("getDeviceServiceVersion: "
                 + String.valueOf(deviceServiceVersion));
         return deviceServiceVersion;
