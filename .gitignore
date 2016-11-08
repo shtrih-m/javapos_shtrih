@@ -1,0 +1,3 @@
+*.class
+/Source/FiscalPrinterService/build
+/Source/FiscalPrinterTest/build
