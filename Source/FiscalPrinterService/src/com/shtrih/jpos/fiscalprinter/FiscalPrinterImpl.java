@@ -588,18 +588,16 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 getPrinter().waitForPrinting();
             }
 
-            /*
-             if (isInReceiptTrailer) {
-             printDocEnd();
-             isInReceiptTrailer = false;
-             isRecPresent = true;
-             }
+            if (isInReceiptTrailer) {
+                printDocEnd();
+                isInReceiptTrailer = false;
+                isRecPresent = true;
+            }
 
-             if (!isRecPresent) {
-             printDocEnd();
-             isRecPresent = true;
-             }
-             */
+            if (!isRecPresent) {
+                printDocEnd();
+                isRecPresent = true;
+            }
         }
     }
 

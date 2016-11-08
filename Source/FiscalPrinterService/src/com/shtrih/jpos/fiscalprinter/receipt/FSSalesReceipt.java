@@ -702,7 +702,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         recItems.add(lastItem);
         addTotal(amount * factor);
         clearPrePostLine();
-
+        
         if ((amount - price) > 0) {
             printDiscount(amount - price, 0, "");
         }
