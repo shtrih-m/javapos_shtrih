@@ -365,21 +365,38 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     private void initializeData() {
         state = JPOS_S_CLOSED;
-        capPositiveSubtotalAdjustment = true;
+        if (printer != null && printer.getCapFiscalStorage() && !params.FSDiscountEnabled) {
+            
+            capPositiveSubtotalAdjustment = false;
+            capAmountAdjustment = false;
+            capOrderAdjustmentFirst = false;
+            capPercentAdjustment = false;
+            capPositiveAdjustment = false;
+            capSubAmountAdjustment = false;
+            capSubPercentAdjustment = false;
+            capPackageAdjustment = false;
+        } else {
+            capPositiveSubtotalAdjustment = true;
+            capAmountAdjustment = true;
+            capOrderAdjustmentFirst = false;
+            capPercentAdjustment = true;
+            capPositiveAdjustment = true;
+            capSubAmountAdjustment = true;
+            capSubPercentAdjustment = true;
+            capPackageAdjustment = true;
+        }
         deviceServiceDescription = "Fiscal Printer Service , SHTRIH-M, 2016";
         physicalDeviceDescription = "SHTRIH-M fiscal printer";
         physicalDeviceName = "SHTRIH-M fiscal printer";
         capAdditionalLines = true;
-        capAmountAdjustment = true;
+        
         capAmountNotPaid = false;
         capCheckTotal = true;
         capFixedOutput = false;
         capIndependentHeader = true;
         capItemList = false;
         capNonFiscalMode = true;
-        capOrderAdjustmentFirst = false;
-        capPercentAdjustment = true;
-        capPositiveAdjustment = true;
+
         capPowerLossReport = false;
         capPredefinedPaymentLines = true;
         capReceiptNotPaid = false;
@@ -393,8 +410,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         capSlpFiscalDocument = false;
         capSlpFullSlip = false;
         capSlpValidation = false;
-        capSubAmountAdjustment = true;
-        capSubPercentAdjustment = true;
+
         capSubtotal = true;
         capTrainingMode = false;
         capValidateJournal = false;
@@ -408,7 +424,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         capFiscalReceiptType = true;
         capMultiContractor = false;
         capOnlyVoidLastItem = false;
-        capPackageAdjustment = true;
+        
         capPostPreLine = true;
         capSetCurrency = false;
         capTotalizerType = true;
@@ -451,7 +467,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         totalizerType = FPTR_TT_DAY;
         capUpdateStatistics = true;
         capStatisticsReporting = true;
-        deviceServiceVersion = deviceVersion113 + 311;
+        deviceServiceVersion = deviceVersion113 + 312;
         freezeEvents = true;
     }
 

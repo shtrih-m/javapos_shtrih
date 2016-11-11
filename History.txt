@@ -6,6 +6,14 @@
 
 ********************************************************************************
 
+  November, 10 2016, 16:30
+  deviceServiceVersion = 1013312
+	
+  [-] Property forbidDiscountsFS renamed to FSDiscountEnabled and inverted
+  [-] Property allowDiscountsWorkaroundFS renamed to FSReceiptItemDiscountEnabled 
+  
+********************************************************************************
+
   November, 8 2016, 19:40
   deviceServiceVersion = 1013311
 	
@@ -20,6 +28,14 @@
   
 ********************************************************************************
 
+  November, 7 2016, 17:54
+  deviceServiceVersion = 1013307
+
+  [+] Added new commands to monitoring service  
+  [+] New jpos.xml option "forbidDiscountsFS" - to fully forbid all discount capabilities in driver with FS printers
+  [+] New jpos.xml option "allowDiscountsWorkaroundFS" - allow discount workaround for some clients with FS printers
+  
+********************************************************************************
   October, 20 2016, 15:50
   deviceServiceVersion = 1013306
 	
