@@ -375,7 +375,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         return MathUtils.round(d / 10000);
     }
 
-    public void checkDiscountsDisabled()  throws Exception{
+    public void checkDiscountsEnabled()  throws Exception{
             if(!getParams().FSDiscountEnabled){
             throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.methodNotSupported)
@@ -385,7 +385,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printRecItemAdjustment(int adjustmentType, String description,
             long amount, int vatInfo) throws Exception {
 
-        checkDiscountsDisabled();
+        checkDiscountsEnabled();
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
                 printDiscount(amount, vatInfo, description);
@@ -414,7 +414,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecSubtotalAdjustment(int adjustmentType,
             String description, long amount) throws Exception {
-        checkDiscountsDisabled();
+        checkDiscountsEnabled();
         checkAdjustment(adjustmentType, amount);
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
@@ -477,7 +477,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecPackageAdjustment2(int adjustmentType,
             String vatAdjustment, int factor) throws Exception {
-        checkDiscountsDisabled();
+        checkDiscountsEnabled();
         PackageAdjustments adjustments = new PackageAdjustments();
         adjustments.parse(vatAdjustment);
         checkAdjustments(adjustmentType, adjustments);
@@ -517,7 +517,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecSubtotalAdjustVoid(int adjustmentType, long amount)
             throws Exception {
-        checkDiscountsDisabled();
+        checkDiscountsEnabled();
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
                 printTotalDiscount(amount, 0, "");
@@ -548,7 +548,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecItemAdjustmentVoid(int adjustmentType,
             String description, long amount, int vatInfo) throws Exception {
-        checkDiscountsDisabled();
+        checkDiscountsEnabled();
         checkAdjustment(adjustmentType, amount);
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
