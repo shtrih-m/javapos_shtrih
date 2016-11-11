@@ -6,6 +6,14 @@
 
 ********************************************************************************
 
+  November, 10 2016, 16:30
+  deviceServiceVersion = 1013312
+	
+  [-] Property forbidDiscountsFS renamed to FSDiscountEnabled and inverted
+  [-] Property allowDiscountsWorkaroundFS renamed to FSReceiptItemDiscountEnabled 
+  
+********************************************************************************
+
   November, 8 2016, 19:40
   deviceServiceVersion = 1013311
 	
