@@ -365,7 +365,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     private void initializeData() {
         state = JPOS_S_CLOSED;
-        if (printer != null && printer.getCapFiscalStorage() && params.forbidDiscountsFS) {
+        if (printer != null && printer.getCapFiscalStorage() && !params.FSDiscountEnabled) {
             
             capPositiveSubtotalAdjustment = false;
             capAmountAdjustment = false;
@@ -467,7 +467,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         totalizerType = FPTR_TT_DAY;
         capUpdateStatistics = true;
         capStatisticsReporting = true;
-        deviceServiceVersion = deviceVersion113 + 311;
+        deviceServiceVersion = deviceVersion113 + 312;
         freezeEvents = true;
     }
 

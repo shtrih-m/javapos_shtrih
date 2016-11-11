@@ -122,8 +122,8 @@ public class FptrParameters {
     public boolean checkTotal = false; 
     public boolean checkTotalEnabled = false; 
     public int receiptNumberRequest = SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER; 
-    public boolean forbidDiscountsFS = true;
-    public boolean allowDiscountsWorkaroundFS = false;
+    public boolean FSDiscountEnabled = true;
+    public boolean FSReceiptItemDiscountEnabled = false;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -281,8 +281,8 @@ public class FptrParameters {
         receiptNumberRequest = reader.readInteger("receiptNumberRequest", 
             SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER); 
         
-        forbidDiscountsFS = reader.readBoolean("forbidDiscountsFS", true);
-        allowDiscountsWorkaroundFS = reader.readBoolean("allowDiscountsWorkaroundFS", false);
+        FSDiscountEnabled = reader.readBoolean("FSDiscountEnabled", false);
+        FSReceiptItemDiscountEnabled = reader.readBoolean("FSReceiptItemDiscountEnabled", false);
 
         // paymentNames
         String paymentName;
