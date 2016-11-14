@@ -5,6 +5,7 @@
  */
 package com.shtrih.jpos.fiscalprinter.receipt;
 
+import com.shtrih.util.StringUtils;
 import java.util.Vector;
 
 /**
@@ -33,7 +34,13 @@ public class FSDiscounts {
     public int size() {
         return items.size();
     }
-
+    public String getDiscountStrings(){
+        String result="";
+        for (int i = 0; i < size(); i++) {
+            result += get(i).getText()+((i+1)<size()?"\n":"");
+        }
+        return result;
+    }
     public long getTotal() {
         long total = 0;
         for (int i = 0; i < size(); i++) {
