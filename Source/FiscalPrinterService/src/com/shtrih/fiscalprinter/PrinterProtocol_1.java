@@ -50,6 +50,29 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         this.port = port;
     }
 
+    private void portWrite(int b) throws Exception{
+        byte[] data = new byte[1];
+        data[0] = (byte)b;
+        portWrite(data);
+    }
+    
+    private void portWrite(byte[] data) throws Exception{
+        Logger2.logTx(logger, data);
+        port.write(data);
+    }
+    
+    int portReadByte() throws Exception{
+        int b = port.readByte();
+        Logger2.logRx(logger, (byte)b);
+        return b;
+    }
+
+    byte[] portReadBytes(int len) throws Exception{
+        byte[] data = port.readBytes(len);
+        Logger2.logRx(logger, data);
+        return data;
+    }
+    
     public PrinterPort getPrinterPort() {
         return port;
     }
@@ -77,7 +100,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
     private int readControlByte() throws Exception {
         int result = 0;
         while (true) {
-            result = port.readByte();
+            result = portReadByte();
             if (result != 0xFF) {
                 break;
             }
@@ -90,23 +113,23 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         for (;;) {
             port.setTimeout(timeout + byteTimeout);
             // STX
-            while (port.readByte() != STX) {
+            while (portReadByte() != STX) {
             }
             // set byte timeout
             port.setTimeout(byteTimeout);
             // data length
-            int dataLength = port.readByte() + 1;
+            int dataLength = portReadByte() + 1;
             // command data
-            byte[] commandData = port.readBytes(dataLength);
+            byte[] commandData = portReadBytes(dataLength);
             // check CRC
             byte crc = commandData[commandData.length - 1];
             commandData = copyOf(commandData, commandData.length - 1);
             if (frame.getCrc(commandData) == crc) {
-                port.write(ACK);
+                portWrite(ACK);
                 return commandData;
             } else {
-                port.write(NAK);
-                port.write(ENQ);
+                portWrite(NAK);
+                portWrite(ENQ);
                 int B = readControlByte();
                 switch (B) {
                     case ACK:
@@ -126,7 +149,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
     private void writeCommand(byte[] data) throws Exception {
         byte nakCommandNumber = 0;
         while (true) {
-            port.write(data);
+            portWrite(data);
             switch (readControlByte()) {
                 case ACK:
                     return;
@@ -151,7 +174,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
 
         for (;;) {
             port.setTimeout(byteTimeout);
-            port.write(ENQ);
+            portWrite(ENQ);
             enqNumber++;
 
             int B = readControlByte();
@@ -199,7 +222,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         for (;;) {
             try {
                 port.setTimeout(byteTimeout);
-                port.write(ENQ);
+                portWrite(ENQ);
 
                 int B = readControlByte();
                 switch (B) {

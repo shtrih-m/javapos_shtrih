@@ -21,7 +21,6 @@ import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
-import com.shtrih.util.Logger2;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.CompositeLogger;
 
@@ -122,7 +121,6 @@ public class SerialPrinterPort implements PrinterPort {
     }
 
     public void write(byte[] b) throws Exception {
-        Logger2.logTx(logger, b);
         OutputStream stream = getPort().getOutputStream();
         stream.write(b);
         stream.flush();
@@ -139,13 +137,11 @@ public class SerialPrinterPort implements PrinterPort {
         for (int i = 0; i < len; i++) {
             data[i] = (byte) doReadByte();
         }
-        Logger2.logRx(logger, data);
         return data;
     }
 
     public int readByte() throws Exception {
         int b = doReadByte();
-        Logger2.logRx(logger, (byte) b);
         return b;
     }
 

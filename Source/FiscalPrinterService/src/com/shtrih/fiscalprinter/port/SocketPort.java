@@ -15,7 +15,6 @@ import java.util.StringTokenizer;
 import com.shtrih.util.CompositeLogger;
 
 import com.shtrih.util.Localizer;
-import com.shtrih.util.Logger2;
 import gnu.io.SerialPort;
 
 /**
@@ -86,7 +85,6 @@ public class SocketPort implements PrinterPort {
         open();
         
         int b = doReadByte();
-        Logger2.logRx(logger, (byte) b);
         return b;
     }
 
@@ -127,7 +125,6 @@ public class SocketPort implements PrinterPort {
             len -= count;
             offset += count;
         }
-        Logger2.logRx(logger, data);
         return data;
     }
 
@@ -138,7 +135,6 @@ public class SocketPort implements PrinterPort {
     }
 
     public void write(byte[] b) throws Exception {
-        Logger2.logTx(logger, b);
         
         open();
         

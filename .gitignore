@@ -1,3 +1,6 @@
 *.class
 /Source/FiscalPrinterService/build
 /Source/FiscalPrinterTest/build
+/Source/FiscalPrinterService/dist/
+/Source/FiscalPrinterService/nbproject/private/
+/Source/FiscalPrinterTest/dist/
