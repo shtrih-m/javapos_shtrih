@@ -281,7 +281,7 @@ public class FptrParameters {
         receiptNumberRequest = reader.readInteger("receiptNumberRequest", 
             SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER); 
         
-        FSDiscountEnabled = reader.readBoolean("FSDiscountEnabled", false);
+        FSDiscountEnabled = reader.readBoolean("FSDiscountEnabled", true);
         FSReceiptItemDiscountEnabled = reader.readBoolean("FSReceiptItemDiscountEnabled", false);
 
         // paymentNames
