@@ -619,8 +619,8 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printFiscalReceipt() {
-        printFiscalReceipt1002();
-        
+        printFiscalReceipt1();
+        //printFiscalReceipt1002();
         //printFiscalReceipt101();
         //printFiscalReceipt102();
         //printFiscalReceipt111();
@@ -701,32 +701,20 @@ class PrinterTest implements FiscalPrinterConst {
             
             printer.setFiscalReceiptType(FPTR_RT_SALES);
             printer.beginFiscalReceipt(true);
-            
-            
-            printer.printText("Slip document, line 1\r\nSlip document, line 2\r\nSlip document, line 3");
-            printer.printText("Slip document, line 4");
-            printer.printDocEnd();
-            
-            
-            
             printer.printRecItem("Тестовый товар", 100, 1000, 0, 100, "");
             printer.printRecItem("Батарейка Alkaline Stam", 20, 0, 1, 20, "");
+            
+            
+            String text = "Slip document, line 1\r\nSlip document, line 2\r\nSlip document, line 3";
+            printer.printNonFiscalDoc(text);
+            
             printer.printRecItemVoid("Батарейка Alkaline Stam", 20, 0, 1, 20, "");
             printer.printRecItem("Тестовый товар", 100, 1000, 0, 100, "");
             printer.printRecSubtotal(200);
-            printer.printRecSubtotalAdjustment(FPTR_AT_AMOUNT_SURCHARGE, "", 100);
-            printer.printRecSubtotal(300);
-            printer.printRecSubtotalAdjustment(FPTR_AT_PERCENTAGE_SURCHARGE, 
-                    "Процентная надбавка 10%", 1000);
-            printer.printRecSubtotal(330);
             printer.printRecSubtotalAdjustment(FPTR_AT_AMOUNT_DISCOUNT, "", 150);
             printer.printRecSubtotalAdjustment(FPTR_AT_AMOUNT_DISCOUNT, "", 25);
-            printer.printRecSubtotalAdjustment(FPTR_AT_AMOUNT_DISCOUNT, "", 25);
-            printer.printRecTotal(0, 0, "10");
-            printer.printRecTotal(130, 10, "10");
-            printer.printRecTotal(130, 10, "20");
-            printer.printRecTotal(130, 10, "30");
-            printer.printRecTotal(130, 200, "0");
+            printer.printRecTotal(25, 10, "0");
+            printer.printRecTotal(25, 100, "10");
             printer.endFiscalReceipt(true);
         } catch (Exception e) {
             e.printStackTrace();

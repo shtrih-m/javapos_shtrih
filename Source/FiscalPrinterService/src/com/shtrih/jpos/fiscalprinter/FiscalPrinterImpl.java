@@ -366,7 +366,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private void initializeData() {
         state = JPOS_S_CLOSED;
         if (printer != null && printer.getCapFiscalStorage() && !params.FSDiscountEnabled) {
-            
+
             capPositiveSubtotalAdjustment = false;
             capAmountAdjustment = false;
             capOrderAdjustmentFirst = false;
@@ -389,7 +389,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         physicalDeviceDescription = "SHTRIH-M fiscal printer";
         physicalDeviceName = "SHTRIH-M fiscal printer";
         capAdditionalLines = true;
-        
+
         capAmountNotPaid = false;
         capCheckTotal = true;
         capFixedOutput = false;
@@ -424,7 +424,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         capFiscalReceiptType = true;
         capMultiContractor = false;
         capOnlyVoidLastItem = false;
-        
+
         capPostPreLine = true;
         capSetCurrency = false;
         capTotalizerType = true;
@@ -467,7 +467,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         totalizerType = FPTR_TT_DAY;
         capUpdateStatistics = true;
         capStatisticsReporting = true;
-        deviceServiceVersion = deviceVersion113 + 314;
+        deviceServiceVersion = deviceVersion113 + 316;
         freezeEvents = true;
     }
 
@@ -2365,13 +2365,23 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printNonFiscalDoc(String text) throws Exception {
+        getPrinter().stopSaveCommands();
+
+        boolean isReceiptOpened = false;
         PrinterStatus status = getPrinter().waitForPrinting();
-        if (status.getPrinterMode().isReceiptOpened()) {
+        isReceiptOpened = status.getPrinterMode().isReceiptOpened();
+        if (isReceiptOpened) {
             getPrinter().sysAdminCancelReceipt();
         }
         getPrinter().waitForPrinting();
         getPrinter().printText(text);
         printDocEnd();
+
+        // open receipt again
+        if (isReceiptOpened) {
+            getPrinter().check(getPrinter().printReceiptCommands());
+            getPrinter().clearReceiptCommands();
+        }
     }
 
     private void printReportEnd() throws Exception {
@@ -3048,6 +3058,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
         setPrinterState(FPTR_PS_FISCAL_RECEIPT);
         printItems.clear();
+        getPrinter().startSaveCommands();
         receipt.beginFiscalReceipt(printHeader);
     }
 
@@ -3069,6 +3080,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             checkPrinterState(FPTR_PS_FISCAL_RECEIPT_ENDING);
 
             receipt.endFiscalReceipt(printHeader);
+            getPrinter().stopSaveCommands();
+            
             if (!receipt.getDisablePrint()) {
                 // Print may not respond for some time
                 sleep(getParams().recCloseSleepTime);

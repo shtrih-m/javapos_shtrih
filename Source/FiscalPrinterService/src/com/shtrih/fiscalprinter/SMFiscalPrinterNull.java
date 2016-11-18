@@ -19,6 +19,7 @@ import com.shtrih.fiscalprinter.command.FSReadCommStatus;
 import com.shtrih.fiscalprinter.command.FSReadDayParameters;
 import com.shtrih.fiscalprinter.command.FSReadFiscalization;
 import com.shtrih.fiscalprinter.command.FSReadStatus;
+import com.shtrih.fiscalprinter.command.FSReceiptDiscount;
 import com.shtrih.fiscalprinter.command.FSWriteTLV;
 import com.shtrih.fiscalprinter.command.FlexCommands;
 import com.shtrih.fiscalprinter.command.IPrinterEvents;
@@ -796,11 +797,11 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
-    public FSReadStatus fsReadStatus() throws Exception{
+    public FSReadStatus fsReadStatus() throws Exception {
         return null;
     }
-    
-    public FSReadDayParameters fsReadDayParameters() throws Exception{
+
+    public FSReadDayParameters fsReadDayParameters() throws Exception {
         return null;
     }
 
@@ -824,11 +825,42 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
 
     public void disablePrint() throws Exception {
     }
+
     public FSReadFiscalization fsReadFiscalization() throws Exception {
         return null;
     }
-    
+
     public FSReadCommStatus fsReadCommStatus() throws Exception {
         return null;
-    } 
+    }
+
+    public void startSaveCommands() {
+    }
+
+    public void stopSaveCommands() {
+    }
+
+    public void clearReceiptCommands() {
+    }
+
+    public int printReceiptCommands() throws Exception {
+        return 0;
+    }
+    
+    public int fsReceiptDiscount(FSReceiptDiscount command) throws Exception{
+        return 0;
+    }
+
+    public String getDepartmentName(int number) throws Exception{
+        return "";
+    }
+    
+    public String getTaxName(int number) throws Exception{
+        return "";
+    }
+    
+    public int getTaxRate(int number) throws Exception{
+        return 0;
+    }
+
 }

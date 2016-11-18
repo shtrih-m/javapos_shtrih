@@ -658,6 +658,13 @@ public interface PrinterConst {
     // ясллю ярнпмн мюдаюбйх
     public static final int SMFPTR_RECITEM_CHRVOID_AMOUNT    = 16; 
     
+    // ////////////////////////////////////////////////////////////////////////
+    // Discount mode constants
+    // ////////////////////////////////////////////////////////////////////////
+
+    public static final int SMFP_DM_CHANGE_SUBTOTAL                 = 0;
+    public static final int SMFP_DM_NOT_CHANGE_SUBTOTAL             = 1;
+    public static final int SMFP_DM_NOT_CHANGE_SUBTOTAL_SMALLDSC    = 2;
             
     
     

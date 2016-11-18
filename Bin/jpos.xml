@@ -261,9 +261,11 @@
 		<prop name="receiptNumberRequest" type="String" value="2"/>
 		
 		<!-- Enable discount calculation in Fiscal Storage printRecItemMethod 1 - enabled, 0 - disabled -->
-		<prop name="FSReceiptItemDiscountEnabled" type="String" value="0"/>
+		<prop name="FSReceiptItemDiscountEnabled" type="String" value="1"/>
 		<!-- Enable discounts for Fiscal Storage printers 1 - enabled, 0 - disabled -->
-		<prop name="FSDiscountEnabled" type="String" value="0"/>
+		<prop name="FSDiscountEnabled" type="String" value="1"/>
+		<!-- Combine item adjustments (enabled by default) -->
+		<prop name="FSCombineItemAdjustments" type="String" value="0"/>
 		
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">

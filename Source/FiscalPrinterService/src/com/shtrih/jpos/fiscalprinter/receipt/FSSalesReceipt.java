@@ -23,6 +23,7 @@ import com.shtrih.fiscalprinter.command.CloseRecParams;
 import com.shtrih.fiscalprinter.command.PriceItem;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.fiscalprinter.command.PrinterStatus;
+import com.shtrih.fiscalprinter.command.FSReceiptDiscount;
 import com.shtrih.fiscalprinter.receipt.PrinterAmount;
 import com.shtrih.fiscalprinter.receipt.ReceiptItems;
 import com.shtrih.fiscalprinter.receipt.SaleReceiptItem;
@@ -34,6 +35,7 @@ import com.shtrih.util.Localizer;
 import com.shtrih.util.MethodParameter;
 import com.shtrih.util.StringUtils;
 import com.shtrih.util.SysUtils;
+import java.util.Locale;
 import static jpos.FiscalPrinterConst.FPTR_PS_MONITOR;
 import static jpos.FiscalPrinterConst.JPOS_EFPTR_BAD_ITEM_AMOUNT;
 import static jpos.FiscalPrinterConst.JPOS_EFPTR_NEGATIVE_TOTAL;
@@ -41,16 +43,12 @@ import static jpos.JposConst.JPOS_E_EXTENDED;
 
 public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
-    private FSSaleReceiptItem lastItem = null;
-    private long total = 0;
+    private PriceItem lastItem = null;
     private int receiptType = 0;
     private boolean isOpened = false;
     private boolean disablePrint = false;
     private String voidDescription = "";
-    private final Vector items = new Vector();
-    private final Vector recItems = new Vector();
     private final long[] payments = new long[5]; // payment amounts
-    private final FSDiscounts discounts = new FSDiscounts();
 
     private static CompositeLogger logger = CompositeLogger.getLogger(FSSalesReceipt.class);
 
@@ -65,11 +63,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecMessage(int station, FontNumber font, String message)
             throws Exception {
-        addTextItem(message);
+        printPreLine();
+        getDevice().printText(station, message, font);
+        printPostLine();
     }
 
     public void printNormal(int station, String data) throws Exception {
-        addTextItem(data);
+        printRecMessage(station, FontNumber.getNormalFont(), data);
     }
 
     public SMFiscalPrinter getDevice() throws Exception {
@@ -81,12 +81,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void clearReceipt() throws Exception {
-        total = 0;
         isOpened = false;
         lastItem = null;
-        items.clear();
-        recItems.clear();
-        discounts.clear();
         for (int i = 0; i < 5; i++) {
             payments[i] = 0;
         }
@@ -113,82 +109,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         openReceipt(PrinterConst.SMFP_RECTYPE_SALE);
         printSale(price, quantity, unitPrice, getParams().department, vatInfo,
                 description);
-    }
-
-    // pack discounts
-    public void addItemsDiscounts() throws Exception {
-        String discountText = "";
-        if (discounts.size() == 1) {
-            discountText = discounts.get(0).getText();
-        }
-        long discountTotal = discounts.getTotal();
-        if (discountTotal < 0) {
-            FSSaleReceiptItem saleItem = getLastItem();
-
-            FSDiscount discount = new FSDiscount();
-            discount.setAmount(discountTotal);
-            discount.setText("");
-            discount.setTax1(0);
-            discount.setTax2(0);
-            discount.setTax3(0);
-            discount.setTax4(0);
-            saleItem.addDiscount(discount);
-            return;
-        }
-
-        long itemsTotal = getSubtotal() + discounts.getTotal();
-        if (itemsTotal <= 0) {
-            return;
-        }
-
-        for (int i = 0; i < recItems.size(); i++) {
-            Object recItem = recItems.get(i);
-            if (recItem instanceof FSSaleReceiptItem) {
-                FSSaleReceiptItem item = (FSSaleReceiptItem) recItem;
-                if (item.getTotal() > 0) {
-                    long itemAmount = item.getTotalWithVoids();
-                    if (itemAmount > 0) {
-                        long discountAmount = itemAmount;
-                        if (discountAmount > discountTotal) {
-                            discountAmount = discountTotal;
-                        }
-
-                        if (discountAmount > 0) {
-                            FSDiscount discount = new FSDiscount();
-                            discount.setAmount(discountAmount);
-                            discount.setText(discountText);
-                            discount.setTax1(0);
-                            discount.setTax2(0);
-                            discount.setTax3(0);
-                            discount.setTax4(0);
-                            item.addDiscount(discount);
-
-                            discountTotal -= discountAmount;
-                            if (discountTotal == 0) {
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public void printReceiptItems() throws Exception {
-        for (int i = 0; i < items.size(); i++) {
-            Object item = items.get(i);
-            if (item instanceof FSSaleReceiptItem) {
-                printFSSale((FSSaleReceiptItem) item);
-            }
-            if (item instanceof FSTextReceiptItem) {
-                printFSText((FSTextReceiptItem) item);
-            }
-            if (item instanceof FSTLVItem) {
-                FSTLVItem tlvItem = (FSTLVItem) item;
-                SMFiscalPrinter printer = getPrinter().getPrinter();
-                printer.fsWriteTLV(tlvItem.getData());
-            }
-        }
     }
 
     public void correctPayments() throws Exception {
@@ -219,23 +139,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 getFiscalDay().cancelFiscalRec();
                 clearReceipt();
             } else {
-                PrinterStatus status = getDevice().waitForPrinting();
-                if (status.getPrinterMode().isReceiptOpened()) {
-                    getDevice().cancelReceipt();
-                }
-                getPrinter().waitForPrinting();
-                getPrinter().openReceipt(receiptType);
-                getPrinter().waitForPrinting();
-
-                addItemsDiscounts();
-                printReceiptItems();
-
                 correctPayments();
-                
-                if (disablePrint) {
-                    getDevice().disablePrint();
-                }
-                
                 CloseRecParams closeParams = new CloseRecParams();
                 closeParams.setSum1(payments[0]);
                 closeParams.setSum2(payments[1]);
@@ -253,79 +157,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void printFSText(FSTextReceiptItem item) throws Exception {
-        if (!item.preLine.isEmpty()) {
-            getDevice().printText(item.preLine);
-        }
-
-        if (!item.text.isEmpty()) {
-            getDevice().printText(item.text);
-        }
-
-        if (!item.postLine.isEmpty()) {
-            getDevice().printText(item.postLine);
-        }
-    }
-
-    public void printFSDiscount(FSDiscount discount)
-            throws Exception {
-        AmountItem item = new AmountItem();
-        item.setAmount(Math.abs(discount.getAmount()));
-        item.setText(discount.getText());
-        item.setTax1(discount.getTax1());
-        item.setTax2(discount.getTax2());
-        item.setTax3(discount.getTax3());
-        item.setTax4(discount.getTax4());
-        if (discount.getAmount() > 0) {
-            getDevice().printDiscount(item);
-        } else {
-            getDevice().printCharge(item);
-        }
-    }
-
-    public void printFSSale(FSSaleReceiptItem item) throws Exception {
-        String preLine = item.getPreLine();
-        if (preLine.length() > 0) {
-            getDevice().printText(preLine);
-        }
-
-        long quantity = item.getItem().getQuantity();
-        item.getItem().setQuantity(Math.abs(quantity));
-        if (quantity > 0) {
-            if (isSaleReceipt()) {
-                getDevice().printSale(item.getItem());
-            } else {
-                getDevice().printVoidSale(item.getItem());
-            }
-        } else {
-            getDevice().printVoidItem(item.getItem());
-        }
-
-        String postLine = item.getPostLine();
-        if (postLine.length() > 0) {
-            getDevice().printText(postLine);
-        }
-        // Print discounts
-        FSDiscounts discounts = item.getDiscounts();
-        for (int i = 0; i < discounts.size(); i++) {
-            FSDiscount discount = (FSDiscount) discounts.get(i);
-            printFSDiscount(discount);
-        }
-    }
-
     public void printRecRefund(String description, long amount, int vatInfo)
             throws Exception {
         openReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
         printSale(amount, 1000, amount, getParams().department, vatInfo,
                 description);
-    }
-
-    public void addTextItem(String text) throws Exception {
-        FSTextReceiptItem item = new FSTextReceiptItem();
-        item.text = text;
-        item.preLine = getPreLine();
-        item.postLine = getPostLine();
-        items.add(item);
     }
 
     public void printRecTotal(long total, long payment, long payType,
@@ -366,22 +202,23 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecSubtotal(long amount) throws Exception {
         checkTotal(getSubtotal(), amount);
-        addTextItem(formatStrings(getParams().subtotalText,
+        getDevice().printText(formatStrings(getParams().subtotalText,
                 "=" + StringUtils.amountToString(getSubtotal())));
     }
 
     public long getItemPercentAdjustmentAmount(long amount) throws Exception {
-        double d = getLastItem().getItem().getAmount() * amount;
+        double d = getLastItem().getAmount() * amount;
         return MathUtils.round(d / 10000);
     }
 
-    public void checkDiscountsEnabled()  throws Exception{
-            if(!getParams().FSDiscountEnabled){
+    public void checkDiscountsEnabled() throws Exception {
+        if (!getParams().FSDiscountEnabled) {
             throw new JposException(JposConst.JPOS_E_ILLEGAL,
-                        Localizer.getString(Localizer.methodNotSupported)
-                        + "adjustments forbidden with FS");
-            }
+                    Localizer.getString(Localizer.methodNotSupported)
+                    + "adjustments forbidden with FS");
+        }
     }
+
     public void printRecItemAdjustment(int adjustmentType, String description,
             long amount, int vatInfo) throws Exception {
 
@@ -628,11 +465,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         return result;
     }
 
-    public void addTotal(long amount) throws Exception {
-        total += amount;
-        logger.debug("Add amount: " + amount + ", total: " + total);
-    }
-
     public long correctQuantity(long price, long quantity, long unitPrice) {
         for (;;) {
             double d = unitPrice * quantity;
@@ -676,44 +508,38 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 + ", quantity: " + quantity
                 + ", unitPrice: " + unitPrice);
 
-        long factor = 1;
-        if (quantity < 0) {
-            factor = -1;
-        }
+        printPreLine();
+
         double d = unitPrice * Math.abs(quantity);
         long amount = MathUtils.round((d / 1000));
 
-        if (quantity < 0) {
-            for (int i = 0; i < recItems.size(); i++) {
-                Object recItem = recItems.get(i);
-                if (recItem instanceof FSSaleReceiptItem) {
-                    FSSaleReceiptItem item = (FSSaleReceiptItem) recItem;
-                    if (item.getTotal() > 0) {
-                        if (item.getItem().getTax1() == vatInfo) {
-                            if (item.getTotalWithVoids() >= price) {
-                                item.addVoidAmount(price);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         PriceItem item = new PriceItem();
         item.setPrice(unitPrice);
-        item.setQuantity(quantity);
+        item.setQuantity(Math.abs(quantity));
         item.setDepartment(department);
         item.setTax1(vatInfo);
         item.setTax2(0);
         item.setTax3(0);
         item.setTax4(0);
         item.setText(description);
-        lastItem = new FSSaleReceiptItem(item, getPreLine(), getPostLine());
-        items.add(lastItem);
-        recItems.add(lastItem);
-        addTotal(amount * factor);
-        clearPrePostLine();
+        lastItem = item;
+
+        if (!getParams().FSCombineItemAdjustments) {
+            printRecItemAsText(item, quantity);
+            item.setText("//");
+        }
+
+        if (quantity > 0) {
+            if (isSaleReceipt()) {
+                getDevice().printSale(item);
+            } else {
+                getDevice().printVoidSale(item);
+            }
+        } else {
+            getDevice().printVoidItem(item);
+        }
+
+        printPostLine();
         if (getParams().FSReceiptItemDiscountEnabled) {
             if ((amount - price) > 0) {
                 printDiscount(amount - price, 0, "");
@@ -721,7 +547,71 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public FSSaleReceiptItem getLastItem() throws Exception {
+    public String formatLines(String line1, String line2) throws Exception {
+        return StringUtils.alignLines(line1, line2, getPrinter().getTextLength());
+    }
+
+    public String getTaxLetter(int tax){
+        String taxLetters = "¿¡¬√ƒ≈";
+        if ((tax < 1)||(tax > 6)){
+            tax = 4;
+        }
+        return "_" + taxLetters.charAt(tax-1);
+    }
+    
+    public void printRecItemAsText(PriceItem item, long quantity) throws Exception {
+
+        int tax = item.getTax1();
+        if (tax == 0){
+            tax = 4;
+        }
+
+        getDevice().printText(item.getText());
+
+        String line = StringUtils.quantityToStr(item.getQuantity()) + " X "
+                + StringUtils.amountToString(item.getPrice());
+        String line1 = "";
+        if (quantity < 0) {
+            line1 = "—“Œ–ÕŒ";
+        }
+        line = formatLines(line1, line);
+        getDevice().printText(line);
+
+        line = "";
+        int department = item.getDepartment();
+        if ((department > 0)&&(department <= 16)){
+            line = getDevice().getDepartmentName(item.getDepartment());
+        }
+        line = formatLines(line, "=" + StringUtils.amountToString(item.getAmount())
+        + getTaxLetter(tax));
+        getDevice().printText(line);
+
+        double taxRate = getDevice().getTaxRate(tax) / 10000.0;
+        long taxAmount = (long) (item.getAmount() * taxRate / (1 + taxRate) + 0.5);
+
+        line = getDevice().getTaxName(tax); 
+        line = formatLines(line, StringUtils.amountToString(taxAmount));
+        getDevice().printText(line);
+    }
+
+    public void printPreLine() throws Exception {
+
+        String preLine = getParams().preLine;
+        if (preLine.length() > 0) {
+            getDevice().printText(preLine);
+        }
+        getParams().clearPreLine();
+    }
+
+    public void printPostLine() throws Exception {
+        String text = getParams().postLine;
+        if (text.length() > 0) {
+            getDevice().printText(text);
+        }
+        getParams().clearPostLine();
+    }
+
+    public PriceItem getLastItem() throws Exception {
         if (lastItem == null) {
             throw new Exception("No receipt item available");
         }
@@ -731,40 +621,47 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printDiscount(long amount, int tax1, String text)
             throws Exception {
         logger.debug("printDiscount: " + amount);
-        if (amount > getLastItem().getTotal()) {
-            throw new Exception("Discount amount more than receipt item amount");
+
+        AmountItem item = new AmountItem();
+        item.setAmount(Math.abs(amount));
+        item.setText(text);
+        item.setTax1(tax1);
+        item.setTax2(0);
+        item.setTax3(0);
+        item.setTax4(0);
+
+        String line = formatStrings(text, "=" + StringUtils.amountToString(amount));
+
+        if (amount > 0) {
+            getDevice().printDiscount(item);
+        } else {
+            getDevice().printCharge(item);
         }
 
-        FSDiscount item = new FSDiscount();
-        item.setAmount(amount);
-        item.setTax1(tax1);
-        item.setTax2(PrinterConst.SMFPTR_TAX_NOTAX);
-        item.setTax3(PrinterConst.SMFPTR_TAX_NOTAX);
-        item.setTax4(PrinterConst.SMFPTR_TAX_NOTAX);
-        item.setText(text);
-        getLastItem().addDiscount(item);
-        addTotal(-amount);
+        if (!getParams().FSCombineItemAdjustments) {
+            if (amount > 0) {
+                getDevice().printText("— »ƒ ¿");
+                getDevice().printText(line);
+            } else {
+                getDevice().printText("Õ¿ƒ¡¿¬ ¿");
+                getDevice().printText(line);
+            }
+        }
     }
 
     public void printTotalDiscount(long amount, int tax1, String text)
             throws Exception {
-        if (amount > getSubtotal()) {
-            throw new Exception("Discount amount more than receipt total");
-        }
-
-        FSDiscount item = new FSDiscount();
-        item.setAmount(amount);
+        FSReceiptDiscount item = new FSReceiptDiscount();
+        item.setSysPassword(getDevice().getUsrPassword());
+        item.setDiscount(Math.abs(amount));
+        item.setCharge(0);
         item.setTax1(tax1);
-        item.setTax2(PrinterConst.SMFPTR_TAX_NOTAX);
-        item.setTax3(PrinterConst.SMFPTR_TAX_NOTAX);
-        item.setTax4(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setText(text);
-        discounts.add(item);
-        total -= amount;
+        getDevice().fsReceiptDiscount(item);
     }
 
     public long getSubtotal() throws Exception {
-        return total;
+        return getDevice().getSubtotal();
     }
 
     private void checkPercents(long amount) throws Exception {
@@ -815,15 +712,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void fsWriteTLV(byte[] data) throws Exception {
-        items.add(new FSTLVItem(data));
-    }
-    
     public void disablePrint() throws Exception {
         disablePrint = true;
     }
-    
-    public boolean getDisablePrint(){
+
+    public boolean getDisablePrint() {
         return disablePrint;
     }
+
 }

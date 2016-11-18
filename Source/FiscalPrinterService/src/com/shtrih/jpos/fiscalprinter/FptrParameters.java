@@ -123,7 +123,8 @@ public class FptrParameters {
     public boolean checkTotalEnabled = false; 
     public int receiptNumberRequest = SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER; 
     public boolean FSDiscountEnabled = true;
-    public boolean FSReceiptItemDiscountEnabled = false;
+    public boolean FSReceiptItemDiscountEnabled = true;
+    public boolean FSCombineItemAdjustments = true;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -282,7 +283,8 @@ public class FptrParameters {
             SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER); 
         
         FSDiscountEnabled = reader.readBoolean("FSDiscountEnabled", true);
-        FSReceiptItemDiscountEnabled = reader.readBoolean("FSReceiptItemDiscountEnabled", false);
+        FSReceiptItemDiscountEnabled = reader.readBoolean("FSReceiptItemDiscountEnabled", true);
+        FSCombineItemAdjustments = reader.readBoolean("FSCombineItemAdjustments", true);
 
         // paymentNames
         String paymentName;

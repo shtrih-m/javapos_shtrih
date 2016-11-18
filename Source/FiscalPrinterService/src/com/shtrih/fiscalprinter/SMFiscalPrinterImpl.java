@@ -104,6 +104,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private boolean capPrintBarcode3 = false;
     private boolean capPrintGraphicsLine = false;
     private boolean capFiscalStorage = false;
+    private int discountMode = PrinterConst.ECRMODE_24NOTOVER;
+    private boolean saveCommands = false;
+    private Vector receiptCommands = new Vector();
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params, FiscalPrinterImpl service) {
@@ -260,9 +263,52 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 break;
             }
         }
-
+        if (saveCommands && succeeded(resultCode) && isReceiptCommand(command)) {
+            receiptCommands.add(command);
+        }
         logger.debug(text + " = " + resultCode);
         return resultCode;
+    }
+
+    public void startSaveCommands() {
+        saveCommands = true;
+        receiptCommands.clear();
+    }
+
+    public void stopSaveCommands() {
+        saveCommands = false;
+    }
+
+    public void clearReceiptCommands() {
+        receiptCommands.clear();
+    }
+
+    public int printReceiptCommands() throws Exception {
+        int result = 0;
+        for (int i = 0; i < receiptCommands.size(); i++) {
+            PrinterCommand command = (PrinterCommand) receiptCommands.get(i);
+            result = executeCommand(command);
+            if (failed(result)) {
+                return result;
+            }
+
+            waitForPrinting();
+        }
+        return result;
+    }
+
+    private boolean isReceiptCommand(PrinterCommand command) throws Exception {
+        int[] codes = {
+            0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89,
+            0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F,
+            0xFF0C, 0xFF0D, 0x12, 0x17, 0x2F
+        };
+        for (int i = 0; i < codes.length; i++) {
+            if (command.getCode() == codes[i]) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setTaxPassword(int taxPassword) {
@@ -603,6 +649,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         PrinterField field = table.getFields().itemByName(fieldName);
         readField(field);
         return field.getValue();
+    }
+
+    public String readTable(int tableNumber, int rowNumber, int fieldNumber)
+            throws Exception {
+        String[] result = new String[1];
+        check(readTable(tableNumber, rowNumber, fieldNumber, result));
+        return result[0];
     }
 
     public int readTable(int tableNumber, int rowNumber, int fieldNumber,
@@ -2501,8 +2554,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setSysPassword(sysPassword);
         execute(command);
         return command;
-    }    
-        
+    }
+
     public String getErrorText(int code) throws Exception {
         String key = "PrinterError" + Hex.toHex((byte) code);
         if ((capFiscalStorage) && (code < 0x20)) {
@@ -2574,5 +2627,22 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void disablePrint() throws Exception {
         // !!! write table and by name
         writeTable(17, 1, 7, "1");
+    }
+
+    public int fsReceiptDiscount(FSReceiptDiscount command) throws Exception {
+        return executeCommand(command);
+    }
+
+    public String getDepartmentName(int number) throws Exception {
+            return readTable(PrinterConst.SMFP_TABLE_DEPARTMENT, number, 1);
+    }
+    
+    public String getTaxName(int number) throws Exception{
+            return readTable(PrinterConst.SMFP_TABLE_TAX, number, 2);
+    }
+    
+    public int getTaxRate(int number) throws Exception{
+            String s = readTable(PrinterConst.SMFP_TABLE_TAX, number, 1);
+            return Integer.parseInt(s);
     }
 }

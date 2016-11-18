@@ -133,28 +133,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public String formatLines(String line1, String line2) throws Exception {
-        return alignLines(line1, line2, getPrinter().getTextLength());
-    }
-
-    public static String alignLines(String line1, String line2, int len) {
-        int lastIndex = MathUtils.min(len, line2.length());
-        String result = line2.substring(0, lastIndex);
-        if (result.length() < len) {
-            lastIndex = MathUtils.min(line1.length(), len - result.length());
-            String S = line1.substring(0, lastIndex);
-            result = S
-                    + StringUtils.stringOfChar(' ',
-                            len - result.length() - S.length()) + result;
-        }
-        return result;
-    }
-
-    public String quantityToStr(long value) throws Exception {
-        if ((value % 1000) == 0) {
-            return String.valueOf(value / 1000);
-        } else {
-            return StringUtils.quantityToString(value / 1000.0);
-        }
+        return StringUtils.alignLines(line1, line2, getPrinter().getTextLength());
     }
 
     public void printReceiptItem(String description, long price, long quantity,
@@ -173,7 +152,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setText(description);
         getReceipt().printSale(item);
 
-        String quantityText = quantityToStr(quantity) + " x "
+        String quantityText = StringUtils.quantityToStr(quantity) + " x "
                 + StringUtils.amountToString(price);
         String amountText = StringUtils.amountToString(item.getAmount());
 
@@ -207,7 +186,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         getReceipt().printSaleRefund(item);
 
         printPreLine();
-        String quantityText = quantityToStr(quantity) + " x "
+        String quantityText = StringUtils.quantityToStr(quantity) + " x "
                 + StringUtils.amountToString(price);
         String amountText = StringUtils.amountToString(-item.getAmount());
 
