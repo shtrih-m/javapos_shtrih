@@ -14,18 +14,15 @@ import com.shtrih.fiscalprinter.command.TLVList;
 import com.shtrih.jpos.DIOUtils;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 
-public class DIOFSWriteTag extends DIOItem {
+public class DIOFSWriteCustomerEmail extends DIOItem {
 
-    public DIOFSWriteTag(FiscalPrinterImpl service) {
+    public DIOFSWriteCustomerEmail(FiscalPrinterImpl service) {
         super(service);
     }
 
     public void execute(int[] data, Object object) throws Exception {
 
-        DIOUtils.checkDataMinLength(data, 1);
-        int tagId = data[0];
-        String tagValue = (String)object;
-        service.fsWriteTag(tagId, tagValue);
+        service.fsWriteCustomerEmail((String)object);
     }
 
 }

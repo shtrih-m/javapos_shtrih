@@ -710,11 +710,11 @@ class PrinterTest implements FiscalPrinterConst {
             
             printer.printRecItemVoid("Батарейка Alkaline Stam", 20, 0, 1, 20, "");
             printer.printRecItem("Тестовый товар", 100, 1000, 0, 100, "");
-            printer.printRecSubtotal(200);
-            printer.printRecSubtotalAdjustment(FPTR_AT_AMOUNT_DISCOUNT, "", 150);
+            printer.printRecItemAdjustment(FPTR_AT_AMOUNT_DISCOUNT, "СКИДКА", 50, 1);
+            printer.printRecSubtotalAdjustment(FPTR_AT_AMOUNT_DISCOUNT, "", 100);
             printer.printRecSubtotalAdjustment(FPTR_AT_AMOUNT_DISCOUNT, "", 25);
-            printer.printRecTotal(25, 10, "0");
-            printer.printRecTotal(25, 100, "10");
+            printer.printRecSubtotal(25);
+            printer.printRecTotal(25, 25, "0");
             printer.endFiscalReceipt(true);
         } catch (Exception e) {
             e.printStackTrace();

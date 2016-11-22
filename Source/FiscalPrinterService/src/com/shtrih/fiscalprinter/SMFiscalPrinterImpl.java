@@ -2,7 +2,7 @@
  * SmPrinterDevice.java
  *
  * Created on July 31 2007, 16:46
- *
+ *f
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
  */
@@ -104,7 +104,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private boolean capPrintBarcode3 = false;
     private boolean capPrintGraphicsLine = false;
     private boolean capFiscalStorage = false;
-    private int discountMode = PrinterConst.ECRMODE_24NOTOVER;
+    private int discountMode = PrinterConst.SMFP_DM_NOT_CHANGE_SUBTOTAL_SMALLDSC;
     private boolean saveCommands = false;
     private Vector receiptCommands = new Vector();
 
@@ -1631,6 +1631,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         capPrintBarcode2 = isCommandSupported(printBarcode2(barcode));
         capPrintBarcode3 = isCommandSupported(printBarcode3(barcode));
         capFiscalStorage = readCapFiscalStorage();
+        if (capFiscalStorage){
+            discountMode = Integer.parseInt(readTable(17, 1, 3));
+        }
+            
     }
 
     private boolean readCapFiscalStorage() throws Exception {
@@ -2640,9 +2644,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public String getTaxName(int number) throws Exception{
             return readTable(PrinterConst.SMFP_TABLE_TAX, number, 2);
     }
-    
+
     public int getTaxRate(int number) throws Exception{
             String s = readTable(PrinterConst.SMFP_TABLE_TAX, number, 1);
             return Integer.parseInt(s);
+    }
+    
+    public int getDiscountMode() throws Exception{
+        return discountMode;
     }
 }

@@ -421,6 +421,15 @@ public interface SmFptrConst {
      */
     public static final int SMFPTR_DIO_PRINT_NON_FISCAL = 0x38;
     
+    /**
+     * Write customer email
+     */
+    public static final int SMFPTR_DIO_FS_WRITE_CUSTOMER_EMAIL = 0x39;
+    
+    /**
+     * Write customer phone number
+     */
+    public static final int SMFPTR_DIO_FS_WRITE_CUSTOMER_PHONE = 0x3A;
     
     
     // ///////////////////////////////////////////////////////////////////

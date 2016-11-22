@@ -37,9 +37,10 @@ public class NullReceipt implements FiscalReceipt {
         return cancelled;
     }
 
-    public void notSupported() throws Exception {
-        throw new JposException(JposConst.JPOS_E_ILLEGAL,
-                "Receipt method is not supported");
+    public void notSupported() throws Exception 
+    {
+        //throw new JposException(JposConst.JPOS_E_ILLEGAL,
+        //        "Receipt method is not supported");
     }
 
     public void beginFiscalReceipt(boolean printHeader) throws Exception {
@@ -172,5 +173,14 @@ public class NullReceipt implements FiscalReceipt {
     }
     
     public void disablePrint() throws Exception{
+    }
+    
+    public void fsWriteTag(int tagId, String tagValue) throws Exception {
+    }
+    
+    public void fsWriteCustomerEmail(String text) throws Exception {
+    }
+
+    public void fsWriteCustomerPhone(String text) throws Exception {
     }
 }

@@ -346,6 +346,14 @@ public class DirectIOHandler {
                 new DIOPrintNonFiscal(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_FS_WRITE_CUSTOMER_EMAIL:
+                new DIOFSWriteCustomerEmail(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_FS_WRITE_CUSTOMER_PHONE:
+                new DIOFSWriteCustomerPhone(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)

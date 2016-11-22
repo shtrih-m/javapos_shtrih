@@ -129,6 +129,7 @@ import com.shtrih.jpos.fiscalprinter.receipt.ReceiptPrinter;
 import com.shtrih.jpos.fiscalprinter.receipt.ReceiptPrinterImpl;
 import com.shtrih.jpos.fiscalprinter.receipt.SalesReceipt;
 import com.shtrih.jpos.fiscalprinter.receipt.FSSalesReceipt;
+import com.shtrih.jpos.fiscalprinter.receipt.FSSalesReceipt2;
 import com.shtrih.jpos.fiscalprinter.request.FiscalPrinterRequest;
 import com.shtrih.jpos.fiscalprinter.request.PrintNormalRequest;
 import com.shtrih.jpos.fiscalprinter.request.PrintRecCashRequest;
@@ -467,7 +468,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         totalizerType = FPTR_TT_DAY;
         capUpdateStatistics = true;
         capStatisticsReporting = true;
-        deviceServiceVersion = deviceVersion113 + 316;
+        deviceServiceVersion = deviceVersion113 + 317;
         freezeEvents = true;
     }
 
@@ -2211,7 +2212,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             }
         }
         loadProperties();
-        receipt = new NonfiscalReceipt(createReceiptContext());
+        receipt = new NullReceipt();
         state = JPOS_S_IDLE;
         setFreezeEvents(false);
     }
@@ -2409,7 +2410,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkPrinterState(FPTR_PS_NONFISCAL);
         setPrinterState(FPTR_PS_MONITOR);
         printDocEnd();
-        receipt = new NonfiscalReceipt(createReceiptContext());
+        receipt = new NullReceipt();
     }
 
     // ////////////////////////////////////////////////////////////////////////////
@@ -3098,7 +3099,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 }
             }
             setPrinterState(FPTR_PS_MONITOR);
-            receipt = new NonfiscalReceipt(createReceiptContext());
+            receipt = new NullReceipt();
         }
     }
 
@@ -4486,10 +4487,17 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    private FiscalReceipt createSalesReceipt(int receiptType) {
+    private FiscalReceipt createSalesReceipt(int receiptType) throws Exception
+    {
         FiscalReceipt result;
-        if (printer.getCapFiscalStorage()) {
-            result = new FSSalesReceipt(createReceiptContext(), receiptType);
+        if (printer.getCapFiscalStorage()) 
+        {
+            if (printer.getDiscountMode() == 0)
+            {
+                result = new FSSalesReceipt2(createReceiptContext(), receiptType);
+            } else{
+                result = new FSSalesReceipt(createReceiptContext(), receiptType);
+            }
         } else if (params.salesReceiptType == SMFPTR_RECEIPT_NORMAL) {
             result = new SalesReceipt(createReceiptContext(), receiptType);
         } else {
@@ -4579,7 +4587,19 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         receipt.fsWriteTLV(data);
     }
 
+    public void fsWriteTag(int tagId, String tagValue) throws Exception {
+        receipt.fsWriteTag(tagId, tagValue);
+    }
+    
     public void disablePrint() throws Exception {
         receipt.disablePrint();
+    }
+    
+    public void fsWriteCustomerEmail(String text) throws Exception {
+        receipt.fsWriteCustomerEmail(text);
+    }
+    
+    public void fsWriteCustomerPhone(String text) throws Exception {
+        receipt.fsWriteCustomerPhone(text);
     }
 }

@@ -32,7 +32,7 @@ public class FSReceiptDiscount extends PrinterCommand {
     private long discount = 0;
     private long charge = 0;
     private int tax1 = 0;
-    private String text = "";
+    private String name = "";
 
     public FSReceiptDiscount(){
     }
@@ -50,7 +50,7 @@ public class FSReceiptDiscount extends PrinterCommand {
         out.writeLong(getDiscount(), 5);
         out.writeLong(getCharge(), 5);
         out.writeByte(getTax1());
-        out.writeString(getText(), 40);
+        out.writeString(getName(), 40);
     }
 
     public void decode(CommandInputStream in) throws Exception {
@@ -115,8 +115,12 @@ public class FSReceiptDiscount extends PrinterCommand {
     /**
      * @param text the text to set
      */
-    public void setText(String text) {
-        this.text = text;
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public String getName(){
+        return name;
     }
     
 }

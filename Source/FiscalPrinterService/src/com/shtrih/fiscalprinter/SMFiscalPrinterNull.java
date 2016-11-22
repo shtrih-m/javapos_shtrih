@@ -863,4 +863,7 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
+    public int getDiscountMode() throws Exception{
+        return 0;
+    }
 }

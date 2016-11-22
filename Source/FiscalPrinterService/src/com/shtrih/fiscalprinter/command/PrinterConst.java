@@ -666,7 +666,4 @@ public interface PrinterConst {
     public static final int SMFP_DM_NOT_CHANGE_SUBTOTAL             = 1;
     public static final int SMFP_DM_NOT_CHANGE_SUBTOTAL_SMALLDSC    = 2;
             
-    
-    
-
 }
