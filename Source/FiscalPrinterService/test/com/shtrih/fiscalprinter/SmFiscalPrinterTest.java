@@ -1,7 +1,7 @@
 /*
  * SmFiscalPrinterTest.java
  *
- * Created on 11 Март 2011 г., 11:54
+ * Created on 11 РњР°СЂС‚ 2011 Рі., 11:54
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

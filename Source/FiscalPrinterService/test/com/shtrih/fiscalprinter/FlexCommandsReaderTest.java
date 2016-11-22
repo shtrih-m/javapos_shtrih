@@ -2,7 +2,7 @@
  * FlexCommandsReaderTest.java
  * JUnit based test
  *
- * Created on 19 Νξÿαπό 2009 γ., 18:29
+ * Created on 19 ΠΠΎΡΠ±Ρ€Ρ 2009 Π³., 18:29
  */
 
 package com.shtrih.fiscalprinter;

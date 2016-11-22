@@ -60,10 +60,10 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    private static final String PrinterChargeText = "Õ¿ƒ¡¿¬ ¿";
-    private static final String PrinterDiscountText = "— »ƒ ¿";
-    private static final String PrinterVoidChargeText = "—“Œ–ÕŒ Õ¿ƒ¡¿¬ »";
-    private static final String PrinterVoidDiscountText = "—“Œ–ÕŒ — »ƒ »";
+    private static final String PrinterChargeText = "–ù–ê–î–ë–ê–í–ö–ê";
+    private static final String PrinterDiscountText = "–°–ö–ò–î–ö–ê";
+    private static final String PrinterVoidChargeText = "–°–¢–û–†–ù–û –ù–ê–î–ë–ê–í–ö–ò";
+    private static final String PrinterVoidDiscountText = "–°–¢–û–†–ù–û –°–ö–ò–î–ö–ò";
     private final Vector preLines = new Vector();
     private static CompositeLogger logger = CompositeLogger.getLogger(GlobusSalesReceipt.class);
     private int receiptType = 0;
@@ -113,13 +113,13 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         if (getParams().getTaxLettersEnabled()) {
             switch (vatInfo) {
                 case 1:
-                    return "_¿";
+                    return "_–ê";
                 case 2:
-                    return "_¡";
+                    return "_–ë";
                 case 3:
-                    return "_¬";
+                    return "_–í";
                 case 4:
-                    return "_√";
+                    return "_–ì";
                 default:
                     return "";
             }

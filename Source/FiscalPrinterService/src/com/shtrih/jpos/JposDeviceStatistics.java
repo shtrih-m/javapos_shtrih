@@ -148,11 +148,11 @@ public class JposDeviceStatistics implements JposStatistics,
 
     /*
      * This is a comma-separated list of name-value pair(s), where an empty
-     * string name (““”=value1”) means ALL resettable statistics are to be set
-     * to the value “value1”, “U_=value2” means all UnifiedPOS defined
-     * resettable statistics are to be set to the value “value2”, “M_=value3”
+     * string name (â€œâ€œâ€=value1â€) means ALL resettable statistics are to be set
+     * to the value â€œvalue1â€, â€œU_=value2â€ means all UnifiedPOS defined
+     * resettable statistics are to be set to the value â€œvalue2â€, â€œM_=value3â€
      * means all manufacturer defined resettable statistics are to be set to the
-     * value “value3”, and “actual_name1=value4, actual_name2=value5” (from the
+     * value â€œvalue3â€, and â€œactual_name1=value4, actual_name2=value5â€ (from the
      * XML file definitions) means that the specifically defined resettable
      * statistic(s) are to be set to the specified value(s)
      */

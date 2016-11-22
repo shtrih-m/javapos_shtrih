@@ -35,21 +35,21 @@ public class ReceiptFormatTable {
         }
     }
             
-    private FieldFormat itemName; // мюхлемнбюмхе б ноепюжхх
-    private FieldFormat itemQuantity; // йнкхвеярбн X жемс б ноепюжхх
-    private FieldFormat itemDepartment; // яейжхъ б ноепюжхх
-    private FieldFormat itemAmount; // ярнхлнярэ б ноепюжхх
-    private FieldFormat itemVoidText; // мюдохяэ ярнпмн б ноепюжхх
-    private FieldFormat discountText; // рейяр б яйхдйе
-    private FieldFormat discountCaption; // мюдохяэ яйхдйю
-    private FieldFormat discountAmount; // ясллю яйхдйх
-    private FieldFormat chargeText; // рейяр б мюдаюбйе
-    private FieldFormat chargeName; // мюдохяэ мюдаюбйю
-    private FieldFormat chargeAmount; // ясллю мюдаюбйх
-    private FieldFormat discountVoidText; // рейяр б ярнпмн яйхдйх
-    private FieldFormat discountVoidName; // мюдохяэ ярнпмн яйхдйх
-    private FieldFormat discountVoidAmount; // ясллю ярнпмн яйхдйх
-    private FieldFormat chargeVoidText; // рейяр б ярнпмн мюдаюбйх
-    private FieldFormat chargeVoidName; // мюдохяэ ярнпмн мюдаюбйх
-    private FieldFormat chargeVoidAmount; // ясллю ярнпмн мюдаюбйх
+    private FieldFormat itemName; // п²п░п≤п°п∙п²п·п▓п░п²п≤п∙ п▓ п·п÷п∙п═п░п╕п≤п≤
+    private FieldFormat itemQuantity; // п п·п⌡п≤п╖п∙п║п╒п▓п· X п╕п∙п²пё п▓ п·п÷п∙п═п░п╕п≤п≤
+    private FieldFormat itemDepartment; // п║п∙п п╕п≤п╞ п▓ п·п÷п∙п═п░п╕п≤п≤
+    private FieldFormat itemAmount; // п║п╒п·п≤п°п·п║п╒п╛ п▓ п·п÷п∙п═п░п╕п≤п≤
+    private FieldFormat itemVoidText; // п²п░п■п÷п≤п║п╛ п║п╒п·п═п²п· п▓ п·п÷п∙п═п░п╕п≤п≤
+    private FieldFormat discountText; // п╒п∙п п║п╒ п▓ п║п п≤п■п п∙
+    private FieldFormat discountCaption; // п²п░п■п÷п≤п║п╛ п║п п≤п■п п░
+    private FieldFormat discountAmount; // п║пёп°п°п░ п║п п≤п■п п≤
+    private FieldFormat chargeText; // п╒п∙п п║п╒ п▓ п²п░п■п▒п░п▓п п∙
+    private FieldFormat chargeName; // п²п░п■п÷п≤п║п╛ п²п░п■п▒п░п▓п п░
+    private FieldFormat chargeAmount; // п║пёп°п°п░ п²п░п■п▒п░п▓п п≤
+    private FieldFormat discountVoidText; // п╒п∙п п║п╒ п▓ п║п╒п·п═п²п· п║п п≤п■п п≤
+    private FieldFormat discountVoidName; // п²п░п■п÷п≤п║п╛ п║п╒п·п═п²п· п║п п≤п■п п≤
+    private FieldFormat discountVoidAmount; // п║пёп°п°п░ п║п╒п·п═п²п· п║п п≤п■п п≤
+    private FieldFormat chargeVoidText; // п╒п∙п п║п╒ п▓ п║п╒п·п═п²п· п²п░п■п▒п░п▓п п≤
+    private FieldFormat chargeVoidName; // п²п░п■п÷п≤п║п╛ п║п╒п·п═п²п· п²п░п■п▒п░п▓п п≤
+    private FieldFormat chargeVoidAmount; // п║пёп°п°п░ п║п╒п·п═п²п· п²п░п■п▒п░п▓п п≤
 }

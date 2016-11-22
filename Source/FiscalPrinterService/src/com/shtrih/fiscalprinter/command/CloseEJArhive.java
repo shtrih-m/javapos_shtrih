@@ -13,8 +13,8 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Close electronic journal archive Command: AAH. Length: 5 bytes. · System
- * Administrator password (4 bytes) 30 Answer: AAH. Length: 2 bytes. · Result
+ * Close electronic journal archive Command: AAH. Length: 5 bytes. Â· System
+ * Administrator password (4 bytes) 30 Answer: AAH. Length: 2 bytes. Â· Result
  * Code (1 byte)
  ****************************************************************************/
 public final class CloseEJArhive extends PrinterCommand {

@@ -562,7 +562,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
     }
 
     public String getTaxLetter(int tax) {
-        String taxLetters = "АБВГДЕ";
+        String taxLetters = "РђР‘Р’Р“Р”Р•";
         if ((tax < 1) || (tax > 6)) {
             tax = 4;
         }
@@ -582,7 +582,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
                 + StringUtils.amountToString(item.getPrice());
         String line1 = "";
         if (quantity < 0) {
-            line1 = "СТОРНО";
+            line1 = "РЎРўРћР РќРћ";
         }
         line = formatLines(line1, line);
         getDevice().printText(line);
@@ -650,10 +650,10 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
 
         if (!getParams().FSCombineItemAdjustments) {
             if (amount > 0) {
-                getDevice().printText("СКИДКА");
+                getDevice().printText("РЎРљРР”РљРђ");
                 getDevice().printText(line);
             } else {
-                getDevice().printText("НАДБАВКА");
+                getDevice().printText("РќРђР”Р‘РђР’РљРђ");
                 getDevice().printText(line);
             }
         }
@@ -732,7 +732,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
 
     public String getTagName(int tagId){
         switch (tagId){
-            case 1008: return "Адрес покупателя";
+            case 1008: return "РђРґСЂРµСЃ РїРѕРєСѓРїР°С‚РµР»СЏ";
             default: return "";
         }
     }
@@ -745,14 +745,14 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
     public void fsWriteCustomerEmail(String text) throws Exception {
         if (!text.isEmpty()) {
             getDevice().fsWriteTag(1008, text);
-            messages.add("Email покупателя: " + text);
+            messages.add("Email РїРѕРєСѓРїР°С‚РµР»СЏ: " + text);
         }
     }
 
     public void fsWriteCustomerPhone(String text) throws Exception {
         if (!text.isEmpty()) {
             getDevice().fsWriteTag(1008, text);
-            messages.add("Телефон покупателя: " + text);
+            messages.add("РўРµР»РµС„РѕРЅ РїРѕРєСѓРїР°С‚РµР»СЏ: " + text);
         }
     }
     

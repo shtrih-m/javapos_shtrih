@@ -15,16 +15,16 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Open Standard Fiscal Slip Command: 71H. Length: 13 bytes. · Operator password
- * (4 bytes) · Slip type (1 byte) «0» – Sale, «1» – Buy, «2» – Sale Refund, «3»
- * – Buy Refund · Slip duplicates type (1 byte) «0» – duplicates as columns, «1»
- * – duplicates as line blocks · Number of duplicates (1 byte) 0…5 · Spacing
- * between Original and Duplicate 1 (1 byte) * · Spacing between Duplicate 1 and
- * Duplicate 2 (1 byte) * · Spacing between Duplicate 2 and Duplicate 3 (1 byte)
- * * · Spacing between Duplicate 3 and Duplicate 4 (1 byte) * · Spacing between
- * Duplicate 4 and Duplicate 5 (1 byte) * Answer: 71H. Length: 5 bytes. · Result
- * Code (1 byte) · Operator index number (1 byte) 1…30 · Current receipt number
- * (2 bytes) – for duplicates as columns the spacing is set in characters, for
+ * Open Standard Fiscal Slip Command: 71H. Length: 13 bytes. Â· Operator password
+ * (4 bytes) Â· Slip type (1 byte) Â«0Â» â€“ Sale, Â«1Â» â€“ Buy, Â«2Â» â€“ Sale Refund, Â«3Â»
+ * â€“ Buy Refund Â· Slip duplicates type (1 byte) Â«0Â» â€“ duplicates as columns, Â«1Â»
+ * â€“ duplicates as line blocks Â· Number of duplicates (1 byte) 0â€¦5 Â· Spacing
+ * between Original and Duplicate 1 (1 byte) * Â· Spacing between Duplicate 1 and
+ * Duplicate 2 (1 byte) * Â· Spacing between Duplicate 2 and Duplicate 3 (1 byte)
+ * * Â· Spacing between Duplicate 3 and Duplicate 4 (1 byte) * Â· Spacing between
+ * Duplicate 4 and Duplicate 5 (1 byte) * Answer: 71H. Length: 5 bytes. Â· Result
+ * Code (1 byte) Â· Operator index number (1 byte) 1â€¦30 Â· Current receipt number
+ * (2 bytes) â€“ for duplicates as columns the spacing is set in characters, for
  * duplicates as line blocks the spacing is set in strings
  ****************************************************************************/
 

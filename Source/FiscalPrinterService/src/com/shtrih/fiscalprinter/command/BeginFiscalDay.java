@@ -13,10 +13,10 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Open Fiscal Day Command: E0H. Length: 5 bytes. · Operator password (4 bytes)
- * Answer: E0H. Length: 2 bytes. · Operator index number (1 byte) 1…30 NOTE:
- * Command opens new fiscal day in FM and changes FP mode to «2 Open Fiscal
- * Day».
+ * Open Fiscal Day Command: E0H. Length: 5 bytes. Â· Operator password (4 bytes)
+ * Answer: E0H. Length: 2 bytes. Â· Operator index number (1 byte) 1â€¦30 NOTE:
+ * Command opens new fiscal day in FM and changes FP mode to Â«2 Open Fiscal
+ * DayÂ».
  ****************************************************************************/
 public final class BeginFiscalDay extends PrinterCommand {
     // in

@@ -17,15 +17,15 @@ package com.shtrih.fiscalprinter.command;
  Get EJ Status 2
 
  Command:  AEH. Length: 5 bytes.
- ·	System Administrator password (4 bytes) 30
+ Â·	System Administrator password (4 bytes) 30
 
  Answer:		AEH. Length: 28 bytes.
- ·	Result Code (1 byte)
- ·	Number of last daily totals (2 bytes) 0000…2100
- ·	Grand totals of sales (6 bytes) 000000000000…999999999999
- ·	Grand totals of buys (6 bytes) 000000000000…999999999999
- ·	Grand totals of sale refunds (6 bytes) 000000000000…999999999999
- ·	Grand totals of buy refunds (6 bytes) 000000000000…999999999999
+ Â·	Result Code (1 byte)
+ Â·	Number of last daily totals (2 bytes) 0000â€¦2100
+ Â·	Grand totals of sales (6 bytes) 000000000000â€¦999999999999
+ Â·	Grand totals of buys (6 bytes) 000000000000â€¦999999999999
+ Â·	Grand totals of sale refunds (6 bytes) 000000000000â€¦999999999999
+ Â·	Grand totals of buy refunds (6 bytes) 000000000000â€¦999999999999
 
  ****************************************************************************/
 import com.shtrih.ej.EJStatus2;

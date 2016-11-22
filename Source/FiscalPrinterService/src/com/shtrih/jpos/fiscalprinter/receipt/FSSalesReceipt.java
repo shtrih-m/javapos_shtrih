@@ -856,7 +856,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     
     public String getTagName(int tagId){
         switch (tagId){
-            case 1008: return "Адрес покупателя";
+            case 1008: return "РђРґСЂРµСЃ РїРѕРєСѓРїР°С‚РµР»СЏ";
             default: return "";
         }
     }
@@ -869,14 +869,14 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void fsWriteCustomerEmail(String text) throws Exception {
         if (!text.isEmpty()) {
             getDevice().fsWriteTag(1008, text);
-            messages.add("Email покупателя: " + text);
+            messages.add("Email РїРѕРєСѓРїР°С‚РµР»СЏ: " + text);
         }
     }
 
     public void fsWriteCustomerPhone(String text) throws Exception {
         if (!text.isEmpty()) {
             getDevice().fsWriteTag(1008, text);
-            messages.add("Телефон покупателя: " + text);
+            messages.add("РўРµР»РµС„РѕРЅ РїРѕРєСѓРїР°С‚РµР»СЏ: " + text);
         }
     }
 }

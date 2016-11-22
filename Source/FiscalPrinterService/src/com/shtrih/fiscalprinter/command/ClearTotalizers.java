@@ -13,8 +13,8 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Clear All Totalizers Command: 27H. Length: 5 bytes. · System Administrator
- * password (4 bytes) 30 Answer: 27H. Length: 2 bytes. · Result Code (1 byte)
+ * Clear All Totalizers Command: 27H. Length: 5 bytes. Â· System Administrator
+ * password (4 bytes) 30 Answer: 27H. Length: 2 bytes. Â· Result Code (1 byte)
  ****************************************************************************/
 public final class ClearTotalizers extends PrinterCommand {
 

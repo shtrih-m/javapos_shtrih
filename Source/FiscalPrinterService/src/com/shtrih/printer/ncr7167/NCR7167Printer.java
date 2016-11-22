@@ -196,7 +196,7 @@ public class NCR7167Printer {
         AddParser(new PrinterSettingChangeParser());
         // Asian Character Commands
         AddParser(0x1C, 0x21, 1, "Select print modes for Kanji characters");
-        AddParser(0x1C, 0x2D, 1, "FS – Turn underline mode ON/OFF for Kanji");
+        AddParser(0x1C, 0x2D, 1, "FS â€“ Turn underline mode ON/OFF for Kanji");
         AddParser(0x1C, 0x32, 74, "Define user-defined Kanji characters");
         AddParser(0x1C, 0x53, 2, "Set Kanji character spacing");
         AddParser(0x1C, 0x57, 2, "Set quadruple mode ON/OFF for Kanji");

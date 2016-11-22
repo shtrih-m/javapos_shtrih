@@ -14,10 +14,10 @@ package com.shtrih.fiscalprinter.command;
  */
 /****************************************************************************
  * Print Department Report In Daily Totals Numbers Range From electronic journal
- * Command: A1H. Length: 11 bytes. · System Administrator password (4 bytes) 30
- * · Report type (1 byte) «0» – short, «1» – full · Department number (1 byte)
- * 1…16 · First day number (2 bytes) 0000…2100 · Last day number (2 bytes)
- * 0000…2100 Answer: A1H. Length: 2 bytes. · Result Code (1 byte) NOTE: Command
+ * Command: A1H. Length: 11 bytes. Â· System Administrator password (4 bytes) 30
+ * Â· Report type (1 byte) Â«0Â» â€“ short, Â«1Â» â€“ full Â· Department number (1 byte)
+ * 1â€¦16 Â· First day number (2 bytes) 0000â€¦2100 Â· Last day number (2 bytes)
+ * 0000â€¦2100 Answer: A1H. Length: 2 bytes. Â· Result Code (1 byte) NOTE: Command
  * execution may take up to 150 seconds.
  ****************************************************************************/
 public final class PrintEJDepartmentReportOnDays extends PrinterCommand {

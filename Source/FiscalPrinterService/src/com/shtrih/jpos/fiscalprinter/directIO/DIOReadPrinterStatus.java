@@ -1,7 +1,7 @@
 /*
  * DIOReadPrinterStatus.java
  *
- * Created on 4 Март 2010 г., 15:30
+ * Created on 4 РњР°СЂС‚ 2010 Рі., 15:30
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

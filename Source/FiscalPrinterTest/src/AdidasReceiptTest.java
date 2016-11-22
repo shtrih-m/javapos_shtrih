@@ -53,7 +53,7 @@ public class AdidasReceiptTest {
         printer.setNumHeaderLines(3);
         printer.setHeaderLine(1, "             Eurosoftware Store", false);
         printer.setHeaderLine(2, "        321 00, Pilsen. Radcicka 40", false);
-        printer.setHeaderLine(3, "             Тел. *123 456 789 ЧЕК", false);
+        printer.setHeaderLine(3, "             РўРµР». *123 456 789 Р§Р•Рљ", false);
 
         printer.setNumTrailerLines(0);
 
@@ -63,11 +63,11 @@ public class AdidasReceiptTest {
         printer.printRecSubtotal(200);
         printer.printRecTotal(200, 1000, "0");
 
-        printer.printRecMessage("   Благодарим за покупку! Посетите наш сайт");
-        printer.printRecMessage("   adidas.ru. Напоминаем, что обмен товара ");
-        printer.printRecMessage("надлежащего качества осуществляется в течение 30");
-        printer.printRecMessage("дней. Гарантийный срок на все товары составляет");
-        printer.printRecMessage("           30 дней. Ждем Вас снова!");
+        printer.printRecMessage("   Р‘Р»Р°РіРѕРґР°СЂРёРј Р·Р° РїРѕРєСѓРїРєСѓ! РџРѕСЃРµС‚РёС‚Рµ РЅР°С€ СЃР°Р№С‚");
+        printer.printRecMessage("   adidas.ru. РќР°РїРѕРјРёРЅР°РµРј, С‡С‚Рѕ РѕР±РјРµРЅ С‚РѕРІР°СЂР° ");
+        printer.printRecMessage("РЅР°РґР»РµР¶Р°С‰РµРіРѕ РєР°С‡РµСЃС‚РІР° РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚СЃСЏ РІ С‚РµС‡РµРЅРёРµ 30");
+        printer.printRecMessage("РґРЅРµР№. Р“Р°СЂР°РЅС‚РёР№РЅС‹Р№ СЃСЂРѕРє РЅР° РІСЃРµ С‚РѕРІР°СЂС‹ СЃРѕСЃС‚Р°РІР»СЏРµС‚");
+        printer.printRecMessage("           30 РґРЅРµР№. Р–РґРµРј Р’Р°СЃ СЃРЅРѕРІР°!");
 
         printer.printBarcode(
                 "0015555290114101000010",
@@ -79,8 +79,8 @@ public class AdidasReceiptTest {
                 SmFptrConst.SMFPTR_TEXTPOS_BELOW,
                 1, 2);
 
-        printer.printRecMessage("Касса=101                    Kaccир: Admin Admin");
-        printer.printRecMessage("№ чека: 479");
+        printer.printRecMessage("РљР°СЃСЃР°=101                    KaccРёСЂ: Admin Admin");
+        printer.printRecMessage("в„– С‡РµРєР°: 479");
 
         printer.endFiscalReceipt(true);
 

@@ -15,10 +15,10 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Get Long Serial Number And Long ECRRN Command: 0FH. Length: 5 bytes. ·
- * Operator password (4 bytes) Answer: 0FH. Length: 16 bytes. · Result Code (1
- * byte) · Long Serial Number (7 bytes) 00000000000000…99999999999999 · Long
- * ECRRN (7 bytes) 00000000000000…99999999999999
+ * Get Long Serial Number And Long ECRRN Command: 0FH. Length: 5 bytes. Â·
+ * Operator password (4 bytes) Answer: 0FH. Length: 16 bytes. Â· Result Code (1
+ * byte) Â· Long Serial Number (7 bytes) 00000000000000â€¦99999999999999 Â· Long
+ * ECRRN (7 bytes) 00000000000000â€¦99999999999999
  ****************************************************************************/
 
 public class ReadLongSerial extends PrinterCommand {

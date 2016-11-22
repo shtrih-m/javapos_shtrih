@@ -13,11 +13,11 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Get date of last record in FM Command: 63H. Length: 5 bytes. · Administrator
+ * Get date of last record in FM Command: 63H. Length: 5 bytes. Â· Administrator
  * or System Administrator password (4 bytes) 29, 30 Answer: 63H. Length: 7
- * bytes. · Result Code (1 byte) · Operator index number (1 byte) 29, 30 · Type
- * of last record in FM (1 byte) «0» – fiscalization/refiscalization, «1» –
- * daily totals · Date (3 bytes) DD-MM-YY
+ * bytes. Â· Result Code (1 byte) Â· Operator index number (1 byte) 29, 30 Â· Type
+ * of last record in FM (1 byte) Â«0Â» â€“ fiscalization/refiscalization, Â«1Â» â€“
+ * daily totals Â· Date (3 bytes) DD-MM-YY
  ****************************************************************************/
 public final class ReadFMLastRecordDate extends PrinterCommand {
     // in

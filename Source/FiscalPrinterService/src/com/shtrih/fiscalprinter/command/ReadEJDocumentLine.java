@@ -13,9 +13,9 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Get data of electronic journal report Command: B3H. Length: 5 bytes. · System
- * Administrator password (4 bytes) 30 Answer: B3H. Length: (2+X) bytes. ·
- * Result Code (1 byte) · Report part or line (X bytes)
+ * Get data of electronic journal report Command: B3H. Length: 5 bytes. Â· System
+ * Administrator password (4 bytes) 30 Answer: B3H. Length: (2+X) bytes. Â·
+ * Result Code (1 byte) Â· Report part or line (X bytes)
  ****************************************************************************/
 
 public final class ReadEJDocumentLine extends PrinterCommand {

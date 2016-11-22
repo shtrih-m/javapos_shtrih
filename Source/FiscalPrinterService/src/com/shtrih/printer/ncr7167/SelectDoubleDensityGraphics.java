@@ -15,8 +15,8 @@ package com.shtrih.printer.ncr7167;
  */
 
 /*********************************************************************
- * Select Double-Density Graphics ASCII: ESC Y n1 n2 d1…dn or ESC L n1 n2 d1 ...
- * dn Hexadecimal: 1B 59 n1 n2 d1 ... dn or 1B 4C n1 n2 d1… dn
+ * Select Double-Density Graphics ASCII: ESC Y n1 n2 d1â€¦dn or ESC L n1 n2 d1 ...
+ * dn Hexadecimal: 1B 59 n1 n2 d1 ... dn or 1B 4C n1 n2 d1â€¦ dn
  * ------------------------------------------------------------- Mode | 8-Dot |
  * 24-Dot ------------------------------------------------------------- Value of
  * n: | n1 + (256 x n2) | 3 x [n1 + (256 x n2)]

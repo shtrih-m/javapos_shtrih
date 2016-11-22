@@ -13,9 +13,9 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Print Department Report Command: 42H. Length: 5 bytes. · Administrator or
+ * Print Department Report Command: 42H. Length: 5 bytes. Â· Administrator or
  * System Administrator password (4 bytes) 29, 30 Answer: 42H. Length: 3 bytes.
- * · Result Code (1 byte) · Operator index number (1 byte) 29, 30
+ * Â· Result Code (1 byte) Â· Operator index number (1 byte) 29, 30
  ****************************************************************************/
 public final class PrintDepartmentReport extends PrinterCommand {
     // in params

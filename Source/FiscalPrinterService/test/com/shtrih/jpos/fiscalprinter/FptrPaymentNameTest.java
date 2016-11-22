@@ -2,7 +2,7 @@
  * FptrPaymentNameTest.java
  * JUnit based test
  *
- * Created on 25 Îêòÿáğü 2009 ã., 19:31
+ * Created on 25 ĞĞºÑ‚ÑĞ±Ñ€ÑŒ 2009 Ğ³., 19:31
  */
 
 package com.shtrih.jpos.fiscalprinter;

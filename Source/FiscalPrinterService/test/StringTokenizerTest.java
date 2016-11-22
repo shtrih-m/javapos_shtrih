@@ -1,7 +1,7 @@
 /*
  * StringTokenizerTest.java
  *
- * Created on 20 Νξÿαπό 2009 γ., 18:18
+ * Created on 20 ΠΠΎΡΠ±Ρ€Ρ 2009 Π³., 18:18
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

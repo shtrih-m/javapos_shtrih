@@ -15,7 +15,7 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Reset FM Command: 16H. Length: 1 byte. Answer: 16H. Length: 2 bytes. • Result
+ * Reset FM Command: 16H. Length: 1 byte. Answer: 16H. Length: 2 bytes. â€¢ Result
  * Code (1 byte)
  ****************************************************************************/
 

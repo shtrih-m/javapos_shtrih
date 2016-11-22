@@ -15,8 +15,8 @@ package com.shtrih.printer.ncr7167;
  */
 
 /*********************************************************************
- * Define Parsing Format, Save in NVRAM ASCII: ESC w P d1 d2…dn CR Hexadecimal:
- * 1B 77 50 d1 d2…dn 0D
+ * Define Parsing Format, Save in NVRAM ASCII: ESC w P d1 d2â€¦dn CR Hexadecimal:
+ * 1B 77 50 d1 d2â€¦dn 0D
  **********************************************************************/
 
 public final class DefineParsingFormatNVRAM extends NCR7167Command {

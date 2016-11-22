@@ -15,16 +15,16 @@ package com.shtrih.fiscalprinter.command;
 import com.shtrih.util.MethodParameter;
 
 /****************************************************************************
- * Load Graphics In FP Command: C0H. Length: 46 bytes. · Operator password (4
- * bytes) · Graphics line number (1 byte) 0…199 · Graphical data (40 bytes)
- * Answer: C0H. Length: 3 bytes. · Result Code (1 byte) · Operator index number
- * (1 byte) 1…30
+ * Load Graphics In FP Command: C0H. Length: 46 bytes. Â· Operator password (4
+ * bytes) Â· Graphics line number (1 byte) 0â€¦199 Â· Graphical data (40 bytes)
+ * Answer: C0H. Length: 3 bytes. Â· Result Code (1 byte) Â· Operator index number
+ * (1 byte) 1â€¦30
  ****************************************************************************/
 
 public class LoadGraphics extends PrinterCommand {
     // in
     private int password; // Operator password (4 bytes)
-    private int lineNumber; // Graphics line number (1 byte) 0…199
+    private int lineNumber; // Graphics line number (1 byte) 0â€¦199
     private byte[] data; // Graphical data (40 bytes)
     // out
     private int operator;

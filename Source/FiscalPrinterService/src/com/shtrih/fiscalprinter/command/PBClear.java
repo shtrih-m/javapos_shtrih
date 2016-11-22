@@ -13,8 +13,8 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Clear print buffer Command: CAH. Message length: 5 bytes. · Operator password
- * (4 bytes) Answer: CAH. Message length: 2 bytes · Result code (1 byte)
+ * Clear print buffer Command: CAH. Message length: 5 bytes. Â· Operator password
+ * (4 bytes) Answer: CAH. Message length: 2 bytes Â· Result code (1 byte)
  ****************************************************************************/
 public final class PBClear extends PrinterCommand {
     // in

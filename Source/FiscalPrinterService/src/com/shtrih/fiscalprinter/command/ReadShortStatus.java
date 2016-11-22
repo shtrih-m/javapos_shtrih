@@ -15,33 +15,33 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Read short status Command: 10H. Length: 5 bytes. · Operator password (4
- * bytes) Answer: 10H. Length: 16 bytes. · Result Code (1 byte) · Operator index
- * number (1 byte) 1…30 · FP flags (2 bytes) · FP mode (1 byte) · FP submode (1
- * byte) · Quantity of operations on the current receipt (1 byte) lower byte of
- * a two-byte digit (see below) · Battery voltage (1 byte) · Power source
- * voltage (1 byte) · Fiscal Memory error code (1 byte) · EJ error code (1 byte)
- * EJ=Electronic Cryptographic Journal · Quantity of operations on the current
- * receipt (1 byte) upper byte of a two-byte digit (see below) · Reserved (3
- * bytes) FP flags Flags (bits): Bit 0 – Journal station low paper (0 – yes, 1 –
- * no) Bit 1 – Receipt station low paper (0 – yes, 1 – no) Bit 2 – Paper in slip
- * station upper sensor (0 – no, 1 – yes) Bit 3 – Paper in slip station lower
- * sensor (0 – no, 1 – yes) Bit 4 – Decimal dot position ( 0 – 0 digits after
- * the dot, 1 – 2 digits after the dot) Bit 5 – EJ in FP (0 – no, 1 – yes) Bit 6
- * – Journal station out-of-paper 0 – no paper, 1 – paper in printing mechanism)
- * Bit 7 – Receipt station out-of-paper ( 0 – no paper, 1 – paper in printing
- * mechanism) Bit 8 –Thermal head lever position of journal station ( 0 – lever
- * up, 1 – lever down) Bit 9 – Thermal head lever position of receipt station (
- * 0 – lever up, 1 – lever down) Bit 10 – FP cabinet lid position (0 – lid down,
- * 1 – lid up) Bit 11 – Cash drawer (0 – drawer closed, 1 – drawer open) Bit 12a
- * –Failure of right sensor of printing mechanism (0 – no, 1 – yes) Bit 12b –
- * Paper on input to presenter (0 – no, 1 – yes) Bit 12c – Printing mechanism
- * model (0 – MLT-286, 1 – MLT-286-1) Bit 13a – Failure of left sensor of
- * printing mechanism (0 – no, 1 – yes) Bit 13b – Paper in presenter (0 – no, 1
- * – yes) Bit 14 – EJ almost full (0 – no, 1 – yes) Bit 15a – Quantity accuracy·
- * for fiscal printers without EJ: 0 – standard accuracy, 1 – higher accuracy·
- * for fiscal printers with EJ: 1 – standard accuracy, 0 – higher accuracyBit
- * 15b – Printer buffer status (0 – empty, 1 – not empty) [for fiscal module of
+ * Read short status Command: 10H. Length: 5 bytes. Â· Operator password (4
+ * bytes) Answer: 10H. Length: 16 bytes. Â· Result Code (1 byte) Â· Operator index
+ * number (1 byte) 1â€¦30 Â· FP flags (2 bytes) Â· FP mode (1 byte) Â· FP submode (1
+ * byte) Â· Quantity of operations on the current receipt (1 byte) lower byte of
+ * a two-byte digit (see below) Â· Battery voltage (1 byte) Â· Power source
+ * voltage (1 byte) Â· Fiscal Memory error code (1 byte) Â· EJ error code (1 byte)
+ * EJ=Electronic Cryptographic Journal Â· Quantity of operations on the current
+ * receipt (1 byte) upper byte of a two-byte digit (see below) Â· Reserved (3
+ * bytes) FP flags Flags (bits): Bit 0 â€“ Journal station low paper (0 â€“ yes, 1 â€“
+ * no) Bit 1 â€“ Receipt station low paper (0 â€“ yes, 1 â€“ no) Bit 2 â€“ Paper in slip
+ * station upper sensor (0 â€“ no, 1 â€“ yes) Bit 3 â€“ Paper in slip station lower
+ * sensor (0 â€“ no, 1 â€“ yes) Bit 4 â€“ Decimal dot position ( 0 â€“ 0 digits after
+ * the dot, 1 â€“ 2 digits after the dot) Bit 5 â€“ EJ in FP (0 â€“ no, 1 â€“ yes) Bit 6
+ * â€“ Journal station out-of-paper 0 â€“ no paper, 1 â€“ paper in printing mechanism)
+ * Bit 7 â€“ Receipt station out-of-paper ( 0 â€“ no paper, 1 â€“ paper in printing
+ * mechanism) Bit 8 â€“Thermal head lever position of journal station ( 0 â€“ lever
+ * up, 1 â€“ lever down) Bit 9 â€“ Thermal head lever position of receipt station (
+ * 0 â€“ lever up, 1 â€“ lever down) Bit 10 â€“ FP cabinet lid position (0 â€“ lid down,
+ * 1 â€“ lid up) Bit 11 â€“ Cash drawer (0 â€“ drawer closed, 1 â€“ drawer open) Bit 12a
+ * â€“Failure of right sensor of printing mechanism (0 â€“ no, 1 â€“ yes) Bit 12b â€“
+ * Paper on input to presenter (0 â€“ no, 1 â€“ yes) Bit 12c â€“ Printing mechanism
+ * model (0 â€“ MLT-286, 1 â€“ MLT-286-1) Bit 13a â€“ Failure of left sensor of
+ * printing mechanism (0 â€“ no, 1 â€“ yes) Bit 13b â€“ Paper in presenter (0 â€“ no, 1
+ * â€“ yes) Bit 14 â€“ EJ almost full (0 â€“ no, 1 â€“ yes) Bit 15a â€“ Quantity accuracyÂ·
+ * for fiscal printers without EJ: 0 â€“ standard accuracy, 1 â€“ higher accuracyÂ·
+ * for fiscal printers with EJ: 1 â€“ standard accuracy, 0 â€“ higher accuracyBit
+ * 15b â€“ Printer buffer status (0 â€“ empty, 1 â€“ not empty) [for fiscal module of
  * SHTRIH-POS-F]
  ****************************************************************************/
 

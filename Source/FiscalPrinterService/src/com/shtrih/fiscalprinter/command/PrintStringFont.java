@@ -17,11 +17,11 @@ package com.shtrih.fiscalprinter.command;
 import com.shtrih.fiscalprinter.FontNumber;
 
 /****************************************************************************
- * Print String With Specific Font Command: 2FH. Length: 47 bytes. · Operator
- * password (4 bytes) · Flags (1 byte) Bit 0 – print on journal station, Bit 1 –
- * print on receipt station · Font number (1 byte) 0…255 · String of characters
- * to print (40 bytes) Answer: 2FH. Length: 3 bytes. · Result Code (1 byte) ·
- * Operator index number (1 byte) 1…30 NOTE: Only WIN1251 code page characters
+ * Print String With Specific Font Command: 2FH. Length: 47 bytes. Â· Operator
+ * password (4 bytes) Â· Flags (1 byte) Bit 0 â€“ print on journal station, Bit 1 â€“
+ * print on receipt station Â· Font number (1 byte) 0â€¦255 Â· String of characters
+ * to print (40 bytes) Answer: 2FH. Length: 3 bytes. Â· Result Code (1 byte) Â·
+ * Operator index number (1 byte) 1â€¦30 NOTE: Only WIN1251 code page characters
  * can be printed. Characters with codes 0 to 31 are ignored.
  ****************************************************************************/
 

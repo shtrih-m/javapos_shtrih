@@ -17,11 +17,11 @@ package com.shtrih.fiscalprinter.command;
 import com.shtrih.util.MethodParameter;
 
 /****************************************************************************
- * Print extended graphics Command: C3H. Length: 9 bytes. · Operator password (4
- * bytes) · Number of first line of preloaded graphics to be printed (1 byte)
- * 1…1200 · Number of last line of preloaded graphics to be printed (1 byte)
- * 1…1200 Answer: C3H. Length: 3 bytes. · Result Code (1 byte) · Operator index
- * number (1 byte) 1…30
+ * Print extended graphics Command: C3H. Length: 9 bytes. Â· Operator password (4
+ * bytes) Â· Number of first line of preloaded graphics to be printed (1 byte)
+ * 1â€¦1200 Â· Number of last line of preloaded graphics to be printed (1 byte)
+ * 1â€¦1200 Answer: C3H. Length: 3 bytes. Â· Result Code (1 byte) Â· Operator index
+ * number (1 byte) 1â€¦30
  ****************************************************************************/
 
 public final class PrintGraphics2 extends PrinterCommand {

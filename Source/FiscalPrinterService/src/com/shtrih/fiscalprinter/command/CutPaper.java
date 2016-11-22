@@ -13,9 +13,9 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Cut receipt Command: 25H. Length: 6 bytes. · Operator password (4 bytes) ·
- * Cut type (1 byte) «0» – complete, «1» – incomplete Answer: 25H. Length: 3
- * bytes. · Result Code (1 byte) · Operator index number (1 byte) 1…30
+ * Cut receipt Command: 25H. Length: 6 bytes. Â· Operator password (4 bytes) Â·
+ * Cut type (1 byte) Â«0Â» â€“ complete, Â«1Â» â€“ incomplete Answer: 25H. Length: 3
+ * bytes. Â· Result Code (1 byte) Â· Operator index number (1 byte) 1â€¦30
  ****************************************************************************/
 public final class CutPaper extends PrinterCommand {
     // in
@@ -23,7 +23,7 @@ public final class CutPaper extends PrinterCommand {
     private int password; // Operator password (4 bytes)
     private int cutType; // Cut type (1 byte)
     // out
-    private int operator = 0; // Operator index number (1 byte) 1…30
+    private int operator = 0; // Operator index number (1 byte) 1â€¦30
 
     /**
      * Creates a new instance of CutPaper

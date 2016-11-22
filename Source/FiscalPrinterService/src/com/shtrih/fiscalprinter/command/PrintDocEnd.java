@@ -13,10 +13,10 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Print document ending Command: 53H. Message length: 6 bytes. · Operator
- * password (4 bytes) · Parameter (1 byte) · 0 - do not print receipt trailer ·
- * 1 - print receipt trailer Answer: 53H. Message length: 3 bytes. · Result code
- * (1 byte) · Operator number (1 byte) 1…30
+ * Print document ending Command: 53H. Message length: 6 bytes. Â· Operator
+ * password (4 bytes) Â· Parameter (1 byte) Â· 0 - do not print receipt trailer Â·
+ * 1 - print receipt trailer Answer: 53H. Message length: 3 bytes. Â· Result code
+ * (1 byte) Â· Operator number (1 byte) 1â€¦30
  ****************************************************************************/
 public final class PrintDocEnd extends PrinterCommand {
 

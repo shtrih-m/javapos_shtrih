@@ -15,8 +15,8 @@ package com.shtrih.printer.ncr7167;
  */
 
 /*********************************************************************
- * Define Parsing Format, Do Not Save Permanently ASCII: ESC w p d1 d2…dn CR
- * Hexadecimal: 1B 77 70 d1 d2…dn CR
+ * Define Parsing Format, Do Not Save Permanently ASCII: ESC w p d1 d2â€¦dn CR
+ * Hexadecimal: 1B 77 70 d1 d2â€¦dn CR
  **********************************************************************/
 
 public final class DefineParsingFormat extends NCR7167Command {

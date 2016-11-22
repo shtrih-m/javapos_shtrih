@@ -40,7 +40,7 @@ public class FptrParameters {
     public int recCloseSleepTime = 0;
     public String closeReceiptText = "";
     public String subtotalText = "SUBTOTAL";
-    public String receiptVoidText = "◊≈  Œ“Ã≈Õ≈Õ";
+    public String receiptVoidText = "–ß–ï–ö –û–¢–ú–ï–ù–ï–ù";
     public int taxPassword = 0;
     public int usrPassword = 1;
     public int sysPassword = 30;
@@ -54,7 +54,7 @@ public class FptrParameters {
     public String fieldsFilesPath = "";
     public int numHeaderLines;
     public int numTrailerLines;
-    public String[] taxNames = {"¿", "¡", "¬", "√"};
+    public String[] taxNames = {"–ê", "–ë", "–í", "–ì"};
     public final Vector paymentNames = new Vector();
     public int reportDevice = SmFptrConst.SMFPTR_REPORT_DEVICE_EJ;
     public int reportType = PrinterConst.SMFP_REPORT_TYPE_FULL;
@@ -277,7 +277,7 @@ public class FptrParameters {
         compatibilityLevel = reader.readInteger("compatibilityLevel",
                 SmFptrConst.SMFPTR_COMPAT_LEVEL_NONE);
         receiptVoidText = reader.readString("receiptVoidText",
-                "◊≈  Œ“Ã≈Õ≈Õ");
+                "–ß–ï–ö –û–¢–ú–ï–ù–ï–ù");
         checkTotalEnabled = reader.readBoolean("checkTotalEnabled", false);
         receiptNumberRequest = reader.readInteger("receiptNumberRequest", 
             SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER); 

@@ -13,8 +13,8 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Test EJ Archive Structure Command: AFH. Length: 5 bytes. · System
- * Administrator password (4 bytes) 30 Answer: AFH. Length: 2 bytes. · Result
+ * Test EJ Archive Structure Command: AFH. Length: 5 bytes. Â· System
+ * Administrator password (4 bytes) 30 Answer: AFH. Length: 2 bytes. Â· Result
  * Code (1 byte)
  ****************************************************************************/
 public final class TestEJArchive extends PrinterCommand {

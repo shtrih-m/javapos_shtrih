@@ -18,14 +18,14 @@ package com.shtrih.fiscalprinter.command;
  electronic journal
 
  Command:  B8H. Length: 12 bytes.
- ·	System Administrator password (4 bytes) 30
- ·	Report type (1 byte) «0» – short, «1» – full
- ·	Date of first daily totals in range (3 bytes) DD-MM-YY
- ·	Date of last daily totals in range (3 bytes) DD-MM-YY
+ Â·	System Administrator password (4 bytes) 30
+ Â·	Report type (1 byte) Â«0Â» â€“ short, Â«1Â» â€“ full
+ Â·	Date of first daily totals in range (3 bytes) DD-MM-YY
+ Â·	Date of last daily totals in range (3 bytes) DD-MM-YY
 
  Answer:		B8H. Length: 18 bytes.
- ·	Result Code (1 byte)
- ·	ECR model (16 bytes) string of WIN1251 code page characters
+ Â·	Result Code (1 byte)
+ Â·	ECR model (16 bytes) string of WIN1251 code page characters
 
  NOTE: Command execution may take up to 100 seconds.
 

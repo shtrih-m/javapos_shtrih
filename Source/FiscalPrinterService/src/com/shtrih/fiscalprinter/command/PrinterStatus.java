@@ -1,7 +1,7 @@
 /*
  * PrinterStatus.java
  *
- * Created on 11 Νξÿαπό 2009 γ., 17:43
+ * Created on 11 ΠΠΎΡΠ±Ρ€Ρ 2009 Π³., 17:43
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

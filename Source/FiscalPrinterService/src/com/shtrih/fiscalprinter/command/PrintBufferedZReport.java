@@ -13,9 +13,9 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Print Z-Report From Buffer Command: C7H. Length: 5 bytes. · Administrator or
+ * Print Z-Report From Buffer Command: C7H. Length: 5 bytes. Â· Administrator or
  * System Administrator password (4 bytes) 29, 30 Answer: C7H. Length: 3 bytes.
- * · Result Code (1 byte) · Operator index number (1 byte) 29, 30
+ * Â· Result Code (1 byte) Â· Operator index number (1 byte) 29, 30
  ****************************************************************************/
 public final class PrintBufferedZReport extends PrinterCommand {
 

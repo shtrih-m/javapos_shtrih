@@ -13,9 +13,9 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Close nonfiscal document Command: E3H. Message length: 5 bytes. · OPerator
- * password (4 bytes) Answer: E3H. Message length: 3 bytes. · Result code (1
- * byte) · Operator number (1 byte) 1…30 This command closes nonfiscal document
+ * Close nonfiscal document Command: E3H. Message length: 5 bytes. Â· OPerator
+ * password (4 bytes) Answer: E3H. Message length: 3 bytes. Â· Result code (1
+ * byte) Â· Operator number (1 byte) 1â€¦30 This command closes nonfiscal document
  ****************************************************************************/
 public final class CloseNonFiscal extends PrinterCommand {
     // in

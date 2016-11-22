@@ -15,8 +15,8 @@ package com.shtrih.printer.ncr7167;
  */
 
 /*********************************************************************
- * Print Advanced Raster Graphics ASCII: ESC .mn rl rh d1 … dn Hexadecimal: 1B
- * 2E m n rl rh d1…dn
+ * Print Advanced Raster Graphics ASCII: ESC .mn rl rh d1 â€¦ dn Hexadecimal: 1B
+ * 2E m n rl rh d1â€¦dn
  **********************************************************************/
 
 public final class PrintAdvancedRasterGraphics extends NCR7167Command {

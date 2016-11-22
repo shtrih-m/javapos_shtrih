@@ -13,12 +13,12 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /*****************************************************************************
- * Feed paper Command: 29H. Length: 7 bytes. · Operator password (4 bytes) ·
- * Flags (1 byte) Bit 0 – journal station, Bit 1 – receipt station, Bit 2 – slip
- * station · Number of lines to feed (1 byte) 1…255 – the maximum number of
+ * Feed paper Command: 29H. Length: 7 bytes. Â· Operator password (4 bytes) Â·
+ * Flags (1 byte) Bit 0 â€“ journal station, Bit 1 â€“ receipt station, Bit 2 â€“ slip
+ * station Â· Number of lines to feed (1 byte) 1â€¦255 â€“ the maximum number of
  * lines to feed is limited by the size of print buffer, but does not exceed 255
- * Answer: 29H. Length: 3 bytes. · Result Code (1 byte) · Operator index number
- * (1 byte) 1…30
+ * Answer: 29H. Length: 3 bytes. Â· Result Code (1 byte) Â· Operator index number
+ * (1 byte) 1â€¦30
  *****************************************************************************/
 public final class FeedPaper extends PrinterCommand {
     // in params

@@ -16,9 +16,9 @@ package com.shtrih.fiscalprinter.command;
 
 /****************************************************************************
  * Fill Slip Line Buffer With Non-fiscal Data Command: 7AH. Length: (6 + X)
- * bytes. · Operator password (4 bytes) · Slip line number (1 byte) 1…200 · Text
- * for printing (X bytes) * Answer: 7AH. Length: 3 bytes. · Result Code (1 byte)
- * · Operator index number (1 byte) 1…30 – only WIN1251 code page characters can
+ * bytes. Â· Operator password (4 bytes) Â· Slip line number (1 byte) 1â€¦200 Â· Text
+ * for printing (X bytes) * Answer: 7AH. Length: 3 bytes. Â· Result Code (1 byte)
+ * Â· Operator index number (1 byte) 1â€¦30 â€“ only WIN1251 code page characters can
  * be printed. Characters with code 27 and the very next character are not
  * placed in the buffer, but set the font type of the following characters.
  * Parameter length is up to 260 bytes.

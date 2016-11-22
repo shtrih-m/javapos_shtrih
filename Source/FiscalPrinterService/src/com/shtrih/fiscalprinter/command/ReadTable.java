@@ -17,9 +17,9 @@ package com.shtrih.fiscalprinter.command;
 import com.shtrih.util.MethodParameter;
 
 /****************************************************************************
- * Get Table Field Value Command: 1FH. Length: 9 bytes. · System Administrator
- * password (4 bytes) 30 · Table (1 byte) · Row (2 bytes) · Field (1 byte)
- * Answer: 1FH. Length: (2+X) bytes. · Result Code (1 byte)
+ * Get Table Field Value Command: 1FH. Length: 9 bytes. Â· System Administrator
+ * password (4 bytes) 30 Â· Table (1 byte) Â· Row (2 bytes) Â· Field (1 byte)
+ * Answer: 1FH. Length: (2+X) bytes. Â· Result Code (1 byte)
  ****************************************************************************/
 
 public class ReadTable extends PrinterCommand {

@@ -15,8 +15,8 @@ package com.shtrih.printer.ncr7167;
  */
 
 /*********************************************************************
- * Printer Setting Change ASCII: USDC1[m n], [m n], …[m n] 0FFH Hexadecimal: 1F
- * 11 [m n], [m n], … [m n] 0FFH
+ * Printer Setting Change ASCII: USDC1[m n], [m n], â€¦[m n] 0FFH Hexadecimal: 1F
+ * 11 [m n], [m n], â€¦ [m n] 0FFH
  **********************************************************************/
 
 public class PrinterSettingChange extends NCR7167Command {

@@ -15,10 +15,10 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Print graphic line Command: C5H. Length: X + 7 bytes. · Operator password (4
- * bytes) · Number of repetitions (2 bytes) · Graphical data (X bytes) Answer:
- * C5H. Length: 3 bytes. · Result Code (1 byte) · Operator index number (1 byte)
- * 1…30
+ * Print graphic line Command: C5H. Length: X + 7 bytes. Â· Operator password (4
+ * bytes) Â· Number of repetitions (2 bytes) Â· Graphical data (X bytes) Answer:
+ * C5H. Length: 3 bytes. Â· Result Code (1 byte) Â· Operator index number (1 byte)
+ * 1â€¦30
  ****************************************************************************/
 
 public final class PrintGraphicLine extends PrinterCommand {

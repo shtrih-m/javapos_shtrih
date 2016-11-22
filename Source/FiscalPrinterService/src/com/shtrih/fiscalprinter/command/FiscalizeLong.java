@@ -13,13 +13,13 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Fiscalize with long ECRRN Command: 0DH. Length: 22 bytes. · Old Tax Officer
- * password (4 bytes) · New Tax Officer password (4 bytes) · Long ECRRN (7
- * bytes) 00000000000000…99999999999999 · Taxpayer ID (6 bytes)
- * 000000000000…999999999999 Answer: 0DH. Length: 9 bytes. · Result Code (1
- * byte) · Fiscalization/Refiscalization number(1 byte) 1…16 · Quantity of
- * refiscalizations left in FM (1 byte) 0…15 · Last daily totals record number
- * in FM (2 bytes) 0000…2100 · Fiscalization/Refiscalization date (3 bytes)
+ * Fiscalize with long ECRRN Command: 0DH. Length: 22 bytes. Â· Old Tax Officer
+ * password (4 bytes) Â· New Tax Officer password (4 bytes) Â· Long ECRRN (7
+ * bytes) 00000000000000â€¦99999999999999 Â· Taxpayer ID (6 bytes)
+ * 000000000000â€¦999999999999 Answer: 0DH. Length: 9 bytes. Â· Result Code (1
+ * byte) Â· Fiscalization/Refiscalization number(1 byte) 1â€¦16 Â· Quantity of
+ * refiscalizations left in FM (1 byte) 0â€¦15 Â· Last daily totals record number
+ * in FM (2 bytes) 0000â€¦2100 Â· Fiscalization/Refiscalization date (3 bytes)
  * DD-MM-YY NOTE: The command is introduced into this protocol to conform to the
  * Byelorussian legislation that requires Electronic Cash Registers to have
  * registration numbers (ECRRN) 14 digits long, where as Russian ECRRN is 10

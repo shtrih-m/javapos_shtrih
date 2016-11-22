@@ -1,7 +1,7 @@
 /*
  * EJournalTime.java
  *
- * Created on 14 Ã‡È 2010 „., 14:06
+ * Created on 14 –ú–∞–π 2010 –≥., 14:06
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

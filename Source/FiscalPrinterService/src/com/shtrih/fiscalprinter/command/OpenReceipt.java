@@ -13,10 +13,10 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Open Receipt Command: 8DH. Length: 6 bytes. · Operator password (4 bytes) ·
- * Receipt type (1 byte): 0 – Sale; 1 – Buy; 2 – Sale Refund; 3 – Buy Refund.
- * Answer: 8DH. Length: 3 bytes. · Result Code (1 byte) · Operator index number
- * (1 byte) 1…30
+ * Open Receipt Command: 8DH. Length: 6 bytes. Â· Operator password (4 bytes) Â·
+ * Receipt type (1 byte): 0 â€“ Sale; 1 â€“ Buy; 2 â€“ Sale Refund; 3 â€“ Buy Refund.
+ * Answer: 8DH. Length: 3 bytes. Â· Result Code (1 byte) Â· Operator index number
+ * (1 byte) 1â€¦30
  ****************************************************************************/
 public final class OpenReceipt extends PrinterCommand {
     // in

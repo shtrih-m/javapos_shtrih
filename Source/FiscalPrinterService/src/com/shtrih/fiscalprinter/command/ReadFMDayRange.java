@@ -15,12 +15,12 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Get Dates And Days Ranges In FM Command: 64H. Length: 5 bytes. · Tax Officer
- * password (4 bytes) Answer: 64H. Length: 12 bytes. · Result Code (1 byte) ·
- * Date of first daily totals record in FM (3 bytes) DD-MM-YY · Date of last
- * daily totals record in FM (3 bytes) DD-MM-YY · Number of first daily totals
- * record in FM (2 bytes) 0000…2100 · Number of last daily totals record in FM
- * (2 bytes) 0000…2100
+ * Get Dates And Days Ranges In FM Command: 64H. Length: 5 bytes. Â· Tax Officer
+ * password (4 bytes) Answer: 64H. Length: 12 bytes. Â· Result Code (1 byte) Â·
+ * Date of first daily totals record in FM (3 bytes) DD-MM-YY Â· Date of last
+ * daily totals record in FM (3 bytes) DD-MM-YY Â· Number of first daily totals
+ * record in FM (2 bytes) 0000â€¦2100 Â· Number of last daily totals record in FM
+ * (2 bytes) 0000â€¦2100
  ****************************************************************************/
 
 public class ReadFMDayRange {

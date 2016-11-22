@@ -19,11 +19,11 @@ package com.shtrih.fiscalprinter.command;
  * 115200 bauds which corresponds to codes of 0 to 6. For other FP ports baud
  * rates range can be smaller, thus if any port does not support some baud rate
  * FP reports an error. Inter-character time out is not a linear parameter. Time
- * out value range [0..255] is divided into three sub-ranges: 1. [0..150] – each
+ * out value range [0..255] is divided into three sub-ranges: 1. [0..150] â€“ each
  * unit equals to 1 ms which means that this range sets inter-character time out
- * value from 0 to 150 ms 2. [151..249] – each unit equals to 150 ms which means
+ * value from 0 to 150 ms 2. [151..249] â€“ each unit equals to 150 ms which means
  * that this range sets inter-character time out values from 300 ms to 15 sec 3.
- * [250..255] – each unit equals to 15 sec which means that this range sets
+ * [250..255] â€“ each unit equals to 15 sec which means that this range sets
  * inter-character time out values from 30 to 105 sec. By default all ports have
  * the following preset parameters: speed 4800 baud with 100 ms of
  * inter-character time out. If data exchange parameters are to be set for the

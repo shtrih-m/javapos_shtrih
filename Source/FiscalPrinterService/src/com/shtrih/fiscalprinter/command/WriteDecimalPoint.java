@@ -15,10 +15,10 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Set Decimal Dot Position Command: 20H. Length: 6 bytes. · System
- * Administrator password (4 bytes) 30 · Decimal dot position (1 byte) «0» – 0
- * digits after the dot, «1» – 2 digits after the dot Answer: 20H. Length: 2
- * bytes. · Result Code (1 byte)
+ * Set Decimal Dot Position Command: 20H. Length: 6 bytes. Â· System
+ * Administrator password (4 bytes) 30 Â· Decimal dot position (1 byte) Â«0Â» â€“ 0
+ * digits after the dot, Â«1Â» â€“ 2 digits after the dot Answer: 20H. Length: 2
+ * bytes. Â· Result Code (1 byte)
  ****************************************************************************/
 
 public final class WriteDecimalPoint extends PrinterCommand {

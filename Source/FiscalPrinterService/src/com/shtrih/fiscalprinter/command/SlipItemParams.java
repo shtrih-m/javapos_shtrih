@@ -14,20 +14,20 @@ package com.shtrih.fiscalprinter.command;
  */
 public class SlipItemParams {
 
-    // Quantity format (1 byte) «0» – no digits after decimal dot, «1» – digits
+    // Quantity format (1 byte) Â«0Â» â€“ no digits after decimal dot, Â«1Â» â€“ digits
     // after decimal dot
     public byte quantityFormat = 0;
-    // Number of lines in transaction block (1 byte) 1…3
+    // Number of lines in transaction block (1 byte) 1â€¦3
     public byte lineNumber = 0;
-    // Line number of Text element in transaction block (1 byte) 0…3, «0» – do
+    // Line number of Text element in transaction block (1 byte) 0â€¦3, Â«0Â» â€“ do
     // not print
     public byte textLine = 0;
     // Line number of Quantity Times Unit Price element in transaction block (1
-    // byte) 0…3, «0» – do not print
+    // byte) 0â€¦3, Â«0Â» â€“ do not print
     public byte quantityLine = 0;
-    // Line number of Transaction Sum element in transaction block (1 byte) 1…3
+    // Line number of Transaction Sum element in transaction block (1 byte) 1â€¦3
     public byte amountLine = 0;
-    // Line number of Department element in transaction block (1 byte) 1…3
+    // Line number of Department element in transaction block (1 byte) 1â€¦3
     public byte departmentLine = 0;
     // Font type of Text element (1 byte)
     public byte textFont = 0;

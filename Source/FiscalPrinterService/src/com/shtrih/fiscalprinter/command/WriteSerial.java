@@ -15,9 +15,9 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Set Serial Number Command: 60H. Length: 9 bytes. · Password (4 bytes)
- * (default value is «0») · Serial number (4 bytes) 00000000…99999999 Answer:
- * 60H. Length: 2 bytes. · Result Code (1 byte)
+ * Set Serial Number Command: 60H. Length: 9 bytes. Â· Password (4 bytes)
+ * (default value is Â«0Â») Â· Serial number (4 bytes) 00000000â€¦99999999 Answer:
+ * 60H. Length: 2 bytes. Â· Result Code (1 byte)
  ****************************************************************************/
 
 public final class WriteSerial extends PrinterCommand {

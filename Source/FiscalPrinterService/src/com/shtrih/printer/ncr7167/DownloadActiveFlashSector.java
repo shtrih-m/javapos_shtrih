@@ -15,8 +15,8 @@ package com.shtrih.printer.ncr7167;
  */
 
 /*********************************************************************
- * Download to Active Flash Sector ASCII: GSDC1al ah cl ch d1…dn Hexadecimal: 1D
- * 11 al ah cl ch d1…dn n = ((ch * 256) + cl)
+ * Download to Active Flash Sector ASCII: GSDC1al ah cl ch d1â€¦dn Hexadecimal: 1D
+ * 11 al ah cl ch d1â€¦dn n = ((ch * 256) + cl)
  **********************************************************************/
 
 public final class DownloadActiveFlashSector extends NCR7167Command {

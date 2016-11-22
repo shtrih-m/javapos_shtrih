@@ -1,7 +1,7 @@
 /*
  * FptrPaymentName.java
  *
- * Created on 25 Îêòÿáğü 2009 ã., 19:27
+ * Created on 25 ĞĞºÑ‚ÑĞ±Ñ€ÑŒ 2009 Ğ³., 19:27
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

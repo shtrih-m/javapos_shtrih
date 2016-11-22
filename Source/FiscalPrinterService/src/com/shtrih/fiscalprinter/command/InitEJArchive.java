@@ -13,8 +13,8 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Initialize electronic journal archive Command: B2H. Length: 5 bytes. · System
- * Administrator password (4 bytes) 30 Answer: B2H. Length: 2 bytes. · Result
+ * Initialize electronic journal archive Command: B2H. Length: 5 bytes. Â· System
+ * Administrator password (4 bytes) 30 Answer: B2H. Length: 2 bytes. Â· Result
  * Code (1 byte) NOTE: Command can be executed only with electronic journal
  * development kit. Command execution may take up to 20 seconds.
  ****************************************************************************/

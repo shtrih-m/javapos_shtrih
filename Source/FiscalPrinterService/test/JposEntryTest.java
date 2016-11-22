@@ -1,7 +1,7 @@
 /*
  * JposEntryTest.java
  *
- * Created on 10 Февраль 2011 г., 11:41
+ * Created on 10 Р¤РµРІСЂР°Р»СЊ 2011 Рі., 11:41
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

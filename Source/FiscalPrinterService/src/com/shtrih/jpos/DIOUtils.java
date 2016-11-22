@@ -1,7 +1,7 @@
 /*
  * DIOUtils.java
  *
- * Created on 13 Ã‡È 2010 „., 17:30
+ * Created on 13 –ú–∞–π 2010 –≥., 17:30
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

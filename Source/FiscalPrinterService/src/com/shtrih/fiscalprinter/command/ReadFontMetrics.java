@@ -13,12 +13,12 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Get Font Parameters Command: 26H. Length: 6 bytes. · System Administrator
- * password (4 bytes) 30 · Font type (1 byte) Answer: 26H. Length: 7 bytes. ·
- * Result Code (1 byte) · Print width in dots (2 bytes) · Character width in
- * dots (1 byte) the width is given together with inter-character spacing ·
+ * Get Font Parameters Command: 26H. Length: 6 bytes. Â· System Administrator
+ * password (4 bytes) 30 Â· Font type (1 byte) Answer: 26H. Length: 7 bytes. Â·
+ * Result Code (1 byte) Â· Print width in dots (2 bytes) Â· Character width in
+ * dots (1 byte) the width is given together with inter-character spacing Â·
  * Character height in dots (1 byte) the height is given together with
- * inter-line spacing · Number of fonts in FP (1 byte)
+ * inter-line spacing Â· Number of fonts in FP (1 byte)
  ****************************************************************************/
 public final class ReadFontMetrics extends PrinterCommand {
 

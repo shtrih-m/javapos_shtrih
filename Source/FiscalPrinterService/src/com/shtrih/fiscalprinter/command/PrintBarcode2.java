@@ -25,7 +25,7 @@ package com.shtrih.fiscalprinter.command;
  * 
  * Answer: 0xCBh. Length: 3 bytes. 
  * - Result Code (1 byte) 
- * - Operator number (1 byte) 1…30
+ * - Operator number (1 byte) 1â€¦30
  *****************************************************************************/
 
 public final class PrintBarcode2 extends PrinterCommand {

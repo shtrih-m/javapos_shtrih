@@ -15,9 +15,9 @@ import com.shtrih.util.MethodParameter;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Cash In Command: 50H. Length: 10 bytes. · Operator password (4 bytes) · Sum
- * to be cashed in (5 bytes) Answer: 50H. Length: 5 bytes. · Result Code (1
- * byte) · Operator index number (1 byte) 1…30 · Current receipt number (2
+ * Cash In Command: 50H. Length: 10 bytes. Â· Operator password (4 bytes) Â· Sum
+ * to be cashed in (5 bytes) Answer: 50H. Length: 5 bytes. Â· Result Code (1
+ * byte) Â· Operator index number (1 byte) 1â€¦30 Â· Current receipt number (2
  * bytes)
  ****************************************************************************/
 public final class PrintCashIn extends PrinterCommand {
@@ -26,7 +26,7 @@ public final class PrintCashIn extends PrinterCommand {
     private int password = 0; // Operator password (4 bytes)
     private long amount = 0; // Sum to be cashed in (5 bytes)
     // out
-    private int operator = 0; // Operator index number (1 byte) 1…30
+    private int operator = 0; // Operator index number (1 byte) 1â€¦30
     private int receiptNumber = 0; // Current receipt number (2 bytes)
 
     /**

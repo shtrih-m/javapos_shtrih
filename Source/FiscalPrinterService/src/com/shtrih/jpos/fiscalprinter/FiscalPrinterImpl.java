@@ -974,18 +974,18 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         LogWriter.write(getDeviceMetrics());
         LogWriter.writeSeparator();
 
-        physicalDeviceName = getDeviceMetrics().getDeviceName() + ", π "
+        physicalDeviceName = getDeviceMetrics().getDeviceName() + ", ‚Ññ "
                 + longStatus.getSerial();
 
         String formatString = Localizer
                 .getString(Localizer.PhysicalDeviceDescription);
 
-        // iceDescription = "%s,  %s, œŒ ‘–: %s.%d, %s, œŒ ‘œ: %s.%d, %s"
+        // iceDescription = "%s,  %s, –ü–û –§–†: %s.%d, %s, –ü–û –§–ü: %s.%d, %s"
         physicalDeviceDescription = getDeviceMetrics().getDeviceName() + ", "
-                + longStatus.getSerial() + ", œŒ ‘–: "
+                + longStatus.getSerial() + ", –ü–û –§–†: "
                 + longStatus.getFirmwareVersion() + "."
                 + String.valueOf(longStatus.getFirmwareBuild()) + ", "
-                + longStatus.getFirmwareDate().toString() + ", œŒ ‘œ: "
+                + longStatus.getFirmwareDate().toString() + ", –ü–û –§–ü: "
                 + longStatus.getFMFirmwareVersion() + "."
                 + String.valueOf(longStatus.getFMFirmwareBuild()) + ", "
                 + longStatus.getFMFirmwareDate().toString();
@@ -2441,9 +2441,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         synchronized (requests) {
             requests.clear();
         }
-        // Any output error events that are enqueued ñ
+        // Any output error events that are enqueued ‚Äì
         // usually waiting for FreezeEvents to
-        // be set to false ñ are also cleared.
+        // be set to false ‚Äì are also cleared.
         synchronized (events) {
             for (int i = events.size() - 1; i >= 0; i--) {
                 if (events.get(i) instanceof ErrorEventRequest) {
@@ -2714,12 +2714,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
         long number;
         switch (dataItem) {
-            // Get the Fiscal Printerís firmware release number.
+            // Get the Fiscal Printer‚Äôs firmware release number.
             case FPTR_GD_FIRMWARE:
                 result = getDataFirmware(optArgs);
                 break;
 
-            // Get the Fiscal Printerís fiscal ID.
+            // Get the Fiscal Printer‚Äôs fiscal ID.
             case FPTR_GD_PRINTER_ID:
                 if (printer.getCapFiscalStorage()) {
                     String[] value = new String[1];
@@ -2748,7 +2748,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 result = StringUtils.amountToString(amount);
                 break;
 
-            // Get the Fiscal Printerís grand total.
+            // Get the Fiscal Printer‚Äôs grand total.
             case FPTR_GD_GRAND_TOTAL:
                 result = readGrandTotal(optArgs);
                 break;
@@ -3119,7 +3119,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
      * ************************************************************************
      * Prints a report of totals for a range of dates on the receipt. This
      * method is always performed synchronously. The dates are strings in the
-     * format ìddmmyyyyhhmmî, where: dd day of the month (1 - 31) mm month (1 -
+     * format ‚Äúddmmyyyyhhmm‚Äù, where: dd day of the month (1 - 31) mm month (1 -
      * 12) yyyy year (1997-) hh hour (0-23) mm minutes (0-59)
      * *************************************************************************
      */

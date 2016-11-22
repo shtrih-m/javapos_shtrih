@@ -15,9 +15,9 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Print daily totals from electronic journal Command: A4H. Length: 7 bytes. ·
- * System Administrator password (4 bytes) 30 · Day number (2 bytes) 0000…2100
- * Answer: A4H. Length: 2 bytes. · Result Code (1 byte) NOTE: Command execution
+ * Print daily totals from electronic journal Command: A4H. Length: 7 bytes. Â·
+ * System Administrator password (4 bytes) 30 Â· Day number (2 bytes) 0000â€¦2100
+ * Answer: A4H. Length: 2 bytes. Â· Result Code (1 byte) NOTE: Command execution
  * may take up to 40 seconds.
  ****************************************************************************/
 

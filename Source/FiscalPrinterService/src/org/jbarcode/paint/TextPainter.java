@@ -3,7 +3,7 @@
  * ================================================================
  *
  * Project Info:  http://jbcode.sourceforge.net
- * Project Lead:  Flávio Sampaio (flavio@ronisons.com);
+ * Project Lead:  FlГЎvio Sampaio (flavio@ronisons.com);
  *
  * (C) Copyright 2005, by Flavio Sampaio
  *
@@ -26,7 +26,7 @@ import java.awt.image.BufferedImage;
 /**
  * TODO: Description.
  * 
- * @author Fl�vio Sampaio
+ * @author FlпїЅvio Sampaio
  * @since 0.1
  */
 public interface TextPainter {

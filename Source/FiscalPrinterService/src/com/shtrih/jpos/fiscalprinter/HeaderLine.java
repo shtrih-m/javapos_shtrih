@@ -1,7 +1,7 @@
 /*
  * HeaderLine.java
  *
- * Created on 23 Νξÿαπό 2009 γ., 20:39
+ * Created on 23 ΠΠΎΡΠ±Ρ€Ρ 2009 Π³., 20:39
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

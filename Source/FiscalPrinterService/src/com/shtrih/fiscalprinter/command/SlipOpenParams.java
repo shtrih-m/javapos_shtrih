@@ -14,13 +14,13 @@ package com.shtrih.fiscalprinter.command;
  */
 public class SlipOpenParams {
 
-    // Slip type (1 byte) «0» – Sale, «1» – Buy, «2» – Sale Refund, «3» – Buy
+    // Slip type (1 byte) Â«0Â» â€“ Sale, Â«1Â» â€“ Buy, Â«2Â» â€“ Sale Refund, Â«3Â» â€“ Buy
     // Refund
     public byte slipType = 0;
-    // Slip duplicates type (1 byte) «0» – duplicates as columns, «1» –
+    // Slip duplicates type (1 byte) Â«0Â» â€“ duplicates as columns, Â«1Â» â€“
     // duplicates as line blocks
     public byte slipDupType = 0;
-    // Number of duplicates (1 byte) 0…5
+    // Number of duplicates (1 byte) 0â€¦5
     public byte numCopies = 0;
     // Spacing between Original and Duplicate 1 (1 byte) *
     public byte spacing1 = 0;

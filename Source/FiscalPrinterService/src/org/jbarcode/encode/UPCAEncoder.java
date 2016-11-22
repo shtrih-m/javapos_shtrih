@@ -24,7 +24,7 @@ package org.jbarcode.encode;
 /**
  * TODO: Description.
  *
- * @author Fl�vio Sampaio
+ * @author FlпїЅvio Sampaio
  * @since 0.1
  */
 public class UPCAEncoder extends EANEncoder {

@@ -1,7 +1,7 @@
 /*
  * PrinterState.java
  *
- * Created on 10 Март 2011 г., 14:06
+ * Created on 10 РњР°СЂС‚ 2011 Рі., 14:06
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

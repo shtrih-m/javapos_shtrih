@@ -13,10 +13,10 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Set communication parameters Command: 14H. Length: 8 bytes. · System
- * Administrator password (4 bytes) 30 · Port number (1 byte) 0…255 · Baud rate
- * (1 byte) 0…6 · Inter-character time out (1 byte) 0…255 Answer: 14H. Length: 2
- * bytes. · Result Code (1 byte)
+ * Set communication parameters Command: 14H. Length: 8 bytes. Â· System
+ * Administrator password (4 bytes) 30 Â· Port number (1 byte) 0â€¦255 Â· Baud rate
+ * (1 byte) 0â€¦6 Â· Inter-character time out (1 byte) 0â€¦255 Answer: 14H. Length: 2
+ * bytes. Â· Result Code (1 byte)
  ****************************************************************************/
 public final class WritePortParams extends PrinterCommand {
     // in

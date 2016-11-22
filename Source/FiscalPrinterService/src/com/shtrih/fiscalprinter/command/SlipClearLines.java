@@ -15,9 +15,9 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Clear All Non-fiscal Data From Slip Buffer Command: 7CH. Length: 5 bytes. ·
- * Operator password (4 bytes) Answer: 7CH. Length: 3 bytes. · Result Code (1
- * byte) · Operator index number (1 byte) 1…30
+ * Clear All Non-fiscal Data From Slip Buffer Command: 7CH. Length: 5 bytes. Â·
+ * Operator password (4 bytes) Answer: 7CH. Length: 3 bytes. Â· Result Code (1
+ * byte) Â· Operator index number (1 byte) 1â€¦30
  ****************************************************************************/
 
 public final class SlipClearLines extends PrinterCommand {

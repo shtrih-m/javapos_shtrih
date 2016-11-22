@@ -1,7 +1,7 @@
 /*
  * IPrinterEvents.java
  *
- * Created on 17 Сентябрь 2010 г., 13:38
+ * Created on 17 РЎРµРЅС‚СЏР±СЂСЊ 2010 Рі., 13:38
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

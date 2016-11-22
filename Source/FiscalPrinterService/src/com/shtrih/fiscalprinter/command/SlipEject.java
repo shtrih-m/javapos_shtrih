@@ -15,9 +15,9 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Eject Slip Command: 2AH. Length: 6 bytes. · Operator password (4 bytes) ·
- * Slip paper eject direction (1 byte) «0» – down, «1» – up Answer: 2AH. Length:
- * 3 bytes. · Result Code (1 byte) · Operator index number (1 byte) 1…30
+ * Eject Slip Command: 2AH. Length: 6 bytes. Â· Operator password (4 bytes) Â·
+ * Slip paper eject direction (1 byte) Â«0Â» â€“ down, Â«1Â» â€“ up Answer: 2AH. Length:
+ * 3 bytes. Â· Result Code (1 byte) Â· Operator index number (1 byte) 1â€¦30
  ****************************************************************************/
 
 public final class SlipEject extends PrinterCommand {

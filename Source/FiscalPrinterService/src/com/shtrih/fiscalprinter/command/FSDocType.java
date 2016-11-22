@@ -15,17 +15,17 @@ public class FSDocType {
 
     //////////////////////////////////////////////////////////////////////
     // 
-    // 00h – нет открытого документа
+    // 00h вЂ“ РЅРµС‚ РѕС‚РєСЂС‹С‚РѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°
     public static final int FS_DOCTYPE_NONE = 0;
-    // 01h – отчет о фискализации
+    // 01h вЂ“ РѕС‚С‡РµС‚ Рѕ С„РёСЃРєР°Р»РёР·Р°С†РёРё
     public static final int FS_DOCTYPE_FISCAL_OPEN = 1;
-    // 02h – отчет об открытии смены
+    // 02h вЂ“ РѕС‚С‡РµС‚ РѕР± РѕС‚РєСЂС‹С‚РёРё СЃРјРµРЅС‹
     public static final int FS_DOCTYPE_DAYOPEN = 2;
-    // 04h – кассовый чек
+    // 04h вЂ“ РєР°СЃСЃРѕРІС‹Р№ С‡РµРє
     public static final int FS_DOCTYPE_RECEIPT = 4;
-    // 08h – отчет о закрытии смены
+    // 08h вЂ“ РѕС‚С‡РµС‚ Рѕ Р·Р°РєСЂС‹С‚РёРё СЃРјРµРЅС‹
     public static final int FS_DOCTYPE_DAYCLOSE = 8;
-    // 10h – отчет о закрытии фискального режима
+    // 10h вЂ“ РѕС‚С‡РµС‚ Рѕ Р·Р°РєСЂС‹С‚РёРё С„РёСЃРєР°Р»СЊРЅРѕРіРѕ СЂРµР¶РёРјР°
     public static final int FS_DOCTYPE_FISCAL_CLOSE = 16;
 
     private final int docType;

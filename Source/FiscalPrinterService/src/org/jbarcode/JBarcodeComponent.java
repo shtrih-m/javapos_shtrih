@@ -3,7 +3,7 @@
  * ================================================================
  *
  * Project Info:  http://jbcode.sourceforge.net
- * Project Lead:  Flávio Sampaio (flavio@ronisons.com);
+ * Project Lead:  FlГЎvio Sampaio (flavio@ronisons.com);
  *
  * (C) Copyright 2005, by Favio Sampaio
  *
@@ -41,7 +41,7 @@ import org.jbarcode.paint.TextPainter;
 /**
  * TODO: Description.
  * 
- * @author Flávio Sampaio
+ * @author FlГЎvio Sampaio
  * @since 0.1
  */
 public class JBarcodeComponent extends JComponent implements PropertyChangeListener{

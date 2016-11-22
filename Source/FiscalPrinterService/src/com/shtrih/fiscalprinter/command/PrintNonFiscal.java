@@ -15,10 +15,10 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Print document attribute Command: E4H. Message length: 7-206 bytes · Operator
- * password (4 bytes) · Attribute ID (1 byte) · Attribute value (1-200 bytes)
- * Answer: E4H. Message length: 3 bytes · Result code (1 byte) · Operator number
- * (1 byte) 1…30 This command prints document attribute in the open fiscal
+ * Print document attribute Command: E4H. Message length: 7-206 bytes Â· Operator
+ * password (4 bytes) Â· Attribute ID (1 byte) Â· Attribute value (1-200 bytes)
+ * Answer: E4H. Message length: 3 bytes Â· Result code (1 byte) Â· Operator number
+ * (1 byte) 1â€¦30 This command prints document attribute in the open fiscal
  * document context. Attribute value is string with win1251 encoding. Lines are
  * separated with 0x0A character. There can be up to 4 lines.
  ****************************************************************************/

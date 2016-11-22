@@ -17,33 +17,33 @@ import com.shtrih.ej.EJFlags;
 import com.shtrih.ej.EJStatus;
 
 /****************************************************************************
- * Get EJ Status 1 Command: ADH. Length: 5 bytes. · System Administrator
- * password (4 bytes) 30 Answer: ADH. Length: 22 bytes. · Result Code (1 byte) ·
- * KPK value of last fiscal receipt (5 bytes) 0000000000…9999999999 · Date of
- * last KPK (3 bytes) DD-MM-YY · Time of last KPK (2 bytes) HH-MM · Number of
- * last KPK (4 bytes) 00000000…99999999 · EJ serial number (5 bytes)
- * 0000000000…9999999999 · EJ flags (1 byte) EJ flags Bits 0&1 Flag t – Receipt
- * type marker:· «00» – Sale· «01» – Buy· «10» – Sale Refund· «11» – Buy
- * RefundFlag t value is set simultaneously with Flag d value Bit 2 Flag i – EJ
- * is activated (0 – no, 1 – yes).Flag i value turns «1» after successful
- * execution of command A9h «Activate EJ». Flag i value turns «0» after
- * successful execution of command AAh «Close EJ Archive» or in case of EJ
- * archive overflow. Bit 3 Flag f – Paper in slip station lower sensor (0 – no,
- * 1 – yes). Flag f value turns «1» after successful execution of Command A9h
- * «Activate EJ». After EJ activation Flag f value is always «1». Bit 4 Flag w –
- * EJ in report mode (0 – no, 1 – yes).Flag f value turns «1», if commands B3H –
- * BBH. Flag f value turns «0», if EJ returns «no data» upon successful
+ * Get EJ Status 1 Command: ADH. Length: 5 bytes. Â· System Administrator
+ * password (4 bytes) 30 Answer: ADH. Length: 22 bytes. Â· Result Code (1 byte) Â·
+ * KPK value of last fiscal receipt (5 bytes) 0000000000â€¦9999999999 Â· Date of
+ * last KPK (3 bytes) DD-MM-YY Â· Time of last KPK (2 bytes) HH-MM Â· Number of
+ * last KPK (4 bytes) 00000000â€¦99999999 Â· EJ serial number (5 bytes)
+ * 0000000000â€¦9999999999 Â· EJ flags (1 byte) EJ flags Bits 0&1 Flag t â€“ Receipt
+ * type marker:Â· Â«00Â» â€“ SaleÂ· Â«01Â» â€“ BuyÂ· Â«10Â» â€“ Sale RefundÂ· Â«11Â» â€“ Buy
+ * RefundFlag t value is set simultaneously with Flag d value Bit 2 Flag i â€“ EJ
+ * is activated (0 â€“ no, 1 â€“ yes).Flag i value turns Â«1Â» after successful
+ * execution of command A9h Â«Activate EJÂ». Flag i value turns Â«0Â» after
+ * successful execution of command AAh Â«Close EJ ArchiveÂ» or in case of EJ
+ * archive overflow. Bit 3 Flag f â€“ Paper in slip station lower sensor (0 â€“ no,
+ * 1 â€“ yes). Flag f value turns Â«1Â» after successful execution of Command A9h
+ * Â«Activate EJÂ». After EJ activation Flag f value is always Â«1Â». Bit 4 Flag w â€“
+ * EJ in report mode (0 â€“ no, 1 â€“ yes).Flag f value turns Â«1Â», if commands B3H â€“
+ * BBH. Flag f value turns Â«0Â», if EJ returns Â«no dataÂ» upon successful
  * execution of command B3H Get Data Of EJ Report, after successful execution of
- * command ACH Cancel Active EJ Operation, and if flag a turns «1». Bit 5 Flag d
- * – Fiscal receipt open (0 – no, 1 – yes). Flag d value turns «1», if commands
+ * command ACH Cancel Active EJ Operation, and if flag a turns Â«1Â». Bit 5 Flag d
+ * â€“ Fiscal receipt open (0 â€“ no, 1 â€“ yes). Flag d value turns Â«1Â», if commands
  * 80H Sale, 81H Buy, 82H Sale Refund, and 82H Buy Refund have been successfully
- * executed. Flag d value turns «0», if commands 84H Void Transaction, 85H Close
- * Receipt have been successfully executed, and if flag a turns «1» Bit 6 Flag s
- * – Fiscal day open (0 – no, 1 – yes). Flag s value turns «1», if any record
- * that has time is saved in EJ archive. Flag s value turns «0», after
+ * executed. Flag d value turns Â«0Â», if commands 84H Void Transaction, 85H Close
+ * Receipt have been successfully executed, and if flag a turns Â«1Â» Bit 6 Flag s
+ * â€“ Fiscal day open (0 â€“ no, 1 â€“ yes). Flag s value turns Â«1Â», if any record
+ * that has time is saved in EJ archive. Flag s value turns Â«0Â», after
  * successful execution of commands A9H Activate EJ and 41H Print Z-Report. Bit
- * 7 Flag a – EJ fatal error code (0 – no fatal error, 1 – fatal error). Flag a
- * value turns «1» when a checksum or writing to archive error occurs, or when
+ * 7 Flag a â€“ EJ fatal error code (0 â€“ no fatal error, 1 â€“ fatal error). Flag a
+ * value turns Â«1Â» when a checksum or writing to archive error occurs, or when
  * EJ archive structure is corrupted.
  ****************************************************************************/
 public final class ReadEJStatus extends PrinterCommand {

@@ -2,7 +2,7 @@
  * FiscalPrinterImplTest.java
  * JUnit based test
  *
- * Created on 12 Октябрь 2009 г., 12:47
+ * Created on 12 РћРєС‚СЏР±СЂСЊ 2009 Рі., 12:47
  */
 
 package com.shtrih.jpos.fiscalprinter;

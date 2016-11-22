@@ -13,8 +13,8 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Confirm date Command: 23H. Length: 8 bytes. · System Administrator password
- * (4 bytes) 30 · Date (3 bytes) DD-MM-YY Answer: 23H. Length: 2 bytes. · Result
+ * Confirm date Command: 23H. Length: 8 bytes. Â· System Administrator password
+ * (4 bytes) 30 Â· Date (3 bytes) DD-MM-YY Answer: 23H. Length: 2 bytes. Â· Result
  * Code (1 byte)
  ****************************************************************************/
 public final class ConfirmDate extends PrinterCommand {

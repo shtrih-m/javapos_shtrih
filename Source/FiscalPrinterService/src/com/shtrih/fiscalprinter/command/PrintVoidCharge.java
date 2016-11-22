@@ -14,12 +14,12 @@ package com.shtrih.fiscalprinter.command;
  */
 /**
  * **************************************************************************
- * Void Surcharge Command: 8BH. Length: 54 bytes. · Operator password (4 bytes)
- * · Void Surcharge value (5 bytes) 0000000000…9999999999 · Tax 1 (1 byte) «0» –
- * no tax, «1»…«4» – tax ID · Tax 2 (1 byte) «0» – no tax, «1»…«4» – tax ID ·
- * Tax 3 (1 byte) «0» – no tax, «1»…«4» – tax ID · Tax 4 (1 byte) «0» – no tax,
- * «1»…«4» – tax ID · Text (40 bytes) Answer: 8BH. Length: 3 bytes. · Result
- * Code (1 byte) · Operator index number (1 byte) 1…30
+ * Void Surcharge Command: 8BH. Length: 54 bytes. Â· Operator password (4 bytes)
+ * Â· Void Surcharge value (5 bytes) 0000000000â€¦9999999999 Â· Tax 1 (1 byte) Â«0Â» â€“
+ * no tax, Â«1Â»â€¦Â«4Â» â€“ tax ID Â· Tax 2 (1 byte) Â«0Â» â€“ no tax, Â«1Â»â€¦Â«4Â» â€“ tax ID Â·
+ * Tax 3 (1 byte) Â«0Â» â€“ no tax, Â«1Â»â€¦Â«4Â» â€“ tax ID Â· Tax 4 (1 byte) Â«0Â» â€“ no tax,
+ * Â«1Â»â€¦Â«4Â» â€“ tax ID Â· Text (40 bytes) Answer: 8BH. Length: 3 bytes. Â· Result
+ * Code (1 byte) Â· Operator index number (1 byte) 1â€¦30
  ***************************************************************************
  */
 public class PrintVoidCharge extends PrinterCommand {

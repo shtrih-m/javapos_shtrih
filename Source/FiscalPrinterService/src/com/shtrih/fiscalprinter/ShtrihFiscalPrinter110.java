@@ -3,7 +3,7 @@ package com.shtrih.fiscalprinter;
 /*
  * ShtrihFiscalPrinter.java
  *
- * Created on 23 Νξÿαπό 2009 γ., 22:32
+ * Created on 23 ΠΠΎΡΠ±Ρ€Ρ 2009 Π³., 22:32
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
@@ -1455,7 +1455,7 @@ public class ShtrihFiscalPrinter110 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_WRITE_CASHIER_NAME, null, lines);
     }
 
-    // cutMode: 0 – full cut, 1 – partial cut
+    // cutMode: 0 β€“ full cut, 1 β€“ partial cut
     public void cutPaper(int cutMode) throws JposException {
         int[] data = new int[1];
         data[0] = cutMode;

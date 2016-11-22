@@ -1,7 +1,7 @@
 /*
  * DIOReadEJSerial.java
  *
- * Created on 4 Март 2010 г., 13:41
+ * Created on 4 РњР°СЂС‚ 2010 Рі., 13:41
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

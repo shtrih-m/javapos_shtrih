@@ -1,7 +1,7 @@
 /*
  * MockPrinterModel.java
  *
- * Created on 12 Îêòÿáğü 2010 ã., 18:11
+ * Created on 12 ĞĞºÑ‚ÑĞ±Ñ€ÑŒ 2010 Ğ³., 18:11
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

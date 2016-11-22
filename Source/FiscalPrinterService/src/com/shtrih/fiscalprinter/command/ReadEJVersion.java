@@ -17,11 +17,11 @@ package com.shtrih.fiscalprinter.command;
  Get EJ Version
 
  Command:  B1H. Length: 5 bytes.
- ·	System Administrator password (4 bytes) 30
+ Â·	System Administrator password (4 bytes) 30
 
  Answer:		B1H. Length: 20 bytes.
- ·	Result Code (1 byte)
- ·	EJ version (18 bytes) string of WIN1251 code page characters
+ Â·	Result Code (1 byte)
+ Â·	EJ version (18 bytes) string of WIN1251 code page characters
 
  ****************************************************************************/
 

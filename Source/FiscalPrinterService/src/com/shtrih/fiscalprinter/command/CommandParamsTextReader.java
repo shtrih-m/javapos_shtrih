@@ -1,7 +1,7 @@
 /*
  * CommandParamsTextReader.java
  *
- * Created on 14 Ã‡È 2010 „., 12:54
+ * Created on 14 –ú–∞–π 2010 –≥., 12:54
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

@@ -19,11 +19,11 @@ import com.shtrih.util.Localizer;
 import com.shtrih.util.MethodParameter;
 
 /****************************************************************************
- * Read field structure Command: 2EH. Length: 7 bytes. · System Administrator
- * password (4 bytes) 30 · Table number (1 byte) · Field number (1 byte) Answer:
- * 2EH. Length: (44+X+X) bytes. · Result Code (1 byte) · Field name (40 bytes) ·
- * Field type (1 byte) «0» – BIN, «1» – CHAR · Number of bytes – X (1 byte) ·
- * Field minimum value (X bytes) for BIN-type fields only · Field maximum value
+ * Read field structure Command: 2EH. Length: 7 bytes. Â· System Administrator
+ * password (4 bytes) 30 Â· Table number (1 byte) Â· Field number (1 byte) Answer:
+ * 2EH. Length: (44+X+X) bytes. Â· Result Code (1 byte) Â· Field name (40 bytes) Â·
+ * Field type (1 byte) Â«0Â» â€“ BIN, Â«1Â» â€“ CHAR Â· Number of bytes â€“ X (1 byte) Â·
+ * Field minimum value (X bytes) for BIN-type fields only Â· Field maximum value
  * (X bytes) for BIN-type fields only
  ****************************************************************************/
 public final class ReadFieldInfo extends PrinterCommand {

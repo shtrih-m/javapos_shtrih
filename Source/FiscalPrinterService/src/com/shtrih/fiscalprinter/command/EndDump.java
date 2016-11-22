@@ -13,8 +13,8 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /*****************************************************************************
- * Stop Getting Data From Dump Command: 03H. Length: 5 bytes. · System
- * Administrator password (4 bytes) 30 Answer: 03H. Length: 2 bytes. · Result
+ * Stop Getting Data From Dump Command: 03H. Length: 5 bytes. Â· System
+ * Administrator password (4 bytes) 30 Answer: 03H. Length: 2 bytes. Â· Result
  * Code (1 byte)
  *****************************************************************************/
 public final class EndDump extends PrinterCommand {

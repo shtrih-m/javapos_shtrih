@@ -13,9 +13,9 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Read print buffer line number Command: C8H. Message length: 5 bytes. ·
- * Operator password (4 bytes) Answer: C8H. Message length: 6 bytes. · Result
- * code (1 byte) · Total lines number (2 bytes) · Printed lines number (2 bytes)
+ * Read print buffer line number Command: C8H. Message length: 5 bytes. Â·
+ * Operator password (4 bytes) Answer: C8H. Message length: 6 bytes. Â· Result
+ * code (1 byte) Â· Total lines number (2 bytes) Â· Printed lines number (2 bytes)
  ****************************************************************************/
 public final class PBGetLineCount extends PrinterCommand {
     // in

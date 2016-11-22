@@ -15,13 +15,13 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Get Fiscalization/Refiscalization Parameters Command: 69H. Length: 6 bytes. ·
+ * Get Fiscalization/Refiscalization Parameters Command: 69H. Length: 6 bytes. Â·
  * Tax Officer password (4 bytes) password of Tax Officer who fiscalized the
- * printer · Fiscalization/Refiscalization number (1 byte) 1…16 Answer: 69H.
- * Length: 22 bytes. · Result Code (1 byte) · Password (4 bytes) · ECRRN (5
- * bytes) 0000000000…9999999999 · Taxpayer ID (6 bytes)
- * 000000000000…999999999999 · Number of the last daily totals record in FM
- * before fiscalization/refiscalization (2 bytes) 0000…2100 ·
+ * printer Â· Fiscalization/Refiscalization number (1 byte) 1â€¦16 Answer: 69H.
+ * Length: 22 bytes. Â· Result Code (1 byte) Â· Password (4 bytes) Â· ECRRN (5
+ * bytes) 0000000000â€¦9999999999 Â· Taxpayer ID (6 bytes)
+ * 000000000000â€¦999999999999 Â· Number of the last daily totals record in FM
+ * before fiscalization/refiscalization (2 bytes) 0000â€¦2100 Â·
  * Fiscalization/Refiscalization date (3 bytes) DD-MM-YY
  ****************************************************************************/
 

@@ -83,7 +83,7 @@ public class MonitoringCommands {
         }
     }
 
-    // INFO Модель ККМ, Зав. № ККМ, Номер ЭКЛЗ/Номер ФН
+    // INFO РњРѕРґРµР»СЊ РљРљРњ, Р—Р°РІ. в„– РљРљРњ, РќРѕРјРµСЂ Р­РљР›Р—/РќРѕРјРµСЂ Р¤Рќ
     private static String getInfoText(FiscalPrinterImpl service) throws Exception {
         LongPrinterStatus status = service.getLongStatus();
         String text = service.getDeviceMetrics().getDeviceName() + ","
@@ -95,7 +95,7 @@ public class MonitoringCommands {
         return text;
     }
 
-    // ECTP Номер ЭКЛЗ, Дата активизации ЭКЛЗ, Время Активизации
+    // ECTP РќРѕРјРµСЂ Р­РљР›Р—, Р”Р°С‚Р° Р°РєС‚РёРІРёР·Р°С†РёРё Р­РљР›Р—, Р’СЂРµРјСЏ РђРєС‚РёРІРёР·Р°С†РёРё
     private static String getECTPText(FiscalPrinterImpl service) throws Exception {
         EJActivation activation = service.getEJActivation();
         String text = activation.getEJSerial() + "," + activation.getDate()
@@ -103,7 +103,7 @@ public class MonitoringCommands {
         return text;
     }
 
-    // FN Номер ФН, Дата активизации ФН, Время Активизации ФН 
+    // FN РќРѕРјРµСЂ Р¤Рќ, Р”Р°С‚Р° Р°РєС‚РёРІРёР·Р°С†РёРё Р¤Рќ, Р’СЂРµРјСЏ РђРєС‚РёРІРёР·Р°С†РёРё Р¤Рќ 
     private static String getFNText(FiscalPrinterImpl service) throws Exception {
         FSReadStatus status = service.getPrinter().fsReadStatus();
         FSReadFiscalization param = service.getPrinter().fsReadFiscalization();
@@ -112,7 +112,7 @@ public class MonitoringCommands {
         return text;
     }
 
-    // FN_UNIXTIME Дата активизации ФН в UNIXTIME
+    // FN_UNIXTIME Р”Р°С‚Р° Р°РєС‚РёРІРёР·Р°С†РёРё Р¤Рќ РІ UNIXTIME
     private static String getFNUnixTimeText(FiscalPrinterImpl service) throws Exception {
         FSReadFiscalization param = service.getPrinter().fsReadFiscalization();
         Calendar calendar = Calendar.getInstance();
@@ -124,14 +124,14 @@ public class MonitoringCommands {
         return text;
     }
 
-    // CNT_QUEUE Кол-во документов, ожидающих отправки в ОФД (очередь)
+    // CNT_QUEUE РљРѕР»-РІРѕ РґРѕРєСѓРјРµРЅС‚РѕРІ, РѕР¶РёРґР°СЋС‰РёС… РѕС‚РїСЂР°РІРєРё РІ РћР¤Р” (РѕС‡РµСЂРµРґСЊ)
     private static String getCntQueueText(FiscalPrinterImpl service) throws Exception {
         FSReadCommStatus status = service.getPrinter().fsReadCommStatus();
         String text = String.valueOf(status.getQueueSize());
         return text;
     }
 
-    // DATE_LAST Дата последнего отправленного документа в ОФД
+    // DATE_LAST Р”Р°С‚Р° РїРѕСЃР»РµРґРЅРµРіРѕ РѕС‚РїСЂР°РІР»РµРЅРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р° РІ РћР¤Р”
     private static String getDateLastText(FiscalPrinterImpl service) throws Exception {
         FSReadCommStatus status = service.getPrinter().fsReadCommStatus();
         String text = status.getDocumentDate() + "," + status.getDocumentTime();
@@ -139,8 +139,8 @@ public class MonitoringCommands {
     }
 
     
-    // CASH_REG Номер регистра
-    // Содержимое денежного регистра
+    // CASH_REG РќРѕРјРµСЂ СЂРµРіРёСЃС‚СЂР°
+    // РЎРѕРґРµСЂР¶РёРјРѕРµ РґРµРЅРµР¶РЅРѕРіРѕ СЂРµРіРёСЃС‚СЂР°
     private static String getCashRegText(String command, FiscalPrinterImpl service) throws Exception {
         String[] params = StringUtils.split(command, ' ');
         if (params.length < 2)
@@ -150,8 +150,8 @@ public class MonitoringCommands {
         return text;
     }
 
-    // OPER_REG Номер регистра
-    // Содержимое операционного регистра
+    // OPER_REG РќРѕРјРµСЂ СЂРµРіРёСЃС‚СЂР°
+    // РЎРѕРґРµСЂР¶РёРјРѕРµ РѕРїРµСЂР°С†РёРѕРЅРЅРѕРіРѕ СЂРµРіРёСЃС‚СЂР°
     private static String getOperRegText(String command, FiscalPrinterImpl service) throws Exception {
         String[] params = StringUtils.split(command, ' ');
         if (params.length < 2)

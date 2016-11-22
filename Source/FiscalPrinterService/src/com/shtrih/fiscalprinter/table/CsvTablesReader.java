@@ -97,8 +97,8 @@ public class CsvTablesReader {
     public void loadLine(String line, PrinterFields fields) throws Exception {
         if (isComment(line)) {
             line = line.toUpperCase();
-            /// ÃÓ‰ÂÎ¸: ﬂ–”—-01 ; π00001000
-            String modelNameTag = "ÃŒƒ≈À‹: ";
+            /// –ú–æ–¥–µ–ª—å: –Ø–†–£–°-01–ö; ‚Ññ00001000
+            String modelNameTag = "–ú–û–î–ï–õ–¨: ";
             int beginIndex = line.lastIndexOf(modelNameTag);
             int endIndex = line.lastIndexOf(";");
             if ((beginIndex != -1) && (endIndex != -1)) {

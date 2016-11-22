@@ -1,7 +1,7 @@
 /*
  * SmFiscalPrinterInterface.java
  *
- * Created on 15 October 2010 г., 11:26
+ * Created on 15 October 2010 Рі., 11:26
  *
  * To change this template, choose Tools | Template PrintVoidItemManager
  * and open the template in the editor.

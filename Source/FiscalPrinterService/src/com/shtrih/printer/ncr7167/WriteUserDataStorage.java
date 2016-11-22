@@ -15,7 +15,7 @@ package com.shtrih.printer.ncr7167;
  */
 
 /*********************************************************************
- * Write to User Data Storage ASCII: ESC ‘ m a0 a1 a2 d1 ... dm Hexadecimal: 1B
+ * Write to User Data Storage ASCII: ESC â€˜ m a0 a1 a2 d1 ... dm Hexadecimal: 1B
  * 27 m a0 a1 a2 d1 ... dm
  **********************************************************************/
 

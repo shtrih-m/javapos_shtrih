@@ -3,7 +3,7 @@
  * ================================================================
  *
  * Project Info:  http://jbcode.sourceforge.net
- * Project Lead:  Fl�vio Sampaio (ronison@gmail.com);
+ * Project Lead:  FlпїЅvio Sampaio (ronison@gmail.com);
  *
  * (C) Copyright 2002, by Guido Laures
  *

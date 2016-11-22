@@ -30,7 +30,7 @@ public class EncodingTest extends TestCase {
         throws Exception
     {
        byte[] data;
-       String src = "Ø";
+       String src = "Ð¨";
        String tmp;
        String dst;
        String charsetName = "Cp866";

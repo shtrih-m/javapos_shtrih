@@ -15,10 +15,10 @@ package com.shtrih.fiscalprinter.command;
 /**
  * **************************************************************************
  * Print Daily Totals Report In Daily Totals Numbers Range from electronic
- * journal Command: A3H. Length: 10 bytes. · System Administrator password (4
- * bytes) 30 · Report type (1 byte) «0» – short, «1» – full · First day number
- * (2 bytes) 0000…2100 · Last day number (2 bytes) 0000…2100 Answer: A3H.
- * Length: 2 bytes. · Result Code (1 byte) NOTE: Command execution may take up
+ * journal Command: A3H. Length: 10 bytes. Â· System Administrator password (4
+ * bytes) 30 Â· Report type (1 byte) Â«0Â» â€“ short, Â«1Â» â€“ full Â· First day number
+ * (2 bytes) 0000â€¦2100 Â· Last day number (2 bytes) 0000â€¦2100 Answer: A3H.
+ * Length: 2 bytes. Â· Result Code (1 byte) NOTE: Command execution may take up
  * to 100 seconds.
  ***************************************************************************
  */

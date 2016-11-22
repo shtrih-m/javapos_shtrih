@@ -15,103 +15,103 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Close Fiscal Slip Command: 76H. Length: 182 bytes. · Operator password (4
- * bytes) · Number of lines in transaction block (1 byte) 1…17 · Line number of
- * Receipt Total element in transaction block (1 byte) 1…17 · Line number of
- * Text element in transaction block (1 byte) 0…17, «0» – do not print · Line
- * number of Cash Payment element in transaction block (1 byte) 0…17, «0» – do
- * not print · Line number of Payment Type 2 element in transaction block (1
- * byte) 0…17, «0» – do not print · Line number of Payment Type 3 element in
- * transaction block (1 byte) 0…17, «0» – do not print · Line number of Payment
- * Type 4 element in transaction block (1 byte) 0…17, «0» – do not print · Line
- * number of Change element in transaction block (1 byte) 0…17, «0» – do not
- * print · Line number of Tax 1 Turnover element in transaction block (1 byte)
- * 0…17, «0» – do not print · Line number of Tax 2 Turnover element in
- * transaction block (1 byte) 0…17, «0» – do not print · Line number of Tax 3
- * Turnover element in transaction block (1 byte) 0…17, «0» – do not print ·
- * Line number of Tax 4 Turnover element in transaction block (1 byte) 0…17, «0»
- * – do not print · Line number of Tax 1 Sum element in transaction block (1
- * byte) 0…17, «0» – do not print · Line number of Tax 2 Sum element in
- * transaction block (1 byte) 0…17, «0» – do not print · Line number of Tax 3
- * Sum element in transaction block (1 byte) 0…17, «0» – do not print · Line
- * number of Tax 4 Sum element in transaction block (1 byte) 0…17, «0» – do not
- * print · Line number of Receipt Subtotal Before Discount/Surcharge element in
- * transaction block (1 byte) 0…17, «0» – do not print · Line number of
- * Discount/Surcharge Value element in transaction block (1 byte) 0…17, «0» – do
- * not print · Font type of Text element (1 byte) · Font type of «TOTAL» element
- * (1 byte) · Font type of Receipt Total Value element (1 byte) · Font type of
- * «CASH» element (1 byte) · Font type of Cash Payment Value element (1 byte) ·
- * Font type of Payment Type 2 Name element (1 byte) · Font type of Payment Type
- * 2 Value element (1 byte) · Font type of Payment Type 3 Name element (1 byte)
- * · Font type of Payment Type 3 Value element (1 byte) · Font type of Payment
- * Type 4Name element (1 byte) · Font type of Payment Type 4Value element (1
- * byte) · Font type of «CHANGE» element (1 byte) · Font type of Change Value
- * element (1 byte) · Font type of Tax 1 Name element (1 byte) · Font type of
- * Tax 1 Turnover Value element (1 byte) · Font type of Tax 1 Rate element (1
- * byte) · Font type of Tax 1 Value element (1 byte) · Font type of Tax 2 Name
- * element (1 byte) · Font type of Tax 2 Turnover Value element (1 byte) · Font
- * type of Tax 2 Rate element (1 byte) · Font type of Tax 2 Value element (1
- * byte) · Font type of Tax 3 Name element (1 byte) · Font type of Tax 3
- * Turnover Value element (1 byte) · Font type of Tax 3 Rate element (1 byte) ·
- * Font type of Tax 3 Value element (1 byte) · Font type of Tax 4 Name element
- * (1 byte) · Font type of Tax 4 Turnover Value element (1 byte) · Font type of
- * Tax 4 Rate element (1 byte) · Font type of Tax 4 Value element (1 byte) ·
- * Font type of «SUBTOTAL» element (1 byte) · Font type of Receipt Subtotal
- * Before Discount/Surcharge Value element (1 byte) · Font type of «DISCOUNT
- * XX.XX%» element (1 byte) · Font type of Receipt Discount Value element (1
- * byte) · Length of Text element in characters (1 byte) · Length of Receipt
- * Total Value element in characters (1 byte) · Length of Cash Payment Value
- * element in characters (1 byte) · Length of Payment Type 2 Value element in
- * characters (1 byte) · Length of Payment Type 3 Value element in characters (1
- * byte) · Length of Payment Type 4Value element in characters (1 byte) · Length
- * of Change Value element in characters (1 byte) · Length of Tax 1 Name element
- * in characters (1 byte) · Length of Tax 1 Turnover element in characters (1
- * byte) · Length of Tax 1 Rate element in characters (1 byte) · Length of Tax 1
- * Value element in characters (1 byte) · Length of Tax 2 Name element in
- * characters (1 byte) · Length of Tax 2 Turnover element in characters (1 byte)
- * · Length of Tax 2 Rate element in characters (1 byte) · Length of Tax 2 Value
- * element in characters (1 byte) · Length of Tax 3 Name element in characters
- * (1 byte) · Length of Tax 3 Turnover element in characters (1 byte) · Length
- * of Tax 3 Rate element in characters (1 byte) · Length of Tax 3 Value element
- * in characters (1 byte) · Length of Tax 4 Name element in characters (1 byte)
- * · Length of Tax 4 Turnover element in characters (1 byte) · Length of Tax 4
- * Rate element in characters (1 byte) · Length of Tax 4 Value element in
- * characters (1 byte) · Length of Receipt Subtotal Before Discount/Surcharge
- * Value element in characters (1 byte) · Length of «DISCOUNT XX.XX%» element in
- * characters (1 byte) · Length of Receipt Discount Value element in characters
- * (1 byte) · Position in line of Text element (1 byte) · Position in line of
- * «TOTAL» element (1 byte) · Position in line of Receipt Total Value element (1
- * byte) · Position in line of «CASH» element (1 byte) · Position in line of
- * Cash Payment Value element (1 byte) · Position in line of Payment Type 2 Name
- * element (1 byte) · Position in line of Payment Type 2 Value element (1 byte)
- * · Position in line of Payment Type 3 Name element (1 byte) · Position in line
- * of Payment Type 3 Value element (1 byte) · Position in line of Payment Type 4
- * Name element (1 byte) · Position in line of Payment Type 4 Value element (1
- * byte) · Position in line of «CHANGE» element (1 byte) · Position in line of
- * Change Value element (1 byte) · Position in line of Tax 1 Name element (1
- * byte) · Position in line of Tax 1 Turnover Value element (1 byte) · Position
- * in line of Tax 1 Rate element (1 byte) · Position in line of Tax 1 Value
- * element (1 byte) · Position in line of Tax 2 Name element (1 byte) · Position
- * in line of Tax 2 Turnover Value element (1 byte) · Position in line of Tax 2
- * Rate element (1 byte) · Position in line of Tax 2 Value element (1 byte) ·
- * Position in line of Tax 3 Name element (1 byte) · Position in line of Tax 3
- * Turnover Value element (1 byte) · Position in line of Tax 3 Rate element (1
- * byte) · Position in line of Tax 3 Value element (1 byte) · Position in line
- * of Tax 4 Name element (1 byte) · Position in line of Tax 4 Turnover Value
- * element (1 byte) · Position in line of Tax 4 Rate element (1 byte) · Position
- * in line of Tax 4 Value element (1 byte) · Position in line of «SUBTOTAL»
- * element (1 byte) · Position in line of Receipt Subtotal Before
- * Discount/Surcharge Value element (1 byte) · Position in line of «DISCOUNT
- * XX.XX%» element (1 byte) · Position in line of Receipt Discount Value element
- * (1 byte) · Slip line number with the first line of Close Fiscal Slip block (1
- * byte) · Cash Payment value (5 bytes) · Payment Type 2 value (5 bytes) ·
- * Payment Type 3 value (5 bytes) · Payment Type 4 value (5 bytes) · Receipt
- * Discount Value 0 to 99,99 % (2 bytes) 0000…9999 · Tax 1 (1 byte) «0» – no
- * tax, «1»…«4» – tax ID · Tax 2 (1 byte) «0» – no tax, «1»…«4» – tax ID · Tax 3
- * (1 byte) «0» – no tax, «1»…«4» – tax ID · Tax 4 (1 byte) «0» – no tax,
- * «1»…«4» – tax ID · Text (40 bytes) Answer: 76H. Length: 8 bytes. · Result
- * Code (1 byte) · Operator index number (1 byte) 1…30 · Change value (5 bytes)
- * 0000000000…9999999999
+ * Close Fiscal Slip Command: 76H. Length: 182 bytes. Â· Operator password (4
+ * bytes) Â· Number of lines in transaction block (1 byte) 1â€¦17 Â· Line number of
+ * Receipt Total element in transaction block (1 byte) 1â€¦17 Â· Line number of
+ * Text element in transaction block (1 byte) 0â€¦17, Â«0Â» â€“ do not print Â· Line
+ * number of Cash Payment element in transaction block (1 byte) 0â€¦17, Â«0Â» â€“ do
+ * not print Â· Line number of Payment Type 2 element in transaction block (1
+ * byte) 0â€¦17, Â«0Â» â€“ do not print Â· Line number of Payment Type 3 element in
+ * transaction block (1 byte) 0â€¦17, Â«0Â» â€“ do not print Â· Line number of Payment
+ * Type 4 element in transaction block (1 byte) 0â€¦17, Â«0Â» â€“ do not print Â· Line
+ * number of Change element in transaction block (1 byte) 0â€¦17, Â«0Â» â€“ do not
+ * print Â· Line number of Tax 1 Turnover element in transaction block (1 byte)
+ * 0â€¦17, Â«0Â» â€“ do not print Â· Line number of Tax 2 Turnover element in
+ * transaction block (1 byte) 0â€¦17, Â«0Â» â€“ do not print Â· Line number of Tax 3
+ * Turnover element in transaction block (1 byte) 0â€¦17, Â«0Â» â€“ do not print Â·
+ * Line number of Tax 4 Turnover element in transaction block (1 byte) 0â€¦17, Â«0Â»
+ * â€“ do not print Â· Line number of Tax 1 Sum element in transaction block (1
+ * byte) 0â€¦17, Â«0Â» â€“ do not print Â· Line number of Tax 2 Sum element in
+ * transaction block (1 byte) 0â€¦17, Â«0Â» â€“ do not print Â· Line number of Tax 3
+ * Sum element in transaction block (1 byte) 0â€¦17, Â«0Â» â€“ do not print Â· Line
+ * number of Tax 4 Sum element in transaction block (1 byte) 0â€¦17, Â«0Â» â€“ do not
+ * print Â· Line number of Receipt Subtotal Before Discount/Surcharge element in
+ * transaction block (1 byte) 0â€¦17, Â«0Â» â€“ do not print Â· Line number of
+ * Discount/Surcharge Value element in transaction block (1 byte) 0â€¦17, Â«0Â» â€“ do
+ * not print Â· Font type of Text element (1 byte) Â· Font type of Â«TOTALÂ» element
+ * (1 byte) Â· Font type of Receipt Total Value element (1 byte) Â· Font type of
+ * Â«CASHÂ» element (1 byte) Â· Font type of Cash Payment Value element (1 byte) Â·
+ * Font type of Payment Type 2 Name element (1 byte) Â· Font type of Payment Type
+ * 2 Value element (1 byte) Â· Font type of Payment Type 3 Name element (1 byte)
+ * Â· Font type of Payment Type 3 Value element (1 byte) Â· Font type of Payment
+ * Type 4Name element (1 byte) Â· Font type of Payment Type 4Value element (1
+ * byte) Â· Font type of Â«CHANGEÂ» element (1 byte) Â· Font type of Change Value
+ * element (1 byte) Â· Font type of Tax 1 Name element (1 byte) Â· Font type of
+ * Tax 1 Turnover Value element (1 byte) Â· Font type of Tax 1 Rate element (1
+ * byte) Â· Font type of Tax 1 Value element (1 byte) Â· Font type of Tax 2 Name
+ * element (1 byte) Â· Font type of Tax 2 Turnover Value element (1 byte) Â· Font
+ * type of Tax 2 Rate element (1 byte) Â· Font type of Tax 2 Value element (1
+ * byte) Â· Font type of Tax 3 Name element (1 byte) Â· Font type of Tax 3
+ * Turnover Value element (1 byte) Â· Font type of Tax 3 Rate element (1 byte) Â·
+ * Font type of Tax 3 Value element (1 byte) Â· Font type of Tax 4 Name element
+ * (1 byte) Â· Font type of Tax 4 Turnover Value element (1 byte) Â· Font type of
+ * Tax 4 Rate element (1 byte) Â· Font type of Tax 4 Value element (1 byte) Â·
+ * Font type of Â«SUBTOTALÂ» element (1 byte) Â· Font type of Receipt Subtotal
+ * Before Discount/Surcharge Value element (1 byte) Â· Font type of Â«DISCOUNT
+ * XX.XX%Â» element (1 byte) Â· Font type of Receipt Discount Value element (1
+ * byte) Â· Length of Text element in characters (1 byte) Â· Length of Receipt
+ * Total Value element in characters (1 byte) Â· Length of Cash Payment Value
+ * element in characters (1 byte) Â· Length of Payment Type 2 Value element in
+ * characters (1 byte) Â· Length of Payment Type 3 Value element in characters (1
+ * byte) Â· Length of Payment Type 4Value element in characters (1 byte) Â· Length
+ * of Change Value element in characters (1 byte) Â· Length of Tax 1 Name element
+ * in characters (1 byte) Â· Length of Tax 1 Turnover element in characters (1
+ * byte) Â· Length of Tax 1 Rate element in characters (1 byte) Â· Length of Tax 1
+ * Value element in characters (1 byte) Â· Length of Tax 2 Name element in
+ * characters (1 byte) Â· Length of Tax 2 Turnover element in characters (1 byte)
+ * Â· Length of Tax 2 Rate element in characters (1 byte) Â· Length of Tax 2 Value
+ * element in characters (1 byte) Â· Length of Tax 3 Name element in characters
+ * (1 byte) Â· Length of Tax 3 Turnover element in characters (1 byte) Â· Length
+ * of Tax 3 Rate element in characters (1 byte) Â· Length of Tax 3 Value element
+ * in characters (1 byte) Â· Length of Tax 4 Name element in characters (1 byte)
+ * Â· Length of Tax 4 Turnover element in characters (1 byte) Â· Length of Tax 4
+ * Rate element in characters (1 byte) Â· Length of Tax 4 Value element in
+ * characters (1 byte) Â· Length of Receipt Subtotal Before Discount/Surcharge
+ * Value element in characters (1 byte) Â· Length of Â«DISCOUNT XX.XX%Â» element in
+ * characters (1 byte) Â· Length of Receipt Discount Value element in characters
+ * (1 byte) Â· Position in line of Text element (1 byte) Â· Position in line of
+ * Â«TOTALÂ» element (1 byte) Â· Position in line of Receipt Total Value element (1
+ * byte) Â· Position in line of Â«CASHÂ» element (1 byte) Â· Position in line of
+ * Cash Payment Value element (1 byte) Â· Position in line of Payment Type 2 Name
+ * element (1 byte) Â· Position in line of Payment Type 2 Value element (1 byte)
+ * Â· Position in line of Payment Type 3 Name element (1 byte) Â· Position in line
+ * of Payment Type 3 Value element (1 byte) Â· Position in line of Payment Type 4
+ * Name element (1 byte) Â· Position in line of Payment Type 4 Value element (1
+ * byte) Â· Position in line of Â«CHANGEÂ» element (1 byte) Â· Position in line of
+ * Change Value element (1 byte) Â· Position in line of Tax 1 Name element (1
+ * byte) Â· Position in line of Tax 1 Turnover Value element (1 byte) Â· Position
+ * in line of Tax 1 Rate element (1 byte) Â· Position in line of Tax 1 Value
+ * element (1 byte) Â· Position in line of Tax 2 Name element (1 byte) Â· Position
+ * in line of Tax 2 Turnover Value element (1 byte) Â· Position in line of Tax 2
+ * Rate element (1 byte) Â· Position in line of Tax 2 Value element (1 byte) Â·
+ * Position in line of Tax 3 Name element (1 byte) Â· Position in line of Tax 3
+ * Turnover Value element (1 byte) Â· Position in line of Tax 3 Rate element (1
+ * byte) Â· Position in line of Tax 3 Value element (1 byte) Â· Position in line
+ * of Tax 4 Name element (1 byte) Â· Position in line of Tax 4 Turnover Value
+ * element (1 byte) Â· Position in line of Tax 4 Rate element (1 byte) Â· Position
+ * in line of Tax 4 Value element (1 byte) Â· Position in line of Â«SUBTOTALÂ»
+ * element (1 byte) Â· Position in line of Receipt Subtotal Before
+ * Discount/Surcharge Value element (1 byte) Â· Position in line of Â«DISCOUNT
+ * XX.XX%Â» element (1 byte) Â· Position in line of Receipt Discount Value element
+ * (1 byte) Â· Slip line number with the first line of Close Fiscal Slip block (1
+ * byte) Â· Cash Payment value (5 bytes) Â· Payment Type 2 value (5 bytes) Â·
+ * Payment Type 3 value (5 bytes) Â· Payment Type 4 value (5 bytes) Â· Receipt
+ * Discount Value 0 to 99,99 % (2 bytes) 0000â€¦9999 Â· Tax 1 (1 byte) Â«0Â» â€“ no
+ * tax, Â«1Â»â€¦Â«4Â» â€“ tax ID Â· Tax 2 (1 byte) Â«0Â» â€“ no tax, Â«1Â»â€¦Â«4Â» â€“ tax ID Â· Tax 3
+ * (1 byte) Â«0Â» â€“ no tax, Â«1Â»â€¦Â«4Â» â€“ tax ID Â· Tax 4 (1 byte) Â«0Â» â€“ no tax,
+ * Â«1Â»â€¦Â«4Â» â€“ tax ID Â· Text (40 bytes) Answer: 76H. Length: 8 bytes. Â· Result
+ * Code (1 byte) Â· Operator index number (1 byte) 1â€¦30 Â· Change value (5 bytes)
+ * 0000000000â€¦9999999999
  ****************************************************************************/
 
 public final class SlipClose extends PrinterCommand {

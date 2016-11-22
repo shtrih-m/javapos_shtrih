@@ -563,15 +563,15 @@ public interface PrinterConst {
     public static final String SMFP_PARAMID_LINE_SPACING = "LineSpacing";
     // Receipt format enabled
     public static final String SMFP_PARAMID_RECFORMAT_ENABLED = "ReceiptFormatEnabled";
-    // мюхлемнбюмхе б ноепюжхх
+    // п²п░п≤п°п∙п²п·п▓п░п²п≤п∙ п▓ п·п÷п∙п═п░п╕п≤п≤
     public static final String SMFPTR_PARAMID_ITM_NAME_LEN = "ReceiptItemNameLength";
-    // рейяр б яйхдйе
+    // п╒п∙п п║п╒ п▓ п║п п≤п■п п∙
     public static final String SMFPTR_PARAMID_DSC_TEXT_LEN = "DiscountTextLength";
-    // рейяр б мюдаюбйе
+    // п╒п∙п п║п╒ п▓ п²п░п■п▒п░п▓п п∙
     public static final String SMFPTR_PARAMID_CHR_TEXT_LEN = "ChargeTextLength";
-    // рейяр б ярнпмн яйхдйх
+    // п╒п∙п п║п╒ п▓ п║п╒п·п═п²п· п║п п≤п■п п≤
     public static final String SMFPTR_PARAMID_DSCVOID_TEXT_LEN = "DiscountVoidTextLength";
-    // рейяр б ярнпмн мюдаюбйх
+    // п╒п∙п п║п╒ п▓ п║п╒п·п═п²п· п²п░п■п▒п░п▓п п≤
     public static final String SMFPTR_PARAMID_CHRVOID_TEXT_LEN = "ChargeVoidTextLength";
     
     // ////////////////////////////////////////////////////////////////////////
@@ -623,39 +623,39 @@ public interface PrinterConst {
     ///////////////////////////////////////////////////////////////////////////
     // ReceiptItemType constants
     
-    // мюхлемнбюмхе б ноепюжхх
+    // п²п░п≤п°п∙п²п·п▓п░п²п≤п∙ п▓ п·п÷п∙п═п░п╕п≤п≤
     public static final int SMFPTR_RECITEM_ITM_NAME         = 0; 
-    // йнкхвеярбн X жемс б ноепюжхх
+    // п п·п⌡п≤п╖п∙п║п╒п▓п· X п╕п∙п²пё п▓ п·п÷п∙п═п░п╕п≤п≤
     public static final int SMFPTR_RECITEM_ITM_QUANTITY     = 1; 
-    // яейжхъ б ноепюжхх
+    // п║п∙п п╕п≤п╞ п▓ п·п÷п∙п═п░п╕п≤п≤
     public static final int SMFPTR_RECITEM_ITM_DEPARTMENT   = 2; 
-    // ярнхлнярэ б ноепюжхх
+    // п║п╒п·п≤п°п·п║п╒п╛ п▓ п·п÷п∙п═п░п╕п≤п≤
     public static final int SMFPTR_RECITEM_ITM_AMOUNT       = 3; 
-    // мюдохяэ ярнпмн б ноепюжхх
+    // п²п░п■п÷п≤п║п╛ п║п╒п·п═п²п· п▓ п·п÷п∙п═п░п╕п≤п≤
     public static final int SMFPTR_RECITEM_ITM_VOIDTEXT     = 4; 
-    // рейяр б яйхдйе
+    // п╒п∙п п║п╒ п▓ п║п п≤п■п п∙
     public static final int SMFPTR_RECITEM_DSC_TEXT         = 5; 
-    // мюдохяэ яйхдйю
+    // п²п░п■п÷п≤п║п╛ п║п п≤п■п п░
     public static final int SMFPTR_RECITEM_DSC_CAPTION      = 6; 
-    // ясллю яйхдйх
+    // п║пёп°п°п░ п║п п≤п■п п≤
     public static final int SMFPTR_RECITEM_DSC_AMOUNT       = 7; 
-    // рейяр б мюдаюбйе
+    // п╒п∙п п║п╒ п▓ п²п░п■п▒п░п▓п п∙
     public static final int SMFPTR_RECITEM_CHR_TEXT         = 8; 
-    // мюдохяэ мюдаюбйю
+    // п²п░п■п÷п≤п║п╛ п²п░п■п▒п░п▓п п░
     public static final int SMFPTR_RECITEM_CHR_CAPTION      = 9; 
-    // ясллю мюдаюбйх
+    // п║пёп°п°п░ п²п░п■п▒п░п▓п п≤
     public static final int SMFPTR_RECITEM_CHR_AMOUNT       = 10; 
-    // рейяр б ярнпмн яйхдйх
+    // п╒п∙п п║п╒ п▓ п║п╒п·п═п²п· п║п п≤п■п п≤
     public static final int SMFPTR_RECITEM_DSCVOID_TEXT     = 11; 
-    // мюдохяэ ярнпмн яйхдйх
+    // п²п░п■п÷п≤п║п╛ п║п╒п·п═п²п· п║п п≤п■п п≤
     public static final int SMFPTR_RECITEM_DSCVOID_CAPTION  = 12; 
-    // ясллю ярнпмн яйхдйх
+    // п║пёп°п°п░ п║п╒п·п═п²п· п║п п≤п■п п≤
     public static final int SMFPTR_RECITEM_DSCVOID_AMOUNT    = 13; 
-    // рейяр б ярнпмн мюдаюбйх
+    // п╒п∙п п║п╒ п▓ п║п╒п·п═п²п· п²п░п■п▒п░п▓п п≤
     public static final int SMFPTR_RECITEM_CHRVOID_TEXT      = 14; 
-    // мюдохяэ ярнпмн мюдаюбйх
+    // п²п░п■п÷п≤п║п╛ п║п╒п·п═п²п· п²п░п■п▒п░п▓п п≤
     public static final int SMFPTR_RECITEM_CHRVOID_CAPTION   = 15; 
-    // ясллю ярнпмн мюдаюбйх
+    // п║пёп°п°п░ п║п╒п·п═п²п· п²п░п■п▒п░п▓п п≤
     public static final int SMFPTR_RECITEM_CHRVOID_AMOUNT    = 16; 
     
     // ////////////////////////////////////////////////////////////////////////

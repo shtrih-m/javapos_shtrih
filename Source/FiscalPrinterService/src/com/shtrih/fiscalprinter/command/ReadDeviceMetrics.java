@@ -15,10 +15,10 @@ package com.shtrih.fiscalprinter.command;
 /**
  * **************************************************************************
  * Get Device Type Command: FCH. Length: 1 byte. Answer: FCH. Length: (8+X)
- * bytes. · Result Code (1 byte) · Device type (1 byte) 0…255 · Device subtype
- * (1 byte) 0…255 · Protocol version supported by device (1 byte) 0…255 ·
- * Subprotocol version supported by device (1 byte) 0…255 · Device model (1
- * byte) 0…255 · Language (1 byte) 0…255, «0» – Russian, «1» – English · Device
+ * bytes. Â· Result Code (1 byte) Â· Device type (1 byte) 0â€¦255 Â· Device subtype
+ * (1 byte) 0â€¦255 Â· Protocol version supported by device (1 byte) 0â€¦255 Â·
+ * Subprotocol version supported by device (1 byte) 0â€¦255 Â· Device model (1
+ * byte) 0â€¦255 Â· Language (1 byte) 0â€¦255, Â«0Â» â€“ Russian, Â«1Â» â€“ English Â· Device
  * name (X bytes) string of WIN1251 code page characters; string length in bytes
  * depends on device model
  */

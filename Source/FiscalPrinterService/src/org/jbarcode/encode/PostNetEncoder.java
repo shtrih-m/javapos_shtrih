@@ -67,7 +67,7 @@ public class PostNetEncoder implements BarcodeEncoder {
         BarSet[] result = new BarSet[texto.length() + 2];
         try {
             result[0] = START_STOP_CHAR;
-            //gera a primeira parte do c�digo
+            //gera a primeira parte do cпїЅdigo
             for (int i = 0; i < texto.length(); i++) {
                 int atual = Integer.parseInt(String.valueOf(texto.charAt(i)));
                 result[i + 1] = CODES[atual];

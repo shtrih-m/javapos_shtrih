@@ -15,9 +15,9 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Print receipt trailer Command: 54H. Message length: 5 bytes. · OPerator
- * pasword (4 bytes) Answer: 54H. Message length: 3 bytes. · Result code (1
- * byte) · Operator number (1 byte) 1…30
+ * Print receipt trailer Command: 54H. Message length: 5 bytes. Â· OPerator
+ * pasword (4 bytes) Answer: 54H. Message length: 3 bytes. Â· Result code (1
+ * byte) Â· Operator number (1 byte) 1â€¦30
  ****************************************************************************/
 
 public final class PrintTrailer extends PrinterCommand {

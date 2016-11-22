@@ -13,8 +13,8 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Cancel active electronic journal operation Command: ACH. Length: 5 bytes. ·
- * System Administrator password (4 bytes) 30 Answer: ACH. Length: 2 bytes. ·
+ * Cancel active electronic journal operation Command: ACH. Length: 5 bytes. Â·
+ * System Administrator password (4 bytes) 30 Answer: ACH. Length: 2 bytes. Â·
  * Result Code (1 byte)
  ****************************************************************************/
 public final class CancelEJDocument extends PrinterCommand {

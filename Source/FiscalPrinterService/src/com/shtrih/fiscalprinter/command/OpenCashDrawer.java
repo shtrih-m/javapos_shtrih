@@ -13,9 +13,9 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Open Cash Drawer Command: 28H. Length: 6 bytes. · Operator password (4 bytes)
- * · Cash drawer number (1 byte) 0, 1 Answer: 28H. Length: 3 bytes. · Result
- * Code (1 byte) · Operator index number (1 byte) 1…30
+ * Open Cash Drawer Command: 28H. Length: 6 bytes. Â· Operator password (4 bytes)
+ * Â· Cash drawer number (1 byte) 0, 1 Answer: 28H. Length: 3 bytes. Â· Result
+ * Code (1 byte) Â· Operator index number (1 byte) 1â€¦30
  ****************************************************************************/
 public class OpenCashDrawer extends PrinterCommand {
     // in
@@ -23,7 +23,7 @@ public class OpenCashDrawer extends PrinterCommand {
     private int password; // Operator password (4 bytes)
     private int drawerNumber; // Cash drawer number (1 byte) 0, 1
     // out
-    private int operator = 0; // Operator index number (1 byte) 1…30
+    private int operator = 0; // Operator index number (1 byte) 1â€¦30
 
     /** Creates a new instance of CutReceiptCommand */
     public OpenCashDrawer() {

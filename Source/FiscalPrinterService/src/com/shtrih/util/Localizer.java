@@ -1,7 +1,7 @@
 /*
  * Localizer.java
  *
- * Created on 7 Èþëü 2010 ã., 16:26
+ * Created on 7 Ð˜ÑŽÐ»ÑŒ 2010 Ð³., 16:26
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

@@ -13,13 +13,13 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Get fiscal memory Totals Command: 62H. Length: 6 bytes. · Administrator or
- * System Administrator password (4 bytes) 29, 30 · Report type (1 byte) «0» –
- * grand totals, «1» – grand totals after the last refiscalization Answer: 62H.
- * Length: 29 bytes. · Result Code (1 byte) · Operator index number (1 byte) 29,
- * 30 · Grand totals of sales (8 bytes) · Grand totals of buys (6 bytes) If
- * there is no FM2, the value is FFh FFh FFh FFh FFh FFh · Grand totals of sale
- * refunds (6 bytes) If there is no FM2, the value is FFh FFh FFh FFh FFh FFh ·
+ * Get fiscal memory Totals Command: 62H. Length: 6 bytes. Â· Administrator or
+ * System Administrator password (4 bytes) 29, 30 Â· Report type (1 byte) Â«0Â» â€“
+ * grand totals, Â«1Â» â€“ grand totals after the last refiscalization Answer: 62H.
+ * Length: 29 bytes. Â· Result Code (1 byte) Â· Operator index number (1 byte) 29,
+ * 30 Â· Grand totals of sales (8 bytes) Â· Grand totals of buys (6 bytes) If
+ * there is no FM2, the value is FFh FFh FFh FFh FFh FFh Â· Grand totals of sale
+ * refunds (6 bytes) If there is no FM2, the value is FFh FFh FFh FFh FFh FFh Â·
  * Grand totals of buy refunds (6 bytes) If there is no FM2, the value is FFh
  * FFh FFh FFh FFh FFh
  ****************************************************************************/

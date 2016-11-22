@@ -1,7 +1,7 @@
 /*
  * DeviceMetrics.java
  *
- * Created on 8 Èþëü 2010 ã., 18:15
+ * Created on 8 Ð˜ÑŽÐ»ÑŒ 2010 Ð³., 18:15
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

@@ -1,7 +1,7 @@
 /*
  * PrinterFields.java
  *
- * Created on 17 Νξÿαπό 2009 γ., 12:49
+ * Created on 17 ΠΠΎΡΠ±Ρ€Ρ 2009 Π³., 12:49
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

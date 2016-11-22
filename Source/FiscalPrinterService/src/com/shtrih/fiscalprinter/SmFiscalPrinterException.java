@@ -1,7 +1,7 @@
 /*
  * SmFiscalPrinterException.java
  *
- * Created on 14 October 2010 �., 16:35
+ * Created on 14 October 2010 пїЅ., 16:35
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

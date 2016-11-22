@@ -17,9 +17,9 @@ import com.shtrih.fiscalprinter.table.PrinterTable;
  */
 
 /****************************************************************************
- * Get Table Structure Command: 2DH. Length: 6 bytes. · System Administrator
- * password (4 bytes) 30 · Table number (1 byte) Answer: 2DH. Length: 45 bytes.
- * · Result Code (1 byte) · Table name (40 bytes) · Number of rows (2 bytes) ·
+ * Get Table Structure Command: 2DH. Length: 6 bytes. Â· System Administrator
+ * password (4 bytes) 30 Â· Table number (1 byte) Answer: 2DH. Length: 45 bytes.
+ * Â· Result Code (1 byte) Â· Table name (40 bytes) Â· Number of rows (2 bytes) Â·
  * Number of fields (1 byte)
  ****************************************************************************/
 

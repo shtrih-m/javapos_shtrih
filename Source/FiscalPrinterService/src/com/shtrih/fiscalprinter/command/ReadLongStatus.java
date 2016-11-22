@@ -15,18 +15,18 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Get FP Status Command: 11H. Length: 5 bytes. · Operator password (4 bytes)
- * Answer: 11H. Length: 48 bytes. · Result Code (1 byte) · Operator index number
- * (1 byte) 1…30 · FP firmware version (2 bytes) · FP firmware build (2 bytes) ·
- * FP firmware date (3 bytes) DD-MM-YY · Number of FP in checkout line (1 byte)
- * · Current receipt number (2 bytes) · FP flags (2 bytes) · FP mode (1 byte) ·
- * FP submode (1 byte) · FP port (1 byte) · FM firmware version (2 bytes) · FM
- * firmware build (2 bytes) · FM firmware date (3 bytes) DD-MM-YY · Current date
- * (3 bytes) DD-MM-YY · Current time (3 bytes) HH-MM-SS · FM flags (1 byte) ·
- * Serial number (4 bytes) · Number of last daily totals record in FM (2 bytes)
- * 0000…2100 · Quantity of free daily totals records left in FM (2 bytes) · Last
- * fiscalization/refiscalization record number in FM (1 byte) 1…16 · Quantity of
- * free fiscalization/refiscalization records left in FM (1 byte) 0…15 ·
+ * Get FP Status Command: 11H. Length: 5 bytes. Â· Operator password (4 bytes)
+ * Answer: 11H. Length: 48 bytes. Â· Result Code (1 byte) Â· Operator index number
+ * (1 byte) 1â€¦30 Â· FP firmware version (2 bytes) Â· FP firmware build (2 bytes) Â·
+ * FP firmware date (3 bytes) DD-MM-YY Â· Number of FP in checkout line (1 byte)
+ * Â· Current receipt number (2 bytes) Â· FP flags (2 bytes) Â· FP mode (1 byte) Â·
+ * FP submode (1 byte) Â· FP port (1 byte) Â· FM firmware version (2 bytes) Â· FM
+ * firmware build (2 bytes) Â· FM firmware date (3 bytes) DD-MM-YY Â· Current date
+ * (3 bytes) DD-MM-YY Â· Current time (3 bytes) HH-MM-SS Â· FM flags (1 byte) Â·
+ * Serial number (4 bytes) Â· Number of last daily totals record in FM (2 bytes)
+ * 0000â€¦2100 Â· Quantity of free daily totals records left in FM (2 bytes) Â· Last
+ * fiscalization/refiscalization record number in FM (1 byte) 1â€¦16 Â· Quantity of
+ * free fiscalization/refiscalization records left in FM (1 byte) 0â€¦15 Â·
  * Taxpayer ID (6 bytes)
  ****************************************************************************/
 

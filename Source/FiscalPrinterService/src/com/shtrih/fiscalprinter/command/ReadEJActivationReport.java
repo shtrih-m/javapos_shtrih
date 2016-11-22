@@ -15,8 +15,8 @@ package com.shtrih.fiscalprinter.command;
 /**
  * **************************************************************************
  * Get Data Of electronic journal activation receipt Command: BBH. Length: 5
- * bytes. · System Administrator password (4 bytes) 30 Answer: BBH. Length: 18
- * bytes. · Result Code (1 byte) · ECR model (16 bytes) string of WIN1251 code
+ * bytes. Â· System Administrator password (4 bytes) 30 Answer: BBH. Length: 18
+ * bytes. Â· Result Code (1 byte) Â· ECR model (16 bytes) string of WIN1251 code
  * page characters
  */
 public final class ReadEJActivationReport extends PrinterCommand {

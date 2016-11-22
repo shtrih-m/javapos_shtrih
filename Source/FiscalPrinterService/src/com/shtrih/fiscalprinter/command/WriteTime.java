@@ -15,8 +15,8 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /*****************************************************************************
- * Set Clock Time Command: 21H. Length: 8 bytes. · System Administrator password
- * (4 bytes) 30 · Time (3 bytes) HH-MM-SS Answer: 21H. Length: 2 bytes. · Result
+ * Set Clock Time Command: 21H. Length: 8 bytes. Â· System Administrator password
+ * (4 bytes) 30 Â· Time (3 bytes) HH-MM-SS Answer: 21H. Length: 2 bytes. Â· Result
  * Code (1 byte)
  *****************************************************************************/
 

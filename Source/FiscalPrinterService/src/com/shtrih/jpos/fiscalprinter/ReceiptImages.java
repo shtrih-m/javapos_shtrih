@@ -1,7 +1,7 @@
 /*
  * ReceiptImages.java
  *
- * Created on 12 Νξÿαπό 2009 γ., 15:25
+ * Created on 12 ΠΠΎΡΠ±Ρ€Ρ 2009 Π³., 15:25
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

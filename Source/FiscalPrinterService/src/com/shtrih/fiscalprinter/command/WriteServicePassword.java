@@ -16,9 +16,9 @@ package com.shtrih.fiscalprinter.command;
 
 /****************************************************************************
  * Set Service Support Center Specialist Password Command: F3H. Length: 9 bytes.
- * · Old password of Service Support Center specialist (4 bytes) · New password
+ * Â· Old password of Service Support Center specialist (4 bytes) Â· New password
  * of Service Support Center specialist (4 bytes) Answer: F3H. Length: 2 bytes.
- * · Result Code (1 byte)
+ * Â· Result Code (1 byte)
  ****************************************************************************/
 
 public final class WriteServicePassword extends PrinterCommand {

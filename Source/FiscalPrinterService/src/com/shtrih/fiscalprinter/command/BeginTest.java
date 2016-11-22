@@ -16,9 +16,9 @@ package com.shtrih.fiscalprinter.command;
 import com.shtrih.util.MethodParameter;
 
 /*****************************************************************************
- * Start Test Command: 19H. Length: 6 bytes. · Operator password (4 bytes) ·
- * Test time out (1 byte) 1…99 Answer: 19H. Length: 3 bytes. · Result Code (1
- * byte) · Operator index number (1 byte) 1…30
+ * Start Test Command: 19H. Length: 6 bytes. Â· Operator password (4 bytes) Â·
+ * Test time out (1 byte) 1â€¦99 Answer: 19H. Length: 3 bytes. Â· Result Code (1
+ * byte) Â· Operator index number (1 byte) 1â€¦30
  *****************************************************************************/
 public class BeginTest extends PrinterCommand {
     // in params

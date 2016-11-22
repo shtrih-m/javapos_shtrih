@@ -15,9 +15,9 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Set License Command: 1CH. Length: 10 bytes. · System Administrator password
- * (4 bytes) 30 · License (5 bytes) 0000000000…9999999999 Answer: 1CH. Length: 2
- * bytes. · Result Code (1 byte)
+ * Set License Command: 1CH. Length: 10 bytes. Â· System Administrator password
+ * (4 bytes) 30 Â· License (5 bytes) 0000000000â€¦9999999999 Answer: 1CH. Length: 2
+ * bytes. Â· Result Code (1 byte)
  ****************************************************************************/
 
 public final class WriteLicense extends PrinterCommand {

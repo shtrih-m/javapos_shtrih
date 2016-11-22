@@ -15,14 +15,14 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Configure Slip Command: 78H. Length: 209 bytes. · Operator password (4 bytes)
- * · Slip width in printer steps (2 bytes)* · Slip length in printer steps (2
- * bytes)* · Printing direction – clockwise rotation in degrees (1 byte) «0» –
- * 0?, «1» – 90?, «2» – 180?, «3» – 270? · Spacing between Line 1 and Line 2 in
- * printer steps (1 byte)* · Spacing between Line 2 and Line 3 in printer steps
- * (1 byte)* · And so on for Lines 3…199 in printer steps (1 byte)* · Spacing
+ * Configure Slip Command: 78H. Length: 209 bytes. Â· Operator password (4 bytes)
+ * Â· Slip width in printer steps (2 bytes)* Â· Slip length in printer steps (2
+ * bytes)* Â· Printing direction â€“ clockwise rotation in degrees (1 byte) Â«0Â» â€“
+ * 0?, Â«1Â» â€“ 90?, Â«2Â» â€“ 180?, Â«3Â» â€“ 270? Â· Spacing between Line 1 and Line 2 in
+ * printer steps (1 byte)* Â· Spacing between Line 2 and Line 3 in printer steps
+ * (1 byte)* Â· And so on for Lines 3â€¦199 in printer steps (1 byte)* Â· Spacing
  * between Line 199 and Line 200 in printer steps (1 byte)* Answer: 78H. Length:
- * 3 bytes. · Result Code (1 byte) · Operator index number (1 byte) 1…30 printer
+ * 3 bytes. Â· Result Code (1 byte) Â· Operator index number (1 byte) 1â€¦30 printer
  * step value depends on the printing mechanism of a specific fiscal printer.
  * The horizontal step value differs from vertical step value: these parameters
  * are given in User Guide documentation for a specific fiscal printer.
@@ -34,12 +34,12 @@ public final class SlipConfigure extends PrinterCommand {
         public int slipWidth;
         // Slip length in printer steps (2 bytes)*
         public int slipLength;
-        // Printing direction – clockwise rotation in degrees (1 byte)
-        // «0» – 0?, «1» – 90?, «2» – 180?, «3» – 270?
+        // Printing direction â€“ clockwise rotation in degrees (1 byte)
+        // Â«0Â» â€“ 0?, Â«1Â» â€“ 90?, Â«2Â» â€“ 180?, Â«3Â» â€“ 270?
         public int rotation;
         // Spacing between Line 1 and Line 2 in printer steps (1 byte)*
         // Spacing between Line 2 and Line 3 in printer steps (1 byte)*
-        // And so on for Lines 3…199 in printer steps (1 byte)*
+        // And so on for Lines 3â€¦199 in printer steps (1 byte)*
         // Spacing between Line 199 and Line 200 in printer steps (1 byte)*
         public byte[] linesSpacing = new byte[199];
     }

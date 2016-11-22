@@ -25,8 +25,8 @@ public class PrinterField {
     private final FieldInfo fieldInfo;
     public static CompositeLogger logger = CompositeLogger.getLogger(PrinterField.class);
 
-    // Номер таблицы,Ряд,Поле,Размер поля,Тип поля,Мин. значение, Макс.значение,
-    // Название,Значение
+    // РќРѕРјРµСЂ С‚Р°Р±Р»РёС†С‹,Р СЏРґ,РџРѕР»Рµ,Р Р°Р·РјРµСЂ РїРѕР»СЏ,РўРёРї РїРѕР»СЏ,РњРёРЅ. Р·РЅР°С‡РµРЅРёРµ, РњР°РєСЃ.Р·РЅР°С‡РµРЅРёРµ,
+    // РќР°Р·РІР°РЅРёРµ,Р—РЅР°С‡РµРЅРёРµ
     /** Creates a new instance of PrinterField */
     public PrinterField(FieldInfo fieldInfo, int row) 
     {

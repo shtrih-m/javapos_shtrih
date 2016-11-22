@@ -2,7 +2,7 @@
  * GetFieldStructureCommandTest.java
  * JUnit based test
  *
- * Created on 13 Îêòÿáğü 2009 ã., 11:47
+ * Created on 13 ĞĞºÑ‚ÑĞ±Ñ€ÑŒ 2009 Ğ³., 11:47
  */
 
 package com.shtrih.fiscalprinter;

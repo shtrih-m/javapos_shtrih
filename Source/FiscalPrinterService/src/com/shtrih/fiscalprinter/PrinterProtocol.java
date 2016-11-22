@@ -1,7 +1,7 @@
 /*
  * SmPrinterDeviceInterface.java
  *
- * Created on 14 October 2010 �., 19:49
+ * Created on 14 October 2010 пїЅ., 19:49
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

@@ -17,9 +17,9 @@ import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
 
 /*********************************************************************
- * Print Bar Code First Variation Second Variation ASCII: GSkm d1…dk NUL or GS k
- * m n d1…dn Hexadecimal: 1D 6B m d1…dk 00 or 1D 6B m n d1…dn First Variation:
- * String terminated with NUL Character m =0 – 6, 10 d = 32 - 126 (see the
+ * Print Bar Code First Variation Second Variation ASCII: GSkm d1â€¦dk NUL or GS k
+ * m n d1â€¦dn Hexadecimal: 1D 6B m d1â€¦dk 00 or 1D 6B m n d1â€¦dn First Variation:
+ * String terminated with NUL Character m =0 â€“ 6, 10 d = 32 - 126 (see the
  * table) n = 1 - 255 (see the table) Second Variation: Length of Byte Specified
  * at Beginning of String m = 65 - 73, 75 (see the table) d = 0 - 127 (see the
  * table) n = 1 - 255 (see the table) m Bar Code D n, Length 0 UPC-A 48- 57

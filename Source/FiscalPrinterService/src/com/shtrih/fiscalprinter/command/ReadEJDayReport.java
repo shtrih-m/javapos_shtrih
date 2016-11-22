@@ -14,8 +14,8 @@ package com.shtrih.fiscalprinter.command;
  */
 /****************************************************************************
  * Get Data Of electronic journal Daily Log Report Command: B4H. Length: 7
- * bytes. · System Administrator password (4 bytes) 30 · Day number (2 bytes)
- * 0000…2100 Answer: B4H. Length: 18 bytes. · Result Code (1 byte) · ECR model
+ * bytes. Â· System Administrator password (4 bytes) 30 Â· Day number (2 bytes)
+ * 0000â€¦2100 Answer: B4H. Length: 18 bytes. Â· Result Code (1 byte) Â· ECR model
  * (16 bytes) string of WIN1251 code page characters NOTE: Command execution may
  * take up to 40 seconds.
  ****************************************************************************/

@@ -9,10 +9,10 @@
 package com.shtrih.fiscalprinter.command;
 
 /****************************************************************************
- * Print Document Header Command: 18H. Length: 37 bytes. · Operator password (4
- * bytes) · Receipt title (30 bytes) · Receipt number (2 bytes) Answer: 18H.
- * Length: 5 bytes. · Result Code (1 byte) · Operator index number (1 byte) 1…30
- * · Current receipt number (2 bytes)
+ * Print Document Header Command: 18H. Length: 37 bytes. Â· Operator password (4
+ * bytes) Â· Receipt title (30 bytes) Â· Receipt number (2 bytes) Answer: 18H.
+ * Length: 5 bytes. Â· Result Code (1 byte) Â· Operator index number (1 byte) 1â€¦30
+ * Â· Current receipt number (2 bytes)
  ****************************************************************************/
 public final class PrintDocHeader extends PrinterCommand {
 

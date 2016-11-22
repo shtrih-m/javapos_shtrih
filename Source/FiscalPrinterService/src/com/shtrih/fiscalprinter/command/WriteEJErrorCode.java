@@ -13,8 +13,8 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Return EJ Error Code Command: BCH. Length: 6 bytes. · System Administrator
- * password (4 bytes) 30 · Result Code (1 byte) Answer: BCH. Length: 2 bytes. ·
+ * Return EJ Error Code Command: BCH. Length: 6 bytes. Â· System Administrator
+ * password (4 bytes) 30 Â· Result Code (1 byte) Answer: BCH. Length: 2 bytes. Â·
  * Result Code (1 byte) NOTE: Command can be executed only with EJ development
  * kit.
  ****************************************************************************/

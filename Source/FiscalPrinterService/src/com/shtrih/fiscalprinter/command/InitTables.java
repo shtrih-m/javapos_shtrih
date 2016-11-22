@@ -13,8 +13,8 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Set Table With Default Values Command: 24H. Length: 5 bytes. · System
- * Administrator password (4 bytes) 30 Answer: 24H. Length: 2 bytes. · Result
+ * Set Table With Default Values Command: 24H. Length: 5 bytes. Â· System
+ * Administrator password (4 bytes) 30 Answer: 24H. Length: 2 bytes. Â· Result
  * Code (1 byte)
  ****************************************************************************/
 public class InitTables extends PrinterCommand {

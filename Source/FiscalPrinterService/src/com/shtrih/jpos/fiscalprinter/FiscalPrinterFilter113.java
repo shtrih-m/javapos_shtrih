@@ -1,7 +1,7 @@
 /*
  * FiscalPrinterFilter113.java
  *
- * Created on 13 ίνβΰπό 2011 γ., 12:58
+ * Created on 13 Π―Π½Π²Π°Ρ€Ρ 2011 Π³., 12:58
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

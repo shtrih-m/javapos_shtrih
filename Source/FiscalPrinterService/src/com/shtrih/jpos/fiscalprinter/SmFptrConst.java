@@ -1,7 +1,7 @@
 /*
  * SmFptrConst.java
  *
- * Created on 13 Νξÿαπό 2009 γ., 17:57
+ * Created on 13 ΠΠΎΡΠ±Ρ€Ρ 2009 Π³., 17:57
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

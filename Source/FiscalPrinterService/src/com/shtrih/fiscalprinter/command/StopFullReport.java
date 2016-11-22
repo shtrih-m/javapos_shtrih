@@ -15,8 +15,8 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Interrupt Full Report Command: 68H. Length: 5 bytes. · Tax Officer password
- * (4 bytes) Answer: 68H. Length: 2 bytes. · Result Code (1 byte)
+ * Interrupt Full Report Command: 68H. Length: 5 bytes. Â· Tax Officer password
+ * (4 bytes) Answer: 68H. Length: 2 bytes. Â· Result Code (1 byte)
  ****************************************************************************/
 
 public final class StopFullReport extends PrinterCommand {

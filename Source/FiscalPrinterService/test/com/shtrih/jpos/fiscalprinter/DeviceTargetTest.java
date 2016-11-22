@@ -2,7 +2,7 @@
  * DeviceTargetTest.java
  * JUnit based test
  *
- * Created on 12 Îêòÿáğü 2009 ã., 12:47
+ * Created on 12 ĞĞºÑ‚ÑĞ±Ñ€ÑŒ 2009 Ğ³., 12:47
  */
 
 package com.shtrih.jpos.fiscalprinter;

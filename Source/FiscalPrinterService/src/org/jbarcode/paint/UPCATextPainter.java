@@ -3,7 +3,7 @@
  * ================================================================
  *
  * Project Info:  http://jbcode.sourceforge.net
- * Project Lead:  Flávio Sampaio (flavio@ronisons.com);
+ * Project Lead:  FlГЎvio Sampaio (flavio@ronisons.com);
  *
  * (C) Copyright 2005, by Flavio Sampaio
  *
@@ -30,7 +30,7 @@ import java.awt.image.BufferedImage;
 /**
  * TODO: Description.
  * 
- * @author Flávio Sampaio
+ * @author FlГЎvio Sampaio
  * @since 0.1
  */
 public class UPCATextPainter implements TextPainter {

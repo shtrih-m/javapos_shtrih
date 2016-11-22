@@ -15,37 +15,37 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Discount/Surcharge On Slip Command: 74H. Length: 68 bytes. · Operator
- * password (4 bytes) · Number of lines in transaction block (1 byte) 1…2 · Line
- * number of Text element in transaction block (1 byte) 0…2, «0» – do not print
- * · Line number of Transaction Name element in transaction block (1 byte) 1…2 ·
- * Line number of Transaction Sum element in transaction block (1 byte) 1…2 ·
- * Font type of Text element (1 byte) · Font type of Transaction Name element (1
- * byte) · Font type of Transaction Sum element (1 byte) · Length of Text
- * element in characters (1 byte) · Length of Transaction Sum element in
- * characters (1 byte) · Position in line of Text element (1 byte) · Position in
- * line of Transaction Name element (1 byte) · Position in line of Transaction
- * Sum element (1 byte) · Transaction type (1 byte) «0» – Discount, «1» –
- * Surcharge · Slip line number with the first line of Discount/Surcharge block
- * (1 byte) · Transaction Sum (5 bytes) · Tax 1 (1 byte) «0» – no tax, «1»…«4» –
- * tax ID · Tax 2 (1 byte) «0» – no tax, «1»…«4» – tax ID · Tax 3 (1 byte) «0» –
- * no tax, «1»…«4» – tax ID · Tax 4 (1 byte) «0» – no tax, «1»…«4» – tax ID ·
- * Text (40 bytes) Answer: 74H. Length: 3 bytes. · Result Code (1 byte) ·
- * Operator index number (1 byte) 1…30
+ * Discount/Surcharge On Slip Command: 74H. Length: 68 bytes. Â· Operator
+ * password (4 bytes) Â· Number of lines in transaction block (1 byte) 1â€¦2 Â· Line
+ * number of Text element in transaction block (1 byte) 0â€¦2, Â«0Â» â€“ do not print
+ * Â· Line number of Transaction Name element in transaction block (1 byte) 1â€¦2 Â·
+ * Line number of Transaction Sum element in transaction block (1 byte) 1â€¦2 Â·
+ * Font type of Text element (1 byte) Â· Font type of Transaction Name element (1
+ * byte) Â· Font type of Transaction Sum element (1 byte) Â· Length of Text
+ * element in characters (1 byte) Â· Length of Transaction Sum element in
+ * characters (1 byte) Â· Position in line of Text element (1 byte) Â· Position in
+ * line of Transaction Name element (1 byte) Â· Position in line of Transaction
+ * Sum element (1 byte) Â· Transaction type (1 byte) Â«0Â» â€“ Discount, Â«1Â» â€“
+ * Surcharge Â· Slip line number with the first line of Discount/Surcharge block
+ * (1 byte) Â· Transaction Sum (5 bytes) Â· Tax 1 (1 byte) Â«0Â» â€“ no tax, Â«1Â»â€¦Â«4Â» â€“
+ * tax ID Â· Tax 2 (1 byte) Â«0Â» â€“ no tax, Â«1Â»â€¦Â«4Â» â€“ tax ID Â· Tax 3 (1 byte) Â«0Â» â€“
+ * no tax, Â«1Â»â€¦Â«4Â» â€“ tax ID Â· Tax 4 (1 byte) Â«0Â» â€“ no tax, Â«1Â»â€¦Â«4Â» â€“ tax ID Â·
+ * Text (40 bytes) Answer: 74H. Length: 3 bytes. Â· Result Code (1 byte) Â·
+ * Operator index number (1 byte) 1â€¦30
  ****************************************************************************/
 
 public final class SlipDiscount extends PrinterCommand {
     class SlipAmountParams {
-        // Number of lines in transaction block (1 byte) 1…2
+        // Number of lines in transaction block (1 byte) 1â€¦2
         public byte lineNumber = 0;
-        // Line number of Text element in transaction block (1 byte) 0…2, «0» –
+        // Line number of Text element in transaction block (1 byte) 0â€¦2, Â«0Â» â€“
         // do not print
         public byte textLine = 0;
         // Line number of Transaction Name element in transaction block (1 byte)
-        // 1…2
+        // 1â€¦2
         public byte nameLine = 0;
         // Line number of Transaction Sum element in transaction block (1 byte)
-        // 1…2
+        // 1â€¦2
         public byte amountLine = 0;
         // Font type of Text element (1 byte)
         public byte textFont = 0;
@@ -63,7 +63,7 @@ public final class SlipDiscount extends PrinterCommand {
         public byte nameOffset = 0;
         // Position in line of Transaction Sum element (1 byte)
         public byte amountOffset = 0;
-        // Transaction type (1 byte) «0» – Discount, «1» – Surcharge
+        // Transaction type (1 byte) Â«0Â» â€“ Discount, Â«1Â» â€“ Surcharge
         public byte operationType = 0;
     }
 

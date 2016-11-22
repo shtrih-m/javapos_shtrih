@@ -1226,7 +1226,7 @@ public class MainDialog extends javax.swing.JDialog
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        // Установка вывода консольных сообщений в нужной кодировке
+        // РЈСЃС‚Р°РЅРѕРІРєР° РІС‹РІРѕРґР° РєРѕРЅСЃРѕР»СЊРЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№ РІ РЅСѓР¶РЅРѕР№ РєРѕРґРёСЂРѕРІРєРµ
         try {
             System.setOut(new CodepagePrintStream(
                     System.out, System.getProperty("console.encoding", "Cp866")));

@@ -15,8 +15,8 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Continue Printing Slip Command: E1H. Length: 5 bytes. · Operator password (4
- * bytes) Answer: E1H. Length: 2 bytes. · Operator index number (1 byte) 1…30
+ * Continue Printing Slip Command: E1H. Length: 5 bytes. Â· Operator password (4
+ * bytes) Answer: E1H. Length: 2 bytes. Â· Operator index number (1 byte) 1â€¦30
  * NOTE: Command allows finishing printing slip document after paper out, power
  * failure, etc. situations. Printing resumes from the very line of slip
  * document on which FP stopped printing because of technical failure.

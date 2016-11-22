@@ -15,10 +15,10 @@ package com.shtrih.fiscalprinter.command;
 import com.shtrih.util.MethodParameter;
 
 /****************************************************************************
- * Get Operation Totalizer Value Command: 1BH. Length: 6 bytes. · Operator
- * password (4 bytes) · Operation totalizer number (1 byte) 0…255 Answer: 1BH.
- * Length: 5 bytes. · Result Code (1 byte) · Operator index number (1 byte) 1…30
- * · Operation totalizer value (2 bytes)
+ * Get Operation Totalizer Value Command: 1BH. Length: 6 bytes. Â· Operator
+ * password (4 bytes) Â· Operation totalizer number (1 byte) 0â€¦255 Answer: 1BH.
+ * Length: 5 bytes. Â· Result Code (1 byte) Â· Operator index number (1 byte) 1â€¦30
+ * Â· Operation totalizer value (2 bytes)
  ****************************************************************************/
 public final class ReadOperationRegister extends PrinterCommand {
     // in

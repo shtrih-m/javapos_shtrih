@@ -15,10 +15,10 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Get Communication Parameters Command: 15H. Length: 6 bytes. · System
- * Administrator password (4 bytes) 30 · Port number (1 byte) 0…255 Answer: 15H.
- * Length: 4 bytes. · Result Code (1 byte) · Baud rate (1 byte) 0…6 ·
- * Inter-character time out (1 byte) 0…255
+ * Get Communication Parameters Command: 15H. Length: 6 bytes. Â· System
+ * Administrator password (4 bytes) 30 Â· Port number (1 byte) 0â€¦255 Answer: 15H.
+ * Length: 4 bytes. Â· Result Code (1 byte) Â· Baud rate (1 byte) 0â€¦6 Â·
+ * Inter-character time out (1 byte) 0â€¦255
  ****************************************************************************/
 
 public final class ReadPortParams extends PrinterCommand {

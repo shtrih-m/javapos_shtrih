@@ -15,9 +15,9 @@ package com.shtrih.fiscalprinter.command;
  */
 
 /****************************************************************************
- * Set Long Serial Number Command: 0EH. Length: 12 bytes. · Password (4 bytes)
- * (default password value «0») · Long Serial Number (7 bytes)
- * 00000000000000…99999999999999 Answer: 0EH. Length: 2 bytes. · Result Code (1
+ * Set Long Serial Number Command: 0EH. Length: 12 bytes. Â· Password (4 bytes)
+ * (default password value Â«0Â») Â· Long Serial Number (7 bytes)
+ * 00000000000000â€¦99999999999999 Answer: 0EH. Length: 2 bytes. Â· Result Code (1
  * byte) NOTE: The command is introduced into this protocol to conform to the
  * Byelorussian legislation that requires Electronic Cash Registers to have
  * serial number to be 14 digits long, where as in Russia it must be 10 digits

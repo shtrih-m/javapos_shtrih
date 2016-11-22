@@ -1,7 +1,7 @@
 /*
  * StringTest.java
  *
- * Created on 9 Сентябрь 2010 г., 18:21
+ * Created on 9 РЎРµРЅС‚СЏР±СЂСЊ 2010 Рі., 18:21
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

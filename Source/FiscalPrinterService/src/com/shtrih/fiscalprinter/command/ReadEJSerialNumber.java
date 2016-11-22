@@ -13,10 +13,10 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Get electronic journal serial number Command: ABH. Length: 5 bytes. · System
- * Administrator password (4 bytes) 30 Answer: ABH. Length: 7 bytes. · Result
- * Code (1 byte) · Electronic journal serial number (5 bytes)
- * 0000000000…9999999999
+ * Get electronic journal serial number Command: ABH. Length: 5 bytes. Â· System
+ * Administrator password (4 bytes) 30 Answer: ABH. Length: 7 bytes. Â· Result
+ * Code (1 byte) Â· Electronic journal serial number (5 bytes)
+ * 0000000000â€¦9999999999
  ****************************************************************************/
 public final class ReadEJSerialNumber extends PrinterCommand {
     // in

@@ -13,7 +13,7 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
- * Initialize FM Command: 61H. Length: 1 byte. Answer: 61H. Length: 2 bytes. ·
+ * Initialize FM Command: 61H. Length: 1 byte. Answer: 61H. Length: 2 bytes. Â·
  * Result Code (1 byte) NOTE: Command can be performed only when a special
  * technological processor is installed in the FM.
  ****************************************************************************/
