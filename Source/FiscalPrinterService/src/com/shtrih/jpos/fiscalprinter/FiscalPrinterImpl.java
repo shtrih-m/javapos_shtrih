@@ -278,7 +278,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private int slipSelection;
     private boolean trainingModeActive;
     private boolean coverOpened = false;
-    private boolean dayOpened = false;
     private String reservedWord = "";
     // 1.6
     private int actualCurrency;
@@ -887,7 +886,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         setJrnPaperState(flags.isJrnEmpty(), flags.isJrnNearEnd());
         setSlpPaperState(flags.isSlpEmpty(), flags.isSlpNearEnd());
         setCoverState(flags.isCoverOpened());
-        dayOpened = status.getPrinterMode().getDayOpened();
     }
 
     private void startPoll() throws Exception {
@@ -1409,7 +1407,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public boolean getDayOpened() throws Exception {
         checkEnabled();
-        return dayOpened;
+        return getPrinter().readPrinterStatus().getPrinterMode().getDayOpened();
     }
 
     public int getDescriptionLength() throws Exception {
@@ -3549,7 +3547,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             getPrinter().printZReport();
             fiscalDay.close();
             printReportEnd();
-            dayOpened = readPrinterStatus().getPrinterMode().getDayOpened();
         } else {
             throw new JposException(JPOS_E_ILLEGAL);
         }
