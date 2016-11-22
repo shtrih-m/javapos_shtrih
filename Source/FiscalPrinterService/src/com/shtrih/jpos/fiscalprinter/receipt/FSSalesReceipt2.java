@@ -536,7 +536,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
 
         if (!getParams().FSCombineItemAdjustments) {
             printRecItemAsText(item, quantity);
-            item.setText("//");
+            item.setText("//"+description);
         }
 
         if (quantity > 0) {
