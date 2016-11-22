@@ -333,6 +333,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             getDevice().printText(postLine);
         }
         // Print discounts
+        //TODO: add print somewhere here
         FSDiscounts discounts = item.getDiscounts();
         for (int i = 0; i < discounts.size(); i++) {
             FSDiscount discount = (FSDiscount) discounts.get(i);
