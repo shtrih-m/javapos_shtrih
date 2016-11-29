@@ -44,6 +44,7 @@ import static jpos.JposConst.JPOS_E_EXTENDED;
 public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
 
     private PriceItem lastItem = null;
+    private long lastItemDiscountSum = 0;
     private int receiptType = 0;
     private boolean isOpened = false;
     private boolean disablePrint = false;
@@ -84,6 +85,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
     public void clearReceipt() throws Exception {
         isOpened = false;
         lastItem = null;
+        lastItemDiscountSum = 0;
         for (int i = 0; i < 5; i++) {
             payments[i] = 0;
         }
@@ -142,7 +144,9 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
                 clearReceipt();
             } else {
                 correctPayments();
-                
+                if (lastItem!=null){
+                    printLastItemTotalAndTax(lastItem);
+                }
                 if (disablePrint) {
                     getDevice().disablePrint();
                 }
@@ -520,9 +524,6 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
 
         printPreLine();
 
-        double d = unitPrice * Math.abs(quantity);
-        long amount = MathUtils.round((d / 1000));
-
         PriceItem item = new PriceItem();
         item.setPrice(unitPrice);
         item.setQuantity(Math.abs(quantity));
@@ -532,7 +533,11 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         item.setTax3(0);
         item.setTax4(0);
         item.setText(description);
+        if (lastItem != null) {
+            printLastItemTotalAndTax(lastItem);
+        }
         lastItem = item;
+        lastItemDiscountSum = 0;
 
         if (!getParams().FSCombineItemAdjustments) {
             printRecItemAsText(item, quantity);
@@ -550,11 +555,6 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         }
 
         printPostLine();
-        if (getParams().FSReceiptItemDiscountEnabled) {
-            if ((amount - price) > 0) {
-                printDiscount(amount - price, 0, "");
-            }
-        }
     }
 
     public String formatLines(String line1, String line2) throws Exception {
@@ -587,6 +587,14 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         line = formatLines(line1, line);
         getDevice().printText(line);
 
+        if (getParams().FSReceiptItemDiscountEnabled) {
+            double d = item.getPrice() * Math.abs(quantity);
+            long amount = MathUtils.round((d / 1000));
+            if ((amount - item.getPrice()) > 0) {
+                printDiscount(amount - item.getPrice(), 0, "");
+            }
+        }
+
         line = "";
         int department = item.getDepartment();
         if ((department > 0) && (department <= 16)) {
@@ -596,8 +604,22 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
                 + getTaxLetter(tax));
         getDevice().printText(line);
 
+
+    }
+
+    private void printLastItemTotalAndTax(PriceItem item) throws Exception {
+
+        if (lastItemDiscountSum != 0) {
+            getDevice().printText(formatStrings(" ","=" + StringUtils.amountToString(item.getAmount()-lastItemDiscountSum)));
+        }
+
+        String line;
+        int tax = item.getTax1();
+        if (tax == 0) {
+            tax = 4;
+        }
         double taxRate = getDevice().getTaxRate(tax) / 10000.0;
-        long taxAmount = (long) (item.getAmount() * taxRate / (1 + taxRate) + 0.5);
+        long taxAmount = (long) ((item.getAmount()-lastItemDiscountSum) * taxRate / (1 + taxRate) + 0.5);
 
         line = getDevice().getTaxName(tax);
         line = formatLines(line, StringUtils.amountToString(taxAmount));
@@ -647,7 +669,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         } else {
             getDevice().printCharge(item);
         }
-
+        lastItemDiscountSum += amount;
         if (!getParams().FSCombineItemAdjustments) {
             if (amount > 0) {
                 getDevice().printText("СКИДКА");
