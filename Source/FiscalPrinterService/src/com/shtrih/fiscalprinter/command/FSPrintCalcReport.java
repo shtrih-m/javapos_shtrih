@@ -55,7 +55,7 @@ public class FSPrintCalcReport extends PrinterCommand {
         documentNumber = in.readInt();
         documentDigest = in.readInt();
         documentCount = in.readInt();
-        documentDate = in.readDate();
+        documentDate = in.readDateYMD();
     }
 
     /**

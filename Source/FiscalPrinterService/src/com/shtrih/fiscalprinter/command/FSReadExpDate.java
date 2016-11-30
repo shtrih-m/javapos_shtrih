@@ -39,7 +39,7 @@ public class FSReadExpDate extends PrinterCommand {
     // in
     private int sysPassword = 0; // System sdministrator password (4 bytes)
     // out
-    private EJDate date; // Serial number
+    private PrinterDate date; // Serial number
 
     public FSReadExpDate() {
     }
@@ -57,20 +57,20 @@ public class FSReadExpDate extends PrinterCommand {
     }
 
     public void decode(CommandInputStream in) throws Exception {
-        setDate(in.readEJDate());
+        setDate(in.readDateYMD());
     }
 
     /**
      * @return the date
      */
-    public EJDate getDate() {
+    public PrinterDate getDate() {
         return date;
     }
 
     /**
      * @param date the date to set
      */
-    public void setDate(EJDate date) {
+    public void setDate(PrinterDate date) {
         this.date = date;
     }
 
