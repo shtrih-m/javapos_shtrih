@@ -333,6 +333,10 @@ public class DirectIOHandler2 {
                 new DIOFSWriteCustomerPhone(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_FS_PRINT_CALC_REPORT:
+                new DIOFSPrintCalcReport(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
@@ -482,6 +486,7 @@ public class DirectIOHandler2 {
             case  SmFptrConst.SMFPTR_DIO_PARAM_TAX_PASSWORD:
                 service.getPrinter().setTaxPassword(value);
                 break;
+                
         }
     }
 

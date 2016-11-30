@@ -64,6 +64,7 @@ import com.shtrih.fiscalprinter.command.ReadFMLastRecordDate;
 import com.shtrih.fiscalprinter.command.ReadFMTotals;
 import com.shtrih.fiscalprinter.command.ReadLongStatus;
 import com.shtrih.fiscalprinter.command.ShortPrinterStatus;
+import com.shtrih.fiscalprinter.command.FSPrintCalcReport;
 import com.shtrih.fiscalprinter.command.TextLine;
 import com.shtrih.fiscalprinter.model.PrinterModel;
 import com.shtrih.fiscalprinter.port.PrinterPort;
@@ -3080,7 +3081,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
             receipt.endFiscalReceipt(printHeader);
             getPrinter().stopSaveCommands();
-            
+
             if (!receipt.getDisablePrint()) {
                 // Print may not respond for some time
                 sleep(getParams().recCloseSleepTime);
@@ -4484,15 +4485,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    private FiscalReceipt createSalesReceipt(int receiptType) throws Exception
-    {
+    private FiscalReceipt createSalesReceipt(int receiptType) throws Exception {
         FiscalReceipt result;
-        if (printer.getCapFiscalStorage()) 
-        {
-            if (printer.getDiscountMode() == 0)
-            {
+        if (printer.getCapFiscalStorage()) {
+            if (printer.getDiscountMode() == 0) {
                 result = new FSSalesReceipt2(createReceiptContext(), receiptType);
-            } else{
+            } else {
                 result = new FSSalesReceipt(createReceiptContext(), receiptType);
             }
         } else if (params.salesReceiptType == SMFPTR_RECEIPT_NORMAL) {
@@ -4587,16 +4585,30 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
         receipt.fsWriteTag(tagId, tagValue);
     }
-    
+
     public void disablePrint() throws Exception {
         receipt.disablePrint();
     }
-    
+
     public void fsWriteCustomerEmail(String text) throws Exception {
         receipt.fsWriteCustomerEmail(text);
     }
-    
+
     public void fsWriteCustomerPhone(String text) throws Exception {
         receipt.fsWriteCustomerPhone(text);
     }
+
+    public void fsPrintCalcReport() throws Exception {
+        FSPrintCalcReport command = new FSPrintCalcReport();
+        command.setSysPassword(printer.getSysPassword());
+        printer.execute(command);
+        try {
+            printer.waitForPrinting();
+            printDocEnd();
+        } catch (Exception e) {
+            logger.error("fsPrintCalcReport: " + e.getMessage());
+        }
+
+    }
+
 }

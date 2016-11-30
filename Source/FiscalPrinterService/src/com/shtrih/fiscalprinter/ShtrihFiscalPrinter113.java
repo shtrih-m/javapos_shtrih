@@ -1572,6 +1572,11 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void fsPrintCalcReport(FSPrintCalcReport command) throws JposException {
         executeCommand(command);
     }
+    
+    public void fsPrintCalcReport() throws JposException {
+        directIO(SmFptrConst.SMFPTR_DIO_FS_PRINT_CALC_REPORT, null, null);
+    }
+    
 
     public void fsReadCommStatus(FSReadCommStatus command) throws JposException {
         executeCommand(command);
@@ -1644,5 +1649,6 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void disablePrint() throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_FS_DISABLE_PRINT, null, null);
     }
-    
 }
+    
+ 

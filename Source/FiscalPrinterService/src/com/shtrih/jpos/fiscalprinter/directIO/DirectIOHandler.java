@@ -354,6 +354,10 @@ public class DirectIOHandler {
                 new DIOFSWriteCustomerPhone(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_FS_PRINT_CALC_REPORT:
+                new DIOFSPrintCalcReport(service).execute(data, object);
+                break;
+                    
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)

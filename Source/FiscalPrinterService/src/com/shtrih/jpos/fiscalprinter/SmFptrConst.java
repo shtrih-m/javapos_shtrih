@@ -431,6 +431,10 @@ public interface SmFptrConst {
      */
     public static final int SMFPTR_DIO_FS_WRITE_CUSTOMER_PHONE = 0x3A;
     
+    /**
+     * Print calculation report
+     */
+    public static final int SMFPTR_DIO_FS_PRINT_CALC_REPORT = 0x3B;
     
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
