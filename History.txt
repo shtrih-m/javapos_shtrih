@@ -6,9 +6,6 @@
 
 ********************************************************************************
 
-  December, 6 2016, 13:55
-  deviceServiceVersion = 1013322
-	
   [-] Fixed error with getDayOpened property
   
 ********************************************************************************
@@ -24,6 +21,19 @@
   deviceServiceVersion = 1013320
 	
   [-] Fixed error with barcode printing by barcodePrefix
+  
+********************************************************************************
+
+    November, 30 2016, 19:15
+  deviceServiceVersion = 1013320
+	
+  [-] FSFiscalReceipt2 lastItem footer print fix
+  
+********************************************************************************
+  November, 29 2016, 12:35
+  deviceServiceVersion = 1013319
+	
+  [+] Discount and tax postion adjustment
   
 ********************************************************************************
 
