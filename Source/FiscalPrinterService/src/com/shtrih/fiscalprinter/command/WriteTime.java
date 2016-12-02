@@ -22,15 +22,13 @@ package com.shtrih.fiscalprinter.command;
 
 public final class WriteTime extends PrinterCommand {
     // in
-    private final int password;
-    private final PrinterTime time;
+    private int password;
+    private PrinterTime time;
 
     /**
      * Creates a new instance of WriteTime
      */
-    public WriteTime(int password, PrinterTime time) {
-        this.password = password;
-        this.time = time;
+    public WriteTime() {
     }
 
     public final int getCode() {
@@ -47,5 +45,33 @@ public final class WriteTime extends PrinterCommand {
     }
 
     public final void decode(CommandInputStream in) throws Exception {
+    }
+
+    /**
+     * @return the password
+     */
+    public int getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(int password) {
+        this.password = password;
+    }
+
+    /**
+     * @return the time
+     */
+    public PrinterTime getTime() {
+        return time;
+    }
+
+    /**
+     * @param time the time to set
+     */
+    public void setTime(PrinterTime time) {
+        this.time = time;
     }
 }

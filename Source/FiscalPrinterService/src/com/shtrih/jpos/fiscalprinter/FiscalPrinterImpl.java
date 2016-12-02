@@ -468,7 +468,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         totalizerType = FPTR_TT_DAY;
         capUpdateStatistics = true;
         capStatisticsReporting = true;
-        deviceServiceVersion = deviceVersion113 + 319;
+        deviceServiceVersion = deviceVersion113 + 320;
         freezeEvents = true;
     }
 
@@ -3225,8 +3225,20 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkPrice(unitPrice);
         checkVatInfo(vatInfo);
 
+        description = updateDescription(description);
         receipt.printRecItem(description, price, quantity, vatInfo, unitPrice,
                 unitName);
+    }
+
+    public String updateDescription(String description) throws Exception {
+        String postLine = getPostLine();
+        if (!postLine.isEmpty()) 
+        {
+            params.clearPostLine();
+            printRecMessage(description);
+            description = postLine;
+        }
+        return description;
     }
 
     public void printRecItem(String description, long price, int quantity,
@@ -3939,6 +3951,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkEnabled();
         checkQuantity(quantity);
         checkVatInfo(vatInfo);
+        
+        description = updateDescription(description);
         receipt.printRecItemVoid(description, price, quantity, vatInfo,
                 unitPrice, unitName);
     }
@@ -4318,6 +4332,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkPrice(unitAmount);
         checkVatInfo(vatInfo);
 
+        description = updateDescription(description);
         receipt.printRecItemRefund(description, amount, quantity, vatInfo,
                 unitAmount, unitName);
     }
@@ -4348,6 +4363,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkQuantity(quantity);
         checkVatInfo(vatInfo);
 
+        description = updateDescription(description);
         receipt.printRecItemRefundVoid(description, amount, quantity, vatInfo,
                 unitAmount, unitName);
     }

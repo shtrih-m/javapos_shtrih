@@ -21,20 +21,15 @@ package com.shtrih.fiscalprinter.command;
 public final class WritePortParams extends PrinterCommand {
     // in
 
-    private final int password;
-    private final int portNumber;
-    private final int baudRate;
-    private final int timeout;
+    private int password;
+    private int portNumber;
+    private int baudRate;
+    private int timeout;
 
     /**
      * Creates a new instance of WritePortParams
      */
-    public WritePortParams(int password, int portNumber, int baudRate,
-            int timeout) {
-        this.password = password;
-        this.portNumber = portNumber;
-        this.baudRate = baudRate;
-        this.timeout = timeout;
+    public WritePortParams() {
     }
 
     public final int getCode() {
@@ -53,5 +48,61 @@ public final class WritePortParams extends PrinterCommand {
     }
 
     public final void decode(CommandInputStream in) throws Exception {
+    }
+
+    /**
+     * @return the password
+     */
+    public int getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(int password) {
+        this.password = password;
+    }
+
+    /**
+     * @return the portNumber
+     */
+    public int getPortNumber() {
+        return portNumber;
+    }
+
+    /**
+     * @param portNumber the portNumber to set
+     */
+    public void setPortNumber(int portNumber) {
+        this.portNumber = portNumber;
+    }
+
+    /**
+     * @return the baudRate
+     */
+    public int getBaudRate() {
+        return baudRate;
+    }
+
+    /**
+     * @param baudRate the baudRate to set
+     */
+    public void setBaudRate(int baudRate) {
+        this.baudRate = baudRate;
+    }
+
+    /**
+     * @return the timeout
+     */
+    public int getTimeout() {
+        return timeout;
+    }
+
+    /**
+     * @param timeout the timeout to set
+     */
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
     }
 }

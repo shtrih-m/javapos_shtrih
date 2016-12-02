@@ -618,8 +618,10 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void printFiscalReceipt() {
-        printFiscalReceipt1();
+    public void printFiscalReceipt() 
+    {
+        //printQRCode2();
+        printFiscalReceipt136();
         //printFiscalReceipt1002();
         //printFiscalReceipt101();
         //printFiscalReceipt102();
@@ -720,6 +722,28 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
+    
+    public void printFiscalReceipt136() {
+        try {
+            printer.resetPrinter();
+            printer.beginFiscalReceipt(true);
+            printer.setPostLine("Марковь Элитная Мыта");
+            printer.setPreLine("22");
+            printer.printRecItem("Марковь весовая", 24995400, 2000, 1, 12497700, "");
+            printer.printRecSubtotal(24995400);
+            for (int i=0;i<3;i++){
+            printer.printRecSubtotalAdjustment(1, "Скидка по акции", 749900);
+            printer.printRecSubtotal(24245500);
+            }
+            printer.printRecTotal(24245500, 24245500, "30");
+            printer.printRecMessage("                     ");
+            printer.endFiscalReceipt(true);
+          
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     
     public void printFiscalReceipt101() {
         try {
@@ -1376,6 +1400,18 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    public void printQRCode2() {
+        try {
+            printer.beginNonFiscal();
+            printer.printNormal(FPTR_S_RECEIPT, "#*~*#http://check.egais.ru?id=38d02af6-bfd2-409f-8041-b011d8160700&dt=2311161430&cn=030000290346");
+            printer.endNonFiscal();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    
     public void openCashDrawer() {
         try {
             printer.openCashDrawer(0);
@@ -2003,3 +2039,4 @@ class PrinterTest implements FiscalPrinterConst {
         printer.endFiscalReceipt(true);
     }
 }
+

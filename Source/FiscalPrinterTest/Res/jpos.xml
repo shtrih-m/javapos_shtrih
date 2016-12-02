@@ -31,7 +31,7 @@
         <!--<prop name="portName" type="String" value="COM2"/> -->
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
-        <prop name="portName" type="String" value="/dev/ttyUSB0"/>
+        <prop name="portName" type="String" value="COM4"/>
 		
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
@@ -55,7 +55,7 @@
         <!-- Operator password -->
         <prop name="operatorPassword" type="String" value="1"/>
         <!-- System administrator password -->
-        <prop name="sysAdminPassword" type="String" value="300"/>
+        <prop name="sysAdminPassword" type="String" value="30"/>
         <!-- device state polling enabled -->
         <prop name="pollEnabled" type="String" value="0"/>
         <!-- device state polling interval in milliseconds -->
@@ -259,6 +259,14 @@
 		<prop name="checkTotalEnabled" type="String" value="0"/>
         <!-- Receipt number request type 0 - receipt number, 1 - fiscal document number, 2 - receipt number in fiscal day -->
 		<prop name="receiptNumberRequest" type="String" value="2"/>
+		
+		<!-- Enable discount calculation in Fiscal Storage printRecItemMethod 1 - enabled, 0 - disabled -->
+		<prop name="FSReceiptItemDiscountEnabled" type="String" value="1"/>
+		<!-- Enable discounts for Fiscal Storage printers 1 - enabled, 0 - disabled -->
+		<prop name="FSDiscountEnabled" type="String" value="1"/>
+		<!-- Combine item adjustments (enabled by default) -->
+		<prop name="FSCombineItemAdjustments" type="String" value="1"/>
+		
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>

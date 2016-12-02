@@ -1124,7 +1124,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void writeTime(PrinterTime time) throws Exception {
         logger.debug("setTime");
 
-        WriteTime command = new WriteTime(sysPassword, time);
+        WriteTime command = new WriteTime();
+        command.setPassword(sysPassword);
+        command.setTime(time);
         execute(command);
     }
 
@@ -1136,8 +1138,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         MethodParameter.checkByte(portNumber, "portNumber");
         MethodParameter.checkByte(baudRate, "baudRate");
-        WritePortParams command = new WritePortParams(sysPassword, portNumber,
-                baudRate, timeout);
+        WritePortParams command = new WritePortParams();
+        command.setPassword(sysPassword);
+        command.setPortNumber(portNumber);
+        command.setBaudRate(baudRate);
+        command.setTimeout(timeout);
         execute(command);
         SysUtils.sleep(300);
     }

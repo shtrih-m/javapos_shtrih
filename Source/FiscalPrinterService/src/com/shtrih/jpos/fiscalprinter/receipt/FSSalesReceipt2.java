@@ -145,7 +145,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
             } else {
                 correctPayments();
                 if (lastItem!=null){
-                    printLastItemTotalAndTax(lastItem);
+                    printTotalAndTax(lastItem);
                 }
                 if (disablePrint) {
                     getDevice().disablePrint();
@@ -534,7 +534,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         item.setTax4(0);
         item.setText(description);
         if (lastItem != null) {
-            printLastItemTotalAndTax(lastItem);
+            printTotalAndTax(lastItem);
         }
         lastItem = item;
         lastItemDiscountSum = 0;
@@ -553,7 +553,13 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         } else {
             getDevice().printVoidItem(item);
         }
-
+        if (getParams().FSReceiptItemDiscountEnabled) {
+            double d = Math.abs(unitPrice) * Math.abs(quantity);
+            long amount = MathUtils.round((d / 1000));
+            if ((amount - price) > 0) {
+                printDiscount(amount - price, 0, "");
+            }
+        }
         printPostLine();
     }
 
@@ -587,13 +593,6 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         line = formatLines(line1, line);
         getDevice().printText(line);
 
-        if (getParams().FSReceiptItemDiscountEnabled) {
-            double d = item.getPrice() * Math.abs(quantity);
-            long amount = MathUtils.round((d / 1000));
-            if ((amount - item.getPrice()) > 0) {
-                printDiscount(amount - item.getPrice(), 0, "");
-            }
-        }
 
         line = "";
         int department = item.getDepartment();
@@ -603,12 +602,12 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         line = formatLines(line, "=" + StringUtils.amountToString(item.getAmount())
                 + getTaxLetter(tax));
         getDevice().printText(line);
-
-
     }
 
-    private void printLastItemTotalAndTax(PriceItem item) throws Exception {
+    private void printTotalAndTax(PriceItem item) throws Exception {
 
+        if (getParams().FSCombineItemAdjustments) return;
+            
         if (lastItemDiscountSum != 0) {
             getDevice().printText(formatStrings(" ","=" + StringUtils.amountToString(item.getAmount()-lastItemDiscountSum)));
         }
@@ -779,3 +778,4 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
     }
     
 }
+
