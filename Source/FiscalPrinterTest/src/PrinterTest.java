@@ -1071,8 +1071,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printNormal(FPTR_S_RECEIPT, getLine(""));
 
             printer.printNormal(FPTR_S_RECEIPT, "Строка1\rСтрока2\nСтрока3\r\nСтрока4\r\rСтрока6");
-            printer.printNormal(FPTR_S_RECEIPT, "Строка7");
-            printer.printNormal(FPTR_S_RECEIPT, "Нефискальный чек");
+            printer.printNormal(FPTR_S_RECEIPT, "#*~*#http://check.egais.ru?id=38d02af6-bfd2-409f-8041-b011d8160700&dt=2311161430&cn=030000290346");
 
             printer.endNonFiscal();
         } catch (JposException e) {

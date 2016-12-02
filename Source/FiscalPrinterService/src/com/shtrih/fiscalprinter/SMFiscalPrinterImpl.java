@@ -496,22 +496,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         logger.debug("printLine(" + String.valueOf(station) + ", " + "'" + line
                 + "', " + String.valueOf(font.getValue()) + ")");
 
-        if ((!params.barcodePrefix.isEmpty()) && line.startsWith(params.barcodePrefix)) {
-            int prefixLength = params.barcodePrefix.length();
-            String barcodeText = line.substring(prefixLength);
-            PrinterBarcode barcode = new PrinterBarcode();
-            barcode.setText(barcodeText);
-            barcode.setLabel(barcodeText);
-            barcode.setType(params.barcodeType);
-            barcode.setBarWidth(params.barcodeBarWidth);
-            barcode.setHeight(params.barcodeHeight);
-            barcode.setTextPosition(params.barcodeTextPosition);
-            barcode.setTextFont(params.barcodeTextFont);
-            barcode.setAspectRatio(params.barcodeAspectRatio);
-            printBarcode(barcode);
-            return 0;
-        }
-
         if (line.length() == 0) {
             line = " ";
         }
@@ -1636,10 +1620,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         capPrintBarcode2 = isCommandSupported(printBarcode2(barcode));
         capPrintBarcode3 = isCommandSupported(printBarcode3(barcode));
         capFiscalStorage = readCapFiscalStorage();
-        if (capFiscalStorage){
+        if (capFiscalStorage) {
             discountMode = Integer.parseInt(readTable(17, 1, 3));
         }
-            
+
     }
 
     private boolean readCapFiscalStorage() throws Exception {
@@ -1887,9 +1871,24 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void doPrintText(int station, String text, FontNumber font)
             throws Exception {
-        String[] lines = splitText(text, font);
-        for (int i = 0; i < lines.length; i++) {
-            printLine(station, lines[i], font);
+        if ((!params.barcodePrefix.isEmpty()) && text.startsWith(params.barcodePrefix)) {
+            int prefixLength = params.barcodePrefix.length();
+            String barcodeText = text.substring(prefixLength);
+            PrinterBarcode barcode = new PrinterBarcode();
+            barcode.setText(barcodeText);
+            barcode.setLabel("");
+            barcode.setType(params.barcodeType);
+            barcode.setBarWidth(params.barcodeBarWidth);
+            barcode.setHeight(params.barcodeHeight);
+            barcode.setTextPosition(params.barcodeTextPosition);
+            barcode.setTextFont(params.barcodeTextFont);
+            barcode.setAspectRatio(params.barcodeAspectRatio);
+            printBarcode(barcode);
+        } else {
+            String[] lines = splitText(text, font);
+            for (int i = 0; i < lines.length; i++) {
+                printLine(station, lines[i], font);
+            }
         }
     }
 
@@ -2643,19 +2642,19 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public String getDepartmentName(int number) throws Exception {
-            return readTable(PrinterConst.SMFP_TABLE_DEPARTMENT, number, 1);
-    }
-    
-    public String getTaxName(int number) throws Exception{
-            return readTable(PrinterConst.SMFP_TABLE_TAX, number, 2);
+        return readTable(PrinterConst.SMFP_TABLE_DEPARTMENT, number, 1);
     }
 
-    public int getTaxRate(int number) throws Exception{
-            String s = readTable(PrinterConst.SMFP_TABLE_TAX, number, 1);
-            return Integer.parseInt(s);
+    public String getTaxName(int number) throws Exception {
+        return readTable(PrinterConst.SMFP_TABLE_TAX, number, 2);
     }
-    
-    public int getDiscountMode() throws Exception{
+
+    public int getTaxRate(int number) throws Exception {
+        String s = readTable(PrinterConst.SMFP_TABLE_TAX, number, 1);
+        return Integer.parseInt(s);
+    }
+
+    public int getDiscountMode() throws Exception {
         return discountMode;
     }
 }

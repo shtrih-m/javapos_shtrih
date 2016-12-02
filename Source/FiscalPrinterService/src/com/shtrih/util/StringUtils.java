@@ -44,7 +44,10 @@ public class StringUtils {
         return (String[]) result.toArray(new String[0]);
     }
 
-    public static String centerLine(String data, int lineLength) {
+    public static String centerLine(String data, int lineLength) 
+    {
+        if (data.length() >= lineLength) return data;
+        
         int len = Math.min(data.length(), lineLength);
         String s = data.substring(0, len);
         len = (lineLength - len) / 2;
