@@ -737,6 +737,12 @@ class PrinterTest implements FiscalPrinterConst {
             }
             printer.printRecTotal(24245500, 24245500, "30");
             printer.printRecMessage("                     ");
+            
+            TLVList list = new TLVList();
+            list.add(1008, "+79168191324");
+            list.add(1008, "kravtsov@shtrih-m.ru");
+            printer.fsWriteTLV(list.getData());
+
             printer.endFiscalReceipt(true);
           
         } catch (Exception e) {

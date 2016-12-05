@@ -6,6 +6,20 @@
 
 ********************************************************************************
 
+  December, 5 2016, 22:03
+  deviceServiceVersion = 1013321
+	
+  [+] Added printing TLV values on receipt from fsWriteTLV method
+  
+********************************************************************************
+
+  December, 2 2016, 23:40
+  deviceServiceVersion = 1013320
+	
+  [-] Fixed error with barcode printing by barcodePrefix
+  
+********************************************************************************
+
   November, 22 2016, 19:15
   deviceServiceVersion = 1013318
 	

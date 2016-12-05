@@ -38,6 +38,7 @@ import static jpos.FiscalPrinterConst.FPTR_PS_MONITOR;
 import static jpos.FiscalPrinterConst.JPOS_EFPTR_BAD_ITEM_AMOUNT;
 import static jpos.FiscalPrinterConst.JPOS_EFPTR_NEGATIVE_TOTAL;
 import static jpos.JposConst.JPOS_E_EXTENDED;
+import com.shtrih.fiscalprinter.TLVReader;
 
 public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
@@ -189,6 +190,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 FSTLVItem tlvItem = (FSTLVItem) item;
                 SMFiscalPrinter printer = getPrinter().getPrinter();
                 printer.fsWriteTLV(tlvItem.getData());
+                
+        
+                TLVReader reader = new TLVReader();
+                reader.read(tlvItem.getData());
+                Vector<String> lines = reader.getPrintText();
+                messages.addAll(lines);
+                
             }
         }
     }
@@ -880,14 +888,3 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 }
-
-/*
-Фискальная ошибка возникает при некоторых цифрах продаж. В журнале 2016-11-28:
-10:47:08,771 - beginFiscalReceipt - открыть чек
-10:47:08,895 - printRecItem - две морковки по 1249.77 на сумму 2499.54
-10:47:12,220 - printRecSubtotalAjustment - скидка на итог на сумму 74.99
-10:47:12,251 - printRecTotal - безналичная оплата на сумму 2424.55
-10:47:12,333 - endFiscalReceipt - фискальная ошибка
-Мне кажется, что фискальный регистратор или драйвер не смог правильно распределить нечетную сумму скидки на две морковки.
-Предыдущие два чека в журнале закрылись нормально.
-*/
