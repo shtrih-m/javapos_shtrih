@@ -468,7 +468,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         totalizerType = FPTR_TT_DAY;
         capUpdateStatistics = true;
         capStatisticsReporting = true;
-        deviceServiceVersion = deviceVersion113 + 322;
+        deviceServiceVersion = deviceVersion113 + 323;
         freezeEvents = true;
     }
 

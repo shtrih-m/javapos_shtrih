@@ -620,8 +620,10 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() 
     {
+        printFiscalReceipt137();
+        
         //printQRCode2();
-        printFiscalReceipt136();
+        //printFiscalReceipt136();
         //printFiscalReceipt1002();
         //printFiscalReceipt101();
         //printFiscalReceipt102();
@@ -750,6 +752,32 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
     
+    public void printFiscalReceipt137() {
+        try {
+            printer.resetPrinter();
+    
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("0627  4606272002283 НЕСКАФЕ ГОЛД 95Г", 2929000, 1000, 1, 2929000, "");
+            printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 4000);
+            printer.printRecTotal(2925000, 2925000, "1");
+            printer.printRecMessage("");
+            printer.printRecMessage("ТОВАРОВ           1                     ");
+            printer.printRecMessage("                                        ");
+            printer.printRecMessage(" ****************************************");
+            printer.printRecMessage("           Уважаемый покупатель!          ");
+            printer.printRecMessage("      На товары, участвующие в акции,     ");
+            printer.printRecMessage("  баллы на сумму покупки не начисляются!  ");
+            printer.printRecMessage("     ****** СПАСИБО ЗА ПОКУПКУ ******     ");
+            printer.printRecMessage("------------------------------------------");
+            printer.printRecMessage(" КАССИР        001   Тупоногова Екатерина ");
+            printer.printRecMessage("*0099 0085/002/001    24.11.16 11:40 AC-00");
+            printer.printRecMessage("------------------------------------------");
+            printer.endFiscalReceipt(false);
+    
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     
     public void printFiscalReceipt101() {
         try {

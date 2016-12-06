@@ -1620,8 +1620,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         capPrintBarcode2 = isCommandSupported(printBarcode2(barcode));
         capPrintBarcode3 = isCommandSupported(printBarcode3(barcode));
         capFiscalStorage = readCapFiscalStorage();
-        if (capFiscalStorage) {
-            discountMode = Integer.parseInt(readTable(17, 1, 3));
+        if (capFiscalStorage) 
+        {
+            discountMode = 2;
+            String[] fieldValue = new String[1];
+            int rc = readTable(17, 1, 3, fieldValue);
+            if (succeeded(rc)){
+                discountMode = Integer.parseInt(fieldValue[0]);
+            }
         }
 
     }
