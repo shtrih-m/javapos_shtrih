@@ -2657,4 +2657,5 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public int getDiscountMode() throws Exception {
         return discountMode;
     }
+    
 }
