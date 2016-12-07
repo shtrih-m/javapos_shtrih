@@ -6,6 +6,15 @@
 
 ********************************************************************************
 
+  December, 7 2016, 18:15
+  deviceServiceVersion = 1013324
+	
+  [-] Fixed error tag prefix names
+  [+] Added fiscal storage status request after error 
+      0x02, Invalid fiscal storage state
+  
+********************************************************************************
+
   December, 6 2016, 13:55
   deviceServiceVersion = 1013322
 	

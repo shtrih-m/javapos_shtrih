@@ -361,6 +361,7 @@ public interface PrinterConst {
     public static final int SMFP_EFPTR_FM_FAILURE = 0x01;
     // Fiscal memory 1 missing
     public static final int SMFP_EFPTR_FM1_FAILURE = 0x02;
+    public static final int SMFP_EFPTR_FS_INVALID_STATE = 0x02;
     // Fiscal memory 2 missing
     public static final int SMFP_EFPTR_FM2_FAILURE = 0x03;
     // Incorrect command parameters

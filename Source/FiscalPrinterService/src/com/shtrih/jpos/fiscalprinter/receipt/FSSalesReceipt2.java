@@ -41,6 +41,7 @@ import static jpos.FiscalPrinterConst.JPOS_EFPTR_BAD_ITEM_AMOUNT;
 import static jpos.FiscalPrinterConst.JPOS_EFPTR_NEGATIVE_TOTAL;
 import static jpos.JposConst.JPOS_E_EXTENDED;
 import com.shtrih.fiscalprinter.TLVReader;
+import com.shtrih.fiscalprinter.TLVInfo;
 
 
 public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
@@ -166,9 +167,11 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
                 closeParams.setText(getParams().closeReceiptText);
                 getPrinter().getPrinter().closeReceipt(closeParams);
                 getFiscalDay().closeFiscalRec();
-
-                for (int i = 0; i < messages.size(); i++) {
-                    getDevice().printText(messages.get(i));
+                
+                if (!disablePrint) {
+                    for (int i = 0; i < messages.size(); i++) {
+                        getDevice().printText(messages.get(i));
+                    }
                 }
             }
         }
@@ -753,13 +756,6 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         return disablePrint;
     }
 
-    public String getTagName(int tagId){
-        switch (tagId){
-            case 1008: return "Адрес покупателя";
-            default: return "";
-        }
-    }
-    
     public void fsWriteTLV(byte[] data) throws Exception {
         getDevice().fsWriteTLV(data);
         
@@ -771,7 +767,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
     
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
         getDevice().fsWriteTag(tagId, tagValue);
-        messages.add(getTagName(tagId) + ": " + tagValue);
+        messages.add(TLVInfo.getTagPrintName(tagId) + ": " + tagValue);
     }
 
     public void fsWriteCustomerEmail(String text) throws Exception {

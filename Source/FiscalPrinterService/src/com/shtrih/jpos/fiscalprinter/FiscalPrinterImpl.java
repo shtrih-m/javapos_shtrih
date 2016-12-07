@@ -65,6 +65,7 @@ import com.shtrih.fiscalprinter.command.ReadFMTotals;
 import com.shtrih.fiscalprinter.command.ReadLongStatus;
 import com.shtrih.fiscalprinter.command.ShortPrinterStatus;
 import com.shtrih.fiscalprinter.command.FSPrintCalcReport;
+import com.shtrih.fiscalprinter.command.FSReadStatus;
 import com.shtrih.fiscalprinter.command.TextLine;
 import com.shtrih.fiscalprinter.model.PrinterModel;
 import com.shtrih.fiscalprinter.port.PrinterPort;
@@ -468,7 +469,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         totalizerType = FPTR_TT_DAY;
         capUpdateStatistics = true;
         capStatisticsReporting = true;
-        deviceServiceVersion = deviceVersion113 + 323;
+        deviceServiceVersion = deviceVersion113 + 324;
         freezeEvents = true;
     }
 
@@ -636,7 +637,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 addEvent(new ErrorEventRequest(cb, event));
             }
 
-            switch (command.getResultCode()) {
+            switch (command.getResultCode()) 
+            {
+                case SMFP_EFPTR_FS_INVALID_STATE:
+                    if (getPrinter().getCapFiscalStorage()){
+                        getPrinter().fsReadStatus();
+                    }
+                    break;
+                    
                 case SMFP_EFPTR_NO_REC_PAPER:
                     isRecPresent = false;
                     setRecPaperState(true, recNearEnd);

@@ -39,6 +39,7 @@ import static jpos.FiscalPrinterConst.JPOS_EFPTR_BAD_ITEM_AMOUNT;
 import static jpos.FiscalPrinterConst.JPOS_EFPTR_NEGATIVE_TOTAL;
 import static jpos.JposConst.JPOS_E_EXTENDED;
 import com.shtrih.fiscalprinter.TLVReader;
+import com.shtrih.fiscalprinter.TLVInfo;
 
 public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
@@ -111,11 +112,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printRecItem(String description, long price, int quantity,
-            int vatInfo, long unitPrice, String unitName) throws Exception 
-    {
+            int vatInfo, long unitPrice, String unitName) throws Exception {
         openReceipt(PrinterConst.SMFP_RECTYPE_SALE);
-        printSale(price, quantity, unitPrice, getParams().department, 
-            vatInfo, description);
+        printSale(price, quantity, unitPrice, getParams().department,
+                vatInfo, description);
     }
 
     // pack discounts
@@ -190,13 +190,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 FSTLVItem tlvItem = (FSTLVItem) item;
                 SMFiscalPrinter printer = getPrinter().getPrinter();
                 printer.fsWriteTLV(tlvItem.getData());
-                
-        
+
                 TLVReader reader = new TLVReader();
                 reader.read(tlvItem.getData());
                 Vector<String> lines = reader.getPrintText();
                 messages.addAll(lines);
-                
+
             }
         }
     }
@@ -240,11 +239,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 addItemsDiscounts();
                 printReceiptItems();
                 correctPayments();
-                
+
                 if (disablePrint) {
                     getDevice().disablePrint();
                 }
-                
+
                 CloseRecParams closeParams = new CloseRecParams();
                 closeParams.setSum1(payments[0]);
                 closeParams.setSum2(payments[1]);
@@ -258,9 +257,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 closeParams.setText(getParams().closeReceiptText);
                 getPrinter().getPrinter().closeReceipt(closeParams);
                 getFiscalDay().closeFiscalRec();
-                
-                for (int i = 0; i < messages.size(); i++) {
-                    getDevice().printText(messages.get(i));
+
+                if (!disablePrint) {
+                    for (int i = 0; i < messages.size(); i++) {
+                        getDevice().printText(messages.get(i));
+                    }
                 }
             }
         }
@@ -296,30 +297,26 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void printFSSale(FSSaleReceiptItem item) throws Exception 
-    {
+    public void printFSSale(FSSaleReceiptItem item) throws Exception {
         long discount = item.getDiscountTotal();
-        if (discount != 0)
-        {
+        if (discount != 0) {
             long total = item.getItem().getAmount();
             PriceItem priceItem = item.getItem();
             long price = (total - discount) * 1000 / priceItem.getQuantity();
             long amount = PrinterAmount.getAmount(price, priceItem.getQuantity());
             priceItem.setPrice(price);
             printFSSale2(item);
-            if (amount > (total - discount))
-            {
+            if (amount > (total - discount)) {
                 priceItem.setPrice(amount);
                 priceItem.setQuantity(1000);
                 printFSSale2(item);
             }
-        } else{
+        } else {
             printFSSale2(item);
         }
     }
-    
-    public void printFSSale2(FSSaleReceiptItem item) throws Exception 
-    {
+
+    public void printFSSale2(FSSaleReceiptItem item) throws Exception {
         String preLine = item.getPreLine();
         if (preLine.length() > 0) {
             getDevice().printText(preLine);
@@ -411,13 +408,14 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         return MathUtils.round(d / 10000);
     }
 
-    public void checkDiscountsEnabled()  throws Exception{
-            if(!getParams().FSDiscountEnabled){
+    public void checkDiscountsEnabled() throws Exception {
+        if (!getParams().FSDiscountEnabled) {
             throw new JposException(JposConst.JPOS_E_ILLEGAL,
-                        Localizer.getString(Localizer.methodNotSupported)
-                        + "adjustments forbidden with FS");
-            }
+                    Localizer.getString(Localizer.methodNotSupported)
+                    + "adjustments forbidden with FS");
+        }
     }
+
     public void printRecItemAdjustment(int adjustmentType, String description,
             long amount, int vatInfo) throws Exception {
         checkDiscountsEnabled();
@@ -750,11 +748,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         addTotal(amount * factor);
         clearPrePostLine();
         if (getParams().FSReceiptItemDiscountEnabled) {
-        if ((amount - price) > 0) {
-            printDiscount(amount - price, 0, "");
+            if ((amount - price) > 0) {
+                printDiscount(amount - price, 0, "");
+            }
         }
-        }
-     }
+    }
 
     public FSSaleReceiptItem getLastItem() throws Exception {
         if (lastItem == null) {
@@ -853,25 +851,18 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void fsWriteTLV(byte[] data) throws Exception {
         items.add(new FSTLVItem(data));
     }
-    
+
     public void disablePrint() throws Exception {
         disablePrint = true;
     }
-    
-    public boolean getDisablePrint(){
+
+    public boolean getDisablePrint() {
         return disablePrint;
     }
-    
-    public String getTagName(int tagId){
-        switch (tagId){
-            case 1008: return "Адрес покупателя";
-            default: return "";
-        }
-    }
-    
+
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
         getDevice().fsWriteTag(tagId, tagValue);
-        messages.add(getTagName(tagId) + ": " + tagValue);
+        messages.add(TLVInfo.getTagPrintName(tagId) + ": " + tagValue);
     }
 
     public void fsWriteCustomerEmail(String text) throws Exception {

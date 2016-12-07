@@ -772,6 +772,12 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecMessage(" КАССИР        001   Тупоногова Екатерина ");
             printer.printRecMessage("*0099 0085/002/001    24.11.16 11:40 AC-00");
             printer.printRecMessage("------------------------------------------");
+            
+            TLVList list = new TLVList();
+            list.add(1008, "+79168191324");
+            list.add(1117, "kravtsov@shtrih-m.ru");
+            printer.fsWriteTLV(list.getData());
+            
             printer.endFiscalReceipt(false);
     
         } catch (Exception e) {
