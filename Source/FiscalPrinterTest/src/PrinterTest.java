@@ -1114,6 +1114,8 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printNormal(FPTR_S_RECEIPT, "#*~*#http://check.egais.ru?id=38d02af6-bfd2-409f-8041-b011d8160700&dt=2311161430&cn=030000290346");
 
             printer.endNonFiscal();
+            ShortPrinterStatus sStatus= printer.readShortPrinterStatus();
+            System.out.println("PrinterTest.printNonFiscal()");
         } catch (JposException e) {
             System.out.println("JposException");
             System.out.println("ErrorCode: " + String.valueOf(e.getErrorCode()));
@@ -1135,7 +1137,28 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
+    public void printFSDiscountTestReceipt() {
+        try {
+            printer.resetPrinter();
+            
+            printer.setFiscalReceiptType(FPTR_RT_SALES);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("Чай чер. бергам. 2*25п", 50, 1, 2, 0, "");
+            printer.printRecItemAdjustment(1, "Тест М за N", 10, 1);
+//            printer.printRecItemAdjustment(1, "Тест М за N2!", 5, 1);
+            printer.printRecItem("Чай чер. бергам. 11*25п", 50, 1, 2, 0, "");
+            printer.printRecItemAdjustment(1, "Тест М за N", 10, 1);
+            printer.printRecItemAdjustment(1, "Тест М за N2!", 5, 1);
+            printer.printRecSubtotal(100);
+            printer.printRecTotal(100, 100, "0");
+            printer.endFiscalReceipt(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    
+    
     public void printCashInReceipt() {
         try {
             printer.setFiscalReceiptType(FPTR_RT_CASH_IN);

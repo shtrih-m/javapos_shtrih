@@ -137,6 +137,7 @@ public class MainDialog extends javax.swing.JDialog
         btnExecuteCommand = new javax.swing.JButton();
         btnEnable1 = new javax.swing.JButton();
         btnDisable1 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         pnlFptr2 = new javax.swing.JPanel();
         btnReadStatus = new javax.swing.JButton();
         Pane2 = new javax.swing.JScrollPane();
@@ -469,6 +470,14 @@ public class MainDialog extends javax.swing.JDialog
         });
         pnlFptr1.add(btnDisable1, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 100, 160, 26));
 
+        jButton1.setText("FSDiscountTest");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        pnlFptr1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 270, 160, -1));
+
         tabPane1.addTab("FiscalPrinter", pnlFptr1);
 
         pnlFptr2.setFocusCycleRoot(true);
@@ -726,7 +735,6 @@ public class MainDialog extends javax.swing.JDialog
 
         chbCashDrawerDeviceEnabled.setText("DeviceEnabled");
         chbCashDrawerDeviceEnabled.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        chbCashDrawerDeviceEnabled.setMargin(new java.awt.Insets(0, 0, 0, 0));
         chbCashDrawerDeviceEnabled.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 chbCashDrawerDeviceEnabledActionPerformed(evt);
@@ -736,7 +744,6 @@ public class MainDialog extends javax.swing.JDialog
 
         chbCashDrawerFreezeEvents.setText("FreezeEvents");
         chbCashDrawerFreezeEvents.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        chbCashDrawerFreezeEvents.setMargin(new java.awt.Insets(0, 0, 0, 0));
         chbCashDrawerFreezeEvents.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 chbCashDrawerFreezeEventsActionPerformed(evt);
@@ -1222,6 +1229,14 @@ public class MainDialog extends javax.swing.JDialog
             e.printStackTrace();
         }
     }//GEN-LAST:event_btnDisable1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            controller.printFSDiscountTestReceipt();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -1320,6 +1335,7 @@ public class MainDialog extends javax.swing.JDialog
     private javax.swing.JTextField edtDayOpened;
     private javax.swing.JTextField edtDeviceName;
     private javax.swing.JTextField edtImageFile;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;

@@ -48,6 +48,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
 
     private PriceItem lastItem = null;
     private long lastItemDiscountSum = 0;
+    private boolean lastItemFooterPrinted = false;
     private int receiptType = 0;
     private boolean isOpened = false;
     private boolean disablePrint = false;
@@ -89,6 +90,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         isOpened = false;
         lastItem = null;
         lastItemDiscountSum = 0;
+        lastItemFooterPrinted = false;
         for (int i = 0; i < 5; i++) {
             payments[i] = 0;
         }
@@ -147,7 +149,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
                 clearReceipt();
             } else {
                 correctPayments();
-                if (lastItem!=null){
+                if (lastItem != null && !lastItemFooterPrinted) {
                     printTotalAndTax(lastItem);
                 }
                 if (disablePrint) {
@@ -221,6 +223,9 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printRecSubtotal(long amount) throws Exception {
+        if (lastItem != null && !lastItemFooterPrinted) {
+            printLastItemTotalAndTax(lastItem);
+        }
         checkTotal(getSubtotal(), amount);
         getDevice().printText(formatStrings(getParams().subtotalText,
                 "=" + StringUtils.amountToString(getSubtotal())));
@@ -272,6 +277,9 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
             String description, long amount) throws Exception {
         checkDiscountsEnabled();
         checkAdjustment(adjustmentType, amount);
+        if (lastItem != null && !lastItemFooterPrinted) {
+            printLastItemTotalAndTax(lastItem);
+        }
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
                 printTotalDiscount(amount, 0, description);
@@ -338,7 +346,9 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         adjustments.parse(vatAdjustment);
         checkAdjustments(adjustmentType, adjustments);
         PackageAdjustment adjustment;
-
+        if (lastItem != null && !lastItemFooterPrinted) {
+            printLastItemTotalAndTax(lastItem);
+        }
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
 
@@ -374,6 +384,9 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
     public void printRecSubtotalAdjustVoid(int adjustmentType, long amount)
             throws Exception {
         checkDiscountsEnabled();
+        if (lastItem != null && !lastItemFooterPrinted) {
+            printLastItemTotalAndTax(lastItem);
+        }
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
                 printTotalDiscount(amount, 0, "");
@@ -406,6 +419,9 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
             String description, long amount, int vatInfo) throws Exception {
         checkDiscountsEnabled();
         checkAdjustment(adjustmentType, amount);
+        if (lastItem != null && !lastItemFooterPrinted) {
+            printLastItemTotalAndTax(lastItem);
+        }
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
                 printDiscount(-amount, vatInfo, description);
@@ -538,11 +554,12 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         item.setTax3(0);
         item.setTax4(0);
         item.setText(description);
-        if (lastItem != null) {
+        if (lastItem != null && !lastItemFooterPrinted) {
             printTotalAndTax(lastItem);
         }
         lastItem = item;
         lastItemDiscountSum = 0;
+        lastItemFooterPrinted = false;
 
         if (!getParams().FSCombineItemAdjustments) {
             printRecItemAsText(item, quantity);
@@ -628,6 +645,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         line = getDevice().getTaxName(tax);
         line = formatLines(line, StringUtils.amountToString(taxAmount));
         getDevice().printText(line);
+        lastItemFooterPrinted = true;
     }
 
     public void printPreLine() throws Exception {
