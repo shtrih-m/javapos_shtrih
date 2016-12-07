@@ -224,7 +224,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
 
     public void printRecSubtotal(long amount) throws Exception {
         if (lastItem != null && !lastItemFooterPrinted) {
-            printLastItemTotalAndTax(lastItem);
+            printTotalAndTax(lastItem);
         }
         checkTotal(getSubtotal(), amount);
         getDevice().printText(formatStrings(getParams().subtotalText,
@@ -278,7 +278,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         checkDiscountsEnabled();
         checkAdjustment(adjustmentType, amount);
         if (lastItem != null && !lastItemFooterPrinted) {
-            printLastItemTotalAndTax(lastItem);
+            printTotalAndTax(lastItem);
         }
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
@@ -347,7 +347,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         checkAdjustments(adjustmentType, adjustments);
         PackageAdjustment adjustment;
         if (lastItem != null && !lastItemFooterPrinted) {
-            printLastItemTotalAndTax(lastItem);
+            printTotalAndTax(lastItem);
         }
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
@@ -385,7 +385,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
             throws Exception {
         checkDiscountsEnabled();
         if (lastItem != null && !lastItemFooterPrinted) {
-            printLastItemTotalAndTax(lastItem);
+            printTotalAndTax(lastItem);
         }
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
@@ -420,7 +420,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         checkDiscountsEnabled();
         checkAdjustment(adjustmentType, amount);
         if (lastItem != null && !lastItemFooterPrinted) {
-            printLastItemTotalAndTax(lastItem);
+            printTotalAndTax(lastItem);
         }
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
