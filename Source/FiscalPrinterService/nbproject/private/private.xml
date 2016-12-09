@@ -19,12 +19,14 @@
             <url>src/com/shtrih/jpos/fiscalprinter/FiscalPrinterImpl.java</url>
             <bookmark id="1">
                 <name/>
-                <line>4479</line>
+                <line>4487</line>
                 <key/>
             </bookmark>
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/projects/JavaPOS1/Source/FiscalPrinterService/src/com/shtrih/fiscalprinter/ShtrihFiscalPrinter.java</file>
+        </group>
     </open-files>
 </project-private>

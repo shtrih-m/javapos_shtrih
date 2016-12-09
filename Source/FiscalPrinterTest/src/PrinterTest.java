@@ -776,6 +776,7 @@ class PrinterTest implements FiscalPrinterConst {
             TLVList list = new TLVList();
             list.add(1008, "+79168191324");
             list.add(1117, "kravtsov@shtrih-m.ru");
+            list.add(1117, "иванов@иванов.рф");
             printer.fsWriteTLV(list.getData());
             
             printer.endFiscalReceipt(false);

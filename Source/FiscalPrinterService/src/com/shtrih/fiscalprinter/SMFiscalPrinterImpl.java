@@ -754,7 +754,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public EndFiscalReceipt closeReceipt(CloseRecParams params)
-            throws Exception {
+            throws Exception 
+    {
         logger.debug("closeReceipt");
         EndFiscalReceipt command = new EndFiscalReceipt();
         command.setPassword(usrPassword);
@@ -2662,6 +2663,29 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public int getDiscountMode() throws Exception {
         return discountMode;
+    }
+    
+    public void fsReadDocumentTLV(int number) throws Exception
+    {
+        logger.debug("fsReadDocumentTLV");
+        FSReadDocument readDocument = new FSReadDocument();
+        readDocument.setDocNumber(number);
+        readDocument.setSysPassword(sysPassword);
+        execute(readDocument);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        while (stream.size() < readDocument.getDocSize())
+        {
+            FSReadDocumentBlock command = new FSReadDocumentBlock();
+            command.setSysPassword(sysPassword);
+            execute(command);
+            stream.write(command.getData());
+        }
+        TLVReader reader = new TLVReader();
+        reader.read(stream.toByteArray());
+        Vector<String> lines = reader.getPrintText();
+        for (int i=0;i<lines.size();i++){
+            logger.debug(lines.get(i));
+        }
     }
     
 }

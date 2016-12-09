@@ -19,7 +19,7 @@ public class TLVList
     {
         addInt(tagId);
         addInt(tagValue.length());
-        stream.write(tagValue.getBytes());
+        stream.write(tagValue.getBytes("cp866"));
     }
   
     public void addInt(int value) throws Exception{
