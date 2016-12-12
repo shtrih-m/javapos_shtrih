@@ -2184,6 +2184,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     + String.valueOf(deviceServiceVersion));
             logger.debug("Java version: " + System.getProperty("java.version"));
             logger.debug("File encoding: " + System.getProperty("file.encoding"));
+            logger.debug("OS: " + System.getProperty("os.name"));
+            logger.debug("OS ARCH: " + System.getProperty("os.arch"));
+            logger.debug("OS Version: " + System.getProperty("os.version"));
             logger.debug("-----------------------------------------------");
 
             params.load(jposEntry);
