@@ -50,29 +50,29 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         this.port = port;
     }
 
-    private void portWrite(int b) throws Exception{
+    private void portWrite(int b) throws Exception {
         byte[] data = new byte[1];
-        data[0] = (byte)b;
+        data[0] = (byte) b;
         portWrite(data);
     }
-    
-    private void portWrite(byte[] data) throws Exception{
+
+    private void portWrite(byte[] data) throws Exception {
         Logger2.logTx(logger, data);
         port.write(data);
     }
-    
-    int portReadByte() throws Exception{
+
+    int portReadByte() throws Exception {
         int b = port.readByte();
-        Logger2.logRx(logger, (byte)b);
+        Logger2.logRx(logger, (byte) b);
         return b;
     }
 
-    byte[] portReadBytes(int len) throws Exception{
+    byte[] portReadBytes(int len) throws Exception {
         byte[] data = port.readBytes(len);
         Logger2.logRx(logger, data);
         return data;
     }
-    
+
     public PrinterPort getPrinterPort() {
         return port;
     }
@@ -110,6 +110,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
 
     private byte[] readAnswer(int timeout) throws Exception {
         int enqNumber = 0;
+        int nakCount = 0;
         for (;;) {
             port.setTimeout(timeout + byteTimeout);
             // STX
@@ -123,25 +124,30 @@ public class PrinterProtocol_1 implements PrinterProtocol {
             byte[] commandData = portReadBytes(dataLength);
             // check CRC
             byte crc = commandData[commandData.length - 1];
+            crc = 0;
             commandData = copyOf(commandData, commandData.length - 1);
             if (frame.getCrc(commandData) == crc) {
                 portWrite(ACK);
                 return commandData;
             } else {
-                portWrite(NAK);
-                portWrite(ENQ);
-                int B = readControlByte();
-                switch (B) {
-                    case ACK:
-                        break;
-                    case NAK:
-                        return commandData;
-                    default:
-                        enqNumber++;
-                        if (enqNumber >= maxEnqNumber) {
-                            throw DeviceException.readAnswerError();
-                        }
+                if (nakCount >= maxNakAnswerNumber) {
+                    throw DeviceException.readAnswerError();
                 }
+                nakCount++;
+                portWrite(NAK);
+                for (;;) {
+                    portWrite(ENQ);
+                    enqNumber++;
+                    int B = readControlByte();
+                    if (B == ACK) break;
+                    if (B == NAK) {
+                        throw DeviceException.readAnswerError();
+                    }
+                    if (enqNumber >= maxEnqNumber) {
+                        throw DeviceException.readAnswerError();
+                    }
+                }
+
             }
         }
     }
@@ -161,7 +167,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
                                 "nakCommandNumber >= maxNakCommandNumber");
                     }
                     break;
-                    
+
                 default:
                     return;
             }
@@ -192,7 +198,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
                     SysUtils.sleep(100);
                     enqNumber++;
             }
-            
+
             if (ackNumber >= maxAckNumber) {
                 throw new DeviceException(PrinterConst.SMFPTR_E_NOCONNECTION,
                         Localizer.getString(Localizer.NoConnection));
@@ -258,7 +264,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         int repeatCount = 0;
         while (true) {
             try {
-                if (repeatCount > 0){
+                if (repeatCount > 0) {
                     logger.debug("retry " + repeatCount + "...");
                 }
                 repeatCount++;
