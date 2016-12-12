@@ -8,3 +8,10 @@
 /jpos_1013322/src/FiscalPrinterTest/nbproject/private/
 /jpos_1013323/src/FiscalPrinterService/nbproject/private/
 /jpos_1013323/src/FiscalPrinterTest/nbproject/private/
+/dist
+/bin
+/Source/build
+/Source/dist
+/Source/.gradle
+/Source/out
+/Source/.idea
