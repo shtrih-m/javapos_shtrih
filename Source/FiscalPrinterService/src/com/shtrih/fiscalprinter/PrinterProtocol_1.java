@@ -124,7 +124,6 @@ public class PrinterProtocol_1 implements PrinterProtocol {
             byte[] commandData = portReadBytes(dataLength);
             // check CRC
             byte crc = commandData[commandData.length - 1];
-            crc = 0;
             commandData = copyOf(commandData, commandData.length - 1);
             if (frame.getCrc(commandData) == crc) {
                 portWrite(ACK);
