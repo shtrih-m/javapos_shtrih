@@ -46,6 +46,9 @@ public class MainDialog extends javax.swing.JDialog
         printer.addStatusUpdateListener(this);
         printer.addErrorListener(this);
         lbEvents.setModel(eventList);
+        System.out.println(System.getProperty("os.name"));
+    System.out.println(System.getProperty("os.arch"));
+    System.out.println(System.getProperty("os.version"));
     }
 
     public String getEventTimeStamp() {
