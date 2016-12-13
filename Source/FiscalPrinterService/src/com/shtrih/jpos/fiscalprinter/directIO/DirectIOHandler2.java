@@ -293,6 +293,10 @@ public class DirectIOHandler2 {
                 new DIOGetReceiptState(service).execute(data, object);
                 break;
 
+            case SmFptrConst.SMFPTR_DIO_OPEN_DAY:
+                new DIOOpenFiscalDay(service).execute(data, object);
+                break;
+
             case SmFptrConst.SMFPTR_DIO_READ_SHORT_STATUS:
                 new DIOReadShortStatus(service).execute(data, object);
                 break;
