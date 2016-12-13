@@ -36,7 +36,7 @@ allprojects {
     }
 
     jar {
-        //manifest.attributes provider: 'gradle'
+        manifest.attributes provider: 'gradle'
     }
     
     clean.doFirst {
