@@ -4,36 +4,9 @@ allprojects {
 
     version = '1.0'
     
-    // Source files encoding UTF8
-    compileJava.options.encoding = 'UTF-8'
-    
-    // Build for Java 6
-    // https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_cross_compilation
-    sourceCompatibility = 1.6
-
-    //assert hasProperty('java6Home') : "Set the property 'java6Home' in your your gradle.properties pointing to a Java 6 installation"
-    
-    def javaExecutablesPath = new File(java6Home, 'bin')
-    def javaExecutables = [:].withDefault { execName ->
-        def executable = new File(javaExecutablesPath, execName + ".exe")
-        assert executable.exists() : "There is no ${execName} executable in ${javaExecutablesPath}"
-        executable
-    }
-    tasks.withType(AbstractCompile) {
-        options.with {
-            fork = true
-            forkOptions.executable = javaExecutables.javac
-        }
-    }
-    tasks.withType(Javadoc) {
-        executable = javaExecutables.javadoc
-    }
-    tasks.withType(Test) {
-        executable = javaExecutables.java
-    }
-    tasks.withType(JavaExec) {
-        executable = javaExecutables.java
-    }
+    sourceCompatibility = '1.6'
+    targetCompatibility = '1.6'
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
     jar {
         manifest.attributes provider: 'gradle'
