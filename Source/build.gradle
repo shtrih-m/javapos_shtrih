@@ -1,0 +1,22 @@
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+    version = '1.0'
+    
+    sourceCompatibility = '1.6'
+    targetCompatibility = '1.6'
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+    jar {
+        manifest.attributes provider: 'gradle'
+    }
+    
+    clean.doFirst {
+        delete "${rootDir}/../dist/"
+        delete "${rootDir}/../bin/"
+        delete "${rootDir}/out/"
+        delete "${rootDir}/dist/"
+        delete "${rootDir}/.gradle/"
+    }
+}

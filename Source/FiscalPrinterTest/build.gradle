@@ -1,0 +1,74 @@
+group 'ShtrihM.JavaPOS.Tester'
+version '1.0'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+//apply plugin: 'application'
+
+//mainClassName = "MainDialog"
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+        resources {
+            srcDirs = ['src/']
+            includes = [ "**/res/*.*" ]
+        }
+    }
+}
+
+repositories {
+    flatDir {
+        dirs '../lib'
+    }
+}
+
+dependencies {
+    compile 'AbsoluteLayout:AbsoluteLayout:1.0',
+            project(':FiscalPrinterService')
+    //testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+jar {
+    archiveName = "FiscalPrinterTest.jar"
+    manifest {
+        attributes(
+            "Implementation-Title": "ShtrihM.JavaPOS.Tester",
+            "Implementation-Version": version,
+             "Class-Path": configurations.compile.collect { it.getName() }.join(' '),
+             "Main-Class": "MainDialog"
+         )
+    }
+}
+
+task distZip(type: Zip) {
+    destinationDir = new File("${rootDir}/../dist/zip")
+    baseName = 'shtrihjavapos'
+    
+    from jar.archivePath
+    from configurations.compile
+    
+    from 'Res/'
+}
+
+task distPlain(type: Copy) {
+    destinationDir = new File("${rootDir}/../bin")
+    //baseName = 'shtrihjavapos'
+    dependsOn jar
+    
+    from jar.archivePath
+    from configurations.compile
+    
+    from 'Res/'
+}
+
+artifacts {
+
+}
+
+uploadArchives {
+    dependsOn distZip
+    dependsOn distPlain
+}

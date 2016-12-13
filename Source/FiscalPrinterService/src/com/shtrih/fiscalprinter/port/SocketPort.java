@@ -109,6 +109,7 @@ public class SocketPort implements PrinterPort {
     }
 
     private void noConnectionError() throws Exception {
+        connected = false;
         throw new IOException(Localizer.getString(Localizer.NoConnection));
     }
 

@@ -1498,6 +1498,10 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
                 null, barcode);
     }
 
+    public void openFiscalDay() throws JposException {
+        printer.directIO(SmFptrConst.SMFPTR_DIO_OPEN_DAY, null, null);
+    }
+
     public int getSysPassword() throws JposException {
         String s = getParameter(SmFptrConst.SMFPTR_DIO_PARAM_SYS_PASSWORD);
         return Integer.decode(s).intValue();
