@@ -15,9 +15,9 @@
 import jpos.config.JposEntry;
 import jpos.config.JposEntryRegistry;
 import jpos.config.JposRegPopulator;
-import jpos.config.simple.SimpleEntry2;
+import jpos.config.simple.SimpleEntry;
 import jpos.config.simple.SimpleEntryRegistry;
-import jpos.config.simple.xml.XercesRegPopulator2;
+import jpos.config.simple.xml.XercesRegPopulator;
 import junit.framework.TestCase;
 
 
@@ -36,9 +36,9 @@ public class JposEntryTest extends TestCase {
         String fileName = "test.xml";
         String logicalName = "logicalName";
         System.out.println("testSave");
-        JposRegPopulator populator = new XercesRegPopulator2();
+        JposRegPopulator populator = new XercesRegPopulator();
         JposEntryRegistry registry = new SimpleEntryRegistry(populator);
-        JposEntry entry = new SimpleEntry2(logicalName, populator);
+        JposEntry entry = new SimpleEntry(logicalName, populator);
         registry.addJposEntry(logicalName, entry);
         entry.addProperty("Property1", "Property1");
         entry.addProperty("Property2", "Property2");

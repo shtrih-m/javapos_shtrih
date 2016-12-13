@@ -65,6 +65,11 @@ public class MockReceiptPrinter implements ReceiptPrinter {
         return 0;
     }
 
+    @Override
+    public void checkZeroReceipt() throws Exception {
+
+    }
+
     public long getSubtotal()
             throws Exception {
         return 0;

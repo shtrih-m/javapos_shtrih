@@ -8,7 +8,7 @@
 package com.shtrih.jpos.cashdrawer;
 
 import junit.framework.TestCase;
-import com.shtrih.util.BasicConfigurator;
+import org.apache.log4j.BasicConfigurator;
 
 /**
  *

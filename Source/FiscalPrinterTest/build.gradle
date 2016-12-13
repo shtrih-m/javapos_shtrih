@@ -17,6 +17,11 @@ sourceSets {
             includes = [ "**/res/*.*" ]
         }
     }
+    test {
+        java {
+          srcDirs = [ "test/" ]
+        }
+    }
 }
 
 repositories {
@@ -28,7 +33,9 @@ repositories {
 dependencies {
     compile 'AbsoluteLayout:AbsoluteLayout:1.0',
             project(':FiscalPrinterService')
-    //testCompile group: 'junit', name: 'junit', version: '4.11'
+            
+    testCompile group: 'org.hamcrest', name: 'hamcrest-core', version: '1.3'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
 jar {

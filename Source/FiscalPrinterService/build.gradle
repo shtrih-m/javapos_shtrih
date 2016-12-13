@@ -19,6 +19,11 @@ sourceSets {
             includes = [ 'res/*.*', '**/resources/*.*' ]
         }
     }
+    test {
+        java {
+          srcDirs = [ "test/" ]
+        }
+    }
 }
 
 repositories {
@@ -36,7 +41,9 @@ dependencies {
             'RXTXcomm:RXTXcomm:1.0',
             'xerces:xerces:1.0',
             'zxing:zxing:2.2'
-    //testCompile group: 'junit', name: 'junit', version: '4.11'
+            
+    testCompile group: 'org.hamcrest', name: 'hamcrest-core', version: '1.3'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
 jar {
