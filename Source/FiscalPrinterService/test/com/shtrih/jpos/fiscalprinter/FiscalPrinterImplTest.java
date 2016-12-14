@@ -20,12 +20,13 @@ import jpos.events.OutputCompleteEvent;
 import jpos.events.StatusUpdateEvent;
 import jpos.services.EventCallbacks;
 import junit.framework.TestCase;
+import org.junit.Ignore;
 
 /**
  *
  * @author V.Kravtsov
  */
-
+@Ignore
 public class FiscalPrinterImplTest extends TestCase 
 {
     

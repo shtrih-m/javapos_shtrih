@@ -33,7 +33,7 @@ public class JposEntryTest extends TestCase {
     public void testSave() 
     throws Exception
     {
-        String fileName = "test.xml";
+        String fileName = "build/test.xml";
         String logicalName = "logicalName";
         System.out.println("testSave");
         JposRegPopulator populator = new XercesRegPopulator();

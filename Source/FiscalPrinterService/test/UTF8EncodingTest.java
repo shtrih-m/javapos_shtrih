@@ -19,7 +19,9 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import junit.framework.TestCase;
+import org.junit.Ignore;
 
+@Ignore
 public class UTF8EncodingTest extends TestCase 
 {
     

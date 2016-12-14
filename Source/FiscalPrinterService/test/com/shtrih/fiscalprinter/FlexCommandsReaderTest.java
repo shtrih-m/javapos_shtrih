@@ -30,7 +30,7 @@ public class FlexCommandsReaderTest extends TestCase {
         FlexCommands commands = new FlexCommands();
         FlexCommandsReader instance = new FlexCommandsReader();
         instance.load(commands);
-        assertEquals(132, commands.size());
+        assertEquals(162, commands.size());
     }
     
 }

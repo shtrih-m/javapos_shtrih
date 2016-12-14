@@ -8,6 +8,7 @@
 package com.shtrih.jpos;
 
 import junit.framework.TestCase;
+import org.junit.Ignore;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -15,6 +16,7 @@ import org.w3c.dom.Node;
  *
  * @author V.Kravtsov
  */
+@Ignore
 public class JposDeviceStatisticsTest extends TestCase {
     
     public JposDeviceStatisticsTest(String testName) {

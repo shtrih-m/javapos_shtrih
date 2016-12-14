@@ -10,12 +10,13 @@
 package com.shtrih.fiscalprinter;
 
 import junit.framework.TestCase;
+import org.junit.Ignore;
 
 /**
  *
  * @author V.Kravtsov
  */
-
+@Ignore
 public class SmFiscalPrinterTest extends TestCase {
     /*
     MockPrinterDevice device;

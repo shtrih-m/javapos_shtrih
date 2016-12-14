@@ -435,6 +435,11 @@ public interface SmFptrConst {
      * Print calculation report
      */
     public static final int SMFPTR_DIO_FS_PRINT_CALC_REPORT = 0x3B;
+
+    /**
+     * Print journal report
+     */
+    public static final int SMFPTR_DIO_PRINT_JOURNAL = 0x3C;
     
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
@@ -589,6 +594,12 @@ public interface SmFptrConst {
     public static final int SMFPTR_RN_FP_DOCUMENT_NUMBER    = 0;
     public static final int SMFPTR_RN_FS_DOCUMENT_NUMBER    = 1;
     public static final int SMFPTR_RN_FS_RECEIPT_NUMBER     = 2;
-    
-    
+
+    // ///////////////////////////////////////////////////////////////////
+    // Report type constants
+
+    public static final int SMFPTR_JRN_REPORT_CURRENT_DAY = 0;
+    public static final int SMFPTR_JRN_REPORT_DAY_NUMBER = 1;
+    public static final int SMFPTR_JRN_REPORT_DOC_NUMBER = 2;
+    public static final int SMFPTR_JRN_REPORT_DOC_RANGE = 3;
 }

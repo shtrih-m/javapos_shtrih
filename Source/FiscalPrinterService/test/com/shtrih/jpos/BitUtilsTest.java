@@ -10,6 +10,8 @@ package com.shtrih.jpos;
 import com.shtrih.util.BitUtils;
 import java.util.BitSet;
 import junit.framework.TestCase;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  *
@@ -56,38 +58,5 @@ public class BitUtilsTest extends TestCase {
         assertEquals(BitUtils.swapBits((byte)1), 128);
         assertEquals(BitUtils.swapBits((byte)2), 64);
         assertEquals(BitUtils.swapBits((byte)4), 32);
-    }
-    
-    /**
-     * Test of fromByteArray method, of class com.shtrih.jpos.BitUtils.
-     */
-    public void testFromByteArray() {
-        byte[] bytes = null;
-        
-        BitSet expResult = null;
-        BitSet result = BitUtils.fromByteArray(bytes);
-        assertEquals(expResult, result);
-        
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of toByteArray method, of class com.shtrih.jpos.BitUtils.
-     */
-    public void testToByteArray() {
-        BitSet bits = null;
-        
-        byte[] expResult = null;
-        byte[] result = BitUtils.toByteArray(bits);
-        assertEquals(expResult, result);
-        
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-    
-    
-    public void testCode39() 
-    {
     }
 }

@@ -6,6 +6,8 @@
 package com.shtrih.jpos.fiscalprinter;
 
 import java.io.File;
+
+import org.junit.Ignore;
 import org.w3c.dom.Node;
 import junit.framework.TestCase;
 import java.io.FileInputStream;
@@ -15,6 +17,7 @@ import com.shtrih.util.FileUtils;
  *
  * @author V.Kravtsov
  */
+@Ignore
 public class XmlReceiptWriterTest extends TestCase {
 
     public XmlReceiptWriterTest(String testName) {
@@ -35,7 +38,7 @@ public class XmlReceiptWriterTest extends TestCase {
     public void testSave() {
         System.out.println("save");
         ReceiptReport report = new ReceiptReport();
-        String path = "test/data/";
+        String path = "data/";
         String fileName = path + "XmlReceipt.xml";
         String fileName1 = path + "XmlReceipt1.xml";
         String fileName2 = path + "XmlReceipt2.xml";

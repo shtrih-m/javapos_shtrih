@@ -29,7 +29,7 @@ public class XmlPropReaderTest extends TestCase {
     public void testSave() {
         try {
             System.out.println("save");
-            String fileName = "XmlPropReaderTest.xml";
+            String fileName = "build/XmlPropReaderTest.xml";
             PrinterImages printerImages = new PrinterImages();
             printerImages.setMaxSize(1000);
             PrinterImage printerImage = new PrinterImage();
@@ -37,12 +37,14 @@ public class XmlPropReaderTest extends TestCase {
             printerImage.setFileName("File name 1");
             printerImage.setHeight(13);
             printerImage.setIsLoaded(true);
+            printerImage.setDigest("image1");
             printerImages.add(printerImage);
 
             printerImage = new PrinterImage();
             printerImage.setStartPos(12);
             printerImage.setFileName("File name 2");
             printerImage.setHeight(12);
+            printerImage.setDigest("image2");
             printerImage.setIsLoaded(false);
             printerImages.add(printerImage);
 
@@ -87,10 +89,14 @@ public class XmlPropReaderTest extends TestCase {
             reader.readHeader(header);
             reader.readTrailer(trailer);
 
+            header.setCount(4);
+
             assertEquals("HeaderLine 1", header.get(0).getText());
             assertEquals("HeaderLine 2", header.get(1).getText());
             assertEquals("HeaderLine 3", header.get(2).getText());
             assertEquals("HeaderLine 4", header.get(3).getText());
+
+            trailer.setCount(3);
 
             assertEquals("TrailerLine 1", trailer.get(0).getText());
             assertEquals("TrailerLine 2", trailer.get(1).getText());

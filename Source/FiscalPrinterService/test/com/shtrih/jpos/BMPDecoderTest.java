@@ -16,10 +16,13 @@ import java.awt.image.SampleModel;
 import java.io.File;
 import junit.framework.TestCase;
 import net.sf.image4j.codec.bmp.BMPDecoder;
+import org.junit.Ignore;
+
 /**
  *
  * @author V.Kravtsov
  */
+@Ignore
 public class BMPDecoderTest extends TestCase {
     
     public BMPDecoderTest(String testName) {

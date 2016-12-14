@@ -41,11 +41,11 @@ public class PrinterModelsTest extends TestCase {
     /**
      * Test of size method, of class PrinterModels.
      */
-    public void testSize() {
+    public void testSize() throws Exception {
         System.out.println("size");
         PrinterModels instance = new PrinterModels();
         assertEquals(0, instance.size());
-        // instance.add(new PrinterModelDefault()); !!!
+        instance.add(new PrinterModelDefault());
         assertEquals(1, instance.size());
     }
 

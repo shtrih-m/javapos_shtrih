@@ -361,6 +361,10 @@ public class DirectIOHandler {
             case SmFptrConst.SMFPTR_DIO_FS_PRINT_CALC_REPORT:
                 new DIOFSPrintCalcReport(service).execute(data, object);
                 break;
+
+            case SmFptrConst.SMFPTR_DIO_PRINT_JOURNAL:
+                new DIOPrintJournal(service).execute(data, object);
+                break;
                     
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,

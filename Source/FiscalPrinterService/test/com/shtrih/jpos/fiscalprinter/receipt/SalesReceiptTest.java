@@ -8,7 +8,9 @@ import com.shtrih.fiscalprinter.receipt.PrinterReceipt;
 import com.shtrih.jpos.fiscalprinter.FiscalDay;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import junit.framework.TestCase;
+import org.junit.Ignore;
 
+@Ignore
 public class SalesReceiptTest extends TestCase {
     
     public SalesReceiptTest(String testName) {

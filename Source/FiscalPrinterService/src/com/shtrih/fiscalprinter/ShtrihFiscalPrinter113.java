@@ -1653,6 +1653,34 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void disablePrint() throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_FS_DISABLE_PRINT, null, null);
     }
+
+    public void printJournalCurrentDay() throws JposException {
+        int[] params = new int[1];
+        params[0] = SmFptrConst.SMFPTR_JRN_REPORT_CURRENT_DAY;
+        directIO(SmFptrConst.SMFPTR_DIO_PRINT_JOURNAL, null, params);
+    }
+
+    public void printJournalDayNumber(int dayNumber) throws JposException {
+        int[] params = new int[2];
+        params[0] = SmFptrConst.SMFPTR_JRN_REPORT_DAY_NUMBER;
+        params[1] = dayNumber;
+        directIO(SmFptrConst.SMFPTR_DIO_PRINT_JOURNAL, null, params);
+    }
+
+    public void printJournalDocNumber(int docNumber) throws JposException {
+        int[] params = new int[2];
+        params[0] = SmFptrConst.SMFPTR_JRN_REPORT_DOC_NUMBER;
+        params[1] = docNumber;
+        directIO(SmFptrConst.SMFPTR_DIO_PRINT_JOURNAL, null, params);
+    }
+
+    public void printJournalDocRange(int docNumber1, int docNumber2) throws JposException {
+        int[] params = new int[3];
+        params[0] = SmFptrConst.SMFPTR_JRN_REPORT_DOC_RANGE;
+        params[1] = docNumber1;
+        params[2] = docNumber2;
+        directIO(SmFptrConst.SMFPTR_DIO_PRINT_JOURNAL, null, params);
+    }
 }
     
  

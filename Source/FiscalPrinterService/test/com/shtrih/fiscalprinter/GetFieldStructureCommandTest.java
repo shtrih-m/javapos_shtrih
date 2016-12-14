@@ -60,7 +60,7 @@ public class GetFieldStructureCommandTest extends TestCase {
     public void testEncode() throws Exception {
         System.out.println("encode");
         
-        CommandOutputStream out = new CommandOutputStream("");
+        CommandOutputStream out = new CommandOutputStream("cp866");
         ReadFieldInfo instance = new ReadFieldInfo();
         
         instance.setTable(0x34);
@@ -79,8 +79,8 @@ public class GetFieldStructureCommandTest extends TestCase {
     public void testDecode() throws Exception {
         System.out.println("decode");
         
-        CommandInputStream in = new CommandInputStream("");
-        CommandOutputStream out = new CommandOutputStream("");
+        CommandInputStream in = new CommandInputStream("cp866");
+        CommandOutputStream out = new CommandOutputStream("cp866");
         ReadFieldInfo instance = new ReadFieldInfo();
         
         out.writeString("fieldName  ", 40);
