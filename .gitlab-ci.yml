@@ -1,0 +1,11 @@
+stages:
+  - build
+job_build:
+  script:
+    - cd Source
+    - gradle clean build uploadArchives
+  artifacts:
+    paths:
+      - Source/dist/zip/
+  stage: build
+
