@@ -1,5 +1,4 @@
 group 'ShtrihM.JavaPOS.Tester'
-version '1.0'
 
 apply plugin: 'java'
 apply plugin: 'idea'
@@ -72,7 +71,7 @@ task distPlain(type: Copy) {
 }
 
 artifacts {
-
+    
 }
 
 uploadArchives {

@@ -1,5 +1,4 @@
 group 'shtrihjavapos'
-version '1.13'
 
 apply plugin: 'java'
 apply plugin: 'idea'

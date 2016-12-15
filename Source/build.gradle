@@ -1,8 +1,19 @@
+def getVersionName2() {
+    def text = "git describe --tags".execute().text.trim()
+    
+    def indexOf = text.indexOf('-')
+    
+    if (indexOf == -1)
+      return "1.13.0-0-00000000"
+      
+    return text.take(indexOf)
+}
+
 allprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
 
-    version = '1.0'
+    version = getVersionName2()
     
     sourceCompatibility = '1.6'
     targetCompatibility = '1.6'
@@ -19,4 +30,19 @@ allprojects {
         delete "${rootDir}/dist/"
         delete "${rootDir}/.gradle/"
     }
+}
+
+def getVersionName = { ->
+    def hashStdOut = new ByteArrayOutputStream()
+    exec {
+        commandLine "git", "rev-parse", "--short", "HEAD"
+        standardOutput = hashStdOut
+    }
+ 
+    def buildNumberStdOut = new ByteArrayOutputStream()
+    exec {
+        commandLine 'echo', "$BUILD_NUMBER"
+        standardOutput = buildNumberStdOut
+    }
+    return buildNumberStdOut.toString().trim() + '-' + hashStdOut.toString().trim()
 }
