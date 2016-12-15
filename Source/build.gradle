@@ -1,11 +1,6 @@
 def getVersionName2() {
     def text = "git describe --tags".execute().text.trim()
-    
-    def indexOf = text.indexOf('-')
-    
-    if (indexOf == -1)
-      return "unknown"
-      
+     
     return text
 }
 
