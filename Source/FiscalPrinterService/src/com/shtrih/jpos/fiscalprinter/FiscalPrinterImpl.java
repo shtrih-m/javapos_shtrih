@@ -8,18 +8,16 @@
 /////////////////////////////////////////////////////////////////////
 package com.shtrih.jpos.fiscalprinter;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Vector;
+import java.util.*;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
+import com.shtrih.util.*;
 import jpos.FiscalPrinterConst;
 import jpos.JposConst;
 import jpos.JposException;
@@ -30,8 +28,6 @@ import jpos.events.ErrorEvent;
 import jpos.events.OutputCompleteEvent;
 import jpos.events.StatusUpdateEvent;
 import jpos.services.EventCallbacks;
-
-import com.shtrih.util.CompositeLogger;
 
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.ej.EJActivation;
@@ -153,11 +149,6 @@ import com.shtrih.jpos.fiscalprinter.request.PrintRecTaxIDRequest;
 import com.shtrih.jpos.fiscalprinter.request.PrintRecTotalRequest;
 import com.shtrih.jpos.fiscalprinter.request.PrintRecVoidRequest;
 import com.shtrih.printer.ncr7167.NCR7167Printer;
-import com.shtrih.util.FileUtils;
-import com.shtrih.util.Localizer;
-import com.shtrih.util.LogWriter;
-import com.shtrih.util.StringUtils;
-import com.shtrih.util.SysUtils;
 import com.shtrih.fiscalprinter.model.XmlModelsWriter;
 import com.shtrih.jpos.monitoring.MonitoringServerX5;
 
@@ -469,7 +460,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         totalizerType = FPTR_TT_DAY;
         capUpdateStatistics = true;
         capStatisticsReporting = true;
-        deviceServiceVersion = deviceVersion113 + 326;
+        deviceServiceVersion = deviceVersion113 + ServiceVersionUtil.getVersionInt();
         freezeEvents = true;
     }
 
@@ -2182,6 +2173,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             logger.debug("SHTRIH-M JavaPos FiscalPrinter service");
             logger.debug("DeviceServiceVersion: "
                     + String.valueOf(deviceServiceVersion));
+            logger.debug("git version: "
+                    + String.valueOf(ServiceVersion.VERSION));
             logger.debug("Java version: " + System.getProperty("java.version"));
             logger.debug("File encoding: " + System.getProperty("file.encoding"));
             logger.debug("OS: " + System.getProperty("os.name"));

@@ -14,6 +14,7 @@ package com.shtrih.jpos.cashdrawer;
  */
 // java
 import com.shtrih.fiscalprinter.PrinterProtocol;
+import com.shtrih.util.*;
 import gnu.io.CommPortIdentifier;
 
 import java.util.Enumeration;
@@ -36,8 +37,6 @@ import jpos.config.simple.SimpleEntryRegistry;
 import jpos.loader.JposServiceLoader;
 import jpos.loader.JposServiceManager;
 
-import com.shtrih.util.CompositeLogger;
-
 import com.shtrih.fiscalprinter.PrinterProtocol_1;
 import com.shtrih.fiscalprinter.ProtocolFactory;
 import com.shtrih.fiscalprinter.SMFiscalPrinterImpl;
@@ -53,11 +52,8 @@ import com.shtrih.jpos.cashdrawer.directIO.DIOSetDriverParameter;
 import com.shtrih.jpos.events.StatusUpdateEventRequest;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.jpos.fiscalprinter.JposExceptionHandler;
-import com.shtrih.util.Localizer;
-import com.shtrih.util.Sound;
 import jpos.config.JposRegPopulator;
 import jpos.loader.JposServiceConnection;
-import com.shtrih.util.SysUtils;
 
 
 public class CashDrawerImpl extends DeviceService implements
@@ -297,7 +293,7 @@ public class CashDrawerImpl extends DeviceService implements
     }
 
     public int getDeviceServiceVersion() throws JposException {
-        int deviceServiceVersion = deviceVersion113 + 326;
+        int deviceServiceVersion = deviceVersion113 + ServiceVersionUtil.getVersionInt();
         logger.debug("getDeviceServiceVersion: "
                 + String.valueOf(deviceServiceVersion));
         return deviceServiceVersion;
@@ -424,6 +420,8 @@ public class CashDrawerImpl extends DeviceService implements
         logger.debug("SHTRIH-M JavaPos CashDrawer service");
         logger.debug("DeviceServiceVersion: "
                 + String.valueOf(getDeviceServiceVersion()));
+        logger.debug("git version: "
+                + String.valueOf(ServiceVersion.VERSION));
         try {
             this.cb = cb;
             params.load(jposEntry);
