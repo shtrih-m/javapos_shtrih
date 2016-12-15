@@ -15,6 +15,7 @@ package com.shtrih.jpos;
 
 import com.shtrih.util.Sound;
 import junit.framework.TestCase;
+import org.junit.Ignore;
 
 @Ignore
 public class SoundTest extends TestCase {
