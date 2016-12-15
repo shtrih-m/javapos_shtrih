@@ -19,11 +19,6 @@ sourceSets {
             includes = [ '../FiscalPrinterService/res/*.*', '../FiscalPrinterService/**/resources/*.*' ]
         }
     }
-    test {
-        java {
-          srcDirs = [ "../FiscalPrinterService/test/" ]
-        }
-    }
 }
 
 repositories {
