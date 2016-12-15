@@ -16,6 +16,7 @@ package com.shtrih.jpos;
 import com.shtrih.util.Sound;
 import junit.framework.TestCase;
 
+@Ignore
 public class SoundTest extends TestCase {
     
     public SoundTest(String testName) {
