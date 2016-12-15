@@ -2,7 +2,7 @@ group 'shtrihjavapos'
 version '1.13'
 
 apply plugin: 'java'
-apply plugin: 'idea'
+//apply plugin: 'idea'
 
 clean.doFirst {
     delete "${projectDir}/dist/"
@@ -12,16 +12,16 @@ clean.doFirst {
 sourceSets {
     main {
         java {
-            srcDirs = ['src']
+            srcDirs = ['../FiscalPrinterService/src']
         }
         resources {
-            srcDirs = ['src/']
-            includes = [ 'res/*.*', '**/resources/*.*' ]
+            srcDirs = ['../FiscalPrinterService/src/']
+            includes = [ '../FiscalPrinterService/res/*.*', '../FiscalPrinterService/**/resources/*.*' ]
         }
     }
     test {
         java {
-          srcDirs = [ "test/" ]
+          srcDirs = [ "../FiscalPrinterService/test/" ]
         }
     }
 }
@@ -37,7 +37,7 @@ dependencies {
             'jpos:jpos113:1.13',
             'jpos:jpos113-controls:1.13',
             'log4j:log4j:1.2.12',
-            'nrjavaserial:nrjavaserial:3.8.8',
+            'RXTXcomm:RXTXcomm:1.0',
             'xerces:xerces:1.0',
             'zxing:zxing:2.2'
             
@@ -57,13 +57,14 @@ jar {
 }
 
 task dist(type: Zip) {
-    destinationDir = new File("${rootDir}/dist/zip/nrj")
+    destinationDir = new File("${rootDir}/dist/zip/rxtx")
     baseName = 'shtrihjavapos'
     dependsOn jar
     
     from jar.archivePath
     from configurations.compile
-    from "Res/"
+    from 'assets/'
+    from "../FiscalPrinterService/Res/"
     from "${rootDir}/../History.txt"
 }
 
@@ -72,5 +73,5 @@ artifacts {
 }
 
 uploadArchives {
-
+   
 }

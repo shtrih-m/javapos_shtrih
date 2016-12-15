@@ -76,6 +76,6 @@ artifacts {
 }
 
 uploadArchives {
-    dependsOn distZip
+    //dependsOn distZip
     dependsOn distPlain
 }

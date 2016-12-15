@@ -1,7 +1,9 @@
 *.class
 /Source/FiscalPrinterService/build
+/Source/FiscalPrinterService.RXTXcomm/build
 /Source/FiscalPrinterTest/build
 /Source/FiscalPrinterService/dist/
+/Source/FiscalPrinterService.RXTXcomm/dist/
 /Source/FiscalPrinterService/nbproject/private/
 /Source/FiscalPrinterTest/dist/
 /jpos_1013322/src/FiscalPrinterService/nbproject/private/
