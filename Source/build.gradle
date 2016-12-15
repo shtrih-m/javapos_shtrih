@@ -6,7 +6,7 @@ def getVersionName2() {
     if (indexOf == -1)
       return "1.13.0-0-00000000"
       
-    return text.take(indexOf)
+    return text
 }
 
 allprojects {
