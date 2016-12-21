@@ -85,19 +85,20 @@ public class TextReportPrinter implements IPrinterEvents {
 	public static final String SINN = "ИНН";
 	public static final String SZReport = "СУТОЧНЫЙ ОТЧЕТ С ГАШЕНИЕМ";
 
-	int getDocumentNumber(String line) throws Exception {
+	private int getDocumentNumber(String line) throws Exception {
 		if (line.contains(SINN) && line.contains("№")) {
-			int index = line.indexOf("№");
-			line = line.substring(index + 1, line.length() - index);
-			return Integer.parseInt(line);
+			int startIndex = line.indexOf("№") + 1;
+			String number = line.substring(startIndex, startIndex + 4);
+			return Integer.parseInt(number);
 		}
 		return 0;
 	}
 
 	// СУТОЧНЫЙ ОТЧЕТ С ГАШЕНИЕМ #0010
-	int getDayNumber(String line) throws Exception {
+	private int getDayNumber(String line) throws Exception {
 		if (line.contains(SZReport)) {
-			String number = line.substring(line.length() - 4, line.length());
+			int startIndex = line.length() - 4;
+			String number = line.substring(startIndex, startIndex + 4);
 			return Integer.parseInt(number);
 		}
 		return -1;

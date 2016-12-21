@@ -135,6 +135,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         JposConst, JposEntryConst, FiscalPrinterConst, SmFptrConst,
         IPrinterEvents {
 
+    private CompositeLogger logger = CompositeLogger.getLogger(FiscalPrinterImpl.class);
+
     public int logoPosition = SMFPTR_LOGO_PRINT;
     private final FptrParameters params;
     private boolean freezeEvents;
@@ -146,7 +148,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private boolean asyncThreadEnabled = false;
     private boolean deviceThreadEnabled = false;
     private boolean eventThreadEnabled = false;
-    private CompositeLogger logger = CompositeLogger.getLogger(FiscalPrinterImpl.class);
     private boolean deviceEnabled = false;
     private EventCallbacks cb = null;
     private final Vector events = new Vector();

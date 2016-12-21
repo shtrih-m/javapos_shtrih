@@ -1225,7 +1225,7 @@ public class MainDialog extends javax.swing.JDialog
 
     private void btnPrintEJournalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintBarcodesActionPerformed
         try {
-            controller.printJournalCurrentDay();
+            controller.printJournalDocRange(427, 429);
             //controller.printJournalDocRange(1,1000);
         } catch (Exception e) {
             e.printStackTrace();
