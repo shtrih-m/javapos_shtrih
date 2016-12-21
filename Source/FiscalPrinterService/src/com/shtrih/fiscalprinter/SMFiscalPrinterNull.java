@@ -143,6 +143,11 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void addEvents(IPrinterEvents item) {
     }
 
+    @Override
+    public void removeEvents(IPrinterEvents item) {
+
+    }
+
     public void deviceExecute(PrinterCommand command) throws Exception {
     }
 

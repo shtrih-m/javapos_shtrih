@@ -68,6 +68,22 @@ public final class ReadFMTotals extends PrinterCommand {
         return totals;
     }
 
+    public long getSalesTotal() {
+        return totals.getSalesAmount();
+    }
+
+    public long getBuyTotal() {
+        return totals.getBuyAmount();
+    }
+
+    public long getRetSaleTotal() {
+        return totals.getRetSaleAmount();
+    }
+
+    public long getRetBuyTotal() {
+        return totals.getRetBuyAmount();
+    }
+
     public int getPassword() {
         return password;
     }

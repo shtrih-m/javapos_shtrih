@@ -14,6 +14,7 @@ package com.shtrih.jpos.fiscalprinter;
 public class HeaderLine {
 
     private String text = "";
+    private boolean doubleWidth = false;
 
     /**
      * Creates a new instance of HeaderLine
@@ -21,15 +22,24 @@ public class HeaderLine {
     public HeaderLine() {
     }
 
-    public HeaderLine(String text) {
+    public HeaderLine(String text, boolean doubleWidth) {
         this.text = text;
+        this.doubleWidth = doubleWidth;
     }
 
     public String getText() {
         return text;
     }
 
+    public boolean isDoubleWidth() {
+        return doubleWidth;
+    }
+
      public void setText(String text) {
         this.text = text;
+    }
+
+    public void setDoubleWidth(boolean doubleWidth) {
+        this.doubleWidth = doubleWidth;
     }
 }

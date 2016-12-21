@@ -86,6 +86,8 @@ public interface SMFiscalPrinter {
 
     public void addEvents(IPrinterEvents item);
 
+    public void removeEvents(IPrinterEvents item);
+
     public void deviceExecute(PrinterCommand command) throws Exception;
 
     public void connect() throws Exception;

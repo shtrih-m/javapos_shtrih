@@ -111,32 +111,47 @@ public class XmlPropReader {
         image.setPosition(readParameterInt(imageNode, "Position"));
     }
 
-    public void readHeader(PrinterHeader header) throws Exception {
-        readLines(header, "Header");
-    }
-    
-    public void readTrailer(PrinterHeader trailer) throws Exception 
-    {
-        readLines(trailer, "Trailer");
-    }
-
-    public void readLines(PrinterHeader header, String nodeName) throws Exception {
-        header.clear();
-        Node headerNode = getChildNode(root, nodeName);
-        int count = headerNode.getChildNodes().getLength();
-        for (int i = 0; i < count; i++) {
-            Node lineNode = headerNode.getChildNodes().item(i);
-            if (lineNode.getNodeName().equalsIgnoreCase("Line")) 
-            {
-                read(lineNode, header);
+    public void readPrinterHeader(PrinterHeader header) throws Exception {
+        try {
+            for (int i = 1; i <= header.getNumHeaderLines(); i++) {
+                header.setHeaderLine(i, "", false);
             }
-        }
-    }
+            for (int i = 1; i <= header.getNumTrailerLines(); i++) {
+                header.setTrailerLine(i, "", false);
+            }
 
-    public void read(Node node, PrinterHeader trailer)
-            throws Exception {
-        String text = readParameterStr(node, "Text");
-        trailer.addLine(text);
+            // header
+            int number = 1;
+            Node headerNode = getChildNode(root, "Header");
+            int count = headerNode.getChildNodes().getLength();
+            for (int i = 0; i < count; i++) {
+                if (number > header.getNumHeaderLines())
+                    break;
+                Node lineNode = headerNode.getChildNodes().item(i);
+                if (lineNode.getNodeName().equalsIgnoreCase("Line")) {
+                    String text = readParameterStr(lineNode, "Text");
+                    boolean doubleWidth = readParameterBool(lineNode, "DoubleWidth");
+                    header.setHeaderLine(number, text, doubleWidth);
+                    number++;
+                }
+            }
+            number = 1;
+            headerNode = getChildNode(root, "Trailer");
+            count = headerNode.getChildNodes().getLength();
+            for (int i = 0; i < count; i++) {
+                if (number > header.getNumTrailerLines())
+                    break;
+                Node lineNode = headerNode.getChildNodes().item(i);
+                if (lineNode.getNodeName().equalsIgnoreCase("Line")) {
+                    String text = readParameterStr(lineNode, "Text");
+                    boolean doubleWidth = readParameterBool(lineNode, "DoubleWidth");
+                    header.setTrailerLine(number, text, doubleWidth);
+                    number++;
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e);
+        }
     }
 
     private String readParameterStr(Node node, String paramName)
@@ -154,7 +169,7 @@ public class XmlPropReader {
 
     private int readParameterInt(Node node, String paramName) throws Exception {
         String s = readParameterStr(node, paramName);
-        return Integer.valueOf(s).intValue();
+        return Integer.valueOf(s);
     }
 
     private boolean readParameterBool(Node node, String paramName)
