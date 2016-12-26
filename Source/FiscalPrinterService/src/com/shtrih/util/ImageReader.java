@@ -34,7 +34,7 @@ public class ImageReader {
         return digest;
     }
 
-    public String getFileDigest(File file) throws Exception {
+    private String getFileDigest(File file) throws Exception {
         byte[] buffer = new byte[(int) file.length()];
         FileInputStream fis = new FileInputStream(file);
         fis.read(buffer);
@@ -88,7 +88,7 @@ public class ImageReader {
         return data;
     }
 
-    public static BufferedImage indexToDirectColorModel(BufferedImage image) {
+    private static BufferedImage indexToDirectColorModel(BufferedImage image) {
         BufferedImage result = new BufferedImage(image.getWidth(),
                 image.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
 

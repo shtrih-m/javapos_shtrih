@@ -1,0 +1,62 @@
+apply plugin: 'idea'
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "25.0.2"
+
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 19
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+    
+    sourceSets {
+        main {
+            java {
+                srcDirs = ["${projectDir}/src", "${projectDir}/../../Core/src"]
+            }
+            res {
+                srcDirs = ["${projectDir}/res"]
+            }
+            manifest {
+                srcFile "${projectDir}/AndroidManifest.xml"
+            }
+        }
+        test {
+            java {
+              srcDirs = [ "${projectDir}/test/" ]
+            }
+            res {
+                srcDirs = ["${projectDir}/test/res"]
+            }
+            assets {
+                srcDirs = ["${projectDir}/test/assets"]
+            }
+        }       
+    }
+}
+
+repositories {
+    flatDir {
+        dirs = ["${projectDir}/../lib"]
+    }
+}
+
+dependencies {
+    compile 'org.jbarcode:jbarcode:0.2.8',
+            'd2xx:d2xx:1.0',
+            'jpos:jpos113:1.13',
+            'log4j:log4j:1.2.16',
+            'xerces4android:xerces4android:1.0',
+            'zxing:zxing:3.2.2'
+
+    testCompile group: 'org.hamcrest', name: 'hamcrest-core', version: '1.3'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
