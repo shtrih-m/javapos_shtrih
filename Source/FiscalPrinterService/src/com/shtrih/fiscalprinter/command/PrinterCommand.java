@@ -1,7 +1,10 @@
 package com.shtrih.fiscalprinter.command;
 
+import java.io.IOException;
+
 import com.shtrih.fiscalprinter.SmFiscalPrinterException;
 import com.shtrih.util.Localizer;
+import com.shtrih.fiscalprinter.AnswerCodeException;
 
 public abstract class PrinterCommand {
 
@@ -78,8 +81,9 @@ public abstract class PrinterCommand {
                 resultCode = in.readByte();
             }
         } else {
-            if (code != getCode()) {
-                throw new Exception("Invalid answer code");
+            if (code != getCode()) 
+            {
+                throw new AnswerCodeException("Invalid answer code");
             }
             resultCode = in.readByte();
         }

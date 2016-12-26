@@ -12,6 +12,7 @@
  */
 package com.shtrih.fiscalprinter.port;
 
+import static com.shtrih.fiscalprinter.port.SocketPort.logger;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 
@@ -44,10 +45,10 @@ public class SerialPrinterPort implements PrinterPort {
         }
     }
 
-    public String getPortName(){
+    public String getPortName() {
         return portName;
     }
-    
+
     public SerialPort getPort() throws Exception {
         checkOpened();
         return port;
@@ -68,9 +69,9 @@ public class SerialPrinterPort implements PrinterPort {
     }
 
     public synchronized void open(int timeout) throws Exception {
+
         if (isClosed()) {
-            port = SharedSerialPorts.getInstance().openPort(portName, timeout,
-                    this);
+            port = SharedSerialPorts.getInstance().openPort(portName, timeout, this);
             port.setInputBufferSize(1024);
             port.setOutputBufferSize(1024);
             port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
@@ -80,6 +81,7 @@ public class SerialPrinterPort implements PrinterPort {
     }
 
     public synchronized void close() {
+
         if (isOpened()) {
             SharedSerialPorts.getInstance().closePort(port);
             port = null;
@@ -105,25 +107,18 @@ public class SerialPrinterPort implements PrinterPort {
         }
     }
 
-    public void readAll() throws Exception {
-        SerialPort serialPort = getPort();
-        InputStream is = serialPort.getInputStream();
-        int len = is.available();
-        if (len > 0) {
-            int offset = 0;
-            byte[] data = new byte[len];
-            is.read(data, offset, len);
-        }
-    }
-
     private void noConnectionError() throws Exception {
         throw new IOException(Localizer.getString(Localizer.NoConnection));
     }
 
     public void write(byte[] b) throws Exception {
-        OutputStream stream = getPort().getOutputStream();
-        stream.write(b);
-        stream.flush();
+        open(0);
+        OutputStream out = getPort().getOutputStream();
+        if (out == null) {
+            throw new Exception("Port open failed");
+        }
+        out.write(b);
+        out.flush();
     }
 
     public void write(int b) throws Exception {
@@ -146,9 +141,14 @@ public class SerialPrinterPort implements PrinterPort {
     }
 
     public int doReadByte() throws Exception {
+        open(0);
         int result;
         SerialPort serialPort = getPort();
         InputStream is = serialPort.getInputStream();
+        if (is == null) {
+            throw new Exception("Port open failed");
+        }
+
         long startTime = System.currentTimeMillis();
         for (;;) {
             long currentTime = System.currentTimeMillis();
@@ -183,19 +183,11 @@ public class SerialPrinterPort implements PrinterPort {
         return (String[]) result.toArray(new String[0]);
     }
 
-    public InputStream getInputStream() throws Exception {
-        return port.getInputStream();
-    }
-
-    public OutputStream getOutputStream() throws Exception {
-        return port.getOutputStream();
-    }
-
     public Object getSyncObject() throws Exception {
         return port;
     }
 
-    public boolean isSearchByBaudRateEnabled(){
+    public boolean isSearchByBaudRateEnabled() {
         return true;
     }
 }

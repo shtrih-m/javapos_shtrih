@@ -23,8 +23,8 @@ public class FptrParameters {
 
     public static final int defaultGraphicsLineDelay = 200;
 
-    private int byteTimeout = 200;
-    private int deviceByteTimeout = 1000;
+    private int byteTimeout = 1000;
+    private int deviceByteTimeout = 5000;
     private int statusCommand = PrinterConst.SMFP_STATUS_COMMAND_11H;
     private int graphicsLineDelay = defaultGraphicsLineDelay;
     private int portType = SmFptrConst.PORT_TYPE_SERIAL;
@@ -125,6 +125,7 @@ public class FptrParameters {
     public boolean FSDiscountEnabled = true;
     public boolean FSReceiptItemDiscountEnabled = true;
     public boolean FSCombineItemAdjustments = true;
+    public boolean readDiscountMode = true;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -156,8 +157,8 @@ public class FptrParameters {
         font = new FontNumber(reader.readInteger("fontNumber", 1));
         closeReceiptText = reader.readString("closeReceiptText", "");
         subtotalText = reader.readString("subtotalText", "SUBTOTAL");
-        setByteTimeout(reader.readInteger("byteTimeout", 200));
-        setDeviceByteTimeout(reader.readInteger("deviceByteTimeout", 1000));
+        setByteTimeout(reader.readInteger("byteTimeout", 1000));
+        setDeviceByteTimeout(reader.readInteger("deviceByteTimeout", 5000));
         taxPassword = reader.readInteger("taxPassword", 0);
         usrPassword = reader.readInteger("operatorPassword", 1);
         sysPassword = reader.readInteger("sysAdminPassword", 30);
@@ -285,6 +286,7 @@ public class FptrParameters {
         FSDiscountEnabled = reader.readBoolean("FSDiscountEnabled", true);
         FSReceiptItemDiscountEnabled = reader.readBoolean("FSReceiptItemDiscountEnabled", true);
         FSCombineItemAdjustments = reader.readBoolean("FSCombineItemAdjustments", true);
+        readDiscountMode = reader.readBoolean("readDiscountMode", true);
 
         // paymentNames
         String paymentName;

@@ -775,7 +775,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
     }
 
     public void fsWriteTLV(byte[] data) throws Exception {
-        getDevice().fsWriteTLV(data);
+        getDevice().check(getDevice().fsWriteTLV(data));
         
         TLVReader reader = new TLVReader();
         reader.read(data);
@@ -784,20 +784,20 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
     }
     
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
-        getDevice().fsWriteTag(tagId, tagValue);
+        getDevice().check(getDevice().fsWriteTag(tagId, tagValue));
         messages.add(TLVInfo.getTagPrintName(tagId) + ": " + tagValue);
     }
 
     public void fsWriteCustomerEmail(String text) throws Exception {
         if (!text.isEmpty()) {
-            getDevice().fsWriteTag(1008, text);
+            getDevice().check(getDevice().fsWriteTag(1008, text));
             messages.add("Email покупателя: " + text);
         }
     }
 
     public void fsWriteCustomerPhone(String text) throws Exception {
         if (!text.isEmpty()) {
-            getDevice().fsWriteTag(1008, text);
+            getDevice().check(getDevice().fsWriteTag(1008, text));
             messages.add("Телефон покупателя: " + text);
         }
     }

@@ -21,26 +21,28 @@ import java.util.Calendar;
  * @author Roman
  */
 public class MonitoringCommands {
+
     public static void Help(PrintWriter out) {
         out.println("=============================");
         out.println("  Welcome to Shtrih JavaPOS  ");
         out.println("=============================");
         out.println("Commands:");
         out.println(" STATUS");
-        out.println(" INFO");            
+        out.println(" INFO");
         out.println(" FN");
         out.println(" FN_UNIXTIME");
         out.println(" CNT_QUEUE");
         out.println(" DATE_LAST");
-        out.println(" CASH_REG regNumber");  
-        out.println(" OPER_REG regNumber");  
+        out.println(" CASH_REG regNumber");
+        out.println(" OPER_REG regNumber");
         out.println("=============================");
         out.println("");
     }
-        
+
     public static String runCommand(String command, FiscalPrinterImpl service) {
-        if (command == null || command.equals(""))
+        if (command == null || command.equals("")) {
             return "";
+        }
         try {
             if (command.equals("STATUS")) {
                 return getStatusText(service);
@@ -56,7 +58,7 @@ public class MonitoringCommands {
             }
             if (command.equals("FN_UNIXTIME")) {
                 return getFNUnixTimeText(service);
-            }   
+            }
             if (command.equals("CNT_QUEUE")) {
                 return getCntQueueText(service);
             }
@@ -65,10 +67,13 @@ public class MonitoringCommands {
             }
             if (command.startsWith("CASH_REG")) {
                 return getCashRegText(command, service);
-            }      
+            }
             if (command.startsWith("OPER_REG")) {
                 return getOperRegText(command, service);
-            }                     
+            }
+            if (command.startsWith("OFD_SETTING")) {
+                return getOFDSettingsText(service);
+            }
         } catch (Exception e) {
         }
         return "";
@@ -88,10 +93,11 @@ public class MonitoringCommands {
         LongPrinterStatus status = service.getLongStatus();
         String text = service.getDeviceMetrics().getDeviceName() + ","
                 + status.getSerial() + ",";
-        if (service.getPrinter().getCapFiscalStorage())
+        if (service.getPrinter().getCapFiscalStorage()) {
             text += service.getPrinter().fsReadStatus().getFsSerial();
-        else
-            text += service.getEJStatus().getSerialNumber();       
+        } else {
+            text += service.getEJStatus().getSerialNumber();
+        }
         return text;
     }
 
@@ -116,8 +122,8 @@ public class MonitoringCommands {
     private static String getFNUnixTimeText(FiscalPrinterImpl service) throws Exception {
         FSReadFiscalization param = service.getPrinter().fsReadFiscalization();
         Calendar calendar = Calendar.getInstance();
-        calendar.set(param.getDate().getYear() + 2000, param.getDate().getMonth() - 1, 
-                param.getDate().getDay(), param.getTime().getHour(), 
+        calendar.set(param.getDate().getYear() + 2000, param.getDate().getMonth() - 1,
+                param.getDate().getDay(), param.getTime().getHour(),
                 param.getTime().getMin(), param.getTime().getSec());
         calendar.set(Calendar.MILLISECOND, 0);
         String text = String.valueOf(calendar.getTimeInMillis() / 1000L);
@@ -138,13 +144,13 @@ public class MonitoringCommands {
         return text;
     }
 
-    
     // CASH_REG Номер регистра
     // Содержимое денежного регистра
     private static String getCashRegText(String command, FiscalPrinterImpl service) throws Exception {
         String[] params = StringUtils.split(command, ' ');
-        if (params.length < 2)
+        if (params.length < 2) {
             return "WRONG_PARAM";
+        }
         long reg = service.getPrinter().readCashRegister(Integer.parseInt(params[1]));
         String text = String.valueOf(reg);
         return text;
@@ -154,10 +160,33 @@ public class MonitoringCommands {
     // Содержимое операционного регистра
     private static String getOperRegText(String command, FiscalPrinterImpl service) throws Exception {
         String[] params = StringUtils.split(command, ' ');
-        if (params.length < 2)
+        if (params.length < 2) {
             return "WRONG_PARAM";
+        }
         int reg = service.getPrinter().readOperationRegister(Integer.parseInt(params[1]));
         String text = String.valueOf(reg);
         return text;
-    }    
+    }
+
+    // Таблица 19, Параметры офд
+    // Номер таблицы,Ряд,Поле,Размер поля,Тип поля,Мин. значение, Макс.значение, Название,Значение
+    //19,1,1,64,1,0,255,'Сервер','connect.ofd-ya.ru'
+    //19,1,2,2,0,0,65535,'Порт','7779'
+    //19,1,3,2,0,0,65535,'Таймаут чтения ответа','1000'
+    //Выводит настройки ОФД из таблицы 19, "Параметры ОФД".
+    //Пример: connect.ofd-ya.ru:7779 (Формат: сервер:порт)
+    
+    private static String getOFDSettingsText(FiscalPrinterImpl service) 
+            throws Exception 
+    {
+        String result = "";
+        SMFiscalPrinter printer = service.getPrinter();
+        if (printer.getCapFiscalStorage()) {
+            String server = printer.readTable(19, 1, 1);
+            String port = printer.readTable(19, 1, 2);
+            result = server + ":" + port;
+        }
+        return result;
+    }
+
 }

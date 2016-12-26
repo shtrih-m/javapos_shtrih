@@ -236,9 +236,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 getPrinter().openReceipt(receiptType);
                 getPrinter().waitForPrinting();
 
+                correctPayments();
                 addItemsDiscounts();
                 printReceiptItems();
-                correctPayments();
 
                 if (disablePrint) {
                     getDevice().disablePrint();
@@ -297,20 +297,28 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
+    public boolean isDiscountAffectTotal() throws Exception {
+        return getPrinter().getPrinter().getDiscountMode() == 0;
+    }
+
     public void printFSSale(FSSaleReceiptItem item) throws Exception {
         long discount = item.getDiscountTotal();
         if (discount != 0) {
             long total = item.getItem().getAmount();
             PriceItem priceItem = item.getItem();
-            long price = (total - discount) * 1000 / priceItem.getQuantity();
-            long amount = PrinterAmount.getAmount(price, priceItem.getQuantity());
-            priceItem.setPrice(price);
+            if (!isDiscountAffectTotal()) {
+                long price = (total - discount) * 1000 / priceItem.getQuantity();
+                priceItem.setPrice(price);
+            }
+            long amount = priceItem.getAmount();
             printFSSale2(item);
+            /*
             if (amount > (total - discount)) {
                 priceItem.setPrice(amount);
                 priceItem.setQuantity(1000);
                 printFSSale2(item);
             }
+            */
         } else {
             printFSSale2(item);
         }
@@ -848,10 +856,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void fsWriteTLV(byte[] data) throws Exception {
-        items.add(new FSTLVItem(data));
-    }
-
     public void disablePrint() throws Exception {
         disablePrint = true;
     }
@@ -860,21 +864,25 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         return disablePrint;
     }
 
+    public void fsWriteTLV(byte[] data) throws Exception {
+        items.add(new FSTLVItem(data));
+    }
+
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
-        getDevice().fsWriteTag(tagId, tagValue);
+        getDevice().check(getDevice().fsWriteTag(tagId, tagValue));
         messages.add(TLVInfo.getTagPrintName(tagId) + ": " + tagValue);
     }
 
     public void fsWriteCustomerEmail(String text) throws Exception {
         if (!text.isEmpty()) {
-            getDevice().fsWriteTag(1008, text);
+            getDevice().check(getDevice().fsWriteTag(1008, text));
             messages.add("Email покупателя: " + text);
         }
     }
 
     public void fsWriteCustomerPhone(String text) throws Exception {
         if (!text.isEmpty()) {
-            getDevice().fsWriteTag(1008, text);
+            getDevice().check(getDevice().fsWriteTag(1008, text));
             messages.add("Телефон покупателя: " + text);
         }
     }

@@ -866,4 +866,15 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public int getDiscountMode() throws Exception{
         return 0;
     }
+    
+    public String readTable(int tableNumber, int rowNumber, int fieldNumber)
+            throws Exception{
+        return "";
+    }
+    
+    public String readTable(String tableName, String fieldName) 
+            throws Exception{
+        return "";
+    }
+    
 }

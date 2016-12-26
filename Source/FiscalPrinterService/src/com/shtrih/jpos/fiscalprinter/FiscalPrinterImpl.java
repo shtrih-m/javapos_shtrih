@@ -4509,10 +4509,15 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private FiscalReceipt createSalesReceipt(int receiptType) throws Exception {
         FiscalReceipt result;
         if (printer.getCapFiscalStorage()) {
+            if (!params.readDiscountMode) {
+                result = new FSSalesReceipt2(createReceiptContext(), receiptType);
+	    } else
+            {
             if (printer.getDiscountMode() == 0) {
                 result = new FSSalesReceipt2(createReceiptContext(), receiptType);
             } else {
                 result = new FSSalesReceipt(createReceiptContext(), receiptType);
+            }
             }
         } else if (params.salesReceiptType == SMFPTR_RECEIPT_NORMAL) {
             result = new SalesReceipt(createReceiptContext(), receiptType);

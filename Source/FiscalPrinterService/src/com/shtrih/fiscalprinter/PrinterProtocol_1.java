@@ -40,7 +40,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
     private int maxNakCommandNumber = 3;
     private int maxNakAnswerNumber = 3;
     private int maxAckNumber = 3;
-    private int maxRepeatCount = 1;
+    private int maxRepeatCount = 3;
     private byte[] txData = new byte[0];
     private byte[] rxData = new byte[0];
     private final Frame frame = new Frame();
@@ -138,7 +138,9 @@ public class PrinterProtocol_1 implements PrinterProtocol {
                     portWrite(ENQ);
                     enqNumber++;
                     int B = readControlByte();
-                    if (B == ACK) break;
+                    if (B == ACK) {
+                        break;
+                    }
                     if (B == NAK) {
                         throw DeviceException.readAnswerError();
                     }
@@ -272,8 +274,13 @@ public class PrinterProtocol_1 implements PrinterProtocol {
                 byte[] rx = sendCommand(tx, timeout);
                 command.decodeData(rx);
                 break;
+
             } catch (IOException e) {
                 logger.error("IOException: ", e);
+
+                port.close();
+                port.open(100);
+
                 if (!command.getIsRepeatable()) {
                     throw e;
                 }
@@ -285,6 +292,20 @@ public class PrinterProtocol_1 implements PrinterProtocol {
 
                 port.close();
                 port.open(100);
+
+                if (!command.getIsRepeatable()) {
+                    throw e;
+                }
+                if (repeatCount >= maxRepeatCount) {
+                    throw e;
+                }
+            } catch (AnswerCodeException e) {
+                try {
+                    port.readBytes(0xFF);
+                    port.close();
+                    port.open(100);
+                } catch (Exception e1) {
+                }
 
                 if (!command.getIsRepeatable()) {
                     throw e;

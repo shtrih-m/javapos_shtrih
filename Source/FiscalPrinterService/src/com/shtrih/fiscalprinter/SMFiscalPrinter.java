@@ -164,6 +164,12 @@ public interface SMFiscalPrinter {
     public int writeTable(int tableNumber, int rowNumber, int fieldNumber,
             String fieldValue) throws Exception;
 
+    public String readTable(int tableNumber, int rowNumber, int fieldNumber)
+            throws Exception;
+    
+    public String readTable(String tableName, String fieldName) 
+            throws Exception;
+    
     public int readTable(int tableNumber, int rowNumber, int fieldNumber,
             String[] fieldValue) throws Exception;
 

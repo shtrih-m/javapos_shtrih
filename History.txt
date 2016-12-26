@@ -6,6 +6,34 @@
 
 ********************************************************************************
 
+  December, 26 2016, 14:23
+  deviceServiceVersion = 1013331
+	
+  [-] Added parameter readDiscountMode 
+  
+********************************************************************************
+
+  December, 22 2016, 23:58
+  deviceServiceVersion = 1013329
+	
+  [-] Fixed error with "Invalid answer code" error handling
+  
+********************************************************************************
+
+  December, 20 2016, 20:33
+  deviceServiceVersion = 1013328
+	
+  [-] Fixed error with serial port
+  
+********************************************************************************
+
+  December, 14 2016, 22:20
+  deviceServiceVersion = 1013327
+	
+  [-] Fixed error with receipt subtotal discount
+  
+********************************************************************************
+
   December, 13 2016, 19:30
   deviceServiceVersion = 1013326
 	
