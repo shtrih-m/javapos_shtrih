@@ -15,7 +15,7 @@ sourceSets {
         }
         resources {
             srcDirs = ['../FiscalPrinterService/src/']
-            includes = [ '../FiscalPrinterService/res/*.*', '../FiscalPrinterService/**/resources/*.*' ]
+            includes = [ 'res/*.*', '**/resources/*.*' ]
         }
     }
 }
