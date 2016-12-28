@@ -27,6 +27,7 @@ import com.shtrih.jpos.fiscalprinter.PackageAdjustment;
 import com.shtrih.jpos.fiscalprinter.PackageAdjustments;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
 import com.shtrih.util.Localizer;
+import com.shtrih.util.MathUtils;
 import com.shtrih.util.StringUtils;
 import com.shtrih.util.SysUtils;
 import static jpos.FiscalPrinterConst.FPTR_PS_MONITOR;
@@ -89,35 +90,41 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         openReceipt(PrinterConst.SMFP_RECTYPE_SALE);
         getPrinter().printPreLine();
         // if unitPrice is zero then we use price and quantity = 1000
+        long itemPrice = price;
         if (unitPrice == 0) {
             quantity = 1000;
         } else {
             if (quantity == 0) {
                 quantity = 1000;
             }
-            price = unitPrice;
+            itemPrice = unitPrice;
         }
         description = getPrinter().printDescription(description);
 
         // receipt was just opened
         if (!hasItems) {
-            printSale(price, quantity, getParams().department, vatInfo,
+            printSale(itemPrice, quantity, getParams().department, vatInfo,
                     description);
             hasItems = true;
         } else {
             switch (receiptType) {
                 case PrinterConst.SMFP_RECTYPE_SALE:
-                    printSale(price, quantity, getParams().department, vatInfo,
+                    printSale(itemPrice, quantity, getParams().department, vatInfo,
                             description);
                     break;
 
                 case PrinterConst.SMFP_RECTYPE_RETSALE:
-                    printStorno(price, quantity, getParams().department,
+                    printStorno(itemPrice, quantity, getParams().department,
                             vatInfo, description);
                     break;
                 default:
                     throw new Exception("Invalid receipt type");
             }
+        }
+        double d = unitPrice * Math.abs(quantity);
+        long amount = MathUtils.round((d / 1000));
+        if (amount > price){
+            printDiscount(amount-price, vatInfo, "");
         }
         getPrinter().printPostLine();
     }

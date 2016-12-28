@@ -31,7 +31,7 @@
         <!--<prop name="portName" type="String" value="COM2"/> -->
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
-        <prop name="portName" type="String" value="COM4"/>
+        <prop name="portName" type="String" value="COM25"/>
 		
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
@@ -195,7 +195,7 @@
         <!-- Paper cut delay in milliseconds -->
         <prop name="cutPaperDelay" type="String" value="0"/>
         <!-- Sales receipt type, 0 - normal, 1 - GLOBUS -->
-        <prop name="salesReceiptType" type="String" value="1"/>
+        <prop name="salesReceiptType" type="String" value="0"/>
         <!-- Amount field length -->
         <prop name="RFAmountLength" type="String" value="8"/>
         <!-- Quantity field length -->
