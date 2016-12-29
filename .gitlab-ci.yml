@@ -4,8 +4,12 @@ job_build:
   script:
     - cd Source
     - gradle clean build uploadArchives
+    - cd android
+    - gradle clean uploadArchives
   artifacts:
     paths:
       - Source/dist/zip/
+      - Source/android/FptrServiceAndroid/build/outputs/aar
+      - Source/android/tinyJavaPosTester/build/outputs/apk
   stage: build
 
