@@ -135,6 +135,7 @@ public class MainDialog extends javax.swing.JDialog
         btnOpenDay = new javax.swing.JButton();
         btnPrintFiscalReceipt3 = new javax.swing.JButton();
         btnPrintBarcodes = new javax.swing.JButton();
+        btnPrintEJournal = new javax.swing.JButton();
         jSeparator5 = new javax.swing.JSeparator();
         lblBarcode = new javax.swing.JLabel();
         btnExecuteCommand = new javax.swing.JButton();
@@ -206,7 +207,7 @@ public class MainDialog extends javax.swing.JDialog
         btnClose = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setResizable(false);
+        setResizable(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -442,6 +443,15 @@ public class MainDialog extends javax.swing.JDialog
             }
         });
         pnlFptr1.add(btnPrintBarcodes, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 320, 160, 26));
+
+        btnPrintEJournal.setText("Print EJournal");
+        btnPrintEJournal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintEJournalActionPerformed(evt);
+            }
+        });
+        pnlFptr1.add(btnPrintEJournal, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 320, 160, 26));
+
         pnlFptr1.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, 570, 10));
 
         lblBarcode.setText("Barcode");
@@ -1213,6 +1223,15 @@ public class MainDialog extends javax.swing.JDialog
         }
     }//GEN-LAST:event_btnPrintBarcodesActionPerformed
 
+    private void btnPrintEJournalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintBarcodesActionPerformed
+        try {
+            controller.printJournalDocRange(427, 429);
+            //controller.printJournalDocRange(1,1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnPrintBarcodesActionPerformed
+
     private void btnExecuteCommandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExecuteCommandActionPerformed
         controller.executeCommand();
     }//GEN-LAST:event_btnExecuteCommandActionPerformed
@@ -1302,6 +1321,7 @@ public class MainDialog extends javax.swing.JDialog
     private javax.swing.JButton btnLoadLogo;
     private javax.swing.JButton btnOpenDay;
     private javax.swing.JButton btnPrintBarcodes;
+    private javax.swing.JButton btnPrintEJournal;
     private javax.swing.JButton btnPrintCashIn;
     private javax.swing.JButton btnPrintCashOut;
     private javax.swing.JButton btnPrintDuplicateReceipt;
