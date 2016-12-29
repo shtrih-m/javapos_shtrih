@@ -2,12 +2,12 @@ apply plugin: 'idea'
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.example.tinyjavaposttester"
         minSdkVersion 11
-        targetSdkVersion 19
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
 
@@ -22,7 +22,7 @@ android {
     }
     productFlavors {
     }
-    
+
     sourceSets {
         main {
             java {
@@ -50,6 +50,6 @@ repositories {
 dependencies {
     //compile fileTree(include: ['*.jar'], dir: '../lib')
     compile project(':FptrServiceAndroid')
-    compile 'com.android.support:appcompat-v7:19.0.0'
-    compile 'com.android.support:support-v4:19.0.0'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:support-v4:25.1.0'
 }

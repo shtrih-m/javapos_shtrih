@@ -1,30 +1,20 @@
 package com.shtrih.barcode;
 
 import com.google.zxing.BarcodeFormat;
-import java.nio.charset.Charset;
-import java.util.Map;
-import java.util.HashMap;
-
-import org.apache.log4j.Logger;
-
 import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitArray;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.pdf417.PDF417Writer;
-import com.google.zxing.pdf417.encoder.BarcodeMatrix;
-import com.google.zxing.pdf417.encoder.Compaction;
-import com.google.zxing.pdf417.encoder.Dimensions;
-import com.google.zxing.pdf417.encoder.PDF417;
-import com.google.zxing.MultiFormatWriter;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
-import com.shtrih.util.Localizer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ZXingEncoder implements SmBarcodeEncoder {
 
     private final int maxWidth;
     private final int xScale;
     private final int yScale;
-    public static Logger logger = Logger.getLogger(ZXingEncoder.class);
 
     public ZXingEncoder(int maxWidth, int xScale, int yScale) {
         this.maxWidth = maxWidth;

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Vector;
 
 import com.shtrih.util.CompositeLogger;
-import org.apache.log4j.Logger;
 
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;

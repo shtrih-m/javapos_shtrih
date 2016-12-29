@@ -8,27 +8,26 @@
  */
 package com.shtrih.jpos.fiscalprinter;
 
+import com.shtrih.fiscalprinter.FontNumber;
+import com.shtrih.fiscalprinter.SMFiscalPrinter;
+import com.shtrih.fiscalprinter.command.PrinterConst;
+import com.shtrih.fiscalprinter.command.ReadTableInfo;
+import com.shtrih.fiscalprinter.model.PrinterModel;
+import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.Localizer;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import jpos.JposConst;
 import jpos.JposException;
 
-import org.apache.log4j.Logger;
-
-import com.shtrih.fiscalprinter.FontNumber;
-import com.shtrih.fiscalprinter.SMFiscalPrinter;
-import com.shtrih.fiscalprinter.command.PrinterConst;
-import com.shtrih.fiscalprinter.command.ReadTableInfo;
-import com.shtrih.fiscalprinter.model.PrinterModel;
-import com.shtrih.util.Localizer;
-
 public class DriverHeader implements JposConst, PrinterHeader {
 
     private final SMFiscalPrinter printer;
     private final List<HeaderLine> header = new ArrayList<HeaderLine>();
     private final List<HeaderLine> trailer = new ArrayList<HeaderLine>();
-    private static Logger logger = Logger.getLogger(DriverHeader.class);
+    private final CompositeLogger logger = CompositeLogger.getLogger(DriverHeader.class);
 
     /**
      * Creates a new instance of PrinterHeader

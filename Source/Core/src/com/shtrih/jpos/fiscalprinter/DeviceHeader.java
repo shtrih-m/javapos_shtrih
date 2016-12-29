@@ -1,23 +1,22 @@
 package com.shtrih.jpos.fiscalprinter;
 
+import com.shtrih.fiscalprinter.SMFiscalPrinter;
+import com.shtrih.fiscalprinter.command.PrinterConst;
+import com.shtrih.fiscalprinter.command.ReadTableInfo;
+import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.Localizer;
+
 import java.util.Vector;
 
 import jpos.JposConst;
 import jpos.JposException;
-
-import org.apache.log4j.Logger;
-
-import com.shtrih.fiscalprinter.SMFiscalPrinter;
-import com.shtrih.fiscalprinter.command.PrinterConst;
-import com.shtrih.fiscalprinter.command.ReadTableInfo;
-import com.shtrih.util.Localizer;
 
 public class DeviceHeader implements PrinterHeader {
 
 	private final SMFiscalPrinter printer;
 	private final Vector<HeaderLine> header = new Vector<HeaderLine>();
 	private final Vector<HeaderLine> trailer = new Vector<HeaderLine>();
-	private static Logger logger = Logger.getLogger(DeviceHeader.class);
+	private final CompositeLogger logger = CompositeLogger.getLogger(DeviceHeader.class);
 
 	public DeviceHeader(SMFiscalPrinter printer) {
 		this.printer = printer;

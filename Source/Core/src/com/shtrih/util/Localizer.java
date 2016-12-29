@@ -120,7 +120,7 @@ public class Localizer {
     }
 
     public static void init(String fileName) {
-        instance = new Localizer("messages_ru.txt");
+        instance = new Localizer(fileName);
     }
 
     private String getResourceString(String key) throws Exception {
