@@ -12,12 +12,6 @@ package com.shtrih.fiscalprinter.command;
  *
  * @author V.Kravtsov
  */
-// javaimport com.shtrih.jpos.fiscalprinter.*;
-import java.util.Arrays;
-import java.util.BitSet;
-
-import com.shtrih.util.BitUtils;
-import com.shtrih.util.ImageReader;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.jpos.fiscalprinter.PrinterImage;
 

@@ -12,9 +12,10 @@ package com.shtrih.printer.ncr7167;
  *
  * @author V.Kravtsov
  */
-import org.apache.log4j.Logger;
+
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
+import com.shtrih.util.CompositeLogger;
 
 /*********************************************************************
  * Print Bar Code First Variation Second Variation ASCII: GSkm d1…dk NUL or GS k
@@ -36,7 +37,7 @@ public class PrintBarCode extends NCR7167Command {
 
 	private final int m;
 	private final String data;
-	private static Logger logger = Logger.getLogger(PrintBarCode.class);
+	private final CompositeLogger logger = CompositeLogger.getLogger(PrintBarCode.class);
 
 	/**
 	 * Creates a new instance of PrintBarCode

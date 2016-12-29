@@ -64,7 +64,17 @@ public class ReceiptReportFilter implements IPrinterEvents {
 
     }
 
-     public void afterCommand(PrinterCommand command) {
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public void done() {
+
+    }
+
+    public void afterCommand(PrinterCommand command) {
         switch (command.getCode()) {
             case 0x50:
                 PrintCashIn cashInCommand = (PrintCashIn) command;

@@ -79,19 +79,16 @@ public class XmlPropWriter {
 		addParameter(imageNode, "Position", new Integer(image.getPosition()));
 	}
 
-	public void writeHeader(PrinterHeader header) throws Exception {
+	public void writePrinterHeader(PrinterHeader header) throws Exception {
 		node = doc.createElement("Header");
 		root.appendChild(node);
-		for (int i = 0; i < header.size(); i++) {
-			write(header.get(i));
+		for (int i = 1; i <= header.getNumHeaderLines(); i++) {
+			write(header.getHeaderLine(i));
 		}
-	}
-
-	public void writeTrailer(PrinterHeader trailer) throws Exception {
 		node = doc.createElement("Trailer");
 		root.appendChild(node);
-		for (int i = 0; i < trailer.size(); i++) {
-			write(trailer.get(i));
+		for (int i = 1; i <= header.getNumTrailerLines(); i++) {
+			write(header.getTrailerLine(i));
 		}
 	}
 
@@ -101,6 +98,7 @@ public class XmlPropWriter {
 		Element lineNode = doc.createElement("Line");
 		node.appendChild(lineNode);
 		addParameter(lineNode, "Text", line.getText());
+		addParameter(lineNode, "DoubleWidth", StringUtils.boolToStr(line.isDoubleWidth()));
 	}
 
 }

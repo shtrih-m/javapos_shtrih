@@ -4,12 +4,12 @@
  */
 package com.shtrih.jpos.fiscalprinter;
 
+import com.shtrih.fiscalprinter.SMFiscalPrinterNull;
 import junit.framework.TestCase;
 import com.shtrih.jpos.fiscalprinter.XmlPropReader;
 import com.shtrih.jpos.fiscalprinter.XmlPropWriter;
 
 /**
- *
  * @author Kravtsov
  */
 public class XmlPropReaderTest extends TestCase {
@@ -26,107 +26,117 @@ public class XmlPropReaderTest extends TestCase {
         super.tearDown();
     }
 
-    public void testSave() {
-        try {
-            System.out.println("save");
-            String fileName = "build/XmlPropReaderTest.xml";
-            PrinterImages printerImages = new PrinterImages();
-            printerImages.setMaxSize(1000);
-            PrinterImage printerImage = new PrinterImage();
-            printerImage.setStartPos(10);
-            printerImage.setFileName("File name 1");
-            printerImage.setHeight(13);
-            printerImage.setIsLoaded(true);
-            printerImage.setDigest("image1");
-            printerImages.add(printerImage);
+    public void testSave() throws Exception {
+        System.out.println("save");
+        String fileName = "build/XmlPropReaderTest.xml";
+        PrinterImages printerImages = new PrinterImages();
+        printerImages.setMaxSize(1000);
+        PrinterImage printerImage = new PrinterImage();
+        printerImage.setStartPos(10);
+        printerImage.setFileName("File name 1");
+        printerImage.setHeight(13);
+        printerImage.setIsLoaded(true);
+        printerImage.setDigest("image1");
+        printerImages.add(printerImage);
 
-            printerImage = new PrinterImage();
-            printerImage.setStartPos(12);
-            printerImage.setFileName("File name 2");
-            printerImage.setHeight(12);
-            printerImage.setDigest("image2");
-            printerImage.setIsLoaded(false);
-            printerImages.add(printerImage);
+        printerImage = new PrinterImage();
+        printerImage.setStartPos(12);
+        printerImage.setFileName("File name 2");
+        printerImage.setHeight(12);
+        printerImage.setDigest("image2");
+        printerImage.setIsLoaded(false);
+        printerImages.add(printerImage);
 
-            ReceiptImages receiptImages = new ReceiptImages();
-            ReceiptImage receiptImage = new ReceiptImage();
-            receiptImage.setImageIndex(1);
-            receiptImage.setPosition(2);
-            receiptImages.add(receiptImage);
+        ReceiptImages receiptImages = new ReceiptImages();
+        ReceiptImage receiptImage = new ReceiptImage();
+        receiptImage.setImageIndex(1);
+        receiptImage.setPosition(2);
+        receiptImages.add(receiptImage);
 
-            DriverHeader header = new DriverHeader(null);
-            header.setCount(4);
-            header.setLine(1, "HeaderLine 1");
-            header.setLine(2, "HeaderLine 2");
-            header.setLine(3, "HeaderLine 3");
-            header.setLine(4, "HeaderLine 4");
-            assertEquals("HeaderLine 1", header.get(0).getText());
-            assertEquals("HeaderLine 2", header.get(1).getText());
-            assertEquals("HeaderLine 3", header.get(2).getText());
-            assertEquals("HeaderLine 4", header.get(3).getText());
+        SMFiscalPrinterNull printer = new SMFiscalPrinterNull(null, null, new FptrParameters());
 
-            DriverTrailer trailer = new DriverTrailer(null);
-            trailer.setCount(3);
-            trailer.setLine(1, "TrailerLine 1");
-            trailer.setLine(2, "TrailerLine 2");
-            assertEquals("TrailerLine 1", trailer.get(0).getText());
-            assertEquals("TrailerLine 2", trailer.get(1).getText());
+        DriverHeader header = new DriverHeader(printer);
+        header.setNumHeaderLines(4);
+        header.setHeaderLine(1, "HeaderLine 1", false);
+        header.setHeaderLine(2, "HeaderLine 2", true);
+        header.setHeaderLine(3, "HeaderLine 3", false);
+        header.setHeaderLine(4, "HeaderLine 4", false);
 
-            XmlPropWriter writer = new XmlPropWriter("FiscalPrinter", "Device1");
-            writer.write(printerImages);
-            writer.write(receiptImages);
-            writer.writeHeader(header);
-            writer.writeTrailer(trailer);
-            writer.save(fileName);
-
-            header = new DriverHeader(null);
-            trailer = new DriverTrailer(null);
-
-            XmlPropReader reader = new XmlPropReader();
-            reader.load("FiscalPrinter", "Device1", fileName);
-            reader.read(printerImages);
-            reader.read(receiptImages);
-            reader.readHeader(header);
-            reader.readTrailer(trailer);
-
-            header.setCount(4);
-
-            assertEquals("HeaderLine 1", header.get(0).getText());
-            assertEquals("HeaderLine 2", header.get(1).getText());
-            assertEquals("HeaderLine 3", header.get(2).getText());
-            assertEquals("HeaderLine 4", header.get(3).getText());
-
-            trailer.setCount(3);
-
-            assertEquals("TrailerLine 1", trailer.get(0).getText());
-            assertEquals("TrailerLine 2", trailer.get(1).getText());
-
-            assertEquals(2, printerImages.size());
-            printerImage = printerImages.get(0);
-            assertEquals(1, printerImage.getStartPos());
-            assertEquals("File name 1", printerImage.getFileName());
-            assertEquals(13, printerImage.getHeight());
-            assertEquals(true, printerImage.getIsLoaded());
-
-            printerImage = printerImages.get(1);
-            assertEquals(14, printerImage.getStartPos());
-            assertEquals("File name 2", printerImage.getFileName());
-            assertEquals(12, printerImage.getHeight());
-            assertEquals(false, printerImage.getIsLoaded());
+        assertEquals("HeaderLine 1", header.getHeaderLine(1).getText());
+        assertEquals(false, header.getHeaderLine(1).isDoubleWidth());
+        assertEquals("HeaderLine 2", header.getHeaderLine(2).getText());
+        assertEquals(true, header.getHeaderLine(2).isDoubleWidth());
+        assertEquals("HeaderLine 3", header.getHeaderLine(3).getText());
+        assertEquals(false, header.getHeaderLine(3).isDoubleWidth());
+        assertEquals("HeaderLine 4", header.getHeaderLine(4).getText());
+        assertEquals(false, header.getHeaderLine(4).isDoubleWidth());
 
 
-            assertEquals(1, receiptImages.size());
-            receiptImage = receiptImages.get(0);
-            assertEquals(1, receiptImage.getImageIndex());
-            assertEquals(2, receiptImage.getPosition());
-                    
+        header.setNumTrailerLines(3);
+        header.setTrailerLine(1, "TrailerLine 1", false);
+        header.setTrailerLine(2, "TrailerLine 2", true);
 
+        assertEquals("TrailerLine 1", header.getTrailerLine(1).getText());
+        assertEquals(false, header.getTrailerLine(1).isDoubleWidth());
+        assertEquals("TrailerLine 2", header.getTrailerLine(2).getText());
+        assertEquals(true, header.getTrailerLine(2).isDoubleWidth());
+        assertEquals("", header.getTrailerLine(3).getText());
+        assertEquals(false, header.getTrailerLine(3).isDoubleWidth());
 
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        XmlPropWriter writer = new XmlPropWriter("FiscalPrinter", "Device1");
+        writer.write(printerImages);
+        writer.write(receiptImages);
+        writer.writePrinterHeader(header);
+        writer.save(fileName);
+
+        header = new DriverHeader(printer);
+
+        XmlPropReader reader = new XmlPropReader();
+        reader.load("FiscalPrinter", "Device1", fileName);
+        reader.read(printerImages);
+        reader.read(receiptImages);
+
+        //header.initDevice();
+
+        header.setNumHeaderLines(4);
+        header.setNumTrailerLines(3);
+        reader.readPrinterHeader(header);
 
 
 
+        assertEquals("HeaderLine 1", header.getHeaderLine(1).getText());
+        assertEquals(false, header.getHeaderLine(1).isDoubleWidth());
+        assertEquals("HeaderLine 2", header.getHeaderLine(2).getText());
+        assertEquals(true, header.getHeaderLine(2).isDoubleWidth());
+        assertEquals("HeaderLine 3", header.getHeaderLine(3).getText());
+        assertEquals(false, header.getHeaderLine(3).isDoubleWidth());
+        assertEquals("HeaderLine 4", header.getHeaderLine(4).getText());
+        assertEquals(false, header.getHeaderLine(4).isDoubleWidth());
+
+        assertEquals("TrailerLine 1", header.getTrailerLine(1).getText());
+        assertEquals(false, header.getTrailerLine(1).isDoubleWidth());
+        assertEquals("TrailerLine 2", header.getTrailerLine(2).getText());
+        assertEquals(true, header.getTrailerLine(2).isDoubleWidth());
+        assertEquals("", header.getTrailerLine(3).getText());
+        assertEquals(false, header.getTrailerLine(3).isDoubleWidth());
+
+        assertEquals(2, printerImages.size());
+        printerImage = printerImages.get(0);
+        assertEquals(1, printerImage.getStartPos());
+        assertEquals("File name 1", printerImage.getFileName());
+        assertEquals(13, printerImage.getHeight());
+        assertEquals(true, printerImage.getIsLoaded());
+
+        printerImage = printerImages.get(1);
+        assertEquals(14, printerImage.getStartPos());
+        assertEquals("File name 2", printerImage.getFileName());
+        assertEquals(12, printerImage.getHeight());
+        assertEquals(false, printerImage.getIsLoaded());
+
+
+        assertEquals(1, receiptImages.size());
+        receiptImage = receiptImages.get(0);
+        assertEquals(1, receiptImage.getImageIndex());
+        assertEquals(2, receiptImage.getPosition());
     }
 }

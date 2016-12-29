@@ -81,4 +81,9 @@ public class PrintBoldString extends PrinterCommand {
     public void setOperator(int operator) {
         this.operator = operator;
     }
+
+
+    public String getLine() {
+        return text;
+    }
 }

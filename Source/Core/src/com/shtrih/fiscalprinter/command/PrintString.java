@@ -62,4 +62,8 @@ public class PrintString extends PrinterCommand {
     public int getOperator() {
         return operator;
     }
+
+    public String getLine() {
+        return line;
+    }
 }

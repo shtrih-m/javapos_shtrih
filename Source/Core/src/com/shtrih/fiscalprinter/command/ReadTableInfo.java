@@ -68,6 +68,10 @@ public class ReadTableInfo extends PrinterCommand {
         return true;
     }
 
+    public int getRowCount() {
+        return getTable().getRowCount();
+    }
+
     /**
      * @return the password
      */
