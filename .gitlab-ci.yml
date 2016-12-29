@@ -8,7 +8,7 @@ job_build:
     - ./gradlew clean build uploadArchives
     - cd android
     - chmod +x gradlew
-    - ./gradlew clean uploadArchives
+    - ./gradlew clean utilVersionClass uploadArchives
   artifacts:
     paths:
       - Source/dist/zip/
