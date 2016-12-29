@@ -2,10 +2,13 @@ stages:
   - build
 job_build:
   script:
+    - export ANDROID_HOME=~/Android/android-sdk-linux/
     - cd Source
-    - gradle clean build uploadArchives
+    - chmod +x gradlew
+    - ./gradlew clean build uploadArchives
     - cd android
-    - gradle clean uploadArchives
+    - chmod +x gradlew
+    - ./gradle clean uploadArchives
   artifacts:
     paths:
       - Source/dist/zip/
