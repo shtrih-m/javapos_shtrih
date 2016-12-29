@@ -125,8 +125,11 @@ public class FptrParameters {
     public boolean FSDiscountEnabled = true;
     public boolean FSReceiptItemDiscountEnabled = true;
     public boolean FSCombineItemAdjustments = true;
+    public boolean textReportEnabled = false;
     public boolean readDiscountMode = true;
+    public String textReportFileName = "documents.txt";
     public boolean FSPrintTags = true;
+    public boolean textReportEmptyLinesEnabled = true;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -290,6 +293,9 @@ public class FptrParameters {
         FSCombineItemAdjustments = reader.readBoolean("FSCombineItemAdjustments", true);
         readDiscountMode = reader.readBoolean("readDiscountMode", true);
         FSPrintTags = reader.readBoolean("FSPrintTags", true);
+
+        textReportEnabled = reader.readBoolean("textReportEnabled", false);
+        textReportFileName = reader.readString("textReportFileName", "");
 
         // paymentNames
         String paymentName;

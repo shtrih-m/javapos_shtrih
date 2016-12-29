@@ -6,7 +6,6 @@
 package com.shtrih.barcode;
 
 import java.util.Arrays;
-import org.apache.log4j.Logger;
 
 /**
  *

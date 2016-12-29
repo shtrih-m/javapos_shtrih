@@ -14,9 +14,6 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 import com.shtrih.util.XmlUtils;
-import java.io.FileWriter;
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
 
 /**
  * @author V.Kravtsov

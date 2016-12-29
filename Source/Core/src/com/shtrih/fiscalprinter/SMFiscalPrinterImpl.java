@@ -12,16 +12,7 @@
  */
 package com.shtrih.fiscalprinter;
 
-import java.io.ByteArrayOutputStream;
-import java.security.InvalidParameterException;
-import java.util.Vector;
-
-import jpos.JposConst;
-import com.shtrih.util.CompositeLogger;
-
-import com.shtrih.barcode.PrinterBarcode;
-import com.shtrih.barcode.SmBarcode;
-import com.shtrih.barcode.SmBarcodeEncoder;
+import com.shtrih.barcode.*;
 import com.shtrih.ej.EJDate;
 import com.shtrih.fiscalprinter.command.*;
 import com.shtrih.fiscalprinter.model.PrinterModel;
@@ -32,31 +23,16 @@ import com.shtrih.fiscalprinter.table.PrinterField;
 import com.shtrih.fiscalprinter.table.PrinterFields;
 import com.shtrih.fiscalprinter.table.PrinterTable;
 import com.shtrih.fiscalprinter.table.PrinterTables;
-import com.shtrih.jpos.fiscalprinter.FptrParameters;
-import com.shtrih.jpos.fiscalprinter.PrinterImage;
-import com.shtrih.jpos.fiscalprinter.PrinterImages;
-import com.shtrih.jpos.fiscalprinter.ReceiptImage;
-import com.shtrih.jpos.fiscalprinter.ReceiptImages;
-import com.shtrih.jpos.fiscalprinter.SmFptrConst;
-import com.shtrih.jpos.fiscalprinter.XmlPropWriter;
+import com.shtrih.jpos.fiscalprinter.*;
 import com.shtrih.printer.ncr7167.NCR7167Printer;
-import com.shtrih.util.Hex;
-import com.shtrih.util.Localizer;
-import com.shtrih.util.MethodParameter;
-import com.shtrih.util.StringUtils;
-import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
-import com.shtrih.util.SysUtils;
-import com.shtrih.barcode.ZXingEncoder;
-import com.shtrih.barcode.JBarcodeEncoder;
-import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_TABLE_CASHIER;
-import com.shtrih.jpos.fiscalprinter.DeviceHeader;
-import com.shtrih.jpos.fiscalprinter.DeviceTrailer;
-import com.shtrih.jpos.fiscalprinter.DriverHeader;
-import com.shtrih.jpos.fiscalprinter.DriverTrailer;
-import com.shtrih.jpos.fiscalprinter.PrinterHeader;
-import static com.shtrih.jpos.fiscalprinter.SmFptrConst.SMFPTR_HEADER_MODE_DRIVER;
-import com.shtrih.util.BitUtils;
-import static jpos.JposConst.JPOS_PS_OFF_OFFLINE;
+import com.shtrih.util.*;
+import jpos.JposConst;
+
+import java.io.ByteArrayOutputStream;
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
@@ -84,7 +60,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public PrinterTable table = new PrinterTable(0, "", 0, 0);
     public FieldInfo fieldInfo = new FieldInfo(0, 0, 0, 0, 0, 0, "");
     public static CompositeLogger logger = CompositeLogger.getLogger(SMFiscalPrinterImpl.class);
-    private final Vector events = new Vector();
+    private final List<IPrinterEvents> events = new ArrayList<IPrinterEvents>();
     private final PrinterPort port;
     private final FptrParameters params;
     private final PrinterImages printerImages = new PrinterImages();
@@ -168,6 +144,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         events.add(item);
     }
 
+    public void removeEvents(IPrinterEvents item) {
+        events.remove(item);
+    }
+
     public void deviceExecute(PrinterCommand command) throws Exception {
         synchronized (port.getSyncObject()) {
             beforeCommand(command);
@@ -192,9 +172,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public void beforeCommand(PrinterCommand command) {
-        for (int i = 0; i < events.size(); i++) {
-            IPrinterEvents printerEvents = (IPrinterEvents) events.get(i);
+    private void beforeCommand(PrinterCommand command) {
+        for (IPrinterEvents printerEvents : events) {
             try {
                 printerEvents.beforeCommand(command);
             } catch (Exception e) {
@@ -203,9 +182,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public void afterCommand(PrinterCommand command) {
-        for (int i = 0; i < events.size(); i++) {
-            IPrinterEvents printerEvents = (IPrinterEvents) events.get(i);
+    private void afterCommand(PrinterCommand command) {
+        for (IPrinterEvents printerEvents : events) {
             try {
                 printerEvents.afterCommand(command);
             } catch (Exception e) {
@@ -755,7 +733,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public EndFiscalReceipt closeReceipt(CloseRecParams params)
-            throws Exception 
+            throws Exception
     {
         logger.debug("closeReceipt");
         EndFiscalReceipt command = new EndFiscalReceipt();
@@ -1577,8 +1555,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 status = readLongPrinterStatus();
                 break;
         }
-        for (int i = 0; i < events.size(); i++) {
-            ((IPrinterEvents) events.get(i)).printerStatusRead(status);
+        for (IPrinterEvents event : events) {
+            event.printerStatusRead(status);
         }
         return status;
     }
@@ -1624,7 +1602,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         capPrintBarcode2 = isCommandSupported(printBarcode2(barcode));
         capPrintBarcode3 = isCommandSupported(printBarcode3(barcode));
         capFiscalStorage = readCapFiscalStorage();
-        if (capFiscalStorage) 
+        if (capFiscalStorage)
         {
             discountMode = 2;
             String[] fieldValue = new String[1];
@@ -2412,8 +2390,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             loadImage3(image);
         } else {
             for (int i = 0; i < image.getHeight(); i++) {
-                loadGraphics(image.getStartPos() + i + 1, image.getHeight(),
-                        image.lines[i]);
+                loadGraphics(image.getStartPos() + i + 1, image.getHeight(), image.lines[i]);
             }
         }
         image.setIsLoaded(true);
@@ -2700,4 +2677,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             logger.debug(lines.get(i));
         }
     }
+<<<<<<< .mine
+
+=======
+
+>>>>>>> .theirs
 }

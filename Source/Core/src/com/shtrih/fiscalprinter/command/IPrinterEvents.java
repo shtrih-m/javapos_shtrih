@@ -15,6 +15,9 @@ package com.shtrih.fiscalprinter.command;
 
 public interface IPrinterEvents 
 {
+    public void init();
+
+    public void done();
     public void afterCommand(PrinterCommand command);
     public void beforeCommand(PrinterCommand command);
     public void printerStatusRead(PrinterStatus status);

@@ -38,6 +38,10 @@ public final class PrintVoidSale extends PrinterCommand {
         this.item = item;
     }
 
+    public PriceItem getItem() {
+        return item;
+    }
+
     public final int getCode() {
         return 0x82;
     }

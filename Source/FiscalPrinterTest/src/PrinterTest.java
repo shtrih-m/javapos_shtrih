@@ -173,6 +173,21 @@ class PrinterTest implements FiscalPrinterConst {
         //printAllBarcodes();
     }
 
+    public void printJournalCurrentDay() {
+        try {
+            printer.printJournalCurrentDay();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printJournalDocRange(int docNumber1, int docNumber2) {
+        try {
+            printer.printJournalDocRange(docNumber1, docNumber2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public void printQRCode() {
         try {
             PrinterBarcode barcode = new PrinterBarcode();
