@@ -420,7 +420,7 @@ public interface SMFiscalPrinter {
 
     public void setEscPrinter(NCR7167Printer escPrinter);
 
-    public void beginFiscalDay() throws Exception;
+    public int beginFiscalDay() throws Exception;
 
     public ReceiptImages getReceiptImages();
 

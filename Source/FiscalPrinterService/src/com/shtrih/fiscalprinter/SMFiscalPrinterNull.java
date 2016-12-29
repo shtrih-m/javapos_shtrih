@@ -734,7 +734,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void setEscPrinter(NCR7167Printer escPrinter) {
     }
 
-    public void beginFiscalDay() throws Exception {
+    public int beginFiscalDay() throws Exception {
+        return 0;
     }
 
     public ReceiptImages getReceiptImages() {

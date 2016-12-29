@@ -103,6 +103,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private boolean capPrintBarcode2 = false;
     private boolean capPrintBarcode3 = false;
     private boolean capPrintGraphicsLine = false;
+    private boolean capOpenFiscalDay = true;
     private boolean capFiscalStorage = false;
     private int discountMode = PrinterConst.SMFP_DM_NOT_CHANGE_SUBTOTAL_SMALLDSC;
     private boolean saveCommands = false;
@@ -1364,10 +1365,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         execute(command);
     }
 
-    public void beginFiscalDay() throws Exception {
+    public int beginFiscalDay() throws Exception {
         BeginFiscalDay command = new BeginFiscalDay();
         command.setPassword(usrPassword);
-        execute(command);
+        int rc = executeCommand(command);
+        capOpenFiscalDay = isCommandSupported(rc);
+        return rc;
     }
 
     public void resetFM() throws Exception {
@@ -1630,7 +1633,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 discountMode = Integer.parseInt(fieldValue[0]);
             }
         }
-
     }
 
     private boolean readCapFiscalStorage() throws Exception {
@@ -2583,13 +2585,16 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return String.valueOf(code) + ", " + result;
     }
 
-    public void openFiscalDay() throws Exception {
+    public void openFiscalDay() throws Exception 
+    {
         logger.debug("openFiscalDay");
+        if (!capOpenFiscalDay) return;
         PrinterStatus status = waitForPrinting();
         if (status.getPrinterMode().isDayClosed()) {
             beginFiscalDay();
             waitForPrinting();
         }
+        
     }
 
     public int fsWriteTag(int tagId, String tagValue) throws Exception {
