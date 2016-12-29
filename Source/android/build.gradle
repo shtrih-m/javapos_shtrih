@@ -1,5 +1,11 @@
 apply plugin: 'idea'
 
+def getVersionName2() {
+    def text = "git describe --tags".execute().text.trim()
+     
+    return text
+}
+
 buildscript {
     repositories {
         jcenter()
@@ -10,5 +16,20 @@ buildscript {
 }
 
 allprojects {
+    version = getVersionName2()
+}
 
+def getVersionName = { ->
+    def hashStdOut = new ByteArrayOutputStream()
+    exec {
+        commandLine "git", "rev-parse", "--short", "HEAD"
+        standardOutput = hashStdOut
+    }
+ 
+    def buildNumberStdOut = new ByteArrayOutputStream()
+    exec {
+        commandLine 'echo', "$BUILD_NUMBER"
+        standardOutput = buildNumberStdOut
+    }
+    return buildNumberStdOut.toString().trim() + '-' + hashStdOut.toString().trim()
 }
