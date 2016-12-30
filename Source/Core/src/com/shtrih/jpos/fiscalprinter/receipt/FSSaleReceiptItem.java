@@ -29,7 +29,7 @@ public class FSSaleReceiptItem {
     public FSSaleReceiptItem(PriceItem item, String preLine, String postline) {
         this.item = item;
         this.preLine = preLine;
-        this.postLine = postLine;
+        this.postLine = postline;
     }
 
     public void addVoidAmount(long amount) 

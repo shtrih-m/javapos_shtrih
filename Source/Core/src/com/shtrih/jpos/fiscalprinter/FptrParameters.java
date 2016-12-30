@@ -40,6 +40,8 @@ public class FptrParameters {
     public int recCloseSleepTime = 0;
     public String closeReceiptText = "";
     public String subtotalText = "SUBTOTAL";
+    public FontNumber subtotalFont;
+    public FontNumber totalDiscountFont;
     public String receiptVoidText = "ЧЕК ОТМЕНЕН";
     public int taxPassword = 0;
     public int usrPassword = 1;
@@ -130,9 +132,14 @@ public class FptrParameters {
     public String textReportFileName = "documents.txt";
     public boolean FSPrintTags = true;
     public boolean textReportEmptyLinesEnabled = true;
+    public boolean ReceiptTemplateEnabled = false;
+    public String ItemTableHeader = null;
+    public String ItemRowFormat=null;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
+        subtotalFont = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
+        totalDiscountFont=new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
     }
 
     public void setDefaults() throws Exception {
@@ -295,6 +302,11 @@ public class FptrParameters {
 
         textReportEnabled = reader.readBoolean("textReportEnabled", false);
         textReportFileName = reader.readString("textReportFileName", "");
+        ReceiptTemplateEnabled = reader.readBoolean("ReceiptTemplateEnabled", false);
+        subtotalFont = new FontNumber(reader.readInteger("subtotalFont", PrinterConst.FONT_NUMBER_NORMAL));
+        totalDiscountFont = new FontNumber(reader.readInteger("totalDiscountFont", PrinterConst.FONT_NUMBER_NORMAL));
+        ItemTableHeader = reader.readString("ItemTableHeader", "");
+        ItemRowFormat = reader.readString("ItemRowFormat", "%TITLE% %QUAN% X %PRICE%");
 
         // paymentNames
         String paymentName;

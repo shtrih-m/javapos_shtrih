@@ -18,7 +18,7 @@
         <jpos category="FiscalPrinter" version="1.9"/>
         <product description="Fiscal printer service" name="ShtrihFptr" url="http://www.javapos.com"/>
         <!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass -->
-        <prop name="portType" type="String" value="0"/>
+        <prop name="portType" type="String" value="2"/>
         <!-- portClass  -->
         <prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.SerialPrinterPort"/>
         <!--<prop name="portClass" type="String" value="com.shtrih.bluetooth.BTPrinterPort"/>-->
@@ -38,10 +38,14 @@
         <prop name="department" type="String" value="1"/>
         <!-- Default font number -->
         <prop name="fontNumber" type="String" value="1"/>
-        <!-- Close receipt text -->
+        <!-- Close templateReceipt text -->
         <prop name="closeReceiptText" type="String" value=""/>
         <!-- Subtotal text -->
         <prop name="subtotalText" type="String" value="ПОДИТОГ:"/>
+	<!-- Subtotal font -->
+        <prop name="subtotalFont" type="String" value="3"/>
+	<!-- TotalDiscount font -->
+        <prop name="totalDiscountFont" type="String" value="5"/>
         <!-- Driver byte receive timeout -->
         <prop name="byteTimeout" type="String" value="1000"/>
         <!-- Device byte receive timeout -->
@@ -91,7 +95,7 @@
         <prop name="messagesFileName" type="String" value="shtrihjavapos_ru.properties"/>
         <!-- Wrap text enabled -->
         <prop name="wrapText" type="String" value="1"/>
-        <!-- Sleep time after receipt close -->
+        <!-- Sleep time after templateReceipt close -->
         <prop name="recCloseSleepTime" type="String" value="0"/>
         <!-- Receipt close wait count -->
         <prop name="recCloseWaitCount" type="String" value="1"/>
@@ -194,7 +198,7 @@
         <prop name="stringEncoding" type="String" value=""/>
         <!-- Paper cut delay in milliseconds -->
         <prop name="cutPaperDelay" type="String" value="0"/>
-        <!-- Sales receipt type, 0 - normal, 1 - GLOBUS -->
+        <!-- Sales templateReceipt type, 0 - normal, 1 - GLOBUS -->
         <prop name="salesReceiptType" type="String" value="0"/>
         <!-- Amount field length -->
         <prop name="RFAmountLength" type="String" value="8"/>
@@ -208,7 +212,7 @@
         <prop name="receiptReportEnabled" type="String" value="1"/>
         <!-- Receipt report file name -->
         <prop name="receiptReportFileName" type="String" value="ZCheckReport.xml"/>
-        <!-- openReceiptType, 0 - open receipt on item print, 1 - open receipt in beginFiscalReceipt -->
+        <!-- openReceiptType, 0 - open templateReceipt on item print, 1 - open templateReceipt in beginFiscalReceipt -->
         <prop name="openReceiptType" type="String" value="0"/>
         <!-- headerMode, the way how to print header and trailer lines -->
         <!-- 0 - header stored and printed with driver -->
@@ -235,7 +239,7 @@
         <prop name="logEnabled" type="String" value="1"/>
         <!-- Send ENQ before every command or not  -->
         <prop name="sendENQ" type="String" value="0"/>
-        <!-- Enable tax letters for GLOBUS receipt  -->
+        <!-- Enable tax letters for GLOBUS templateReceipt  -->
         <prop name="taxLettersEnabled" type="String" value="0"/>
         <!-- Barcode prefix -->
         <prop name="barcodePrefix" type="String" value="#*~*#"/>
@@ -260,15 +264,14 @@
         <prop name="receiptVoidText" type="String" value="ЧЕК ОТМЕНЕН"/>
         <!-- Check total enabled, default 0 (disabled) -->
         <prop name="checkTotalEnabled" type="String" value="0"/>
-        <!-- Receipt number request type 0 - receipt number, 1 - fiscal document number, 2 - receipt number in fiscal day -->
+        <!-- Receipt number request type 0 - templateReceipt number, 1 - fiscal document number, 2 - templateReceipt number in fiscal day -->
         <prop name="receiptNumberRequest" type="String" value="2"/>
-		
         <!-- Enable discount calculation in Fiscal Storage printRecItemMethod 1 - enabled, 0 - disabled -->
         <prop name="FSReceiptItemDiscountEnabled" type="String" value="1"/>
         <!-- Enable discounts for Fiscal Storage printers 1 - enabled, 0 - disabled -->
         <prop name="FSDiscountEnabled" type="String" value="1"/>
         <!-- Combine item adjustments (enabled by default) -->
-        <prop name="FSCombineItemAdjustments" type="String" value="1"/>
+	<prop name="FSCombineItemAdjustments" type="String" value="0"/>
 		
         <!-- Text report enabled -->
         <prop name="textReportEnabled" type="String" value="0"/>
@@ -276,6 +279,13 @@
         <prop name="textReportFileName" type="String" value="archive.txt"/>
         <!-- Text report empty lines enabled -->
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
+	<!-- X5 receipt template -->
+	<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
+	<prop name="ItemTableHeader" type="String" value=" №                  Цена со  Кол-\nпп  Цена     Скидка скидкой  во    ИТОГО\n "/>
+	<prop name="ItemRowFormat" type="String" value="%3cPOS% %38lTITLE%\n    %8lPRICE% %6lDISCOUNT% %8lSUM%*%3QUAN%%=$10TOTAL_TAX%\n "/>
+	<!-- Use text template -->
+<!-- 	<prop name="useTemplateReceipt" type="String" value="1"/> -->
+
 		
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">

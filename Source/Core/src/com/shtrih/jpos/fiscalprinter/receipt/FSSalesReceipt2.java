@@ -10,6 +10,7 @@ package com.shtrih.jpos.fiscalprinter.receipt;
  */
 import java.util.Vector;
 
+import com.shtrih.jpos.fiscalprinter.receipt.template.ParsingException;
 import jpos.JposConst;
 import jpos.JposException;
 import jpos.FiscalPrinterConst;
@@ -45,9 +46,9 @@ import com.shtrih.fiscalprinter.TLVInfo;
 
 public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
 
-    private PriceItem lastItem = null;
-    private long lastItemDiscountSum = 0;
-    private boolean lastItemFooterPrinted = false;
+    protected PriceItem lastItem = null;
+    protected long lastItemDiscountSum = 0;
+    protected boolean lastItemFooterPrinted = false;
     private int receiptType = 0;
     private boolean isOpened = false;
     private boolean disablePrint = false;
@@ -73,7 +74,9 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         getDevice().printText(station, message, font);
         printPostLine();
     }
+    public void parseTemplate() throws ParsingException{
 
+    }
     public void printNormal(int station, String data) throws Exception {
         printRecMessage(station, FontNumber.getNormalFont(), data);
     }
@@ -123,6 +126,10 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         openReceipt(PrinterConst.SMFP_RECTYPE_SALE);
         printSale(price, quantity, unitPrice, getParams().department, vatInfo,
                 description);
+    }
+
+    protected void setLastItem(PriceItem lastItem) {
+        this.lastItem = lastItem;
     }
 
     public void correctPayments() throws Exception {
@@ -211,7 +218,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    private String formatStrings(String line1, String line2) throws Exception {
+    protected String formatStrings(String line1, String line2) throws Exception {
         int len;
         String S = "";
         len = getModel().getTextLength(getParams().getFont())
@@ -630,7 +637,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         getDevice().printText(line);
     }
 
-    private void printTotalAndTax(PriceItem item) throws Exception {
+    protected void printTotalAndTax(PriceItem item) throws Exception {
 
         if (getParams().FSCombineItemAdjustments) {
             return;

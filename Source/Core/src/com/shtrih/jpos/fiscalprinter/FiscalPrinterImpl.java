@@ -9,14 +9,11 @@
 package com.shtrih.jpos.fiscalprinter;
 
 import java.io.*;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
+import com.shtrih.jpos.fiscalprinter.receipt.*;
 import com.shtrih.util.*;
 import com.shtrih.fiscalprinter.command.*;
 import jpos.FiscalPrinterConst;
@@ -52,61 +49,13 @@ import com.shtrih.fiscalprinter.table.CsvTablesWriter;
 import com.shtrih.fiscalprinter.table.PrinterField;
 import com.shtrih.fiscalprinter.table.PrinterFields;
 import com.shtrih.fiscalprinter.table.PrinterTables;
-import com.shtrih.fiscalprinter.table.PrinterTable;
 import com.shtrih.jpos.DeviceService;
 import com.shtrih.jpos.StatusUpdateEventHelper;
 import com.shtrih.jpos.events.ErrorEventRequest;
 import com.shtrih.jpos.events.OutputCompleteEventRequest;
 import com.shtrih.jpos.events.StatusUpdateEventRequest;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOCutPaper;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOExecuteCommand;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOExecuteCommandStr;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOGetDriverParameter;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOGetReceiptState;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOIsReadyFiscal;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOIsReadyNonFiscal;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOOpenDrawer;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOPrintBarcode;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOPrintText;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadCashReg;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadCashierName;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadDayStatus;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadDrawerState;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadEJSerial;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadHeaderLine;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadLicense;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadMaxGraphics;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadOperReg;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadParameter;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadPaymentName;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadPrinterStatus;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadSerial;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadTable;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadTextLength;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadTrailerLine;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOSetDriverParameter;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOWaitPrint;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOWriteCashierName;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOWriteParameter;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOWritePaymentName;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOWriteTable;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOXMLZReport;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadShortStatus;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadLongStatus;
 import com.shtrih.jpos.fiscalprinter.directIO.DirectIOHandler;
 import com.shtrih.jpos.fiscalprinter.directIO.DirectIOHandler2;
-import com.shtrih.jpos.fiscalprinter.receipt.CashInReceipt;
-import com.shtrih.jpos.fiscalprinter.receipt.CashOutReceipt;
-import com.shtrih.jpos.fiscalprinter.receipt.FiscalReceipt;
-import com.shtrih.jpos.fiscalprinter.receipt.GlobusSalesReceipt;
-import com.shtrih.jpos.fiscalprinter.receipt.NonfiscalReceipt;
-import com.shtrih.jpos.fiscalprinter.receipt.NullReceipt;
-import com.shtrih.jpos.fiscalprinter.receipt.ReceiptContext;
-import com.shtrih.jpos.fiscalprinter.receipt.ReceiptPrinter;
-import com.shtrih.jpos.fiscalprinter.receipt.ReceiptPrinterImpl;
-import com.shtrih.jpos.fiscalprinter.receipt.SalesReceipt;
-import com.shtrih.jpos.fiscalprinter.receipt.FSSalesReceipt;
-import com.shtrih.jpos.fiscalprinter.receipt.FSSalesReceipt2;
 import com.shtrih.jpos.fiscalprinter.request.FiscalPrinterRequest;
 import com.shtrih.jpos.fiscalprinter.request.PrintNormalRequest;
 import com.shtrih.jpos.fiscalprinter.request.PrintRecCashRequest;
@@ -128,7 +77,6 @@ import com.shtrih.jpos.fiscalprinter.request.PrintRecTaxIDRequest;
 import com.shtrih.jpos.fiscalprinter.request.PrintRecTotalRequest;
 import com.shtrih.jpos.fiscalprinter.request.PrintRecVoidRequest;
 import com.shtrih.printer.ncr7167.NCR7167Printer;
-import com.shtrih.fiscalprinter.model.XmlModelsWriter;
 import com.shtrih.jpos.monitoring.MonitoringServerX5;
 
 public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
@@ -4537,6 +4485,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         } else {
             result = new GlobusSalesReceipt(createReceiptContext(),
                     PrinterConst.SMFP_RECTYPE_SALE);
+        }
+        if (params.ReceiptTemplateEnabled && result instanceof FSSalesReceipt2){
+            result = new FSTemplateReceipt(createReceiptContext(),receiptType);
         }
         return result;
     }

@@ -206,4 +206,32 @@ public class StringUtils {
         }
         return result;
     }
+
+    public static String left(String s, int size) {
+        return String.format("%-" + size + "." + size + "s", s);
+    }
+
+    public static String right(String s, int size) {
+        return String.format("%" + size + "." + size + "s", s);
+    }
+
+    public static String center(String s, int size) {
+        return center(s, size, ' ');
+    }
+
+    public static String center(String s, int size, char pad) {
+        if (s == null) return s;
+        if (size <= s.length())
+            return s.substring(0, size + 1);
+
+        StringBuilder sb = new StringBuilder(size);
+        for (int i = 0; i < (size - s.length()) / 2; i++) {
+            sb.append(pad);
+        }
+        sb.append(s);
+        while (sb.length() < size) {
+            sb.append(pad);
+        }
+        return sb.toString();
+    }
 }
