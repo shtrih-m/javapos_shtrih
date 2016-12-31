@@ -20,9 +20,6 @@ public class TemplatePriceItem extends PriceItem {
 
     public long getTotalPrice() {
         long result=m_totalPrice;
-//        for (AmountItem discount:m_discountItems){
-//            result -= discount.getAmount();
-//        }
         return result;
     }
 
@@ -64,7 +61,7 @@ public class TemplatePriceItem extends PriceItem {
 
     }
     public long getTotalWithDiscount(){
-        return (getPrice()-(getTotalDiscount()/(getQuantity()/1000)))*((getQuantity()/1000));
+        return getAmount()-getTotalDiscount();
     }
     public void setPosition(long pos) {
         this.m_pos = pos;
@@ -85,9 +82,11 @@ public class TemplatePriceItem extends PriceItem {
         }else if (f.tag.equals("QUAN")){
             result=StringUtils.quantityToStr(getQuantity());
         }else if (f.tag.equals("SUM")){
-            result=StringUtils.amountToString(getPrice()-(getTotalDiscount()/(getQuantity()/1000)));
+            long d= getQuantity()%1000 == 0 ? getQuantity()/1000:getQuantity();
+            result=StringUtils.amountToString(getPrice()-(getTotalDiscount()/d));
         }else if (f.tag.equals("DISCOUNT")){
-            result=StringUtils.amountToString(getTotalDiscount()/(getQuantity()/1000));
+            long d= getQuantity()%1000 == 0 ? getQuantity()/1000:getQuantity();
+            result=StringUtils.amountToString(getTotalDiscount()/d);
         }else if (f.tag.equals("TOTAL")){
             result=StringUtils.amountToString(getTotalWithDiscount());
         }else if (f.tag.equals("TOTAL_TAX")){
