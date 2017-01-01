@@ -126,7 +126,7 @@ public class FSTemplateReceipt extends FSSalesReceipt2 {
     protected void doPrintDiscount(AmountItem item) throws Exception{
         long amount=item.getAmount();
         item.setAmount(Math.abs(amount));
-        String line = formatStrings(getDevice().getParams().totalDiscountFont, item.getText(), "=" + StringUtils.amountToString(amount));
+        String line = formatStrings(getDevice().getParams().discountFont, item.getText(), "=" + StringUtils.amountToString(amount));
 
         if (amount > 0) {
             getDevice().printDiscount(item);
@@ -134,18 +134,16 @@ public class FSTemplateReceipt extends FSSalesReceipt2 {
             getDevice().printCharge(item);
         }
         lastItemDiscountSum += amount;
-        if (!getParams().FSCombineItemAdjustments) {
             //не печатаем автоматически посчитанную скидку. Оставляем это для шаблона
             if (item.getText().equals("")){
                 return;
             }
             if (amount > 0) {
-                getDevice().printText(SMFP_STATION_REC, "СКИДКА", getDevice().getParams().totalDiscountFont);
+                getDevice().printText(SMFP_STATION_REC, "СКИДКА", getDevice().getParams().discountFont);
             } else {
-                getDevice().printText(SMFP_STATION_REC, "НАДБАВКА", getDevice().getParams().totalDiscountFont);
+                getDevice().printText(SMFP_STATION_REC, "НАДБАВКА", getDevice().getParams().discountFont);
             }
-            getDevice().printText(SMFP_STATION_REC, line, getDevice().getParams().totalDiscountFont);
-        }
+            getDevice().printText(SMFP_STATION_REC, line, getDevice().getParams().discountFont);
     }
 
     @Override
@@ -188,10 +186,6 @@ public class FSTemplateReceipt extends FSSalesReceipt2 {
     protected void printLastItem(PriceItem item) throws Exception {
         TemplatePriceItem tItem=(TemplatePriceItem) item;
         item.setText("//"+item.getText());
-//        Vector<AmountItem> discounts=tItem.getDiscountItems();
-//        for (AmountItem discount:discounts){
-//            tItem.setTotalPrice(tItem.getTotalPrice()-discount.getAmount());
-//        }
         if (tItem.getTotalQuantity() > 0) {
             if (isSaleReceipt()) {
                 getDevice().printSale(item);
@@ -209,11 +203,9 @@ public class FSTemplateReceipt extends FSSalesReceipt2 {
                 printDiscount(amount - tItem.getTotalPrice(), 0, "");
             }
         }
-        if (!getParams().FSCombineItemAdjustments) {
             printRecItemAsText(item, tItem.getTotalQuantity());
-        }
+
         lastItemFooterPrinted = true;
-        if (getParams().FSCombineItemAdjustments) return;
     }
 
     @Override

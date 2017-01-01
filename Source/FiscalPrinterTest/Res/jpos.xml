@@ -38,7 +38,7 @@
         <prop name="department" type="String" value="1"/>
         <!-- Default font number -->
         <prop name="fontNumber" type="String" value="1"/>
-        <!-- Close templateReceipt text -->
+        <!-- Close Receipt text -->
         <prop name="closeReceiptText" type="String" value=""/>
         <!-- Subtotal text -->
         <prop name="subtotalText" type="String" value="ПОДИТОГ:"/>
@@ -95,7 +95,7 @@
         <prop name="messagesFileName" type="String" value="shtrihjavapos_ru.properties"/>
         <!-- Wrap text enabled -->
         <prop name="wrapText" type="String" value="1"/>
-        <!-- Sleep time after templateReceipt close -->
+        <!-- Sleep time after Receipt close -->
         <prop name="recCloseSleepTime" type="String" value="0"/>
         <!-- Receipt close wait count -->
         <prop name="recCloseWaitCount" type="String" value="1"/>
@@ -198,7 +198,7 @@
         <prop name="stringEncoding" type="String" value=""/>
         <!-- Paper cut delay in milliseconds -->
         <prop name="cutPaperDelay" type="String" value="0"/>
-        <!-- Sales templateReceipt type, 0 - normal, 1 - GLOBUS -->
+        <!-- Sales Receipt type, 0 - normal, 1 - GLOBUS -->
         <prop name="salesReceiptType" type="String" value="0"/>
         <!-- Amount field length -->
         <prop name="RFAmountLength" type="String" value="8"/>
@@ -212,7 +212,7 @@
         <prop name="receiptReportEnabled" type="String" value="1"/>
         <!-- Receipt report file name -->
         <prop name="receiptReportFileName" type="String" value="ZCheckReport.xml"/>
-        <!-- openReceiptType, 0 - open templateReceipt on item print, 1 - open templateReceipt in beginFiscalReceipt -->
+        <!-- openReceiptType, 0 - open Receipt on item print, 1 - open Receipt in beginFiscalReceipt -->
         <prop name="openReceiptType" type="String" value="0"/>
         <!-- headerMode, the way how to print header and trailer lines -->
         <!-- 0 - header stored and printed with driver -->
@@ -239,7 +239,7 @@
         <prop name="logEnabled" type="String" value="1"/>
         <!-- Send ENQ before every command or not  -->
         <prop name="sendENQ" type="String" value="0"/>
-        <!-- Enable tax letters for GLOBUS templateReceipt  -->
+        <!-- Enable tax letters for GLOBUS Receipt  -->
         <prop name="taxLettersEnabled" type="String" value="0"/>
         <!-- Barcode prefix -->
         <prop name="barcodePrefix" type="String" value="#*~*#"/>
@@ -264,7 +264,7 @@
         <prop name="receiptVoidText" type="String" value="ЧЕК ОТМЕНЕН"/>
         <!-- Check total enabled, default 0 (disabled) -->
         <prop name="checkTotalEnabled" type="String" value="0"/>
-        <!-- Receipt number request type 0 - templateReceipt number, 1 - fiscal document number, 2 - templateReceipt number in fiscal day -->
+        <!-- Receipt number request type 0 - Receipt number, 1 - fiscal document number, 2 - Receipt number in fiscal day -->
         <prop name="receiptNumberRequest" type="String" value="2"/>
         <!-- Enable discount calculation in Fiscal Storage printRecItemMethod 1 - enabled, 0 - disabled -->
         <prop name="FSReceiptItemDiscountEnabled" type="String" value="1"/>
@@ -284,7 +284,7 @@
 	<prop name="ItemTableHeader" type="String" value=" №                  Цена со  Кол-\nпп  Цена     Скидка скидкой  во    ИТОГО\n "/>
 	<prop name="ItemRowFormat" type="String" value="%3cPOS% %38lTITLE%\n    %8lPRICE% %6lDISCOUNT% %8lSUM%*%3QUAN%%=$10TOTAL_TAX%\n "/>
 	<!-- Use text template -->
-<!-- 	<prop name="useTemplateReceipt" type="String" value="1"/> -->
+<!-- 	<prop name="useReceipt" type="String" value="1"/> -->
 
 		
     </JposEntry> 

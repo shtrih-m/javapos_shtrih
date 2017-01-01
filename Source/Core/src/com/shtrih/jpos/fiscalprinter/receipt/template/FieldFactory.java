@@ -9,7 +9,7 @@ public class FieldFactory {
     public static Field createField(String from) throws ParsingException {
         Field result = null;
         if (from.length() < 1) {
-            throw new ParsingException("No tag between %% chars");
+            throw new ParsingException("Empty %% sequence,no tag between %% chars");
         }
         int width = -1;
         String prefix = "";

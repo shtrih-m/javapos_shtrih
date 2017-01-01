@@ -74,9 +74,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         getDevice().printText(station, message, font);
         printPostLine();
     }
-    public void parseTemplate() throws ParsingException{
 
-    }
     public void printNormal(int station, String data) throws Exception {
         printRecMessage(station, FontNumber.getNormalFont(), data);
     }
