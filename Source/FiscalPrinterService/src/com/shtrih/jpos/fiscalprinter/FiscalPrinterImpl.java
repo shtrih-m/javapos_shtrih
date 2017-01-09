@@ -299,6 +299,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private boolean isRecPresent = true;
     private boolean inAfterCommand = false;
     private boolean isInReceiptTrailer = false;
+    private int nonFiscalDocNumber = 1;
 
     class DeviceTarget implements Runnable {
 
@@ -2329,6 +2330,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkPrinterState(FPTR_PS_MONITOR);
         setPrinterState(FPTR_PS_NONFISCAL);
         receipt = new NonfiscalReceipt(createReceiptContext());
+        printer.printDocHeader("Нефискальный документ", nonFiscalDocNumber);
+        printer.waitForPrinting();
     }
 
     public void printNormalAsync(int station, String data) throws Exception {
@@ -3104,6 +3107,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             }
             setPrinterState(FPTR_PS_MONITOR);
             receipt = new NullReceipt();
+            nonFiscalDocNumber++;
+            saveProperties();
         }
     }
 
@@ -4430,6 +4435,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             writer.write(printer.getReceiptImages());
             writer.writeHeader(header);
             writer.writeTrailer(trailer);
+            writer.writeNonFiscalDocNumber(nonFiscalDocNumber);
             writer.save(getPropsFileName());
         } catch (Exception e) {
             logger.error("saveProperties", e);
@@ -4448,6 +4454,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 reader.read(printer.getReceiptImages());
                 reader.readHeader(header);
                 reader.readTrailer(trailer);
+                nonFiscalDocNumber = reader.readNonFiscalDocNumber();
             }
         } catch (Exception e) {
             logger.error("Failed to load properties", e);

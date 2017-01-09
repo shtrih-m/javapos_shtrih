@@ -50,6 +50,13 @@ public class XmlPropWriter {
 		}
 	}
 
+	public void writeNonFiscalDocNumber(int number) throws Exception 
+        {
+ 		Element childNode = doc.createElement("NonFiscal");
+		node.appendChild(childNode);
+		addParameter(childNode, "DocumentNumber", number);
+       }
+        
 	public void write(PrinterImage image) throws Exception {
 		Element imageNode = doc.createElement("Image");
 		node.appendChild(imageNode);

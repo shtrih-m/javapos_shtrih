@@ -488,5 +488,7 @@ public interface SMFiscalPrinter {
     public int getTaxRate(int number) throws Exception;
    
     public int getDiscountMode() throws Exception;
+    
+    public int printDocHeader(String title, int number) throws Exception;
 }
 

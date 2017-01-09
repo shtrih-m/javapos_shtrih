@@ -259,6 +259,8 @@
 		<prop name="checkTotalEnabled" type="String" value="0"/>
         <!-- Receipt number request type 0 - receipt number, 1 - fiscal document number, 2 - receipt number in fiscal day -->
 		<prop name="receiptNumberRequest" type="String" value="2"/>
+        <!-- FSPrintTags - разрешить печать тегов из драйвера -->
+		<prop name="FSPrintTags" type="String" value="1"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>

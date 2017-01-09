@@ -2669,6 +2669,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public int getDiscountMode() throws Exception {
         return discountMode;
     }
+
+    public int printDocHeader(String title, int number) throws Exception{
+        PrintDocHeader command = new PrintDocHeader();
+        command.setPassword(usrPassword);
+        command.setTitle(title);
+        command.setNumber(number);
+        return executeCommand(command);
+    }
     
     public void fsReadDocumentTLV(int number) throws Exception
     {

@@ -1131,7 +1131,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printNormal(FPTR_S_RECEIPT, "#*~*#http://check.egais.ru?id=38d02af6-bfd2-409f-8041-b011d8160700&dt=2311161430&cn=030000290346");
 
             printer.endNonFiscal();
-            ShortPrinterStatus sStatus = printer.readShortPrinterStatus();
+            //ShortPrinterStatus sStatus = printer.readShortPrinterStatus();
             System.out.println("PrinterTest.printNonFiscal()");
         } catch (JposException e) {
             System.out.println("JposException");

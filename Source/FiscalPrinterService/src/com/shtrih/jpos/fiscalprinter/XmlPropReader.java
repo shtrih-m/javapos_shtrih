@@ -53,8 +53,7 @@ public class XmlPropReader {
         throw new Exception("Child node not found, " + nodeName);
     }
 
-    public void read(PrinterImages images) throws Exception 
-    {
+    public void read(PrinterImages images) throws Exception {
         images.clear();
         Node imagesNode = getChildNode(root, "Images");
         if (imagesNode == null) {
@@ -74,8 +73,7 @@ public class XmlPropReader {
         }
     }
 
-    public PrinterImage readPrinterImage(Node imageNode) throws Exception 
-    {
+    public PrinterImage readPrinterImage(Node imageNode) throws Exception {
         PrinterImage image = new PrinterImage();
         image.setFileName(readParameterStr(imageNode, "FileName"));
         image.setDigest(readParameterStr(imageNode, "Digest"));
@@ -85,18 +83,15 @@ public class XmlPropReader {
         return image;
     }
 
-    public void read(ReceiptImages images) throws Exception 
-    {
+    public void read(ReceiptImages images) throws Exception {
         images.clear();
         Node imagesNode = getChildNode(root, "ReceiptImages");
         if (imagesNode == null) {
             return;
         }
-        for (int i = 0; i < imagesNode.getChildNodes().getLength(); i++) 
-        {
+        for (int i = 0; i < imagesNode.getChildNodes().getLength(); i++) {
             Node imageNode = imagesNode.getChildNodes().item(i);
-            if (imageNode.getNodeName().equalsIgnoreCase("ReceiptImage")) 
-            {
+            if (imageNode.getNodeName().equalsIgnoreCase("ReceiptImage")) {
                 ReceiptImage image = new ReceiptImage();
                 readReceiptImage(imageNode, image);
                 images.add(image);
@@ -104,9 +99,17 @@ public class XmlPropReader {
         }
     }
 
+    public int readNonFiscalDocNumber() throws Exception {
+        int result = 1;
+        Node childNode = getChildNode(root, "NonFiscal");
+        if (childNode != null) {
+            result = readParameterInt(childNode, "DocumentNumber");
+        }
+        return result;
+    }
+
     public void readReceiptImage(Node imageNode, ReceiptImage image)
-            throws Exception 
-    {
+            throws Exception {
         image.setImageIndex(readParameterInt(imageNode, "ImageIndex"));
         image.setPosition(readParameterInt(imageNode, "Position"));
     }
@@ -114,9 +117,8 @@ public class XmlPropReader {
     public void readHeader(PrinterHeader header) throws Exception {
         readLines(header, "Header");
     }
-    
-    public void readTrailer(PrinterHeader trailer) throws Exception 
-    {
+
+    public void readTrailer(PrinterHeader trailer) throws Exception {
         readLines(trailer, "Trailer");
     }
 
@@ -126,8 +128,7 @@ public class XmlPropReader {
         int count = headerNode.getChildNodes().getLength();
         for (int i = 0; i < count; i++) {
             Node lineNode = headerNode.getChildNodes().item(i);
-            if (lineNode.getNodeName().equalsIgnoreCase("Line")) 
-            {
+            if (lineNode.getNodeName().equalsIgnoreCase("Line")) {
                 read(lineNode, header);
             }
         }

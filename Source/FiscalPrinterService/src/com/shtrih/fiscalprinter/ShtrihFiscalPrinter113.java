@@ -1035,7 +1035,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         data[1] = station;
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_TEXT, data, text);
     }
-    
+
     public void setParameter(int paramType, int paramValue)
             throws JposException {
         int data[] = new int[1];
@@ -1576,11 +1576,10 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void fsPrintCalcReport(FSPrintCalcReport command) throws JposException {
         executeCommand(command);
     }
-    
+
     public void fsPrintCalcReport() throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_FS_PRINT_CALC_REPORT, null, null);
     }
-    
 
     public void fsReadCommStatus(FSReadCommStatus command) throws JposException {
         executeCommand(command);
@@ -1613,43 +1612,49 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void fsStartDayClose(FSStartDayClose command) throws JposException {
         executeCommand(command);
     }
-    
+
     public void fsDayClose(FSDayClose command) throws JposException {
         executeCommand(command);
     }
-    
+
     public void fsSale(FSSale command) throws JposException {
         executeCommand(command);
-    }    
-    
+    }
+
     public void fsSale2(FSSale2 command) throws JposException {
         executeCommand(command);
     }
-    
+
     public void fsCloseReceipt(FSCloseReceipt command) throws JposException {
         executeCommand(command);
     }
+
+    public void fsWriteCustomerEmail(String data) throws JposException {
+        directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_CUSTOMER_EMAIL, null, data);
+    }
+
+    public void fsWriteCustomerPhone(String data) throws JposException {
+        directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_CUSTOMER_PHONE, null, data);
+    }
     
-    public void fsWriteTLV(byte[] data) throws JposException 
-    {
+    public void fsWriteTLV(byte[] data) throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_TLV, null, data);
     }
 
-    public void fsWriteTag(int tagId, String tagValue) throws Exception
-    {
+    public void fsWriteTag(int tagId, String tagValue) throws Exception {
         int[] data = new int[1];
         data[0] = tagId;
         directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_TAG, data, tagValue);
     }
-    
+
     public void printDocEnd() throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_DOC_END, null, null);
     }
-    
+
     public void printNonFiscalDoc(String text) throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_NON_FISCAL, null, text);
     }
-    
+
     public void disablePrint() throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_FS_DISABLE_PRINT, null, null);
     }
@@ -1682,5 +1687,3 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_JOURNAL, null, params);
     }
 }
-    
- 
