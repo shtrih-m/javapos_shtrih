@@ -318,7 +318,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 priceItem.setQuantity(1000);
                 printFSSale2(item);
             }
-            */
+             */
         } else {
             printFSSale2(item);
         }
@@ -870,20 +870,26 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
         getDevice().check(getDevice().fsWriteTag(tagId, tagValue));
-        messages.add(TLVInfo.getTagPrintName(tagId) + ": " + tagValue);
+        if (getParams().FSPrintTags) {
+            messages.add(TLVInfo.getTagPrintName(tagId) + ": " + tagValue);
+        }
     }
 
     public void fsWriteCustomerEmail(String text) throws Exception {
         if (!text.isEmpty()) {
             getDevice().check(getDevice().fsWriteTag(1008, text));
-            messages.add("Email покупателя: " + text);
+            if (getParams().FSPrintTags) {
+                messages.add("Email покупателя: " + text);
+            }
         }
     }
 
     public void fsWriteCustomerPhone(String text) throws Exception {
         if (!text.isEmpty()) {
             getDevice().check(getDevice().fsWriteTag(1008, text));
-            messages.add("Телефон покупателя: " + text);
+            if (getParams().FSPrintTags) {
+                messages.add("Телефон покупателя: " + text);
+            }
         }
     }
 }

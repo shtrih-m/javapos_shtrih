@@ -43,7 +43,6 @@ import static jpos.JposConst.JPOS_E_EXTENDED;
 import com.shtrih.fiscalprinter.TLVReader;
 import com.shtrih.fiscalprinter.TLVInfo;
 
-
 public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
 
     private PriceItem lastItem = null;
@@ -155,7 +154,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
                 if (disablePrint) {
                     getDevice().disablePrint();
                 }
-                
+
                 CloseRecParams closeParams = new CloseRecParams();
                 closeParams.setSum1(payments[0]);
                 closeParams.setSum2(payments[1]);
@@ -169,7 +168,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
                 closeParams.setText(getParams().closeReceiptText);
                 getPrinter().getPrinter().closeReceipt(closeParams);
                 getFiscalDay().closeFiscalRec();
-                
+
                 if (!disablePrint) {
                     for (int i = 0; i < messages.size(); i++) {
                         getDevice().printText(messages.get(i));
@@ -563,7 +562,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
 
         if (!getParams().FSCombineItemAdjustments) {
             printRecItemAsText(item, quantity);
-            item.setText("//"+description);
+            item.setText("//" + description);
         }
 
         if (quantity > 0) {
@@ -615,7 +614,6 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         line = formatLines(line1, line);
         getDevice().printText(line);
 
-
         line = "";
         int department = item.getDepartment();
         if ((department > 0) && (department <= 16)) {
@@ -628,10 +626,12 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
 
     private void printTotalAndTax(PriceItem item) throws Exception {
 
-        if (getParams().FSCombineItemAdjustments) return;
-            
+        if (getParams().FSCombineItemAdjustments) {
+            return;
+        }
+
         if (lastItemDiscountSum != 0) {
-            getDevice().printText(formatStrings(" ","=" + StringUtils.amountToString(item.getAmount()-lastItemDiscountSum)));
+            getDevice().printText(formatStrings(" ", "=" + StringUtils.amountToString(item.getAmount() - lastItemDiscountSum)));
         }
 
         String line;
@@ -640,7 +640,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
             tax = 4;
         }
         double taxRate = getDevice().getTaxRate(tax) / 10000.0;
-        long taxAmount = (long) ((item.getAmount()-lastItemDiscountSum) * taxRate / (1 + taxRate) + 0.5);
+        long taxAmount = (long) ((item.getAmount() - lastItemDiscountSum) * taxRate / (1 + taxRate) + 0.5);
 
         line = getDevice().getTaxName(tax);
         line = formatLines(line, StringUtils.amountToString(taxAmount));
@@ -776,31 +776,36 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
 
     public void fsWriteTLV(byte[] data) throws Exception {
         getDevice().check(getDevice().fsWriteTLV(data));
-        
+
         TLVReader reader = new TLVReader();
         reader.read(data);
         Vector<String> lines = reader.getPrintText();
         messages.addAll(lines);
     }
-    
+
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
         getDevice().check(getDevice().fsWriteTag(tagId, tagValue));
-        messages.add(TLVInfo.getTagPrintName(tagId) + ": " + tagValue);
+        if (getParams().FSPrintTags) {
+            messages.add(TLVInfo.getTagPrintName(tagId) + ": " + tagValue);
+        }
     }
 
     public void fsWriteCustomerEmail(String text) throws Exception {
         if (!text.isEmpty()) {
             getDevice().check(getDevice().fsWriteTag(1008, text));
-            messages.add("Email покупателя: " + text);
+            if (getParams().FSPrintTags) {
+                messages.add("Email покупателя: " + text);
+            }
         }
     }
 
     public void fsWriteCustomerPhone(String text) throws Exception {
         if (!text.isEmpty()) {
             getDevice().check(getDevice().fsWriteTag(1008, text));
-            messages.add("Телефон покупателя: " + text);
+            if (getParams().FSPrintTags) {
+                messages.add("Телефон покупателя: " + text);
+            }
         }
     }
-    
-}
 
+}
