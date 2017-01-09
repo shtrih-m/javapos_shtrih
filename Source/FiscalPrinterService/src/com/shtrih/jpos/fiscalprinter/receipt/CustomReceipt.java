@@ -207,12 +207,6 @@ public abstract class CustomReceipt implements FiscalReceipt {
                 getParams().font);
     }
 
-    public void fsWriteTLV(byte[] data) throws Exception {
-    }
-
-    public void fsWriteTag(int tagId, String tagValue) throws Exception {
-    }
-
     public void checkTotal(long recTotal, long appTotal) throws Exception {
         if (!getParams().checkTotalEnabled) {
             return;
@@ -238,6 +232,12 @@ public abstract class CustomReceipt implements FiscalReceipt {
 
     public boolean getDisablePrint() {
         return false;
+    }
+
+    public void fsWriteTLV(byte[] data) throws Exception {
+    }
+
+    public void fsWriteTag(int tagId, String tagValue) throws Exception {
     }
 
     public void fsWriteCustomerEmail(String text) throws Exception {

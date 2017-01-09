@@ -37,57 +37,56 @@ public class NullReceipt implements FiscalReceipt {
         return cancelled;
     }
 
-    public void notSupported() throws Exception 
+    public void notOpenedException() throws Exception 
     {
-        //throw new JposException(JposConst.JPOS_E_ILLEGAL,
-        //        "Receipt method is not supported");
+        throw new JposException(JposConst.JPOS_E_ILLEGAL, "Receipt is not opened");
     }
 
     public void beginFiscalReceipt(boolean printHeader) throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void endFiscalReceipt(boolean printHeader) throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecItem(String description, long price, int quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecItemAdjustment(int adjustmentType, String description,
             long amount, int vatInfo) throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecMessage(int station, FontNumber font, String message)
             throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecNotPaid(String description, long amount)
             throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecRefund(String description, long amount, int vatInfo)
             throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecSubtotal(long amount) throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecSubtotalAdjustment(int adjustmentType,
             String description, long amount) throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecTotal(long total, long payment, long payType,
             String description) throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecVoid(String description) throws Exception {
@@ -96,91 +95,95 @@ public class NullReceipt implements FiscalReceipt {
 
     public void printRecVoidItem(String description, long amount, int quantity,
             int adjustmentType, long adjustment, int vatInfo) throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecCash(long amount) throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecItemFuel(String description, long price, int quantity,
             int vatInfo, long unitPrice, String unitName, long specialTax,
             String specialTaxName) throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecItemFuelVoid(String description, long price,
             int vatInfo, long specialTax) throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecPackageAdjustment(int adjustmentType,
             String description, String vatAdjustment) throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecPackageAdjustVoid(int adjustmentType,
             String vatAdjustment) throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecRefundVoid(String description, long amount, int vatInfo)
             throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecSubtotalAdjustVoid(int adjustmentType, long amount)
             throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecTaxID(String taxID) throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecItemVoid(String description, long price, int quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecItemAdjustmentVoid(int adjustmentType,
             String description, long amount, int vatInfo) throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecItemRefund(String description, long amount,
             int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printRecItemRefundVoid(String description, long amount,
             int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
     public void printNormal(int station, String data) throws Exception {
-        notSupported();
+        notOpenedException();
     }
 
-    public void fsWriteTLV(byte[] data) throws Exception {
-        notSupported();
-    }
-    
     public boolean getDisablePrint(){
         return false;
     }
     
     public void disablePrint() throws Exception{
+        notOpenedException();
+    }
+    
+    public void fsWriteTLV(byte[] data) throws Exception {
+        notOpenedException();
     }
     
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
+        notOpenedException();
     }
     
     public void fsWriteCustomerEmail(String text) throws Exception {
+        notOpenedException();
     }
 
     public void fsWriteCustomerPhone(String text) throws Exception {
+        notOpenedException();
     }
 }

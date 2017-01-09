@@ -19,14 +19,18 @@
             <url>src/com/shtrih/jpos/fiscalprinter/FiscalPrinterImpl.java</url>
             <bookmark id="1">
                 <name/>
-                <line>4487</line>
+                <line>4494</line>
                 <key/>
             </bookmark>
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/projects/JavaPOS1/Source/FiscalPrinterService/src/com/shtrih/fiscalprinter/SMFiscalPrinterImpl.java</file>
+            <file>file:/C:/projects/JavaPOS1/Source/FiscalPrinterService/src/com/shtrih/jpos/fiscalprinter/directIO/DirectIOHandler2.java</file>
+            <file>file:/C:/projects/JavaPOS1/Source/FiscalPrinterService/src/com/shtrih/jpos/fiscalprinter/SmFptrConst.java</file>
+            <file>file:/C:/projects/JavaPOS1/Source/FiscalPrinterService/src/com/shtrih/jpos/fiscalprinter/directIO/DirectIOHandler.java</file>
+            <file>file:/C:/projects/JavaPOS1/Source/FiscalPrinterService/src/com/shtrih/jpos/fiscalprinter/directIO/DIOReadShortStatus.java</file>
+            <file>file:/C:/projects/JavaPOS1/Source/FiscalPrinterService/src/com/shtrih/jpos/fiscalprinter/FiscalPrinterImpl.java</file>
         </group>
     </open-files>
 </project-private>

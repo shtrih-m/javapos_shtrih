@@ -6,6 +6,20 @@
 
 ********************************************************************************
 
+  January, 9 2016, 20:30
+  deviceServiceVersion = 1013338
+	
+  [+] Added exception when tags writed when receipt is closed
+  
+********************************************************************************
+
+  January, 9 2016, 20:15
+  deviceServiceVersion = 1013337
+	
+  [+] Added document header printing in Nonfiscal document
+  
+********************************************************************************
+
   December, 26 2016, 14:23
   deviceServiceVersion = 1013331
 	
