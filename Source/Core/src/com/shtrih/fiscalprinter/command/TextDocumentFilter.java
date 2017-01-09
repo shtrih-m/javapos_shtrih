@@ -16,6 +16,7 @@ import com.shtrih.jpos.fiscalprinter.PrinterHeader;
 import com.shtrih.util.MathUtils;
 //import com.shtrih.util.StaticContext;
 import com.shtrih.util.StringUtils;
+import com.shtrih.util.SysUtils;
 
 //import android.os.Environment;
 
@@ -598,8 +599,8 @@ public class TextDocumentFilter implements IPrinterEvents {
 
 	public void add(String line) throws Exception {
 		logger.debug("add(" + line + ")");
-		File path = new File("."); //StaticContext.getContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-		File file = new File(path, printer.getParams().textReportFileName);
+
+		File file = new File(SysUtils.getFilesPath() + printer.getParams().textReportFileName);
 		PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
 		writer.println(line);
 		writer.flush();

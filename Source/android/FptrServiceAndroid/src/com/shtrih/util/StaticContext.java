@@ -5,9 +5,9 @@ import android.content.Context;
 public class StaticContext {
 	private static Context context = null;
 
-	public static Context getContext() throws Exception {
+	public static Context getContext() {
 		if (context == null) {
-			throw new Exception("Context is not set");
+			throw new RuntimeException("Context is not set");
 		}
 		return context;
 	}

@@ -5,7 +5,7 @@ import java.io.File;
 import android.content.Context;
 
 public class SysUtils {
-	public static String getFilesPath() throws Exception {
+	public static String getFilesPath()  {
 		Context context = StaticContext.getContext();
 		return context.getFilesDir().getAbsolutePath() + File.separator;
 	}

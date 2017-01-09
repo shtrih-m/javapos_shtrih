@@ -2677,9 +2677,4 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             logger.debug(lines.get(i));
         }
     }
-<<<<<<< .mine
-
-=======
-
->>>>>>> .theirs
 }
