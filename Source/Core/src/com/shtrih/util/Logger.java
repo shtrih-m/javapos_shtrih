@@ -72,7 +72,7 @@ public class Logger {
     }
 
     public String getFileName() {
-        return "shtrihjavapos.log";
+        return SysUtils.getFilesPath() + "shtrihjavapos.log";
     }
 
     public synchronized void write(String prefix, String text) {

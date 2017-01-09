@@ -1856,7 +1856,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void writeFieldsFileFromFileName() throws Exception {
-        File file = new File(params.fieldsFileName);
+        File file = new File(SysUtils.getFilesPath() + params.fieldsFileName);
         if (!file.exists()) {
             logger.debug("File not exists: " + params.fieldsFileName);
             return;
