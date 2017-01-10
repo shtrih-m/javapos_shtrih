@@ -210,55 +210,73 @@
         <prop name="receiptReportFileName" type="String" value="ZCheckReport.xml"/>
         <!-- openReceiptType, 0 - open receipt on item print, 1 - open receipt in beginFiscalReceipt -->
         <prop name="openReceiptType" type="String" value="0"/>
-        <!-- headerMode, 0 - header in driver, 1 - header in printer -->
-		<prop name="headerMode" type="String" value="0"/>
+        <!-- headerMode, the way how to print header and trailer lines -->
+        <!-- 0 - header stored and printed with driver -->
+        <!-- 1 - header stored and printed by printer, numHeaderLine and numTrailerLines are fixed -->
+        <!-- 2 - header stored and printed with driver, header printed on receipt begin -->
+        <prop name="headerMode" type="String" value="0"/>
         <!-- headerImagePosition,  -->
         <!-- SMFPTR_LOGO_AFTER_HEADER     = 0  -->
         <!-- SMFPTR_LOGO_BEFORE_TRAILER   = 1  -->
         <!-- SMFPTR_LOGO_AFTER_TRAILER    = 2  -->
         <!-- SMFPTR_LOGO_AFTER_ADDTRAILER = 3  -->
         <!-- SMFPTR_LOGO_BEFORE_HEADER    = 4  -->
-		<prop name="headerImagePosition" type="String" value="0"/>
+        <prop name="headerImagePosition" type="String" value="0"/>
         <!-- trailerImagePosition,  -->
         <!-- SMFPTR_LOGO_AFTER_HEADER     = 0  -->
         <!-- SMFPTR_LOGO_BEFORE_TRAILER   = 1  -->
         <!-- SMFPTR_LOGO_AFTER_TRAILER    = 2  -->
         <!-- SMFPTR_LOGO_AFTER_ADDTRAILER = 3  -->
         <!-- SMFPTR_LOGO_BEFORE_HEADER    = 4  -->
-		<prop name="trailerImagePosition" type="String" value="1"/>
+        <prop name="trailerImagePosition" type="String" value="1"/>
         <!-- Center header and trailer text automatically  -->
-		<prop name="centerHeader" type="String" value="1"/>
+        <prop name="centerHeader" type="String" value="1"/>
         <!-- Log file enabled  -->
-		<prop name="logEnabled" type="String" value="1"/>
+        <prop name="logEnabled" type="String" value="1"/>
         <!-- Send ENQ before every command or not  -->
-		<prop name="sendENQ" type="String" value="0"/>
+        <prop name="sendENQ" type="String" value="0"/>
         <!-- Enable tax letters for GLOBUS receipt  -->
-		<prop name="taxLettersEnabled" type="String" value="0"/>
+        <prop name="taxLettersEnabled" type="String" value="0"/>
         <!-- Barcode prefix -->
-		<prop name="barcodePrefix" type="String" value="#*~*#"/>
+        <prop name="barcodePrefix" type="String" value="#*~*#"/>
         <!-- Barcode type -->
-		<!-- UPCA=0, UPCE=1, EAN13=2, EAN8=3, CODE39=4, ITF=5, CODABAR=6, CODE93=7, CODE128=8, PDF417=10, GS1_OMNI=11,  -->
-		<!-- GS1_TRUNC=12, GS1_LIMIT=13, GS1_EXP=14, GS1_STK=15, GS1_STK_OMNI=16, GS1_EXP_STK=17, AZTEC=18, DATA_MATRIX=19,  -->
-		<!-- MAXICODE=20, QR_CODE=21, RSS_14=22, RSS_EXPANDED=23, UPC_EAN_EXTENSION=24  -->
-		<prop name="barcodeType" type="String" value="21"/>
+        <!-- UPCA=0, UPCE=1, EAN13=2, EAN8=3, CODE39=4, ITF=5, CODABAR=6, CODE93=7, CODE128=8, PDF417=10, GS1_OMNI=11,  -->
+        <!-- GS1_TRUNC=12, GS1_LIMIT=13, GS1_EXP=14, GS1_STK=15, GS1_STK_OMNI=16, GS1_EXP_STK=17, AZTEC=18, DATA_MATRIX=19,  -->
+        <!-- MAXICODE=20, QR_CODE=21, RSS_14=22, RSS_EXPANDED=23, UPC_EAN_EXTENSION=24  -->
+        <prop name="barcodeType" type="String" value="21"/>
         <!-- Barcode bar/module width -->
-		<prop name="barcodeBarWidth" type="String" value="4"/>
+        <prop name="barcodeBarWidth" type="String" value="4"/>
         <!-- Barcode height -->
-		<prop name="barcodeHeight" type="String" value="100"/>
+        <prop name="barcodeHeight" type="String" value="100"/>
         <!-- Barcode text position NOTPRINTED=0, ABOVE=1, BELOW=2, BOTH=3 -->
-		<prop name="barcodeTextPosition" type="String" value="2"/>
+        <prop name="barcodeTextPosition" type="String" value="2"/>
         <!-- Barcode text font, 1..7, default 1 -->
-		<prop name="barcodeTextFont" type="String" value="1"/>
+        <prop name="barcodeTextFont" type="String" value="1"/>
         <!-- Barcode aspect ratio -->
-		<prop name="barcodeAspectRatio" type="String" value="3"/>
+        <prop name="barcodeAspectRatio" type="String" value="3"/>
         <!-- Compatibility level, 0 - NONE, 1 - FULL -->
-		<prop name="compatibilityLevel" type="String" value="0"/>
+        <prop name="compatibilityLevel" type="String" value="0"/>
         <!-- Receipt void text -->
-		<prop name="receiptVoidText" type="String" value="ЧЕК ОТМЕНЕН"/>
+        <prop name="receiptVoidText" type="String" value="ЧЕК ОТМЕНЕН"/>
         <!-- Check total enabled, default 0 (disabled) -->
-		<prop name="checkTotalEnabled" type="String" value="0"/>
+        <prop name="checkTotalEnabled" type="String" value="0"/>
         <!-- Receipt number request type 0 - receipt number, 1 - fiscal document number, 2 - receipt number in fiscal day -->
-		<prop name="receiptNumberRequest" type="String" value="2"/>
+        <prop name="receiptNumberRequest" type="String" value="2"/>
+		
+        <!-- Enable discount calculation in Fiscal Storage printRecItemMethod 1 - enabled, 0 - disabled -->
+        <prop name="FSReceiptItemDiscountEnabled" type="String" value="1"/>
+        <!-- Enable discounts for Fiscal Storage printers 1 - enabled, 0 - disabled -->
+        <prop name="FSDiscountEnabled" type="String" value="1"/>
+        <!-- Combine item adjustments (enabled by default) -->
+        <prop name="FSCombineItemAdjustments" type="String" value="0"/>
+		
+        <!-- Text report enabled -->
+        <prop name="textReportEnabled" type="String" value="1"/>
+        <!-- Text report file name -->
+        <prop name="textReportFileName" type="String" value="archive.txt"/>
+        <!-- Text report empty lines enabled -->
+        <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
+		
         <!-- FSPrintTags - разрешить печать тегов из драйвера -->
 		<prop name="FSPrintTags" type="String" value="1"/>
     </JposEntry> 

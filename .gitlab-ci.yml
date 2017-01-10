@@ -2,10 +2,17 @@ stages:
   - build
 job_build:
   script:
+    - export ANDROID_HOME=~/Android/android-sdk-linux/
     - cd Source
-    - gradle clean build uploadArchives
+    - chmod +x gradlew
+    - ./gradlew clean build uploadArchives
+    - cd android
+    - chmod +x gradlew
+    - ./gradlew clean utilVersionClass uploadArchives
   artifacts:
     paths:
       - Source/dist/zip/
+      - Source/android/FptrServiceAndroid/build/outputs/aar
+      - Source/android/tinyJavaPosTester/build/outputs/apk
   stage: build
 

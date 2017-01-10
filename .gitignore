@@ -5,11 +5,8 @@
 /Source/FiscalPrinterService/dist/
 /Source/FiscalPrinterService.RXTXcomm/dist/
 /Source/FiscalPrinterService/nbproject/private/
+/Source/FiscalPrinterTest/nbproject/private/
 /Source/FiscalPrinterTest/dist/
-/jpos_1013322/src/FiscalPrinterService/nbproject/private/
-/jpos_1013322/src/FiscalPrinterTest/nbproject/private/
-/jpos_1013323/src/FiscalPrinterService/nbproject/private/
-/jpos_1013323/src/FiscalPrinterTest/nbproject/private/
 /dist
 /bin
 /Source/build
@@ -30,3 +27,5 @@
 /Source/android/tinyJavaPosTester/dist
 /Source/android/FptrServiceAndroid/dist
 /Source/android/tinyJavaPosTester/dist
+/Source/android/FptrServiceAndroid/src/com/shtrih/util/ServiceVersion.java
+

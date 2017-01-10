@@ -11,23 +11,23 @@ clean.doFirst {
 sourceSets {
     main {
         java {
-            srcDirs = ['src']
+            srcDirs = [ "src", "${projectDir}/../Core/src" ]
         }
         resources {
-            srcDirs = ['src/']
-            includes = [ 'res/*.*', '**/resources/*.*' ]
+            srcDirs = [ "${projectDir}/src/" ]
+            includes = [ "res/*.*", "**/resources/*.*" ]
         }
     }
     test {
         java {
-          srcDirs = [ "test/" ]
+          srcDirs = [ "${projectDir}/test/" ]
         }
     }
 }
 
 repositories {
     flatDir {
-        dirs '../lib'
+        dirs "${projectDir}/../lib"
     }
 }
 

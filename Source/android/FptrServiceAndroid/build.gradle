@@ -1,0 +1,93 @@
+apply plugin: 'idea'
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    defaultConfig {
+        minSdkVersion 10
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+    
+    sourceSets {
+        main {
+            java {
+                srcDirs = ["${projectDir}/src", "${projectDir}/../../Core/src"]
+            }
+            res {
+                srcDirs = ["${projectDir}/res"]
+            }
+            manifest {
+                srcFile "${projectDir}/AndroidManifest.xml"
+            }
+            assets {
+                srcDirs = ["${projectDir}/assets"]
+            }
+        }
+        test {
+            java {
+              srcDirs = [ "${projectDir}/test/" ]
+            }
+            res {
+                srcDirs = ["${projectDir}/test/res"]
+            }
+        }    
+        androidTest {
+            java {
+              srcDirs = [ "${projectDir}/androidTest/" ]
+            }
+            res {
+                srcDirs = ["${projectDir}/androidTest/res"]
+            }
+            assets {
+                srcDirs = ["${projectDir}/androidTest/assets"]
+            }
+        }     
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+}
+
+task utilVersionClass()  {
+    def clazz = new File("${projectDir}/src/com/shtrih/util/ServiceVersion.java")
+    clazz.text = "package com.shtrih.util;\n\npublic class ServiceVersion {\n    public static final String VERSION = \""+version+"\";\n}"
+}
+
+repositories {
+    flatDir {
+        dirs = ["${projectDir}/../lib"]
+    }
+}
+
+dependencies {
+    compile 'org.jbarcode:jbarcode:0.2.8',
+            'd2xx:d2xx:1.0',
+            'jpos:jpos113:1.13',
+            'log4j:log4j:1.2.16',
+            'xerces4android:xerces4android:1.0',
+            'zxing:zxing:3.2.2'
+
+//    testCompile group: 'org.hamcrest', name: 'hamcrest-core', version: '1.3'
+//    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    androidTestCompile 'com.android.support:support-annotations:25.1.0'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    // Optional -- Hamcrest library
+    // androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
+    testCompile 'junit:junit:4.12'
+}

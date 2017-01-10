@@ -11,10 +11,10 @@ clean.doFirst {
 sourceSets {
     main {
         java {
-            srcDirs = ['../FiscalPrinterService/src']
+            srcDirs = [ "${projectDir}/../FiscalPrinterService/src", "${projectDir}/../Core/src" ]
         }
         resources {
-            srcDirs = ['../FiscalPrinterService/src/']
+            srcDirs = [ "${projectDir}/../FiscalPrinterService/src/" ]
             includes = [ 'res/*.*', '**/resources/*.*' ]
         }
     }

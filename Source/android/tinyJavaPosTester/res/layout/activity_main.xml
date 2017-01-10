@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/V1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/LinearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="com.shtrih.tinyjavapostester.MainActivity" >
+
+        <Button
+            android:id="@+id/printReceipt"
+            android:layout_width="288dp"
+            android:layout_height="wrap_content"
+            android:text="PrintReceipt" />
+
+        <Button
+            android:id="@+id/StopReceipt"
+            android:layout_width="284dp"
+            android:layout_height="wrap_content"
+            android:text="StopReceipt" />
+
+        <Button
+            android:id="@+id/btnOpenFiscalDay"
+            android:layout_width="285dp"
+            android:layout_height="wrap_content"
+            android:text="Open fiscal day" />
+
+        <Button
+            android:id="@+id/btnPrintZReport"
+            android:layout_width="288dp"
+            android:layout_height="wrap_content"
+            android:text="PrintZReport" />
+
+        <Button
+            android:id="@+id/btnPrintDayJournal"
+            android:layout_width="288dp"
+            android:layout_height="wrap_content"
+            android:text="Print day journal" />
+    </LinearLayout>
+
+</LinearLayout>
