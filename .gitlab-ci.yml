@@ -8,8 +8,9 @@ job_build:
     - ./gradlew clean build uploadArchives
     - cd android
     - chmod +x gradlew
-    - ./gradlew clean utilVersionClass uploadArchives
+    - ./gradlew clean utilVersionClass uploadArchives dist
   artifacts:
+    name: "shtrihjavapos-${CI_BUILD_REF_NAME}_${CI_PIPELINE_ID}"
     paths:
       - Source/dist/zip/
   stage: build
