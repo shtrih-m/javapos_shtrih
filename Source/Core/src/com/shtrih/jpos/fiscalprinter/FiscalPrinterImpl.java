@@ -281,6 +281,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private int nonFiscalDocNumber = 1;
     private TextDocumentFilter filter = null;
 
+    public void setTextDocumentFilterEnablinessTo(boolean value) {
+        filter.setEnabled(value);
+    }
+
     class DeviceTarget implements Runnable {
 
         private final FiscalPrinterImpl fiscalPrinter;
@@ -444,6 +448,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         deviceServiceVersion = deviceVersion113 + ServiceVersionUtil.getVersionInt();
         freezeEvents = true;
     }
+
+
 
     public SMFiscalPrinter getPrinter() {
         if (printer == null) {
@@ -1009,7 +1015,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
             logger.debug("Reading license file...");
             try {
-                String fileName = "shtrihjavapos.lic";
+                String fileName = SysUtils.getFilesPath() + "shtrihjavapos.lic";
                 FileReader fileReader = new FileReader(fileName);
                 try {
                     BufferedReader input = new BufferedReader(fileReader);

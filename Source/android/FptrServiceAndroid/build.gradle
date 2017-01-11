@@ -1,6 +1,10 @@
 apply plugin: 'idea'
 apply plugin: 'com.android.library'
 
+clean.doFirst {
+    delete "${rootDir}/../dist/zip/android"
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -9,7 +13,7 @@ android {
         minSdkVersion 10
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0"
+        versionName "$version"
         
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -90,4 +94,12 @@ dependencies {
     // Optional -- Hamcrest library
     // androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
     testCompile 'junit:junit:4.12'
+}
+
+task dist(type: Zip) {
+    destinationDir = new File("${rootDir}/../dist/zip/android")
+    baseName = 'shtrihjavapos-android'
+    
+    from "${rootDir}/FptrServiceAndroid/build/outputs/aar/FptrServiceAndroid-release.aar"
+    from "${rootDir}/tinyJavaPosTester/assets/jpos.xml"
 }

@@ -53,11 +53,13 @@ public class MainActivity extends Activity implements OnClickListener {
 		printReceipt = (TextView) findViewById(R.id.printReceipt);
 		btnPrintZReport = (TextView) findViewById(R.id.btnPrintZReport);
 		btnOpenFiscalDay = (TextView) findViewById(R.id.btnOpenFiscalDay);
+		btnPrintDayJournal = (TextView) findViewById(R.id.btnPrintDayJournal);
 		stopReceipt = (TextView) findViewById(R.id.StopReceipt);
 		printReceipt.setOnClickListener(this);
 		btnPrintZReport.setOnClickListener(this);
 		stopReceipt.setOnClickListener(this);
 		btnOpenFiscalDay.setOnClickListener(this);
+		btnPrintDayJournal.setOnClickListener(this);
 	}
 
 	@Override
@@ -308,6 +310,10 @@ public class MainActivity extends Activity implements OnClickListener {
 
 			case R.id.btnOpenFiscalDay:
 				printer.openFiscalDay();
+				break;
+
+			case R.id.btnPrintDayJournal:
+				printer.printJournalCurrentDay();
 				break;
 
 			}

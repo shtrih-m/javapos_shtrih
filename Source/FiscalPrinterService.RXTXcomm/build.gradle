@@ -4,7 +4,7 @@ apply plugin: 'java'
 //apply plugin: 'idea'
 
 clean.doFirst {
-    delete "${projectDir}/dist/"
+    delete "${projectDir}/dist/zip/javase"
     delete "${projectDir}/build/"
 }
 
@@ -51,7 +51,7 @@ jar {
 }
 
 task dist(type: Zip) {
-    destinationDir = new File("${rootDir}/dist/zip/rxtx")
+    destinationDir = new File("${rootDir}/dist/zip/javase/rxtx")
     baseName = 'shtrihjavapos'
     dependsOn jar
     
