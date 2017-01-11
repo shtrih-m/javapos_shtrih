@@ -1,6 +1,10 @@
 apply plugin: 'idea'
 apply plugin: 'com.android.library'
 
+clean.doFirst {
+    delete "${rootDir}/../dist/zip/android"
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
