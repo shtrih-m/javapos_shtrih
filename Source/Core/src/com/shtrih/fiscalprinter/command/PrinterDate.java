@@ -55,6 +55,12 @@ public class PrinterDate {
                 + StringUtils.intToStr(year + 2000, 4);
     }
 
+    public String toStringShort() {
+        return StringUtils.intToStr(day, 2) + "."
+                + StringUtils.intToStr(month, 2) + "."
+                + StringUtils.intToStr(year, 2);
+    }
+    
     // 01.02.09
     public static String toText(PrinterDate date) {
         return StringUtils.intToStr(date.getDay(), 2) + "."

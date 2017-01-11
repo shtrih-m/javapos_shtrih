@@ -2677,4 +2677,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             logger.debug(lines.get(i));
         }
     }
+    
+    public void printLines(String line1, String line2) throws Exception{
+        String text = StringUtils.alignLines(line1, line2, getMessageLength());
+        printText(text);
+    }
+    
 }

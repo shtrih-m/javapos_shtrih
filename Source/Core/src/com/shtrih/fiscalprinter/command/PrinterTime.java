@@ -56,6 +56,11 @@ public class PrinterTime {
                 + StringUtils.intToStr(time.getSec(), 2);
     }
 
+    public String toString2() {
+        return StringUtils.intToStr(getHour(), 2) + ":"
+                + StringUtils.intToStr(getMin(), 2);
+    }
+    
     public String toString() {
         return toString(this);
     }

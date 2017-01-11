@@ -619,10 +619,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 addEvent(new ErrorEventRequest(cb, event));
             }
 
-            switch (command.getResultCode())
-            {
+            switch (command.getResultCode()) {
                 case SMFP_EFPTR_FS_INVALID_STATE:
-                    if (getPrinter().getCapFiscalStorage()){
+                    if (getPrinter().getCapFiscalStorage()) {
                         getPrinter().fsReadStatus();
                     }
                     break;
@@ -1387,7 +1386,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public boolean getDayOpened() throws Exception {
         checkEnabled();
-        if (receipt.isOpened()) return true;
+        if (receipt.isOpened()) {
+            return true;
+        }
         return getPrinter().readPrinterStatus().getPrinterMode().getDayOpened();
     }
 
@@ -2321,7 +2322,37 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkPrinterState(FPTR_PS_MONITOR);
         setPrinterState(FPTR_PS_NONFISCAL);
         receipt = new NonfiscalReceipt(createReceiptContext());
-        printer.printDocHeader("Нефискальный документ", nonFiscalDocNumber);
+        printHeaderDriver();
+    }
+
+    public void printHeaderDriver() throws Exception {
+        if (printer.getCapFiscalStorage()) {
+            // 1
+            LongPrinterStatus status = printer.getLongStatus();
+            String line1 = "ККТ " + status.getSerialLong();
+            String line2 = status.getDate().toStringShort() + " "
+                    + status.getTime().toString2();
+            printer.printLines(line1, line2);
+            // 2
+            line1 = printer.readTable(2, status.getOperatorNumber(), 2);
+            line2 = String.format("#%04d", status.getDocumentNumber());
+            printer.printLines(line1, line2);
+            // 3
+            line1 = "Нефискальный документ";
+            line2 = String.format("ИНН %010d", status.getFiscalID());
+            printer.printLines(line1, line2);
+            // 4
+            line1 = "РН ККТ " + printer.readTable(18, 1, 3).trim();
+            line2 = "ФН " + printer.readTable(18, 1, 4).trim();
+            printer.printLines(line1, line2);
+            // 5
+            line1 = "Сайт ФНС:";
+            line2 = printer.readTable(18, 1, 13).trim();
+            printer.printLines(line1, line2);
+
+        } else {
+            printer.printDocHeader("Нефискальный документ", nonFiscalDocNumber);
+        }
         printer.waitForPrinting();
     }
 
@@ -3228,8 +3259,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public String updateDescription(String description) throws Exception {
         String postLine = getPostLine();
-        if (!postLine.isEmpty())
-        {
+        if (!postLine.isEmpty()) {
             params.clearPostLine();
             printRecMessage(description);
             description = postLine;
@@ -4505,13 +4535,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         if (printer.getCapFiscalStorage()) {
             if (!params.readDiscountMode) {
                 result = new FSSalesReceipt2(createReceiptContext(), receiptType);
-	    } else
-            {
-            if (printer.getDiscountMode() == 0) {
+            } else if (printer.getDiscountMode() == 0) {
                 result = new FSSalesReceipt2(createReceiptContext(), receiptType);
             } else {
                 result = new FSSalesReceipt(createReceiptContext(), receiptType);
-            }
             }
         } else if (params.salesReceiptType == SMFPTR_RECEIPT_NORMAL) {
             result = new SalesReceipt(createReceiptContext(), receiptType);

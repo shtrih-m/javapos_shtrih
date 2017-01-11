@@ -174,6 +174,11 @@ public class LongPrinterStatus implements PrinterConst {
         return serialNumber2Text(getSerialNumber());
     }
 
+    public String getSerialLong() 
+    {
+        return String.format("%016d", getSerialNumber());
+    }
+    
     public static String serialNumber2Text(long value) {
         if (value == 0xFFFFFFFF) {
             return "not entered";

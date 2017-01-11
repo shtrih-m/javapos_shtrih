@@ -886,4 +886,9 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public int printDocHeader(String title, int number) throws Exception{
         return 0;
     }
+    
+    public void printLines(String line1, String line2) throws Exception{
+        
+    }
+    
 }

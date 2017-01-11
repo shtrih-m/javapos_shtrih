@@ -492,5 +492,7 @@ public interface SMFiscalPrinter {
     public int getDiscountMode() throws Exception;
     
     public int printDocHeader(String title, int number) throws Exception;
+    
+    public void printLines(String line1, String line2) throws Exception;
 }
 
