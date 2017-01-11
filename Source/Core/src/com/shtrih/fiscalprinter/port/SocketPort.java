@@ -30,46 +30,50 @@ public class SocketPort implements PrinterPort {
     private String portName = "";
     static CompositeLogger logger = CompositeLogger.getLogger(SocketPort.class);
 
-    public SocketPort() throws Exception 
-    {
+    public SocketPort() throws Exception {
     }
 
-    
     public void open() throws Exception {
         open(0);
     }
-            
-    public void open(int timeout) throws Exception 
-    {
-        if (connected) return; 
-        
-        socket = new Socket();
-        socket.setReuseAddress(true);
-        socket.setSoTimeout(this.timeout);
-        StringTokenizer tokenizer = new StringTokenizer(portName, ":");
-        String host = tokenizer.nextToken();
-        int port = Integer.parseInt(tokenizer.nextToken());
-        socket.connect(new InetSocketAddress(host, port), timeout);
+
+    public void open(int timeout) throws Exception {
+        if (connected) {
+            return;
+        }
+
+        socket = (Socket) SharedObjects.getInstance().findObject(portName);
+        if (socket == null) {
+            socket = new Socket();
+            SharedObjects.getInstance().add(socket, portName);
+
+            socket.setReuseAddress(true);
+            socket.setSoTimeout(this.timeout);
+            StringTokenizer tokenizer = new StringTokenizer(portName, ":");
+            String host = tokenizer.nextToken();
+            int port = Integer.parseInt(tokenizer.nextToken());
+            socket.connect(new InetSocketAddress(host, port), timeout);
+        }
         in = socket.getInputStream();
-        if (in == null){
+        if (in == null) {
             throw new Exception("socket.getInputStream() return null");
         }
         out = socket.getOutputStream();
-        if (out == null){
+        if (out == null) {
             throw new Exception("socket.getOutputStream() return null");
         }
         SharedObjects.getInstance().addref(portName);
         connected = true;
     }
 
-    public void close() throws Exception 
-    {
-        if (!connected) return;
-        
+    public void close() throws Exception {
+        if (!connected) {
+            return;
+        }
+
         connected = false;
-        if (SharedObjects.getInstance().release(portName))
-        {
-            
+        if (SharedObjects.getInstance().release(portName)) {
+
             in.close();
             out.close();
             in = null;
@@ -80,17 +84,16 @@ public class SocketPort implements PrinterPort {
         }
     }
 
-    public int readByte() throws Exception 
-    {
+    public int readByte() throws Exception {
         open();
-        
+
         int b = doReadByte();
         return b;
     }
 
     public int doReadByte() throws Exception {
         open();
-        
+
         int result;
         long startTime = System.currentTimeMillis();
         for (;;) {
@@ -115,7 +118,7 @@ public class SocketPort implements PrinterPort {
 
     public byte[] readBytes(int len) throws Exception {
         open();
-        
+
         byte[] data = new byte[len];
         int offset = 0;
         while (len > 0) {
@@ -136,9 +139,9 @@ public class SocketPort implements PrinterPort {
     }
 
     public void write(byte[] b) throws Exception {
-        
+
         open();
-        
+
         for (int i = 0; i < 2; i++) {
             try {
                 connect();
@@ -169,22 +172,16 @@ public class SocketPort implements PrinterPort {
         this.timeout = timeout;
     }
 
-    public String getPortName(){
+    public String getPortName() {
         return portName;
     }
-    
-    public void setPortName(String portName) throws Exception 
-    {
-        if (portName.equalsIgnoreCase(this.portName)){
+
+    public void setPortName(String portName) throws Exception {
+        if (portName.equalsIgnoreCase(this.portName)) {
             return;
         }
-        
+        close();
         this.portName = portName;
-        socket = (Socket)SharedObjects.getInstance().findObject(portName);
-        if (socket == null){
-            socket = new Socket();
-            SharedObjects.getInstance().add(socket, portName);
-        }
     }
 
     public InputStream getInputStream() throws Exception {
