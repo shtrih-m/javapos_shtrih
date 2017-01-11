@@ -281,6 +281,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private int nonFiscalDocNumber = 1;
     private TextDocumentFilter filter = null;
 
+    public void setTextDocumentFilterEnablinessTo(boolean value) {
+        filter.setEnabled(value);
+    }
+
     class DeviceTarget implements Runnable {
 
         private final FiscalPrinterImpl fiscalPrinter;
@@ -444,6 +448,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         deviceServiceVersion = deviceVersion113 + ServiceVersionUtil.getVersionInt();
         freezeEvents = true;
     }
+
+
 
     public SMFiscalPrinter getPrinter() {
         if (printer == null) {

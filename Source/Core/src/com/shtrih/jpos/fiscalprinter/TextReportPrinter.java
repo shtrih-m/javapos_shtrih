@@ -49,10 +49,12 @@ public class TextReportPrinter implements IPrinterEvents {
 
 	public void start() {
 		printer.getPrinter().addEvents(this);
+		printer.setTextDocumentFilterEnablinessTo(false);
 	}
 
 	public void stop() {
 		printer.getPrinter().removeEvents(this);
+        printer.setTextDocumentFilterEnablinessTo(true);
 	}
 
 	public int readDayNumber() throws Exception {
@@ -134,7 +136,7 @@ public class TextReportPrinter implements IPrinterEvents {
 	}
 
 	private List<String> copyLines(List<String> lines, int index1, int index2) {
-		List<String> result = new ArrayList<>();
+		List<String> result = new ArrayList<String>();
 		for (int i = index1; i <= index2; i++) {
 			if (i < 0)
 				return result;
