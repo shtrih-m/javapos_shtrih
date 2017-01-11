@@ -12,7 +12,5 @@ job_build:
   artifacts:
     paths:
       - Source/dist/zip/
-      - Source/android/FptrServiceAndroid/build/outputs/aar
-      - Source/android/tinyJavaPosTester/build/outputs/apk
   stage: build
 

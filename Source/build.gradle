@@ -22,7 +22,7 @@ allprojects {
         delete "${rootDir}/../dist/"
         delete "${rootDir}/../bin/"
         delete "${rootDir}/out/"
-        delete "${rootDir}/dist/"
+        delete "${rootDir}/dist/zip/javase"
         delete "${rootDir}/.gradle/"
     }
 }
