@@ -1,15 +1,17 @@
 package com.shtrih.jpos.fiscalprinter;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.Vector;
-
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.command.IPrinterEvents;
 import com.shtrih.fiscalprinter.command.LongPrinterStatus;
 import com.shtrih.fiscalprinter.command.PrinterCommand;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.fiscalprinter.command.PrinterStatus;
+import com.shtrih.util.SysUtils;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TextReportPrinter implements IPrinterEvents {
 	/////////////////////////////////////////////////////////////////////////////
@@ -67,9 +69,9 @@ public class TextReportPrinter implements IPrinterEvents {
 		return dayNumber;
 	}
 
-	private Vector loadLines() throws Exception {
-		String fileName = printer.getParams().textReportFileName;
-		Vector result = new Vector();
+	private List<String> loadLines() throws Exception {
+		String fileName = SysUtils.getFilesPath() + printer.getParams().textReportFileName;
+		List<String> result = new ArrayList<String>();
 		BufferedReader reader = new BufferedReader(new FileReader(fileName));
 		String line;
 		try {
@@ -112,9 +114,9 @@ public class TextReportPrinter implements IPrinterEvents {
 		return line.contains(SZReport);
 	}
 
-	private int findNextDocument(Vector lines, int index) {
+	private int findNextDocument(List<String> lines, int index) {
 		for (int i = index; i < lines.size(); i++) {
-			String line = (String) lines.get(i);
+			String line = lines.get(i);
 			if (isDocumentHeader(line)) {
 				return i;
 			}
@@ -122,17 +124,17 @@ public class TextReportPrinter implements IPrinterEvents {
 		return lines.size();
 	}
 
-	private int findPrevDocument(Vector lines, int index) {
+	private int findPrevDocument(List<String> lines, int index) {
 		for (int i = index; i >= 0; i--) {
-			String line = (String) lines.get(i);
+			String line =  lines.get(i);
 			if (isDocumentHeader(line))
 				return i;
 		}
 		return index;
 	}
 
-	private Vector copyLines(Vector lines, int index1, int index2) {
-		Vector result = new Vector();
+	private List<String> copyLines(List<String> lines, int index1, int index2) {
+		List<String> result = new ArrayList<>();
 		for (int i = index1; i <= index2; i++) {
 			if (i < 0)
 				return result;
@@ -144,12 +146,11 @@ public class TextReportPrinter implements IPrinterEvents {
 	}
 
 	public void printEJReportDayCurrent(int dayNumber) throws Exception {
-		String SDayNumber = "";
-		Vector lines = loadLines();
+		List<String> lines = loadLines();
 		int index1 = 0;
 		int index2 = lines.size() - 1;
 		for (int i = 0; i < lines.size(); i++) {
-			String line = (String) lines.get(i);
+			String line =  lines.get(i);
 
 			int dayNum = getDayNumber(line);
 			if (dayNum == (dayNumber - 1)) {
@@ -162,15 +163,15 @@ public class TextReportPrinter implements IPrinterEvents {
 			}
 		}
 
-		Vector dstLines = copyLines(lines, index1, index2);
+		List<String> dstLines = copyLines(lines, index1, index2);
 		String header = String.format("Контрольная лента Смена № %d", dayNumber);
-		dstLines.insertElementAt(header, 0);
+		dstLines.add(0, header);
 		printLines(dstLines);
 	}
 
 	private static final int ReceiptBufferLength = 550;
 
-	private int updateIndex(Vector lines, int index) {
+	private int updateIndex(List<String> lines, int index) {
 		index++;
 		if (wasNoPaper) {
 			wasNoPaper = false;
@@ -182,18 +183,18 @@ public class TextReportPrinter implements IPrinterEvents {
 		return index;
 	}
 
-	public void printLines(Vector lines) throws Exception {
+	private void printLines(List<String> lines) throws Exception {
 		int index = 0;
 		wasNoPaper = false;
 		while (index < lines.size()) {
-			String line = (String) lines.get(index);
+			String line = lines.get(index);
 			printer.getPrinter().printLine(PrinterConst.SMFP_STATION_REC, line, FontNumber.getNormalFont());
 			index = updateIndex(lines, index);
 		}
 		printer.getPrinter().waitForPrinting();
 	}
 
-	private int findZReport(Vector lines, int dayNumber) throws Exception {
+	private int findZReport(List<String> lines, int dayNumber) throws Exception {
 		for (int i = 0; i < lines.size(); i++) {
 			String line = (String) lines.get(i);
 			int dayNum = getDayNumber(line);
@@ -204,7 +205,7 @@ public class TextReportPrinter implements IPrinterEvents {
 	}
 
 	public void printEJReportDayNumber(int dayNumber) throws Exception {
-		Vector lines = loadLines();
+		List<String> lines = loadLines();
 		int index1 = findZReport(lines, dayNumber - 1);
 		if (index1 != -1) {
 			index1 = findNextDocument(lines, index1 + 1);
@@ -220,7 +221,7 @@ public class TextReportPrinter implements IPrinterEvents {
 			throw new Exception(String.format("Смена № %d не найдена", dayNumber));
 		}
 
-		Vector dst = copyLines(lines, index1, index2);
+		List<String> dst = copyLines(lines, index1, index2);
 		String header = String.format("Контрольная лента Смена № %d", dayNumber);
 		dst.add(0, header);
 		printLines(dst);
@@ -230,7 +231,7 @@ public class TextReportPrinter implements IPrinterEvents {
 	public void printEJReportDocNumber(int docNumber) throws Exception {
 		int index1 = -1;
 		int index2 = -1;
-		Vector lines = loadLines();
+		List<String> lines = loadLines();
 		int lastDocIndex = lines.size();
 		for (int i = lines.size() - 1; i >= 0; i--) {
 			String line = (String) lines.get(i);
@@ -248,7 +249,7 @@ public class TextReportPrinter implements IPrinterEvents {
 			throw new Exception(String.format("Документ № %d не найден", docNumber));
 		}
 
-		Vector dst = copyLines(lines, index1, index2);
+		List<String> dst = copyLines(lines, index1, index2);
 		String header = String.format("Контрольная лента Документ № %d", docNumber);
 		dst.add(0, header);
 		printLines(dst);
@@ -267,7 +268,7 @@ public class TextReportPrinter implements IPrinterEvents {
 		int index1 = -1;
 		int index2 = -1;
 
-		Vector lines = loadLines();
+		List<String> lines = loadLines();
 		for (int i = 0; i < lines.size(); i++) {
 			String line = (String) lines.get(i);
 			int docNum = getDocumentNumber(line);
@@ -278,7 +279,7 @@ public class TextReportPrinter implements IPrinterEvents {
 			}
 		}
 		index2 = findNextDocument(lines, index2 + 1) - 1;
-		Vector dst = copyLines(lines, index1, index2);
+		List<String> dst = copyLines(lines, index1, index2);
 		String header = String.format("Контрольная лента Документ с № %d по № %d", N1, N2);
 		dst.add(0, header);
 		printLines(dst);

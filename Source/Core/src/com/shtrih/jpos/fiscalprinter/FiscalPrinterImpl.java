@@ -1009,7 +1009,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
             logger.debug("Reading license file...");
             try {
-                String fileName = "shtrihjavapos.lic";
+                String fileName = SysUtils.getFilesPath() + "shtrihjavapos.lic";
                 FileReader fileReader = new FileReader(fileName);
                 try {
                     BufferedReader input = new BufferedReader(fileReader);

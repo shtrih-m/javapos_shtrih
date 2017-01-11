@@ -77,8 +77,7 @@ public class JposDeviceStatistics implements JposStatistics,
 
     public void save(String fileName) {
         try {
-            FileWriter writer = new FileWriter(SysUtils.getFilesPath()
-                    + fileName);
+            FileWriter writer = new FileWriter(SysUtils.getFilesPath() + fileName);
             try {
                 retrieveData("", writer);
             } finally {

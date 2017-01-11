@@ -602,9 +602,14 @@ public class TextDocumentFilter implements IPrinterEvents {
 
 		File file = new File(SysUtils.getFilesPath() + printer.getParams().textReportFileName);
 		PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
-		writer.println(line);
-		writer.flush();
-		writer.close();            // TODO: with/using
+		try {
+			writer.println(line);
+			writer.flush();
+		}
+		finally {
+			writer.close();
+		}
+
 	}
 
 	private void beginDocument() throws Exception {

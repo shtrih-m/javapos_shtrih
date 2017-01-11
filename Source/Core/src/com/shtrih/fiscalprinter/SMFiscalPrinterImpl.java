@@ -2314,7 +2314,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 }
             }
             XmlModelsWriter writer = new XmlModelsWriter(models);
-            writer.save("models2.xml");
+            writer.save(SysUtils.getFilesPath() + "models2.xml");
 
         } catch (Exception e) {
             logger.error(e.getMessage());

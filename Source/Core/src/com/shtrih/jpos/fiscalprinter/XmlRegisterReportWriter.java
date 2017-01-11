@@ -18,6 +18,8 @@ import java.util.Vector;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
+import com.shtrih.util.SysUtils;
 import com.shtrih.util.XmlUtils;
 import com.shtrih.fiscalprinter.command.FMTotals;
 import com.shtrih.fiscalprinter.command.CashRegister;
@@ -31,7 +33,7 @@ public class XmlRegisterReportWriter {
     public static void execute(RegisterReport report, String fileName)
             throws Exception {
         if (fileName.equals("")) {
-            fileName = "ZReport.xml";
+            fileName = SysUtils.getFilesPath() + "ZReport.xml";
         }
 
         Vector cashRegisters = report.getCashRegisters();
