@@ -2334,7 +2334,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void printHeaderDriver() throws Exception {
         if (printer.getCapFiscalStorage()) {
             // 1
-            LongPrinterStatus status = printer.getLongStatus();
+            LongPrinterStatus status = printer.readLongStatus();
             String line1 = "ККТ " + status.getSerialLong();
             String line2 = status.getDate().toStringShort() + " "
                     + status.getTime().toString2();
@@ -4315,10 +4315,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public int getMaxGraphicsWidth() throws Exception {
         return getModel().getMaxGraphicsWidth();
-    }
-
-    public LongPrinterStatus getLongStatus() throws Exception {
-        return getPrinter().getLongStatus();
     }
 
     public EJStatus getEJStatus() {

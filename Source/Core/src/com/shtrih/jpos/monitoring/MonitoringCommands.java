@@ -90,7 +90,7 @@ public class MonitoringCommands {
 
     // INFO Модель ККМ, Зав. № ККМ, Номер ЭКЛЗ/Номер ФН
     private static String getInfoText(FiscalPrinterImpl service) throws Exception {
-        LongPrinterStatus status = service.getLongStatus();
+        LongPrinterStatus status = service.getPrinter().getLongStatus();
         String text = service.getDeviceMetrics().getDeviceName() + ","
                 + status.getSerial() + ",";
         if (service.getPrinter().getCapFiscalStorage()) {
