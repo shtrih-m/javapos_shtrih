@@ -18,17 +18,14 @@ import com.shtrih.util.XmlUtils;
  */
 public class XmlPropReader {
 
-    private Document doc;
     private Node root;
-    private Node node;
     private static CompositeLogger logger = CompositeLogger.getLogger(XmlPropReader.class);
 
     public XmlPropReader() {
     }
 
-    public void load(String className, String deviceName, String fileName)
-            throws Exception {
-        doc = XmlUtils.parse(fileName);
+    public void load(String className, String deviceName, String fileName) throws Exception {
+        Document doc = XmlUtils.parse(fileName);
         if (doc == null) {
             throw new Exception("Error loading document");
         }
@@ -38,23 +35,21 @@ public class XmlPropReader {
         }
         root = getChildNode(root, className);
         root = getChildNode(root, deviceName);
-        node = root;
     }
 
-    public Node getChildNode(Node node, String nodeName) throws Exception {
-        Node result = null;
+    private Node getChildNode(Node node, String nodeName) throws Exception {
         NodeList list = node.getChildNodes();
         for (int i = 0; i < list.getLength(); i++) {
-            result = list.item(i);
+            Node result = list.item(i);
             if (result.getNodeName().equalsIgnoreCase(nodeName)) {
                 return result;
             }
         }
+
         throw new Exception("Child node not found, " + nodeName);
     }
 
-    public void read(PrinterImages images) throws Exception 
-    {
+    public void read(PrinterImages images) throws Exception {
         images.clear();
         Node imagesNode = getChildNode(root, "Images");
         if (imagesNode == null) {
@@ -74,8 +69,7 @@ public class XmlPropReader {
         }
     }
 
-    public PrinterImage readPrinterImage(Node imageNode) throws Exception 
-    {
+    public PrinterImage readPrinterImage(Node imageNode) throws Exception {
         PrinterImage image = new PrinterImage();
         image.setFileName(readParameterStr(imageNode, "FileName"));
         image.setDigest(readParameterStr(imageNode, "Digest"));
@@ -85,18 +79,15 @@ public class XmlPropReader {
         return image;
     }
 
-    public void read(ReceiptImages images) throws Exception 
-    {
+    public void read(ReceiptImages images) throws Exception {
         images.clear();
         Node imagesNode = getChildNode(root, "ReceiptImages");
         if (imagesNode == null) {
             return;
         }
-        for (int i = 0; i < imagesNode.getChildNodes().getLength(); i++) 
-        {
+        for (int i = 0; i < imagesNode.getChildNodes().getLength(); i++) {
             Node imageNode = imagesNode.getChildNodes().item(i);
-            if (imageNode.getNodeName().equalsIgnoreCase("ReceiptImage")) 
-            {
+            if (imageNode.getNodeName().equalsIgnoreCase("ReceiptImage")) {
                 ReceiptImage image = new ReceiptImage();
                 readReceiptImage(imageNode, image);
                 images.add(image);
@@ -106,16 +97,28 @@ public class XmlPropReader {
 
     public int readNonFiscalDocNumber() throws Exception {
         int result = 1;
-        Node childNode = getChildNode(root, "NonFiscal");
+        Node childNode = getChildNodeOrNull(root, "NonFiscal");
         if (childNode != null) {
             result = readParameterInt(childNode, "DocumentNumber");
         }
         return result;
     }
 
+    private Node getChildNodeOrNull(Node node, String nodeName) throws Exception {
+
+        NodeList list = node.getChildNodes();
+        for (int i = 0; i < list.getLength(); i++) {
+            Node result = list.item(i);
+            if (result.getNodeName().equalsIgnoreCase(nodeName)) {
+                return result;
+            }
+        }
+
+        return null;
+    }
+
     public void readReceiptImage(Node imageNode, ReceiptImage image)
-            throws Exception 
-    {
+            throws Exception {
         image.setImageIndex(readParameterInt(imageNode, "ImageIndex"));
         image.setPosition(readParameterInt(imageNode, "Position"));
     }

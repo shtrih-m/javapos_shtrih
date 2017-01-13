@@ -6,8 +6,6 @@ package com.shtrih.jpos.fiscalprinter;
 
 import com.shtrih.fiscalprinter.SMFiscalPrinterNull;
 import junit.framework.TestCase;
-import com.shtrih.jpos.fiscalprinter.XmlPropReader;
-import com.shtrih.jpos.fiscalprinter.XmlPropWriter;
 
 /**
  * @author Kravtsov
@@ -27,7 +25,6 @@ public class XmlPropReaderTest extends TestCase {
     }
 
     public void testSave() throws Exception {
-        System.out.println("save");
         String fileName = "build/XmlPropReaderTest.xml";
         PrinterImages printerImages = new PrinterImages();
         printerImages.setMaxSize(1000);
@@ -87,6 +84,7 @@ public class XmlPropReaderTest extends TestCase {
         writer.write(printerImages);
         writer.write(receiptImages);
         writer.writePrinterHeader(header);
+        writer.writeNonFiscalDocNumber(666);
         writer.save(fileName);
 
         header = new DriverHeader(printer);
@@ -138,5 +136,19 @@ public class XmlPropReaderTest extends TestCase {
         receiptImage = receiptImages.get(0);
         assertEquals(1, receiptImage.getImageIndex());
         assertEquals(2, receiptImage.getPosition());
+
+        assertEquals(666, reader.readNonFiscalDocNumber());
+    }
+
+    public void test_when_non_fiscal_was_not_found_should_return_default_value() throws Exception {
+        String fileName = "build/XmlPropReaderTest.xml";
+
+        XmlPropWriter writer = new XmlPropWriter("FiscalPrinter", "Device1");
+        writer.save(fileName);
+
+        XmlPropReader reader = new XmlPropReader();
+        reader.load("FiscalPrinter", "Device1", fileName);
+
+        assertEquals(1, reader.readNonFiscalDocNumber());
     }
 }
