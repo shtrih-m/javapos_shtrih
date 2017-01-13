@@ -2906,7 +2906,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             if ((optArgs != null) && (optArgs.length > 0)) {
                 mode = optArgs[0];
             }
-            FMTotals totals = printer.readFMTotals(mode).getFMTotals();
+            FMTotals totals = printer.readFPTotals(mode);
             result = String.valueOf(totals.getSalesAmount()) + ";"
                     + String.valueOf(totals.getBuyAmount()) + ";"
                     + String.valueOf(totals.getRetSaleAmount()) + ";"
@@ -3616,7 +3616,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 RegisterReportReader.execute(report, printer);
                 if (params.xmlZReportEnabled) {
                     try {
-                        String fileName = getXmlZReportFileName(report.dayNumber);
+                        String fileName = getXmlZReportFileName(report.getDayNumber());
                         XmlRegisterReportWriter.execute(report, fileName);
                     } catch (Exception e) {
                         logger.error("Error saving file", e);
@@ -3624,7 +3624,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 }
                 if (params.csvZReportEnabled) {
                     try {
-                        String fileName = getCsvZReportFileName(report.dayNumber);
+                        String fileName = getCsvZReportFileName(report.getDayNumber());
                         CsvRegisterReportWriter.execute(report, fileName);
                     } catch (Exception e) {
                         logger.error("Error saving file", e);

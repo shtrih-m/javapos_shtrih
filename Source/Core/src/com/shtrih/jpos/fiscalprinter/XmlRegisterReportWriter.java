@@ -23,7 +23,10 @@ import com.shtrih.util.SysUtils;
 import com.shtrih.util.XmlUtils;
 import com.shtrih.fiscalprinter.command.FMTotals;
 import com.shtrih.fiscalprinter.command.CashRegister;
+import com.shtrih.fiscalprinter.command.FSReadCommStatus;
 import com.shtrih.fiscalprinter.command.OperationRegister;
+import com.shtrih.fiscalprinter.command.PrinterDate;
+import com.shtrih.fiscalprinter.command.PrinterTime;
 
 public class XmlRegisterReportWriter {
 
@@ -95,6 +98,16 @@ public class XmlRegisterReportWriter {
             node.setAttribute("Buy", String.valueOf(totals.getBuyAmount()));
             node.setAttribute("RetSale", String.valueOf(totals.getRetSaleAmount()));
             node.setAttribute("RetBuy", String.valueOf(totals.getRetBuyAmount()));
+            // Calculation report
+            if (report.getCapCommStatus()){
+            FSReadCommStatus commStatus = report.getCommStatus();
+            node = xmldoc.createElement("FSCalcReport");
+            root.appendChild(node);
+            node.setAttribute("QueueSize", String.valueOf(commStatus.getQueueSize()));
+            node.setAttribute("DocumentNumber", String.valueOf(commStatus.getDocumentNumber()));
+            node.setAttribute("DocumentDate", commStatus.getDocumentDate().toString());
+            node.setAttribute("DocumentTime", commStatus.getDocumentTime().toString());
+            }
             
             XmlUtils.save(xmldoc, fileName, "UTF-8");
         } finally {

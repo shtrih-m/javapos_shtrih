@@ -633,7 +633,8 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void printFiscalReceipt() {
+    public void printFiscalReceipt() 
+    {
         printFiscalReceipt138();
 
         //printQRCode2();

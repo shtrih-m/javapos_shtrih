@@ -425,7 +425,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="btnPrintFiscalReceipt2">
               <Properties>
-                <Property name="text" type="java.lang.String" value="fiscal receipt 2"/>
+                <Property name="text" type="java.lang.String" value="voided receipt"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintFiscalReceipt2ActionPerformed"/>

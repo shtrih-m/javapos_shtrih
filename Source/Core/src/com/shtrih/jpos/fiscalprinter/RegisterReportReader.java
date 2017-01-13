@@ -23,7 +23,7 @@ public class RegisterReportReader {
 
     public static void execute(RegisterReport report, SMFiscalPrinter printer)
             throws Exception {
-        report.dayNumber = printer.readDayNumber() + 1;
+        report.setDayNumber(printer.readDayNumber() + 1);
 
         int count = 0;
         int result = 0;
@@ -68,12 +68,15 @@ public class RegisterReportReader {
                 operRegisters.add(register);
             }
         }
+
         if (printer.getLongStatus().isFiscalized()) {
-            FMTotals totals = printer.readFMTotals(SmFptrConst.FMTOTALS_ALL_FISCALIZATIONS).getFMTotals();
+            FMTotals totals = printer.readFPTotals(SmFptrConst.FMTOTALS_ALL_FISCALIZATIONS);
             report.setAllFiscalizations(totals);
-            totals = printer.readFMTotals(SmFptrConst.FMTOTALS_LAST_FISCALIZATION).getFMTotals();
+            totals = printer.readFMTotals(SmFptrConst.FMTOTALS_LAST_FISCALIZATION);
             report.setLastFiscalization(totals);
         }
+        report.setCapCommStatus(printer.getCapFiscalStorage());
+        report.setCommStatus(printer.fsReadCommStatus());
     }
 
 }

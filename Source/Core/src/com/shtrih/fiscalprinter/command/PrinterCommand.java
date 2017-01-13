@@ -73,8 +73,8 @@ public abstract class PrinterCommand {
         in.setData(data);
         checkMinLength(in.getSize(), 2);
         int code = in.readByte();
-        if (code == 0xFF) {
-            code = 0xFF00 + in.readByte();
+        if (getCode() > 0xFF) {
+            code = (code << 8) + in.readByte();
             if (code != getCode()) {
                 resultCode = code & 0xFF;
             } else {
@@ -97,7 +97,7 @@ public abstract class PrinterCommand {
         out.reset();
         int code = getCode();
         if (code > 0xFF) {
-            out.writeByte(0xFF);
+            out.writeByte( (code >> 8) & 0xFF);
             out.writeByte(code & 0xFF);
         } else {
             out.writeByte(code);

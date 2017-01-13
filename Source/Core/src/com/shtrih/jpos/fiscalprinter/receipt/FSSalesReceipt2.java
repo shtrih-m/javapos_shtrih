@@ -96,6 +96,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         voidDescription = "";
         disablePrint = false;
         messages.clear();
+        cancelled = false;
     }
 
     public void beginFiscalReceipt(boolean printHeader) throws Exception {

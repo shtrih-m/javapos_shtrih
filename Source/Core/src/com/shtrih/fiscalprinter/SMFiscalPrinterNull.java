@@ -71,6 +71,8 @@ import com.shtrih.fiscalprinter.command.ReadOperationRegister;
 import com.shtrih.jpos.fiscalprinter.PrinterImage;
 import com.shtrih.jpos.fiscalprinter.ReceiptImages;
 import com.shtrih.util.BitUtils;
+import com.shtrih.fiscalprinter.command.FMTotals;
+
 
 /**
  *
@@ -732,10 +734,18 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return new String[0];
     }
 
-    public ReadFMTotals readFMTotals(int mode) throws Exception {
-        return new ReadFMTotals();
+    public FMTotals readFMTotals(int mode) throws Exception {
+        return new FMTotals();
     }
 
+    public FMTotals readFPTotals(int mode) throws Exception {
+        return new FMTotals();
+    }
+    
+    public FMTotals readFSTotals() throws Exception {
+        return new FMTotals();
+    }
+    
     public void setEscPrinter(NCR7167Printer escPrinter) {
     }
 

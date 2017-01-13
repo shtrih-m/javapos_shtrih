@@ -88,6 +88,7 @@ public abstract class CustomReceipt implements FiscalReceipt {
     }
 
     public void beginFiscalReceipt(boolean printHeader) throws Exception {
+        cancelled = false;
     }
 
     public void endFiscalReceipt(boolean printHeader) throws Exception {

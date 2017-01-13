@@ -21,7 +21,7 @@ public class TextDocumentFilter implements IPrinterEvents {
 
     private boolean enabled = true;
     private String deviceName = "ККМ";
-    private int operatorNumber = 0;
+    private int operatorNumber = 1;
     private LongPrinterStatus status = null;
     private long receiptTotal = 0;
     private boolean receiptOpened = false;
@@ -34,7 +34,6 @@ public class TextDocumentFilter implements IPrinterEvents {
     private XReport report = new XReport();
     private final String[] paymentNames = new String[4];
     private final List<Operator> operators = new ArrayList<Operator>();
-    private final File archiveFilePath;
 
     private static String SFiscalSign = "ФП";
     private static String SSaleText = "ПРОДАЖА";
@@ -64,7 +63,6 @@ public class TextDocumentFilter implements IPrinterEvents {
     public TextDocumentFilter(SMFiscalPrinter printer, PrinterHeader header) {
         this.header = header;
         this.printer = printer;
-        archiveFilePath =  new File(SysUtils.getFilesPath() + this.printer.getParams().textReportFileName);
     }
 
     public boolean getEnabled() {
@@ -503,9 +501,9 @@ public class TextDocumentFilter implements IPrinterEvents {
 
     public XReport readXReport() throws Exception {
         XReport report = new XReport();
-        ReadFMTotals totals = printer.readFMTotals(1);
-        report.salesAmountBefore = totals.getSalesTotal();
-        report.buyAmountBefore = totals.getBuyTotal();
+        FMTotals totals = printer.readFPTotals(1);
+        report.salesAmountBefore = totals.getSalesAmount();
+        report.buyAmountBefore = totals.getBuyAmount();
         report.xReportNumber = printer.readOperationRegister(158) + 1;
         report.zReportNumber = getDayNumber() + 1;
         for (int i = 0; i <= 3; i++) {
@@ -607,7 +605,8 @@ public class TextDocumentFilter implements IPrinterEvents {
     public void add(String line) throws Exception {
         logger.debug("add(" + line + ")");
 
-        PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(archiveFilePath, true)));
+        File file = new File(SysUtils.getFilesPath() + printer.getParams().textReportFileName);
+        PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
         try {
             writer.println(line);
             writer.flush();
@@ -660,6 +659,9 @@ public class TextDocumentFilter implements IPrinterEvents {
             if (operator.getNumber() == operatorNumber) {
                 return operator.getName();
             }
+        }
+        if ((operatorNumber < 1)||(operatorNumber > 30)){
+            operatorNumber = 1;
         }
         String[] fieldValue = new String[1];
         printer.check(printer.readTable(PrinterConst.SMFP_TABLE_CASHIER, operatorNumber, 2, fieldValue));

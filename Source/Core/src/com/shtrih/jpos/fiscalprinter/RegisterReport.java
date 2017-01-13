@@ -11,14 +11,18 @@ package com.shtrih.jpos.fiscalprinter;
 
 import java.util.Vector;
 import com.shtrih.fiscalprinter.command.FMTotals;
+import com.shtrih.fiscalprinter.command.FSReadCommStatus;
 
 public class RegisterReport {
 
-    public int dayNumber = 0;
+    private int dayNumber = 0;
     private final Vector cashRegisters = new Vector();
     private final Vector operRegisters = new Vector();
     private FMTotals lastFiscalization = new FMTotals();
     private FMTotals allFiscalizations = new FMTotals();
+    private boolean capCommStatus = false;
+    private FSReadCommStatus commStatus = new FSReadCommStatus();
+
     
     public RegisterReport() {
     }
@@ -45,5 +49,47 @@ public class RegisterReport {
 
     public void setAllFiscalizations(FMTotals allFiscalizations) {
         this.allFiscalizations = allFiscalizations;
+    }
+
+    /**
+     * @return the dayNumber
+     */
+    public int getDayNumber() {
+        return dayNumber;
+    }
+
+    /**
+     * @param dayNumber the dayNumber to set
+     */
+    public void setDayNumber(int dayNumber) {
+        this.dayNumber = dayNumber;
+    }
+
+    /**
+     * @return the commStatus
+     */
+    public FSReadCommStatus getCommStatus() {
+        return commStatus;
+    }
+
+    /**
+     * @param commStatus the commStatus to set
+     */
+    public void setCommStatus(FSReadCommStatus commStatus) {
+        this.commStatus = commStatus;
+    }
+
+    /**
+     * @return the capCommStatus
+     */
+    public boolean getCapCommStatus() {
+        return capCommStatus;
+    }
+
+    /**
+     * @param capCommStatus the capCommStatus to set
+     */
+    public void setCapCommStatus(boolean capCommStatus) {
+        this.capCommStatus = capCommStatus;
     }
 }

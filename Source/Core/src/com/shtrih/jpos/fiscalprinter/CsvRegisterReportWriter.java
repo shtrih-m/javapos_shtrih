@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import com.shtrih.fiscalprinter.command.FMTotals;
 import com.shtrih.fiscalprinter.command.CashRegister;
+import com.shtrih.fiscalprinter.command.FSReadCommStatus;
 import com.shtrih.fiscalprinter.command.OperationRegister;
 
 public class CsvRegisterReportWriter {
@@ -40,7 +41,7 @@ public class CsvRegisterReportWriter {
                         + String.valueOf(cashRegister.getValue())
                         + Separator
                         + String.valueOf(CashRegister.getEngName(cashRegister
-                                        .getNumber()));
+                                .getNumber()));
                 writer.write(line);
                 writer.newLine();
             }
@@ -88,6 +89,22 @@ public class CsvRegisterReportWriter {
                     + String.valueOf(totals.getRetBuyAmount());
             writer.write(line);
             writer.newLine();
+            // Comm status
+            if (report.getCapCommStatus())
+            {
+            FSReadCommStatus commStatus = report.getCommStatus();
+            line = "4"
+                    + Separator
+                    + String.valueOf(commStatus.getQueueSize())
+                    + Separator
+                    + String.valueOf(commStatus.getDocumentNumber())
+                    + Separator
+                    + commStatus.getDocumentDate().toString()
+                    + Separator
+                    + commStatus.getDocumentTime().toString();
+            writer.write(line);
+            writer.newLine();
+            }
 
             writer.flush();
         } finally {

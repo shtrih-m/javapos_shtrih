@@ -23,6 +23,7 @@ import com.shtrih.fiscalprinter.command.ContinuePrint;
 import com.shtrih.fiscalprinter.command.DeviceMetrics;
 import com.shtrih.fiscalprinter.command.EndFiscalReceipt;
 import com.shtrih.fiscalprinter.command.EndTest;
+import com.shtrih.fiscalprinter.command.FMTotals;
 import com.shtrih.fiscalprinter.command.FSReadCommStatus;
 import com.shtrih.fiscalprinter.command.FSReadDayParameters;
 import com.shtrih.fiscalprinter.command.FSReadFiscalization;
@@ -418,8 +419,12 @@ public interface SMFiscalPrinter {
 
     public String[] readEJActivationText(int maxCount) throws Exception;
 
-    public ReadFMTotals readFMTotals(int mode) throws Exception;
+    public FMTotals readFMTotals(int mode) throws Exception;
 
+    public FMTotals readFPTotals(int mode) throws Exception;
+    
+    public FMTotals readFSTotals() throws Exception;
+    
     public void setEscPrinter(NCR7167Printer escPrinter);
 
     public int beginFiscalDay() throws Exception;

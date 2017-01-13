@@ -733,8 +733,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public EndFiscalReceipt closeReceipt(CloseRecParams params)
-            throws Exception
-    {
+            throws Exception {
         logger.debug("closeReceipt");
         EndFiscalReceipt command = new EndFiscalReceipt();
         command.setPassword(usrPassword);
@@ -1021,7 +1020,25 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         PrintZReport command = new PrintZReport();
         command.setPassword(sysPassword);
         execute(command);
+        printCalcReport();
         return command;
+    }
+
+    public void printCalcReport() throws Exception {
+        if (!getCapFiscalStorage()) {
+            return;
+        }
+
+        try {
+            waitForPrinting();
+            FSReadCommStatus status = fsReadCommStatus();
+            printLines("КОЛИЧЕСТВО СООБЩЕНИЙ ДЛЯ ОФД:", String.valueOf(status.getQueueSize()));
+            printLines("НОМЕР ПЕРВОГО ДОКУМЕНТА ДЛЯ ОФД:", String.valueOf(status.getDocumentNumber()));
+            String docDate = status.getDocumentDate().toString() + " " + status.getDocumentTime().toString2();
+            printLines("ДАТА ПЕРВОГО ДОКУМЕНТА:", docDate);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
     }
 
     public int printDepartmentReport() throws Exception {
@@ -1602,12 +1619,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         capPrintBarcode2 = isCommandSupported(printBarcode2(barcode));
         capPrintBarcode3 = isCommandSupported(printBarcode3(barcode));
         capFiscalStorage = readCapFiscalStorage();
-        if (capFiscalStorage)
-        {
+        if (capFiscalStorage) {
             discountMode = 2;
             String[] fieldValue = new String[1];
             int rc = readTable(17, 1, 3, fieldValue);
-            if (succeeded(rc)){
+            if (succeeded(rc)) {
                 discountMode = Integer.parseInt(fieldValue[0]);
             }
         }
@@ -2222,14 +2238,36 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command;
     }
 
-    public ReadFMTotals readFMTotals(int mode) throws Exception {
+    public FMTotals readFMTotals(int mode) throws Exception {
         ReadFMTotals command = new ReadFMTotals();
         command.setPassword(sysPassword);
         command.setMode((byte) mode);
-        executeCommand(command);
-        return command;
+        execute(command);
+        return command.getFMTotals();
     }
 
+    public FMTotals readFSTotals() throws Exception {
+        FSReadTotals command = new FSReadTotals();
+        execute(command);
+        return command.getTotals();
+    }
+    
+    public FMTotals readFPTotals(int mode) throws Exception 
+    {
+        if (capFiscalStorage){
+            return readFSTotals();
+        } else{
+            if (isFiscalized()){
+                return readFMTotals(mode);
+            } else
+            {
+                long saleTotals = readCashRegister(244);
+                FMTotals totals = new FMTotals(saleTotals, 0, 0, 0);
+                return totals;
+            }
+        }
+    }
+    
     public ReadEJDocumentLine readEJDocumentLine() throws Exception {
         ReadEJDocumentLine command = new ReadEJDocumentLine();
         command.setPassword(sysPassword);
@@ -2562,16 +2600,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return String.valueOf(code) + ", " + result;
     }
 
-    public void openFiscalDay() throws Exception 
-    {
+    public void openFiscalDay() throws Exception {
         logger.debug("openFiscalDay");
-        if (!capOpenFiscalDay) return;
+        if (!capOpenFiscalDay) {
+            return;
+        }
         PrinterStatus status = waitForPrinting();
         if (status.getPrinterMode().isDayClosed()) {
             beginFiscalDay();
             waitForPrinting();
         }
-        
+
     }
 
     public int fsWriteTag(int tagId, String tagValue) throws Exception {
@@ -2647,24 +2686,22 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return discountMode;
     }
 
-    public int printDocHeader(String title, int number) throws Exception{
+    public int printDocHeader(String title, int number) throws Exception {
         PrintDocHeader command = new PrintDocHeader();
         command.setPassword(usrPassword);
         command.setTitle(title);
         command.setNumber(number);
         return executeCommand(command);
     }
-    
-    public void fsReadDocumentTLV(int number) throws Exception
-    {
+
+    public void fsReadDocumentTLV(int number) throws Exception {
         logger.debug("fsReadDocumentTLV");
         FSReadDocument readDocument = new FSReadDocument();
         readDocument.setDocNumber(number);
         readDocument.setSysPassword(sysPassword);
         execute(readDocument);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        while (stream.size() < readDocument.getDocSize())
-        {
+        while (stream.size() < readDocument.getDocSize()) {
             FSReadDocumentBlock command = new FSReadDocumentBlock();
             command.setSysPassword(sysPassword);
             execute(command);
@@ -2673,14 +2710,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         TLVReader reader = new TLVReader();
         reader.read(stream.toByteArray());
         Vector<String> lines = reader.getPrintText();
-        for (int i=0;i<lines.size();i++){
+        for (int i = 0; i < lines.size(); i++) {
             logger.debug(lines.get(i));
         }
     }
-    
-    public void printLines(String line1, String line2) throws Exception{
+
+    public void printLines(String line1, String line2) throws Exception {
         String text = StringUtils.alignLines(line1, line2, getMessageLength());
         printText(text);
     }
-    
+
 }
