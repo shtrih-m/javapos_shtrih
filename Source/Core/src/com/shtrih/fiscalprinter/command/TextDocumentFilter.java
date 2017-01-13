@@ -34,6 +34,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     private XReport report = new XReport();
     private final String[] paymentNames = new String[4];
     private final List<Operator> operators = new ArrayList<Operator>();
+    private final File archiveFilePath;
 
     private static String SFiscalSign = "ФП";
     private static String SSaleText = "ПРОДАЖА";
@@ -63,6 +64,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     public TextDocumentFilter(SMFiscalPrinter printer, PrinterHeader header) {
         this.header = header;
         this.printer = printer;
+        archiveFilePath =  new File(SysUtils.getFilesPath() + this.printer.getParams().textReportFileName);
     }
 
     public boolean getEnabled() {
@@ -605,8 +607,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     public void add(String line) throws Exception {
         logger.debug("add(" + line + ")");
 
-        File file = new File(SysUtils.getFilesPath() + printer.getParams().textReportFileName);
-        PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
+        PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(archiveFilePath, true)));
         try {
             writer.println(line);
             writer.flush();
