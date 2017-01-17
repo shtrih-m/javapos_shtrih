@@ -2193,7 +2193,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             }
         }
 
-        receipt = new NullReceipt();
+        receipt = new NullReceipt(createReceiptContext());
 
         header = createHeader();
         filter = new TextDocumentFilter(getPrinter(), header);
@@ -2435,7 +2435,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkPrinterState(FPTR_PS_NONFISCAL);
         setPrinterState(FPTR_PS_MONITOR);
         printDocEnd();
-        receipt = new NullReceipt();
+        receipt = new NullReceipt(createReceiptContext());
     }
 
     // ////////////////////////////////////////////////////////////////////////////
@@ -3125,7 +3125,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 }
             }
             setPrinterState(FPTR_PS_MONITOR);
-            receipt = new NullReceipt();
+            receipt = new NullReceipt(createReceiptContext());
             nonFiscalDocNumber++;
             saveProperties();
         }

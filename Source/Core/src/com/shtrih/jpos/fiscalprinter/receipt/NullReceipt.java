@@ -13,12 +13,26 @@ import jpos.JposException;
 
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
+import com.shtrih.jpos.fiscalprinter.FptrParameters;
 
 public class NullReceipt implements FiscalReceipt {
 
     private boolean cancelled = false;
+    private ReceiptContext context = null;
 
     public NullReceipt() {
+    }
+
+    public NullReceipt(ReceiptContext context) {
+        this.context = context;
+    }
+
+    public FptrParameters getParams() {
+        return context.getParams();
+    }
+
+    public ReceiptPrinter getPrinter() {
+        return context.getPrinter();
     }
 
     public boolean getCapAutoCut() throws Exception {
@@ -37,8 +51,7 @@ public class NullReceipt implements FiscalReceipt {
         return cancelled;
     }
 
-    public void notOpenedException() throws Exception 
-    {
+    public void notOpenedException() throws Exception {
         throw new JposException(JposConst.JPOS_E_ILLEGAL, "Receipt is not opened");
     }
 
@@ -57,11 +70,6 @@ public class NullReceipt implements FiscalReceipt {
 
     public void printRecItemAdjustment(int adjustmentType, String description,
             long amount, int vatInfo) throws Exception {
-        notOpenedException();
-    }
-
-    public void printRecMessage(int station, FontNumber font, String message)
-            throws Exception {
         notOpenedException();
     }
 
@@ -159,26 +167,36 @@ public class NullReceipt implements FiscalReceipt {
         notOpenedException();
     }
 
+    public void printRecMessage(int station, FontNumber font, String message)
+            throws Exception {
+        if (context != null) {
+            getPrinter().printText(station, message, font);
+        }
+    }
+
     public void printNormal(int station, String data) throws Exception {
+        if (context != null) {
+            getPrinter().printText(getPrinter().getStation(station), data,
+                    getParams().font);
+        }
+    }
+
+    public boolean getDisablePrint() {
+        return false;
+    }
+
+    public void disablePrint() throws Exception {
         notOpenedException();
     }
 
-    public boolean getDisablePrint(){
-        return false;
-    }
-    
-    public void disablePrint() throws Exception{
-        notOpenedException();
-    }
-    
     public void fsWriteTLV(byte[] data) throws Exception {
         notOpenedException();
     }
-    
+
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
         notOpenedException();
     }
-    
+
     public void fsWriteCustomerEmail(String text) throws Exception {
         notOpenedException();
     }

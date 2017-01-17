@@ -635,8 +635,10 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() 
     {
-        printFiscalReceipt138();
-
+        printFiscalReceipt139();
+        
+        //printNCRFiscalReceipt();
+        
         //printQRCode2();
         //printFiscalReceipt136();
         //printFiscalReceipt137();
@@ -801,6 +803,8 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt138() {
         try {
             printer.resetPrinter();
+            
+            printer.setFontNumber(1);
 
             printer.beginFiscalReceipt(false);
             printer.printRecItem("1 3300573 Пакет ПЯТЕРОЧКА 65х40см", 445, 1000, 1, 445, "");
@@ -824,6 +828,22 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    public void printFiscalReceipt139() {
+        try {
+            printer.resetPrinter();
+            
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("**02  2314523000002 ШЕЙКА СВИНАЯ", 2849100, 950, 2, 2999000, "кг");
+            printer.printRecItemAdjustment(1, "ckugka", 284900, 2);
+            printer.printRecTotal(2564200, 2564200, "12");
+            
+            printer.endFiscalReceipt(false);
+    
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void printFiscalReceipt101() {
         try {
             printer.resetPrinter();
