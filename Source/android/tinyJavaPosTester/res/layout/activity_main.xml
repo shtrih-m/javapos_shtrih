@@ -1,55 +1,58 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/V1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.shtrih.tinyjavapostester.MainActivity">
 
-    <Button
-        android:id="@+id/btnPrintReceipt"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="printReceipt"
-        android:text="PrintReceipt"
-        />
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-    <Button
-        android:id="@+id/btnPrintEAN13Barcode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="printEAN13Barcode"
-        android:text="Print EAN13 bar code" />
+        <Button
+            android:id="@+id/btnPrintReceipt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="printReceipt"
+            android:text="@string/action_print_receipt" />
 
-    <Button
-        android:id="@+id/btnPrintPDF417Barcode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="printPDF417Barcode"
-        android:text="Print PDF417 bar code" />
+        <Button
+            android:id="@+id/btnPrintEAN13Barcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="printEAN13Barcode"
+            android:text="@string/action_print_ean13_bar_code" />
 
-    <Button
-        android:id="@+id/btnOpenFiscalDay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="openFiscalDay"
-        android:text="Open fiscal day" />
+        <Button
+            android:id="@+id/btnPrintPDF417Barcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="printPDF417Barcode"
+            android:text="@string/action_print_pdf417_bar_code" />
 
-    <Button
-        android:id="@+id/btnPrintZReport"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="printZReport"
-        android:text="PrintZReport" />
+        <Button
+            android:id="@+id/btnOpenFiscalDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="openFiscalDay"
+            android:text="@string/action_open_fiscal_day" />
 
-    <Button
-        android:id="@+id/btnPrintDayJournal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="printJournalCurrentDay"
-        android:text="Print day journal" />
-</LinearLayout>
+        <Button
+            android:id="@+id/btnPrintZReport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="printZReport"
+            android:text="@string/action_print_z_report" />
+
+        <Button
+            android:id="@+id/btnPrintDayJournal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="printJournalCurrentDay"
+            android:text="@string/action_print_current_day_journal" />
+    </LinearLayout>
+</ScrollView>

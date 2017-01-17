@@ -2,14 +2,18 @@
 <resources>
 
     <string name="app_name">tinyJavaPosTester</string>
-    <string name="action_connect_ptk">Connect PTK</string>
+    <string name="action_connect_ptk">Connect KKM</string>
     <string name="none_paired">no paired</string>
     <string name="none_found">nothing found</string>
-    <string name="scanning">scanning...</string>
+    <string name="scanning">scanning…</string>
     <string name="scan">scan</string>
     <string name="select_device">select device</string>
-    <string name="open_fiscal_day">open_fiscal_day</string>
-    
+    <string name="action_print_receipt">Print receipt</string>
+    <string name="action_print_ean13_bar_code">Print EAN13 bar code</string>
+    <string name="action_print_pdf417_bar_code">Print PDF417 bar code</string>
+    <string name="action_open_fiscal_day">Open fiscal day</string>
+    <string name="action_print_z_report">Print Z-report</string>
+    <string name="action_print_current_day_journal">Print current day journal</string>
 
-    
+
 </resources>
