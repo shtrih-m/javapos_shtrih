@@ -7,7 +7,7 @@
 ********************************************************************************
 
   January, 17 2017, 19:00
-  deviceServiceVersion = 1013346
+  deviceServiceVersion = 1013347
 	
   [-] Fixed error with printNormal and printRecMessage
   

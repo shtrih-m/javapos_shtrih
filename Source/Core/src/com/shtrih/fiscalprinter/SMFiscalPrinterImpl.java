@@ -2251,23 +2251,19 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         execute(command);
         return command.getTotals();
     }
-    
-    public FMTotals readFPTotals(int mode) throws Exception 
-    {
-        if (capFiscalStorage){
+
+    public FMTotals readFPTotals(int mode) throws Exception {
+        if (capFiscalStorage) {
             return readFSTotals();
-        } else{
-            if (isFiscalized()){
-                return readFMTotals(mode);
-            } else
-            {
-                long saleTotals = readCashRegister(244);
-                FMTotals totals = new FMTotals(saleTotals, 0, 0, 0);
-                return totals;
-            }
+        } else if (isFiscalized()) {
+            return readFMTotals(mode);
+        } else {
+            long saleTotals = readCashRegister(244);
+            FMTotals totals = new FMTotals(saleTotals, 0, 0, 0);
+            return totals;
         }
     }
-    
+
     public ReadEJDocumentLine readEJDocumentLine() throws Exception {
         ReadEJDocumentLine command = new ReadEJDocumentLine();
         command.setPassword(sysPassword);
@@ -2720,4 +2716,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         printText(text);
     }
 
+    public void printItems(Vector<PrintItem> items) throws Exception {
+        for (int i = 0; i < items.size(); i++) {
+            PrintItem item = items.get(i);
+            item.print(this);
+        }
+    }
 }

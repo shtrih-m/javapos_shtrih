@@ -635,7 +635,7 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() 
     {
-        printFiscalReceipt139();
+        printFiscalReceipt101();
         
         //printNCRFiscalReceipt();
         
@@ -848,14 +848,29 @@ class PrinterTest implements FiscalPrinterConst {
         try {
             printer.resetPrinter();
 
+            printer.printRecMessage("printRecMessage1");
+            printer.printNormal(FPTR_S_RECEIPT, "printNormal1");
+            
             printer.setFiscalReceiptType(FPTR_RT_SALES);
             printer.beginFiscalReceipt(true);
+            
+            printer.printRecMessage("printRecMessage2");
+            printer.printNormal(FPTR_S_RECEIPT, "printNormal2");
+            
             printer.printRecItem("Тестовый товар", 10000, 1000, 0, 10000, "");
             printer.printRecSubtotalAdjustment(FPTR_AT_AMOUNT_DISCOUNT, "", 500);
             printer.printRecItem("Батарейка Alkaline Stam", 20, 0, 1, 20, "");
             printer.printRecItemVoid("Батарейка Alkaline Stam", 20, 0, 1, 20, "");
             printer.printRecSubtotal(9500);
+            
+            printer.printRecMessage("printRecMessage3");
+            printer.printNormal(FPTR_S_RECEIPT, "printNormal3");
+            
             printer.printRecTotal(9500, 9500, "10");
+            
+            printer.printRecMessage("printRecMessage4");
+            printer.printNormal(FPTR_S_RECEIPT, "printNormal4");
+            
             printer.endFiscalReceipt(true);
         } catch (Exception e) {
             e.printStackTrace();

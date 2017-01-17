@@ -11,7 +11,10 @@ package com.shtrih.fiscalprinter;
 /**
  *
  * @author V.Kravtsov
- */
+*/
+
+import java.util.Vector;
+
 import com.shtrih.ej.EJDate;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.command.AmountItem;
@@ -74,6 +77,8 @@ import com.shtrih.printer.ncr7167.NCR7167Printer;
 import com.shtrih.jpos.fiscalprinter.PrinterImage;
 import com.shtrih.jpos.fiscalprinter.PrinterImages;
 import com.shtrih.jpos.fiscalprinter.ReceiptImages;
+import com.shtrih.fiscalprinter.command.TextLine;
+import com.shtrih.jpos.fiscalprinter.PrintItem;
 
 public interface SMFiscalPrinter {
 
@@ -499,5 +504,7 @@ public interface SMFiscalPrinter {
     public int printDocHeader(String title, int number) throws Exception;
     
     public void printLines(String line1, String line2) throws Exception;
+    
+    public void printItems(Vector<PrintItem> items) throws Exception;
 }
 

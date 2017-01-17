@@ -267,7 +267,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private String logicalName = "";
     private boolean asyncMode = false;
     private FiscalReceipt receipt = new NullReceipt();
-    private final Vector printItems = new Vector();
+    private final Vector<PrintItem> printItems = new Vector();
     private final PrinterReceipt printerReceipt = new PrinterReceipt();
     private boolean connected = false;
     private boolean isLicenseValid = false;
@@ -2394,6 +2394,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printDocEnd() throws Exception {
+        getPrinter().printItems(printItems);
         header.endDocument(additionalHeader, additionalTrailer);
     }
 
@@ -2403,7 +2404,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     private void printReportEnd() throws Exception {
         try {
-            header.endDocument("", "");
+        getPrinter().printItems(printItems);
+        header.endDocument("", "");
         } catch (Exception e) {
             // ignore print errors
             logger.error("printReportEnd: " + e.getMessage());

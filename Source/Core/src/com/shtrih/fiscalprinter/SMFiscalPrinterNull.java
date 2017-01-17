@@ -72,7 +72,7 @@ import com.shtrih.jpos.fiscalprinter.PrinterImage;
 import com.shtrih.jpos.fiscalprinter.ReceiptImages;
 import com.shtrih.util.BitUtils;
 import com.shtrih.fiscalprinter.command.FMTotals;
-
+import com.shtrih.jpos.fiscalprinter.PrintItem;
 
 /**
  *
@@ -741,11 +741,11 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public FMTotals readFPTotals(int mode) throws Exception {
         return new FMTotals();
     }
-    
+
     public FMTotals readFSTotals() throws Exception {
         return new FMTotals();
     }
-    
+
     public void setEscPrinter(NCR7167Printer escPrinter) {
     }
 
@@ -862,43 +862,45 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public int printReceiptCommands() throws Exception {
         return 0;
     }
-    
-    public int fsReceiptDiscount(FSReceiptDiscount command) throws Exception{
+
+    public int fsReceiptDiscount(FSReceiptDiscount command) throws Exception {
         return 0;
     }
 
-    public String getDepartmentName(int number) throws Exception{
+    public String getDepartmentName(int number) throws Exception {
         return "";
     }
-    
-    public String getTaxName(int number) throws Exception{
+
+    public String getTaxName(int number) throws Exception {
         return "";
     }
-    
-    public int getTaxRate(int number) throws Exception{
+
+    public int getTaxRate(int number) throws Exception {
         return 0;
     }
 
-    public int getDiscountMode() throws Exception{
+    public int getDiscountMode() throws Exception {
         return 0;
     }
-    
+
     public String readTable(int tableNumber, int rowNumber, int fieldNumber)
-            throws Exception{
+            throws Exception {
         return "";
     }
-    
-    public String readTable(String tableName, String fieldName) 
-            throws Exception{
+
+    public String readTable(String tableName, String fieldName)
+            throws Exception {
         return "";
     }
-    
-    public int printDocHeader(String title, int number) throws Exception{
+
+    public int printDocHeader(String title, int number) throws Exception {
         return 0;
     }
-    
-    public void printLines(String line1, String line2) throws Exception{
-        
+
+    public void printLines(String line1, String line2) throws Exception {
     }
-    
+
+    public void printItems(Vector<PrintItem> items) throws Exception {
+    }
+
 }
