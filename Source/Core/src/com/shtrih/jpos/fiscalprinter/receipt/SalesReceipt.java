@@ -149,7 +149,6 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         PrinterStatus status = getPrinter().getPrinter().waitForPrinting();
         if (status.getPrinterMode().isReceiptOpened()) {
             if (getReceipt().isCancelled()) {
-                getPrinter().printText(getParams().receiptVoidText);
                 getPrinter().getPrinter().cancelReceipt();
                 getFiscalDay().cancelFiscalRec();
             } else {

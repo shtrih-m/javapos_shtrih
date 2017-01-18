@@ -2335,7 +2335,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         if (printer.getCapFiscalStorage()) {
             // 1
             LongPrinterStatus status = printer.readLongStatus();
-            String line1 = "ККТ " + status.getSerialLong();
+            String line1 = "ККТ " + printer.readTable(18, 1, 1).trim();
             String line2 = status.getDate().toStringShort() + " "
                     + status.getTime().toString2();
             printer.printLines(line1, line2);

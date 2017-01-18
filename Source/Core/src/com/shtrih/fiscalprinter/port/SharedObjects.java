@@ -40,10 +40,10 @@ public class SharedObjects {
         throw new CloneNotSupportedException();
     }
 
-    public int size(){
+    public int size() {
         return items.size();
     }
-    
+
     public synchronized SharedObject find(String name) {
         for (int i = 0; i < items.size(); i++) {
             SharedObject item = (SharedObject) items.get(i);
@@ -54,25 +54,28 @@ public class SharedObjects {
         return null;
     }
 
-    public synchronized Object findObject(String name) 
-    {
+    public synchronized Object findObject(String name) {
         SharedObject item = find(name);
-        if (item == null) return null;
+        if (item == null) {
+            return null;
+        }
         return item.getItem();
     }
-    
+
     public synchronized void add(Object item, String name) {
         items.add(new SharedObject(item, name));
     }
 
     public synchronized boolean release(String name) {
         SharedObject item = find(name);
-        if (item == null) {
-            return true;
+        if (item != null) {
+            item.release();
+            if (item.getRefCount() <= 0) {
+                items.remove(item);
+                return true;
+            }
         }
-
-        item.release();
-        return item.getRefCount() <= 0;
+        return false;
     }
 
     public synchronized void addref(String name) {

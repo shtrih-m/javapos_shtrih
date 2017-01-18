@@ -2721,5 +2721,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             PrintItem item = items.get(i);
             item.print(this);
         }
+        items.clear();
     }
 }

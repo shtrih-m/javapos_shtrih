@@ -72,10 +72,8 @@ public class SocketPort implements PrinterPort {
         }
 
         connected = false;
-        if (SharedObjects.getInstance().release(portName)) {
-
-            in.close();
-            out.close();
+        if (SharedObjects.getInstance().release(portName)) 
+        {
             in = null;
             out = null;
             socket.close();
