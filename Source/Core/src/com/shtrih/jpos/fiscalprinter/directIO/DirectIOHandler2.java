@@ -345,6 +345,10 @@ public class DirectIOHandler2 {
                 new DIOPrintJournal(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_SET_DISCOUNT_AMOUNT:
+                new DIOSetDiscountAmount(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)

@@ -103,4 +103,5 @@ public interface FiscalReceipt {
     
     public void fsWriteCustomerPhone(String text) throws Exception;
     
+    public void setDiscountAmount(int amount) throws Exception;
 }

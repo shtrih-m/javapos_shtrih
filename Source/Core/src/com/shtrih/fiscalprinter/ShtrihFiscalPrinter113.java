@@ -26,6 +26,7 @@ import jpos.events.StatusUpdateListener;
 
 import com.shtrih.fiscalprinter.command.*;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
+import static jpos.FiscalPrinterConst.FPTR_PS_FISCAL_RECEIPT;
 
 /**
  * Wrapper class to help using directIO codes *
@@ -1636,7 +1637,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void fsWriteCustomerPhone(String data) throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_CUSTOMER_PHONE, null, data);
     }
-    
+
     public void fsWriteTLV(byte[] data) throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_TLV, null, data);
     }
@@ -1685,5 +1686,10 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         params[1] = docNumber1;
         params[2] = docNumber2;
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_JOURNAL, null, params);
+    }
+
+    public void setDiscountAmount(int amount) throws Exception {
+        directIO(SmFptrConst.SMFPTR_DIO_SET_DISCOUNT_AMOUNT, null, 
+                new Integer(amount));
     }
 }

@@ -449,8 +449,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         freezeEvents = true;
     }
 
-
-
     public SMFiscalPrinter getPrinter() {
         if (printer == null) {
             logger.error("printer is null");
@@ -2404,8 +2402,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     private void printReportEnd() throws Exception {
         try {
-        getPrinter().printItems(printItems);
-        header.endDocument("", "");
+            getPrinter().printItems(printItems);
+            header.endDocument("", "");
         } catch (Exception e) {
             // ignore print errors
             logger.error("printReportEnd: " + e.getMessage());
@@ -4660,6 +4658,22 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             logger.error("fsPrintCalcReport: " + e.getMessage());
         }
 
+    }
+
+    public void setDiscountAmount(int amount) throws Exception 
+    {
+        if ((printerState.getValue() != FPTR_PS_FISCAL_RECEIPT)
+                && (printerState.getValue() != FPTR_PS_FISCAL_RECEIPT_TOTAL)) {
+            throwWrongStateError();
+        }
+        
+        receipt.setDiscountAmount(amount);
+        
+        if (receipt.isPayed()) {
+            setPrinterState(FPTR_PS_FISCAL_RECEIPT_ENDING);
+        } else {
+            setPrinterState(FPTR_PS_FISCAL_RECEIPT_TOTAL);
+        }
     }
 
 }

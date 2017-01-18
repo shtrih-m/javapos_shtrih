@@ -54,6 +54,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
     private String voidDescription = "";
     private final long[] payments = new long[5]; // payment amounts
     private Vector<String> messages = new Vector();
+    private int discountAmount = 0;
 
     private static CompositeLogger logger = CompositeLogger.getLogger(FSSalesReceipt2.class);
 
@@ -86,6 +87,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
     }
 
     public void clearReceipt() throws Exception {
+        discountAmount = 0;
         isOpened = false;
         lastItem = null;
         lastItemDiscountSum = 0;
@@ -165,7 +167,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
                 closeParams.setTax2(0);
                 closeParams.setTax3(0);
                 closeParams.setTax4(0);
-                closeParams.setDiscount(0);
+                closeParams.setDiscount(discountAmount);
                 closeParams.setText(getParams().closeReceiptText);
                 getPrinter().getPrinter().closeReceipt(closeParams);
                 getFiscalDay().closeFiscalRec();
@@ -481,7 +483,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
     }
 
     public boolean isPayed() throws Exception {
-        return getPaymentAmount() >= getSubtotal();
+        return getPaymentAmount() >= (getSubtotal() - discountAmount);
     }
 
     public void clearPrePostLine() {
@@ -706,10 +708,16 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
 
     public void printTotalDiscount(long amount, int tax1, String text)
             throws Exception {
+
         FSReceiptDiscount item = new FSReceiptDiscount();
         item.setSysPassword(getDevice().getUsrPassword());
-        item.setDiscount(Math.abs(amount));
-        item.setCharge(0);
+        if (amount > 0) {
+            item.setDiscount(Math.abs(amount));
+            item.setCharge(0);
+        } else {
+            item.setDiscount(0);
+            item.setCharge(Math.abs(amount));
+        }
         item.setTax1(tax1);
         item.setName(text);
         getDevice().fsReceiptDiscount(item);
@@ -809,4 +817,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
         }
     }
 
+    public void setDiscountAmount(int amount) throws Exception {
+        discountAmount = amount;
+    }
 }

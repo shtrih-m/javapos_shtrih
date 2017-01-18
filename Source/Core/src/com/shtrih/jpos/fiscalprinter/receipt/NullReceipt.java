@@ -204,4 +204,7 @@ public class NullReceipt implements FiscalReceipt {
     public void fsWriteCustomerPhone(String text) throws Exception {
         notOpenedException();
     }
+    
+    public void setDiscountAmount(int amount) throws Exception{
+    }
 }

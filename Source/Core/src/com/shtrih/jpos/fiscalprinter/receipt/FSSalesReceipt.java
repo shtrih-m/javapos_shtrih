@@ -54,6 +54,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private final long[] payments = new long[5]; // payment amounts
     private final FSDiscounts discounts = new FSDiscounts();
     private Vector<String> messages = new Vector();
+    private int discountAmount = 0;
 
     private static CompositeLogger logger = CompositeLogger.getLogger(FSSalesReceipt.class);
 
@@ -84,6 +85,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void clearReceipt() throws Exception {
+        discountAmount = 0;
         total = 0;
         isOpened = false;
         lastItem = null;
@@ -97,7 +99,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         disablePrint = false;
         messages.clear();
         cancelled = false;
-}
+    }
 
     public void beginFiscalReceipt(boolean printHeader) throws Exception {
         clearReceipt();
@@ -254,7 +256,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 closeParams.setTax2(0);
                 closeParams.setTax3(0);
                 closeParams.setTax4(0);
-                closeParams.setDiscount(0);
+                closeParams.setDiscount(discountAmount);
                 closeParams.setText(getParams().closeReceiptText);
                 getPrinter().getPrinter().closeReceipt(closeParams);
                 getFiscalDay().closeFiscalRec();
@@ -651,7 +653,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public boolean isPayed() throws Exception {
-        return getPaymentAmount() >= getSubtotal();
+        return getPaymentAmount() >= (getSubtotal() - discountAmount);
     }
 
     public void clearPrePostLine() {
@@ -773,7 +775,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printDiscount(long amount, int tax1, String text)
             throws Exception {
         logger.debug("printDiscount: " + amount);
-        if (amount > getLastItem().getTotal()) {
+        if (Math.abs(amount) > getLastItem().getTotal()) {
             throw new Exception("Discount amount more than receipt item amount");
         }
 
@@ -892,5 +894,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 messages.add("Телефон покупателя: " + text);
             }
         }
+    }
+
+    public void setDiscountAmount(int amount) throws Exception {
+        discountAmount = amount;
     }
 }

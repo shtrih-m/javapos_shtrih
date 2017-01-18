@@ -6,10 +6,12 @@
 
 ********************************************************************************
 
-  January, 18 2017, 19:40
-  deviceServiceVersion = 1013348
+  January, 18 2017, 21:30
+  deviceServiceVersion = 1013349
 	
   [-] Fixed error "Socket closed"
+  [+] Added directIO code SMFPTR_DIO_SET_DISCOUNT_AMOUNT = 0x3D to
+      set receipt discount amount. Works in discount mode 2 only.
   
 ********************************************************************************
 

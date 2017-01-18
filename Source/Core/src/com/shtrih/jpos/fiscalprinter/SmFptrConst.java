@@ -440,6 +440,12 @@ public interface SmFptrConst {
      * Print journal report
      */
     public static final int SMFPTR_DIO_PRINT_JOURNAL = 0x3C;
+
+    /**
+     * Set receipt discount amount
+     * For receipt discount from 1 to 99 kopeks
+     */
+    public static final int SMFPTR_DIO_SET_DISCOUNT_AMOUNT = 0x3D;
     
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:

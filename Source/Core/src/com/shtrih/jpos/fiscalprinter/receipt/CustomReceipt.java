@@ -247,4 +247,6 @@ public abstract class CustomReceipt implements FiscalReceipt {
     public void fsWriteCustomerPhone(String text) throws Exception {
     }
 
+    public void setDiscountAmount(int amount) throws Exception{
+    }
 }
