@@ -70,6 +70,10 @@ task dist(type: Zip) {
     from configurations.compile
     from "Res/"
     from "${rootDir}/../History.txt"
+        
+    into('doc') {
+        from "${rootDir}/../Doc/SHTRIH/JposShtrih.docx"
+    }
 }
 
 artifacts {

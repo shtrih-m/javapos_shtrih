@@ -102,4 +102,5 @@ task dist(type: Zip) {
     
     from "${rootDir}/FptrServiceAndroid/build/outputs/aar/FptrServiceAndroid-release.aar"
     from "${rootDir}/tinyJavaPosTester/assets/jpos.xml"
+    from "${rootDir}/../../Doc/SHTRIH/JposShtrih.docx"
 }
