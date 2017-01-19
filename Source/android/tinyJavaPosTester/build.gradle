@@ -14,10 +14,23 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
+    signingConfigs {
+        release {
+            storeFile file("${projectDir}/tinyJavaPOSTester-release-key.keystore")
+            storePassword "123456"
+            keyAlias "tinyJavaPOSTester"
+            keyPassword "123456"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            
+            applicationVariants.all { variant ->
+                renameAPK(variant, defaultConfig, 'R')
+            }
         }
     }
     productFlavors {
@@ -58,5 +71,15 @@ task dist(type: Zip) {
     destinationDir = new File("${rootDir}/../dist/zip/android")
     baseName = 'tinyJavaPosTester'
     
-    from "${rootDir}/tinyJavaPosTester/build/outputs/apk/tinyJavaPosTester-release-unsigned.apk"
+    from "${rootDir}/tinyJavaPosTester/build/outputs/apk/tinyJavaPosTester_v${version}.apk"
 }
+
+def renameAPK(variant, defaultConfig, buildType) {
+     variant.outputs.each { output ->
+         def formattedDate = new Date().format('yyMMdd')
+
+         def file = output.packageApplication.outputFile
+         def fileName = "tinyJavaPosTester_v${version}.apk"
+         output.packageApplication.outputFile = new File(file.parent, fileName)
+     }
+ }
