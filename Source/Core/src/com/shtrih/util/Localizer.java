@@ -99,14 +99,14 @@ public class Localizer {
         try {
             InputStream stream = ResourceLoader.load(resourceName);
             if (stream == null) {
-                logger.debug("Failed to create resource stream");
+                logger.debug("Failed to create resource stream from '" + resourceName + "', resource missing");
                 return;
             }
 
             bundle = new PropertyResourceBundle(stream);
 
         } catch (Exception e) {
-            logger.error("loadFromResource: " + e.getMessage());
+            logger.error("loadFromResource '" + resourceName + "'", e);
         }
     }
 
@@ -135,6 +135,7 @@ public class Localizer {
         try {
             return getInstance().getResourceString(key);
         } catch (Exception e) {
+            logger.error("Failed to find name for '" + key + "'", e);
             return key;
         }
     }
