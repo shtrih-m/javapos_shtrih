@@ -13,16 +13,14 @@ package com.shtrih.util;
  */
 
 import java.io.InputStream;
-import java.util.Locale;
 import java.util.Properties;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import com.shtrih.util.CompositeLogger;
-
 public class Localizer {
 
     private static CompositeLogger logger = CompositeLogger.getLogger(Localizer.class);
+
     public static final String receiptDuplicationNotSupported = "ReceiptDuplicationNotSupported";
     public static final String deviceIsEnabled = "DeviceIsEnabled";
     public static final String additionalHeaderNotSupported = "AdditionalHeaderNotSupported";
@@ -97,7 +95,7 @@ public class Localizer {
         loadFromResource(resourceName);
     }
 
-    public void loadFromResource(String resourceName) {
+    private void loadFromResource(String resourceName) {
         try {
             InputStream stream = ResourceLoader.load(resourceName);
             if (stream == null) {
@@ -112,7 +110,7 @@ public class Localizer {
         }
     }
 
-    public static Localizer getInstance() {
+    private static Localizer getInstance() {
         if (instance == null) {
             instance = new Localizer("messages_ru.txt");
         }

@@ -6,7 +6,7 @@ public class ResourceLoader {
 
     private static ResourceLoader instance;
 
-    public static ResourceLoader getInstance() {
+    private static ResourceLoader getInstance() {
         if (instance == null) {
             instance = new ResourceLoader();
         }
