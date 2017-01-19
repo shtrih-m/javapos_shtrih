@@ -12,6 +12,6 @@ job_build:
   artifacts:
     name: "shtrihjavapos-${CI_BUILD_REF_NAME}_${CI_PIPELINE_ID}"
     paths:
-      - Source/dist/zip/
+      - dist/zip/
   stage: build
 
