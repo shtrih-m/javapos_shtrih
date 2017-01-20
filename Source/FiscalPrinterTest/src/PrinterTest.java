@@ -635,7 +635,8 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() 
     {
-        printFiscalReceipt101();
+        //printCancelledReceipt();
+        printFiscalReceipt102();
         
         //printNCRFiscalReceipt();
         
@@ -848,6 +849,7 @@ class PrinterTest implements FiscalPrinterConst {
         try {
             printer.resetPrinter();
 
+            printer.printRecMessage("Кассовый чек");
             printer.printRecMessage("printRecMessage1");
             printer.printNormal(FPTR_S_RECEIPT, "printNormal1");
             
@@ -873,6 +875,10 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecMessage("printRecMessage4");
             printer.printNormal(FPTR_S_RECEIPT, "printNormal4");
             
+            printer.printBarcode("1234567890123", "", SmFptrConst.SMFPTR_BARCODE_EAN13,
+              100, SmFptrConst.SMFPTR_PRINTTYPE_AUTO, 2, 0, 1, 0);
+            
+            
             printer.endFiscalReceipt(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -885,10 +891,26 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setCheckTotal(true);
             printer.setFiscalReceiptType(FPTR_RT_SALES);
             printer.beginFiscalReceipt(true);
-            printer.printRecItem("Item 1", 1001, 5000, 1, 200, "");
-            printer.printRecItem("Item 2", 999, 5000, 1, 200, "");
-            printer.printRecSubtotal(2000);
-            printer.printRecTotal(2000, 2000, "0");
+            printer.printRecItem("1 1860 Напиток COCA-COLA газ.ПЭТ  2.0л", 29385, 3000, 1, 9795, "");
+            printer.printRecItemAdjustment(1, "", 10000, 0);
+            printer.printRecSubtotal(19385);
+            printer.printRecSubtotalAdjustment(1, "", 85);
+            printer.printRecTotal(19300, 19300, "");
+            
+            printer.printRecMessage("На артикул не предоставляется скидка");
+            printer.printRecMessage(" ");
+            printer.printRecMessage("Покупатель: 7789004000000079");
+            printer.printRecMessage("     ");
+            printer.printRecMessage("................................................");
+            printer.printRecMessage(" ");
+            printer.printRecMessage("         ***ЧЕК ПОКУПАТЕЛЯ ***          ");
+            printer.printRecMessage(" ");
+            printer.printRecMessage("----------------------------------------");
+            printer.printRecMessage(" ");
+            printer.printRecMessage("Списано баллов: 1000                    ");
+            printer.printRecMessage("Со счета списано, баллов: 1000          ");
+            printer.printRecMessage("Баланс, баллов: 892                     ");
+            
             printer.endFiscalReceipt(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1953,8 +1975,6 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printNormal(2, "  4605246004278");
             printer.setFontNumber(1);
             printer.printRecItem("Чай чер. бергам. 2*25п", 1000290, 1, 0, 0, "");
-
-            printer.printRecVoid("ЧЕК ОТМЕНЕН");
             printer.endFiscalReceipt(false);
 
         } catch (Exception e) {

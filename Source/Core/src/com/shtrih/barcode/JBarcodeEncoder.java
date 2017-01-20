@@ -105,7 +105,8 @@ public class JBarcodeEncoder implements SmBarcodeEncoder {
         if (encoder == null) return null;
         
         String code = barcode.getText();
-        code = code + encoder.computeCheckSum(code);
+        //code = code + encoder.computeCheckSum(code);
+        code = encoder.getTextWithCheckSum(code);
         BarSet[] barset = encoder.encode(code);
         BitSet bits = BarsetToBits(barset, barcode.getBarWidth());
         byte[] data = BitUtils.toByteArray(bits);

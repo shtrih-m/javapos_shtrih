@@ -2603,7 +2603,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
         PrinterStatus status = waitForPrinting();
         if (status.getPrinterMode().isDayClosed()) {
-            beginFiscalDay();
+            check(beginFiscalDay());
             waitForPrinting();
         }
 

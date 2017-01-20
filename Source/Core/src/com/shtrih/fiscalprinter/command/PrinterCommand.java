@@ -90,6 +90,10 @@ public abstract class PrinterCommand {
         if (resultCode == 0) {
             decode(in);
         }
+        // !!!!
+        //if (code == 0x88){
+        //    resultCode = 0x73;
+       // }
     }
 
     public byte[] encodeData() throws Exception {

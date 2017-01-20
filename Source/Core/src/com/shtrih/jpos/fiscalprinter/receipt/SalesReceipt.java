@@ -129,31 +129,15 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         getPrinter().printPostLine();
     }
 
-    public void printTaxDiscounts() throws Exception {
-        for (int tax = 1; tax < 5; tax++) {
-            long amount = getReceipt().getDiscountAmount(tax);
-            if (amount > 0) {
-                AmountItem item = new AmountItem();
-                item.setAmount(amount);
-                item.setTax1(tax);
-                item.setTax2(PrinterConst.SMFPTR_TAX_NOTAX);
-                item.setTax3(PrinterConst.SMFPTR_TAX_NOTAX);
-                item.setTax4(PrinterConst.SMFPTR_TAX_NOTAX);
-                item.setText("");
-                getPrinter().getPrinter().printDiscount(item);
-            }
-        }
-    }
-
     public void endFiscalReceipt(boolean printHeader) throws Exception {
         PrinterStatus status = getPrinter().getPrinter().waitForPrinting();
-        if (status.getPrinterMode().isReceiptOpened()) {
+        if (status.getPrinterMode().isReceiptOpened()) 
+        {
             if (getReceipt().isCancelled()) {
                 getPrinter().getPrinter().cancelReceipt();
                 getFiscalDay().cancelFiscalRec();
             } else {
                 getPrinter().checkZeroReceipt();
-                printTaxDiscounts();
                 long[] sum = getReceipt().getPayments();
                 CloseRecParams closeParams = new CloseRecParams();
                 closeParams.setSum1(sum[0]);
@@ -693,12 +677,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setTax3(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setTax4(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setText(text);
-        if (tax1 == PrinterConst.SMFPTR_TAX_NOTAX) {
-            getPrinter().getPrinter().printDiscount(item);
-        } else {
-            String amountText = "=" + StringUtils.amountToString(amount);
-            getPrinter().printStrings(text, amountText);
-        }
+        getPrinter().getPrinter().printDiscount(item);
         getReceipt().printDiscount(item);
         vatAmounts[tax1] = vatAmounts[tax1] - amount;
         printStornoItems();

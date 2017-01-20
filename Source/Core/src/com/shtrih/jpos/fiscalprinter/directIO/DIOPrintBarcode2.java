@@ -30,7 +30,7 @@ public final class DIOPrintBarcode2 {
 
     public void execute(int[] data, Object object) throws Exception {
         Object[] params = (Object[]) object;
-        DIOUtils.checkObjectMinLength((String[]) object, 1);
+        //DIOUtils.checkObjectMinLength((String[]) object, 1);
         String barcodeData = (String) params[0];
 
         String barcodeLabel = "";
@@ -40,7 +40,7 @@ public final class DIOPrintBarcode2 {
 
         int barcodeType = SmFptrConst.SMFPTR_BARCODE_EAN13;
         int barcodeHeight = 100;
-        int barcodePrintType = SmFptrConst.SMFPTR_PRINTTYPE_DRIVER;
+        int barcodePrintType = SmFptrConst.SMFPTR_PRINTTYPE_AUTO;
         int barcodeBarWidth = 2;
         int barcodeTextPosition = SmFptrConst.SMFPTR_TEXTPOS_BELOW;
         int barcodeTextFont = 1;

@@ -3064,8 +3064,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         cancelReceipt();
 
         PrinterStatus status = getPrinter().waitForPrinting();
-        if (status.getPrinterMode().isDayClosed()) {
-            getPrinter().beginFiscalDay();
+        if (status.getPrinterMode().isDayClosed()) 
+        {
+            getPrinter().check(getPrinter().beginFiscalDay());
             getPrinter().waitForPrinting();
             printDocEnd();
         }
@@ -3664,6 +3665,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         cancelReceipt();
         receiptType = 0;
         isReceiptOpened = false;
+        printItems.clear();
     }
 
     public void setDate(String date) throws Exception {

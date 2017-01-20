@@ -18,6 +18,7 @@ import com.shtrih.fiscalprinter.SMFiscalPrinterImpl;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.fiscalprinter.command.PrinterParameter;
 import com.shtrih.fiscalprinter.command.PrinterParameters;
+import com.shtrih.jpos.fiscalprinter.SmFptrConst;
 
 public class PrinterModelDefault implements PrinterModel {
 
@@ -683,7 +684,7 @@ public class PrinterModelDefault implements PrinterModel {
     }
 
     public boolean getCapBarcodeSupported(int barcodeType) {
-        return false;
+        return barcodeType == SmFptrConst.SMFPTR_BARCODE_EAN13;
     }
 
     public int getMinCashRegister() {
