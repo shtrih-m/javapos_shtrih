@@ -603,8 +603,6 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
 
     public void add(String line) throws Exception {
-        logger.debug("add(" + line + ")");
-
         File file = new File(SysUtils.getFilesPath() + printer.getParams().textReportFileName);
         PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
         try {
@@ -617,25 +615,13 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
 
     private void beginDocument() throws Exception {
-        logger.debug("beginDocument");
-
-//		int count = header.getNumHeaderLines();
-//		for (int i = 1; i <= count; i++) {
-//			add(header.getHeaderLine(i).getText());
-//		}
         printReceiptHeader();
     }
 
     private void endDocument() throws Exception {
-        logger.debug("endDocument");
-//		int count = header.getNumTrailerLines();
-//		for (int i = 1; i <= count; i++) {
-//			add(header.getTrailerLine(i).getText());
-//		}
     }
 
     private void printReceiptHeader() throws Exception {
-        logger.debug("printReceiptHeader");
         status = printer.readLongStatus();
         int documentNumber = status.getDocumentNumber();
         if (!isDocumentPrinted)

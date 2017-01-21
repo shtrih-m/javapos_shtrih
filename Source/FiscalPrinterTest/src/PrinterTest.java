@@ -190,14 +190,18 @@ class PrinterTest implements FiscalPrinterConst {
     }
     public void printQRCode() {
         try {
+            String text1 = "http://check.egais.ru?id=fb8c9153-9d3d-40b9-a1a7-1cf35d637976&dt=2101171104&cn=020000272834";
+            String text2 = "26544400044402170";
+            String text = text1;
+            
             PrinterBarcode barcode = new PrinterBarcode();
             barcode.setTextFont(1);
             barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_NOTPRINTED);
-            barcode.setBarWidth(4);
+            barcode.setBarWidth(5);
             barcode.setHeight(100);
             barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
-            barcode.setLabel("QR code: 26544400044402170");
-            barcode.setText("26544400044402170");
+            barcode.setLabel("QR code: " + text);
+            barcode.setText(text);
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_QR_CODE);
             printer.printBarcode(barcode);
         } catch (Exception e) {
@@ -860,7 +864,6 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printNormal(FPTR_S_RECEIPT, "printNormal2");
             
             printer.printRecItem("Тестовый товар", 10000, 1000, 0, 10000, "");
-            printer.printRecSubtotalAdjustment(FPTR_AT_AMOUNT_SURCHARGE, "", 100);
             printer.printRecSubtotalAdjustment(FPTR_AT_AMOUNT_DISCOUNT, "", 600);
             printer.printRecItem("Батарейка Alkaline Stam", 20, 0, 1, 20, "");
             printer.printRecItemVoid("Батарейка Alkaline Stam", 20, 0, 1, 20, "");
@@ -878,6 +881,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printBarcode("1234567890123", "", SmFptrConst.SMFPTR_BARCODE_EAN13,
               100, SmFptrConst.SMFPTR_PRINTTYPE_AUTO, 2, 0, 1, 0);
             
+            printQRCode();
             
             printer.endFiscalReceipt(true);
         } catch (Exception e) {

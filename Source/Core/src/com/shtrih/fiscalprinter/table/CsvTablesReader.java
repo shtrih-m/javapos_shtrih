@@ -83,7 +83,7 @@ public class CsvTablesReader {
                     try {
                         loadLine(line, fields);
                     } catch (Exception e) {
-                        logger.error(e.getMessage());
+                        //logger.error(e.getMessage());
                     }
                 }
             }

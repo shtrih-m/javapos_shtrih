@@ -53,7 +53,7 @@ public class XmlPropWriter {
 	public void writeNonFiscalDocNumber(int number) throws Exception 
         {
  		Element childNode = doc.createElement("NonFiscal");
-		node.appendChild(childNode);
+		root.appendChild(childNode);
 		addParameter(childNode, "DocumentNumber", number);
        }
         

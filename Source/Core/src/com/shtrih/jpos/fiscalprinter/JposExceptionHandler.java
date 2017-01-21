@@ -36,7 +36,6 @@ public class JposExceptionHandler implements JposConst, FiscalPrinterConst,
 
     public static void handleException(Throwable e) throws JposException 
     {
-        logger.error("handleException: " + e.getMessage());
         JposException jposException = getJposException(e);
         logger.error("JposException. " + "ErrorCode: "
                 + String.valueOf(jposException.getErrorCode()) + ", "

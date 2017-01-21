@@ -581,17 +581,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 getPrinter().continuePrint();
                 getPrinter().waitForPrinting();
             }
-
-            if (isInReceiptTrailer) {
-                printDocEnd();
-                isInReceiptTrailer = false;
-                isRecPresent = true;
-            }
-
-            if (!isRecPresent) {
-                printDocEnd();
-                isRecPresent = true;
-            }
         }
     }
 
@@ -906,7 +895,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 setJrnPaperState(true, true);
 
                 updateDeviceMetrics();
-                header.initDevice();
                 checkEcrMode();
                 cancelReceipt();
                 writeTables();
@@ -914,7 +902,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 readPrinterStatus();
                 readEJActivation();
                 loadProperties();
-
+                header.initDevice();
                 // if polling enabled - create device thread
                 if (params.pollEnabled) {
                     startPoll();

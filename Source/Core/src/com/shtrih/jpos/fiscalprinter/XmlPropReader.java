@@ -41,20 +41,27 @@ public class XmlPropReader {
         node = root;
     }
 
-    public Node getChildNode(Node node, String nodeName) throws Exception {
+    public Node findChildNode(Node node, String nodeName) throws Exception {
         Node result = null;
         NodeList list = node.getChildNodes();
         for (int i = 0; i < list.getLength(); i++) {
             result = list.item(i);
             if (result.getNodeName().equalsIgnoreCase(nodeName)) {
-                return result;
+                break;
             }
         }
-        throw new Exception("Child node not found, " + nodeName);
+        return result;
     }
 
-    public void read(PrinterImages images) throws Exception 
-    {
+    public Node getChildNode(Node node, String nodeName) throws Exception {
+        Node result = findChildNode(node, nodeName);
+        if (result == null) {
+            throw new Exception("Child node not found, " + nodeName);
+        }
+        return result;
+    }
+
+    public void read(PrinterImages images) throws Exception {
         images.clear();
         Node imagesNode = getChildNode(root, "Images");
         if (imagesNode == null) {
@@ -74,8 +81,7 @@ public class XmlPropReader {
         }
     }
 
-    public PrinterImage readPrinterImage(Node imageNode) throws Exception 
-    {
+    public PrinterImage readPrinterImage(Node imageNode) throws Exception {
         PrinterImage image = new PrinterImage();
         image.setFileName(readParameterStr(imageNode, "FileName"));
         image.setDigest(readParameterStr(imageNode, "Digest"));
@@ -85,18 +91,15 @@ public class XmlPropReader {
         return image;
     }
 
-    public void read(ReceiptImages images) throws Exception 
-    {
+    public void read(ReceiptImages images) throws Exception {
         images.clear();
-        Node imagesNode = getChildNode(root, "ReceiptImages");
+        Node imagesNode = findChildNode(root, "ReceiptImages");
         if (imagesNode == null) {
             return;
         }
-        for (int i = 0; i < imagesNode.getChildNodes().getLength(); i++) 
-        {
+        for (int i = 0; i < imagesNode.getChildNodes().getLength(); i++) {
             Node imageNode = imagesNode.getChildNodes().item(i);
-            if (imageNode.getNodeName().equalsIgnoreCase("ReceiptImage")) 
-            {
+            if (imageNode.getNodeName().equalsIgnoreCase("ReceiptImage")) {
                 ReceiptImage image = new ReceiptImage();
                 readReceiptImage(imageNode, image);
                 images.add(image);
@@ -106,7 +109,7 @@ public class XmlPropReader {
 
     public int readNonFiscalDocNumber() throws Exception {
         int result = 1;
-        Node childNode = getChildNode(root, "NonFiscal");
+        Node childNode = findChildNode(root, "NonFiscal");
         if (childNode != null) {
             result = readParameterInt(childNode, "DocumentNumber");
         }
@@ -114,8 +117,7 @@ public class XmlPropReader {
     }
 
     public void readReceiptImage(Node imageNode, ReceiptImage image)
-            throws Exception 
-    {
+            throws Exception {
         image.setImageIndex(readParameterInt(imageNode, "ImageIndex"));
         image.setPosition(readParameterInt(imageNode, "Position"));
     }
@@ -131,11 +133,14 @@ public class XmlPropReader {
 
             // header
             int number = 1;
-            Node headerNode = getChildNode(root, "Header");
+            Node headerNode = findChildNode(root, "Header");
+            if (headerNode ==  null) return;
+            
             int count = headerNode.getChildNodes().getLength();
             for (int i = 0; i < count; i++) {
-                if (number > header.getNumHeaderLines())
+                if (number > header.getNumHeaderLines()) {
                     break;
+                }
                 Node lineNode = headerNode.getChildNodes().item(i);
                 if (lineNode.getNodeName().equalsIgnoreCase("Line")) {
                     String text = readParameterStr(lineNode, "Text");
@@ -146,10 +151,13 @@ public class XmlPropReader {
             }
             number = 1;
             headerNode = getChildNode(root, "Trailer");
+            if (headerNode ==  null) return;
+            
             count = headerNode.getChildNodes().getLength();
             for (int i = 0; i < count; i++) {
-                if (number > header.getNumTrailerLines())
+                if (number > header.getNumTrailerLines()) {
                     break;
+                }
                 Node lineNode = headerNode.getChildNodes().item(i);
                 if (lineNode.getNodeName().equalsIgnoreCase("Line")) {
                     String text = readParameterStr(lineNode, "Text");

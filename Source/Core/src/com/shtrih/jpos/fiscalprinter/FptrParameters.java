@@ -24,7 +24,7 @@ public class FptrParameters {
     public static final int defaultGraphicsLineDelay = 200;
 
     private int byteTimeout = 1000;
-    private int deviceByteTimeout = 5000;
+    private int deviceByteTimeout = 10000;
     private int statusCommand = PrinterConst.SMFP_STATUS_COMMAND_11H;
     private int graphicsLineDelay = defaultGraphicsLineDelay;
     private int portType = SmFptrConst.PORT_TYPE_SERIAL;
@@ -163,7 +163,6 @@ public class FptrParameters {
         closeReceiptText = reader.readString("closeReceiptText", "");
         subtotalText = reader.readString("subtotalText", "SUBTOTAL");
         setByteTimeout(reader.readInteger("byteTimeout", 1000));
-        setDeviceByteTimeout(reader.readInteger("deviceByteTimeout", 5000));
         taxPassword = reader.readInteger("taxPassword", 0);
         usrPassword = reader.readInteger("operatorPassword", 1);
         sysPassword = reader.readInteger("sysAdminPassword", 30);

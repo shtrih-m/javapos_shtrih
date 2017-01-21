@@ -36,6 +36,10 @@ import java.util.Vector;
 
 public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
+    enum Boolean {
+        NOTDEFINED, TRUE, FALSE
+    }
+
     public PrinterProtocol device;
     // delay on wait
     public static final int TimeToSleep = 100;
@@ -69,16 +73,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private NCR7167Printer escPrinter = new NCR7167Printer(null);
     private final PrinterFields fields = new PrinterFields();
     private final FiscalPrinterImpl service;
-    private boolean capLoadGraphics1 = false;
-    private boolean capLoadGraphics2 = false;
-    private boolean capLoadGraphics3 = false;
-    private boolean capPrintGraphics1 = false;
-    private boolean capPrintGraphics2 = false;
-    private boolean capPrintGraphics3 = false;
-    private boolean capPrintScaled = false;
-    private boolean capPrintBarcode2 = false;
-    private boolean capPrintBarcode3 = false;
-    private boolean capPrintGraphicsLine = false;
+    private Boolean capLoadGraphics1 = Boolean.NOTDEFINED;
+    private Boolean capLoadGraphics2 = Boolean.NOTDEFINED;
+    private Boolean capLoadGraphics3 = Boolean.NOTDEFINED;
+    private Boolean capPrintGraphics1 = Boolean.NOTDEFINED;
+    private Boolean capPrintGraphics2 = Boolean.NOTDEFINED;
+    private Boolean capPrintGraphics3 = Boolean.NOTDEFINED;
+    private Boolean capPrintScaled = Boolean.NOTDEFINED;
+    private Boolean capPrintGraphicsLine = Boolean.NOTDEFINED;
+    private Boolean capPrintBarcode2 = Boolean.NOTDEFINED;
+    private Boolean capPrintBarcode3 = Boolean.NOTDEFINED;
+
     private boolean capOpenFiscalDay = true;
     private boolean capFiscalStorage = false;
     private int discountMode = PrinterConst.SMFP_DM_NOT_CHANGE_SUBTOTAL_SMALLDSC;
@@ -1595,29 +1600,152 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return model;
     }
 
+    public boolean getCapLoadGraphics1() throws Exception {
+        if (capLoadGraphics1 == Boolean.NOTDEFINED) {
+            byte[] data = new byte[40];
+            for (int i = 0; i < data.length; i++) {
+                data[i] = 0;
+            }
+            if (isCommandSupported(loadGraphics1(1, data))) {
+                capLoadGraphics1 = Boolean.TRUE;
+            } else {
+                capLoadGraphics1 = Boolean.FALSE;
+            }
+        }
+        return capLoadGraphics1 == Boolean.TRUE;
+    }
+
+    public boolean getCapLoadGraphics2() throws Exception {
+        if (capLoadGraphics2 == Boolean.NOTDEFINED) {
+            byte[] data = new byte[40];
+            for (int i = 0; i < data.length; i++) {
+                data[i] = 0;
+            }
+            if (isCommandSupported(loadGraphics2(1, data))) {
+                capLoadGraphics2 = Boolean.TRUE;
+            } else {
+                capLoadGraphics2 = Boolean.FALSE;
+            }
+        }
+        return capLoadGraphics2 == Boolean.TRUE;
+    }
+
+    public boolean getCapLoadGraphics3() throws Exception {
+        if (capLoadGraphics3 == Boolean.NOTDEFINED) {
+            byte[] data = new byte[40];
+            for (int i = 0; i < data.length; i++) {
+                data[i] = 0;
+            }
+            if (isCommandSupported(loadGraphics3(1, data))) {
+                capLoadGraphics3 = Boolean.TRUE;
+            } else {
+                capLoadGraphics3 = Boolean.FALSE;
+            }
+        }
+        return capLoadGraphics3 == Boolean.TRUE;
+    }
+
+    public boolean getCapPrintGraphics1() throws Exception {
+        if (capPrintGraphics1 == Boolean.NOTDEFINED) {
+            if (isCommandSupported(printGraphics1(1, 2))) {
+                capPrintGraphics1 = Boolean.TRUE;
+            } else {
+                capPrintGraphics1 = Boolean.FALSE;
+            }
+        }
+        return capPrintGraphics1 == Boolean.TRUE;
+    }
+
+    public boolean getCapPrintGraphics2() throws Exception {
+        if (capPrintGraphics2 == Boolean.NOTDEFINED) {
+            if (isCommandSupported(printGraphics2(1, 2))) {
+                capPrintGraphics2 = Boolean.TRUE;
+            } else {
+                capPrintGraphics2 = Boolean.FALSE;
+            }
+        }
+        return capPrintGraphics2 == Boolean.TRUE;
+    }
+
+    public boolean getCapPrintGraphics3() throws Exception {
+        if (capPrintGraphics3 == Boolean.NOTDEFINED) {
+            if (isCommandSupported(printGraphics3(1, 2))) {
+                capPrintGraphics3 = Boolean.TRUE;
+            } else {
+                capPrintGraphics3 = Boolean.FALSE;
+            }
+        }
+        return capPrintGraphics3 == Boolean.TRUE;
+    }
+
+    public boolean getCapPrintScaled() throws Exception {
+        if (capPrintScaled == Boolean.NOTDEFINED) {
+            if (isCommandSupported(printScaled(1, 2, 1, 1))) {
+                capPrintScaled = Boolean.TRUE;
+            } else {
+                capPrintScaled = Boolean.FALSE;
+            }
+        }
+        return capPrintScaled == Boolean.TRUE;
+    }
+
+    public boolean getCapPrintGraphicsLine() throws Exception {
+        if (capPrintGraphicsLine == Boolean.NOTDEFINED) {
+            byte[] data = new byte[40];
+            for (int i = 0; i < data.length; i++) {
+                data[i] = 0;
+            }
+            if (isCommandSupported(printGraphicLine(1, data))) {
+                capPrintGraphicsLine = Boolean.TRUE;
+            } else {
+                capPrintGraphicsLine = Boolean.FALSE;
+            }
+        }
+        return capPrintGraphicsLine == Boolean.TRUE;
+    }
+
+    public boolean getCapPrintBarcode2() throws Exception {
+        if (capPrintBarcode2 == Boolean.NOTDEFINED) {
+            PrinterBarcode barcode = new PrinterBarcode();
+            barcode.setHeight(1);
+            barcode.setText("123456789012");
+            barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);
+            if (isCommandSupported(printBarcode2(barcode))) {
+                capPrintBarcode2 = Boolean.TRUE;
+            } else {
+                capPrintBarcode2 = Boolean.FALSE;
+            }
+        }
+        return capPrintBarcode2 == Boolean.TRUE;
+    }
+
+    public boolean getCapPrintBarcode3() throws Exception {
+        return false;
+    }
+    /*
+    public boolean getCapPrintBarcode3() throws Exception {
+        if (capPrintBarcode3 == Boolean.NOTDEFINED) {
+            byte[] data = {0x00};
+            LoadBarcode3 command = new LoadBarcode3();
+            command.setPassword(usrPassword);
+            command.setBlockType(0);
+            command.setBlockNumber(0);
+            command.setBlockData(data);
+            int rc = executeCommand(command);
+            if (isCommandSupported(rc)) {
+                capPrintBarcode3 = Boolean.TRUE;
+            } else {
+                capPrintBarcode3 = Boolean.FALSE;
+            }
+        }
+        return capPrintBarcode3 == Boolean.TRUE;
+    }
+    */
+    
     public void initialize() throws Exception {
         model = selectPrinterModel(getDeviceMetrics());
         readFonts();
 
-        byte[] data = new byte[40];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = 0;
-        }
-        capLoadGraphics1 = isCommandSupported(loadGraphics1(1, data));
-        capLoadGraphics2 = isCommandSupported(loadGraphics2(1, data));
-        capLoadGraphics3 = isCommandSupported(loadGraphics3(1, data));
-        capPrintGraphics1 = isCommandSupported(printGraphics1(1, 2));
-        capPrintGraphics2 = isCommandSupported(printGraphics2(1, 2));
-        capPrintGraphics3 = isCommandSupported(printGraphics3(1, 2));
-        capPrintScaled = isCommandSupported(printScaled(1, 2, 1, 1));
-        capPrintGraphicsLine = isCommandSupported(printGraphicLine(1, data));
-
-        PrinterBarcode barcode = new PrinterBarcode();
-        barcode.setHeight(1);
-        barcode.setText("123456789012");
-        barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);
-        capPrintBarcode2 = isCommandSupported(printBarcode2(barcode));
-        capPrintBarcode3 = isCommandSupported(printBarcode3(barcode));
         capFiscalStorage = readCapFiscalStorage();
         if (capFiscalStorage) {
             discountMode = 2;
@@ -1684,9 +1812,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     private void loadGraphics(int lineNumber, byte[] data) throws Exception {
-        if (capLoadGraphics2) {
+        if (getCapLoadGraphics2()) {
             check(loadGraphics2(lineNumber, data));
-        } else if (capLoadGraphics1) {
+        } else if (getCapLoadGraphics1()) {
             check(loadGraphics1(lineNumber, data));
         }
     }
@@ -1712,19 +1840,21 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void printGraphics(int line1, int line2) throws Exception {
-        if (capPrintGraphics3) {
+        if (getCapPrintGraphics3()) {
             printGraphics3(line1 + 1, line2 + 1);
             return;
         }
-        if (capPrintGraphics2) {
+        if (getCapPrintGraphics2()) {
             printGraphics2(line1, line2);
             return;
         }
-        if (capPrintGraphics1) {
+        if (getCapPrintGraphics1()) {
             printGraphics1(line1, line2);
+            return;
         }
-        if (capPrintScaled) {
+        if (getCapPrintScaled()) {
             printScaled(line1, line2, 1, 1);
+            return;
         }
         throw new Exception("Graphics commands are not supported");
     }
@@ -1818,6 +1948,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             default:
                 printBarcodeDriver(barcode);
         }
+        waitForPrinting();
     }
 
     private void printBarcodeDevice(PrinterBarcode barcode) throws Exception {
@@ -1835,6 +1966,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 printBarcodeLabel(barcode);
             }
             printBarcode(barcode.getText());
+            //Thread.sleep(1000); !!!
         }
     }
 
@@ -1944,7 +2076,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
         }
 
-        if (capPrintGraphicsLine) {
+        if (getCapPrintGraphicsLine()) {
             int width = getModel().getFonts().get(0).getPaperWidth();
             bc.setHScale(1);
             bc.setVScale(1);
@@ -1964,17 +2096,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void printBarcode2D(PrinterBarcode barcode) throws Exception {
-        if ((capPrintBarcode3) && (barcode.getType() == SmFptrConst.SMFPTR_BARCODE_QR_CODE)) {
+        if ((getCapPrintBarcode3()) && (barcode.getType() == SmFptrConst.SMFPTR_BARCODE_QR_CODE)) {
             check(printBarcode3(barcode));
         } else {
             int hScale = barcode.getBarWidth();
             int vScale = barcode.getBarWidth();
             int loadHScale = hScale;
             int loadVScale = vScale;
-            if (capLoadGraphics3) {
+            if (getCapLoadGraphics3()) {
                 loadHScale = 1;
                 loadVScale = 1;
-            } else if (capPrintScaled) {
+            } else if (getCapPrintScaled()) {
                 hScale = 1;
                 loadVScale = 1;
             } else {
@@ -1992,6 +2124,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public int printBarcode3(PrinterBarcode barcode) throws Exception {
+        logger.debug("printBarcode3");
         // Load barcode data
         String text = barcode.getText();
         int blockSize = LoadBarcode3.MAX_BLOCK_SIZE;
@@ -2030,7 +2163,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     private void printSmBarcode(SmBarcode barcode) throws Exception {
-        if (capLoadGraphics3) {
+        if (getCapLoadGraphics3()) {
             loadBarcode512(barcode);
 
             PrintGraphics3 command = new PrintGraphics3();
@@ -2047,7 +2180,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
             int line1 = barcode.getFirstLine();
             int line2 = barcode.getFirstLine() + barcode.getHeight() - 1;
-            if (capPrintScaled) {
+            if (getCapPrintScaled()) {
                 printScaled(line1, line2, barcode.getVScale(), barcode.getHScale());
             } else {
                 printGraphics(line1, line2);
@@ -2114,7 +2247,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public int getMaxGraphicsWidth() throws Exception {
-        if (capLoadGraphics3) {
+        if (getCapLoadGraphics3()) {
             return 512;
         } else {
             return 320;
@@ -2420,7 +2553,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     + String.valueOf(getMaxGraphicsWidth()));
         }
         // write image to device
-        if (capLoadGraphics3) {
+        if (getCapLoadGraphics3()) {
             loadImage3(image);
         } else {
             for (int i = 0; i < image.getHeight(); i++) {
@@ -2719,7 +2852,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void printItems(Vector<PrintItem> items) throws Exception {
         for (int i = 0; i < items.size(); i++) {
             PrintItem item = items.get(i);
-            item.print(this);
+            try {
+                item.print(this);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+            }
         }
         items.clear();
     }

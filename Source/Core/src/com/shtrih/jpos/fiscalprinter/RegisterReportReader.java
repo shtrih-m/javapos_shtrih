@@ -72,11 +72,13 @@ public class RegisterReportReader {
         if (printer.getLongStatus().isFiscalized()) {
             FMTotals totals = printer.readFPTotals(SmFptrConst.FMTOTALS_ALL_FISCALIZATIONS);
             report.setAllFiscalizations(totals);
-            totals = printer.readFMTotals(SmFptrConst.FMTOTALS_LAST_FISCALIZATION);
+            totals = printer.readFPTotals(SmFptrConst.FMTOTALS_LAST_FISCALIZATION);
             report.setLastFiscalization(totals);
         }
         report.setCapCommStatus(printer.getCapFiscalStorage());
-        report.setCommStatus(printer.fsReadCommStatus());
+        if (printer.getCapFiscalStorage()) {
+            report.setCommStatus(printer.fsReadCommStatus());
+        }
     }
 
 }
