@@ -4,15 +4,13 @@ package com.shtrih.util;
  *
  * @author V.Kravtsov
  */
-import java.io.File;
+
+import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.io.BufferedWriter;
-import java.util.logging.SimpleFormatter;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.text.SimpleDateFormat;
-import java.text.Format;
 
 public class FileLogger {
 
@@ -22,21 +20,6 @@ public class FileLogger {
 
     private FileLogger(String className) {
         this.className = className;
-    }
-
-    public void deleteFile() throws Exception {
-        closeFile();
-        File file = new File(getFileName());
-        if (file.exists()) {
-            file.delete();
-        }
-    }
-
-    public void closeFile() throws Exception {
-        if (writer != null) {
-            writer.close();
-        }
-        writer = null;
     }
 
     public static synchronized FileLogger getLogger(java.lang.Class c) {
@@ -75,7 +58,7 @@ public class FileLogger {
         return SysUtils.getFilesPath() + "shtrihjavapos.log";
     }
 
-    public synchronized void write(String prefix, String text) {
+    private synchronized void write(String prefix, String text) {
         if (!enabled) {
             return;
         }

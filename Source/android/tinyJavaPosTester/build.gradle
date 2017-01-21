@@ -29,7 +29,7 @@ android {
             signingConfig signingConfigs.release
             
             applicationVariants.all { variant ->
-                renameAPK(variant, defaultConfig, 'R')
+                renameAPK(variant)
             }
         }
     }
@@ -67,19 +67,20 @@ dependencies {
     compile 'com.android.support:support-v4:25.1.0'
 }
 
-task dist(type: Zip) {
-    destinationDir = new File("${rootDir}/../dist/zip/android")
-    baseName = 'tinyJavaPosTester'
+task dist(type: Copy) {
+    destinationDir = new File("${rootDir}/../../dist/zip/android")
     
-    from "${rootDir}/tinyJavaPosTester/build/outputs/apk/tinyJavaPosTester_v${version}.apk"
+    from "${rootDir}/tinyJavaPosTester/build/outputs/apk/" + apkName()
 }
 
-def renameAPK(variant, defaultConfig, buildType) {
+def renameAPK(variant) {
      variant.outputs.each { output ->
-         def formattedDate = new Date().format('yyMMdd')
-
          def file = output.packageApplication.outputFile
-         def fileName = "tinyJavaPosTester_v${version}.apk"
+         def fileName = apkName()
          output.packageApplication.outputFile = new File(file.parent, fileName)
      }
+ }
+ 
+ def apkName(){
+    return "tinyJavaPosTester_v${version}.apk";
  }

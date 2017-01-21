@@ -50,8 +50,8 @@ jar {
 }
 
 task distZip(type: Zip) {
-    destinationDir = new File("${rootDir}/../dist/zip")
-    baseName = 'shtrihjavapos'
+    destinationDir = new File("${rootDir}/../dist/zip/javase")
+    baseName = 'FiscalPrinterTest-javase'
     
     from jar.archivePath
     from configurations.compile
@@ -75,6 +75,6 @@ artifacts {
 }
 
 uploadArchives {
-    //dependsOn distZip
+    dependsOn distZip
     dependsOn distPlain
 }

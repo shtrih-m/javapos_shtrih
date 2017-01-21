@@ -4,7 +4,7 @@ apply plugin: 'java'
 apply plugin: 'idea'
 
 clean.doFirst {
-    delete "${projectDir}/dist/zip/javase"
+    delete "${projectDir}/../dist/zip/javase"
     delete "${projectDir}/build/"
 }
 
@@ -62,8 +62,8 @@ jar {
 jar.dependsOn('utilVersionClass')
 
 task dist(type: Zip) {
-    destinationDir = new File("${rootDir}/dist/zip/javase/nrj")
-    baseName = 'shtrihjavapos'
+    destinationDir = new File("${rootDir}/../dist/zip/javase/")
+    baseName = 'shtrihjavapos-javase-nrjavaserial'
     dependsOn jar
     
     from jar.archivePath

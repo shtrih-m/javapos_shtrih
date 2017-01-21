@@ -19,10 +19,9 @@ allprojects {
     }
     
     clean.doFirst {
-        delete "${rootDir}/../dist/"
+        delete "${rootDir}/../dist/zip/javase"
         delete "${rootDir}/../bin/"
         delete "${rootDir}/out/"
-        delete "${rootDir}/dist/zip/javase"
         delete "${rootDir}/.gradle/"
     }
 }
