@@ -636,7 +636,7 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt() 
     {
         //printCancelledReceipt();
-        printFiscalReceipt102();
+        printFiscalReceipt101();
         
         //printNCRFiscalReceipt();
         
