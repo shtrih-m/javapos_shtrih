@@ -1,4 +1,4 @@
-﻿#
+#
 # String constants for shtrihjavapos.jar file, SHTRIH-M, 2010
 #
 #

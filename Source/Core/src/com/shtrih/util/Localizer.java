@@ -8,15 +8,14 @@
  */
 package com.shtrih.util;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.Properties;
+
 /**
  * @author V.Kravtsov
  */
-
-import java.io.InputStream;
-import java.util.Properties;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
-
 public class Localizer {
 
     private static CompositeLogger logger = CompositeLogger.getLogger(Localizer.class);
@@ -83,9 +82,11 @@ public class Localizer {
     public static final String FMEndDayRequired = "FMEndDayRequired";
     public static final String NoErrors = "NoErrors";
     public static final String PhysicalDeviceDescription = "PhysicalDeviceDescription";
+
     private static Localizer instance;
-    private ResourceBundle bundle = null;
-    private final Properties properties = new Properties();
+
+    private Properties loadedProperties = new Properties();
+    private Properties properties = new Properties();
 
     /**
      * Creates a new instance of Localizer
@@ -103,8 +104,11 @@ public class Localizer {
                 return;
             }
 
-            bundle = new PropertyResourceBundle(stream);
+            Reader reader = new InputStreamReader(stream, "UTF-8");
+            Properties props = new Properties();
+            props.load(reader);
 
+            loadedProperties = props;
         } catch (Exception e) {
             logger.error("loadFromResource '" + resourceName + "'", e);
         }
@@ -121,14 +125,24 @@ public class Localizer {
         instance = new Localizer(fileName);
     }
 
-    private String getResourceString(String key) throws Exception {
-        if (bundle != null) {
-            String value = bundle.getString(key);
-            value = new String(value.getBytes("ISO-8859-1"), "UTF-8");
-            return value;
-        } else {
-            return properties.getProperty(key);
+    private String getResourceString(String key) {
+        if (loadedProperties != null) {
+            String value = loadedProperties.getProperty(key);
+
+            if (value == null) {
+                logger.error("Localized value for '" + key + "' was not found");
+            } else {
+                return value;
+            }
         }
+
+        String value = properties.getProperty(key);
+        if (value == null) {
+            logger.error("Default value for '" + key + "' was not found");
+            return key;
+        }
+
+        return value;
     }
 
     public static String getString(String key) {
@@ -146,18 +160,14 @@ public class Localizer {
 
     private void initProperties() {
         properties.clear();
-        add(receiptDuplicationNotSupported,
-                "Receipt duplication is not supported");
+        add(receiptDuplicationNotSupported, "Receipt duplication is not supported");
         add(deviceIsEnabled, "Device is enabled");
         add(additionalHeaderNotSupported, "Additional header is not supported");
-        add(additionalTrailerNotSupported,
-                "Additional trailer is not supported");
+        add(additionalTrailerNotSupported, "Additional trailer is not supported");
         add(changeDueTextNotSupported, "Change due text is not supported");
-        add(multipleContractorsNotSupported,
-                "Multiple contractors are not supported");
+        add(multipleContractorsNotSupported, "Multiple contractors are not supported");
         add(messageTypeNotSupported, "MessageType is not supported");
-        add(methodNotSupported,
-                "Method not supported for selected FiscalReceiptType");
+        add(methodNotSupported, "Method not supported for selected FiscalReceiptType");
         add(invalidParameterValue, "Invalid parameter value");
         add(invalidPropertyValue, "Invalid property value");
         add(notPaidReceiptsNotSupported, "Not paid receipts is not supported");
@@ -179,15 +189,13 @@ public class Localizer {
         add(InvalidAnswerLength, "Invalid answer data length");
         add(InvalidFieldValue, "Invalid field value");
         add(NoConnection, "No connection");
-        add(ReceiveTimeoutNotSupported,
-                "Receive timeout is not supported by port driver");
+        add(ReceiveTimeoutNotSupported, "Receive timeout is not supported by port driver");
         add(NotImplemented, "Not implemented");
         add(CommandNotFound, "Command not found");
         add(NullDataParameter, "Data parameter cannot be null");
         add(NullObjectParameter, "Object parameter cannot be null");
         add(InsufficientDataLen, "Data parameter length must be greater than ");
-        add(InsufficientObjectLen,
-                "Object parameter length must be greater than ");
+        add(InsufficientObjectLen, "Object parameter length must be greater than ");
         add(BarcodeTypeNotSupported, "Barcode type is not supported");
         add(BarcodeExceedsPrintWidth, "Barcode exceeds print width");
         add(FailedCancelReceipt, "Can not cancel receipt");
@@ -241,14 +249,12 @@ public class Localizer {
         add("PrinterError19", "FM: No data available");
         add("PrinterError1A", "FM: Fiscalization area overflow");
         add("PrinterError1B", "FM: Serial number not assigned");
-        add("PrinterError1C",
-                "FM: There is corrupted record in the defined range");
+        add("PrinterError1C", "FM: There is corrupted record in the defined range");
         add("PrinterError1D", "FM: Last day record is corrupted");
         add("PrinterError1E", "FM: Fiscalizations overflow");
         add("PrinterError1F", "FM: Registers memory is missing");
         add("PrinterError20", "FM: Cash register overflow after add");
-        add("PrinterError21",
-                "FM: Subtracted amount is more then cash register value");
+        add("PrinterError21", "FM: Subtracted amount is more then cash register value");
         add("PrinterError22", "FM: Invalid date");
         add("PrinterError23", "FM: No activation record available");
         add("PrinterError24", "FM: Activation area overflow");
@@ -258,8 +264,7 @@ public class Localizer {
 
         add("PrinterError28", "FM: Technological sign is present");
         add("PrinterError29", "FM: Technological sign is not present");
-        add("PrinterError2A",
-                "FM: FM size is not matched with firmware version");
+        add("PrinterError2A", "FM: FM size is not matched with firmware version");
         add("PrinterError2B", "Previous command cannot be cancelled");
         add("PrinterError2C", "Fiscal day is closed");
         add("PrinterError2D", "Receipt total less that discount amount");
@@ -438,7 +443,6 @@ public class Localizer {
         add(FMLastRecordCorrupted, "Last fiscal memory record currupted.");
         add(FMEndDayRequired, "Fiscal memory fiscal day is over.");
         add(NoErrors, "No errors");
-        add(PhysicalDeviceDescription,
-                "%s,  %s, Printer firmware: %s.%d, %s, FM firmware: %s.%d, %s");
+        add(PhysicalDeviceDescription, "%s,  %s, Printer firmware: %s.%d, %s, FM firmware: %s.%d, %s");
     }
 }
