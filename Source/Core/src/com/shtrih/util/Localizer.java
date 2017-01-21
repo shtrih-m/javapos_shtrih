@@ -85,8 +85,8 @@ public class Localizer {
 
     private static Localizer instance;
 
-    private Properties loadedProperties = new Properties();
-    private Properties properties = new Properties();
+    private Properties loadedProperties;
+    private Properties properties;
 
     /**
      * Creates a new instance of Localizer
@@ -122,6 +122,17 @@ public class Localizer {
     }
 
     public static void init(String fileName) {
+
+        if (fileName == null)
+            throw new IllegalArgumentException("fileName should not be null");
+
+        // Backward compatibility
+        if (fileName.equals("shtrihjavapos_en.properties")) {
+            fileName = "messages_en.txt";
+        } else if (fileName.equals("shtrihjavapos_ru.properties")) {
+            fileName = "messages_ru.txt";
+        }
+
         instance = new Localizer(fileName);
     }
 
@@ -159,7 +170,8 @@ public class Localizer {
     }
 
     private void initProperties() {
-        properties.clear();
+        properties = new Properties();
+
         add(receiptDuplicationNotSupported, "Receipt duplication is not supported");
         add(deviceIsEnabled, "Device is enabled");
         add(additionalHeaderNotSupported, "Additional header is not supported");

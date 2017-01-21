@@ -55,6 +55,7 @@ android {
 }
 
 repositories {
+
     flatDir {
         dirs = ['../lib']
     }
