@@ -1154,18 +1154,16 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void openReceipt(int receiptType) throws Exception {
         logger.debug("openReceipt");
-        
+
         PrinterStatus status = waitForPrinting();
-        if (capOpenFiscalDay) 
-        {
+        if (capOpenFiscalDay) {
             if (status.getPrinterMode().isDayClosed()) {
                 check(beginFiscalDay());
                 waitForPrinting();
             }
         }
 
-        if (!status.getPrinterMode().isReceiptOpened())
-        {
+        if (!status.getPrinterMode().isReceiptOpened()) {
             OpenReceipt command = new OpenReceipt();
             command.setPassword(usrPassword);
             command.setReceiptType(receiptType);
@@ -1175,8 +1173,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    
-    
     public int loadGraphics1(int lineNumber, byte[] data) throws Exception {
         logger.debug("loadGraphics, " + String.valueOf(lineNumber));
         MethodParameter.checkRange(lineNumber, 0, 255, "lineNumber");
@@ -1739,6 +1735,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public boolean getCapPrintBarcode3() throws Exception {
         return false;
     }
+
     /*
     public boolean getCapPrintBarcode3() throws Exception {
         if (capPrintBarcode3 == Boolean.NOTDEFINED) {
@@ -1757,8 +1754,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
         return capPrintBarcode3 == Boolean.TRUE;
     }
-    */
-    
+     */
     public void initialize() throws Exception {
         model = selectPrinterModel(getDeviceMetrics());
         readFonts();
@@ -2885,18 +2881,22 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
         items.clear();
     }
-    
-    public void printFSHeader() throws Exception
-    {
-        if (getCapFiscalStorage())
-        {
+
+    public void printFSHeader() throws Exception {
+        if (getCapFiscalStorage()) {
             printText(fsUser);
             printText(fsAddress);
         }
     }
-    
-    public boolean getCapOpenReceipt(){
+
+    public boolean getCapOpenReceipt() {
         return capOpenReceipt;
     }
-    
+
+    public void checkDiscountMode(int mode) throws Exception {
+        if (getDiscountMode() != mode) {
+            throw new Exception("Incorrect fiscal printer discount mode");
+        }
+    }
+
 }

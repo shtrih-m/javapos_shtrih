@@ -516,5 +516,7 @@ public interface SMFiscalPrinter {
     public FSReadSerial fsReadSerial() throws Exception;
     
     public FSReadExpDate fsReadExpDate() throws Exception;
+    
+    public void checkDiscountMode(int mode) throws Exception;
 }
 

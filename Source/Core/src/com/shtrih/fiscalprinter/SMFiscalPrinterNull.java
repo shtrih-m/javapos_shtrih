@@ -918,4 +918,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public FSReadExpDate fsReadExpDate() throws Exception {
         return null;
     }
+    
+    public void checkDiscountMode(int mode) throws Exception {
+    }
+    
 }

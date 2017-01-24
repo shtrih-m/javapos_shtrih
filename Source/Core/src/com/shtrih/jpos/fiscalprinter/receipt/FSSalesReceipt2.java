@@ -826,6 +826,7 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
     }
 
     public void setDiscountAmount(int amount) throws Exception {
+        getDevice().checkDiscountMode(2);
         discountAmount = amount;
     }
 }
