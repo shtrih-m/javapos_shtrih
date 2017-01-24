@@ -29,7 +29,9 @@ import com.shtrih.fiscalprinter.command.EndTest;
 import com.shtrih.fiscalprinter.command.FMTotals;
 import com.shtrih.fiscalprinter.command.FSReadCommStatus;
 import com.shtrih.fiscalprinter.command.FSReadDayParameters;
+import com.shtrih.fiscalprinter.command.FSReadExpDate;
 import com.shtrih.fiscalprinter.command.FSReadFiscalization;
+import com.shtrih.fiscalprinter.command.FSReadSerial;
 import com.shtrih.fiscalprinter.command.FSReadStatus;
 import com.shtrih.fiscalprinter.command.FSReceiptDiscount;
 import com.shtrih.fiscalprinter.command.FlexCommands;
@@ -269,7 +271,7 @@ public interface SMFiscalPrinter {
 
     public void duplicateReceipt() throws Exception;
 
-    public OpenReceipt openReceipt(int receiptType) throws Exception;
+    public void openReceipt(int receiptType) throws Exception;
 
     public void loadGraphics(int lineNumber, int lineCount, byte[] data)
             throws Exception;
@@ -339,8 +341,6 @@ public interface SMFiscalPrinter {
     public int readDeviceMetrics() throws Exception;
 
     public DeviceMetrics getDeviceMetrics();
-
-    public PrinterModel getModel() throws Exception;
 
     public void initialize() throws Exception;
 
@@ -506,5 +506,15 @@ public interface SMFiscalPrinter {
     public void printLines(String line1, String line2) throws Exception;
     
     public void printItems(Vector<PrintItem> items) throws Exception;
+
+    public void printFSHeader() throws Exception;
+    
+    public PrinterModel getModel() throws Exception;
+    
+    public boolean getCapOpenReceipt() throws Exception;
+    
+    public FSReadSerial fsReadSerial() throws Exception;
+    
+    public FSReadExpDate fsReadExpDate() throws Exception;
 }
 

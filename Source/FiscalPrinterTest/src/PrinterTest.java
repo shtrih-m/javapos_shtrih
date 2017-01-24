@@ -8,6 +8,7 @@
 //
 /////////////////////////////////////////////////////////////////////
 
+import java.util.Vector;
 import java.io.FileReader;
 import java.io.BufferedReader;
 
@@ -853,6 +854,14 @@ class PrinterTest implements FiscalPrinterConst {
         try {
             printer.resetPrinter();
 
+            Vector<String> list = new Vector<String>();
+            printer.directIO(SmFptrConst.SMFPTR_DIO_READ_FS_PARAMS, null, list);
+            System.out.println("List size: " + list.size());
+            for (int i=0;i<list.size();i++){
+                System.out.println(String.valueOf(i) + ". " + list.get(i));
+            }
+            
+            
             printer.printRecMessage("Кассовый чек");
             printer.printRecMessage("printRecMessage1");
             printer.printNormal(FPTR_S_RECEIPT, "printNormal1");
@@ -879,7 +888,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printNormal(FPTR_S_RECEIPT, "printNormal4");
             
             printer.printBarcode("1234567890123", "", SmFptrConst.SMFPTR_BARCODE_EAN13,
-              100, SmFptrConst.SMFPTR_PRINTTYPE_AUTO, 2, 0, 1, 0);
+              100, SmFptrConst.SMFPTR_PRINTTYPE_DRIVER, 2, 0, 1, 0);
             
             printQRCode();
             

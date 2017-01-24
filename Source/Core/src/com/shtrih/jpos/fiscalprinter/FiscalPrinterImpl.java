@@ -477,7 +477,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void openReceipt(int receiptType) throws Exception {
-        if ((!isReceiptOpened) && getModel().getCapOpenReceipt()) {
+        if ((!isReceiptOpened) && getPrinter().getCapOpenReceipt()) {
             getPrinter().openReceipt(receiptType);
             getPrinter().waitForPrinting();
             this.receiptType = receiptType;

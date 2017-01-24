@@ -348,6 +348,10 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_SET_DISCOUNT_AMOUNT:
                 new DIOSetDiscountAmount(service).execute(data, object);
                 break;
+    
+            case SmFptrConst.SMFPTR_DIO_READ_FS_PARAMS:
+                new DIOReadFSParams(service).execute(data, object);
+                break;
                 
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,

@@ -370,6 +370,10 @@ public class DirectIOHandler {
                 new DIOSetDiscountAmount(service).execute(data, object);
                 break;
                     
+            case SmFptrConst.SMFPTR_DIO_READ_FS_PARAMS:
+                new DIOReadFSParams(service).execute(data, object);
+                break;
+    
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)

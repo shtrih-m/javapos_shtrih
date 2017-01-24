@@ -72,6 +72,8 @@ import com.shtrih.jpos.fiscalprinter.PrinterImage;
 import com.shtrih.jpos.fiscalprinter.ReceiptImages;
 import com.shtrih.util.BitUtils;
 import com.shtrih.fiscalprinter.command.FMTotals;
+import com.shtrih.fiscalprinter.command.FSReadExpDate;
+import com.shtrih.fiscalprinter.command.FSReadSerial;
 import com.shtrih.jpos.fiscalprinter.PrintItem;
 
 /**
@@ -452,8 +454,7 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void duplicateReceipt() throws Exception {
     }
 
-    public OpenReceipt openReceipt(int receiptType) throws Exception {
-        return new OpenReceipt();
+    public void openReceipt(int receiptType) throws Exception {
     }
 
     public void loadGraphics(int lineNumber, byte[] data)
@@ -903,4 +904,18 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void printItems(Vector<PrintItem> items) throws Exception {
     }
 
+    public void printFSHeader() throws Exception{
+    }
+    
+    public boolean getCapOpenReceipt() throws Exception{
+        return true;
+    }
+    
+    public FSReadSerial fsReadSerial() throws Exception {
+        return null;
+    }
+    
+    public FSReadExpDate fsReadExpDate() throws Exception {
+        return null;
+    }
 }

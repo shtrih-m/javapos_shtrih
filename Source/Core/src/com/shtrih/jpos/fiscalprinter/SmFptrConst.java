@@ -446,6 +446,12 @@ public interface SmFptrConst {
      * For receipt discount from 1 to 99 kopeks
      */
     public static final int SMFPTR_DIO_SET_DISCOUNT_AMOUNT = 0x3D;
+
+    /**
+     * Read FS parameters
+     */
+    public static final int SMFPTR_DIO_READ_FS_PARAMS = 0x3E;
+    
     
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:

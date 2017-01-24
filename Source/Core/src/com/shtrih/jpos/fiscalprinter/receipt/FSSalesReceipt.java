@@ -101,7 +101,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         cancelled = false;
     }
 
-    public void beginFiscalReceipt(boolean printHeader) throws Exception {
+    public void beginFiscalReceipt(boolean printHeader) throws Exception 
+    {
+        getPrinter().getPrinter().printFSHeader();
+        
         clearReceipt();
         getPrinter().openReceipt(receiptType);
         getPrinter().waitForPrinting();

@@ -83,12 +83,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private Boolean capPrintGraphicsLine = Boolean.NOTDEFINED;
     private Boolean capPrintBarcode2 = Boolean.NOTDEFINED;
     private Boolean capPrintBarcode3 = Boolean.NOTDEFINED;
+    private String fsUser = "";
+    private String fsAddress = "";
 
     private boolean capOpenFiscalDay = true;
     private boolean capFiscalStorage = false;
     private int discountMode = PrinterConst.SMFP_DM_NOT_CHANGE_SUBTOTAL_SMALLDSC;
     private boolean saveCommands = false;
     private Vector receiptCommands = new Vector();
+    private boolean capOpenReceipt = true;
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params, FiscalPrinterImpl service) {
@@ -1149,17 +1152,31 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         execute(command);
     }
 
-    public OpenReceipt openReceipt(int receiptType) throws Exception {
+    public void openReceipt(int receiptType) throws Exception {
         logger.debug("openReceipt");
-        openFiscalDay();
+        
+        PrinterStatus status = waitForPrinting();
+        if (capOpenFiscalDay) 
+        {
+            if (status.getPrinterMode().isDayClosed()) {
+                check(beginFiscalDay());
+                waitForPrinting();
+            }
+        }
 
-        OpenReceipt command = new OpenReceipt();
-        command.setPassword(usrPassword);
-        command.setReceiptType(receiptType);
-        execute(command);
-        return command;
+        if (!status.getPrinterMode().isReceiptOpened())
+        {
+            OpenReceipt command = new OpenReceipt();
+            command.setPassword(usrPassword);
+            command.setReceiptType(receiptType);
+            int rc = executeCommand(command);
+            capOpenReceipt = succeeded(rc);
+            check(rc);
+        }
     }
 
+    
+    
     public int loadGraphics1(int lineNumber, byte[] data) throws Exception {
         logger.debug("loadGraphics, " + String.valueOf(lineNumber));
         MethodParameter.checkRange(lineNumber, 0, 255, "lineNumber");
@@ -1753,6 +1770,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             int rc = readTable(17, 1, 3, fieldValue);
             if (succeeded(rc)) {
                 discountMode = Integer.parseInt(fieldValue[0]);
+            }
+            rc = readTable(18, 1, 7, fieldValue);
+            if (succeeded(rc)) {
+                fsUser = fieldValue[0];
+            }
+            rc = readTable(18, 1, 9, fieldValue);
+            if (succeeded(rc)) {
+                fsAddress = fieldValue[0];
             }
         }
     }
@@ -2860,4 +2885,18 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
         items.clear();
     }
+    
+    public void printFSHeader() throws Exception
+    {
+        if (getCapFiscalStorage())
+        {
+            printText(fsUser);
+            printText(fsAddress);
+        }
+    }
+    
+    public boolean getCapOpenReceipt(){
+        return capOpenReceipt;
+    }
+    
 }

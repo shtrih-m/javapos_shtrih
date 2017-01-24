@@ -6,6 +6,16 @@
 
 ********************************************************************************
 
+  January, 24 2017, 19:40
+  deviceServiceVersion = 1013353
+	
+  [+] Added directIO(SMFPTR_DIO_READ_FS_PARAMS) to read fiscal storage params
+      public static final int SMFPTR_DIO_READ_FS_PARAMS = 0x3E;
+	  
+  [-] Fixed error with command "Open receipt"
+  
+********************************************************************************
+
   January, 21 2017, 23:00
   deviceServiceVersion = 1013352
 	

@@ -47,8 +47,9 @@ public class ReceiptPrinterImpl implements ReceiptPrinter {
         }
     }
     
-    public void openReceipt(int receiptType) throws Exception {
-        if (printer.getModel().getCapOpenReceipt()) 
+    public void openReceipt(int receiptType) throws Exception 
+    {
+        if (printer.getCapOpenReceipt()) 
         {
             printer.openReceipt(receiptType);
             printer.waitForPrinting();
