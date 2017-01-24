@@ -1,4 +1,4 @@
 @echo off
 
-cmd /c gradlew clean utilVersionClass assemble test uploadArchives dist
+cmd /c gradlew clean build dist
 pause
