@@ -27,8 +27,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.jbarcode:jbarcode:0.2.8',
-            'jpos:jpos113:1.13',
+    compile 'jpos:jpos113:1.13',
             'jpos:jpos113-controls:1.13',
             'log4j:log4j:1.2.12',
             'RXTXcomm:RXTXcomm:1.0',

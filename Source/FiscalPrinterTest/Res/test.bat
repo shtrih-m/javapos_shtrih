@@ -9,7 +9,6 @@ set classpath=%classpath%;FiscalPrinterTest.jar
 set classpath=%classpath%;log4j-1.2.12.jar
 set classpath=%classpath%;xerces.jar
 set classpath=%classpath%;nrjavaserial-3.12.0.jar
-set classpath=%classpath%;jbarcode-0.2.8.jar
 set classpath=%classpath%;zxing-2.2.jar
 set classpath=%classpath%;%cd%\
 

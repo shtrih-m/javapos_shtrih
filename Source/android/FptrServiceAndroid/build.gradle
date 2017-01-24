@@ -80,8 +80,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.jbarcode:jbarcode:0.2.8',
-            'd2xx:d2xx:1.0',
+    compile 'd2xx:d2xx:1.0',
             'jpos:jpos113:1.13',
             'log4j:log4j:1.2.16',
             'xerces4android:xerces4android:1.0',
