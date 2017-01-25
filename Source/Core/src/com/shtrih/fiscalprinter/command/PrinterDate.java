@@ -49,6 +49,12 @@ public class PrinterDate {
         return year;
     }
 
+    public String toJposString() {
+        return StringUtils.intToStr(day, 2) + 
+                StringUtils.intToStr(month, 2) + 
+                StringUtils.intToStr(year + 2000, 4);
+    }
+    
     public String toString() {
         return StringUtils.intToStr(day, 2) + "."
                 + StringUtils.intToStr(month, 2) + "."

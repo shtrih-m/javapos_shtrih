@@ -49,6 +49,11 @@ public class PrinterTime {
         return sec;
     }
 
+    public String toJposString() {
+        return StringUtils.intToStr(getHour(), 2) +
+                StringUtils.intToStr(getMin(), 2);
+    }
+    
     // 01:02:09
     public static String toString(PrinterTime time) {
         return StringUtils.intToStr(time.getHour(), 2) + ":"

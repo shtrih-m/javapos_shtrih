@@ -18,7 +18,7 @@
         <jpos category="FiscalPrinter" version="1.9"/>
         <product description="Fiscal printer service" name="ShtrihFptr" url="http://www.javapos.com"/>
         <!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass -->
-        <prop name="portType" type="String" value="2"/>
+        <prop name="portType" type="String" value="0"/>
         <!-- portClass  -->
         <prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.SerialPrinterPort"/>
         <!--<prop name="portClass" type="String" value="com.shtrih.bluetooth.BTPrinterPort"/>-->

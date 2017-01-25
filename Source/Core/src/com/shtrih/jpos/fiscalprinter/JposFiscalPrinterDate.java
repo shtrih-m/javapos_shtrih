@@ -38,6 +38,14 @@ public class JposFiscalPrinterDate implements JposConst {
         this.min = min;
     }
 
+    public JposFiscalPrinterDate(PrinterDate date, PrinterTime time) {
+        this.day = date.getDay();
+        this.month = date.getMonth();
+        this.year = 2000 + date.getYear();
+        this.hour = time.getHour();
+        this.min = time.getMin();
+    }
+    
     public int getDay() {
         return day;
     }

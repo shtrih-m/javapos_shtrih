@@ -861,7 +861,7 @@ class PrinterTest implements FiscalPrinterConst {
                 System.out.println(String.valueOf(i) + ". " + list.get(i));
             }
             
-            
+            /*
             printer.printRecMessage("Кассовый чек");
             printer.printRecMessage("printRecMessage1");
             printer.printNormal(FPTR_S_RECEIPT, "printNormal1");
@@ -893,6 +893,7 @@ class PrinterTest implements FiscalPrinterConst {
             printQRCode();
             
             printer.endFiscalReceipt(true);
+            */
         } catch (Exception e) {
             e.printStackTrace();
         }
