@@ -135,6 +135,7 @@ public class FptrParameters {
     public boolean ReceiptTemplateEnabled = false;
     public String ItemTableHeader = null;
     public String ItemRowFormat=null;
+    public boolean capJrnPresent = true;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -307,6 +308,7 @@ public class FptrParameters {
         discountFont = new FontNumber(reader.readInteger("discountFont", PrinterConst.FONT_NUMBER_NORMAL));
         ItemTableHeader = reader.readString("ItemTableHeader", "");
         ItemRowFormat = reader.readString("ItemRowFormat", "%TITLE% %QUAN% X %PRICE%");
+        capJrnPresent = reader.readBoolean("capJrnPresent", true);
 
         // paymentNames
         String paymentName;

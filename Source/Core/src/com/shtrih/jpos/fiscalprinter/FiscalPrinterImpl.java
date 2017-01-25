@@ -1133,7 +1133,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public boolean getCapJrnPresent() throws Exception {
-        return getModel().getCapJrnPresent();
+        return params.capJrnPresent && getModel().getCapJrnPresent();
     }
 
     public boolean getCapNonFiscalMode() throws Exception {
