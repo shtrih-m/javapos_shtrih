@@ -4,15 +4,14 @@ package com.shtrih.util;
  *
  * @author V.Kravtsov
  */
+
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.io.BufferedWriter;
-import java.util.logging.SimpleFormatter;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.text.SimpleDateFormat;
-import java.text.Format;
 
 public class Logger {
 

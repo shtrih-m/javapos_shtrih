@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ConfigureLog4J.configure(getApplicationContext());
-
         printer = new ShtrihFiscalPrinter(new FiscalPrinter());
     }
 
