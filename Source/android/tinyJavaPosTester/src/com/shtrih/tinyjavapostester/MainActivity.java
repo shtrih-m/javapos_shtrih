@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ConfigureLog4J.configure(getApplicationContext());
-        StaticContext.setContext(getApplicationContext());
 
         printer = new ShtrihFiscalPrinter(new FiscalPrinter());
     }
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void connectToDevice(final String address) throws Exception {
-        JposConfig.configure("ShtrihFptr", address);
+        JposConfig.configure("ShtrihFptr", address, getApplicationContext());
 
         if (printer.getState() != JposConst.JPOS_S_CLOSED) {
             printer.close();

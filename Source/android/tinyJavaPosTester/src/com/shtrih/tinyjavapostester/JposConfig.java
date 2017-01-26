@@ -1,5 +1,9 @@
 package com.shtrih.tinyjavapostester;
 
+import android.content.Context;
+
+import com.shtrih.util.SysUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -10,14 +14,11 @@ import jpos.config.JposEntryRegistry;
 import jpos.loader.JposServiceLoader;
 import jpos.util.JposPropertiesConst;
 
-import com.shtrih.util.StaticContext;
-import com.shtrih.util.SysUtils;
-
 public class JposConfig {
 
-	public static void configure(String deviceName, String portName)
+	public static void configure(String deviceName, String portName, Context context)
 			throws Exception {
-		copyAsset("jpos.xml", SysUtils.getFilesPath() + "jpos.xml");
+		copyAsset("jpos.xml", SysUtils.getFilesPath() + "jpos.xml", context);
 		String fileURL = "file://" + SysUtils.getFilesPath() + "jpos.xml";
 		System.setProperty(
 				JposPropertiesConst.JPOS_POPULATOR_FILE_URL_PROP_NAME, fileURL);
@@ -37,12 +38,12 @@ public class JposConfig {
 		}
 	}
 
-	public static void copyAsset(String assetFileName, String destFile)
+	public static void copyAsset(String assetFileName, String destFile, Context context)
 			throws Exception {
 		InputStream is = null;
 		OutputStream os = null;
 		try {
-			is = StaticContext.getContext().getAssets().open(assetFileName);
+			is = context.getAssets().open(assetFileName);
 			os = new FileOutputStream(new File(destFile));
 			byte[] buffer = new byte[1024];
 			int length;
