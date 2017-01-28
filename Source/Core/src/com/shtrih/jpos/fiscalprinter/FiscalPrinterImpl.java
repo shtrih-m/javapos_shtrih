@@ -2266,7 +2266,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printHeaderDriver() throws Exception {
-        if (printer.getCapFiscalStorage()) {
+        if (params.nonFiscalHeaderEnabled && printer.getCapFiscalStorage()) {
             // 1
             LongPrinterStatus status = printer.readLongStatus();
             String line1 = "ККТ " + printer.readTable(18, 1, 1).trim();

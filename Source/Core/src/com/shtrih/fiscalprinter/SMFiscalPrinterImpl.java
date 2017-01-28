@@ -1733,11 +1733,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public boolean getCapPrintBarcode3() throws Exception {
-        return false;
-    }
-
-    /*
-    public boolean getCapPrintBarcode3() throws Exception {
         if (capPrintBarcode3 == Boolean.NOTDEFINED) {
             byte[] data = {0x00};
             LoadBarcode3 command = new LoadBarcode3();
@@ -1754,7 +1749,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
         return capPrintBarcode3 == Boolean.TRUE;
     }
-     */
+     
     public void initialize() throws Exception {
         model = selectPrinterModel(getDeviceMetrics());
         readFonts();

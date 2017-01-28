@@ -640,11 +640,11 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() 
     {
+        printFiscalReceipt104();
+        
+        //printFiscalReceipt101();
         //printCancelledReceipt();
-        printFiscalReceipt101();
-        
         //printNCRFiscalReceipt();
-        
         //printQRCode2();
         //printFiscalReceipt136();
         //printFiscalReceipt137();
@@ -850,18 +850,54 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
     
+    public void fsReadParameters() throws Exception 
+    {
+        Vector<String> list = new Vector<String>();
+        printer.directIO(SmFptrConst.SMFPTR_DIO_READ_FS_PARAMS, null, list);
+        System.out.println("List size: " + list.size());
+        for (int i=0;i<list.size();i++){
+            System.out.println(String.valueOf(i) + ". " + list.get(i));
+        }
+    }
+            
+    public void printFiscalReceipt103() {
+        try {
+            printer.resetPrinter();
+
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("1 3496906 KIT.Корм говяд.жел.д/взр.85г", 13585, 11000, 1, 1300, "");
+            printer.printRecItemAdjustment(1, "", 715, 1);
+            printer.printRecSubtotalAdjustment(1, "", 85);
+            printer.printRecSubtotal(13500);
+            printer.printRecTotal(13500, 13500, "30");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void printFiscalReceipt104() {
+        try {
+            printer.resetPrinter();
+
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("АИ-92-К5     N 1:00000", 50000, 13400, 1, 3730, "");
+            printer.printRecTotal(50000, 50000, "30");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    
+                    
     public void printFiscalReceipt101() {
         try {
             printer.resetPrinter();
 
-            Vector<String> list = new Vector<String>();
-            printer.directIO(SmFptrConst.SMFPTR_DIO_READ_FS_PARAMS, null, list);
-            System.out.println("List size: " + list.size());
-            for (int i=0;i<list.size();i++){
-                System.out.println(String.valueOf(i) + ". " + list.get(i));
-            }
-            
-            /*
             printer.printRecMessage("Кассовый чек");
             printer.printRecMessage("printRecMessage1");
             printer.printNormal(FPTR_S_RECEIPT, "printNormal1");
@@ -893,7 +929,6 @@ class PrinterTest implements FiscalPrinterConst {
             printQRCode();
             
             printer.endFiscalReceipt(true);
-            */
         } catch (Exception e) {
             e.printStackTrace();
         }
