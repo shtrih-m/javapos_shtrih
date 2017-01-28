@@ -6,6 +6,17 @@
 
 ********************************************************************************
 
+  January, 28 2017, 14:00
+  deviceServiceVersion = 1013357
+	
+  [+] Added parameter fsHeaderEnabled to enable printing of company address
+      after receipt header. Default value is false (not printed).
+
+  [+] Added parameter nonFiscalHeaderEnabled to enable or disable document header 
+      in nonfiscal receipt
+
+********************************************************************************
+
   January, 25 2017, 22:50
   deviceServiceVersion = 1013355
 	

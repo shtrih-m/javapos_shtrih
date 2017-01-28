@@ -2878,7 +2878,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void printFSHeader() throws Exception {
-        if (getCapFiscalStorage()) {
+        if (getCapFiscalStorage() && getParams().fsHeaderEnabled) {
             printText(fsUser);
             printText(fsAddress);
         }

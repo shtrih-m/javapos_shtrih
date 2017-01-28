@@ -137,6 +137,8 @@ public class FptrParameters {
     public String ItemRowFormat=null;
     public boolean capJrnPresent = true;
     public boolean nonFiscalHeaderEnabled = false;
+    public boolean fsHeaderEnabled = false;
+    
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -311,6 +313,7 @@ public class FptrParameters {
         ItemRowFormat = reader.readString("ItemRowFormat", "%TITLE% %QUAN% X %PRICE%");
         capJrnPresent = reader.readBoolean("capJrnPresent", true);
         nonFiscalHeaderEnabled = reader.readBoolean("nonFiscalHeaderEnabled", false);
+        fsHeaderEnabled = reader.readBoolean("fsHeaderEnabled", false);
 
         // paymentNames
         String paymentName;
