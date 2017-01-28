@@ -146,7 +146,7 @@ public class SocketPort implements PrinterPort {
                 out.write(b);
                 out.flush();
                 return;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 close();
                 if (i == 1) {
                     throw e;

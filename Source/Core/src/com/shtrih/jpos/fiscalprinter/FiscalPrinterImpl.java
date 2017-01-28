@@ -2265,8 +2265,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         printHeaderDriver();
     }
 
-    public void printHeaderDriver() throws Exception {
-        if (params.nonFiscalHeaderEnabled && printer.getCapFiscalStorage()) {
+    public void printHeaderDriver() throws Exception 
+    {
+        if (!params.nonFiscalHeaderEnabled) return;
+        
+        if (printer.getCapFiscalStorage()) {
             // 1
             LongPrinterStatus status = printer.readLongStatus();
             String line1 = "ККТ " + printer.readTable(18, 1, 1).trim();
@@ -2289,11 +2292,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             line1 = "Сайт ФНС:";
             line2 = printer.readTable(18, 1, 13).trim();
             printer.printLines(line1, line2);
-
+            printer.waitForPrinting();
         } else {
             printer.printDocHeader("Нефискальный документ", nonFiscalDocNumber);
+            printer.waitForPrinting();
         }
-        printer.waitForPrinting();
     }
 
     public void printNormalAsync(int station, String data) throws Exception {
