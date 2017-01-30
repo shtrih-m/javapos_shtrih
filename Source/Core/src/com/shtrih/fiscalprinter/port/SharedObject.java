@@ -17,6 +17,7 @@ public class SharedObject {
     private final Object item;
     private final String name;
     private int refCount = 0;
+    static CompositeLogger logger = CompositeLogger.getLogger(SharedObject.class);
 
     public SharedObject(Object item, String name) {
         this.item = item;
@@ -31,12 +32,15 @@ public class SharedObject {
         return item;
     }
 
-    public void addRef() {
+    public void addRef() 
+    {
         refCount += 1;
+        logger.debug("refCount: " + refCount);
     }
 
     public void release() {
         refCount -= 1;
+        logger.debug("refCount: " + refCount);
     }
 
     public int getRefCount() {

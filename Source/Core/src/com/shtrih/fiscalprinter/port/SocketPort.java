@@ -72,14 +72,12 @@ public class SocketPort implements PrinterPort {
         }
 
         connected = false;
-        if (SharedObjects.getInstance().release(portName)) 
-        {
-            in = null;
-            out = null;
-            socket.close();
-            socket = null;
-            Thread.sleep(100);
-        }
+        SharedObjects.getInstance().release(portName);
+        in = null;
+        out = null;
+        socket.close();
+        socket = null;
+        Thread.sleep(100);
     }
 
     public int readByte() throws Exception {

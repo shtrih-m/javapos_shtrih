@@ -92,8 +92,8 @@ public class JBarcodeEncoder implements SmBarcodeEncoder {
             case SmFptrConst.SMFPTR_BARCODE_CODABAR:
                 return CodabarEncoder.getInstance();
 
-            //case SmFptrConst.SMFPTR_BARCODE_CODE128:
-            //    return Code128Encoder.getInstance();
+            case SmFptrConst.SMFPTR_BARCODE_CODE128:
+                return Code128Encoder.getInstance();
 
             default:
                 return null;
