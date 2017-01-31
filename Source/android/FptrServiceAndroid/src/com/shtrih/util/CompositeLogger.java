@@ -1,19 +1,19 @@
 package com.shtrih.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author V.Kravtsov
  */
-
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 public class CompositeLogger {
     
     private final Logger log4JLogger;
 
     private CompositeLogger(String className) {
-        log4JLogger = LogManager.getLogger(className);
+        log4JLogger = LoggerFactory.getLogger(className);
     }
     
     public static synchronized CompositeLogger getLogger(java.lang.Class c) {
@@ -29,7 +29,7 @@ public class CompositeLogger {
     }
     
     public synchronized void fatal(String text, Throwable e) {
-        log4JLogger.fatal(text, e);
+        log4JLogger.error(text, e);
     }
     
     public synchronized void error(String text, Throwable e) {
@@ -37,7 +37,7 @@ public class CompositeLogger {
     }
     
     public synchronized void error(Throwable e) {
-        log4JLogger.error(e);
+        log4JLogger.error("Error", e);
     }
     
     public synchronized void error(String text) {

@@ -1,26 +1,24 @@
 package com.shtrih.util;
 
-import java.io.File;
-
-import android.content.Context;
 import android.os.Environment;
 
+import java.io.File;
+
 public class SysUtils {
+
+    private static String filesPath;
+
+    static void setFilesPath(String value) {
+        filesPath = value;
+    }
+
     public static String getFilesPath() {
-        Context context = StaticContext.getContext();
 
-        File downloads = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+        if (filesPath != null)
+            return filesPath;
 
-        if (downloads != null) {
-
-            if (downloads.exists())
-                return downloads.getAbsolutePath() + File.separator;
-
-            if (downloads.mkdirs())
-                return downloads.getAbsolutePath() + File.separator;
-        }
-
-        return context.getFilesDir().getAbsolutePath() + File.separator;
+        filesPath = Environment.getExternalStorageDirectory().getAbsoluteFile() + File.separator;
+        return filesPath;
     }
 
     public static void sleep(long millis) throws InterruptedException {
