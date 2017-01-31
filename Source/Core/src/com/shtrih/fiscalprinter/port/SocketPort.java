@@ -25,8 +25,6 @@ public class SocketPort implements PrinterPort {
     private boolean connected = false;
     private int timeout = 1000;
     private Socket socket = null;
-    private InputStream in = null;
-    private OutputStream out = null;
     private String portName = "";
     static CompositeLogger logger = CompositeLogger.getLogger(SocketPort.class);
 
@@ -54,14 +52,6 @@ public class SocketPort implements PrinterPort {
             int port = Integer.parseInt(tokenizer.nextToken());
             socket.connect(new InetSocketAddress(host, port), timeout);
         }
-        in = socket.getInputStream();
-        if (in == null) {
-            throw new Exception("socket.getInputStream() return null");
-        }
-        out = socket.getOutputStream();
-        if (out == null) {
-            throw new Exception("socket.getOutputStream() return null");
-        }
         SharedObjects.getInstance().addref(portName);
         connected = true;
     }
@@ -73,8 +63,6 @@ public class SocketPort implements PrinterPort {
 
         connected = false;
         SharedObjects.getInstance().release(portName);
-        in = null;
-        out = null;
         socket.close();
         socket = null;
         Thread.sleep(100);
@@ -90,6 +78,7 @@ public class SocketPort implements PrinterPort {
     public int doReadByte() throws Exception {
         open();
 
+        InputStream in = socket.getInputStream();
         int result;
         long startTime = System.currentTimeMillis();
         for (;;) {
@@ -115,6 +104,7 @@ public class SocketPort implements PrinterPort {
     public byte[] readBytes(int len) throws Exception {
         open();
 
+        InputStream in = socket.getInputStream();
         byte[] data = new byte[len];
         int offset = 0;
         while (len > 0) {
@@ -138,6 +128,7 @@ public class SocketPort implements PrinterPort {
 
         open();
 
+        OutputStream out = socket.getOutputStream();
         for (int i = 0; i < 2; i++) {
             try {
                 connect();

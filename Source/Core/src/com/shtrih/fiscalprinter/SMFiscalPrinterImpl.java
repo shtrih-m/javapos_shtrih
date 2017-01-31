@@ -955,6 +955,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         logger.debug("printDiscount");
 
         String text = getRecFormatText(item.getText(), SMFPTR_PARAMID_DSC_TEXT_LEN);
+        if (text.equalsIgnoreCase("СКИДКА")) {
+            text = "";
+        }
         item.setText(text);
 
         PrintDiscount command = new PrintDiscount();
@@ -1749,7 +1752,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
         return capPrintBarcode3 == Boolean.TRUE;
     }
-     
+
     public void initialize() throws Exception {
         model = selectPrinterModel(getDeviceMetrics());
         readFonts();
@@ -2080,11 +2083,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return getModel().getPrintWidth();
     }
 
+    
     public void printBarcode1D(PrinterBarcode barcode) throws Exception {
         SmBarcodeEncoder encoder = new JBarcodeEncoder();
         SmBarcode bc = encoder.encode(barcode);
         if (bc == null) {
-            encoder = new ZXingEncoder(getPrintWidth(),
+            encoder = new ZXingEncoder(
                     barcode.getBarWidth(), barcode.getHeight());
             bc = encoder.encode(barcode);
             if (bc == null) {
@@ -2110,7 +2114,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             printSmBarcode(bc);
         }
     }
-
+ 
     public void printBarcode2D(PrinterBarcode barcode) throws Exception {
         if ((getCapPrintBarcode3()) && (barcode.getType() == SmFptrConst.SMFPTR_BARCODE_QR_CODE)) {
             check(printBarcode3(barcode));
@@ -2129,7 +2133,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 hScale = 1;
                 vScale = 1;
             }
-            SmBarcodeEncoder encoder = new ZXingEncoder(getMaxGraphicsWidth(), loadHScale, loadVScale);
+            SmBarcodeEncoder encoder = new ZXingEncoder(loadHScale, loadVScale);
             SmBarcode bc = encoder.encode(barcode);
             bc.setFirstLine(getImageFirstLine());
             bc.setVScale(vScale);

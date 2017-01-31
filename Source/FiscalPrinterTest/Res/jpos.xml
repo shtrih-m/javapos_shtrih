@@ -61,9 +61,9 @@
         <!-- System administrator password -->
         <prop name="sysAdminPassword" type="String" value="30"/>
         <!-- device state polling enabled -->
-        <prop name="pollEnabled" type="String" value="0"/>
+        <prop name="pollEnabled" type="String" value="1"/>
         <!-- device state polling interval in milliseconds -->
-        <prop name="pollInterval" type="String" value="100"/>
+        <prop name="pollInterval" type="String" value="1000"/>
         <!-- Amount coefficient -->
         <prop name="amountFactor" type="String" value="1"/>
         <!-- Quantity coefficient -->
@@ -271,20 +271,19 @@
         <!-- Enable discounts for Fiscal Storage printers 1 - enabled, 0 - disabled -->
         <prop name="FSDiscountEnabled" type="String" value="1"/>
         <!-- Combine item adjustments (enabled by default) -->
-	<prop name="FSCombineItemAdjustments" type="String" value="0"/>
-		
+		<prop name="FSCombineItemAdjustments" type="String" value="0"/>
         <!-- Text report enabled -->
         <prop name="textReportEnabled" type="String" value="0"/>
         <!-- Text report file name -->
         <prop name="textReportFileName" type="String" value="archive.txt"/>
         <!-- Text report empty lines enabled -->
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
-	<!-- X5 receipt template -->
-	<prop name="ReceiptTemplateEnabled" type="String" value="0"/>
-	<prop name="ItemTableHeader" type="String" value=" №                  Цена со  Кол-\nпп  Цена     Скидка скидкой  во    ИТОГО\n "/>
-	<prop name="ItemRowFormat" type="String" value="%3cPOS% %38lTITLE%\n    %8lPRICE% %6lDISCOUNT% %8lSUM%*%3QUAN%%=$10TOTAL_TAX%\n "/>
-	<!-- Use text template -->
-<!-- 	<prop name="useReceipt" type="String" value="1"/> -->
+		<!-- X5 receipt template -->
+		<prop name="ReceiptTemplateEnabled" type="String" value="0"/>
+		<prop name="ItemTableHeader" type="String" value=" №                  Цена со  Кол-\nпп  Цена     Скидка скидкой  во    ИТОГО\n "/>
+		<prop name="ItemRowFormat" type="String" value="%3cPOS% %38lTITLE%\n    %8lPRICE% %6lDISCOUNT% %8lSUM%*%3QUAN%%=$10TOTAL_TAX%\n "/>
+		<!-- Use text template -->
+		<!-- 	<prop name="useReceipt" type="String" value="1"/> -->
 
 		
     </JposEntry> 

@@ -66,16 +66,12 @@ public class SharedObjects {
         items.add(new SharedObject(item, name));
     }
 
-    public synchronized boolean release(String name) {
+    public synchronized void release(String name) {
         SharedObject item = find(name);
         if (item != null) {
             item.release();
-            if (item.getRefCount() <= 0) {
-                items.remove(item);
-                return true;
-            }
+            items.remove(item);
         }
-        return false;
     }
 
     public synchronized void addref(String name) {

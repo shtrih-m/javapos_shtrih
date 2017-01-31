@@ -57,43 +57,28 @@ public class JBarcodeEncoder implements SmBarcodeEncoder {
         return bits;
     }
 
-    private byte[] centerGraphics(byte[] data, int len) {
-        int l = (len - data.length) / 2;
-        if (l < 0) {
-            l = 0;
-        }
-
-        byte[] result = new byte[len];
-        Arrays.fill(result, (byte) 0);
-        System.arraycopy(data, (byte) 0, result, (byte) l, data.length);
-        return result;
-    }
-
     private BarcodeEncoder getEncoder(int barcodeType) throws Exception {
         switch (barcodeType) {
-            case SmFptrConst.SMFPTR_BARCODE_UPCA:
-                return UPCAEncoder.getInstance();
+            //ase SmFptrConst.SMFPTR_BARCODE_UPCA:
+            //    return UPCAEncoder.getInstance();
 
             case SmFptrConst.SMFPTR_BARCODE_UPCE:
                 return UPCEEncoder.getInstance();
 
-            case SmFptrConst.SMFPTR_BARCODE_EAN8:
-                return EAN8Encoder.getInstance();
+            //case SmFptrConst.SMFPTR_BARCODE_EAN8:
+            //    return EAN8Encoder.getInstance();
 
             case SmFptrConst.SMFPTR_BARCODE_EAN13:
                 return EAN13Encoder.getInstance();
 
-            case SmFptrConst.SMFPTR_BARCODE_CODE39:
-                return Code39Encoder.getInstance();
+            //case SmFptrConst.SMFPTR_BARCODE_CODE39:
+            //    return Code39Encoder.getInstance();
 
-            case SmFptrConst.SMFPTR_BARCODE_ITF:
-                return Interleaved2of5Encoder.getInstance();
+            //case SmFptrConst.SMFPTR_BARCODE_ITF:
+            //    return Interleaved2of5Encoder.getInstance();
 
             case SmFptrConst.SMFPTR_BARCODE_CODABAR:
                 return CodabarEncoder.getInstance();
-
-            case SmFptrConst.SMFPTR_BARCODE_CODE128:
-                return Code128Encoder.getInstance();
 
             default:
                 return null;
@@ -105,7 +90,6 @@ public class JBarcodeEncoder implements SmBarcodeEncoder {
         if (encoder == null) return null;
         
         String code = barcode.getText();
-        //code = code + encoder.computeCheckSum(code);
         code = encoder.getTextWithCheckSum(code);
         BarSet[] barset = encoder.encode(code);
         BitSet bits = BarsetToBits(barset, barcode.getBarWidth());

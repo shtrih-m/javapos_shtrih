@@ -12,12 +12,10 @@ import java.util.Map;
 
 public class ZXingEncoder implements SmBarcodeEncoder {
 
-    private final int maxWidth;
     private final int xScale;
     private final int yScale;
 
-    public ZXingEncoder(int maxWidth, int xScale, int yScale) {
-        this.maxWidth = maxWidth;
+    public ZXingEncoder(int xScale, int yScale) {
         this.xScale = xScale;
         this.yScale = yScale;
     }

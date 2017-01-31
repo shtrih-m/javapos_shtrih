@@ -170,8 +170,8 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printBarcodes() {
         //printQRCode();
-        printCode128();
-        //printAllBarcodes();
+        //printCode128();
+        printAllBarcodes();
     }
 
     public void printJournalCurrentDay() {
@@ -231,7 +231,7 @@ class PrinterTest implements FiscalPrinterConst {
         try {
             PrinterBarcode barcode = new PrinterBarcode();
 
-            barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_NOTPRINTED);
+            barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_ABOVE);
             barcode.setTextFont(1);
             barcode.setBarWidth(2);
             barcode.setHeight(100);
@@ -243,47 +243,47 @@ class PrinterTest implements FiscalPrinterConst {
             barcode.setText("12345678901");
             barcode.setLabel("UPC-A: ");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_UPCA);
-            printer.printBarcode(barcode);
+            printBarcode(barcode);
             // UPCE
             barcode.setText("01234567");
             barcode.setLabel("UPC-E: ");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_UPCE);
-            printer.printBarcode(barcode);
+            printBarcode(barcode);
             // EAN13
             barcode.setText("123456789012");
             barcode.setLabel("EAN13: ");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);
-            printer.printBarcode(barcode);
+            printBarcode(barcode);
             // EAN8
             barcode.setText("12345670");
             barcode.setLabel("EAN8: ");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN8);
-            printer.printBarcode(barcode);
+            printBarcode(barcode);
             // CODE39
             barcode.setText("123456789012");
             barcode.setLabel("CODE39: ");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_CODE39);
-            printer.printBarcode(barcode);
+            printBarcode(barcode);
             // ITF25
             barcode.setText("123456789012");
             barcode.setLabel("ITF25: ");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_ITF);
-            printer.printBarcode(barcode);
+            printBarcode(barcode);
             // CODABAR
             barcode.setText("123456789012");
             barcode.setLabel("CODABAR: ");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_CODABAR);
-            printer.printBarcode(barcode);
+            printBarcode(barcode);
             // CODE93
             barcode.setText("123456789012");
             barcode.setLabel("CODE93: ");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_CODE93);
-            printer.printBarcode(barcode);
+            printBarcode(barcode);
             // CODE128
             barcode.setText("123456789012");
             barcode.setLabel("CODE128: ");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_CODE128);
-            printer.printBarcode(barcode);
+            printBarcode(barcode);
 
             barcode.setBarWidth(4);
             barcode.setText(
@@ -295,15 +295,15 @@ class PrinterTest implements FiscalPrinterConst {
             // Aztec
             barcode.setLabel("Aztec: ");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_AZTEC);
-            printer.printBarcode(barcode);
+            printBarcode(barcode);
             // Data matrix
             barcode.setLabel("Data matrix: ");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_DATA_MATRIX);
-            printer.printBarcode(barcode);
+            printBarcode(barcode);
             // QR code
             barcode.setLabel("QR code: ");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_QR_CODE);
-            printer.printBarcode(barcode);
+            printBarcode(barcode);
             // PDF417
             barcode.setBarWidth(2);
             barcode.setText(
@@ -311,7 +311,7 @@ class PrinterTest implements FiscalPrinterConst {
                     + "1F525456644096478D256A910EFEABB67");
             barcode.setLabel("PDF417: ");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_PDF417);
-            printer.printBarcode(barcode);
+            printBarcode(barcode);
 
             printer.endNonFiscal();
         } catch (Exception e) {
@@ -319,25 +319,22 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void printBarcode(PrinterBarcode barcode) {
+    public void printBarcodeNF(PrinterBarcode barcode) {
         try {
-            barcode.setLabel("");
+            barcode.setLabel(barcode.getLabel() + barcode.getText());
             printer.resetPrinter();
             printer.beginNonFiscal();
-            doPrintBarcode(barcode);
+            printBarcode(barcode);
             printer.endNonFiscal();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void doPrintBarcode(PrinterBarcode barcode)
+    public void printBarcode(PrinterBarcode barcode)
             throws Exception {
         try {
-            int data[] = new int[6];
-            String[] command = new String[2];
-
-            printer.printNormal(FPTR_S_RECEIPT, "--------------------------------------------");
+            printer.printNormal(FPTR_S_RECEIPT, "------------------------------------------");
             printer.printNormal(FPTR_S_RECEIPT, barcode.getLabel() + barcode.getText());
             printer.printBarcode(barcode);
         } catch (Exception e) {
