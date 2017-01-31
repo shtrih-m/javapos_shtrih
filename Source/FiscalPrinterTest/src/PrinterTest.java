@@ -169,9 +169,9 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printBarcodes() {
-        //printQRCode();
-        //printCode128();
-        printAllBarcodes();
+        printQRCode();
+        printEan13();
+        //printAllBarcodes();
     }
 
     public void printJournalCurrentDay() {
@@ -227,6 +227,22 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    public void printEan13() {
+        try {
+            PrinterBarcode barcode = new PrinterBarcode();
+            barcode.setTextFont(1);
+            barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_ABOVE);
+            barcode.setBarWidth(2);
+            barcode.setHeight(100);
+            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
+            barcode.setLabel("CODE128: 001000421101");
+            barcode.setText("001000421101");
+            barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);
+            printer.printBarcode(barcode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public void printAllBarcodes() {
         try {
             PrinterBarcode barcode = new PrinterBarcode();
