@@ -11,6 +11,8 @@
 import java.util.Vector;
 import java.io.FileReader;
 import java.io.BufferedReader;
+import java.util.Map;
+import java.util.HashMap;
 
 import jpos.CashDrawer;
 import jpos.JposException;
@@ -31,6 +33,14 @@ import jpos.events.DirectIOEvent;
 import com.shtrih.fiscalprinter.command.*;
 import com.shtrih.util.Hex;
 import com.shtrih.barcode.PrinterBarcode;
+
+import com.google.zxing.pdf417.PDF417Writer;
+import com.google.zxing.pdf417.encoder.BarcodeMatrix;
+import com.google.zxing.pdf417.encoder.Compaction;
+import com.google.zxing.pdf417.encoder.Dimensions;
+import com.google.zxing.pdf417.encoder.PDF417;
+import com.google.zxing.EncodeHintType;
+
 
 class PrinterTest implements FiscalPrinterConst {
 
@@ -169,9 +179,9 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printBarcodes() {
-        printQRCode();
-        printEan13();
-        //printAllBarcodes();
+        //printQRCode();
+        //printEan13();
+        printAllBarcodes();
     }
 
     public void printJournalCurrentDay() {
@@ -189,12 +199,13 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
+
     public void printQRCode() {
         try {
             String text1 = "http://check.egais.ru?id=fb8c9153-9d3d-40b9-a1a7-1cf35d637976&dt=2101171104&cn=020000272834";
             String text2 = "26544400044402170";
             String text = text1;
-            
+
             PrinterBarcode barcode = new PrinterBarcode();
             barcode.setTextFont(1);
             barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_NOTPRINTED);
@@ -243,6 +254,7 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
+
     public void printAllBarcodes() {
         try {
             PrinterBarcode barcode = new PrinterBarcode();
@@ -321,12 +333,18 @@ class PrinterTest implements FiscalPrinterConst {
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_QR_CODE);
             printBarcode(barcode);
             // PDF417
-            barcode.setBarWidth(2);
+            barcode.setBarWidth(3);
             barcode.setText(
                     "4C63A673C86B0976C0B24495848F6EF157792203A0D275\n"
                     + "1F525456644096478D256A910EFEABB67");
             barcode.setLabel("PDF417: ");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_PDF417);
+            Map<EncodeHintType, Object> params = new HashMap<EncodeHintType, Object>(0);
+            params.put(EncodeHintType.PDF417_COMPACTION, Compaction.BYTE);
+            params.put(EncodeHintType.PDF417_DIMENSIONS, new Dimensions(3, 3, 60, 2));
+            params.put(EncodeHintType.MARGIN, new Integer(0));
+            params.put(EncodeHintType.ERROR_CORRECTION, new Integer(0));
+            barcode.addParameter(params);
             printBarcode(barcode);
 
             printer.endNonFiscal();
@@ -651,10 +669,9 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void printFiscalReceipt() 
-    {
+    public void printFiscalReceipt() {
         printFiscalReceipt104();
-        
+
         //printFiscalReceipt101();
         //printCancelledReceipt();
         //printNCRFiscalReceipt();
@@ -822,7 +839,7 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt138() {
         try {
             printer.resetPrinter();
-            
+
             printer.setFontNumber(1);
 
             printer.beginFiscalReceipt(false);
@@ -841,7 +858,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecSubtotal(59100);
             printer.printRecTotal(59100, 59100, "30");
             printer.endFiscalReceipt(false);
-    
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -850,29 +867,28 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt139() {
         try {
             printer.resetPrinter();
-            
+
             printer.beginFiscalReceipt(false);
             printer.printRecItem("**02  2314523000002 ШЕЙКА СВИНАЯ", 2849100, 950, 2, 2999000, "кг");
             printer.printRecItemAdjustment(1, "ckugka", 284900, 2);
             printer.printRecTotal(2564200, 2564200, "12");
-            
+
             printer.endFiscalReceipt(false);
-    
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
-    public void fsReadParameters() throws Exception 
-    {
+
+    public void fsReadParameters() throws Exception {
         Vector<String> list = new Vector<String>();
         printer.directIO(SmFptrConst.SMFPTR_DIO_READ_FS_PARAMS, null, list);
         System.out.println("List size: " + list.size());
-        for (int i=0;i<list.size();i++){
+        for (int i = 0; i < list.size(); i++) {
             System.out.println(String.valueOf(i) + ". " + list.get(i));
         }
     }
-            
+
     public void printFiscalReceipt103() {
         try {
             printer.resetPrinter();
@@ -889,7 +905,7 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
+
     public void printFiscalReceipt104() {
         try {
             printer.resetPrinter();
@@ -903,10 +919,7 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
-    
-    
-                    
+
     public void printFiscalReceipt101() {
         try {
             printer.resetPrinter();
@@ -914,33 +927,33 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecMessage("Кассовый чек");
             printer.printRecMessage("printRecMessage1");
             printer.printNormal(FPTR_S_RECEIPT, "printNormal1");
-            
+
             printer.setFiscalReceiptType(FPTR_RT_SALES);
             printer.beginFiscalReceipt(true);
-            
+
             printer.printRecMessage("printRecMessage2");
             printer.printNormal(FPTR_S_RECEIPT, "printNormal2");
-            
+
             printer.printRecItem("Тестовый товар", 10000, 1000, 0, 10000, "");
             printer.printRecSubtotalAdjustment(FPTR_AT_AMOUNT_DISCOUNT, "", 600);
             printer.printRecItem("Батарейка Alkaline Stam", 20, 0, 1, 20, "");
             printer.printRecItemVoid("Батарейка Alkaline Stam", 20, 0, 1, 20, "");
             printer.printRecSubtotal(9500);
-            
+
             printer.printRecMessage("printRecMessage3");
             printer.printNormal(FPTR_S_RECEIPT, "printNormal3");
-            
+
             printer.setDiscountAmount(99);
             printer.printRecTotal(9500, 9500, "0");
-            
+
             printer.printRecMessage("printRecMessage4");
             printer.printNormal(FPTR_S_RECEIPT, "printNormal4");
-            
+
             printer.printBarcode("1234567890123", "", SmFptrConst.SMFPTR_BARCODE_EAN13,
-              100, SmFptrConst.SMFPTR_PRINTTYPE_DRIVER, 2, 0, 1, 0);
-            
+                    100, SmFptrConst.SMFPTR_PRINTTYPE_DRIVER, 2, 0, 1, 0);
+
             printQRCode();
-            
+
             printer.endFiscalReceipt(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -958,7 +971,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecSubtotal(19385);
             printer.printRecSubtotalAdjustment(1, "", 85);
             printer.printRecTotal(19300, 19300, "");
-            
+
             printer.printRecMessage("На артикул не предоставляется скидка");
             printer.printRecMessage(" ");
             printer.printRecMessage("Покупатель: 7789004000000079");
@@ -972,7 +985,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecMessage("Списано баллов: 1000                    ");
             printer.printRecMessage("Со счета списано, баллов: 1000          ");
             printer.printRecMessage("Баланс, баллов: 892                     ");
-            
+
             printer.endFiscalReceipt(true);
         } catch (Exception e) {
             e.printStackTrace();
