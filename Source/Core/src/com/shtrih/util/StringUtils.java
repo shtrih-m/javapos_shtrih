@@ -222,7 +222,7 @@ public class StringUtils {
     public static String center(String s, int size, char pad) {
         if (s == null) return s;
         if (size <= s.length())
-            return s.substring(0, size-1);
+            return s.substring(0, size);
 
         StringBuilder sb = new StringBuilder(size);
         for (int i = 0; i < (size - s.length()) / 2; i++) {

@@ -68,8 +68,8 @@ public class JBarcodeEncoder implements SmBarcodeEncoder {
             //case SmFptrConst.SMFPTR_BARCODE_EAN8:
             //    return EAN8Encoder.getInstance();
 
-            case SmFptrConst.SMFPTR_BARCODE_EAN13:
-                return EAN13Encoder.getInstance();
+            //case SmFptrConst.SMFPTR_BARCODE_EAN13:
+            //  return EAN13Encoder.getInstance();
 
             //case SmFptrConst.SMFPTR_BARCODE_CODE39:
             //    return Code39Encoder.getInstance();
