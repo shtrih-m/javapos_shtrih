@@ -169,7 +169,7 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printBarcodes() {
-        printQRCode();
+        //printQRCode();
         printEan13();
         //printAllBarcodes();
     }
@@ -235,8 +235,8 @@ class PrinterTest implements FiscalPrinterConst {
             barcode.setBarWidth(2);
             barcode.setHeight(100);
             barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
-            barcode.setLabel("CODE128: 001000421101");
-            barcode.setText("001000421101");
+            barcode.setLabel("EAN13: 2223432423409");
+            barcode.setText("2223432423409");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);
             printer.printBarcode(barcode);
         } catch (Exception e) {
@@ -896,8 +896,13 @@ class PrinterTest implements FiscalPrinterConst {
 
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-            printer.printRecItem("АИ-92-К5     N 1:00000", 50000, 13400, 1, 3730, "");
-            printer.printRecTotal(50000, 50000, "30");
+            for (int i=0;i<100;i++){
+                printer.printRecItem("Receipt Item " + i, 1, 100, 1, 1, "");
+            }
+            for (int i=0;i<100;i++){
+                printer.printRecItem("Receipt Item " + i, 1, 100, 1, 1, "");
+            }
+            printer.printRecTotal(50000, 50000, "0");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
