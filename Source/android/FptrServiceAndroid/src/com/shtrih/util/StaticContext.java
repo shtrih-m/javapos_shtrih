@@ -1,7 +1,6 @@
 package com.shtrih.util;
 
 import android.content.Context;
-import android.os.Environment;
 
 import java.io.File;
 
@@ -13,7 +12,7 @@ public class StaticContext {
 
 	private static String getFilesPath(Context context)
 	{
-		File downloads = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+		File downloads = context.getExternalFilesDir(null);
 
 		if (downloads != null) {
 
