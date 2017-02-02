@@ -114,17 +114,17 @@ public class TextDocumentFilter implements IPrinterEvents {
         try {
             switch (command.getCode()) {
 
-                case 0x12:
-                    add(((PrintBoldString) command).getLine());
-                    break;
-
-                case 0x17:
-                    add(((PrintString) command).getLine());
-                    break;
-
-                case 0x2F:
-                    add(((PrintStringFont) command).getLine());
-                    break;
+//                case 0x12:
+//                    add(((PrintBoldString) command).getLine());
+//                    break;
+//
+//                case 0x17:
+//                    add(((PrintString) command).getLine());
+//                    break;
+//
+//                case 0x2F:
+//                    add(((PrintStringFont) command).getLine());
+//                    break;
 
                 case 0x40:
                     printXReport((PrintXReport) command);
