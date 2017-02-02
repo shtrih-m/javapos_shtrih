@@ -5,30 +5,30 @@
  */
 package com.shtrih.fiscalprinter.command;
 
+import com.shtrih.util.encoding.IBM866;
+
 import java.io.ByteArrayOutputStream;
 
 /**
- *
  * @author V.Kravtsov
  */
-public class TLVList 
-{
+public class TLVList {
     private final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-    
-    public void add(int tagId, String tagValue) throws Exception
-    {
+
+    public void add(int tagId, String tagValue) throws Exception {
         addInt(tagId);
         addInt(tagValue.length());
-        stream.write(tagValue.getBytes("cp866"));
+        stream.write(tagValue.getBytes(new IBM866()));
     }
-  
-    public void addInt(int value) throws Exception{
+
+    private void addInt(int value) throws Exception {
+        // TODO: check value > 0xFFFF
+
         stream.write((value >>> 0) & 0xFF);
         stream.write((value >>> 8) & 0xFF);
     }
 
-    public byte[] getData(){
+    public byte[] getData() {
         return stream.toByteArray();
     }
-    
 }

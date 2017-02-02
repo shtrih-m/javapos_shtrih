@@ -7,6 +7,8 @@ package com.shtrih.fiscalprinter;
 
 import com.shtrih.util.BitUtils;
 import com.shtrih.util.Hex;
+import com.shtrih.util.encoding.IBM866;
+
 import java.util.Date;
 
 /**
@@ -101,7 +103,7 @@ public class TLVItem {
     }
 
     public String toASCII(byte[] data) throws Exception {
-        return new String(data, "cp866");
+        return new String(data, new IBM866());
     }
 
     public double toFVLN(byte[] data) throws Exception {
