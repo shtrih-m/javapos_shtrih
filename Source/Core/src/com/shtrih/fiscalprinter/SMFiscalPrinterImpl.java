@@ -157,7 +157,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void deviceExecute(PrinterCommand command) throws Exception {
-        synchronized (port.getSyncObject()) {
+        synchronized (port.getSyncObject()) 
+        {
             beforeCommand(command);
             try {
                 device.send(command);
@@ -1155,8 +1156,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         PrinterStatus status = waitForPrinting();
         if (capOpenFiscalDay) {
             if (status.getPrinterMode().isDayClosed()) {
-                check(beginFiscalDay());
-                waitForPrinting();
+                if (succeeded(beginFiscalDay())){
+                    waitForPrinting();
+                }
             }
         }
 
@@ -1165,7 +1167,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             command.setPassword(usrPassword);
             command.setReceiptType(receiptType);
             int rc = executeCommand(command);
-            capOpenReceipt = succeeded(rc);
+            capOpenReceipt = isCommandSupported(rc);
             check(rc);
         }
     }
