@@ -519,7 +519,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    private void checkPaperStatus(PrinterStatus status) throws Exception {
+  private void checkPaperStatus(PrinterStatus status) throws Exception {
         if (isRecPresent) {
             isRecPresent = status.getPrinterFlags().isRecPresent();
         }
@@ -529,9 +529,15 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 getPrinter().continuePrint();
                 getPrinter().waitForPrinting();
             }
+
+            if (isInReceiptTrailer) {
+                printDocEnd();
+                isInReceiptTrailer = false;
+                isRecPresent = true;
+            }
         }
     }
-
+    
     public void beforeCommand(PrinterCommand command) {
     }
 
@@ -2330,9 +2336,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         header.beginDocument(additionalHeader, additionalTrailer);
     }
 
-    public void printDocEnd() throws Exception {
+    public void printDocEnd() throws Exception 
+    {
+        isInReceiptTrailer = true;
+        getPrinter().waitForPrinting();
         getPrinter().printItems(printItems);
         header.endDocument(additionalHeader, additionalTrailer);
+        isInReceiptTrailer = false;
     }
 
     private void printReportBegin() throws Exception {
@@ -3052,12 +3062,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             if (!receipt.getDisablePrint()) {
                 // Print may not respond for some time
                 sleep(getParams().recCloseSleepTime);
-                isInReceiptTrailer = true;
                 if (!receipt.getCapAutoCut()) {
                     try {
-                        getPrinter().waitForPrinting();
                         printDocEnd();
-                        isInReceiptTrailer = false;
                     } catch (Exception e) {
                         // ignore print errors because cashin is succeeded
                         logger.error("endFiscalReceipt: " + e.getMessage());

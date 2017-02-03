@@ -234,11 +234,24 @@ class PrinterTest implements FiscalPrinterConst {
             barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_ABOVE);
             barcode.setBarWidth(2);
             barcode.setHeight(100);
-            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
+            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_AUTO);
             barcode.setLabel("EAN13: 2223432423409");
             barcode.setText("2223432423409");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);
             printer.printBarcode(barcode);
+            
+            barcode.setBarWidth(3);
+            printer.printBarcode(barcode);
+
+            barcode.setBarWidth(4);
+            printer.printBarcode(barcode);
+
+            barcode.setBarWidth(5);
+            printer.printBarcode(barcode);
+            
+            barcode.setBarWidth(6);
+            printer.printBarcode(barcode);
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -653,8 +666,9 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() 
     {
-        printFiscalReceipt104();
+        printFiscalReceipt1();
         
+        //printFiscalReceipt104();
         //printFiscalReceipt101();
         //printCancelledReceipt();
         //printNCRFiscalReceipt();
@@ -896,8 +910,8 @@ class PrinterTest implements FiscalPrinterConst {
 
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-            for (int i=0;i<=100;i++){
-                printer.printRecItem("Receipt Item " + i, 1, 100, 1, 1, "");
+            for (int i=0;i<=20;i++){
+                printer.printRecItem("Receipt Item " + i, 1, 1000, 1, 1, "");
             }
             printer.printRecTotal(50000, 50000, "0");
             printer.endFiscalReceipt(false);
@@ -906,7 +920,28 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
     
-    
+     public void printFiscalReceipt105() {
+        try {
+            printer.resetPrinter();
+
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("****            430 МАНДАРИНЫ", 10772, 770, 1, 13990, "кг");
+            printer.printRecItem("****            430 МАНДАРИНЫ", 10772, 770, 1, 13990, "кг");
+            printer.printRecVoidItem("****            430 МАНДАРИНЫ", 13990, 770, 0, 0, 1);
+            printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 22);
+            printer.printRecTotal(10750, 10750, "1");
+            printer.printRecMessage(" ТОВАРОВ           1                      ");
+            printer.printRecMessage(" **************************************** ");
+            printer.printRecMessage("           Уважаемый покупатель!          ");
+            printer.printRecMessage("      На товары, участвующие в акции,     ");
+            printer.printRecMessage("  баллы на сумму покупки не начисляются!  ");
+            printer.printRecMessage("     ****** СПАСИБО ЗА ПОКУПКУ ******     ");
+            printer.endFiscalReceipt(false);
+                    
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }   
     
                     
     public void printFiscalReceipt101() {

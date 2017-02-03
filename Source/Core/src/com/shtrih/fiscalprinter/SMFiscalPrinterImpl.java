@@ -900,8 +900,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void printSale(PriceItem item) throws Exception {
         logger.debug("printSale");
-        openFiscalDay();
-
         String text = getRecItemText(item.getText());
         item.setText(text);
 
@@ -911,8 +909,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void printVoidSale(PriceItem item) throws Exception {
         logger.debug("printVoidSale");
-        openFiscalDay();
-
         String text = getRecItemText(item.getText());
         item.setText(text);
 
@@ -922,7 +918,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void printRefund(PriceItem item) throws Exception {
         logger.debug("printRefund");
-        openFiscalDay();
 
         String text = getRecItemText(item.getText());
         item.setText(text);
@@ -933,7 +928,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void printVoidRefund(PriceItem item) throws Exception {
         logger.debug("printVoidRefund");
-        openFiscalDay();
 
         String text = getRecItemText(item.getText());
         item.setText(text);

@@ -253,4 +253,5 @@ public class FSTemplateReceipt extends FSSalesReceipt2 {
         lastItemDiscountSum = 0;
         lastItemFooterPrinted = false;
     }
-}
+    
+  }

@@ -18,7 +18,7 @@
         <jpos category="FiscalPrinter" version="1.9"/>
         <product description="Fiscal printer service" name="ShtrihFptr" url="http://www.javapos.com"/>
         <!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass -->
-        <prop name="portType" type="String" value="2"/>
+        <prop name="portType" type="String" value="0"/>
         <!-- portClass  -->
         <prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.SerialPrinterPort"/>
         <!--<prop name="portClass" type="String" value="com.shtrih.bluetooth.BTPrinterPort"/>-->
@@ -31,7 +31,7 @@
         <!--<prop name="portName" type="String" value="COM2"/> -->
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
-        <prop name="portName" type="String" value="192.168.137.111:7778"/>
+        <prop name="portName" type="String" value="COM4"/>
 		
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
@@ -280,8 +280,8 @@
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- X5 receipt template -->
 		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
-		<prop name="ItemTableHeader" type="String" value=" №          Цена со  Кол-\nпп  Цена     Скидка скидкой  во    ИТОГО\n "/>
-		<prop name="ItemRowFormat" type="String" value="%3cPOS% %38lTITLE%\n    %8lPRICE% %6lDISCOUNT% %8lSUM%*%3QUAN%%=$10TOTAL_TAX%\n "/>
+		<prop name="ItemTableHeader" type="String" value=" №                  Цена со  Кол-\nпп  Цена     Скидка скидкой  во    ИТОГО"/>
+		<prop name="ItemRowFormat" type="String" value="%3cPOS% %38lTITLE%\n    %8lPRICE% %6lDISCOUNT% %8lSUM%*%3QUAN%%=$10TOTAL_TAX%"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>
