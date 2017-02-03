@@ -1,27 +1,18 @@
 package com.shtrih.util;
 
-import android.content.Context;
-
-import com.shtrih.fiscalprinter.BuildConfig;
+import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
-public class LocalizerTests {
+@RunWith(AndroidJUnit4.class)
+public class LocalizerAndroidUnitTest {
 
     @Before
     public void SetupContext(){
-        Context context = RuntimeEnvironment.application.getApplicationContext();
-
-        StaticContext.setContext(context);
     }
 
     @Test

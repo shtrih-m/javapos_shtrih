@@ -2,19 +2,27 @@ package com.shtrih.util;
 
 import android.content.Context;
 
-public class StaticContext {
-	private static Context context = null;
+import java.io.File;
 
-	public static Context getContext() {
-		if (context == null) {
-			throw new RuntimeException("Context is not set");
-		}
-		return context;
+public class StaticContext {
+
+	public static void setContext(Context context) {
+		SysUtils.setFilesPath(getFilesPath(context));
 	}
 
-	// NOTE: Application must call setContext to provide application instance to
-	// library
-	public static void setContext(Context value) {
-		context = value;
+	private static String getFilesPath(Context context)
+	{
+		File downloads = context.getExternalFilesDir(null);
+
+		if (downloads != null) {
+
+			if (downloads.exists())
+				return downloads.getAbsolutePath() + File.separator;
+
+			if (downloads.mkdirs())
+				return downloads.getAbsolutePath() + File.separator;
+		}
+
+		return context.getFilesDir().getAbsolutePath() + File.separator;
 	}
 }

@@ -234,7 +234,7 @@ class PrinterTest implements FiscalPrinterConst {
             barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_ABOVE);
             barcode.setBarWidth(2);
             barcode.setHeight(100);
-            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_AUTO);
+            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
             barcode.setLabel("EAN13: 2223432423409");
             barcode.setText("2223432423409");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);

@@ -2077,22 +2077,16 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return getModel().getPrintWidth();
     }
 
-    
     public void printBarcode1D(PrinterBarcode barcode) throws Exception {
-        SmBarcodeEncoder encoder = new JBarcodeEncoder();
+        SmBarcodeEncoder encoder = new ZXingEncoder(
+                getMaxGraphicsWidth(), barcode.getBarWidth(), barcode.getHeight());
         SmBarcode bc = encoder.encode(barcode);
         if (bc == null) {
-            encoder = new ZXingEncoder(
-                    barcode.getBarWidth(), barcode.getHeight());
-            bc = encoder.encode(barcode);
-            if (bc == null) {
-                throw new Exception("Barcode type is not supported");
-            }
+            throw new Exception("Barcode type is not supported");
         }
 
         if (getCapPrintGraphicsLine()) {
-            int width = getModel().getFonts().get(0).getPaperWidth();
-            bc.setHScale(1);
+            int width = getModel().getFonts().get(0).getPaperWidth();            bc.setHScale(1);
             bc.setVScale(1);
             bc.centerBarcode(width);
             byte[] data = bc.getRow(0);
@@ -2108,7 +2102,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             printSmBarcode(bc);
         }
     }
- 
+
     public void printBarcode2D(PrinterBarcode barcode) throws Exception {
         if ((getCapPrintBarcode3()) && (barcode.getType() == SmFptrConst.SMFPTR_BARCODE_QR_CODE)) {
             check(printBarcode3(barcode));
@@ -2127,7 +2121,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 hScale = 1;
                 vScale = 1;
             }
-            SmBarcodeEncoder encoder = new ZXingEncoder(loadHScale, loadVScale);
+            SmBarcodeEncoder encoder = new ZXingEncoder(
+                    getMaxGraphicsWidth(), loadHScale, loadVScale);
             SmBarcode bc = encoder.encode(barcode);
             bc.setFirstLine(getImageFirstLine());
             bc.setVScale(vScale);

@@ -12,19 +12,18 @@
  */
 package com.shtrih.fiscalprinter.port;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+
+import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.Localizer;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 import java.util.Vector;
-
-import org.apache.log4j.Logger;
-
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-
-import com.shtrih.util.Localizer;
 
 public class BluetoothPort implements PrinterPort {
 	private static final UUID MY_UUID = UUID
@@ -34,7 +33,7 @@ public class BluetoothPort implements PrinterPort {
 	private int openTimeout = 10000;
 	private String portName = "";
 	private BluetoothSocket socket = null;
-	static Logger logger = Logger.getLogger(BluetoothPort.class);
+	private static CompositeLogger logger = CompositeLogger.getLogger(BluetoothPort.class);
 
 	/**
 	 * Creates a new instance of BluetoothPort

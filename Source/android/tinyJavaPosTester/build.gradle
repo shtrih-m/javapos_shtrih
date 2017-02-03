@@ -14,6 +14,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
+    
     signingConfigs {
         release {
             storeFile file("${projectDir}/tinyJavaPOSTester-release-key.keystore")
@@ -22,6 +23,7 @@ android {
             keyPassword "123456"
         }
     }
+    
     buildTypes {
         release {
             minifyEnabled false
@@ -33,6 +35,7 @@ android {
             }
         }
     }
+    
     productFlavors {
     }
 
@@ -52,9 +55,14 @@ android {
             }
         }
     }
+    
+    lintOptions {
+        abortOnError false
+    }
 }
 
 repositories {
+    jcenter()
 
     flatDir {
         dirs = ['../lib']
@@ -66,6 +74,12 @@ dependencies {
     compile project(':FptrServiceAndroid')
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:support-v4:25.1.0'
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'com.github.tony19:logback-android-core:1.1.1-6'
+    compile('com.github.tony19:logback-android-classic:1.1.1-6') {
+      // workaround issue #73
+      exclude group: 'com.google.android', module: 'android'
+    }
 }
 
 task dist(type: Copy) {

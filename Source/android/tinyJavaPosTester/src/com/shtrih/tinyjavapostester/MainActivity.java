@@ -14,7 +14,6 @@ import com.google.zxing.pdf417.encoder.Compaction;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
-import com.shtrih.util.StaticContext;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -37,9 +36,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        ConfigureLog4J.configure(getApplicationContext());
-        StaticContext.setContext(getApplicationContext());
 
         printer = new ShtrihFiscalPrinter(new FiscalPrinter());
     }
@@ -66,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void connectToDevice(final String address) throws Exception {
-        JposConfig.configure("ShtrihFptr", address);
+        JposConfig.configure("ShtrihFptr", address, getApplicationContext());
 
         if (printer.getState() != JposConst.JPOS_S_CLOSED) {
             printer.close();
@@ -207,6 +203,9 @@ public class MainActivity extends AppCompatActivity {
             printer.printRecItem(itemName, price, 0, 0, 0, "");
         }
         printer.printRecTotal(payment, payment, "1");
+
+        printer.directIO(0x39, null, "foo@example.com");
+
         printer.endFiscalReceipt(false);
     }
 
