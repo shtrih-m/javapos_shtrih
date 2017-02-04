@@ -2126,6 +2126,13 @@ class PrinterTest implements FiscalPrinterConst {
         printer.printLine(SmFptrConst.SMFPTR_LINE_TYPE_WHITE, 5);
     }
 
+    public void printBlackSeparator()
+            throws Exception 
+    {
+        printer.printText("------------------------------------------");
+        //printer.printLine(SmFptrConst.SMFPTR_LINE_TYPE_BLACK, 3);
+    }
+    
     public void testCashDrawer(ShtrihCashDrawer driver) {
         try {
             driver.open("ShtrihCashDrawer");

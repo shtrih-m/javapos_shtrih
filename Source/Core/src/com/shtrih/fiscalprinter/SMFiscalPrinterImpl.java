@@ -251,8 +251,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 break;
             }
         }
-        if (saveCommands && succeeded(resultCode) && isReceiptCommand(command)) {
-            receiptCommands.add(command);
+        if (saveCommands && succeeded(resultCode) && isReceiptCommand(command)) 
+        {
+            BinaryCommand cmd = new BinaryCommand(command.getCode(), 
+                    command.getText(), command.getTxData());
+            receiptCommands.add(cmd);
         }
         logger.debug(text + " = " + resultCode);
         return resultCode;

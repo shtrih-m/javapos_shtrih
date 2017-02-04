@@ -15,6 +15,7 @@ public abstract class PrinterCommand {
     private boolean repeatEnabled = false;
     private boolean repeatNeeded;
     private boolean errorReportEnabled = true;
+    private byte[] txData;
     private byte[] rxData;
 
     /**
@@ -63,6 +64,10 @@ public abstract class PrinterCommand {
         }
     }
 
+    public byte[] getTxData() {
+        return txData;
+    }
+    
     public byte[] getRxData() {
         return rxData;
     }
@@ -102,7 +107,10 @@ public abstract class PrinterCommand {
         } else {
             out.writeByte(code);
         }
-        encode(out);
+        CommandOutputStream out1 = new CommandOutputStream(charsetName);
+        encode(out1);
+        txData = out1.getData();
+        out.writeBytes(txData);
         return out.getData();
     }
 
