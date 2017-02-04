@@ -69,6 +69,7 @@ public class SocketPort implements PrinterPort {
     }
 
     public int readByte() throws Exception {
+        checkLock();
         open();
 
         int b = doReadByte();
@@ -76,6 +77,7 @@ public class SocketPort implements PrinterPort {
     }
 
     public int doReadByte() throws Exception {
+        checkLock();
         open();
 
         InputStream in = socket.getInputStream();
@@ -102,6 +104,7 @@ public class SocketPort implements PrinterPort {
     }
 
     public byte[] readBytes(int len) throws Exception {
+        checkLock();
         open();
 
         InputStream in = socket.getInputStream();
@@ -126,6 +129,7 @@ public class SocketPort implements PrinterPort {
 
     public void write(byte[] b) throws Exception {
 
+        checkLock();
         open();
 
         OutputStream out = socket.getOutputStream();
@@ -146,6 +150,7 @@ public class SocketPort implements PrinterPort {
     }
 
     public void write(int b) throws Exception {
+        checkLock();
         open();
         byte[] data = new byte[1];
         data[0] = (byte) b;
@@ -186,4 +191,11 @@ public class SocketPort implements PrinterPort {
     public boolean isSearchByBaudRateEnabled() {
         return false;
     }
+
+    public void checkLock() throws Exception {
+        if (!Thread.holdsLock(socket)) {
+            throw new Exception("Not locked");
+        }
+    }
+
 }

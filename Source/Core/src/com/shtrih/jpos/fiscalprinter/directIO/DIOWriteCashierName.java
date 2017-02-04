@@ -11,6 +11,7 @@ package com.shtrih.jpos.fiscalprinter.directIO;
 
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.PrinterConst;
+import com.shtrih.fiscalprinter.command.ReadLongStatus;
 import com.shtrih.jpos.DIOUtils;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 
@@ -20,13 +21,12 @@ public class DIOWriteCashierName extends DIOItem {
         super(service);
     }
 
-    public void execute(int[] data, Object object) throws Exception {
-
+    public void execute(int[] data, Object object) throws Exception 
+    {
         String[] lines = (String[]) object;
         DIOUtils.checkObjectMinLength(lines, 1);
-        SMFiscalPrinter printer = getPrinter();
-        int operator = printer.readPrinterStatus().getOperator();
-        printer.check(printer.writeTable(PrinterConst.SMFP_TABLE_CASHIER,
-                operator, 2, lines[0]));
+        String cashierName = lines[0];
+        getPrinter().writeAdminName(cashierName);
+        getPrinter().writeCasierName(cashierName);
     }
 }

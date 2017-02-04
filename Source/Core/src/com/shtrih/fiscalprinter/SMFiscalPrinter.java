@@ -88,10 +88,6 @@ public interface SMFiscalPrinter {
 
     public FptrParameters getParams();
 
-    public PrinterProtocol getDevice();
-
-    public void setDevice(PrinterProtocol device);
-
     public void addEvents(IPrinterEvents item);
 
     public void removeEvents(IPrinterEvents item);

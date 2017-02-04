@@ -433,7 +433,7 @@ public class MainDialog extends javax.swing.JDialog
                 btnPrintFiscalReceipt3ActionPerformed(evt);
             }
         });
-        pnlFptr1.add(btnPrintFiscalReceipt3, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 270, 160, 26));
+        pnlFptr1.add(btnPrintFiscalReceipt3, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 270, 160, 30));
 
         btnPrintBarcodes.setText("Print barcodes");
         btnPrintBarcodes.addActionListener(new java.awt.event.ActionListener() {

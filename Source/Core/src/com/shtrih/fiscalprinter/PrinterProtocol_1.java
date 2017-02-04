@@ -261,7 +261,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         }
     }
 
-    public void send(PrinterCommand command) throws Exception {
+    public void sendCommand(PrinterCommand command) throws Exception {
         int repeatCount = 0;
         while (true) {
             try {
@@ -385,6 +385,12 @@ public class PrinterProtocol_1 implements PrinterProtocol {
             baos.write(data, 0, data.length);
             baos.write(getCrc(data));
             return baos.toByteArray();
+        }
+    }
+
+    public void send(PrinterCommand command) throws Exception {
+        synchronized (port.getSyncObject()) {
+            sendCommand(command);
         }
     }
 

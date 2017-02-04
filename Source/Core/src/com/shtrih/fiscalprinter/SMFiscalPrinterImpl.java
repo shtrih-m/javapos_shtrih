@@ -157,8 +157,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void deviceExecute(PrinterCommand command) throws Exception {
-        synchronized (port.getSyncObject()) 
-        {
+        synchronized (port.getSyncObject()) {
             beforeCommand(command);
             try {
                 device.send(command);
@@ -251,9 +250,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 break;
             }
         }
-        if (saveCommands && succeeded(resultCode) && isReceiptCommand(command)) 
-        {
-            BinaryCommand cmd = new BinaryCommand(command.getCode(), 
+        if (saveCommands && succeeded(resultCode) && isReceiptCommand(command)) {
+            BinaryCommand cmd = new BinaryCommand(command.getCode(),
                     command.getText(), command.getTxData());
             receiptCommands.add(cmd);
         }
@@ -264,10 +262,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void startSaveCommands() {
         saveCommands = true;
         receiptCommands.clear();
+        logger.debug("startSaveCommands");
     }
 
     public void stopSaveCommands() {
         saveCommands = false;
+        logger.debug("stopSaveCommands");
     }
 
     public void clearReceiptCommands() {
@@ -275,6 +275,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public int printReceiptCommands() throws Exception {
+        logger.debug("printReceiptCommands.0");
         int result = 0;
         for (int i = 0; i < receiptCommands.size(); i++) {
             PrinterCommand command = (PrinterCommand) receiptCommands.get(i);
@@ -285,6 +286,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
             waitForPrinting();
         }
+        logger.debug("printReceiptCommands.1");
         return result;
     }
 
@@ -1159,7 +1161,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         PrinterStatus status = waitForPrinting();
         if (capOpenFiscalDay) {
             if (status.getPrinterMode().isDayClosed()) {
-                if (succeeded(beginFiscalDay())){
+                if (succeeded(beginFiscalDay())) {
                     waitForPrinting();
                 }
             }
@@ -2091,7 +2093,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
 
         if (getCapPrintGraphicsLine()) {
-            int width = getModel().getFonts().get(0).getPaperWidth();            bc.setHScale(1);
+            int width = getModel().getFonts().get(0).getPaperWidth();
+            bc.setHScale(1);
             bc.setVScale(1);
             bc.centerBarcode(width);
             byte[] data = bc.getRow(0);

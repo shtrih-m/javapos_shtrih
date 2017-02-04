@@ -664,10 +664,19 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    public void writeCashierName() {
+        try {
+            printer.writeCashierName("Кассир: Иванов И.И.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void printFiscalReceipt() 
     {
         printFiscalReceipt1();
         
+        //writeCashierName();
         //printFiscalReceipt104();
         //printFiscalReceipt101();
         //printCancelledReceipt();
@@ -753,8 +762,17 @@ class PrinterTest implements FiscalPrinterConst {
 
             printer.setFiscalReceiptType(FPTR_RT_SALES);
             printer.beginFiscalReceipt(true);
+            printer.printText("Before line 1");
+            printer.setPreLine("PreLine1");
+            printer.setPostLine("PostLine1");
             printer.printRecItem("Тестовый товар", 100, 1000, 0, 100, "");
+            printer.printText("After line 1");
+            
+            printer.printText("Before line 2");
+            printer.setPreLine("PreLine2");
+            printer.setPostLine("PostLine2");
             printer.printRecItem("Батарейка Alkaline Stam", 20, 0, 1, 20, "");
+            printer.printText("After line 2");
 
             String text = "Slip document, line 1\r\nSlip document, line 2\r\nSlip document, line 3";
             printer.printNonFiscalDoc(text);
@@ -1088,7 +1106,7 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void printFiscalReceipt3() {
+    public void printFiscalReceipt31() {
         try {
             printer.setFiscalReceiptType(FPTR_RT_SALES);
             printer.beginFiscalReceipt(true);
@@ -1113,6 +1131,19 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    public void printFiscalReceipt3() {
+        try {
+            for (int i=0;i<100;i++)
+            {
+                ReadLongStatus command = new ReadLongStatus();
+                command.setPassword(30);
+                printer.executeCommand(command);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void printFiscalReceipt4() {
         try {
             printer.setFiscalReceiptType(FPTR_RT_SALES);

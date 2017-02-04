@@ -40,7 +40,7 @@ public class DIOExecuteCommand {
         RawCommand command = new RawCommand();
         command.setTxData(tx);
         command.setTimeout(timeout);
-        service.printer.getDevice().send(command);
+        service.printer.deviceExecute(command);
         service.printer.check(command.getResultCode());
         ((Object[]) object)[1] = command.getRxData();
     }

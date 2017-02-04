@@ -71,10 +71,6 @@ public class DirectIOHandler {
         return service.getPrinter();
     }
     
-    public PrinterProtocol getDevice(){
-        return getPrinter().getDevice();
-    }
-    
     public FptrParameters getParams(){
         return service.getParams();
     }
@@ -85,7 +81,7 @@ public class DirectIOHandler {
         switch (command) {
             case SmFptrConst.SMFPTR_DIO_COMMAND_OBJECT:
                 PrinterCommand printerCommand = (PrinterCommand) object;
-                getDevice().send(printerCommand);
+                getPrinter().deviceExecute(printerCommand);
                 getPrinter().check(printerCommand.getResultCode());
                 break;
 

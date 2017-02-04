@@ -519,7 +519,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-  private void checkPaperStatus(PrinterStatus status) throws Exception {
+    private void checkPaperStatus(PrinterStatus status) throws Exception {
         if (isRecPresent) {
             isRecPresent = status.getPrinterFlags().isRecPresent();
         }
@@ -537,7 +537,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             }
         }
     }
-    
+
     public void beforeCommand(PrinterCommand command) {
     }
 
@@ -2271,10 +2271,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         printHeaderDriver();
     }
 
-    public void printHeaderDriver() throws Exception 
-    {
-        if (!params.nonFiscalHeaderEnabled) return;
-        
+    public void printHeaderDriver() throws Exception {
+    if (!params.nonFiscalHeaderEnabled) {
+            return;
+        }
+
         if (printer.getCapFiscalStorage()) {
             // 1
             LongPrinterStatus status = printer.readLongStatus();
@@ -2336,13 +2337,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         header.beginDocument(additionalHeader, additionalTrailer);
     }
 
-    public void printDocEnd() throws Exception 
-    {
-        isInReceiptTrailer = true;
-        getPrinter().waitForPrinting();
-        getPrinter().printItems(printItems);
-        header.endDocument(additionalHeader, additionalTrailer);
-        isInReceiptTrailer = false;
+    public void printDocEnd() throws Exception {
+        synchronized (printer) {
+            isInReceiptTrailer = true;
+            getPrinter().waitForPrinting();
+            getPrinter().printItems(printItems);
+            header.endDocument(additionalHeader, additionalTrailer);
+            isInReceiptTrailer = false;
+        }
     }
 
     private void printReportBegin() throws Exception {
@@ -2380,11 +2382,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void endNonFiscal() throws Exception {
-        checkOnLine();
-        checkPrinterState(FPTR_PS_NONFISCAL);
-        setPrinterState(FPTR_PS_MONITOR);
-        printDocEnd();
-        receipt = new NullReceipt(createReceiptContext());
+        synchronized (printer) {
+            checkOnLine();
+            checkPrinterState(FPTR_PS_NONFISCAL);
+            setPrinterState(FPTR_PS_MONITOR);
+            printDocEnd();
+            receipt = new NullReceipt(createReceiptContext());
+        }
     }
 
     // ////////////////////////////////////////////////////////////////////////////
@@ -3013,8 +3017,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         cancelReceipt();
 
         PrinterStatus status = getPrinter().waitForPrinting();
-        if (status.getPrinterMode().isDayClosed()) 
-        {
+        if (status.getPrinterMode().isDayClosed()) {
             getPrinter().check(getPrinter().beginFiscalDay());
             getPrinter().waitForPrinting();
             printDocEnd();
@@ -4496,8 +4499,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             result = new GlobusSalesReceipt(createReceiptContext(),
                     PrinterConst.SMFP_RECTYPE_SALE);
         }
-        if (params.ReceiptTemplateEnabled && result instanceof FSSalesReceipt2){
-            result = new FSTemplateReceipt(createReceiptContext(),receiptType);
+        if (params.ReceiptTemplateEnabled && result instanceof FSSalesReceipt2) {
+            result = new FSTemplateReceipt(createReceiptContext(), receiptType);
         }
         return result;
     }
@@ -4611,15 +4614,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     }
 
-    public void setDiscountAmount(int amount) throws Exception 
-    {
+    public void setDiscountAmount(int amount) throws Exception {
         if ((printerState.getValue() != FPTR_PS_FISCAL_RECEIPT)
                 && (printerState.getValue() != FPTR_PS_FISCAL_RECEIPT_TOTAL)) {
             throwWrongStateError();
         }
-        
+
         receipt.setDiscountAmount(amount);
-        
+
         if (receipt.isPayed()) {
             setPrinterState(FPTR_PS_FISCAL_RECEIPT_ENDING);
         } else {
