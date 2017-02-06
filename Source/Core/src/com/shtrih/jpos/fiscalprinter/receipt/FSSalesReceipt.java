@@ -23,21 +23,11 @@ import com.shtrih.fiscalprinter.command.CloseRecParams;
 import com.shtrih.fiscalprinter.command.PriceItem;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.fiscalprinter.command.PrinterStatus;
-import com.shtrih.fiscalprinter.receipt.PrinterAmount;
-import com.shtrih.fiscalprinter.receipt.ReceiptItems;
-import com.shtrih.fiscalprinter.receipt.SaleReceiptItem;
-import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.jpos.fiscalprinter.PackageAdjustment;
 import com.shtrih.jpos.fiscalprinter.PackageAdjustments;
-import com.shtrih.jpos.fiscalprinter.SmFptrConst;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.MethodParameter;
 import com.shtrih.util.StringUtils;
-import com.shtrih.util.SysUtils;
-import static jpos.FiscalPrinterConst.FPTR_PS_MONITOR;
-import static jpos.FiscalPrinterConst.JPOS_EFPTR_BAD_ITEM_AMOUNT;
-import static jpos.FiscalPrinterConst.JPOS_EFPTR_NEGATIVE_TOTAL;
-import static jpos.JposConst.JPOS_E_EXTENDED;
 import com.shtrih.fiscalprinter.TLVReader;
 import com.shtrih.fiscalprinter.TLVInfo;
 
@@ -53,7 +43,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private final Vector recItems = new Vector();
     private final long[] payments = new long[5]; // payment amounts
     private final FSDiscounts discounts = new FSDiscounts();
-    private Vector<String> messages = new Vector();
+    private Vector<String> messages = new Vector<String>();
     private int discountAmount = 0;
 
     private static CompositeLogger logger = CompositeLogger.getLogger(FSSalesReceipt.class);
@@ -84,7 +74,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         return isOpened;
     }
 
-    public void clearReceipt() throws Exception {
+    private void clearReceipt() throws Exception {
         discountAmount = 0;
         total = 0;
         isOpened = false;
@@ -103,11 +93,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void beginFiscalReceipt(boolean printHeader) throws Exception 
     {
+        clearReceipt();
+
         getPrinter().getPrinter().printFSHeader();
         
-        clearReceipt();
         getPrinter().openReceipt(receiptType);
-        getPrinter().waitForPrinting();
     }
 
     public void openReceipt(int receiptType) throws Exception {
@@ -234,14 +224,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 getFiscalDay().cancelFiscalRec();
                 clearReceipt();
             } else {
-                PrinterStatus status = getDevice().waitForPrinting();
-                if (status.getPrinterMode().isReceiptOpened()) {
-                    getDevice().cancelReceipt();
-                }
-                getPrinter().waitForPrinting();
-                getPrinter().openReceipt(receiptType);
-                getPrinter().waitForPrinting();
-
                 correctPayments();
                 addItemsDiscounts();
                 printReceiptItems();
