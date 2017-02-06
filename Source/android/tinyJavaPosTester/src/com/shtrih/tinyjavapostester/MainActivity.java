@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
             payment += price;
 
             String itemName = items[rand.nextInt(items.length)];
-            printer.printRecItem(itemName, price, 0, 0, 0, "");
+            printer.printRecItemRefund(itemName, price, 0, 0, 0, "");
         }
         printer.printRecTotal(payment, payment, "1");
         printer.endFiscalReceipt(false);
