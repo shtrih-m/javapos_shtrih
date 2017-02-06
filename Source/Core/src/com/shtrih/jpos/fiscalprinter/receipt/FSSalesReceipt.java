@@ -494,10 +494,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         openReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
 
         if (isSaleReceipt()) {
-            printStorno(amount, quantity, 0, getParams().department, vatInfo,
+            printStorno(0, quantity, amount, getParams().department, vatInfo,
                     description);
         } else {
-            printSale(amount, quantity, 0, getParams().department, vatInfo,
+            printSale(0, quantity, amount, getParams().department, vatInfo,
                     description);
         }
 
@@ -761,8 +761,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         recItems.add(lastItem);
         addTotal(amount * factor);
         clearPrePostLine();
-        if (getParams().FSReceiptItemDiscountEnabled) {
-            if ((amount - price) > 0) {
+        if (getParams().FSReceiptItemDiscountEnabled) 
+        {
+            if ((price > 0)&&(amount - price) > 0) {
                 printDiscount(amount - price, 0, "");
             }
         }

@@ -674,7 +674,9 @@ class PrinterTest implements FiscalPrinterConst {
     
     public void printFiscalReceipt() 
     {
-        printFiscalReceipt1();
+        printFiscalReceipt106();
+        
+        //printFiscalReceipt1();
         
         //writeCashierName();
         //printFiscalReceipt104();
@@ -961,6 +963,26 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }   
     
+     public void printFiscalReceipt106() {
+        try {
+            printer.resetPrinter();
+
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("Item 1", 0, 770, 1, 13990, "кг");
+            printer.printRecVoidItem("Item", 13990, 770, 0, 0, 1);
+            printer.printRecTotal(10750, 10750, "1");
+            printer.printRecMessage(" ТОВАРОВ           1                      ");
+            printer.printRecMessage(" **************************************** ");
+            printer.printRecMessage("           Уважаемый покупатель!          ");
+            printer.printRecMessage("      На товары, участвующие в акции,     ");
+            printer.printRecMessage("  баллы на сумму покупки не начисляются!  ");
+            printer.printRecMessage("     ****** СПАСИБО ЗА ПОКУПКУ ******     ");
+            printer.endFiscalReceipt(false);
+                    
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }   
                     
     public void printFiscalReceipt101() {
         try {
