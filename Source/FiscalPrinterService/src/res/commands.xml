@@ -1434,7 +1434,7 @@
 		<Command>
 			<Code>65</Code>
 			<Name>Print Z report</Name>
-			<Timeout>30000</Timeout>
+			<Timeout>65000</Timeout>
 			<InParams>
 				<Param>
 					<Name>Password</Name>
@@ -6331,7 +6331,7 @@
 		<Command>
 			<Code>224</Code>
 			<Name>Open day</Name>
-			<Timeout>10000</Timeout>
+			<Timeout>35000</Timeout>
 			<InParams>
 				<Param>
 					<Name>Operator password</Name>

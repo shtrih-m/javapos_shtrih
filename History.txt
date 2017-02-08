@@ -6,6 +6,13 @@
 
 ********************************************************************************
 
+  February, 8 2017, 11:08
+  deviceServiceVersion = 1013367
+	
+  [-] Fixed error with receipt cut on unknown models - removed model.getCapCutter
+
+********************************************************************************
+
   January, 28 2017, 14:00
   deviceServiceVersion = 1013357
 	

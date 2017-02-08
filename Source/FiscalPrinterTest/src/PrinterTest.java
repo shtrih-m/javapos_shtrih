@@ -674,10 +674,12 @@ class PrinterTest implements FiscalPrinterConst {
     
     public void printFiscalReceipt() 
     {
-        printFiscalReceipt106();
+        printFiscalReceipt1();
         
+        //printFiscalReceipt107();
+        
+        //printFiscalReceipt106();
         //printFiscalReceipt1();
-        
         //writeCashierName();
         //printFiscalReceipt104();
         //printFiscalReceipt101();
@@ -963,11 +965,17 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }   
     
+        String additionalHeader = "Ваш кассир сегодня:\r\n"
+                + "ИВАНИЛОВА Г.Л.\r\n"
+                + "*0562 1007/008/011          18.06.14 14:04 AC-00\r\n"
+                + "------------------------------------------------";
+     
      public void printFiscalReceipt106() {
         try {
             printer.resetPrinter();
 
-            printer.beginFiscalReceipt(true);
+            printer.setAdditionalHeader(additionalHeader);
+            printer.beginFiscalReceipt(false);
             printer.printRecItem("Item 1", 0, 770, 1, 13990, "кг");
             printer.printRecVoidItem("Item", 13990, 770, 0, 0, 1);
             printer.printRecTotal(10750, 10750, "1");
@@ -977,13 +985,40 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecMessage("      На товары, участвующие в акции,     ");
             printer.printRecMessage("  баллы на сумму покупки не начисляются!  ");
             printer.printRecMessage("     ****** СПАСИБО ЗА ПОКУПКУ ******     ");
+            printer.endFiscalReceipt(true);
+                    
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }   
+        
+     public void printFiscalReceipt107() {
+        try {
+            printer.resetPrinter();
+
+            printer.setAdditionalHeader(additionalHeader);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("9866 NESC.Кофе CLAS.раст.ж/б 100г" , 16900, 1000, 1, 16900, "");
+            printer.printRecItem("5051 AHM.Чай EARL GREY 25х2г", 6197, 1000, 1, 9295, "");
+            printer.printRecItemAdjustment(1, "Тест M за N !!NEW!!", 3098, 1);
+            printer.printRecItem("5051 AHM.Чай EARL GREY 25х2г", 6197, 1000, 1, 9295, "");
+            printer.printRecItemAdjustment(1, "Тест M за N !!NEW!!", 3098, 0);
+            printer.printRecItem("5051 AHM.Чай EARL GREY 25х2г", 6196, 1000, 1, 9295, "");
+            printer.printRecItemAdjustment(1, "Тест M за N !!NEW!!", 3099, 1);
+            printer.printRecMessage("СКИДКА:                              92.95");
+            printer.printRecSubtotal(35490);
+            printer.printRecSubtotalAdjustment(1, "", 90);
+            printer.printRecSubtotal(35400);
+            printer.printRecTotal(35400, 35400, "30");
             printer.endFiscalReceipt(false);
                     
         } catch (Exception e) {
             e.printStackTrace();
         }
     }   
-                    
+     
+  
+     
     public void printFiscalReceipt101() {
         try {
             printer.resetPrinter();

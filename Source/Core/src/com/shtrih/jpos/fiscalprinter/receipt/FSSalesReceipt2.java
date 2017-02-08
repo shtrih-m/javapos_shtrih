@@ -141,7 +141,8 @@ public class FSSalesReceipt2 extends CustomReceipt implements FiscalReceipt {
     }
 
     public void endFiscalReceipt(boolean printHeader) throws Exception {
-        if (isOpened) {
+        if (isOpened) 
+        {
             if (cancelled) {
                 try {
                     PrinterStatus status = getDevice().waitForPrinting();

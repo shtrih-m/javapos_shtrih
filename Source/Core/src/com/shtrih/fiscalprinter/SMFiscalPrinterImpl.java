@@ -83,6 +83,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private Boolean capPrintGraphicsLine = Boolean.NOTDEFINED;
     private Boolean capPrintBarcode2 = Boolean.NOTDEFINED;
     private Boolean capPrintBarcode3 = Boolean.NOTDEFINED;
+    private boolean capCutPaper = true; 
     private String fsUser = "";
     private String fsAddress = "";
 
@@ -1258,9 +1259,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     // CutPaper
-    public int cutPaper(int cutType) throws Exception {
+    public int cutPaper(int cutType) throws Exception 
+    {
         logger.debug("cutPaper");
-
         CutPaper command = new CutPaper();
         command.setPassword(usrPassword);
         command.setCutType(cutType);
@@ -2614,12 +2615,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void cutPaper() throws Exception {
-        if ((params.cutMode == SmFptrConst.SMFPTR_CUT_MODE_AUTO)
-                && (getModel().getCapCutter())) {
+        if (capCutPaper && (params.cutMode == SmFptrConst.SMFPTR_CUT_MODE_AUTO))
+        {
             if (params.cutPaperDelay != 0) {
                 SysUtils.sleep(params.cutPaperDelay);
             }
-            cutPaper(params.cutType);
+            int rc = cutPaper(params.cutType);
+            capCutPaper = isCommandSupported(rc);
         }
     }
 
@@ -2752,8 +2754,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             return;
         }
         PrinterStatus status = waitForPrinting();
-        if (status.getPrinterMode().isDayClosed()) {
-            check(beginFiscalDay());
+        if (status.getPrinterMode().isDayClosed()) 
+        {
+            beginFiscalDay();
             waitForPrinting();
         }
 

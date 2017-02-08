@@ -142,7 +142,7 @@ public class DriverHeader implements JposConst, PrinterHeader {
             throws Exception {
         printTrailer(additionalTrailer);
         printHeaderBeforeCutter();
-        cutPaper();
+        printer.cutPaper();
     }
 
     @Override
@@ -276,20 +276,6 @@ public class DriverHeader implements JposConst, PrinterHeader {
             printRecLine(" ");
         }
         printer.waitForPrinting();
-    }
-
-    private boolean isCutEnabled() throws Exception {
-        return ((printer.getParams().cutMode == SmFptrConst.SMFPTR_CUT_MODE_AUTO) && (getModel()
-                .getCapCutter()));
-    }
-
-    void cutPaper() throws Exception {
-        if (isCutEnabled()) {
-            if (getParams().cutPaperDelay != 0) {
-                Thread.sleep(getParams().cutPaperDelay);
-            }
-            printer.cutPaper(getParams().cutType);
-        }
     }
 
     private void printTrailer() throws Exception {

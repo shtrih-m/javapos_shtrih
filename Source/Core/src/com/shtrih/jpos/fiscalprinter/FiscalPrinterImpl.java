@@ -3018,8 +3018,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
         PrinterStatus status = getPrinter().waitForPrinting();
         if (status.getPrinterMode().isDayClosed()) {
-            getPrinter().check(getPrinter().beginFiscalDay());
-            getPrinter().waitForPrinting();
+            getPrinter().openFiscalDay();
             printDocEnd();
         }
 
@@ -3038,7 +3037,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         setPrinterState(FPTR_PS_FISCAL_RECEIPT);
         printItems.clear();
         getPrinter().startSaveCommands();
-        printDocBegin();
+        if (printHeader){
+            printDocBegin();
+        }
         receipt.beginFiscalReceipt(printHeader);
     }
 
@@ -3089,7 +3090,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             if (!getCapDuplicateReceipt()) {
                 throw new JposException(JPOS_E_ILLEGAL, Localizer.getString(Localizer.receiptDuplicationNotSupported));
             }
-            printDocBegin();
             getPrinter().duplicateReceipt();
             printDocEnd();
             duplicateReceipt = false;

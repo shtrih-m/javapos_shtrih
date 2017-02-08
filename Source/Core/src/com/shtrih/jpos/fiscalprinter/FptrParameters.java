@@ -215,6 +215,10 @@ public class FptrParameters {
         statusCommand = reader.readInteger("statusCommand",
                 PrinterConst.SMFP_STATUS_COMMAND_DS);
         messagesFileName = reader.readString("messagesFileName", "shtrihjavapos_en.properties");
+        if (messagesFileName.equals("")){
+            messagesFileName = "shtrihjavapos_en.properties";
+        }
+                
         wrapText = reader.readBoolean("wrapText", true);
         recCloseSleepTime = reader.readInteger("recCloseSleepTime", 0);
         cutType = reader.readInteger("cutType",
