@@ -12,7 +12,7 @@ public class DriverHeader2 extends DriverHeader {
 			throws Exception {
 		printTrailer(additionalTrailer);
 		printSpaceLines(getModel().getNumHeaderLines());
-		cutPaper();
+		getPrinter().cutPaper();
 	}
 
 		@Override

@@ -36,6 +36,10 @@ public class DriverHeader implements JposConst, PrinterHeader {
         this.printer = printer;
     }
 
+    public SMFiscalPrinter getPrinter(){
+        return printer;
+    }
+    
     public FptrParameters getParams() {
         return printer.getParams();
     }
