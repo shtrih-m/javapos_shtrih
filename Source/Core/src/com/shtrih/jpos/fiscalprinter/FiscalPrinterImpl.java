@@ -2333,22 +2333,15 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         getPrinter().printLine(SMFP_STATION_REC, line, params.font);
     }
 
-    private void printDocBegin() throws Exception {
-        header.beginDocument(additionalHeader, additionalTrailer);
-    }
-
     public void printDocEnd() throws Exception {
         synchronized (printer) {
             isInReceiptTrailer = true;
             getPrinter().waitForPrinting();
             getPrinter().printItems(printItems);
             header.endDocument(additionalHeader, additionalTrailer);
+            header.beginDocument(additionalHeader, additionalTrailer);
             isInReceiptTrailer = false;
         }
-    }
-
-    private void printReportBegin() throws Exception {
-        header.beginDocument(additionalHeader, additionalTrailer);
     }
 
     private void printReportEnd() throws Exception {
@@ -3037,9 +3030,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         setPrinterState(FPTR_PS_FISCAL_RECEIPT);
         printItems.clear();
         getPrinter().startSaveCommands();
-        if (printHeader){
-            printDocBegin();
-        }
         receipt.beginFiscalReceipt(printHeader);
     }
 
@@ -3120,7 +3110,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         PrinterDate printerDate2 = JposFiscalPrinterDate.valueOf(date2)
                 .getPrinterDate();
 
-        printReportBegin();
         if (params.reportDevice == SMFPTR_REPORT_DEVICE_EJ) {
             EJDate d1 = new EJDate(printerDate1);
             EJDate d2 = new EJDate(printerDate2);
@@ -3129,7 +3118,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             getPrinter().printFMReportDates(printerDate1, printerDate2,
                     params.reportType);
         }
-        printReportEnd();
+        printDocEnd();
     }
 
     public void printPowerLossReport() throws Exception {
@@ -3488,13 +3477,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 // case FPTR_RT_EOD_ORDINAL:
                 day1 = stringParamToInt(startNum, "startNum");
                 day2 = stringParamToInt(endNum, "endNum");
-                printReportBegin();
                 if (params.reportDevice == SMFPTR_REPORT_DEVICE_EJ) {
                     getPrinter().printEJReportDays(day1, day2, params.reportType);
                 } else {
                     getPrinter().printFMReportDays(day1, day2, params.reportType);
                 }
-                printReportEnd();
+                printDocEnd();
                 break;
 
             case FPTR_RT_DATE:
@@ -3504,7 +3492,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 date1 = JposFiscalPrinterDate.valueOf(startNum).getPrinterDate();
                 date2 = JposFiscalPrinterDate.valueOf(endNum).getPrinterDate();
                 // print report
-                printReportBegin();
                 if (params.reportDevice == SMFPTR_REPORT_DEVICE_EJ) {
                     getPrinter().printEJDayReportOnDates(new EJDate(date1),
                             new EJDate(date2), params.reportType);
@@ -3512,7 +3499,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     getPrinter()
                             .printFMReportDates(date1, date2, params.reportType);
                 }
-                printReportEnd();
+                printDocEnd();
                 break;
 
             default:
@@ -3526,9 +3513,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkOnLine();
         checkStateBusy();
         checkPrinterState(FPTR_PS_MONITOR);
-        printReportBegin();
         getPrinter().printXReport();
-        printReportEnd();
+        printDocEnd();
     }
 
     public void printZReport() throws Exception {
@@ -3542,10 +3528,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
         PrinterStatus status = readPrinterStatus();
         if (status.getPrinterMode().canPrintZReport()) {
-            printReportBegin();
             getPrinter().printZReport();
             fiscalDay.close();
-            printReportEnd();
+            printDocEnd();
         } else {
             throw new JposException(JPOS_E_ILLEGAL);
         }

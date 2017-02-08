@@ -674,7 +674,9 @@ class PrinterTest implements FiscalPrinterConst {
     
     public void printFiscalReceipt() 
     {
-        printFiscalReceipt1();
+        printNCRFiscalReceipt();
+        //printFiscalReceipt11();
+        //printFiscalReceipt1();
         
         //printFiscalReceipt107();
         
@@ -2092,32 +2094,30 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printNCRFiscalReceipt() {
         String[] headerLines = {
-            " ",
             "               ООО \"ГИПЕРГЛОБУС\"         ",
             "       г. Щелково, Пролетарский пр-т 18  ",
             "             тел.: (495) 221-85-00       ",
-            "                 www.globus.ru           ",
-            " "};
+            "                 www.globus.ru           "
+        };
 
         String[] trailerLines = {
-            " ",
             "              Спасибо за покупку!        ",
-            "          Будем рады Вас видеть снова!   ",
-            " "};
+            "          Будем рады Вас видеть снова!   "
+            };
 
         try {
             printer.clearLogo();
             printer.clearImages();
-            String fileName = "Globus.bmp";
+            String fileName = "AdidasLogo.bmp";
             int imageIndex = printer.loadImage(fileName);
-            printer.addLogo(imageIndex, SmFptrConst.SMFPTR_LOGO_BEFORE_TRAILER);
+            printer.addLogo(imageIndex, SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
 
             printer.setAdditionalHeader("");
             printer.setAdditionalTrailer("");
             setHeaderLines(headerLines);
             setTrailerLines(trailerLines);
             printer.setFiscalReceiptType(FPTR_RT_SALES);
-            printer.beginFiscalReceipt(true);
+            printer.beginFiscalReceipt(false);
             // Item 1 
             printer.setFontNumber(3);
             printer.printNormal(2, "  4605246004278");
@@ -2143,7 +2143,7 @@ class PrinterTest implements FiscalPrinterConst {
             // Subtotal
             printer.printRecSubtotal(1070000);
             printer.printRecTotal(1070000, 1070000, "0");
-            printer.endFiscalReceipt(false);
+            printer.endFiscalReceipt(true);
 
         } catch (Exception e) {
             e.printStackTrace();

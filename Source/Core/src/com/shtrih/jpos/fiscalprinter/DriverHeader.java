@@ -190,6 +190,8 @@ public class DriverHeader implements JposConst, PrinterHeader {
                 int firstLine = image.getStartPos() + 1;
                 printer.printGraphics(firstLine, firstLine + headerHeight);
                 printer.waitForPrinting();
+                printer.writeParameter(PrinterConst.SMFP_PARAMID_LINE_SPACING,
+                        ls);
             } else {
                 printBlankSpace(headerHeight);
             }
@@ -227,19 +229,13 @@ public class DriverHeader implements JposConst, PrinterHeader {
             if ((getParams().logoMode == SmFptrConst.SMFPTR_LOGO_MODE_SPLIT_IMAGE)
                     && (getModel()
                     .getCapParameter(PrinterConst.SMFP_PARAMID_LINE_SPACING))) {
-                int ls = printer
-                        .readIntParameter(PrinterConst.SMFP_PARAMID_LINE_SPACING);
-                printer.writeParameter(PrinterConst.SMFP_PARAMID_LINE_SPACING,
-                        0);
                 int firstLine = image.getStartPos() + 1;
                 printer.printGraphics(firstLine + headerHeight + 1,
                         image.getEndPos());
-                printer.writeParameter(PrinterConst.SMFP_PARAMID_LINE_SPACING,
-                        ls);
             } else {
                 printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
             }
-            printLines(trailer);
+            printLines(header);
         } else {
             int lineNumber = (headerHeight - imageHeight) / lineHeight;
             printLines(header, lineNumber + 1, header.size());
