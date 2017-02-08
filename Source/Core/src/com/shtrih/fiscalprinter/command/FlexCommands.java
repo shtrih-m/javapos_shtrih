@@ -10,15 +10,14 @@
 package com.shtrih.fiscalprinter.command;
 
 /**
- *
  * @author V.Kravtsov
  */
 
-import java.util.Vector;
+import java.util.HashMap;
 
 public class FlexCommands {
 
-    private final Vector list = new Vector();
+    private final HashMap<Integer, FlexCommand> list = new HashMap<Integer, FlexCommand>();
 
     /** Creates a new instance of FlexCommands */
     public FlexCommands() {
@@ -28,22 +27,12 @@ public class FlexCommands {
         return list.size();
     }
 
-    public FlexCommand get(int index) {
-        return (FlexCommand) list.get(index);
-    }
-
     public FlexCommand itemByCode(int code) {
-        for (int i = 0; i < size(); i++) {
-            FlexCommand command = get(i);
-            if (command.getCode() == code) {
-                return command;
-            }
-        }
-        return null;
+        return list.get(code);
     }
 
     public void add(FlexCommand item) {
-        list.add(item);
+        list.put(item.getCode(), item);
     }
 
     public void clear() {
