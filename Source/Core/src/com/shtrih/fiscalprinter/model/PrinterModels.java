@@ -85,7 +85,7 @@ public class PrinterModels implements Serializable {
 			InputStream stream = ResourceLoader.load("models.xml");
 			XmlModelsReader reader = new XmlModelsReader(this);
 			reader.load(stream);
-                        
+
 		} catch (Exception e) {
 			logger.error(e);
 			setDefaults();
@@ -101,7 +101,7 @@ public class PrinterModels implements Serializable {
 		}
 	}
 
-	public PrinterModel itemByID(int id) throws Exception {
+	public PrinterModel itemByID(int id) {
 		for (int i = 0; i < size(); i++) {
 			PrinterModel result = get(i);
 			if (result.getId() == id) {
