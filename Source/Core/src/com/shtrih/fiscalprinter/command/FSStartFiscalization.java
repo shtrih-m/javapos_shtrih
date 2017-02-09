@@ -1,45 +1,33 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.fiscalprinter.command;
 
-import com.shtrih.ej.EJDate;
-import com.shtrih.util.BitUtils;
-
 /**
- *
- * @author V.Kravtsov
- */
-/**
- * Начать фискализацию ФН
- * Код команды FF05h. Длина сообщения: 6 байт.
- * Пароль системного администратора: 4 байт
- * Ответ:	FF05h Длина сообщения: 1 байт.
- * Код ошибки (1 байт)
- *
+ * Начать отчет о регистрации ККТ
+ * Код команды FF05h. Длина сообщения: 7 байт.
+ * Пароль системного администратора: 4 байта
+ * Тип отчета: 1 байт
+ * 00 – Отчет о регистрации КТТ
+ * 01 – Отчет об изменении параметров регистрации ККТ, в связи с заменой ФН
+ * 02 – Отчет об изменении параметров регистрации ККТ без замены ФН
+ * Ответ: FF05h. Длина сообщения: 1 байт.
+ * Код ошибки: 1 байт
  */
 public class FSStartFiscalization extends PrinterCommand {
 
-    /**
-     * @return the sysPassword
-     */
+    // in
+    private final int sysPassword; // System sdministrator password (4 bytes)
+    private final int reportType;
+
     public int getSysPassword() {
         return sysPassword;
     }
 
-    /**
-     * @param sysPassword the sysPassword to set
-     */
-    public void setSysPassword(int sysPassword) {
-        this.sysPassword = sysPassword;
+    public int getReportType() {
+        return reportType;
     }
 
-    // in
-    private int sysPassword = 0; // System sdministrator password (4 bytes)
-
-    public FSStartFiscalization() {
+    public FSStartFiscalization(int sysPassword, int reportType) {
+        this.sysPassword = sysPassword;
+        this.reportType = reportType;
     }
 
     public final int getCode() {
@@ -51,7 +39,8 @@ public class FSStartFiscalization extends PrinterCommand {
     }
 
     public void encode(CommandOutputStream out) throws Exception {
-        out.writeInt(getSysPassword());
+        out.writeInt(sysPassword);
+        out.writeByte(reportType);
     }
 
     public void decode(CommandInputStream in) throws Exception {

@@ -1,65 +1,41 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.fiscalprinter.command;
 
-import com.shtrih.ej.EJDate;
-import com.shtrih.util.BitUtils;
-
 /**
- *
- * @author V.Kravtsov
- */
-/**
- * Фискализация ФН
- * Код команды FF06h . Длина сообщения: 45 байт.
- * Пароль системного администратора: 4 байт
- * Дата и время DATE_TIME (5 байт)
- * ИНН ASCII (12 байт)
- * Регистрационный номер ККТ ASCII (20 байт)
- * Код налогообложения ( 1 байт)
- * Режим работы ( 1 байт)
- * Ответ:	FF06h Длина сообщения: 9 байт.
- * Код ошибки (1 байт)
- * Номер ФД (4 байта)
- * Фискальный признак ( 4 байт)
- *
- *
+ * Сформировать отчёт о регистрации ККТ
+ * Код команды FF06h. Длина сообщения: 40 байт.
+ * Пароль системного администратора: 4 байта
+ * ИНН : 12 байт ASCII
+ * Регистрационный номер ККТ: 20 байт ASCII
+ * Код налогообложения: 1 байт
+ * Режим работы: 1 байт
+ * Ответ: FF06h. Длина сообщения: 9 байт.
+ * Код ошибки: 1 байт
+ * Номер ФД: 4 байта
+ * Фискальный признак: 4 байта
  */
 public class FSFiscalization extends PrinterCommand {
 
-    /**
-     * @return the sysPassword
-     */
-    public int getSysPassword() {
-        return sysPassword;
-    }
-
-    /**
-     * @param sysPassword the sysPassword to set
-     */
-    public void setSysPassword(int sysPassword) {
-        this.sysPassword = sysPassword;
-    }
-
     // in
-    private int sysPassword; // System sdministrator password (4 bytes)
-    private PrinterDate date;
-    private PrinterTime time;
-    private String taxID;
-    private String regID;
-    private int taxSystemCode;
+    private final int sysPassword; // System sdministrator password (4 bytes)
+
+    private final String taxID;
+    private final String regID;
+    private final int taxSystemCode;
+    private final int operationMode;
     // out
     private long docNumber;
     private long macNumber;
 
-    public FSFiscalization() {
+    public FSFiscalization(int sysPassword, String taxID, String regID, int taxSystemCode, int operationMode) {
+        this.sysPassword = sysPassword;
+        this.taxID = taxID;
+        this.regID = regID;
+        this.taxSystemCode = taxSystemCode;
+        this.operationMode = operationMode;
     }
 
     public final int getCode() {
-        return 0xFF05;
+        return 0xFF06;
     }
 
     public final String getText() {
@@ -67,115 +43,23 @@ public class FSFiscalization extends PrinterCommand {
     }
 
     public void encode(CommandOutputStream out) throws Exception {
-        out.writeInt(getSysPassword());
-        out.writeDate(getDate());
-        out.writeTime(getTime());
-        out.writeString(getTaxID(), 12);
-        out.writeString(getRegID(), 20);
-        out.writeByte(getTaxSystemCode());
+        out.writeInt(sysPassword);
+        out.writeString(taxID, 12);
+        out.writeString(regID, 20);
+        out.writeByte(taxSystemCode);
+        out.writeByte(operationMode);
     }
 
     public void decode(CommandInputStream in) throws Exception {
-        setDocNumber(in.readLong(4));
-        setMacNumber(in.readLong(4));
+        docNumber = in.readLong(4);
+        macNumber = in.readLong(4);
     }
 
-    /**
-     * @return the date
-     */
-    public PrinterDate getDate() {
-        return date;
-    }
-
-    /**
-     * @param date the date to set
-     */
-    public void setDate(PrinterDate date) {
-        this.date = date;
-    }
-
-    /**
-     * @return the time
-     */
-    public PrinterTime getTime() {
-        return time;
-    }
-
-    /**
-     * @param time the time to set
-     */
-    public void setTime(PrinterTime time) {
-        this.time = time;
-    }
-
-    /**
-     * @return the taxID
-     */
-    public String getTaxID() {
-        return taxID;
-    }
-
-    /**
-     * @param taxID the taxID to set
-     */
-    public void setTaxID(String taxID) {
-        this.taxID = taxID;
-    }
-
-    /**
-     * @return the regID
-     */
-    public String getRegID() {
-        return regID;
-    }
-
-    /**
-     * @param regID the regID to set
-     */
-    public void setRegID(String regID) {
-        this.regID = regID;
-    }
-
-    /**
-     * @return the taxSystemCode
-     */
-    public int getTaxSystemCode() {
-        return taxSystemCode;
-    }
-
-    /**
-     * @param taxSystemCode the taxSystemCode to set
-     */
-    public void setTaxSystemCode(int taxSystemCode) {
-        this.taxSystemCode = taxSystemCode;
-    }
-
-    /**
-     * @return the docNumber
-     */
     public long getDocNumber() {
         return docNumber;
     }
 
-    /**
-     * @param docNumber the docNumber to set
-     */
-    public void setDocNumber(long docNumber) {
-        this.docNumber = docNumber;
-    }
-
-    /**
-     * @return the macNumber
-     */
     public long getMacNumber() {
         return macNumber;
     }
-
-    /**
-     * @param macNumber the macNumber to set
-     */
-    public void setMacNumber(long macNumber) {
-        this.macNumber = macNumber;
-    }
-
 }
