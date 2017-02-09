@@ -2094,10 +2094,10 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printNCRFiscalReceipt() {
         String[] headerLines = {
-            "               ООО \"ГИПЕРГЛОБУС\"         ",
-            "       г. Щелково, Пролетарский пр-т 18  ",
-            "             тел.: (495) 221-85-00       ",
-            "                 www.globus.ru           "
+            "                                                ",
+            "             34400, Rostov-Na-Donu              ",
+            "             RIKHARDA ZORGE UL. 33              ",
+            "                ???. 79081735904                "
         };
 
         String[] trailerLines = {
@@ -2108,14 +2108,14 @@ class PrinterTest implements FiscalPrinterConst {
         try {
             printer.clearLogo();
             printer.clearImages();
-            String fileName = "AdidasLogo.bmp";
+            String fileName = "Logo.bmp";
             int imageIndex = printer.loadImage(fileName);
             printer.addLogo(imageIndex, SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
 
             printer.setAdditionalHeader("");
             printer.setAdditionalTrailer("");
             setHeaderLines(headerLines);
-            setTrailerLines(trailerLines);
+            //setTrailerLines(trailerLines);
             printer.setFiscalReceiptType(FPTR_RT_SALES);
             printer.beginFiscalReceipt(false);
             // Item 1 

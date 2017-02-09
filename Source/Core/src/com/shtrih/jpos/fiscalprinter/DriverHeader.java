@@ -24,6 +24,7 @@ import jpos.JposException;
 
 public class DriverHeader implements JposConst, PrinterHeader {
 
+    private int lineNumber = 0;
     private final SMFiscalPrinter printer;
     private final List<HeaderLine> header = new ArrayList<HeaderLine>();
     private final List<HeaderLine> trailer = new ArrayList<HeaderLine>();
@@ -167,6 +168,7 @@ public class DriverHeader implements JposConst, PrinterHeader {
         printer.waitForPrinting();
     }
 
+    /*
     void printHeaderBeforeCutter() throws Exception {
         printer.waitForPrinting();
         int imageHeight = 0;
@@ -196,25 +198,17 @@ public class DriverHeader implements JposConst, PrinterHeader {
                 printBlankSpace(headerHeight);
             }
         } else {
-
-            int lineNumber = (headerHeight - imageHeight) / lineHeight;
-            int spaceHeight = (headerHeight - imageHeight) % lineHeight;
-            if (spaceHeight > 0) {
-                printBlankSpace(spaceHeight);
+            lineNumber = (headerHeight - imageHeight) / lineHeight;
+            if (lineNumber > 0) {
+                printRecLine(" ");
+                lineNumber--;
             }
             printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
-            int printedHeight = printLines(header, 1, lineNumber);
-            int fontHeight = getModel().getFontHeight(new FontNumber(1));
-            int lineCount = (headerHeight - printedHeight + fontHeight - 1)
-                    / fontHeight;
-            if (lineCount > 0) {
-                printer.printStringFont(PrinterConst.SMFP_STATION_REC,
-                        FontNumber.getNormalFont(), " ");
-            }
+            printLines(header, 1, lineNumber);
         }
         printer.waitForPrinting();
     }
-
+    
     void printHeaderAfterCutter(String additionalHeader) throws Exception {
         printer.waitForPrinting();
         int imageHeight = 0;
@@ -237,7 +231,76 @@ public class DriverHeader implements JposConst, PrinterHeader {
             }
             printLines(header);
         } else {
-            int lineNumber = (headerHeight - imageHeight) / lineHeight;
+            printLines(header, lineNumber + 1, header.size());
+            printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
+        }
+        if (additionalHeader.length() > 0) {
+            printer.printText(PrinterConst.SMFP_STATION_REC, additionalHeader,
+                    printer.getParams().getFont());
+        }
+        printer.waitForPrinting();
+    }
+    
+    
+*/
+    
+    void printHeaderBeforeCutter() throws Exception {
+        printer.waitForPrinting();
+        int imageHeight = 0;
+        int lineHeight = printer.getLineHeight(new FontNumber(
+                PrinterConst.FONT_NUMBER_NORMAL));
+        int lineSpacing = printer.getLineSpacing();
+        int headerHeight = getModel().getHeaderHeight();
+        PrinterImage image = printer
+                .getPrinterImage(SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
+        if (image != null) {
+            imageHeight = image.getHeight() + lineSpacing;
+        }
+        if (imageHeight > headerHeight) {
+            if (getParams().logoMode == SmFptrConst.SMFPTR_LOGO_MODE_SPLIT_IMAGE)
+            {
+                int firstLine = image.getStartPos() + 1;
+                printer.printGraphics(firstLine, firstLine + headerHeight);
+                printer.waitForPrinting();
+            } else {
+                printBlankSpace(headerHeight);
+            }
+        } else {
+            lineNumber = (headerHeight - imageHeight) / lineHeight;
+            if (lineNumber > 0) {
+                printRecLine(" ");
+                lineNumber--;
+            }
+            printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
+            printLines(header, 1, lineNumber);
+        }
+        printer.waitForPrinting();
+    }
+    
+    
+    
+    
+    void printHeaderAfterCutter(String additionalHeader) throws Exception {
+        printer.waitForPrinting();
+        int imageHeight = 0;
+        int lineHeight = printer.getLineHeight(new FontNumber(PrinterConst.FONT_NUMBER_NORMAL));
+        int lineSpacing = printer.getLineSpacing();
+        int headerHeight = getModel().getHeaderHeight();
+        PrinterImage image = printer.getPrinterImage(SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
+        if (image != null) {
+            imageHeight = image.getHeight() + lineSpacing;
+        }
+        if (imageHeight > headerHeight) {
+            if (getParams().logoMode == SmFptrConst.SMFPTR_LOGO_MODE_SPLIT_IMAGE)
+            {
+                int firstLine = image.getStartPos() + 1;
+                printer.printGraphics(firstLine + headerHeight + 1,
+                        image.getEndPos());
+            } else {
+                printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
+            }
+            printLines(header);
+        } else {
             printLines(header, lineNumber + 1, header.size());
             printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
         }

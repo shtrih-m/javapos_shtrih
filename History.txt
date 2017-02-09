@@ -6,8 +6,8 @@
 
 ********************************************************************************
 
-  February, 9 2017, 00:20
-  deviceServiceVersion = 1013369
+  February, 9 2017, 20:50
+  deviceServiceVersion = 1013370
 	
   [-] Fixed error logo printing
 

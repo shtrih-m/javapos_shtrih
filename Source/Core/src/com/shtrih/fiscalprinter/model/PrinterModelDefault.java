@@ -592,7 +592,7 @@ public class PrinterModelDefault implements PrinterModel {
     public boolean getCapParameter(String paramName) throws Exception {
         return parameters.itemByName(paramName) != null;
     }
-
+    
     public int getLineSpacing() {
         return lineSpacing;
     }
@@ -742,13 +742,13 @@ public class PrinterModelDefault implements PrinterModel {
     public boolean getCapGraphicsLineMargin() {
         return capGraphicsLineMargin;
     }
-    
+
     public int getPrintWidth() {
         return printWidth;
     }
-    
+
     public void setPrintWidth(int printWidth) {
         this.printWidth = printWidth;
     }
-    
+
 }
