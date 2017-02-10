@@ -904,22 +904,29 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void printItems(Vector<PrintItem> items) throws Exception {
     }
 
-    public void printFSHeader() throws Exception{
+    public void printFSHeader() throws Exception {
     }
-    
-    public boolean getCapOpenReceipt() throws Exception{
+
+    public boolean getCapOpenReceipt() throws Exception {
         return true;
     }
-    
+
     public FSReadSerial fsReadSerial() throws Exception {
         return null;
     }
-    
+
     public FSReadExpDate fsReadExpDate() throws Exception {
         return null;
     }
-    
+
     public void checkDiscountMode(int mode) throws Exception {
     }
-    
+
+    public void printReceiptHeader(String docName) throws Exception {
+    }
+
+    public String getReceiptName(int receiptType) {
+        return "";
+    }
+
 }

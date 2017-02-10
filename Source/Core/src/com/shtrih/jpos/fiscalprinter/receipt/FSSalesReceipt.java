@@ -216,6 +216,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     }
                     getPrinter().waitForPrinting();
                     getDevice().cancelReceipt();
+                    String docName = getDevice().getReceiptName(receiptType);
+                    getDevice().printReceiptHeader(docName);
                     getPrinter().printText(voidDescription);
                     getPrinter().printText(getParams().receiptVoidText);
                 } catch (Exception e) {

@@ -138,6 +138,8 @@ public class FptrParameters {
     public boolean capJrnPresent = true;
     public boolean nonFiscalHeaderEnabled = false;
     public boolean fsHeaderEnabled = false;
+    public int nonFiscalDocNumber = 1;
+    public String fieldSeparator = "\n";
     
 
     public FptrParameters() throws Exception {
@@ -318,6 +320,7 @@ public class FptrParameters {
         capJrnPresent = reader.readBoolean("capJrnPresent", true);
         nonFiscalHeaderEnabled = reader.readBoolean("nonFiscalHeaderEnabled", false);
         fsHeaderEnabled = reader.readBoolean("fsHeaderEnabled", false);
+        fieldSeparator = reader.readString("FieldSeparator", "\n");
 
         // paymentNames
         String paymentName;

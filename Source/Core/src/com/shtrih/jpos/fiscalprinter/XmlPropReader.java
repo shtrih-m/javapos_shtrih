@@ -167,7 +167,7 @@ public class XmlPropReader {
                 }
             }
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("readPrinterHeader: " + e.getMessage());
         }
     }
 

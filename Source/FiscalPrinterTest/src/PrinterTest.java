@@ -189,12 +189,13 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
+
     public void printQRCode() {
         try {
             String text1 = "http://check.egais.ru?id=fb8c9153-9d3d-40b9-a1a7-1cf35d637976&dt=2101171104&cn=020000272834";
             String text2 = "26544400044402170";
             String text = text1;
-            
+
             PrinterBarcode barcode = new PrinterBarcode();
             barcode.setTextFont(1);
             barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_NOTPRINTED);
@@ -239,7 +240,7 @@ class PrinterTest implements FiscalPrinterConst {
             barcode.setText("2223432423409");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);
             printer.printBarcode(barcode);
-            
+
             barcode.setBarWidth(3);
             printer.printBarcode(barcode);
 
@@ -248,14 +249,15 @@ class PrinterTest implements FiscalPrinterConst {
 
             barcode.setBarWidth(5);
             printer.printBarcode(barcode);
-            
+
             barcode.setBarWidth(6);
             printer.printBarcode(barcode);
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     public void printAllBarcodes() {
         try {
             PrinterBarcode barcode = new PrinterBarcode();
@@ -671,16 +673,18 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
+
     public void printFiscalReceipt() 
     {
-        printNCRFiscalReceipt();
+        printFiscalReceipt106();
+        
+        //printCancelledSalesReceipt();
+        //printFiscalReceipt11();
+        //printNCRFiscalReceipt();
         //printFiscalReceipt11();
         //printFiscalReceipt1();
-        
+
         //printFiscalReceipt107();
-        
-        //printFiscalReceipt106();
         //printFiscalReceipt1();
         //writeCashierName();
         //printFiscalReceipt104();
@@ -773,7 +777,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setPostLine("PostLine1");
             printer.printRecItem("Тестовый товар", 100, 1000, 0, 100, "");
             printer.printText("After line 1");
-            
+
             printer.printText("Before line 2");
             printer.setPreLine("PreLine2");
             printer.setPostLine("PostLine2");
@@ -860,7 +864,7 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt138() {
         try {
             printer.resetPrinter();
-            
+
             printer.setFontNumber(1);
 
             printer.beginFiscalReceipt(false);
@@ -879,7 +883,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecSubtotal(59100);
             printer.printRecTotal(59100, 59100, "30");
             printer.endFiscalReceipt(false);
-    
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -888,29 +892,28 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt139() {
         try {
             printer.resetPrinter();
-            
+
             printer.beginFiscalReceipt(false);
             printer.printRecItem("**02  2314523000002 ШЕЙКА СВИНАЯ", 2849100, 950, 2, 2999000, "кг");
             printer.printRecItemAdjustment(1, "ckugka", 284900, 2);
             printer.printRecTotal(2564200, 2564200, "12");
-            
+
             printer.endFiscalReceipt(false);
-    
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
-    public void fsReadParameters() throws Exception 
-    {
+
+    public void fsReadParameters() throws Exception {
         Vector<String> list = new Vector<String>();
         printer.directIO(SmFptrConst.SMFPTR_DIO_READ_FS_PARAMS, null, list);
         System.out.println("List size: " + list.size());
-        for (int i=0;i<list.size();i++){
+        for (int i = 0; i < list.size(); i++) {
             System.out.println(String.valueOf(i) + ". " + list.get(i));
         }
     }
-            
+
     public void printFiscalReceipt103() {
         try {
             printer.resetPrinter();
@@ -927,14 +930,14 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
+
     public void printFiscalReceipt104() {
         try {
             printer.resetPrinter();
 
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-            for (int i=0;i<=20;i++){
+            for (int i = 0; i <= 20; i++) {
                 printer.printRecItem("Receipt Item " + i, 1, 1000, 1, 1, "");
             }
             printer.printRecTotal(50000, 50000, "0");
@@ -943,8 +946,8 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
-     public void printFiscalReceipt105() {
+
+    public void printFiscalReceipt105() {
         try {
             printer.resetPrinter();
 
@@ -961,26 +964,25 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecMessage("  баллы на сумму покупки не начисляются!  ");
             printer.printRecMessage("     ****** СПАСИБО ЗА ПОКУПКУ ******     ");
             printer.endFiscalReceipt(false);
-                    
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }   
-    
-        String additionalHeader = "Ваш кассир сегодня:\r\n"
-                + "ИВАНИЛОВА Г.Л.\r\n"
-                + "*0562 1007/008/011          18.06.14 14:04 AC-00\r\n"
-                + "------------------------------------------------";
-     
-     public void printFiscalReceipt106() {
+    }
+
+    String additionalHeader = "Ваш кассир сегодня:\r\n"
+            + "ИВАНИЛОВА Г.Л.\r\n"
+            + "*0562 1007/008/011    18.06.14 14:04 AC-00\r\n"
+            + "------------------------------------------";
+
+    public void printFiscalReceipt106() {
         try {
             printer.resetPrinter();
-
             printer.setAdditionalHeader(additionalHeader);
-            printer.beginFiscalReceipt(false);
-            printer.printRecItem("Item 1", 0, 770, 1, 13990, "кг");
-            printer.printRecVoidItem("Item", 13990, 770, 0, 0, 1);
-            printer.printRecTotal(10750, 10750, "1");
+            printer.setFiscalReceiptType(FPTR_RT_SALES);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("Item 1", 100, 1000, 1, 100, "кг");
+            printer.printRecTotal(100, 100, "0");
             printer.printRecMessage(" ТОВАРОВ           1                      ");
             printer.printRecMessage(" **************************************** ");
             printer.printRecMessage("           Уважаемый покупатель!          ");
@@ -988,19 +990,31 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecMessage("  баллы на сумму покупки не начисляются!  ");
             printer.printRecMessage("     ****** СПАСИБО ЗА ПОКУПКУ ******     ");
             printer.endFiscalReceipt(true);
-                    
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }   
-        
-     public void printFiscalReceipt107() {
+    }
+
+    public void printCancelledSalesReceipt() {
+        try {
+            printer.setFiscalReceiptType(FPTR_RT_SALES);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("Item 1", 0, 770, 1, 13990, "кг");
+            printer.printRecVoid("Receipt cancelled");
+            printer.endFiscalReceipt(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printFiscalReceipt107() {
         try {
             printer.resetPrinter();
 
             printer.setAdditionalHeader(additionalHeader);
             printer.beginFiscalReceipt(false);
-            printer.printRecItem("9866 NESC.Кофе CLAS.раст.ж/б 100г" , 16900, 1000, 1, 16900, "");
+            printer.printRecItem("9866 NESC.Кофе CLAS.раст.ж/б 100г", 16900, 1000, 1, 16900, "");
             printer.printRecItem("5051 AHM.Чай EARL GREY 25х2г", 6197, 1000, 1, 9295, "");
             printer.printRecItemAdjustment(1, "Тест M за N !!NEW!!", 3098, 1);
             printer.printRecItem("5051 AHM.Чай EARL GREY 25х2г", 6197, 1000, 1, 9295, "");
@@ -1013,14 +1027,12 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecSubtotal(35400);
             printer.printRecTotal(35400, 35400, "30");
             printer.endFiscalReceipt(false);
-                    
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }   
-     
-  
-     
+    }
+
     public void printFiscalReceipt101() {
         try {
             printer.resetPrinter();
@@ -1028,33 +1040,33 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecMessage("Кассовый чек");
             printer.printRecMessage("printRecMessage1");
             printer.printNormal(FPTR_S_RECEIPT, "printNormal1");
-            
+
             printer.setFiscalReceiptType(FPTR_RT_SALES);
             printer.beginFiscalReceipt(true);
-            
+
             printer.printRecMessage("printRecMessage2");
             printer.printNormal(FPTR_S_RECEIPT, "printNormal2");
-            
+
             printer.printRecItem("Тестовый товар", 10000, 1000, 0, 10000, "");
             printer.printRecSubtotalAdjustment(FPTR_AT_AMOUNT_DISCOUNT, "", 600);
             printer.printRecItem("Батарейка Alkaline Stam", 20, 0, 1, 20, "");
             printer.printRecItemVoid("Батарейка Alkaline Stam", 20, 0, 1, 20, "");
             printer.printRecSubtotal(9500);
-            
+
             printer.printRecMessage("printRecMessage3");
             printer.printNormal(FPTR_S_RECEIPT, "printNormal3");
-            
+
             printer.setDiscountAmount(99);
             printer.printRecTotal(9500, 9500, "0");
-            
+
             printer.printRecMessage("printRecMessage4");
             printer.printNormal(FPTR_S_RECEIPT, "printNormal4");
-            
+
             printer.printBarcode("1234567890123", "", SmFptrConst.SMFPTR_BARCODE_EAN13,
-              100, SmFptrConst.SMFPTR_PRINTTYPE_DRIVER, 2, 0, 1, 0);
-            
+                    100, SmFptrConst.SMFPTR_PRINTTYPE_DRIVER, 2, 0, 1, 0);
+
             printQRCode();
-            
+
             printer.endFiscalReceipt(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1072,7 +1084,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecSubtotal(19385);
             printer.printRecSubtotalAdjustment(1, "", 85);
             printer.printRecTotal(19300, 19300, "");
-            
+
             printer.printRecMessage("На артикул не предоставляется скидка");
             printer.printRecMessage(" ");
             printer.printRecMessage("Покупатель: 7789004000000079");
@@ -1086,7 +1098,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecMessage("Списано баллов: 1000                    ");
             printer.printRecMessage("Со счета списано, баллов: 1000          ");
             printer.printRecMessage("Баланс, баллов: 892                     ");
-            
+
             printer.endFiscalReceipt(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1192,8 +1204,7 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt3() {
         try {
-            for (int i=0;i<100;i++)
-            {
+            for (int i = 0; i < 100; i++) {
                 ReadLongStatus command = new ReadLongStatus();
                 command.setPassword(30);
                 printer.executeCommand(command);
@@ -1202,7 +1213,7 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
+
     public void printFiscalReceipt4() {
         try {
             printer.setFiscalReceiptType(FPTR_RT_SALES);
@@ -2103,7 +2114,7 @@ class PrinterTest implements FiscalPrinterConst {
         String[] trailerLines = {
             "              Спасибо за покупку!        ",
             "          Будем рады Вас видеть снова!   "
-            };
+        };
 
         try {
             printer.clearLogo();
@@ -2215,12 +2226,11 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printBlackSeparator()
-            throws Exception 
-    {
+            throws Exception {
         printer.printText("------------------------------------------");
         //printer.printLine(SmFptrConst.SMFPTR_LINE_TYPE_BLACK, 3);
     }
-    
+
     public void testCashDrawer(ShtrihCashDrawer driver) {
         try {
             driver.open("ShtrihCashDrawer");

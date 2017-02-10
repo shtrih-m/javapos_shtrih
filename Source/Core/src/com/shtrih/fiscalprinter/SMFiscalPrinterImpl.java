@@ -83,7 +83,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private Boolean capPrintGraphicsLine = Boolean.NOTDEFINED;
     private Boolean capPrintBarcode2 = Boolean.NOTDEFINED;
     private Boolean capPrintBarcode3 = Boolean.NOTDEFINED;
-    private boolean capCutPaper = true; 
+    private boolean capCutPaper = true;
     private String fsUser = "";
     private String fsAddress = "";
 
@@ -1259,8 +1259,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     // CutPaper
-    public int cutPaper(int cutType) throws Exception 
-    {
+    public int cutPaper(int cutType) throws Exception {
         logger.debug("cutPaper");
         CutPaper command = new CutPaper();
         command.setPassword(usrPassword);
@@ -2615,8 +2614,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void cutPaper() throws Exception {
-        if (capCutPaper && (params.cutMode == SmFptrConst.SMFPTR_CUT_MODE_AUTO))
-        {
+        if (capCutPaper && (params.cutMode == SmFptrConst.SMFPTR_CUT_MODE_AUTO)) {
             if (params.cutPaperDelay != 0) {
                 SysUtils.sleep(params.cutPaperDelay);
             }
@@ -2753,8 +2751,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             return;
         }
         PrinterStatus status = waitForPrinting();
-        if (status.getPrinterMode().isDayClosed()) 
-        {
+        if (status.getPrinterMode().isDayClosed()) {
             beginFiscalDay();
             waitForPrinting();
         }
@@ -2897,4 +2894,51 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
+    public void printReceiptHeader(String docName) throws Exception {
+        if (getCapFiscalStorage()) {
+            // 1
+            LongPrinterStatus status = readLongStatus();
+            String line1 = "ККТ " + readTable(18, 1, 1).trim();
+            String line2 = status.getDate().toStringShort() + " "
+                    + status.getTime().toString2();
+            printLines(line1, line2);
+            // 2
+            line1 = readTable(2, status.getOperatorNumber(), 2);
+            line2 = String.format("#%04d", status.getDocumentNumber());
+            printLines(line1, line2);
+            // 3
+            line1 = docName; 
+            line2 = String.format("ИНН %010d", status.getFiscalID());
+            printLines(line1, line2);
+            // 4
+            line1 = "РН ККТ " + readTable(18, 1, 3).trim();
+            line2 = "ФН " + readTable(18, 1, 4).trim();
+            printLines(line1, line2);
+            // 5
+            line1 = "Сайт ФНС:";
+            line2 = readTable(18, 1, 13).trim();
+            printLines(line1, line2);
+            waitForPrinting();
+        } else {
+            printDocHeader("Нефискальный документ", params.nonFiscalDocNumber);
+            waitForPrinting();
+        }
+    }
+
+    private static String[] docNames = {
+        "ПРОДАЖА", "ПОКУПКА", "ВОЗВРАТ ПРОДАЖИ", "ВОЗВРАТ ПОКУПКИ"
+    };
+    
+    private static String[] fsDocNames = {
+        "ПРИХОД", "РАСХОД", "ВОЗВРАТ ПРИХОДА", "ВОЗВРАТ РАСХОДА"
+    };
+    
+    public String getReceiptName(int receiptType)
+    {
+        if (getCapFiscalStorage()){
+            return "КАССОВЫЙ ЧЕК/" + fsDocNames[receiptType];
+        } else{
+            return docNames[receiptType];
+        }
+    }
 }

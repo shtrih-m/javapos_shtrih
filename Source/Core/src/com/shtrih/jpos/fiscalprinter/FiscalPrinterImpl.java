@@ -226,7 +226,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private boolean isRecPresent = true;
     private boolean inAfterCommand = false;
     private boolean isInReceiptTrailer = false;
-    private int nonFiscalDocNumber = 1;
     private TextDocumentFilter filter = null;
 
     public void setTextDocumentFilterEnablinessTo(boolean value) {
@@ -855,8 +854,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 readTables();
                 readPrinterStatus();
                 readEJActivation();
-                loadProperties();
                 header.initDevice();
+                loadProperties();
+
                 // if polling enabled - create device thread
                 if (params.pollEnabled) {
                     startPoll();
@@ -2272,37 +2272,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printHeaderDriver() throws Exception {
-    if (!params.nonFiscalHeaderEnabled) {
-            return;
-        }
-
-        if (printer.getCapFiscalStorage()) {
-            // 1
-            LongPrinterStatus status = printer.readLongStatus();
-            String line1 = "ККТ " + printer.readTable(18, 1, 1).trim();
-            String line2 = status.getDate().toStringShort() + " "
-                    + status.getTime().toString2();
-            printer.printLines(line1, line2);
-            // 2
-            line1 = printer.readTable(2, status.getOperatorNumber(), 2);
-            line2 = String.format("#%04d", status.getDocumentNumber());
-            printer.printLines(line1, line2);
-            // 3
-            line1 = "Нефискальный документ";
-            line2 = String.format("ИНН %010d", status.getFiscalID());
-            printer.printLines(line1, line2);
-            // 4
-            line1 = "РН ККТ " + printer.readTable(18, 1, 3).trim();
-            line2 = "ФН " + printer.readTable(18, 1, 4).trim();
-            printer.printLines(line1, line2);
-            // 5
-            line1 = "Сайт ФНС:";
-            line2 = printer.readTable(18, 1, 13).trim();
-            printer.printLines(line1, line2);
-            printer.waitForPrinting();
-        } else {
-            printer.printDocHeader("Нефискальный документ", nonFiscalDocNumber);
-            printer.waitForPrinting();
+        if (params.nonFiscalHeaderEnabled) {
+            printer.printReceiptHeader("Нефискальный документ");
         }
     }
 
@@ -3022,11 +2993,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
         fiscalDay.open();
 
-        if (additionalHeader.length() > 0) {
-            getPrinter().printText(SMFP_STATION_REC, additionalHeader,
-                    getFont());
-        }
-
         setPrinterState(FPTR_PS_FISCAL_RECEIPT);
         printItems.clear();
         getPrinter().startSaveCommands();
@@ -3067,7 +3033,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             }
             setPrinterState(FPTR_PS_MONITOR);
             receipt = new NullReceipt(createReceiptContext());
-            nonFiscalDocNumber++;
+            params.nonFiscalDocNumber++;
             saveProperties();
         }
     }
@@ -4385,14 +4351,16 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void saveProperties() throws Exception {
+        logger.debug("saveProperties");
         try {
             XmlPropWriter writer = new XmlPropWriter("FiscalPrinter",
                     logicalName);
             writer.write(getPrinterImages());
             writer.write(printer.getReceiptImages());
             writer.writePrinterHeader(header);
-            writer.writeNonFiscalDocNumber(nonFiscalDocNumber);
+            writer.writeNonFiscalDocNumber(params.nonFiscalDocNumber);
             writer.save(getPropsFileName());
+            logger.debug("saveProperties: OK");
         } catch (Exception e) {
             logger.error("saveProperties", e);
         }
@@ -4409,7 +4377,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 reader.read(getPrinterImages());
                 reader.read(printer.getReceiptImages());
                 reader.readPrinterHeader(header);
-                nonFiscalDocNumber = reader.readNonFiscalDocNumber();
+                params.nonFiscalDocNumber = reader.readNonFiscalDocNumber();
+                logger.debug("loadProperties: OK");
+            } else {
+                logger.debug("loadProperties: no file");
             }
         } catch (Exception e) {
             logger.error("Failed to load properties", e);
@@ -4612,6 +4583,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         } else {
             setPrinterState(FPTR_PS_FISCAL_RECEIPT_TOTAL);
         }
+    }
+
+    public String getReceiptName(int receiptType) {
+        return "";
     }
 
 }

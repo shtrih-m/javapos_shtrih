@@ -29,8 +29,9 @@ public class FSTemplateReceipt extends FSSalesReceipt2 {
      * @throws Exception
      */
     protected void parseItemRowFormat() throws Exception {
-        m_tableHeaderLines = getDevice().getParams().ItemTableHeader.split("\\\\n");
-        String[] itemLines = getDevice().getParams().ItemRowFormat.split("\\\\n");
+        String fieldSeparator = getParams().fieldSeparator;
+        m_tableHeaderLines = getDevice().getParams().ItemTableHeader.split(fieldSeparator);
+        String[] itemLines = getDevice().getParams().ItemRowFormat.split(fieldSeparator);
         m_templateLines = new TemplateLine[itemLines.length];
         for (int i = 0; i < itemLines.length; i++) {
             TemplateLine templateLine = FormatLineParser.getLineFromString(itemLines[i]);

@@ -514,5 +514,10 @@ public interface SMFiscalPrinter {
     public FSReadExpDate fsReadExpDate() throws Exception;
     
     public void checkDiscountMode(int mode) throws Exception;
+    
+    public void printReceiptHeader(String docName) throws Exception;
+    
+    public String getReceiptName(int receiptType);
+    
 }
 
