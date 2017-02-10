@@ -847,6 +847,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 setPowerState(JPOS_PS_ONLINE);
                 setJrnPaperState(true, true);
 
+                header.initDevice();
+                loadProperties();
+
                 updateDeviceMetrics();
                 checkEcrMode();
                 cancelReceipt();
@@ -854,8 +857,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 readTables();
                 readPrinterStatus();
                 readEJActivation();
-                header.initDevice();
-                loadProperties();
 
                 // if polling enabled - create device thread
                 if (params.pollEnabled) {
@@ -3976,7 +3977,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         PrinterStatus status = getPrinter().waitForPrinting();
         if (status.getPrinterMode().isReceiptOpened()) {
             getPrinter().sysAdminCancelReceipt();
-            printDocEnd();
+            if (!getPrinter().getCapFiscalStorage()) {
+                printDocEnd();
+            }
         }
     }
 

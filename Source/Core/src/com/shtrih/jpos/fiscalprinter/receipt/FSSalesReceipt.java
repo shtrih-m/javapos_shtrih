@@ -94,16 +94,15 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void beginFiscalReceipt(boolean printHeader) throws Exception 
     {
         clearReceipt();
-
         getPrinter().getPrinter().printFSHeader();
-        
-        getPrinter().openReceipt(receiptType);
     }
 
     public void openReceipt(int receiptType) throws Exception {
         if (!isOpened) {
             isOpened = true;
             this.receiptType = receiptType;
+            getPrinter().openReceipt(receiptType);
+            getPrinter().waitForPrinting();
         }
     }
 

@@ -676,7 +676,10 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() 
     {
-        printFiscalReceipt106();
+        printFiscalReceipt11();
+        
+        //printSpeedTest2();
+        //printFiscalReceipt106();
         
         //printCancelledSalesReceipt();
         //printFiscalReceipt11();
@@ -1357,7 +1360,7 @@ class PrinterTest implements FiscalPrinterConst {
     public void printSpeedTest() {
         try {
             printer.beginNonFiscal();
-            for (int i = 1; i <= 100; i++) {
+            for (int i = 1; i <= 200; i++) {
                 printer.printNormal(FPTR_S_RECEIPT, "Line " + i);
             }
             printer.endNonFiscal();
@@ -1378,10 +1381,10 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(FPTR_RT_SALES);
             printer.beginFiscalReceipt(true);
-            for (int i = 1; i <= 100; i++) {
+            for (int i = 1; i <= 200; i++) {
                 printer.printRecItem("Item " + i, 1, 1000, 0, 0, "");
             }
-            printer.printRecTotal(100, 100, "1");
+            printer.printRecTotal(10000, 10000, "1");
             printer.endFiscalReceipt(true);
         } catch (JposException e) {
             System.out.println("JposException");

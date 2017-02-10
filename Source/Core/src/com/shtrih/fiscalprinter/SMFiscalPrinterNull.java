@@ -376,7 +376,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return new PrintFMReportDays();
     }
 
-    public void printSale(PriceItem item) throws Exception {
+    public void printSale(PriceItem item) throws Exception 
+    {
     }
 
     public void printVoidSale(PriceItem item) throws Exception {
@@ -488,7 +489,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
-    public int cutPaper(int cutType) throws Exception {
+    public int cutPaper(int cutType) throws Exception 
+    {
         return 0;
     }
 

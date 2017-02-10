@@ -6,9 +6,11 @@
 
 ********************************************************************************
 
-  February, 10 2017, 12:40
-  deviceServiceVersion = 1013371
+  February, 10 2017, 20:15
+  deviceServiceVersion = 1013372
 	
+  [-] Fixed error with additional header
+  [-] Fixed error with refund receipt
   [-] Fixed error logo printing
   [+] Added parameter FieldSeparator as field separator for parameters 
       ItemTableHeader and ItemRowFormat

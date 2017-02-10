@@ -185,10 +185,17 @@ public class XmlPropReader {
     }
 
     private int readParameterInt(Node node, String paramName) throws Exception {
-        String s = readParameterStr(node, paramName);
-        return Integer.valueOf(s);
+        int result = 0;
+        try {
+            String s = readParameterStr(node, paramName);
+            result = Integer.valueOf(s).intValue();
+        } catch (Exception e) {
+            logger.error("readParameterInt failed, " + paramName + ", " + e.getMessage());
+        }
+        return result;
     }
 
+    
     private boolean readParameterBool(Node node, String paramName)
             throws Exception {
         String paramValue = readParameterStr(node, paramName);
