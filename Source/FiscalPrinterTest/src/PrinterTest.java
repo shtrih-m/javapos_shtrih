@@ -676,7 +676,8 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() 
     {
-        printFiscalReceipt11();
+        printFiscalReceipt107();
+        //printFiscalReceipt11();
         
         //printSpeedTest2();
         //printFiscalReceipt106();
@@ -726,10 +727,10 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(FPTR_RT_SALES);
             printer.beginFiscalReceipt(true);
-            printer.printRecRefund("****      100359344 Item1", 5596000, 2);
-            printer.printRecSubtotal(5596000);
+            printer.printRecRefund("****      100359344 Item1", 5596, 2);
+            printer.printRecSubtotal(5596);
             printer.printRecSubtotalAdjustment(1, "", 1000);
-            printer.printRecTotal(5596000, 5596000, "payTypeName1");
+            printer.printRecTotal(5596, 5596, "payTypeName1");
             printer.endFiscalReceipt(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1024,7 +1025,6 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecItemAdjustment(1, "Тест M за N !!NEW!!", 3098, 0);
             printer.printRecItem("5051 AHM.Чай EARL GREY 25х2г", 6196, 1000, 1, 9295, "");
             printer.printRecItemAdjustment(1, "Тест M за N !!NEW!!", 3099, 1);
-            printer.printRecMessage("СКИДКА:                              92.95");
             printer.printRecSubtotal(35490);
             printer.printRecSubtotalAdjustment(1, "", 90);
             printer.printRecSubtotal(35400);
@@ -1457,8 +1457,8 @@ class PrinterTest implements FiscalPrinterConst {
         try {
             printer.setFiscalReceiptType(FPTR_RT_CASH_IN);
             printer.beginFiscalReceipt(true);
-            printer.printRecCash(100);
-            printer.printRecTotal(0, 100, "0");
+            printer.printRecCash(100000);
+            printer.printRecTotal(0, 100000, "0");
             printer.printNormal(FiscalPrinterConst.FPTR_S_RECEIPT, "PrintNormal");
             printer.printRecMessage("printRecMessage");
             printer.endFiscalReceipt(true);

@@ -267,7 +267,7 @@
         <!-- Receipt number request type 0 - Receipt number, 1 - fiscal document number, 2 - Receipt number in fiscal day -->
         <prop name="receiptNumberRequest" type="String" value="2"/>
         <!-- Enable discount calculation in Fiscal Storage printRecItemMethod 1 - enabled, 0 - disabled -->
-        <prop name="FSReceiptItemDiscountEnabled" type="String" value="1"/>
+        <prop name="FSReceiptItemDiscountEnabled" type="String" value="0"/>
         <!-- Enable discounts for Fiscal Storage printers 1 - enabled, 0 - disabled -->
         <prop name="FSDiscountEnabled" type="String" value="1"/>
         <!-- Combine item adjustments (enabled by default) -->

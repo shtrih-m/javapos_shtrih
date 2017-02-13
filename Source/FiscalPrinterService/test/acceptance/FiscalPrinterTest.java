@@ -7,21 +7,26 @@
 package acceptance;
 
 import junit.framework.TestCase;
-import jpos.services.FiscalPrinterService113;
+
+import jpos.config.JposEntry;
 import jpos.FiscalPrinter113;
+import jpos.FiscalPrinterControl113;
+import jpos.services.FiscalPrinterService113;
+
 import com.shtrih.jpos.DeviceService;
+import com.shtrih.fiscalprinter.SMFiscalPrinterNull;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
+import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterService;
-import jpos.FiscalPrinterControl113;
 
 /**
  *
  * @author V.Kravtsov
  */
-public class FiscalPrinterServiceTest extends TestCase 
+public class FiscalPrinterTest extends TestCase 
 {
-    public FiscalPrinterServiceTest(String testName) {
+    public FiscalPrinterTest(String testName) {
         super(testName);
     }
     
@@ -37,9 +42,15 @@ public class FiscalPrinterServiceTest extends TestCase
     
     public void testParseEJActivation() throws Exception 
     {
-        FiscalPrinterEmulator printer = new FiscalPrinterEmulator();
-        FiscalPrinterControl113 control = new FiscalPrinter113();
-        ShtrihFiscalPrinter driver = new ShtrihFiscalPrinter(control);
+        /*
+        FptrParameters parameters = new FptrParameters();
+        SMFiscalPrinterNull printer = new SMFiscalPrinterNull(null, null, parameters);
+        FiscalPrinterImpl service = new FiscalPrinterImpl();
+        service.setPrinter(printer);
+        JposEntry jposEntry = new JposEntry();
+        service.setJposEntry(jposEntry);
+        service.open("ShtrihFptr", null);
+        */
     }
     
 }

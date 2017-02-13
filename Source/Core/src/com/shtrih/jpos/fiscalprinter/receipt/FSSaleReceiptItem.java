@@ -13,27 +13,62 @@ import com.shtrih.fiscalprinter.command.AmountItem;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.MathUtils;
+import com.shtrih.util.MethodParameter;
+import com.shtrih.util.StringUtils;
 
 /**
  * @author V.Kravtsov
  */
 public class FSSaleReceiptItem {
 
+    private int pos = 0;
+    private long price;
+    private long quantity;
+    private int department;
+    private int tax1;
+    private int tax2;
+    private int tax3;
+    private int tax4;
+    private String text;
     private String preLine = "";
     private String postLine = "";
-    private PriceItem item;
     private long voidAmount = 0;
     private final FSDiscounts discounts = new FSDiscounts();
     private CompositeLogger logger = CompositeLogger.getLogger(FiscalPrinterImpl.class);
 
-    public FSSaleReceiptItem(PriceItem item, String preLine, String postline) {
-        this.item = item;
-        this.preLine = preLine;
-        this.postLine = postline;
+    public FSSaleReceiptItem() {
     }
 
-    public void addVoidAmount(long amount) 
-    {
+    public PriceItem getPriceItem() throws Exception {
+        PriceItem item = new PriceItem();
+        item.setDepartment(department);
+        item.setPrice(price);
+        item.setQuantity(quantity);
+        item.setTax1(tax1);
+        item.setTax2(tax2);
+        item.setTax3(tax3);
+        item.setTax4(tax4);
+        item.setText(text);
+        return item;
+    }
+
+    public void setPreLine(String value) {
+        this.preLine = value;
+    }
+
+    public void setPostLine(String value) {
+        this.postLine = value;
+    }
+
+    public int getPos() {
+        return pos;
+    }
+
+    public void setPos(int value) {
+        pos = value;
+    }
+
+    public void addVoidAmount(long amount) {
         voidAmount += amount;
     }
 
@@ -46,9 +81,7 @@ public class FSSaleReceiptItem {
     }
 
     public long getTotal() {
-        long total = item.getAmount() - discounts.getTotal();
-        return total;
-
+        return getAmount() - discounts.getTotal();
     }
 
     public long getDiscountTotal() {
@@ -74,17 +107,106 @@ public class FSSaleReceiptItem {
     }
 
     /**
-     * @return the item
-     */
-    public PriceItem getItem() {
-        return item;
-    }
-
-    /**
      * @return the discounts
      */
     public FSDiscounts getDiscounts() {
         return discounts;
     }
 
+    public long getTotalDiscount() {
+        return discounts.getTotal();
+    }
+
+    public long getPrice() {
+        return price;
+    }
+
+    public long getQuantity() {
+        return quantity;
+    }
+
+    public int getDepartment() {
+        return department;
+    }
+
+    public int getTax1() {
+        return tax1;
+    }
+
+    public int getTax2() {
+        return tax2;
+    }
+
+    public int getTax3() {
+        return tax3;
+    }
+
+    public int getTax4() {
+        return tax4;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    /**
+     * @param price the price to set
+     */
+    public void setPrice(long price) throws Exception {
+        MethodParameter.checkRange(price, 0, 0xFFFFFFFFFFL, "price");
+        this.price = price;
+    }
+
+    /**
+     * @param quantity the quantity to set
+     */
+    public void setQuantity(long quantity) throws Exception {
+        this.quantity = quantity;
+    }
+
+    /**
+     * @param department the department to set
+     */
+    public void setDepartment(int department) {
+        this.department = department;
+    }
+
+    /**
+     * @param tax1 the tax1 to set
+     */
+    public void setTax1(int tax1) {
+        this.tax1 = tax1;
+    }
+
+    /**
+     * @param tax2 the tax2 to set
+     */
+    public void setTax2(int tax2) {
+        this.tax2 = tax2;
+    }
+
+    /**
+     * @param tax3 the tax3 to set
+     */
+    public void setTax3(int tax3) {
+        this.tax3 = tax3;
+    }
+
+    /**
+     * @param tax4 the tax4 to set
+     */
+    public void setTax4(int tax4) {
+        this.tax4 = tax4;
+    }
+
+    /**
+     * @param text the text to set
+     */
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public long getAmount() {
+        return PrinterAmount.getAmount(getPrice(), getQuantity());
+    }
 }
