@@ -54,5 +54,12 @@
             android:layout_height="wrap_content"
             android:onClick="printJournalCurrentDay"
             android:text="@string/action_print_current_day_journal" />
+
+        <Button
+            android:id="@+id/btnPrintDuplicateReceipt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="printDuplicateReceipt"
+            android:text="@string/action_print_duplicate_receipt" />
     </LinearLayout>
 </ScrollView>

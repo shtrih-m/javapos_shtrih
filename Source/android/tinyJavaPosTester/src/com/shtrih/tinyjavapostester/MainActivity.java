@@ -277,4 +277,12 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    public void printDuplicateReceipt(View v) {
+        try {
+            printer.printDuplicateReceipt();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
