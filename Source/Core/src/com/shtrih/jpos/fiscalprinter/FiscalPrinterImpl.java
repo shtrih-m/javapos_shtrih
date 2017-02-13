@@ -4230,11 +4230,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return getPrinter().getDeviceMetrics();
     }
 
-    public void printBarcode(PrinterBarcode barcode) throws Exception {
+    public void printBarcode(PrinterBarcode barcode) throws Exception 
+    {
         if (isReceiptEnding()) {
             printItems.add(barcode);
         } else {
-            getPrinter().printBarcode(barcode);
+            receipt.printBarcode(barcode);
         }
     }
 

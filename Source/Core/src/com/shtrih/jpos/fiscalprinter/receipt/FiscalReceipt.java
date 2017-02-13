@@ -8,6 +8,7 @@ package com.shtrih.jpos.fiscalprinter.receipt;
  *
  * @author V.Kravtsov
  */
+import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.FontNumber;
 
 public interface FiscalReceipt {
@@ -104,4 +105,7 @@ public interface FiscalReceipt {
     public void fsWriteCustomerPhone(String text) throws Exception;
     
     public void setDiscountAmount(int amount) throws Exception;
+    
+    public void printBarcode(PrinterBarcode barcode) throws Exception;
+    
 }

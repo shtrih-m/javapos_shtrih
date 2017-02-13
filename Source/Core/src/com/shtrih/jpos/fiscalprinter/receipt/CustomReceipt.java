@@ -8,6 +8,7 @@ package com.shtrih.jpos.fiscalprinter.receipt;
  *
  * @author V.Kravtsov
  */
+import com.shtrih.barcode.PrinterBarcode;
 import jpos.JposConst;
 import jpos.JposException;
 
@@ -249,4 +250,9 @@ public abstract class CustomReceipt implements FiscalReceipt {
 
     public void setDiscountAmount(int amount) throws Exception{
     }
+    
+    public void printBarcode(PrinterBarcode barcode) throws Exception{
+        getPrinter().getPrinter().printBarcode(barcode);
+    }
+    
 }

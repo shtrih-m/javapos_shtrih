@@ -8,6 +8,7 @@ package com.shtrih.jpos.fiscalprinter.receipt;
  *
  * @author V.Kravtsov
  */
+import com.shtrih.barcode.PrinterBarcode;
 import java.util.Vector;
 
 import jpos.JposConst;
@@ -195,6 +196,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             if (item instanceof FSTextReceiptItem) {
                 printFSText((FSTextReceiptItem) item);
             }
+            if (item instanceof PrinterBarcode){
+                getPrinter().getPrinter().printBarcode((PrinterBarcode)item);
+            }
+            
             if (item instanceof FSTLVItem) {
                 FSTLVItem tlvItem = (FSTLVItem) item;
                 SMFiscalPrinter printer = getPrinter().getPrinter();
@@ -1005,4 +1010,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         return StringUtils.alignLines(line1, line2, getPrinter().getTextLength());
     }
 
+    public void printBarcode(PrinterBarcode barcode) throws Exception{
+        recItems.add(barcode);
+    }
+    
+    
 }
