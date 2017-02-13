@@ -84,7 +84,7 @@ public class SocketPort implements PrinterPort {
         int result;
         long startTime = System.currentTimeMillis();
         for (;;) {
-            Thread.sleep(0, 001);
+            //Thread.sleep(0, 001);
             long currentTime = System.currentTimeMillis();
             if (in.available() > 0) {
                 result = in.read();

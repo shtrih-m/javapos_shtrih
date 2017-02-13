@@ -676,7 +676,7 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() 
     {
-        printFiscalReceipt107();
+        printFiscalReceipt104();
         //printFiscalReceipt11();
         
         //printSpeedTest2();
@@ -941,7 +941,7 @@ class PrinterTest implements FiscalPrinterConst {
 
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-            for (int i = 0; i <= 20; i++) {
+            for (int i = 0; i <= 100; i++) {
                 printer.printRecItem("Receipt Item " + i, 1, 1000, 1, 1, "");
             }
             printer.printRecTotal(50000, 50000, "0");

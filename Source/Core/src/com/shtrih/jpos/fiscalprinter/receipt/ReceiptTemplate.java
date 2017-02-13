@@ -133,7 +133,7 @@ public class ReceiptTemplate {
             return StringUtils.quantityToStr(item.getQuantity());
         }
         if (f.tag.equals("SUM")) {
-            return StringUtils.amountToString(item.getAmount());
+            return StringUtils.amountToString(item.getPriceWithDiscount());
         }
 
         if (f.tag.equals("DISCOUNT")) {

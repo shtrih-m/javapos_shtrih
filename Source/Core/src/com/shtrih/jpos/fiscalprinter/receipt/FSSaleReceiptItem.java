@@ -206,6 +206,10 @@ public class FSSaleReceiptItem {
         this.text = text;
     }
 
+    public long getPriceWithDiscount() {
+        return getTotal()*1000/quantity;
+    }
+    
     public long getAmount() {
         return PrinterAmount.getAmount(getPrice(), getQuantity());
     }
