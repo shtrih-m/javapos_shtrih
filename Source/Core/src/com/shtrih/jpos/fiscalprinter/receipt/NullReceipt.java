@@ -210,5 +210,6 @@ public class NullReceipt implements FiscalReceipt {
     }
     
     public void printBarcode(PrinterBarcode barcode) throws Exception{
+        getPrinter().getPrinter().printBarcode(barcode);
     }    
 }

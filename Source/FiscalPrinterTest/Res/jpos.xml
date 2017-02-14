@@ -41,10 +41,10 @@
         <!-- Close Receipt text -->
         <prop name="closeReceiptText" type="String" value=""/>
         <!-- Subtotal text -->
-        <prop name="subtotalText" type="String" value="ПОДИТОГ:"/>
-	<!-- Subtotal font -->
-        <prop name="subtotalFont" type="String" value="3"/>
-	<!-- TotalDiscount font -->
+        <prop name="subtotalText" type="String" value="ПОДЫТОГ:"/>
+		<!-- Subtotal font -->
+        <prop name="subtotalFont" type="String" value="1"/>
+		<!-- TotalDiscount font -->
         <prop name="totalDiscountFont" type="String" value="5"/>
         <!-- Driver byte receive timeout -->
         <prop name="byteTimeout" type="String" value="1000"/>
@@ -279,7 +279,7 @@
         <!-- Text report empty lines enabled -->
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- X5 receipt template -->
-		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
+		<prop name="ReceiptTemplateEnabled" type="String" value="0"/>
 		<prop name="FieldSeparator" type="String" value="\\n"/>
 		<prop name="ItemTableHeader" type="String" value="------------------------------------------\n №                  Цена со  Кол-\nпп  Цена     Скидка скидкой  во    ИТОГО\n------------------------------------------"/>
 		<prop name="ItemRowFormat" type="String" value="%3cPOS% %38lTITLE%\n    %8lPRICE% %6lDISCOUNT% %8lSUM%*%3QUAN%%=$10TOTAL_TAX%"/>

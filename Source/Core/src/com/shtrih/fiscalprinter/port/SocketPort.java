@@ -47,6 +47,8 @@ public class SocketPort implements PrinterPort {
 
             socket.setReuseAddress(true);
             socket.setSoTimeout(this.timeout);
+            socket.setTcpNoDelay(true);
+            
             StringTokenizer tokenizer = new StringTokenizer(portName, ":");
             String host = tokenizer.nextToken();
             int port = Integer.parseInt(tokenizer.nextToken());

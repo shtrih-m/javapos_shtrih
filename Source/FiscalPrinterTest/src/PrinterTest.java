@@ -213,6 +213,18 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printCode128() {
         try {
+            Object[] params = new Object[9];
+            params[0] = "TC5TC5TC5TC5TC5TCD"; // barcode data
+            params[1] = "TC5TC5TC5TC5TC5TCD"; // barcode label
+            params[2] = new Integer(SmFptrConst.SMFPTR_BARCODE_CODE128); // barcode type
+            params[3] = new Integer(45); // barcode height in pixels
+            params[4] = new Integer(1); // print type
+            params[5] = new Integer(2); // barcode bar width in pixels
+            params[6] = new Integer(0); // text position
+            params[7] = new Integer(1); // text font
+            params[8] = new Integer(3); // narrow to width ratio, 3 by default
+            printer.directIO(SmFptrConst.SMFPTR_DIO_PRINT_BARCODE, null, params);
+            /*
             PrinterBarcode barcode = new PrinterBarcode();
             barcode.setTextFont(1);
             barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_NOTPRINTED);
@@ -223,6 +235,7 @@ class PrinterTest implements FiscalPrinterConst {
             barcode.setText("0010004211016101000026");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_CODE128);
             printer.printBarcode(barcode);
+            */
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -236,8 +249,8 @@ class PrinterTest implements FiscalPrinterConst {
             barcode.setBarWidth(2);
             barcode.setHeight(100);
             barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
-            barcode.setLabel("EAN13: 2223432423409");
-            barcode.setText("2223432423409");
+            barcode.setLabel("EAN13: 222343242340");
+            barcode.setText("222343242340");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);
             printer.printBarcode(barcode);
 
@@ -676,38 +689,8 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() 
     {
-        printFiscalReceipt104();
-        //printFiscalReceipt11();
-        
-        //printSpeedTest2();
-        //printFiscalReceipt106();
-        
-        //printCancelledSalesReceipt();
-        //printFiscalReceipt11();
-        //printNCRFiscalReceipt();
-        //printFiscalReceipt11();
-        //printFiscalReceipt1();
-
-        //printFiscalReceipt107();
-        //printFiscalReceipt1();
-        //writeCashierName();
-        //printFiscalReceipt104();
-        //printFiscalReceipt101();
-        //printCancelledReceipt();
-        //printNCRFiscalReceipt();
-        //printQRCode2();
-        //printFiscalReceipt136();
-        //printFiscalReceipt137();
-        //printFiscalReceipt138();
-        //printFiscalReceipt1002();
-        //printFiscalReceipt101();
-        //printFiscalReceipt102();
-        //printFiscalReceipt111();
-        /*
-        printFiscalReceipt123();
-        printRefundReceipt();
-        printCancelledReceipt();
-         */
+        printEan13();
+        printFiscalReceipt14();
     }
 
     public void printPaperReport() {
@@ -726,17 +709,35 @@ class PrinterTest implements FiscalPrinterConst {
         try {
             printer.resetPrinter();
             printer.setFiscalReceiptType(FPTR_RT_SALES);
-            printer.beginFiscalReceipt(true);
+            printer.beginFiscalReceipt(false);
             printer.printRecRefund("****      100359344 Item1", 5596, 2);
             printer.printRecSubtotal(5596);
             printer.printRecSubtotalAdjustment(1, "", 1000);
             printer.printRecTotal(5596, 5596, "payTypeName1");
-            printer.endFiscalReceipt(true);
+            printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public void printFiscalReceipt14() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(FPTR_RT_SALES);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("1053 ПИРОЖКИ ПЕЧЕНЫЕ С КА", 1800, 1000, 2, 1800, "шт");
+            printer.printRecItemAdjustment(1, "ckugka", 180, 2);
+            printer.printRecVoidItem("1053 ПИРОЖКИ ПЕЧЕНЫЕ С КА", 1800, 1000, 0, 0, 2);
+            printer.printRecItemAdjustment(2, "ckugka", 180, 2);
+            printer.printRecTotal(10000, 10000, "payTypeName1");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    
     public void printFiscalReceipt1001() {
         try {
             printer.resetPrinter();
@@ -941,7 +942,7 @@ class PrinterTest implements FiscalPrinterConst {
 
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-            for (int i = 0; i <= 100; i++) {
+            for (int i = 0; i <= 230; i++) {
                 printer.printRecItem("Receipt Item " + i, 1, 1000, 1, 1, "");
             }
             printer.printRecTotal(50000, 50000, "0");

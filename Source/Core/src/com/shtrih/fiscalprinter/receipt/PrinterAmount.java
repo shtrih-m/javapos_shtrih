@@ -12,6 +12,6 @@ public class PrinterAmount {
     }
 
     public static long getAmount(long price, long quantity) {
-        return (price * quantity + 500) / 1000;
+        return (price * Math.abs(quantity) + 500) / 1000;
     }
 }
