@@ -2404,7 +2404,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public FMTotals readFPTotals(int mode) throws Exception {
         if (capFiscalStorage) {
-            return readFSTotals();
+            return new FMTotals(); //readFSTotals();
         } else if (isFiscalized()) {
             return readFMTotals(mode);
         } else {

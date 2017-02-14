@@ -56,8 +56,9 @@ public class TextDocumentFilter implements IPrinterEvents {
     private static String SDiscountStornoText = "СТОРНО СКИДКИ";
     private static String SChargeStornoText = "СТОРНО НАДБАВКИ";
     private static String SXReportText = "СУТОЧНЫЙ ОТЧЕТ БЕЗ ГАШЕНИЯ";
-    private static String SZReportText = "СУТОЧНЫЙ ОТЧЕТ С ГАШЕНИЕМ";
+    public static final String SZReportText = "СУТОЧНЫЙ ОТЧЕТ С ГАШЕНИЕМ";
     private static String SDayClosed = "СМЕНА ЗАКРЫТА";
+    public static final String SINN = "ИНН";
     private static String[] docNames = {SSaleText, SBuyText, SRetSaleText, SRetBuyText};
 
     public TextDocumentFilter(SMFiscalPrinter printer, PrinterHeader header) {
@@ -495,17 +496,13 @@ public class TextDocumentFilter implements IPrinterEvents {
         }
     }
 
-    public int getDayNumber() throws Exception {
-        return printer.readLongStatus().getDayNumber();
-    }
-
     public XReport readXReport() throws Exception {
         XReport report = new XReport();
         FMTotals totals = printer.readFPTotals(1);
         report.salesAmountBefore = totals.getSalesAmount();
         report.buyAmountBefore = totals.getBuyAmount();
         report.xReportNumber = printer.readOperationRegister(158) + 1;
-        report.zReportNumber = getDayNumber() + 1;
+        report.zReportNumber = printer.readLongStatus().getCurrentShiftNumber();
         for (int i = 0; i <= 3; i++) {
             Receipt receipt = report.receipts.get(i);
             receipt.number = printer.readOperationRegister(148 + i);
@@ -629,7 +626,7 @@ public class TextDocumentFilter implements IPrinterEvents {
 
         // ККМ
         String s1 = String.format("%s %s", deviceName, status.getSerial());
-        String s2 = String.format("ИНН %s #%04d", status.getFiscalIDText(), documentNumber);
+        String s2 = String.format("ИНН %s №%04d", status.getFiscalIDText(), documentNumber);
         add(s1, s2);
         // Кассир
         PrinterDate date = status.getDate();
@@ -646,7 +643,7 @@ public class TextDocumentFilter implements IPrinterEvents {
                 return operator.getName();
             }
         }
-        if ((operatorNumber < 1)||(operatorNumber > 30)){
+        if ((operatorNumber < 1) || (operatorNumber > 30)) {
             operatorNumber = 1;
         }
         String[] fieldValue = new String[1];
@@ -684,8 +681,12 @@ public class TextDocumentFilter implements IPrinterEvents {
     public void printXZReport() throws Exception {
         String[] ReceiptText = {"ЧЕКОВ ПРОДАЖ", "ЧЕКОВ ПОКУПОК", "ЧЕКОВ ВОЗВРАТОВ ПРОДАЖ", "ЧЕКОВ ВОЗВРАТОВ ПОКУПОК"};
         String[] voidedReceiptText = {"ПРОДАЖ", "ПОКУПОК", "ВОЗВР.ПРОДАЖ", "ВОЗВР.ПОКУПОК"};
-        add("НЕОБНУЛ.СУММА ПРОДАЖ НА НАЧ.СМЕНЫ", report.salesAmountBefore);
-        add("НЕОБНУЛ.СУММА ПОКУПОК НА НАЧ.СМЕНЫ", report.buyAmountBefore);
+
+        if (!printer.getCapFiscalStorage()) {
+            add("НЕОБНУЛ.СУММА ПРОДАЖ НА НАЧ.СМЕНЫ", report.salesAmountBefore);
+            add("НЕОБНУЛ.СУММА ПОКУПОК НА НАЧ.СМЕНЫ", report.buyAmountBefore);
+        }
+
         for (int i = 0; i <= 3; i++) {
             Receipt receipt = report.receipts.get(i);
             add(ReceiptText[i], String.format("%04d", receipt.number));
@@ -707,8 +708,11 @@ public class TextDocumentFilter implements IPrinterEvents {
         }
         add("НАЛ. В КАССЕ", report.cashInDrawer);
         add("ВЫРУЧКА", report.income);
-        add("НЕОБНУЛ. СУММА ПРОДАЖ", report.salesAmount);
-        add("НЕОБ. СУММА ПОКУПОК", report.buyAmount);
+
+        if (!printer.getCapFiscalStorage()) {
+            add("НЕОБНУЛ. СУММА ПРОДАЖ", report.salesAmount);
+            add("НЕОБ. СУММА ПОКУПОК", report.buyAmount);
+        }
     }
 
     public void addFiscalSign() throws Exception {
@@ -769,3 +773,4 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
 
 }
+

@@ -417,4 +417,13 @@ public class LongPrinterStatus implements PrinterConst {
     public boolean isFiscalized() {
         return registrationNumber != 0;
     }
+
+    public int getCurrentShiftNumber() {
+        int dayNumber =  getDayNumber() + 1;
+
+        if(dayNumber == 10000)
+            dayNumber = 1;
+
+        return dayNumber;
+    }
 }
