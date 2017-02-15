@@ -24,11 +24,15 @@ public class DIOPrintJournal extends DIOItem {
             service.resetPrinter();
             switch (reportType) {
                 case SmFptrConst.SMFPTR_JRN_REPORT_CURRENT_DAY:
-                    reportPrinter.printEJReportDayCurrent(reportPrinter.readDayNumber());
+                    reportPrinter.printEJReportCurrentDay(readDayNumber());
                     break;
                 case SmFptrConst.SMFPTR_JRN_REPORT_DAY_NUMBER:
                     int dayNumber = params[1];
-                    reportPrinter.printEJReportDayNumber(dayNumber);
+
+                    if (dayNumber == readDayNumber())
+                        reportPrinter.printEJReportCurrentDay(dayNumber);
+                    else
+                        reportPrinter.printEJReportDayNumber(dayNumber);
                     break;
 
                 case SmFptrConst.SMFPTR_JRN_REPORT_DOC_NUMBER:
@@ -50,4 +54,7 @@ public class DIOPrintJournal extends DIOItem {
         }
     }
 
+    private int readDayNumber() throws Exception {
+        return service.readLongStatus().getCurrentShiftNumber();
+    }
 }

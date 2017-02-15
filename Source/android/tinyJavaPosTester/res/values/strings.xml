@@ -14,6 +14,7 @@
     <string name="action_open_fiscal_day">Open fiscal day</string>
     <string name="action_print_z_report">Print Z-report</string>
     <string name="action_print_current_day_journal">Print current day journal</string>
+    <string name="action_print_duplicate_receipt">Print duplicate receipt</string>
 
 
 </resources>
