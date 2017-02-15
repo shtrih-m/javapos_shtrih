@@ -10,6 +10,8 @@
   deviceServiceVersion = 1013377
 	
   [-] Fixed error with header saving
+  [-] Fixed error with additional line between items when 
+      using template and parameter ItemRowFormat has spaces at the end
   
 ********************************************************************************
 
