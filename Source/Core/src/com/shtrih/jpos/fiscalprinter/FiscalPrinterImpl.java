@@ -847,8 +847,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 setPowerState(JPOS_PS_ONLINE);
                 setJrnPaperState(true, true);
 
-                header.initDevice();
                 loadProperties();
+                header.initDevice();
 
                 updateDeviceMetrics();
                 checkEcrMode();
@@ -4230,8 +4230,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return getPrinter().getDeviceMetrics();
     }
 
-    public void printBarcode(PrinterBarcode barcode) throws Exception 
-    {
+    public void printBarcode(PrinterBarcode barcode) throws Exception {
         if (isReceiptEnding()) {
             printItems.add(barcode);
         } else {
@@ -4363,6 +4362,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             writer.write(printer.getReceiptImages());
             writer.writePrinterHeader(header);
             writer.writeNonFiscalDocNumber(params.nonFiscalDocNumber);
+
             writer.save(getPropsFileName());
             logger.debug("saveProperties: OK");
         } catch (Exception e) {
@@ -4445,8 +4445,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     private FiscalReceipt createSalesReceipt(int receiptType) throws Exception {
         FiscalReceipt result;
-        if (printer.getCapFiscalStorage()) 
-        {
+        if (printer.getCapFiscalStorage()) {
             result = new FSSalesReceipt(createReceiptContext(), receiptType);
         } else if (params.salesReceiptType == SMFPTR_RECEIPT_NORMAL) {
             result = new SalesReceipt(createReceiptContext(), receiptType);
@@ -4584,5 +4583,4 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public String getReceiptName(int receiptType) {
         return "";
     }
-
 }

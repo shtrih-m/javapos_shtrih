@@ -44,10 +44,11 @@ public class StringUtils {
         return (String[]) result.toArray(new String[0]);
     }
 
-    public static String centerLine(String data, int lineLength) 
-    {
-        if (data.length() >= lineLength) return data;
-        
+    public static String centerLine(String data, int lineLength) {
+        if (data.length() >= lineLength) {
+            return data;
+        }
+
         int len = Math.min(data.length(), lineLength);
         String s = data.substring(0, len);
         len = (lineLength - len) / 2;
@@ -129,7 +130,7 @@ public class StringUtils {
         DecimalFormat formatter = new DecimalFormat("0.00", symbols);
         return formatter.format(amount / 100.0);
     }
-    
+
     public static String quantityToStr(long value) throws Exception {
         if ((value % 1000) == 0) {
             return String.valueOf(value / 1000);
@@ -145,7 +146,7 @@ public class StringUtils {
         DecimalFormat formatter = new DecimalFormat("0.000", symbols);
         return formatter.format(value);
     }
-    
+
     public static String alignLines(String line1, String line2, int len) {
         int lastIndex = MathUtils.min(len, line2.length());
         String result = line2.substring(0, lastIndex);
@@ -158,7 +159,6 @@ public class StringUtils {
         }
         return result;
     }
-
 
     public static String arrayToStr(int[] value) {
         String result = "";
@@ -207,6 +207,18 @@ public class StringUtils {
         return result;
     }
 
+    public static String rtrim(String text) {
+        String s = text;
+        while (!s.isEmpty()) {
+            if (s.charAt(s.length() - 1) == ' ') {
+                s = s.substring(0, s.length() - 1);
+            } else {
+                break;
+            }
+        }
+        return s;
+    }
+
     public static String left(String s, int size) {
         return String.format("%-" + size + "." + size + "s", s);
     }
@@ -220,9 +232,12 @@ public class StringUtils {
     }
 
     public static String center(String s, int size, char pad) {
-        if (s == null) return s;
-        if (size <= s.length())
+        if (s == null) {
+            return s;
+        }
+        if (size <= s.length()) {
             return s.substring(0, size);
+        }
 
         StringBuilder sb = new StringBuilder(size);
         for (int i = 0; i < (size - s.length()) / 2; i++) {

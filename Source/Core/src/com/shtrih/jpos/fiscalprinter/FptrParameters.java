@@ -14,6 +14,7 @@ import java.util.Vector;
 import jpos.config.JposEntry;
 import jpos.config.RS232Const;
 
+import com.shtrih.util.StringUtils;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.jpos.JposPropertyReader;
@@ -317,6 +318,8 @@ public class FptrParameters {
         discountFont = new FontNumber(reader.readInteger("discountFont", PrinterConst.FONT_NUMBER_NORMAL));
         ItemTableHeader = reader.readString("ItemTableHeader", "");
         ItemRowFormat = reader.readString("ItemRowFormat", "%TITLE% %QUAN% X %PRICE%");
+        ItemRowFormat = StringUtils.rtrim(ItemRowFormat);
+                
         capJrnPresent = reader.readBoolean("capJrnPresent", true);
         nonFiscalHeaderEnabled = reader.readBoolean("nonFiscalHeaderEnabled", false);
         fsHeaderEnabled = reader.readBoolean("fsHeaderEnabled", false);
