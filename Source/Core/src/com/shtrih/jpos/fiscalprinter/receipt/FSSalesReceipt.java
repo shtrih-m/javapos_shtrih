@@ -206,10 +206,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 SMFiscalPrinter printer = getPrinter().getPrinter();
                 printer.fsWriteTLV(tlvItem.getData());
 
-                TLVReader reader = new TLVReader();
-                reader.read(tlvItem.getData());
-                Vector<String> lines = reader.getPrintText();
-                messages.addAll(lines);
+                if (getParams().FSPrintTags) {
+                    TLVReader reader = new TLVReader();
+                    reader.read(tlvItem.getData());
+                    Vector<String> lines = reader.getPrintText();
+                    messages.addAll(lines);
+                }
 
             }
         }
@@ -403,8 +405,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             } else {
                 getDevice().printVoidSale(item.getPriceItem());
             }
-        } else 
-        {
+        } else {
             getDevice().printVoidItem(item.getPriceItem());
         }
 
@@ -949,7 +950,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         list.add(tagId, tagValue);
         fsWriteTLV(list.getData());
     }
-    
+
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
         fsWriteTag2(tagId, tagValue);
         if (getParams().FSPrintTags) {
@@ -960,18 +961,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void fsWriteCustomerEmail(String text) throws Exception {
         if (!text.isEmpty()) {
             fsWriteTag2(1008, text);
-            if (getParams().FSPrintTags) {
-                messages.add("Email покупателя: " + text);
-            }
         }
     }
 
     public void fsWriteCustomerPhone(String text) throws Exception {
         if (!text.isEmpty()) {
             fsWriteTag2(1008, text);
-            if (getParams().FSPrintTags) {
-                messages.add("Телефон покупателя: " + text);
-            }
         }
     }
 

@@ -10,10 +10,12 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import org.junit.Ignore;
 
 /**
  * @author P.Zhirkov
  */
+@Ignore
 public class TextReportStorageTests {
 
     private File file;
