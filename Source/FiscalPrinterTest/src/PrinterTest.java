@@ -689,7 +689,6 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() 
     {
-        printEan13();
         printFiscalReceipt14();
     }
 
@@ -725,6 +724,8 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(FPTR_RT_SALES);
             printer.beginFiscalReceipt(false);
+            printer.fsWriteCustomerEmail("kravtsov@shtrih-m.ru");
+            printer.fsWriteCustomerPhone("+79168191324");
             printer.printRecItem("1053 ПИРОЖКИ ПЕЧЕНЫЕ С КА", 1800, 1000, 2, 1800, "шт");
             printer.printRecItemAdjustment(1, "ckugka", 180, 2);
             printer.printRecVoidItem("1053 ПИРОЖКИ ПЕЧЕНЫЕ С КА", 1800, 1000, 0, 0, 2);

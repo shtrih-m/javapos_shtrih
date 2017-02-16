@@ -6,6 +6,13 @@
 
 ********************************************************************************
 
+  February, 16 2017, 12:30
+  deviceServiceVersion = 1013378
+	
+  [-] Fixed error with writing customer email and phone
+  
+********************************************************************************
+
   February, 15 2017, 19:30
   deviceServiceVersion = 1013377
 	

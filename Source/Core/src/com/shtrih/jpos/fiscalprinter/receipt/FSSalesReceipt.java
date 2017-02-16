@@ -32,6 +32,7 @@ import com.shtrih.fiscalprinter.command.PrinterStatus;
 import com.shtrih.jpos.fiscalprinter.PackageAdjustment;
 import com.shtrih.jpos.fiscalprinter.PackageAdjustments;
 import com.shtrih.fiscalprinter.command.FSReceiptDiscount;
+import com.shtrih.fiscalprinter.command.TLVList;
 import com.shtrih.jpos.fiscalprinter.receipt.template.TemplateLine;
 
 public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
@@ -943,8 +944,14 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         items.add(new FSTLVItem(data));
     }
 
+    public void fsWriteTag2(int tagId, String tagValue) throws Exception {
+        TLVList list = new TLVList();
+        list.add(tagId, tagValue);
+        fsWriteTLV(list.getData());
+    }
+    
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
-        getDevice().check(getDevice().fsWriteTag(tagId, tagValue));
+        fsWriteTag2(tagId, tagValue);
         if (getParams().FSPrintTags) {
             messages.add(TLVInfo.getTagPrintName(tagId) + ": " + tagValue);
         }
@@ -952,7 +959,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void fsWriteCustomerEmail(String text) throws Exception {
         if (!text.isEmpty()) {
-            getDevice().check(getDevice().fsWriteTag(1008, text));
+            fsWriteTag2(1008, text);
             if (getParams().FSPrintTags) {
                 messages.add("Email покупателя: " + text);
             }
@@ -961,7 +968,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void fsWriteCustomerPhone(String text) throws Exception {
         if (!text.isEmpty()) {
-            getDevice().check(getDevice().fsWriteTag(1008, text));
+            fsWriteTag2(1008, text);
             if (getParams().FSPrintTags) {
                 messages.add("Телефон покупателя: " + text);
             }
