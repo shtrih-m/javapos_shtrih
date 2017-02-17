@@ -335,13 +335,15 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             getDevice().printCharge(item);
         }
 
-        if ((!getParams().FSCombineItemAdjustments) && (!getParams().ReceiptTemplateEnabled)) {
-            String line = formatStrings(item.getText(), "=" + StringUtils.amountToString(item.getAmount()));
+        if ((!getParams().FSCombineItemAdjustments)) 
+        {
             if (discount.getAmount() > 0) {
-                getDevice().printText("СКИДКА");
+                String line = formatStrings("СКИДКА " + item.getText(), 
+                        "=" + StringUtils.amountToString(item.getAmount()));
                 getDevice().printText(line);
             } else {
-                getDevice().printText("НАДБАВКА");
+                String line = formatStrings("НАДБАВКА " + item.getText(), 
+                        "=" + StringUtils.amountToString(item.getAmount()));
                 getDevice().printText(line);
             }
         }

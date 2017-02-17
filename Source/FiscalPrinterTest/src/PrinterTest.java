@@ -76,6 +76,15 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void setHeaderLines() {
         try {
+            printer.setHeaderLine(1, getLoadImageCommand("Logo.bmp"), false);
+            printer.setHeaderLine(2, "           Кассовый чек", false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setHeaderLines2() {
+        try {
             printer.setHeaderLine(1, getLoadImageCommand("Logo.bmp") + "ООО \"ГИПЕРГЛОБУС\"", false);
             printer.setHeaderLine(2, "                       г.Влaдимир Суздaльский проспект 28", false);
             printer.setHeaderLine(3, "                           т(4922)37-68-66", false);
@@ -84,7 +93,7 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-
+    
     public void setTrailerLines() {
         try {
             printer.setTrailerLine(1, getLoadImageCommand("qrcode_110.bmp") + "Trailer line 1", false);
@@ -96,7 +105,7 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void setHeaderLines2() {
+    public void setHeaderLines3() {
         try {
             //String text = getHeaderLine(1) + getLoadImageCommand("Logo.bmp");
             //printer.setHeaderLine(1, text, false);
@@ -689,7 +698,7 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() 
     {
-        printFiscalReceipt14();
+        printFiscalReceipt105();
     }
 
     public void printPaperReport() {
@@ -724,12 +733,9 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(FPTR_RT_SALES);
             printer.beginFiscalReceipt(false);
-            printer.fsWriteCustomerEmail("kravtsov@shtrih-m.ru");
-            printer.fsWriteCustomerPhone("+79168191324");
-            printer.printRecItem("1053 ПИРОЖКИ ПЕЧЕНЫЕ С КА", 1800, 1000, 2, 1800, "шт");
-            printer.printRecItemAdjustment(1, "ckugka", 180, 2);
-            printer.printRecVoidItem("1053 ПИРОЖКИ ПЕЧЕНЫЕ С КА", 1800, 1000, 0, 0, 2);
-            printer.printRecItemAdjustment(2, "ckugka", 180, 2);
+            printer.printRecItem("1053 ПИРОЖКИ ПЕЧЕНЫЕ С КА", 1800, 1000, 1, 1, "");
+            printer.printRecItem("1053 ПИРОЖКИ ПЕЧЕНЫЕ С КА", 1800, 1000, 1, 1, "");
+            printer.printRecItem("1053 ПИРОЖКИ ПЕЧЕНЫЕ С КА", 1800, 1000, 1, 1, "");
             printer.printRecTotal(10000, 10000, "payTypeName1");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
@@ -959,7 +965,9 @@ class PrinterTest implements FiscalPrinterConst {
 
             printer.beginFiscalReceipt(true);
             printer.printRecItem("****            430 МАНДАРИНЫ", 10772, 770, 1, 13990, "кг");
+            printer.printRecItemAdjustment(1, "M за N !!!", 50, 1);
             printer.printRecItem("****            430 МАНДАРИНЫ", 10772, 770, 1, 13990, "кг");
+            printer.printRecItemAdjustment(1, "M за N !!!", 50, 1);
             printer.printRecVoidItem("****            430 МАНДАРИНЫ", 13990, 770, 0, 0, 1);
             printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 22);
             printer.printRecTotal(10750, 10750, "1");
