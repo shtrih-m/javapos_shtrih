@@ -2655,7 +2655,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             throws Exception {
         checkOnLine();
         String result = "";
-        LongPrinterStatus status;
 
         long number;
         switch (dataItem) {
@@ -2667,14 +2666,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             // Get the Fiscal Printer’s fiscal ID.
             case FPTR_GD_PRINTER_ID:
                 if (printer.getCapFiscalStorage()) {
-                    String[] value = new String[1];
-                    value[0] = "";
-                    getPrinter().check(
-                            printer.readTable(18, 1, 1, value));
-                    result = value[0];
+                    result = getPrinter().fsReadSerial().getSerial();
                 } else {
-                    status = readLongStatus();
-                    result = status.getSerial();
+                    result = readLongStatus().getSerial();
                 }
                 break;
 
