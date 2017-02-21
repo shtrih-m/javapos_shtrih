@@ -1011,8 +1011,24 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
          */
         getDevice().printLines(line1, line);
+        printTotalAndTax(item);
     }
 
+    protected void printTotalAndTax(FSSaleReceiptItem item) throws Exception 
+    {
+        String line;
+        int tax = item.getTax1();
+        if (tax == 0) {
+            tax = 4;
+        }
+        double taxRate = getDevice().getTaxRate(tax) / 10000.0;
+        long taxAmount = (long) ((item.getTotal()) * taxRate / (1 + taxRate) + 0.5);
+
+        line = getDevice().getTaxName(tax);
+        line = formatLines(line, StringUtils.amountToString(taxAmount));
+        getDevice().printText(line);
+    }
+    
     public String formatLines(String line1, String line2) throws Exception {
         return StringUtils.alignLines(line1, line2, getPrinter().getTextLength());
     }
