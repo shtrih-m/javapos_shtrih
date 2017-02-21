@@ -6,9 +6,10 @@
 
 ********************************************************************************
 
-  February, 21 2017, 15:03
-  deviceServiceVersion = 1013381
+  February, 21 2017, 16:51
+  deviceServiceVersion = 1013382
 	
+  [-] Fixed error with barcode printing
   [-] Fixed error with tax printing
   
 ********************************************************************************

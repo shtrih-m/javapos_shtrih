@@ -1948,7 +1948,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     Localizer.getString(Localizer.InvalidBarcodeHeight));
         }
 
-        if (barcode.getType() == SmFptrConst.SMFPTR_BARCODE_EAN13){
+        if (barcode.getType() == SmFptrConst.SMFPTR_BARCODE_EAN13)
+        {
+            String bc = barcode.getText();
+            if (bc.length() > 12){
+                bc = bc.substring(0, 12);
+            }
+            barcode.setText(bc);
             barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DEVICE);
         }
                 

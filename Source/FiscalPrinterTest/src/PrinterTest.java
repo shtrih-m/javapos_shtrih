@@ -262,17 +262,16 @@ class PrinterTest implements FiscalPrinterConst {
             barcode.setText("222343242340");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);
             printer.printBarcode(barcode);
-
-            barcode.setBarWidth(3);
-            printer.printBarcode(barcode);
-
-            barcode.setBarWidth(4);
-            printer.printBarcode(barcode);
-
-            barcode.setBarWidth(5);
-            printer.printBarcode(barcode);
-
-            barcode.setBarWidth(6);
+            
+            barcode = new PrinterBarcode();
+            barcode.setTextFont(1);
+            barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_ABOVE);
+            barcode.setBarWidth(2);
+            barcode.setHeight(100);
+            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
+            barcode.setLabel("EAN13: 2223432423401");
+            barcode.setText("2223432423401");
+            barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);
             printer.printBarcode(barcode);
 
         } catch (Exception e) {
