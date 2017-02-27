@@ -43,6 +43,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public PrinterProtocol device;
     // delay on wait
     public static final int TimeToSleep = 100;
+    public static final int SMFP_EFPTR_PREVCOMMAND_TimeToSleep = 333;
     public static String charsetName = "Cp1251"; // device charset name
     // tax officer password
     public int taxPassword = 0;
@@ -249,6 +250,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
             if (!command.getRepeatNeeded()) {
                 break;
+            }
+
+            if(command.getResultCode() == SMFP_EFPTR_PREVCOMMAND) {
+                // Do not count as an attempt, added to fix SHTRIH-MOBILE-F bug
+                SysUtils.sleep(SMFP_EFPTR_PREVCOMMAND_TimeToSleep);
+                i--;
             }
         }
         if (saveCommands && succeeded(resultCode) && isReceiptCommand(command)) {
@@ -1951,7 +1958,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (barcode.getType() == SmFptrConst.SMFPTR_BARCODE_EAN13){
             barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DEVICE);
         }
-                
+
         switch (barcode.getPrintType()) {
             case SmFptrConst.SMFPTR_PRINTTYPE_AUTO:
                 if (getModel().getCapBarcodeSupported(barcode.getType())) {
@@ -2911,7 +2918,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             line2 = String.format("#%04d", status.getDocumentNumber());
             printLines(line1, line2);
             // 3
-            line1 = docName; 
+            line1 = docName;
             line2 = String.format("ИНН %010d", status.getFiscalID());
             printLines(line1, line2);
             // 4
@@ -2932,11 +2939,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private static String[] docNames = {
         "ПРОДАЖА", "ПОКУПКА", "ВОЗВРАТ ПРОДАЖИ", "ВОЗВРАТ ПОКУПКИ"
     };
-    
+
     private static String[] fsDocNames = {
         "ПРИХОД", "РАСХОД", "ВОЗВРАТ ПРИХОДА", "ВОЗВРАТ РАСХОДА"
     };
-    
+
     public String getReceiptName(int receiptType)
     {
         if (getCapFiscalStorage()){
