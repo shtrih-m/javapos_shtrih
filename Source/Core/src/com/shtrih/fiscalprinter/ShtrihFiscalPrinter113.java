@@ -1570,6 +1570,10 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         executeCommand(command);
     }
 
+    public void fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws JposException {
+        executeCommand(command);
+    }
+    
     public void fsStartCalcReport(FSStartCalcReport command) throws JposException {
         executeCommand(command);
     }

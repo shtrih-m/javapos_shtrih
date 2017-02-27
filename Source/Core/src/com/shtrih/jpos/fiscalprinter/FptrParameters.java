@@ -141,6 +141,7 @@ public class FptrParameters {
     public boolean fsHeaderEnabled = false;
     public int nonFiscalDocNumber = 1;
     public String fieldSeparator = "\n";
+    public int printerIDMode = PrinterConst.PRINTER_ID_SERIAL;
     
 
     public FptrParameters() throws Exception {
@@ -324,6 +325,7 @@ public class FptrParameters {
         nonFiscalHeaderEnabled = reader.readBoolean("nonFiscalHeaderEnabled", false);
         fsHeaderEnabled = reader.readBoolean("fsHeaderEnabled", false);
         fieldSeparator = reader.readString("FieldSeparator", "\n");
+        printerIDMode = reader.readInteger("PrinterIDMode", PrinterConst.PRINTER_ID_SERIAL);
 
         // paymentNames
         String paymentName;

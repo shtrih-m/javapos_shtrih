@@ -666,5 +666,10 @@ public interface PrinterConst {
     public static final int SMFP_DM_CHANGE_SUBTOTAL                 = 0;
     public static final int SMFP_DM_NOT_CHANGE_SUBTOTAL             = 1;
     public static final int SMFP_DM_NOT_CHANGE_SUBTOTAL_SMALLDSC    = 2;
-            
+
+    // PRINTER_ID parameters
+    public static final int PRINTER_ID_SERIAL       = 0;
+    public static final int PRINTER_ID_FS_SERIAL    = 1;
+    
+    
 }
