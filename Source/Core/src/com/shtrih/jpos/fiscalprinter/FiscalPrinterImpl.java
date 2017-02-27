@@ -228,7 +228,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private boolean isInReceiptTrailer = false;
     private TextDocumentFilter filter = null;
 
-
     public void setTextDocumentFilterEnablinessTo(boolean value) {
         filter.setEnabled(value);
     }
@@ -2666,15 +2665,19 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
             // Get the Fiscal Printer’s fiscal ID.
             case FPTR_GD_PRINTER_ID:
-                if (params.printerIDMode == PrinterConst.PRINTER_ID_FS_SERIAL){
+                
+                if (params.printerIDMode == PrinterConst.PRINTER_ID_FS_SERIAL) {
                     if (printer.getCapFiscalStorage()) {
                         result = getPrinter().fsReadSerial().getSerial();
                     } else {
                         result = readLongStatus().getSerial();
                     }
-                } else
-                {
+                } else {
+                    if (printer.getCapFiscalStorage()) {
+                        result = printer.readTable(18, 1, 1).trim();
+                    } else {
                         result = readLongStatus().getSerial();
+                    }
                 }
                 break;
 

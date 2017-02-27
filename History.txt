@@ -6,8 +6,8 @@
 
 ********************************************************************************
 
-  February, 27 2017, 12:15
-  deviceServiceVersion = 1013383
+  February, 27 2017, 16:52
+  deviceServiceVersion = 1013384
 	
   [-] Fixed error with getData(FPTR_GD_PRINTER_ID)
   

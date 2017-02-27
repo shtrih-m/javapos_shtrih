@@ -671,5 +671,9 @@ public interface PrinterConst {
     public static final int PRINTER_ID_SERIAL       = 0;
     public static final int PRINTER_ID_FS_SERIAL    = 1;
     
+    // swapGraphicsLine constants
+    public static final int SWAP_LINE_AUTO  = 0;
+    public static final int SWAP_LINE_FALSE = 1;
+    public static final int SWAP_LINE_TRUE  = 2;
     
 }

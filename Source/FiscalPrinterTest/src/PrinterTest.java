@@ -653,6 +653,11 @@ class PrinterTest implements FiscalPrinterConst {
     public void enableDevice() {
         try {
             printer.setDeviceEnabled(true);
+            
+            String[] lines = new String[1];
+            printer.getData(FPTR_GD_PRINTER_ID, null, lines);
+            System.out.println("FPTR_GD_PRINTER_ID: " + lines[0]);
+            
             printer.setPOSID("1", "Кравцов В.В.");
         } catch (Exception e) {
             e.printStackTrace();
