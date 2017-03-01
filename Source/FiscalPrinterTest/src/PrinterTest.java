@@ -76,15 +76,6 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void setHeaderLines() {
         try {
-            printer.setHeaderLine(1, getLoadImageCommand("Logo.bmp"), false);
-            printer.setHeaderLine(2, "           Кассовый чек", false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void setHeaderLines2() {
-        try {
             printer.setHeaderLine(1, getLoadImageCommand("Logo.bmp") + "ООО \"ГИПЕРГЛОБУС\"", false);
             printer.setHeaderLine(2, "                       г.Влaдимир Суздaльский проспект 28", false);
             printer.setHeaderLine(3, "                           т(4922)37-68-66", false);
@@ -973,7 +964,9 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecItem("****            430 МАНДАРИНЫ", 10772, 770, 1, 13990, "кг");
             printer.printRecItemAdjustment(1, "M за N !!!", 50, 1);
             printer.printRecVoidItem("****            430 МАНДАРИНЫ", 13990, 770, 0, 0, 1);
+            printer.printRecSubtotal(0);
             printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 22);
+            printer.printRecSubtotal(0);
             printer.printRecTotal(10750, 10750, "1");
             printer.printRecMessage(" ТОВАРОВ           1                      ");
             printer.printRecMessage(" **************************************** ");

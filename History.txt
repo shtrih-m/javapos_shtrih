@@ -6,6 +6,14 @@
 
 ********************************************************************************
 
+  March 1 2017, 20:00
+  deviceServiceVersion = 1013385
+	
+  [-] Fixed error with nonfiscal header
+  [-] Fixed error with loading header and trailer
+  
+********************************************************************************
+
   February, 27 2017, 16:52
   deviceServiceVersion = 1013384
 	

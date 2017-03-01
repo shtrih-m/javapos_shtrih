@@ -122,6 +122,8 @@ public class XmlPropReader {
         image.setPosition(readParameterInt(imageNode, "Position"));
     }
 
+    //readPrinterHeader: Array index out of range: 0    
+    
     public void readPrinterHeader(PrinterHeader header) throws Exception {
         try {
             for (int i = 1; i <= header.getNumHeaderLines(); i++) {

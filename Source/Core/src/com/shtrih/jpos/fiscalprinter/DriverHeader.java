@@ -27,8 +27,8 @@ public class DriverHeader implements JposConst, PrinterHeader {
 
     private int lineNumber = 0;
     private final SMFiscalPrinter printer;
-    private final List<HeaderLine> header = new Vector<HeaderLine>();
-    private final List<HeaderLine> trailer = new Vector<HeaderLine>();
+    private final Vector<HeaderLine> header = new Vector<HeaderLine>();
+    private final Vector<HeaderLine> trailer = new Vector<HeaderLine>();
     private final CompositeLogger logger = CompositeLogger.getLogger(DriverHeader.class);
 
     /**

@@ -201,6 +201,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 getPrinter().getPrinter().printBarcode((PrinterBarcode) item);
             }
 
+            if (item instanceof FSDiscount) {
+                printTotalDiscount((FSDiscount) item);
+            }
+            
             if (item instanceof FSTLVItem) {
                 FSTLVItem tlvItem = (FSTLVItem) item;
                 SMFiscalPrinter printer = getPrinter().getPrinter();
@@ -479,8 +483,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecSubtotal(long amount) throws Exception {
         checkTotal(getSubtotal(), amount);
-        //addTextItem(formatStrings(getParams().subtotalText,
-        //        "=" + StringUtils.amountToString(getSubtotal())));
+        addTextItem(formatStrings(getParams().subtotalText,
+                "=" + StringUtils.amountToString(getSubtotal())));
     }
 
     public long getItemPercentAdjustmentAmount(long amount) throws Exception {

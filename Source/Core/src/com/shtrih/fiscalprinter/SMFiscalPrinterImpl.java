@@ -1948,16 +1948,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     Localizer.getString(Localizer.InvalidBarcodeHeight));
         }
 
-        if (barcode.getType() == SmFptrConst.SMFPTR_BARCODE_EAN13)
-        {
+        if (barcode.getType() == SmFptrConst.SMFPTR_BARCODE_EAN13) {
             String bc = barcode.getText();
-            if (bc.length() > 12){
+            if (bc.length() > 12) {
                 bc = bc.substring(0, 12);
             }
             barcode.setText(bc);
             barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DEVICE);
         }
-                
+
         switch (barcode.getPrintType()) {
             case SmFptrConst.SMFPTR_PRINTTYPE_AUTO:
                 if (getModel().getCapBarcodeSupported(barcode.getType())) {
@@ -2094,6 +2093,22 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return getModel().getPrintWidth();
     }
 
+    public boolean getSwapGraphicsLine() throws Exception {
+        switch (params.swapGraphicsLine) {
+            case SWAP_LINE_AUTO:
+                return getModel().getSwapGraphicsLine();
+
+            case SWAP_LINE_TRUE:
+                return true;
+
+            case SWAP_LINE_FALSE:
+                return false;
+
+            default:
+                return getModel().getSwapGraphicsLine();
+        }
+    }
+
     public void printBarcode1D(PrinterBarcode barcode) throws Exception {
         SmBarcodeEncoder encoder = new ZXingEncoder(
                 getMaxGraphicsWidth(), barcode.getBarWidth(), barcode.getHeight());
@@ -2108,7 +2123,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             bc.setVScale(1);
             bc.centerBarcode(width);
             byte[] data = bc.getRow(0);
-            if (getModel().getSwapGraphicsLine()) {
+            if (getSwapGraphicsLine()) {
                 data = BitUtils.swapBits(data);
             }
             printGraphicLine(barcode.getHeight(), data);
@@ -2875,6 +2890,16 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         printText(text);
     }
 
+    public void printLines2(String line1, String line2) throws Exception {
+        if ((line1.length() + line2.length()) > getMessageLength()) {
+            printText(line1);
+            printText(line2);
+        } else {
+            String text = StringUtils.alignLines(line1, line2, getMessageLength());
+            printText(text);
+        }
+    }
+
     public void printItems(Vector<PrintItem> items) throws Exception {
         for (int i = 0; i < items.size(); i++) {
             PrintItem item = items.get(i);
@@ -2911,23 +2936,23 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             String line1 = "ККТ " + readTable(18, 1, 1).trim();
             String line2 = status.getDate().toStringShort() + " "
                     + status.getTime().toString2();
-            printLines(line1, line2);
+            printLines2(line1, line2);
             // 2
             line1 = readTable(2, status.getOperatorNumber(), 2);
             line2 = String.format("#%04d", status.getDocumentNumber());
-            printLines(line1, line2);
+            printLines2(line1, line2);
             // 3
-            line1 = docName; 
+            line1 = docName;
             line2 = String.format("ИНН %010d", status.getFiscalID());
             printLines(line1, line2);
             // 4
             line1 = "РН ККТ " + readTable(18, 1, 3).trim();
             line2 = "ФН " + readTable(18, 1, 4).trim();
-            printLines(line1, line2);
+            printLines2(line1, line2);
             // 5
             line1 = "Сайт ФНС:";
             line2 = readTable(18, 1, 13).trim();
-            printLines(line1, line2);
+            printLines2(line1, line2);
             waitForPrinting();
         } else {
             printDocHeader("Нефискальный документ", params.nonFiscalDocNumber);
@@ -2938,16 +2963,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private static String[] docNames = {
         "ПРОДАЖА", "ПОКУПКА", "ВОЗВРАТ ПРОДАЖИ", "ВОЗВРАТ ПОКУПКИ"
     };
-    
+
     private static String[] fsDocNames = {
         "ПРИХОД", "РАСХОД", "ВОЗВРАТ ПРИХОДА", "ВОЗВРАТ РАСХОДА"
     };
-    
-    public String getReceiptName(int receiptType)
-    {
-        if (getCapFiscalStorage()){
+
+    public String getReceiptName(int receiptType) {
+        if (getCapFiscalStorage()) {
             return "КАССОВЫЙ ЧЕК/" + fsDocNames[receiptType];
-        } else{
+        } else {
             return docNames[receiptType];
         }
     }
