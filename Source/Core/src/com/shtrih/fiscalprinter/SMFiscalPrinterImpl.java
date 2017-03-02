@@ -2695,6 +2695,19 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command;
     }
 
+    @Override
+    public String readFullSerial() throws Exception {
+        int tableNumber = 18;
+        if(isShtrihMobile())
+            tableNumber = 14;
+
+        return readTable(tableNumber, 1, 1).trim();
+    }
+
+    private boolean isShtrihMobile() throws Exception {
+        return getModel().getModelID() == 19;
+    }
+
     public FSReadExpDate fsReadExpDate() throws Exception {
         FSReadExpDate command = new FSReadExpDate();
         command.setSysPassword(sysPassword);
@@ -2949,7 +2962,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (getCapFiscalStorage()) {
             // 1
             LongPrinterStatus status = readLongStatus();
-            String line1 = "ККТ " + readTable(18, 1, 1).trim();
+            String line1 = "ККТ " + readFullSerial();
             String line2 = status.getDate().toStringShort() + " "
                     + status.getTime().toString2();
             printLines2(line1, line2);
@@ -2963,7 +2976,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             printLines(line1, line2);
             // 4
             line1 = "РН ККТ " + readTable(18, 1, 3).trim();
-            line2 = "ФН " + readTable(18, 1, 4).trim();
+            line2 = "ФН " + fsReadSerial().getSerial();
             printLines2(line1, line2);
             // 5
             line1 = "Сайт ФНС:";

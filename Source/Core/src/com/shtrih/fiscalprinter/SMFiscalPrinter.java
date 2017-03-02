@@ -510,7 +510,9 @@ public interface SMFiscalPrinter {
     public boolean getCapOpenReceipt() throws Exception;
     
     public FSReadSerial fsReadSerial() throws Exception;
-    
+
+    public String readFullSerial() throws Exception;
+
     public FSReadExpDate fsReadExpDate() throws Exception;
     
     public void checkDiscountMode(int mode) throws Exception;

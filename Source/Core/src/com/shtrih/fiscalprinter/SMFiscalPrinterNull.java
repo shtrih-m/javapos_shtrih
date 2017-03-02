@@ -917,6 +917,11 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return null;
     }
 
+    @Override
+    public String readFullSerial() throws Exception {
+        return null;
+    }
+
     public FSReadExpDate fsReadExpDate() throws Exception {
         return null;
     }

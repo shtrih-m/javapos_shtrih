@@ -9,10 +9,11 @@ package com.shtrih.fiscalprinter;
  * and open the template in the editor.
  */
 /**
- *
  * @author V.Kravtsov
  */
+
 import com.shtrih.barcode.PrinterBarcode;
+
 import jpos.BaseControl;
 import jpos.FiscalPrinter;
 import jpos.FiscalPrinterConst;
@@ -26,6 +27,7 @@ import jpos.events.StatusUpdateListener;
 
 import com.shtrih.fiscalprinter.command.*;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
+
 import static jpos.FiscalPrinterConst.FPTR_PS_FISCAL_RECEIPT;
 
 /**
@@ -41,7 +43,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
      * Creates a new instance of ShtrihFiscalPrinter
      */
     public ShtrihFiscalPrinter113(FiscalPrinterControl113 printer,
-            String encoding) {
+                                  String encoding) {
         this.printer = printer;
         this.encoding = encoding;
     }
@@ -278,27 +280,27 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public void printRecItemFuel(String description, long price, int quantity,
-            int vatInfo, long unitPrice, String unitName, long specialTax,
-            String specialTaxName) throws JposException {
+                                 int vatInfo, long unitPrice, String unitName, long specialTax,
+                                 String specialTaxName) throws JposException {
         printer.printRecItemFuel(encodeString(description), price, quantity,
                 vatInfo, unitPrice, encodeString(unitName), specialTax,
                 encodeString(specialTaxName));
     }
 
     public void printRecItemFuelVoid(String description, long price,
-            int vatInfo, long specialTax) throws JposException {
+                                     int vatInfo, long specialTax) throws JposException {
         printer.printRecItemFuelVoid(encodeString(description), price, vatInfo,
                 specialTax);
     }
 
     public void printRecPackageAdjustment(int adjustmentType,
-            String description, String vatAdjustment) throws JposException {
+                                          String description, String vatAdjustment) throws JposException {
         printer.printRecPackageAdjustment(adjustmentType,
                 encodeString(description), encodeString(vatAdjustment));
     }
 
     public void printRecPackageAdjustVoid(int adjustmentType,
-            String vatAdjustment) throws JposException {
+                                          String vatAdjustment) throws JposException {
         printer.printRecPackageAdjustVoid(adjustmentType,
                 encodeString(vatAdjustment));
     }
@@ -781,13 +783,13 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public void printRecItem(String description, long price, int quantity,
-            int vatInfo, long unitPrice, String unitName) throws JposException {
+                             int vatInfo, long unitPrice, String unitName) throws JposException {
         printer.printRecItem(encodeString(description), price, quantity,
                 vatInfo, unitPrice, encodeString(unitName));
     }
 
     public void printRecItemAdjustment(int adjustmentType, String description,
-            long amount, int vatInfo) throws JposException {
+                                       long amount, int vatInfo) throws JposException {
         printer.printRecItemAdjustment(adjustmentType,
                 encodeString(description), amount, vatInfo);
     }
@@ -811,7 +813,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public void printRecSubtotalAdjustment(int adjustmentType,
-            String description, long amount) throws JposException {
+                                           String description, long amount) throws JposException {
         printer.printRecSubtotalAdjustment(adjustmentType,
                 encodeString(description), amount);
     }
@@ -826,7 +828,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public void printRecVoidItem(String description, long amount, int quantity,
-            int adjustmentType, long adjustment, int vatInfo)
+                                 int adjustmentType, long adjustment, int vatInfo)
             throws JposException {
         printer.printRecVoidItem(encodeString(description), amount, quantity,
                 adjustmentType, adjustment, vatInfo);
@@ -1151,7 +1153,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
      * Write table value *
      */
     public void writeTable(int tableNumber, int rowNumber, int fieldNumber,
-            String fieldValue) throws JposException {
+                           String fieldValue) throws JposException {
         String[] params = new String[4];
         params[0] = String.valueOf(tableNumber);
         params[1] = String.valueOf(rowNumber);
@@ -1195,8 +1197,8 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
      * Print barcode *
      */
     public void printBarcode(String barcode, String label, int barcodeType,
-            int barcodeHeight, int printType, int barWidth, int textPosition,
-            int textFont, int aspectRatio) throws JposException {
+                             int barcodeHeight, int printType, int barWidth, int textPosition,
+                             int textFont, int aspectRatio) throws JposException {
         Object[] params = new Object[9];
         params[0] = barcode; // barcode data
         params[1] = label; // barcode label
@@ -1469,26 +1471,26 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public void printRecItemVoid(String description, long price, int quantity,
-            int vatInfo, long unitPrice, String unitName) throws JposException {
+                                 int vatInfo, long unitPrice, String unitName) throws JposException {
         printer.printRecItemVoid(description, price, quantity, vatInfo,
                 unitPrice, unitName);
     }
 
     public void printRecItemAdjustmentVoid(int adjustmentType,
-            String description, long amount, int vatInfo) throws JposException {
+                                           String description, long amount, int vatInfo) throws JposException {
         printer.printRecItemAdjustmentVoid(adjustmentType, description, amount,
                 vatInfo);
     }
 
     public void printRecItemRefund(String description, long amount,
-            int quantity, int vatInfo, long unitAmount, String unitName)
+                                   int quantity, int vatInfo, long unitAmount, String unitName)
             throws JposException {
         printer.printRecItemRefund(description, amount, quantity, vatInfo,
                 unitAmount, unitName);
     }
 
     public void printRecItemRefundVoid(String description, long amount,
-            int quantity, int vatInfo, long unitAmount, String unitName)
+                                       int quantity, int vatInfo, long unitAmount, String unitName)
             throws JposException {
         printer.printRecItemRefundVoid(description, amount, quantity, vatInfo,
                 unitAmount, unitName);
@@ -1664,12 +1666,18 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_FS_DISABLE_PRINT, null, null);
     }
 
+    /**
+     Печать СКЛ за текущую смену
+     */
     public void printJournalCurrentDay() throws JposException {
         int[] params = new int[1];
         params[0] = SmFptrConst.SMFPTR_JRN_REPORT_CURRENT_DAY;
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_JOURNAL, null, params);
     }
 
+    /**
+     Печать СКЛ за указанную смену
+     */
     public void printJournalDayNumber(int dayNumber) throws JposException {
         int[] params = new int[2];
         params[0] = SmFptrConst.SMFPTR_JRN_REPORT_DAY_NUMBER;
@@ -1677,6 +1685,9 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_JOURNAL, null, params);
     }
 
+    /**
+     Печать документа из СКЛ с указанным номером
+     */
     public void printJournalDocNumber(int docNumber) throws JposException {
         int[] params = new int[2];
         params[0] = SmFptrConst.SMFPTR_JRN_REPORT_DOC_NUMBER;
@@ -1684,6 +1695,9 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_JOURNAL, null, params);
     }
 
+    /**
+     Печать документа из СКЛ с указанным номером
+     */
     public void printJournalDocRange(int docNumber1, int docNumber2) throws JposException {
         int[] params = new int[3];
         params[0] = SmFptrConst.SMFPTR_JRN_REPORT_DOC_RANGE;
@@ -1693,7 +1707,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public void setDiscountAmount(int amount) throws Exception {
-        directIO(SmFptrConst.SMFPTR_DIO_SET_DISCOUNT_AMOUNT, null, 
+        directIO(SmFptrConst.SMFPTR_DIO_SET_DISCOUNT_AMOUNT, null,
                 new Integer(amount));
     }
 }

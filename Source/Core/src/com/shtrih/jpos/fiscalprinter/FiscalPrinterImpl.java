@@ -2677,13 +2677,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 
                 if (params.printerIDMode == PrinterConst.PRINTER_ID_FS_SERIAL) {
                     if (printer.getCapFiscalStorage()) {
-                        result = getPrinter().fsReadSerial().getSerial();
+                        result = printer.fsReadSerial().getSerial();
                     } else {
                         result = readLongStatus().getSerial();
                     }
                 } else {
                     if (printer.getCapFiscalStorage()) {
-                        result = printer.readTable(18, 1, 1).trim();
+                        result = printer.readFullSerial();
                     } else {
                         result = readLongStatus().getSerial();
                     }
