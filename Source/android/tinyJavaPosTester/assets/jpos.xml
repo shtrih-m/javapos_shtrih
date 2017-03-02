@@ -171,5 +171,7 @@
 		<prop name="textReportFileName" type="String" value="archive.txt"/>
 		<!-- Text report empty lines enabled -->
 		<prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
+		<!-- Print TLV tags passed to receipt -->
+		<prop name="FSPrintTags" type="String" value="1"/>
 	</JposEntry>
 </JposEntries>
