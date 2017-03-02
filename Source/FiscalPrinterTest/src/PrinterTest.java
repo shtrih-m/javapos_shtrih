@@ -944,7 +944,7 @@ class PrinterTest implements FiscalPrinterConst {
 
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-            for (int i = 0; i <= 230; i++) {
+            for (int i = 0; i <= 20; i++) {
                 printer.printRecItem("Receipt Item " + i, 1, 1000, 1, 1, "");
             }
             printer.printRecTotal(50000, 50000, "0");
@@ -1213,15 +1213,7 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printFiscalReceipt3() {
-        try {
-            for (int i = 0; i < 100; i++) {
-                ReadLongStatus command = new ReadLongStatus();
-                command.setPassword(30);
-                printer.executeCommand(command);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        printFiscalReceipt104();
     }
 
     public void printFiscalReceipt4() {

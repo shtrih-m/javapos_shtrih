@@ -676,4 +676,7 @@ public interface PrinterConst {
     public static final int SWAP_LINE_FALSE = 1;
     public static final int SWAP_LINE_TRUE  = 2;
     
+    // subAdjustmentOrder constants
+    public static final int ADJUSTMENT_ORDER_CORRECT = 0;
+    public static final int ADJUSTMENT_ORDER_RECEND  = 1;
 }

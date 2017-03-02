@@ -12,6 +12,7 @@ import java.util.Vector;
 
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.CashRegister;
+import com.shtrih.fiscalprinter.command.CashRegisters;
 import com.shtrih.fiscalprinter.command.FMTotals;
 import com.shtrih.fiscalprinter.command.LongPrinterStatus;
 import com.shtrih.fiscalprinter.command.OperationRegister;
@@ -29,7 +30,7 @@ public class RegisterReportReader {
         int result = 0;
         int minNumber = printer.getModel().getMinCashRegister();
         int maxNumber = printer.getModel().getMaxCashRegister();
-        Vector cashRegisters = report.getCashRegisters();
+        CashRegisters cashRegisters = report.getCashRegisters();
         if (minNumber <= maxNumber) {
             for (int i = minNumber; i <= maxNumber; i++) {
                 CashRegister register = new CashRegister(i);
@@ -53,6 +54,12 @@ public class RegisterReportReader {
                 }
                 cashRegisters.add(register);
             }
+        }
+        for (int i = 0; i < 4; i++) {
+            CashRegister register = (CashRegister) cashRegisters.get(185 + i);
+            long itemsDiscountAmount = getDayTotals(i, cashRegisters)
+                    - getDayPayments(i, cashRegisters);
+            register.setValue(itemsDiscountAmount);
         }
 
         minNumber = printer.getModel().getMinOperationRegister();
@@ -79,6 +86,36 @@ public class RegisterReportReader {
         if (printer.getCapFiscalStorage()) {
             report.setCommStatus(printer.fsReadCommStatus());
         }
+    }
+
+    public static long getDayPayments(int recType, CashRegisters registers) throws Exception {
+        long result = 0;
+        // Payment types 1..4
+        for (int i = 0; i <= 3; i++) {
+            CashRegister register = registers.find(193 + recType + i * 4);
+            if (register != null) {
+                result += register.getValue();
+            }
+        }
+        // Payment types 1..4
+        for (int i = 0; i <= 11; i++) {
+            CashRegister register = registers.find(4144 + recType + i * 4);
+            if (register != null) {
+                result += register.getValue();
+            }
+        }
+        return result;
+    }
+
+    public static long getDayTotals(int recType, CashRegisters registers) throws Exception {
+        long result = 0;
+        for (int i = 0; i <= 15; i++) {
+            CashRegister register = registers.find(121 + recType + i * 4);
+            if (register != null) {
+                result += register.getValue();
+            }
+        }
+        return result;
     }
 
 }

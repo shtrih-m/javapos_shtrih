@@ -807,9 +807,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public int readCashRegister(CashRegister register) throws Exception {
         logger.debug("readCashRegister");
-        ReadCashRegister command = new ReadCashRegister(usrPassword,
-                register.getNumber());
-        int result = executeCommand(command);
+        ReadCashRegister command = readCashRegister2(register.getNumber());
+        int result = command.getResultCode();
         if (result == 0) {
             register.setValue(command.getValue());
         }
@@ -818,9 +817,19 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public long readCashRegister(int number) throws Exception {
         logger.debug("readCashRegister");
-        ReadCashRegister command = new ReadCashRegister(usrPassword, number);
+        ReadCashRegister command = readCashRegister2(number);
         execute(command);
         return command.getValue();
+    }
+
+    /*
+        185.Накопление скидок с продаж в смене
+        186.Накопление скидок с покупок в смене
+        187.Накопление скидок с возврата продаж в смене
+        188.Накопление скидок с возврата покупок в смене
+     */
+    public boolean isDayDiscountRegister(int number) throws Exception {
+        return (number >= 185) && (number <= 188);
     }
 
     public ReadCashRegister readCashRegister2(int number) throws Exception {

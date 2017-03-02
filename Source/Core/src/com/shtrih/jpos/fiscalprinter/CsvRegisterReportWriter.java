@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import com.shtrih.fiscalprinter.command.FMTotals;
 import com.shtrih.fiscalprinter.command.CashRegister;
+import com.shtrih.fiscalprinter.command.CashRegisters;
 import com.shtrih.fiscalprinter.command.FSReadCommStatus;
 import com.shtrih.fiscalprinter.command.OperationRegister;
 
@@ -30,7 +31,7 @@ public class CsvRegisterReportWriter {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(fileName), "UTF8"));
         try {
-            Vector cashRegisters = report.getCashRegisters();
+            CashRegisters cashRegisters = report.getCashRegisters();
             for (int i = 0; i < cashRegisters.size(); i++) {
                 CashRegister cashRegister = (CashRegister) cashRegisters.get(i);
 

@@ -23,6 +23,7 @@ import com.shtrih.util.SysUtils;
 import com.shtrih.util.XmlUtils;
 import com.shtrih.fiscalprinter.command.FMTotals;
 import com.shtrih.fiscalprinter.command.CashRegister;
+import com.shtrih.fiscalprinter.command.CashRegisters;
 import com.shtrih.fiscalprinter.command.FSReadCommStatus;
 import com.shtrih.fiscalprinter.command.OperationRegister;
 import com.shtrih.fiscalprinter.command.PrinterDate;
@@ -39,7 +40,7 @@ public class XmlRegisterReportWriter {
             fileName = SysUtils.getFilesPath() + "ZReport.xml";
         }
 
-        Vector cashRegisters = report.getCashRegisters();
+        CashRegisters cashRegisters = report.getCashRegisters();
         Vector operRegisters = report.getOperRegisters();
 
         Element node;

@@ -143,6 +143,7 @@ public class FptrParameters {
     public String fieldSeparator = "\n";
     public int printerIDMode = PrinterConst.PRINTER_ID_SERIAL;
     public int swapGraphicsLine = PrinterConst.SWAP_LINE_AUTO;
+    public int subAdjustmentOrder = PrinterConst.ADJUSTMENT_ORDER_CORRECT;
     
 
     public FptrParameters() throws Exception {
@@ -328,7 +329,8 @@ public class FptrParameters {
         fieldSeparator = reader.readString("FieldSeparator", "\n");
         printerIDMode = reader.readInteger("PrinterIDMode", PrinterConst.PRINTER_ID_SERIAL);
         swapGraphicsLine = reader.readInteger("swapGraphicsLine", PrinterConst.SWAP_LINE_AUTO);
-
+        subAdjustmentOrder = reader.readInteger("subAdjustmentOrder", PrinterConst.ADJUSTMENT_ORDER_CORRECT);
+        
         // paymentNames
         String paymentName;
         String propertyName;

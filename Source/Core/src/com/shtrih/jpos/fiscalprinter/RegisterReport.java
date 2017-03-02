@@ -11,12 +11,14 @@ package com.shtrih.jpos.fiscalprinter;
 
 import java.util.Vector;
 import com.shtrih.fiscalprinter.command.FMTotals;
+import com.shtrih.fiscalprinter.command.CashRegister;
+import com.shtrih.fiscalprinter.command.CashRegisters;
 import com.shtrih.fiscalprinter.command.FSReadCommStatus;
 
 public class RegisterReport {
 
     private int dayNumber = 0;
-    private final Vector cashRegisters = new Vector();
+    private final CashRegisters cashRegisters = new CashRegisters();
     private final Vector operRegisters = new Vector();
     private FMTotals lastFiscalization = new FMTotals();
     private FMTotals allFiscalizations = new FMTotals();
@@ -27,7 +29,7 @@ public class RegisterReport {
     public RegisterReport() {
     }
 
-    public Vector getCashRegisters() {
+    public CashRegisters getCashRegisters() {
         return cashRegisters;
     }
 

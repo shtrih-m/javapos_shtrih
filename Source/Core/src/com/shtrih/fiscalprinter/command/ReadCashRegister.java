@@ -26,8 +26,8 @@ public final class ReadCashRegister extends PrinterCommand {
 
     // in
 
-    private final int password;
-    private final int number;
+    private int password;
+    private int number;
     // out
     private int operator = 0;
     private long value = 0;
@@ -75,5 +75,47 @@ public final class ReadCashRegister extends PrinterCommand {
 
     public boolean getIsRepeatable() {
         return true;
+    }
+
+    /**
+     * @return the password
+     */
+    public int getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(int password) {
+        this.password = password;
+    }
+
+    /**
+     * @return the number
+     */
+    public int getNumber() {
+        return number;
+    }
+
+    /**
+     * @param number the number to set
+     */
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    /**
+     * @param operator the operator to set
+     */
+    public void setOperator(int operator) {
+        this.operator = operator;
+    }
+
+    /**
+     * @param value the value to set
+     */
+    public void setValue(long value) {
+        this.value = value;
     }
 }
