@@ -12,7 +12,6 @@ import com.shtrih.util.encoding.IBM866;
 import java.util.Date;
 
 /**
- *
  * @author V.Kravtsov
  */
 public class TLVItem {
@@ -41,8 +40,9 @@ public class TLVItem {
 
     public long toInt(byte[] d) {
         long result = 0;
-        for (int i = d.length; i <= 0; i--) {
-            result = result * 0x100 + d[i];
+        for (int i = d.length-1; i >= 0; i--) {
+            result <<= 8;
+            result |= d[i] & 0xFF;
         }
         return result;
     }
@@ -66,7 +66,7 @@ public class TLVItem {
         }
     }
 
-//
+    //
     /*
             0 Общая
             1 Упрощенная Доход

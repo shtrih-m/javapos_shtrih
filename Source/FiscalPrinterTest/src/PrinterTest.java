@@ -8,6 +8,7 @@
 //
 /////////////////////////////////////////////////////////////////////
 
+import java.math.BigDecimal;
 import java.util.Vector;
 import java.io.FileReader;
 import java.io.BufferedReader;
@@ -693,7 +694,7 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() 
     {
-        printFiscalReceipt105();
+        printFiscalReceipt666();
     }
 
     public void printPaperReport() {
@@ -974,6 +975,77 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecMessage("      На товары, участвующие в акции,     ");
             printer.printRecMessage("  баллы на сумму покупки не начисляются!  ");
             printer.printRecMessage("     ****** СПАСИБО ЗА ПОКУПКУ ******     ");
+            printer.endFiscalReceipt(false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printFiscalReceipt666() {
+        try {
+            printer.resetPrinter();
+            printer.clearLogo();
+            printer.clearImages();
+            int numHeaderLines = printer.getNumHeaderLines();
+            for (int i = 1; i <= numHeaderLines; i++) {
+                printer.setHeaderLine(i, "Header line " + i, false);
+            }
+
+            long payment = 0;
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(jpos.FiscalPrinterConst.FPTR_RT_SALES);
+            printer.beginFiscalReceipt(false);
+
+            double unitPrice = 0.1;
+            double qty = 1.0;
+
+            printer.printRecItem("Водка БонАква сильногаз 1,0л ПЭТ", 0, (int)(qty*1000), 4, (long)(unitPrice*100), "");
+
+            payment+=(long)(0.1*100);
+
+            printer.fsWriteTag(1074, "8-913-919-1205"); // Телефон платежного агента
+
+            printer.printRecTotal(payment, payment, "1");
+
+            printer.directIO(0x39, null, "foo@example.com");
+            
+            printer.fsWriteTLV(new byte[] {-13, 3, 1, 0, -124});            // тег: 1011, длина: 1, значение: 132
+
+            printer.endFiscalReceipt(false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printNonFiscalReceipt666() {
+        try {
+            printer.resetPrinter();
+            printer.clearLogo();
+            printer.clearImages();
+            int numHeaderLines = printer.getNumHeaderLines();
+            for (int i = 1; i <= numHeaderLines; i++) {
+                printer.setHeaderLine(i, "Header line " + i, false);
+            }
+
+            int howMuch = 1;
+
+            long payment = 0;
+            printer.resetPrinter();
+            //printer.setFiscalReceiptType(jpos.FiscalPrinterConst.FPTR_RT_SALES);
+            printer.beginNonFiscal();
+            for (int i = 0; i < howMuch; i++) {
+                long price = 1234;
+                payment += price;
+
+                String itemName = "Item 1234";
+                printer.printRecItem(itemName, price, 0, 0, 0, "");
+            }
+            printer.printRecTotal(payment, payment, "1");
+
+            //printer.directIO(0x39, null, "foo@example.com");
+
             printer.endFiscalReceipt(false);
 
         } catch (Exception e) {
