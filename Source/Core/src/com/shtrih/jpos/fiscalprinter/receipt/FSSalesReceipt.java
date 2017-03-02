@@ -956,7 +956,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         items.add(new FSTLVItem(data));
     }
 
-    public void fsWriteTag2(int tagId, String tagValue) throws Exception {
+    private void fsWriteTag2(int tagId, String tagValue) throws Exception {
         TLVList list = new TLVList();
         list.add(tagId, tagValue);
         fsWriteTLV(list.getData());
@@ -964,9 +964,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
         fsWriteTag2(tagId, tagValue);
-        if (getParams().FSPrintTags) {
-            messages.add(TLVInfo.getTagPrintName(tagId) + ": " + tagValue);
-        }
     }
 
     public void fsWriteCustomerEmail(String text) throws Exception {
