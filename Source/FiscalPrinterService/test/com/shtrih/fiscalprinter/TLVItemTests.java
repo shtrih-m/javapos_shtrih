@@ -28,7 +28,7 @@ public class TLVItemTests {
 
         TLVItem item = new TLVItem(new TLVInfo(666, TLVInfo.TLVType.itVLN), data, 12);
         assertEquals(12345, item.toInt(item.getData()));
-        assertEquals("123,45", item.getText());
+        assertEquals("123.45", item.getText());
     }
 
     @Test
@@ -37,7 +37,7 @@ public class TLVItemTests {
 
         TLVItem item = new TLVItem(new TLVInfo(666, TLVInfo.TLVType.itVLN), data, 12);
         assertEquals(132, item.toInt(item.getData()));
-        assertEquals("1,32", item.getText());
+        assertEquals("1.32", item.getText());
     }
 
     @Test
@@ -46,7 +46,7 @@ public class TLVItemTests {
 
         TLVItem item = new TLVItem(new TLVInfo(666, TLVInfo.TLVType.itVLN), data, 12);
         assertEquals(132, item.toInt(item.getData()));
-        assertEquals("1,32", item.getText());
+        assertEquals("1.32", item.getText());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class TLVItemTests {
 
         TLVItem item = new TLVItem(new TLVInfo(666, TLVInfo.TLVType.itVLN), data, 12);
         assertEquals(132, item.toInt(item.getData()));
-        assertEquals("1,32", item.getText());
+        assertEquals("1.32", item.getText());
     }
 
     private byte[] fsWriteTag(final int data) throws Exception {

@@ -10,6 +10,7 @@ import com.shtrih.util.Hex;
 import com.shtrih.util.encoding.IBM866;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * @author V.Kravtsov
@@ -40,7 +41,7 @@ public class TLVItem {
 
     public long toInt(byte[] d) {
         long result = 0;
-        for (int i = d.length-1; i >= 0; i--) {
+        for (int i = d.length - 1; i >= 0; i--) {
             result <<= 8;
             result |= d[i] & 0xFF;
         }
@@ -126,7 +127,7 @@ public class TLVItem {
     public String toFVLNS(byte[] data) throws Exception {
         double result = toFVLN(data);
         int power = data[0];
-        return String.format("%." + power + "f", result);
+        return String.format(Locale.US, "%." + power + "f", result);
     }
 
     public String getText() throws Exception {
@@ -142,7 +143,7 @@ public class TLVItem {
             case itUnixTime:
                 return toDate(data).toString();
             case itVLN:
-                return String.format("%.2f", toInt(data) / 100.0);
+                return String.format(Locale.US, "%.2f", toInt(data) / 100.0);
             case itFVLN:
                 return toFVLNS(data);
             case itASCII:

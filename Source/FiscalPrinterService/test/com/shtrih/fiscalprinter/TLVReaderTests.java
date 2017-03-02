@@ -26,7 +26,7 @@ public class TLVReaderTests {
         TLVItem item = items.get(0);
 
         assertEquals(12345, item.toInt(item.getData()));
-        assertEquals("123,45", item.getText());
+        assertEquals("123.45", item.getText());
     }
 
     private byte[] fsWriteTag(final int tag, final int data) throws Exception {
