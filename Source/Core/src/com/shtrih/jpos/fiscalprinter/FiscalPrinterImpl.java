@@ -2269,6 +2269,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkPrinterState(FPTR_PS_MONITOR);
         setPrinterState(FPTR_PS_NONFISCAL);
         receipt = new NonfiscalReceipt(createReceiptContext());
+        printDocStart();
         printHeaderDriver();
     }
 
@@ -2311,6 +2312,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             getPrinter().waitForPrinting();
             getPrinter().printItems(printItems);
             header.endDocument(additionalHeader, additionalTrailer);
+            isInReceiptTrailer = false;
+        }
+    }
+
+    public void printDocStart() throws Exception {
+        synchronized (printer) {
+            isInReceiptTrailer = true;
             header.beginDocument(additionalHeader, additionalTrailer);
             isInReceiptTrailer = false;
         }
@@ -2336,6 +2344,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             getPrinter().sysAdminCancelReceipt();
         }
         getPrinter().waitForPrinting();
+        printDocStart();
         getPrinter().printText(text);
         printDocEnd();
 
@@ -2986,6 +2995,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
         PrinterStatus status = getPrinter().waitForPrinting();
         if (status.getPrinterMode().isDayClosed()) {
+            printDocStart();
             getPrinter().openFiscalDay();
             printDocEnd();
         }
@@ -3000,6 +3010,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         setPrinterState(FPTR_PS_FISCAL_RECEIPT);
         printItems.clear();
         getPrinter().startSaveCommands();
+        printDocStart();
         receipt.beginFiscalReceipt(printHeader);
     }
 
@@ -3050,6 +3061,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             if (!getCapDuplicateReceipt()) {
                 throw new JposException(JPOS_E_ILLEGAL, Localizer.getString(Localizer.receiptDuplicationNotSupported));
             }
+            printDocStart();
             getPrinter().duplicateReceipt();
             printDocEnd();
             duplicateReceipt = false;
@@ -3079,6 +3091,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 .getPrinterDate();
         PrinterDate printerDate2 = JposFiscalPrinterDate.valueOf(date2)
                 .getPrinterDate();
+
+        printDocStart();
 
         if (params.reportDevice == SMFPTR_REPORT_DEVICE_EJ) {
             EJDate d1 = new EJDate(printerDate1);
@@ -3447,6 +3461,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 // case FPTR_RT_EOD_ORDINAL:
                 day1 = stringParamToInt(startNum, "startNum");
                 day2 = stringParamToInt(endNum, "endNum");
+
+                printDocStart();
+
                 if (params.reportDevice == SMFPTR_REPORT_DEVICE_EJ) {
                     getPrinter().printEJReportDays(day1, day2, params.reportType);
                 } else {
@@ -3461,7 +3478,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 // pase dates
                 date1 = JposFiscalPrinterDate.valueOf(startNum).getPrinterDate();
                 date2 = JposFiscalPrinterDate.valueOf(endNum).getPrinterDate();
+
                 // print report
+                printDocStart();
+
                 if (params.reportDevice == SMFPTR_REPORT_DEVICE_EJ) {
                     getPrinter().printEJDayReportOnDates(new EJDate(date1),
                             new EJDate(date2), params.reportType);
@@ -3483,6 +3503,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkOnLine();
         checkStateBusy();
         checkPrinterState(FPTR_PS_MONITOR);
+        printDocStart();
         getPrinter().printXReport();
         printDocEnd();
     }
@@ -3498,6 +3519,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
         PrinterStatus status = readPrinterStatus();
         if (status.getPrinterMode().canPrintZReport()) {
+            printDocStart();
             getPrinter().printZReport();
             fiscalDay.close();
             printDocEnd();
@@ -4556,6 +4578,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void fsPrintCalcReport() throws Exception {
+        printDocStart();
         FSPrintCalcReport command = new FSPrintCalcReport();
         command.setSysPassword(printer.getSysPassword());
         printer.execute(command);

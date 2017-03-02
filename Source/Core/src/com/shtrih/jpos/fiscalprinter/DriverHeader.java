@@ -149,11 +149,12 @@ public class DriverHeader implements JposConst, PrinterHeader {
         printTrailer(additionalTrailer);
         printHeaderBeforeCutter();
         printer.cutPaper();
+        printHeaderAfterCutter(additionalHeader);
     }
 
     @Override
     public void beginDocument(String additionalHeader, String additionalTrailer) throws Exception {
-        printHeaderAfterCutter(additionalHeader);
+
     }
 
     void printTrailer(String additionalTrailer) throws Exception {

@@ -43,6 +43,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public PrinterProtocol device;
     // delay on wait
     public static final int TimeToSleep = 100;
+    public static final int SMFP_EFPTR_PREVCOMMAND_TimeToSleep = 333;
     public static String charsetName = "Cp1251"; // device charset name
     // tax officer password
     public int taxPassword = 0;
@@ -249,6 +250,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
             if (!command.getRepeatNeeded()) {
                 break;
+            }
+
+            if(command.getResultCode() == SMFP_EFPTR_PREVCOMMAND) {
+                // Do not count as an attempt, added to fix SHTRIH-MOBILE-F bug
+                SysUtils.sleep(SMFP_EFPTR_PREVCOMMAND_TimeToSleep);
+                i--;
             }
         }
         if (saveCommands && succeeded(resultCode) && isReceiptCommand(command)) {
