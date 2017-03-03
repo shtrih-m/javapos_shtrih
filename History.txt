@@ -7,7 +7,7 @@
 ********************************************************************************
 
   March 3 2017, 21:10
-  deviceServiceVersion = 1013387
+  deviceServiceVersion = 1013389
 	
   [-] Fixed error with loadLogo method
   
