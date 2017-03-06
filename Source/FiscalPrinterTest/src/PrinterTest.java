@@ -985,13 +985,15 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt666() {
         try {
             printer.resetPrinter();
+            
             printer.clearLogo();
             printer.clearImages();
+            printer.loadLogo(SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER, "logo.bmp");
             int numHeaderLines = printer.getNumHeaderLines();
             for (int i = 1; i <= numHeaderLines; i++) {
                 printer.setHeaderLine(i, "Header line " + i, false);
             }
-
+            
             long payment = 0;
             printer.resetPrinter();
             printer.setFiscalReceiptType(jpos.FiscalPrinterConst.FPTR_RT_SALES);
@@ -999,19 +1001,19 @@ class PrinterTest implements FiscalPrinterConst {
 
             double unitPrice = 0.1;
             double qty = 1.0;
-
             printer.printRecItem("Водка БонАква сильногаз 1,0л ПЭТ", 0, (int)(qty*1000), 4, (long)(unitPrice*100), "");
-
-            payment+=(long)(0.1*100);
-
-            printer.fsWriteTag(1074, "8-913-919-1205"); // Телефон платежного агента
-
-            printer.printRecTotal(payment, payment, "1");
-
-            printer.directIO(0x39, null, "foo@example.com");
             
-            printer.fsWriteTLV(new byte[] {-13, 3, 1, 0, -124});            // тег: 1011, длина: 1, значение: 132
-
+            payment+=(long)(0.1*100);
+            //printer.fsWriteTag(1074, "8-913-919-1205"); // Телефон платежного агента
+            printer.printRecTotal(payment, payment, "1");
+            //printer.directIO(0x39, null, "foo@example.com");
+            //printer.fsWriteTLV(new byte[] {-13, 3, 1, 0, -124});            // тег: 1011, длина: 1, значение: 132
+            
+            printer.printRecMessage("printRecMessage 1");
+            printer.printRecMessage("printRecMessage 2");
+            printer.printRecMessage("printRecMessage 3");
+            printer.printRecMessage("printRecMessage 4");
+            printer.printRecMessage("printRecMessage 5");
             printer.endFiscalReceipt(false);
 
         } catch (Exception e) {
@@ -1963,7 +1965,7 @@ class PrinterTest implements FiscalPrinterConst {
                 CashRegister reg = printer.readCashRegister(i);
                 result = result + String.valueOf(i) + ". "
                         + String.valueOf(reg.getValue()) + ", "
-                        + String.valueOf(reg.getName(i));
+                        + String.valueOf(reg.getName(i)) + "\r\n";
             }
         } catch (Exception e) {
             e.printStackTrace();

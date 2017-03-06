@@ -211,6 +211,8 @@ public interface SMFiscalPrinter {
 
     public long readCashRegister(int number) throws Exception;
 
+    public long readCashRegisterCorrection(int number) throws Exception;
+    
     public PrintEJDayReportOnDates printEJDayReportOnDates(EJDate date1,
             EJDate date2, int reportType) throws Exception;
 
@@ -520,6 +522,5 @@ public interface SMFiscalPrinter {
     public void printReceiptHeader(String docName) throws Exception;
     
     public String getReceiptName(int receiptType);
-    
 }
 

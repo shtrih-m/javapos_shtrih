@@ -356,6 +356,10 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
+    public long readCashRegisterCorrection(int number) throws Exception{
+        return 0;
+    }
+    
     public PrintEJDayReportOnDates printEJDayReportOnDates(EJDate date1,
             EJDate date2, int reportType) throws Exception {
         return new PrintEJDayReportOnDates();

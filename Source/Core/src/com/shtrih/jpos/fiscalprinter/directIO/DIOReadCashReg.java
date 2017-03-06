@@ -30,9 +30,9 @@ public class DIOReadCashReg {
         DIOUtils.checkObjectMinLength((String[]) object, 2);
 
         String[] lines = (String[]) object;
-        CashRegister register = new CashRegister(data[0]);
-        service.printer.check(service.printer.readCashRegister(register));
-        lines[0] = String.valueOf(register.getValue());
-        lines[1] = CashRegister.getName(data[0]);
+        int number = data[0];
+        long amount = service.printer.readCashRegisterCorrection(number);
+        lines[0] = String.valueOf(amount);
+        lines[1] = CashRegister.getName(number);
     }
 }

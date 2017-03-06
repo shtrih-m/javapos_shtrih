@@ -18,7 +18,7 @@
         <jpos category="FiscalPrinter" version="1.9"/>
         <product description="Fiscal printer service" name="ShtrihFptr" url="http://www.javapos.com"/>
         <!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass -->
-        <prop name="portType" type="String" value="2"/>
+        <prop name="portType" type="String" value="0"/>
         <!-- portClass  -->
         <prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.SerialPrinterPort"/>
         <!--<prop name="portClass" type="String" value="com.shtrih.bluetooth.BTPrinterPort"/>-->
@@ -31,7 +31,7 @@
         <!--<prop name="portName" type="String" value="COM2"/> -->
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
-        <prop name="portName" type="String" value="192.168.137.111:7778"/>
+        <prop name="portName" type="String" value="COM4"/>
 		
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
@@ -286,6 +286,8 @@
 		<prop name="nonFiscalHeaderEnabled" type="String" value="1"/>
 		<!-- Subtotal adjustment order, 0 - correct, 1 - at receipt end -->
 		<prop name="subAdjustmentOrder" type="String" value="1"/>
+		<!-- swapGraphicsLine, 0 - auto, 1 - False, 2 - true -->
+		<prop name="swapGraphicsLine" type="String" value="0"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>

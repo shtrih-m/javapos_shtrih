@@ -507,7 +507,8 @@ public class DirectIOHandler2 {
         int number = data[0];
         Object[] params = (Object[]) object;
         CashRegister register = new CashRegister(number);
-        service.printer.check(service.printer.readCashRegister(register));
+        long amount = service.printer.readCashRegisterCorrection(number);
+        register.setValue(amount);
         params[0] = register;
     }
 

@@ -252,7 +252,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 break;
             }
 
-            if(command.getResultCode() == SMFP_EFPTR_PREVCOMMAND) {
+            if (command.getResultCode() == SMFP_EFPTR_PREVCOMMAND) {
                 // Do not count as an attempt, added to fix SHTRIH-MOBILE-F bug
                 SysUtils.sleep(SMFP_EFPTR_PREVCOMMAND_TimeToSleep);
                 i--;
@@ -829,6 +829,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command.getValue();
     }
 
+    public ReadCashRegister readCashRegister2(int number) throws Exception {
+        logger.debug("readCashRegister");
+        ReadCashRegister command = new ReadCashRegister(usrPassword, number);
+        execute(command);
+        return command;
+    }
+
     /*
         185.Накопление скидок с продаж в смене
         186.Накопление скидок с покупок в смене
@@ -839,11 +846,37 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return (number >= 185) && (number <= 188);
     }
 
-    public ReadCashRegister readCashRegister2(int number) throws Exception {
+    public long readCashRegisterCorrection(int number) throws Exception {
         logger.debug("readCashRegister");
-        ReadCashRegister command = new ReadCashRegister(usrPassword, number);
+        ReadCashRegister command = readCashRegister2(number);
         execute(command);
-        return command;
+        if (getCapFiscalStorage() && isDayDiscountRegister(number)) {
+            int recType = number - 185;
+            long amount = readDayTotals(recType) - readDayPayments(recType);
+            command.setValue(amount);
+        }
+        return command.getValue();
+    }
+
+    public long readDayPayments(int recType) throws Exception {
+        long result = 0;
+        // Payment types 1..4
+        for (int i = 0; i <= 3; i++) {
+            result += readCashRegister(193 + recType + i * 4);
+        }
+        // Payment types 1..4
+        for (int i = 0; i <= 11; i++) {
+            result += readCashRegister(4144 + recType + i * 4);
+        }
+        return result;
+    }
+
+    public long readDayTotals(int recType) throws Exception {
+        long result = 0;
+        for (int i = 0; i <= 15; i++) {
+            result += readCashRegister(121 + recType + i * 4);
+        }
+        return result;
     }
 
     public PrintEJDayReportOnDates printEJDayReportOnDates(EJDate date1,
@@ -2698,8 +2731,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     @Override
     public String readFullSerial() throws Exception {
         int tableNumber = 18;
-        if(isShtrihMobile())
+        if (isShtrihMobile()) {
             tableNumber = 14;
+        }
 
         return readTable(tableNumber, 1, 1).trim();
     }
