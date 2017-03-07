@@ -136,8 +136,11 @@ public class ReceiptTemplate {
             return StringUtils.amountToString(item.getPriceWithDiscount());
         }
 
-        if (f.tag.equals("DISCOUNT")) {
-            return StringUtils.amountToString(item.getTotalDiscount());
+        if (f.tag.equals("DISCOUNT")) 
+        {
+            long amount = item.getTotalDiscount();
+            if (amount == 0) return "";
+            return StringUtils.amountToString(amount);
         }
         if (f.tag.equals("TOTAL")) {
             return StringUtils.amountToString(item.getTotal());
