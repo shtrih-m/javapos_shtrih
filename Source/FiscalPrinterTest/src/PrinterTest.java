@@ -694,7 +694,8 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() 
     {
-        printFiscalReceipt666();
+        printZeroFiscalReceipt();
+        //printFiscalReceipt666();
     }
 
     public void printPaperReport() {
@@ -724,6 +725,19 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    public void printZeroFiscalReceipt() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(FPTR_RT_SALES);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("ITEM 1", 0, 1234, 0, 0, "");
+            printer.printRecTotal(1000, 1000, "payTypeName1");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void printFiscalReceipt14() {
         try {
             printer.resetPrinter();

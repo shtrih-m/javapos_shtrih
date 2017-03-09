@@ -105,7 +105,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         if (!isOpened) {
             isOpened = true;
             this.receiptType = receiptType;
-            
+
             getPrinter().openReceipt(receiptType);
             getPrinter().waitForPrinting();
         }
@@ -205,7 +205,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             if (item instanceof FSDiscount) {
                 printTotalDiscount((FSDiscount) item);
             }
-            
+
             if (item instanceof FSTLVItem) {
                 FSTLVItem tlvItem = (FSTLVItem) item;
                 SMFiscalPrinter printer = getPrinter().getPrinter();
@@ -262,8 +262,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     }
                 }
                 printReceiptItems();
-                if (getParams().subAdjustmentOrder == PrinterConst.ADJUSTMENT_ORDER_RECEND)
-                {
+                if (getParams().subAdjustmentOrder == PrinterConst.ADJUSTMENT_ORDER_RECEND) {
                     for (int i = 0; i < discounts.size(); i++) {
                         printTotalDiscount(discounts.get(i));
                     }
@@ -341,14 +340,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             getDevice().printCharge(item);
         }
 
-        if ((!getParams().FSCombineItemAdjustments)) 
-        {
+        if ((!getParams().FSCombineItemAdjustments)) {
             if (discount.getAmount() > 0) {
-                String line = formatStrings("СКИДКА " + item.getText(), 
+                String line = formatStrings("СКИДКА " + item.getText(),
                         "=" + StringUtils.amountToString(item.getAmount()));
                 getDevice().printText(line);
             } else {
-                String line = formatStrings("НАДБАВКА " + item.getText(), 
+                String line = formatStrings("НАДБАВКА " + item.getText(),
                         "=" + StringUtils.amountToString(item.getAmount()));
                 getDevice().printText(line);
             }
@@ -767,8 +765,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printStorno(long price, long quantity, long unitPrice,
             int department, int vatInfo, String description) throws Exception {
         if (unitPrice == 0) {
-            quantity = 1000;
-            unitPrice = price;
+            if (price != 0) {
+                quantity = 1000;
+                unitPrice = price;
+            }
         } else if (quantity == 0) {
             quantity = 1000;
         }
@@ -779,8 +779,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printSale(long price, long quantity, long unitPrice,
             int department, int vatInfo, String description) throws Exception {
         if (unitPrice == 0) {
-            quantity = 1000;
-            unitPrice = price;
+            if (price != 0) {
+                quantity = 1000;
+                unitPrice = price;
+            }
         } else if (quantity == 0) {
             quantity = 1000;
         }
@@ -884,7 +886,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setTax3(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setTax4(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setText(text);
-        if (getParams().subAdjustmentOrder == PrinterConst.ADJUSTMENT_ORDER_CORRECT){
+        if (getParams().subAdjustmentOrder == PrinterConst.ADJUSTMENT_ORDER_CORRECT) {
             items.add(item);
         }
         discounts.add(item);
@@ -1020,8 +1022,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         printTotalAndTax(item);
     }
 
-    protected void printTotalAndTax(FSSaleReceiptItem item) throws Exception 
-    {
+    protected void printTotalAndTax(FSSaleReceiptItem item) throws Exception {
         String line;
         int tax = item.getTax1();
         if (tax == 0) {
@@ -1034,7 +1035,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         line = formatLines(line, StringUtils.amountToString(taxAmount));
         getDevice().printText(line);
     }
-    
+
     public String formatLines(String line1, String line2) throws Exception {
         return StringUtils.alignLines(line1, line2, getPrinter().getTextLength());
     }
