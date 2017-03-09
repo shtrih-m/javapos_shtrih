@@ -117,6 +117,7 @@ public class FptrParameters {
     public int barcodeTextPosition = SmFptrConst.SMFPTR_TEXTPOS_BELOW;
     public int barcodeTextFont = 1;
     public int barcodeAspectRatio = 3;
+    public boolean FSServiceEnabled = false;
     public String FSHost = "k-server.test-naofd.ru";
     public int FSPort = 7779;
     public int FSConnectTimeout = 3000; // 3000 ms
@@ -296,6 +297,7 @@ public class FptrParameters {
         barcodeTextPosition = reader.readInteger("barcodeTextPosition", SmFptrConst.SMFPTR_TEXTPOS_BELOW);
         barcodeTextFont = reader.readInteger("barcodeTextFont", 1);
         barcodeAspectRatio = reader.readInteger("barcodeAspectRatio", 3);
+        FSServiceEnabled = reader.readBoolean("FSServiceEnabled", false);
         FSHost = reader.readString("FSHost", "k-server.test-naofd.ru");
         FSPort = reader.readInteger("FSPort", 7779);
         FSConnectTimeout = reader.readInteger("FSConnectTimeout", 3000);

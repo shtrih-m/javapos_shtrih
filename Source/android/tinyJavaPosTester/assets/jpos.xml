@@ -173,5 +173,11 @@
 		<prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- Print TLV tags passed to receipt -->
 		<prop name="FSPrintTags" type="String" value="1"/>
+
+		<prop name="FSServiceEnabled" type="String" value="1"/>
+		<prop name="FSHost" type="String" value="127.0.0.1"/>
+		<prop name="FSPort" type="String" value="7779"/>
+		<prop name="FSConnectTimeout" type="String" value="30000"/>
+		<prop name="FSPollPeriod" type="String" value="5000"/>
 	</JposEntry>
 </JposEntries>

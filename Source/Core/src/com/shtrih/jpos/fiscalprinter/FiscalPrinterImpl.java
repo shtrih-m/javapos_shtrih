@@ -227,6 +227,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private boolean inAfterCommand = false;
     private boolean isInReceiptTrailer = false;
     private TextDocumentFilter filter = null;
+    private FSService fsSenderService;
 
     public void setTextDocumentFilterEnablinessTo(boolean value) {
         filter.setEnabled(value);
@@ -862,10 +863,20 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 if (params.pollEnabled) {
                     startPoll();
                 }
+
+                if (params.FSServiceEnabled) {
+                    fsSenderService = new FSService(printer, params);
+                    fsSenderService.start();
+                }
             } else {
                 stopPoll();
                 connected = false;
                 setPowerState(JPOS_PS_UNKNOWN);
+
+                if (params.FSServiceEnabled) {
+                    fsSenderService.stop();
+                    fsSenderService = null;
+                }
             }
             this.deviceEnabled = deviceEnabled;
         }
@@ -2112,7 +2123,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             port = PrinterPortFactory.createInstance(params);
             device = ProtocolFactory.getProtocol(params, port);
             printer = new SMFiscalPrinterImpl(port, device, params, this);
-
+            
             printer.setEscPrinter(new NCR7167Printer(this));
 
             getPrinter().addEvents(this);

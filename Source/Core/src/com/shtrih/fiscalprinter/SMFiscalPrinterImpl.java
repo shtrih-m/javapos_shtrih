@@ -3038,4 +3038,77 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             return docNames[receiptType];
         }
     }
+
+    public FSReadBlock fsReadBlock(int offset, int size) throws Exception {
+        FSReadBlock command = new FSReadBlock();
+        command.setSysPassword(sysPassword);
+        command.setOffset(offset);
+        command.setSize(size);
+        execute(command);
+        return command;
+    }
+
+    public FSStartWriteBlock fsStartWriteBlock(int size) throws Exception {
+        FSStartWriteBlock command = new FSStartWriteBlock();
+        command.setSysPassword(sysPassword);
+        command.setSize(size);
+        execute(command);
+        return command;
+    }
+
+    public FSWriteBlock fsWriteBlock(int offset, byte[] data) throws Exception {
+        FSWriteBlock command = new FSWriteBlock();
+        command.setSysPassword(sysPassword);
+        command.setOffset(offset);
+        command.setData(data);
+        execute(command);
+        return command;
+    }
+
+    public byte[] fsReadBlockData() throws Exception {
+        byte[] result = new byte[0];
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        FSReadBufferStatus status = fsReadBufferStatus();
+
+        if (status.getDataSize() == 0) {
+            return result;
+        }
+        if (status.getBlockSize() == 0) {
+            return result;
+        }
+
+        int count = (status.getDataSize() + status.getBlockSize() - 1)
+                / status.getBlockSize();
+        for (int i = 0; i < count; i++) {
+            int offset = i * status.getBlockSize();
+            int dataSize = status.getDataSize() - offset;
+            if (dataSize > status.getBlockSize()) {
+                dataSize = status.getBlockSize();
+            }
+            FSReadBlock block = fsReadBlock(offset, dataSize);
+
+            stream.write(block.getData());
+        }
+        return stream.toByteArray();
+    }
+
+    public void fsWriteBlockData(byte[] data) throws Exception {
+        FSStartWriteBlock command = fsStartWriteBlock(data.length);
+
+        int blockSize = command.getBlockSize();
+        if (blockSize == 0) {
+            throw new Exception("blockSize = 0");
+        }
+        int count = (data.length + blockSize - 1) / blockSize;
+        for (int i = 0; i < count; i++) {
+            int offset = i * blockSize;
+            int dataSize = data.length - i * blockSize;
+            if (dataSize > blockSize) {
+                dataSize = blockSize;
+            }
+            byte[] blockData = new byte[dataSize];
+            System.arraycopy(data, offset, blockData, offset, dataSize);
+            fsWriteBlock(offset, blockData);
+        }
+    }
 }

@@ -522,5 +522,9 @@ public interface SMFiscalPrinter {
     public void printReceiptHeader(String docName) throws Exception;
     
     public String getReceiptName(int receiptType);
+
+    byte[] fsReadBlockData() throws Exception;
+
+    void fsWriteBlockData(byte[] data) throws Exception;
 }
 
