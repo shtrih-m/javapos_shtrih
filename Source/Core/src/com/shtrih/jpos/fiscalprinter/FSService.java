@@ -7,6 +7,7 @@ package com.shtrih.jpos.fiscalprinter;
 
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.Hex;
 
 import java.io.InputStream;
 import java.net.InetSocketAddress;
@@ -51,13 +52,20 @@ public class FSService implements Runnable {
     private void checkData() {
         try {
             byte[] data = printer.fsReadBlockData();
+
             if (data.length == 0) {
                 return;
             }
+
+            System.out.println("FS -> OFD: " + Hex.toHex(data));
+
             byte[] answer = sendData(data);
             if (answer.length == 0) {
                 return;
             }
+
+            System.out.println("FS <- OFD: " + Hex.toHex(answer));
+
             printer.fsWriteBlockData(answer);
 
         } catch (Exception e) {
@@ -74,12 +82,15 @@ public class FSService implements Runnable {
 
         int headerSize = 30;
         byte[] header = new byte[headerSize];
-        in.read(header, 0, headerSize);
-        int size = (header[24] << 8) + header[25];
+        in.read(header, 0, headerSize);  // TODO: read while not enough
+        int size = ((header[25] << 8)) | (header[24] & 0xFF);
+
+        System.out.println(Hex.toHex(header));
+
         byte[] answer = new byte[headerSize + size];
         System.arraycopy(header, 0, answer, 0, headerSize);
         if (size > 0) {
-            in.read(answer, headerSize, size);
+            in.read(answer, headerSize, size); // TODO: read while not enough
         }
         return answer;
     }

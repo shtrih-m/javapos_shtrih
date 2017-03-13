@@ -5,13 +5,6 @@
  */
 package com.shtrih.fiscalprinter.command;
 
-import com.shtrih.ej.EJDate;
-import com.shtrih.util.BitUtils;
-
-/**
- *
- * @author V.Kravtsov
- */
 /**
  *
  * Прочитать блок данных данных из буфера
@@ -23,24 +16,9 @@ import com.shtrih.util.BitUtils;
  * Код ошибки (1 байт)
  * Данные (N байт)
  *
- *
  */
 public class FSReadBlock extends PrinterCommand {
-
-    /**
-     * @return the sysPassword
-     */
-    public int getSysPassword() {
-        return sysPassword;
-    }
-
-    /**
-     * @param sysPassword the sysPassword to set
-     */
-    public void setSysPassword(int sysPassword) {
-        this.sysPassword = sysPassword;
-    }
-
+        
     // in
     private int sysPassword; // System sdministrator password (4 bytes)
     private int offset;
@@ -48,7 +26,10 @@ public class FSReadBlock extends PrinterCommand {
     // out
     private byte[] data;
 
-    public FSReadBlock() {
+    public FSReadBlock(int sysPassword, int offset, int size) {
+        this.sysPassword = sysPassword;
+        this.offset = offset;
+        this.size = size;
     }
 
     public final int getCode() {
@@ -60,41 +41,13 @@ public class FSReadBlock extends PrinterCommand {
     }
 
     public void encode(CommandOutputStream out) throws Exception {
-        out.writeInt(getSysPassword());
-        out.writeShort(getOffset());
-        out.writeByte(getSize());
+        out.writeInt(sysPassword);
+        out.writeShort(offset);
+        out.writeByte(size);
     }
 
     public void decode(CommandInputStream in) throws Exception {
-        setData(in.readBytes(in.getSize()));
-    }
-
-    /**
-     * @return the offset
-     */
-    public int getOffset() {
-        return offset;
-    }
-
-    /**
-     * @param offset the offset to set
-     */
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
-
-    /**
-     * @return the size
-     */
-    public int getSize() {
-        return size;
-    }
-
-    /**
-     * @param size the size to set
-     */
-    public void setSize(int size) {
-        this.size = size;
+        data = in.readBytes(in.getSize());
     }
 
     /**
@@ -103,12 +56,4 @@ public class FSReadBlock extends PrinterCommand {
     public byte[] getData() {
         return data;
     }
-
-    /**
-     * @param data the data to set
-     */
-    public void setData(byte[] data) {
-        this.data = data;
-    }
-
 }

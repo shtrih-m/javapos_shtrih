@@ -2808,8 +2808,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public FSReadBufferStatus fsReadBufferStatus() throws Exception {
-        FSReadBufferStatus command = new FSReadBufferStatus();
-        command.setSysPassword(sysPassword);
+        FSReadBufferStatus command = new FSReadBufferStatus(sysPassword);
         execute(command);
         return command;
     }
@@ -3040,10 +3039,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public FSReadBlock fsReadBlock(int offset, int size) throws Exception {
-        FSReadBlock command = new FSReadBlock();
-        command.setSysPassword(sysPassword);
-        command.setOffset(offset);
-        command.setSize(size);
+        FSReadBlock command = new FSReadBlock(sysPassword, offset, size);
         execute(command);
         return command;
     }

@@ -91,7 +91,7 @@ public class FSWriteBlock extends PrinterCommand {
      * @param data the data to set
      */
     public void setData(byte[] data) {
-        this.setData(data);
+        this.data = data;
     }
 
 }
