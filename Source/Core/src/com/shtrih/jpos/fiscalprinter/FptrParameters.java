@@ -107,6 +107,7 @@ public class FptrParameters {
     public boolean centerHeader = false;
     public boolean cancelIO = false;
     public boolean logEnabled = false;
+    public boolean stripExceptionDetails = true;
     public boolean sendENQ = true;
     private boolean taxLettersEnabled = true;
     public boolean zeroReceiptEnabled = true;
@@ -287,6 +288,7 @@ public class FptrParameters {
                 SmFptrConst.SMFPTR_LOGO_AFTER_TRAILER);
         centerHeader = reader.readBoolean("centerHeader", false);
         logEnabled = reader.readBoolean("logEnabled", false);
+        stripExceptionDetails = reader.readBoolean("stripExceptionDetails", true);
         sendENQ = reader.readBoolean("sendENQ", true);
         taxLettersEnabled = reader.readBoolean("taxLettersEnabled", true);
         zeroReceiptEnabled = reader.readBoolean("zeroReceiptEnabled", true);

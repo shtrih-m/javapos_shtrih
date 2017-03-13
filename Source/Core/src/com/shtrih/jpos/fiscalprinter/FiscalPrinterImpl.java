@@ -2143,6 +2143,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             if (params.monitoringEnabled) {
                 monitoringServer.start(params.getMonitoringPort());
             }
+
+            JposExceptionHandler.setStripExceptionDetails(params.stripExceptionDetails);
         }
 
         receipt = new NullReceipt(createReceiptContext());

@@ -438,7 +438,7 @@ public class CashDrawerImpl extends DeviceService implements
             }
             fptrParams.load(entry);
             logger.setEnabled(fptrParams.logEnabled);
-
+            JposExceptionHandler.setStripExceptionDetails(fptrParams.stripExceptionDetails);
 
             port = PrinterPortFactory.createInstance(fptrParams);
             device = ProtocolFactory.getProtocol(fptrParams, port);
