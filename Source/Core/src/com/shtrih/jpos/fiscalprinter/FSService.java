@@ -19,26 +19,36 @@ import java.net.Socket;
  */
 public class FSService implements Runnable {
 
+    private CompositeLogger logger = CompositeLogger.getLogger(FSService.class);
+
     private String host;
     private int port;
-    private int connectTimeout;
+    private final int connectTimeout;
     private int pollPeriod;
     private Thread thread = null;
     private boolean stopFlag = false;
     private final SMFiscalPrinter printer;
-    private CompositeLogger logger = CompositeLogger.getLogger(FSService.class);
 
     public FSService(SMFiscalPrinter printer, FptrParameters parameters) {
         this.printer = printer;
-        this.pollPeriod = parameters.FSPollPeriod;
-        this.host = parameters.FSHost;
-        this.port = parameters.FSPort;
         this.connectTimeout = parameters.FSConnectTimeout;
-
     }
 
     public void run() {
         try {
+            while (true) {
+                try {
+                    // TODO: move table numbers to PrinterModel
+                    host = printer.readTable(15, 1, 1);
+                    port = Integer.valueOf(printer.readTable(15, 1, 2));
+                    pollPeriod = Integer.valueOf(printer.readTable(15, 1, 3)) * 1000;
+                    break;
+                } catch (Exception e) {
+                    Thread.sleep(10 * 1000);
+                    logger.error("Failed to read FSSender parameters", e);
+                }
+            }
+
             while (!stopFlag) {
                 checkData();
                 Thread.sleep(pollPeriod);
