@@ -8,7 +8,7 @@ public class SysUtils {
 
     private static String filesPath;
 
-    static void setFilesPath(String value) {
+    public static void setFilesPath(String value) {
         filesPath = value;
     }
 
