@@ -149,6 +149,9 @@ public class ReceiptTemplate {
             return StringUtils.amountToString(item.getTotal()) + "_"
                     + getTaxLetter(item.getTax1());
         }
+        if (f.tag.equals("TAX_LETTER")){
+            return getTaxLetter(item.getTax1());
+        }
         throw new ParsingException("Unknown tag: " + f.tag);
     }
 
