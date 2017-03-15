@@ -5,18 +5,15 @@
  */
 package com.shtrih.jpos.fiscalprinter.receipt;
 
-import java.util.Vector;
-
-import com.shtrih.util.StringUtils;
 import com.shtrih.fiscalprinter.FontNumber;
-import com.shtrih.fiscalprinter.command.PriceItem;
-import com.shtrih.fiscalprinter.command.AmountItem;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
-import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.jpos.fiscalprinter.receipt.template.Field;
-import com.shtrih.jpos.fiscalprinter.receipt.template.TemplateLine;
 import com.shtrih.jpos.fiscalprinter.receipt.template.FormatLineParser;
 import com.shtrih.jpos.fiscalprinter.receipt.template.ParsingException;
+import com.shtrih.jpos.fiscalprinter.receipt.template.TemplateLine;
+import com.shtrih.util.StringUtils;
+
+import java.util.Vector;
 
 /**
  *
@@ -151,6 +148,9 @@ public class ReceiptTemplate {
         }
         if (f.tag.equals("TAX_LETTER")){
             return getTaxLetter(item.getTax1());
+        }
+        if (f.tag.equals("MULT_NE_ONE")) {
+            return item.getQuantity() == 1000 ? " " : "*";
         }
         throw new ParsingException("Unknown tag: " + f.tag);
     }

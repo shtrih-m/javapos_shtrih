@@ -6,6 +6,14 @@
 
 ********************************************************************************
 
+  March 15 2017, 15:51
+  deviceServiceVersion = 1013396
+	
+  [+] Added TAX_LETTER tag to ReceiptTemplate
+  [+] Added MULT_NE_ONE tag to ReceiptTemplate
+  
+********************************************************************************
+
   March 15 2017, 13:30
   deviceServiceVersion = 1013394
 	
