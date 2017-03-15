@@ -1,34 +1,13 @@
 package com.shtrih.fiscalprinter;
 
-/*
- * ShtrihFiscalPrinter.java
- *
- * Created on 23 Ноябрь 2009 г., 22:32
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-/**
- * @author V.Kravtsov
- */
-
 import com.shtrih.barcode.PrinterBarcode;
-
-import jpos.BaseControl;
-import jpos.FiscalPrinter;
-import jpos.FiscalPrinterConst;
-import jpos.FiscalPrinterControl113;
-import jpos.JposConst;
-import jpos.JposException;
+import com.shtrih.fiscalprinter.command.*;
+import com.shtrih.jpos.fiscalprinter.SmFptrConst;
+import jpos.*;
 import jpos.events.DirectIOListener;
 import jpos.events.ErrorListener;
 import jpos.events.OutputCompleteListener;
 import jpos.events.StatusUpdateListener;
-
-import com.shtrih.fiscalprinter.command.*;
-import com.shtrih.jpos.fiscalprinter.SmFptrConst;
-
-import static jpos.FiscalPrinterConst.FPTR_PS_FISCAL_RECEIPT;
 
 /**
  * Wrapper class to help using directIO codes *
@@ -1536,7 +1515,18 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         executeCommand(command);
     }
 
-    public void fsFiscalization(FSFiscalization command) throws JposException {
+    public void fsStartFiscalization(int reportType) throws Exception {
+        FSStartFiscalization command = new FSStartFiscalization(getSysPassword(), reportType);
+        executeCommand(command);
+    }
+
+    public void fsFiscalization(String inn, String rnm, int taxSystemCode, int operationMode) throws JposException {
+        FSFiscalization command = new FSFiscalization(getSysPassword(), inn, rnm, taxSystemCode, operationMode);
+        executeCommand(command);
+    }
+
+    public void fsReFiscalization(String inn, String rnm, int taxSystemCode, int operationMode, int reasonCode) throws JposException {
+        FSReFiscalization command = new FSReFiscalization(getSysPassword(), inn, rnm, taxSystemCode, operationMode, reasonCode);
         executeCommand(command);
     }
 
@@ -1560,10 +1550,6 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         executeCommand(command);
     }
 
-    public void fsRegistrationReport(FSRegistrationReport command) throws JposException {
-        executeCommand(command);
-    }
-
     public void fsStartCorrectionReceipt(FSStartCorrectionReceipt command) throws JposException {
         executeCommand(command);
     }
@@ -1575,7 +1561,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws JposException {
         executeCommand(command);
     }
-    
+
     public void fsStartCalcReport(FSStartCalcReport command) throws JposException {
         executeCommand(command);
     }
@@ -1667,7 +1653,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     /**
-     Печать СКЛ за текущую смену
+     * Печать СКЛ за текущую смену
      */
     public void printJournalCurrentDay() throws JposException {
         int[] params = new int[1];
@@ -1676,7 +1662,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     /**
-     Печать СКЛ за указанную смену
+     * Печать СКЛ за указанную смену
      */
     public void printJournalDayNumber(int dayNumber) throws JposException {
         int[] params = new int[2];
@@ -1686,7 +1672,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     /**
-     Печать документа из СКЛ с указанным номером
+     * Печать документа из СКЛ с указанным номером
      */
     public void printJournalDocNumber(int docNumber) throws JposException {
         int[] params = new int[2];
@@ -1696,7 +1682,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     /**
-     Печать документа из СКЛ с указанным номером
+     * Печать документа из СКЛ с указанным номером
      */
     public void printJournalDocRange(int docNumber1, int docNumber2) throws JposException {
         int[] params = new int[3];

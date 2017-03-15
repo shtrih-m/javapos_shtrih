@@ -2756,12 +2756,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command;
     }
 
-    public FSStartFiscalization fsStartFiscalization(int reportType) throws Exception {
-        FSStartFiscalization command = new FSStartFiscalization(sysPassword, reportType);
-        execute(command);
-        return command;
-    }
-
     public FSResetState fsResetState(int code) throws Exception {
         FSResetState command = new FSResetState();
         command.setSysPassword(sysPassword);
