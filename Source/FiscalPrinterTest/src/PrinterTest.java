@@ -694,8 +694,9 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() 
     {
-        printZeroFiscalReceipt();
+        //printZeroFiscalReceipt();
         //printFiscalReceipt666();
+        printFiscalReceipt107();
     }
 
     public void printPaperReport() {
@@ -1113,17 +1114,8 @@ class PrinterTest implements FiscalPrinterConst {
 
             printer.setAdditionalHeader(additionalHeader);
             printer.beginFiscalReceipt(false);
-            printer.printRecItem("9866 NESC.Кофе CLAS.раст.ж/б 100г", 16900, 1000, 1, 16900, "");
-            printer.printRecItem("5051 AHM.Чай EARL GREY 25х2г", 6197, 1000, 1, 9295, "");
-            printer.printRecItemAdjustment(1, "Тест M за N !!NEW!!", 3098, 1);
-            printer.printRecItem("5051 AHM.Чай EARL GREY 25х2г", 6197, 1000, 1, 9295, "");
-            printer.printRecItemAdjustment(1, "Тест M за N !!NEW!!", 3098, 0);
-            printer.printRecItem("5051 AHM.Чай EARL GREY 25х2г", 6196, 1000, 1, 9295, "");
-            printer.printRecItemAdjustment(1, "Тест M за N !!NEW!!", 3099, 1);
-            printer.printRecSubtotal(35490);
-            printer.printRecSubtotalAdjustment(1, "", 90);
-            printer.printRecSubtotal(35400);
-            printer.printRecTotal(35400, 35400, "30");
+            printer.printRecItem("АИ-92           N  2", 50000, 14010, 1, 3570, "");
+            printer.printRecTotal(100000, 100000, "30");
             printer.endFiscalReceipt(false);
 
         } catch (Exception e) {

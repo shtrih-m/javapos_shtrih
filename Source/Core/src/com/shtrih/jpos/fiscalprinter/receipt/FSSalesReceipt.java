@@ -833,6 +833,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setPreLine(getPreLine());
         item.setPostLine(getPostLine());
         item.setPos(recItems.size() + 1);
+        lastItem = item;
 
         items.add(item);
         recItems.add(item);
@@ -842,9 +843,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             if ((price > 0) && (amount - price) > 0) {
                 printDiscount(amount - price, 0, "");
             }
-        }
-        if (quantity >= 0) {
-            lastItem = item;
         }
     }
 

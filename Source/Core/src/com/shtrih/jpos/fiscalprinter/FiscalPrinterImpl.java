@@ -2267,10 +2267,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void beginNonFiscal() throws Exception {
         checkOnLine();
         checkPrinterState(FPTR_PS_MONITOR);
-        setPrinterState(FPTR_PS_NONFISCAL);
         receipt = new NonfiscalReceipt(createReceiptContext());
         printDocStart();
         printHeaderDriver();
+        
+        setPrinterState(FPTR_PS_NONFISCAL);
     }
 
     public void printHeaderDriver() throws Exception {

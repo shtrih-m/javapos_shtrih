@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 
-<log4j:configuration >
+<log4j:configuration>
 
    <appender name="CONSOLE-WARN" class="com.shtrih.util.ConsoleAppender">
      <param name="Encoding" value="UTF-8"/>
@@ -26,11 +26,8 @@
    </appender>
 
    <root>
-	   
      <priority value ="debug" />
-   	   
      <appender-ref ref="A1" />
-	
    </root>
 
 

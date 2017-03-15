@@ -24,7 +24,6 @@ public class SharedSerialPort {
     static CompositeLogger logger = CompositeLogger.getLogger(SharedSerialPort.class);
 
     public SharedSerialPort(SerialPort port, String portName, Object owner) {
-        logger.debug("SharedSerialPort(" + portName + ")");
         this.port = port;
         this.owner = owner;
         this.portName = portName;

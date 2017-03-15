@@ -96,7 +96,6 @@ public class SharedSerialPorts {
 
     public synchronized SerialPort openPort(String portName, int timeout,
             Object owner) throws Exception {
-        logger.debug("openPort(" + portName + ")");
         SharedSerialPort item = null;
         item = findItem(portName, owner);
         if (item == null) {
