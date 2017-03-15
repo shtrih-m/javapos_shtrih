@@ -112,11 +112,13 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         int enqNumber = 0;
         int nakCount = 0;
         for (;;) {
+            Logger2.logTimeout(logger, timeout + byteTimeout);
             port.setTimeout(timeout + byteTimeout);
             // STX
             while (portReadByte() != STX) {
             }
             // set byte timeout
+            Logger2.logTimeout(logger, byteTimeout);
             port.setTimeout(byteTimeout);
             // data length
             int dataLength = portReadByte() + 1;
@@ -180,6 +182,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         int enqNumber = 0;
 
         for (;;) {
+            Logger2.logTimeout(logger, byteTimeout);
             port.setTimeout(byteTimeout);
             portWrite(ENQ);
             enqNumber++;
@@ -214,7 +217,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         }
     }
 
-    public byte[] sendCommand(byte[] data, int timeout)
+    private byte[] sendCommand(byte[] data, int timeout)
             throws Exception {
         txData = frame.encode(data);
         byte[] rx = send(txData, timeout);
@@ -228,6 +231,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
 
         for (;;) {
             try {
+                Logger2.logTimeout(logger, byteTimeout);
                 port.setTimeout(byteTimeout);
                 portWrite(ENQ);
 
@@ -261,7 +265,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         }
     }
 
-    public void sendCommand(PrinterCommand command) throws Exception {
+    private void sendCommand(PrinterCommand command) throws Exception {
         int repeatCount = 0;
         while (true) {
             try {

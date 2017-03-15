@@ -173,5 +173,14 @@
 		<prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- Print TLV tags passed to receipt -->
 		<prop name="FSPrintTags" type="String" value="1"/>
+		
+    <!-- Turn on/off FSSender service -->
+		<prop name="FSServiceEnabled" type="String" value="0"/>
+		<prop name="FSConnectTimeout" type="String" value="30000"/>
+		
+    <!-- Log file enabled  -->
+    <prop name="logEnabled" type="String" value="1"/>
+		<!-- Hide internal exception details  -->
+		<prop name="stripExceptionDetails" type="String" value="0"/>
 	</JposEntry>
 </JposEntries>

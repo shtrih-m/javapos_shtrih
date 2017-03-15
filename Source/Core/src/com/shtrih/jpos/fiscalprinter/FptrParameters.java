@@ -107,6 +107,7 @@ public class FptrParameters {
     public boolean centerHeader = false;
     public boolean cancelIO = false;
     public boolean logEnabled = false;
+    public boolean stripExceptionDetails = true;
     public boolean sendENQ = true;
     private boolean taxLettersEnabled = true;
     public boolean zeroReceiptEnabled = true;
@@ -117,6 +118,7 @@ public class FptrParameters {
     public int barcodeTextPosition = SmFptrConst.SMFPTR_TEXTPOS_BELOW;
     public int barcodeTextFont = 1;
     public int barcodeAspectRatio = 3;
+    public boolean FSServiceEnabled = false;
     public String FSHost = "k-server.test-naofd.ru";
     public int FSPort = 7779;
     public int FSConnectTimeout = 3000; // 3000 ms
@@ -286,6 +288,7 @@ public class FptrParameters {
                 SmFptrConst.SMFPTR_LOGO_AFTER_TRAILER);
         centerHeader = reader.readBoolean("centerHeader", false);
         logEnabled = reader.readBoolean("logEnabled", false);
+        stripExceptionDetails = reader.readBoolean("stripExceptionDetails", true);
         sendENQ = reader.readBoolean("sendENQ", true);
         taxLettersEnabled = reader.readBoolean("taxLettersEnabled", true);
         zeroReceiptEnabled = reader.readBoolean("zeroReceiptEnabled", true);
@@ -296,6 +299,7 @@ public class FptrParameters {
         barcodeTextPosition = reader.readInteger("barcodeTextPosition", SmFptrConst.SMFPTR_TEXTPOS_BELOW);
         barcodeTextFont = reader.readInteger("barcodeTextFont", 1);
         barcodeAspectRatio = reader.readInteger("barcodeAspectRatio", 3);
+        FSServiceEnabled = reader.readBoolean("FSServiceEnabled", false);
         FSHost = reader.readString("FSHost", "k-server.test-naofd.ru");
         FSPort = reader.readInteger("FSPort", 7779);
         FSConnectTimeout = reader.readInteger("FSConnectTimeout", 3000);

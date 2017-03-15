@@ -8,10 +8,6 @@
  */
 package com.shtrih.jpos.fiscalprinter;
 
-/**
- *
- * @author V.Kravtsov
- */
 import java.io.IOException;
 
 import jpos.FiscalPrinterConst;
@@ -23,19 +19,25 @@ import com.shtrih.util.CompositeLogger;
 import com.shtrih.fiscalprinter.SmFiscalPrinterException;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 
+/**
+ * @author V.Kravtsov
+ */
 public class JposExceptionHandler implements JposConst, FiscalPrinterConst,
         PrinterConst {
 
     static CompositeLogger logger = CompositeLogger.getLogger(JposExceptionHandler.class);
 
-    /**
-     * Creates a new instance of JposExceptionHandler
-     */
+    private static boolean stripExceptionDetails;
+
+    public static void setStripExceptionDetails(boolean value) {
+        stripExceptionDetails = value;
+    }
+
     public JposExceptionHandler() {
     }
 
-    public static void handleException(Throwable e) throws JposException 
-    {
+    public static void handleException(Throwable e) throws JposException {
+
         JposException jposException = getJposException(e);
         logger.error("JposException. " + "ErrorCode: "
                 + String.valueOf(jposException.getErrorCode()) + ", "
@@ -47,6 +49,16 @@ public class JposExceptionHandler implements JposConst, FiscalPrinterConst,
     }
 
     public static JposException getJposException(Throwable e) {
+        JposException jposException = getJposExceptionWithoutDetails(e);
+        if(!stripExceptionDetails)
+        {
+            jposException.initCause(e);
+        }
+
+        return jposException;
+    }
+
+    private static JposException getJposExceptionWithoutDetails(Throwable e) {
         if (e instanceof JposException) {
             return (JposException) e;
         }
@@ -73,11 +85,9 @@ public class JposExceptionHandler implements JposConst, FiscalPrinterConst,
                             text);
             }
         }
-        if (e instanceof IOException) 
-        {
+        if (e instanceof IOException) {
             return new JposException(JPOS_E_TIMEOUT, e.getMessage());
         }
         return new JposException(JPOS_E_FAILURE, e.getMessage());
     }
-
 }

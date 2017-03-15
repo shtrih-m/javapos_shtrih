@@ -55,4 +55,7 @@ public class Logger2 {
         }
     }
 
+    public static void logTimeout(CompositeLogger logger, int timeout) {
+        logger.debug("setTimeout: " + timeout);
+    }
 }

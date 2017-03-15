@@ -237,6 +237,8 @@
         <prop name="centerHeader" type="String" value="1"/>
         <!-- Log file enabled  -->
         <prop name="logEnabled" type="String" value="1"/>
+        <!-- Hide internal exception details  -->
+        <prop name="stripExceptionDetails" type="String" value="1"/>
         <!-- Send ENQ before every command or not  -->
         <prop name="sendENQ" type="String" value="0"/>
         <!-- Enable tax letters for GLOBUS Receipt  -->
