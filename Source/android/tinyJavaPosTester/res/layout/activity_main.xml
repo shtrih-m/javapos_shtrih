@@ -61,5 +61,12 @@
             android:layout_height="wrap_content"
             android:onClick="printDuplicateReceipt"
             android:text="@string/action_print_duplicate_receipt" />
+
+        <Button
+            android:id="@+id/btnConnectToDeviceDirect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="connectToDeviceDirect"
+            android:text="@string/action_connect_to_device_direct" />
     </LinearLayout>
 </ScrollView>

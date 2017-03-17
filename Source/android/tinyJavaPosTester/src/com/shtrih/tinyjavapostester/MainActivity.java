@@ -8,12 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.pdf417.encoder.Compaction;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
+import com.shtrih.util.SysUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -21,6 +23,7 @@ import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ThreadFactory;
 
 import jpos.FiscalPrinter;
 import jpos.JposConst;
@@ -176,12 +179,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void printReceipt(View v) {
-        try {
-            printSalesReceipt();
-            printRefundReceipt();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    printSalesReceipt();
+                    printRefundReceipt();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        t.start();
     }
 
     private void printSalesReceipt() throws JposException, InterruptedException {
@@ -255,11 +265,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void printZReport(View v) {
-        try {
-            printer.printZReport();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    printer.printZReport();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        t.start();
     }
 
     public void openFiscalDay(View v) {
@@ -284,5 +300,45 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void connectToDeviceDirect(View view) {
+        try {
+            SysUtils.setFilesPath(this.getFilesDir().getAbsolutePath());
+            JposConfig.configure("ShtrihFptr", "192.168.42.150:7778", getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        Thread thrd = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    if (printer.getState() != JposConst.JPOS_S_CLOSED) {
+                        printer.close();
+                    }
+                    printer.open("ShtrihFptr");
+                    printer.claim(3000);
+                    printer.setDeviceEnabled(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+//
+//        try {
+        thrd.start();
+        try {
+            thrd.join();
+            Toast.makeText(this, "Успех", Toast.LENGTH_LONG).show();
+        }
+        catch (InterruptedException e)
+        {
+        }
+//            Thread.sleep(100);
+//        } catch (InterruptedException e) {
+//
+//        }
     }
 }

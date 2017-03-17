@@ -1035,6 +1035,14 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         return object[0];
     }
 
+    public int getParameterInt(int paramType) throws JposException {
+        int data[] = new int[1];
+        int object[] = new int[1];
+        data[0] = paramType;
+        directIO(SmFptrConst.SMFPTR_DIO_GET_DRIVER_PARAMETER, data, object);
+        return object[0];
+    }
+
     /**
      * Set number of header lines *
      */
@@ -1485,18 +1493,15 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public int getSysPassword() throws JposException {
-        String s = getParameter(SmFptrConst.SMFPTR_DIO_PARAM_SYS_PASSWORD);
-        return Integer.decode(s).intValue();
+        return getParameterInt(SmFptrConst.SMFPTR_DIO_PARAM_SYS_PASSWORD);
     }
 
     public int getUsrPassword() throws JposException {
-        String s = getParameter(SmFptrConst.SMFPTR_DIO_PARAM_USR_PASSWORD);
-        return Integer.decode(s).intValue();
+        return getParameterInt(SmFptrConst.SMFPTR_DIO_PARAM_USR_PASSWORD);
     }
 
     public int getTaxPassword() throws JposException {
-        String s = getParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_PASSWORD);
-        return Integer.decode(s).intValue();
+        return getParameterInt(SmFptrConst.SMFPTR_DIO_PARAM_TAX_PASSWORD);
     }
 
     public void fsReadStatus(FSReadStatus command) throws JposException {
