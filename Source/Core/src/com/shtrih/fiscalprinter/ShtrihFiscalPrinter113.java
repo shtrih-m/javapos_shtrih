@@ -1141,12 +1141,14 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
      */
     public void writeTable(int tableNumber, int rowNumber, int fieldNumber,
                            String fieldValue) throws JposException {
-        String[] params = new String[4];
-        params[0] = String.valueOf(tableNumber);
-        params[1] = String.valueOf(rowNumber);
-        params[2] = String.valueOf(fieldNumber);
-        params[3] = fieldValue;
-        directIO(SmFptrConst.SMFPTR_DIO_WRITETABLE, null, params);
+        String[] params = new String[1];
+        params[0] = fieldValue;
+        int[] data = new int[3];
+        data[0] = tableNumber;
+        data[1] = rowNumber;
+        data[2] = fieldNumber;
+
+        directIO(SmFptrConst.SMFPTR_DIO_WRITETABLE, data, params);
     }
 
     /**
