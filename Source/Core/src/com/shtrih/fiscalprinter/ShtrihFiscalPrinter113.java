@@ -1035,14 +1035,6 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         return object[0];
     }
 
-    public int getParameterInt(int paramType) throws JposException {
-        int data[] = new int[1];
-        int object[] = new int[1];
-        data[0] = paramType;
-        directIO(SmFptrConst.SMFPTR_DIO_GET_DRIVER_PARAMETER, data, object);
-        return object[0];
-    }
-
     /**
      * Set number of header lines *
      */
@@ -1141,14 +1133,12 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
      */
     public void writeTable(int tableNumber, int rowNumber, int fieldNumber,
                            String fieldValue) throws JposException {
-        String[] params = new String[1];
-        params[0] = fieldValue;
-        int[] data = new int[3];
-        data[0] = tableNumber;
-        data[1] = rowNumber;
-        data[2] = fieldNumber;
-
-        directIO(SmFptrConst.SMFPTR_DIO_WRITETABLE, data, params);
+        String[] params = new String[4];
+        params[0] = String.valueOf(tableNumber);
+        params[1] = String.valueOf(rowNumber);
+        params[2] = String.valueOf(fieldNumber);
+        params[3] = fieldValue;
+        directIO(SmFptrConst.SMFPTR_DIO_WRITETABLE, null, params);
     }
 
     /**
@@ -1495,15 +1485,18 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public int getSysPassword() throws JposException {
-        return getParameterInt(SmFptrConst.SMFPTR_DIO_PARAM_SYS_PASSWORD);
+        String s = getParameter(SmFptrConst.SMFPTR_DIO_PARAM_SYS_PASSWORD);
+        return Integer.decode(s).intValue();
     }
 
     public int getUsrPassword() throws JposException {
-        return getParameterInt(SmFptrConst.SMFPTR_DIO_PARAM_USR_PASSWORD);
+        String s = getParameter(SmFptrConst.SMFPTR_DIO_PARAM_USR_PASSWORD);
+        return Integer.decode(s).intValue();
     }
 
     public int getTaxPassword() throws JposException {
-        return getParameterInt(SmFptrConst.SMFPTR_DIO_PARAM_TAX_PASSWORD);
+        String s = getParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_PASSWORD);
+        return Integer.decode(s).intValue();
     }
 
     public void fsReadStatus(FSReadStatus command) throws JposException {

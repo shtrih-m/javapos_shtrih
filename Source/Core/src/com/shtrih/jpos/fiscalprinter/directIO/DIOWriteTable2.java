@@ -33,7 +33,7 @@ public class DIOWriteTable2 {
         int tableNumber = Integer.valueOf(params[0]).intValue();
         int rowNumber = Integer.valueOf(params[1]).intValue();
         int fieldNumber = Integer.valueOf(params[2]).intValue();
-        String fieldValue = params[2];
+        String fieldValue = params[3];
         fieldValue = service.decodeText(fieldValue);
         service.printer.check(service.printer.writeTable(tableNumber,
                 rowNumber, fieldNumber, fieldValue));
