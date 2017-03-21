@@ -153,7 +153,7 @@ public class FptrParameters {
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
         subtotalFont = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
-        discountFont =new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
+        discountFont = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
     }
 
     public void setDefaults() throws Exception {
@@ -330,10 +330,10 @@ public class FptrParameters {
         ItemRowFormat = reader.readString("ItemRowFormat", "%TITLE% %QUAN% X %PRICE%");
         ItemRowFormat = StringUtils.rtrim(ItemRowFormat);
                 
-        discountFormat = reader.readString("DiscountFormat", "    СКИДКА %20lTITLE%%=$10TOTAL%");
+        discountFormat = reader.readString("DiscountFormat", "");
         discountFormat = StringUtils.rtrim(discountFormat);
         
-        chargeFormat = reader.readString("ChargeFormat", "    НАДБАВКА %20lTITLE%%=$10TOTAL%");
+        chargeFormat = reader.readString("ChargeFormat", "");
         chargeFormat = StringUtils.rtrim(chargeFormat);
         
         capJrnPresent = reader.readBoolean("capJrnPresent", true);

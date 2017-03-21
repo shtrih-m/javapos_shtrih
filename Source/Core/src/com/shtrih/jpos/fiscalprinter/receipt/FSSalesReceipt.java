@@ -263,7 +263,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     }
                 }
                 printReceiptItems();
-                
+
                 if (isDiscountAffectTotal() && (getParams().subAdjustmentOrder == PrinterConst.ADJUSTMENT_ORDER_RECEND)) {
                     for (int i = 0; i < discounts.size(); i++) {
                         printTotalDiscount(discounts.get(i));
@@ -276,10 +276,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
                 FSCloseReceipt closeReceipt = new FSCloseReceipt();
                 closeReceipt.setSysPassword(getPrinter().getPrinter().getUsrPassword());
-                for (int i=0;i<16;i++){
+                for (int i = 0; i < 16; i++) {
                     closeReceipt.setPayment(i, 0);
                 }
-                for (int i=0;i<4;i++){
+                for (int i = 0; i < 4; i++) {
                     closeReceipt.setPayment(i, payments[i]);
                 }
                 closeReceipt.setTax1(0);
@@ -345,12 +345,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             getDevice().printCharge(item);
         }
 
-        if ((!getParams().FSCombineItemAdjustments)) 
-        {
+        if ((!getParams().FSCombineItemAdjustments)) {
             String[] lines = receiptTemplate.getDiscountLines(discount);
-            for (int i = 0; i < lines.length; i++) {
-                getDevice().printLine(PrinterConst.SMFP_STATION_REC,
-                        lines[i], getParams().discountFont);
+            if ((lines.length > 1) || (lines[0].length() > 0)) {
+                for (int i = 0; i < lines.length; i++) {
+                    getDevice().printLine(PrinterConst.SMFP_STATION_REC,
+                            lines[i], getParams().discountFont);
+                }
             }
         }
     }
@@ -485,8 +486,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecSubtotal(long amount) throws Exception {
         checkTotal(getSubtotal(), amount);
-        addTextItem(formatStrings(getParams().subtotalText,
-                "=" + StringUtils.amountToString(getSubtotal())));
+        //addTextItem(formatStrings(getParams().subtotalText,
+        //        "=" + StringUtils.amountToString(getSubtotal())));
     }
 
     public long getItemPercentAdjustmentAmount(long amount) throws Exception {
@@ -1044,8 +1045,3 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         recItems.add(barcode);
     }
 }
-
-
-// <prop name="DiscountFormat" type="String" value="    СКИДКА %20lTITLE%=$10TOTAL%"/>
-// <prop name="ChargeFormat" type="String"   value="    НАДБАВКА %20lTITLE%=$10TOTAL%"/>
-

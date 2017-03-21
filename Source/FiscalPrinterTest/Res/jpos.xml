@@ -37,15 +37,15 @@
         <!--Default department-->
         <prop name="department" type="String" value="1"/>
         <!-- Default font number -->
-        <prop name="fontNumber" type="String" value="1"/>
+        <prop name="fontNumber" type="String" value="5"/>
+		<!-- discountFont -->
+        <prop name="discountFont" type="String" value="5"/>
         <!-- Close Receipt text -->
         <prop name="closeReceiptText" type="String" value=""/>
         <!-- Subtotal text -->
         <prop name="subtotalText" type="String" value="ПОДЫТОГ:"/>
 		<!-- Subtotal font -->
         <prop name="subtotalFont" type="String" value="1"/>
-		<!-- TotalDiscount font -->
-        <prop name="totalDiscountFont" type="String" value="5"/>
         <!-- Driver byte receive timeout -->
         <prop name="byteTimeout" type="String" value="10000"/>
         <!-- Device byte receive timeout -->
@@ -79,9 +79,9 @@
         <!-- fieldsFilesPath to initialize printer tables -->
         <prop name="fieldsFilesPath" type="String" value="I:\Projects\JavaPOS\Bin\tables\"/>
         <!-- Number of header lines -->
-        <prop name="numHeaderLines" type="String" value="4"/>
+        <prop name="numHeaderLines" type="String" value="1"/>
         <!-- Number of trailer lines -->
-        <prop name="numTrailerLines" type="String" value="3"/>
+        <prop name="numTrailerLines" type="String" value="1"/>
         <!-- Device to print report, 0 - fiscal memory (FM), 1 - electronic journal (EJ)  -->
         <prop name="reportDevice" type="String" value="0"/>
         <!-- Report type, 0 - short, 1 - full -->
@@ -225,7 +225,7 @@
         <!-- SMFPTR_LOGO_AFTER_TRAILER    = 2  -->
         <!-- SMFPTR_LOGO_AFTER_ADDTRAILER = 3  -->
         <!-- SMFPTR_LOGO_BEFORE_HEADER    = 4  -->
-        <prop name="headerImagePosition" type="String" value="0"/>
+        <prop name="headerImagePosition" type="String" value="4"/>
         <!-- trailerImagePosition,  -->
         <!-- SMFPTR_LOGO_AFTER_HEADER     = 0  -->
         <!-- SMFPTR_LOGO_BEFORE_TRAILER   = 1  -->
@@ -281,12 +281,14 @@
         <!-- Text report empty lines enabled -->
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- Receipt template -->
-		<prop name="ReceiptTemplateEnabled" type="String" value="0"/>
+		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
 		<prop name="FieldSeparator" type="String" value=";"/>
-		<prop name="ItemTableHeader" type="String" value=" №                  Цена со  Кол-;пп  Цена     Скидка скидкой  во    ИТОГО; ;"/>
-		<prop name="ItemRowFormat" type="String" value="%3cPOS% %38lTITLE%;    %8lPRICE% %6lDISCOUNT% %8lSUM%*%3QUAN%%=$10TOTAL_TAX%"/>
-		<prop name="DiscountFormat" type="String" value="    СКИДКА  %20lTITLE%%=$10TOTAL%"/>
-		<prop name="ChargeFormat" type="String"   value="    НАДБАВКА  %20lTITLE%%=$10TOTAL%"/>
+		<prop name="ItemTableHeader" type="String" value="---------------------------------------------------; №                  Цена со  Кол-;пп  Цена     Скидка скидкой  во             ИТОГО;---------------------------------------------------;"/>
+		<prop name="ItemRowFormat" type="String" value="%3cPOS% %47lTITLE%;    %8lPRICE% %6lDISCOUNT% %8lSUM%*%3QUAN%%=$19TOTAL_TAX%"/>
+		<!-- <prop name="DiscountFormat" type="String" value="    СКИДКА  %29lTITLE%%=$10TOTAL%"/> -->
+		<prop name="DiscountFormat" type="String" value=""/>
+		<!-- <prop name="ChargeFormat" type="String"   value="    НАДБАВКА  %29lTITLE%%=$10TOTAL%"/> -->
+		<prop name="ChargeFormat" type="String" value=""/>
 		
 		<prop name="nonFiscalHeaderEnabled" type="String" value="1"/>
 		<!-- Subtotal adjustment order, 0 - correct, 1 - at receipt end -->

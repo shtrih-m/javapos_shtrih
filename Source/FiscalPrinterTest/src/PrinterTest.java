@@ -77,10 +77,7 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void setHeaderLines() {
         try {
-            printer.setHeaderLine(1, getLoadImageCommand("Logo.bmp") + "ООО \"ГИПЕРГЛОБУС\"", false);
-            printer.setHeaderLine(2, "                       г.Влaдимир Суздaльский проспект 28", false);
-            printer.setHeaderLine(3, "                           т(4922)37-68-66", false);
-            printer.setHeaderLine(4, "               www.globus.ru", false);
+            printer.setHeaderLine(1, getLoadImageCommand("Logo.bmp") + "КАССОВЫЙ ЧЕК", false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,10 +85,7 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void setTrailerLines() {
         try {
-            printer.setTrailerLine(1, getLoadImageCommand("qrcode_110.bmp") + "Trailer line 1", false);
-            printer.setTrailerLine(2, "Trailer line 2", false);
-            printer.setTrailerLine(3, "Trailer line 3", false);
-
+            printer.setTrailerLine(1, " ", false);
         } catch (Exception e) {
             e.printStackTrace();
         }
