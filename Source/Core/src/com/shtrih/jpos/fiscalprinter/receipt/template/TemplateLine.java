@@ -69,7 +69,7 @@ public class TemplateLine {
             }
         }
         if (state == CharState.IN_FIELD) {
-            throw new ParsingException("Field opened and not closed");
+            throw new ParsingException("Field opened and not closed, '" + m_source_contents + "'");
         } else if (state == CharState.ESCAPED) {
             throw new ParsingException("Character escaped and no next char");
         }

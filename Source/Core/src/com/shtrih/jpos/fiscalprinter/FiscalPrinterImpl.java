@@ -2123,7 +2123,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             port = PrinterPortFactory.createInstance(params);
             device = ProtocolFactory.getProtocol(params, port);
             printer = new SMFiscalPrinterImpl(port, device, params, this);
-            
+
             printer.setEscPrinter(new NCR7167Printer(this));
 
             getPrinter().addEvents(this);
@@ -2283,7 +2283,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         receipt = new NonfiscalReceipt(createReceiptContext());
         printDocStart();
         printHeaderDriver();
-        
+
         setPrinterState(FPTR_PS_NONFISCAL);
     }
 
@@ -2688,19 +2688,17 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
             // Get the Fiscal Printer’s fiscal ID.
             case FPTR_GD_PRINTER_ID:
-                
+
                 if (params.printerIDMode == PrinterConst.PRINTER_ID_FS_SERIAL) {
                     if (printer.getCapFiscalStorage()) {
                         result = printer.fsReadSerial().getSerial();
                     } else {
                         result = readLongStatus().getSerial();
                     }
+                } else if (printer.getCapFiscalStorage()) {
+                    result = printer.readFullSerial();
                 } else {
-                    if (printer.getCapFiscalStorage()) {
-                        result = printer.readFullSerial();
-                    } else {
-                        result = readLongStatus().getSerial();
-                    }
+                    result = readLongStatus().getSerial();
                 }
                 break;
 
@@ -4622,5 +4620,18 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public String getReceiptName(int receiptType) {
         return "";
+    }
+
+    public Vector<FSTicket> fsReadTickets(int[] numbers) throws Exception {
+        Vector<FSTicket> tickets = new Vector<FSTicket>();
+        for (int i = 0; i < numbers.length; i++) {
+            FSReadDocTicket command = new FSReadDocTicket();
+            command.setSysPassword(printer.getSysPassword());
+            command.setDocNumber(numbers[i]);
+            int rc = printer.executeCommand(command);
+            byte[] ticket = command.getTicket();
+            tickets.add(new FSTicket(rc, ticket));
+        }
+        return tickets;
     }
 }

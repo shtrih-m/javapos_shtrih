@@ -138,6 +138,8 @@ public class FptrParameters {
     public boolean ReceiptTemplateEnabled = false;
     public String ItemTableHeader = null;
     public String ItemRowFormat=null;
+    public String discountFormat = null;
+    public String chargeFormat = null;
     public boolean capJrnPresent = true;
     public boolean nonFiscalHeaderEnabled = false;
     public boolean fsHeaderEnabled = false;
@@ -324,9 +326,16 @@ public class FptrParameters {
         subtotalFont = new FontNumber(reader.readInteger("subtotalFont", PrinterConst.FONT_NUMBER_NORMAL));
         discountFont = new FontNumber(reader.readInteger("discountFont", PrinterConst.FONT_NUMBER_NORMAL));
         ItemTableHeader = reader.readString("ItemTableHeader", "");
+        
         ItemRowFormat = reader.readString("ItemRowFormat", "%TITLE% %QUAN% X %PRICE%");
         ItemRowFormat = StringUtils.rtrim(ItemRowFormat);
                 
+        discountFormat = reader.readString("DiscountFormat", "    СКИДКА %20lTITLE%%=$10TOTAL%");
+        discountFormat = StringUtils.rtrim(discountFormat);
+        
+        chargeFormat = reader.readString("ChargeFormat", "    НАДБАВКА %20lTITLE%%=$10TOTAL%");
+        chargeFormat = StringUtils.rtrim(chargeFormat);
+        
         capJrnPresent = reader.readBoolean("capJrnPresent", true);
         nonFiscalHeaderEnabled = reader.readBoolean("nonFiscalHeaderEnabled", false);
         fsHeaderEnabled = reader.readBoolean("fsHeaderEnabled", false);

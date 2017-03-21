@@ -27,7 +27,7 @@ public class FSReadDocTicket extends PrinterCommand {
     private int sysPassword; // System sdministrator password (4 bytes)
     private int docNumber;
     // out
-    private byte[] ticket;
+    private byte[] ticket = null;
 
 
     public FSReadDocTicket() {

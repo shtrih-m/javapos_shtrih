@@ -24,6 +24,7 @@ import com.shtrih.fiscalprinter.TLVInfo;
 import com.shtrih.fiscalprinter.TLVReader;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
+import com.shtrih.fiscalprinter.command.FSCloseReceipt;
 import com.shtrih.fiscalprinter.command.AmountItem;
 import com.shtrih.fiscalprinter.command.CloseRecParams;
 import com.shtrih.fiscalprinter.command.PriceItem;
@@ -262,7 +263,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     }
                 }
                 printReceiptItems();
-                if (getParams().subAdjustmentOrder == PrinterConst.ADJUSTMENT_ORDER_RECEND) {
+                
+                if (isDiscountAffectTotal() && (getParams().subAdjustmentOrder == PrinterConst.ADJUSTMENT_ORDER_RECEND)) {
                     for (int i = 0; i < discounts.size(); i++) {
                         printTotalDiscount(discounts.get(i));
                     }
@@ -272,18 +274,21 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     getDevice().disablePrint();
                 }
 
-                CloseRecParams closeParams = new CloseRecParams();
-                closeParams.setSum1(payments[0]);
-                closeParams.setSum2(payments[1]);
-                closeParams.setSum3(payments[2]);
-                closeParams.setSum4(payments[3]);
-                closeParams.setTax1(0);
-                closeParams.setTax2(0);
-                closeParams.setTax3(0);
-                closeParams.setTax4(0);
-                closeParams.setDiscount(discountAmount);
-                closeParams.setText(getParams().closeReceiptText);
-                getPrinter().getPrinter().closeReceipt(closeParams);
+                FSCloseReceipt closeReceipt = new FSCloseReceipt();
+                closeReceipt.setSysPassword(getPrinter().getPrinter().getUsrPassword());
+                for (int i=0;i<16;i++){
+                    closeReceipt.setPayment(i, 0);
+                }
+                for (int i=0;i<4;i++){
+                    closeReceipt.setPayment(i, payments[i]);
+                }
+                closeReceipt.setTax1(0);
+                closeReceipt.setTax2(0);
+                closeReceipt.setTax3(0);
+                closeReceipt.setTax4(0);
+                closeReceipt.setDiscount(discountAmount);
+                closeReceipt.setText(getParams().closeReceiptText);
+                getPrinter().getPrinter().execute(closeReceipt);
                 getFiscalDay().closeFiscalRec();
 
                 if (!disablePrint) {
@@ -340,15 +345,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             getDevice().printCharge(item);
         }
 
-        if ((!getParams().FSCombineItemAdjustments)) {
-            if (discount.getAmount() > 0) {
-                String line = formatStrings("СКИДКА " + item.getText(),
-                        "=" + StringUtils.amountToString(item.getAmount()));
-                getDevice().printText(line);
-            } else {
-                String line = formatStrings("НАДБАВКА " + item.getText(),
-                        "=" + StringUtils.amountToString(item.getAmount()));
-                getDevice().printText(line);
+        if ((!getParams().FSCombineItemAdjustments)) 
+        {
+            String[] lines = receiptTemplate.getDiscountLines(discount);
+            for (int i = 0; i < lines.length; i++) {
+                getDevice().printLine(PrinterConst.SMFP_STATION_REC,
+                        lines[i], getParams().discountFont);
             }
         }
     }
@@ -1041,5 +1043,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printBarcode(PrinterBarcode barcode) throws Exception {
         recItems.add(barcode);
     }
-
 }
+
+
+// <prop name="DiscountFormat" type="String" value="    СКИДКА %20lTITLE%=$10TOTAL%"/>
+// <prop name="ChargeFormat" type="String"   value="    НАДБАВКА %20lTITLE%=$10TOTAL%"/>
+

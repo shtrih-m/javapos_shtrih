@@ -74,7 +74,7 @@ public class FSCloseReceipt extends PrinterCommand {
     public void encode(CommandOutputStream out) throws Exception {
         out.writeInt(sysPassword);
         for (int i=0;i<payments.length;i++){
-            out.writeLong(payments[i], i);
+            out.writeLong(payments[i], 5);
         }
         out.writeShort(discount);
         out.writeByte(tax1);
@@ -117,6 +117,10 @@ public class FSCloseReceipt extends PrinterCommand {
         this.payments = payments;
     }
 
+    public void setPayment(int index, long payment) {
+        this.payments[index] = payment;
+    }
+    
     /**
      * @return the discount
      */

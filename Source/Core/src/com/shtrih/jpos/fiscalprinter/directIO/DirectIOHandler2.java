@@ -349,6 +349,14 @@ public class DirectIOHandler2 {
                 new DIOReadFSParams(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS:
+                new DIOReadFSTickets(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS2:
+                new DIOReadFSTickets2(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
