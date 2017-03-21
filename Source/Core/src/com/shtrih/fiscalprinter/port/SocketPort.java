@@ -58,7 +58,8 @@ public class SocketPort implements PrinterPort {
         connected = true;
     }
 
-    public void close() throws Exception {
+    public void close() throws Exception 
+    {
         if (!connected) {
             return;
         }
@@ -101,7 +102,6 @@ public class SocketPort implements PrinterPort {
     }
 
     private void noConnectionError() throws Exception {
-        connected = false;
         throw new IOException(Localizer.getString(Localizer.NoConnection));
     }
 

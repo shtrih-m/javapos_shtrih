@@ -131,12 +131,16 @@ public class StringUtils {
         return formatter.format(amount / 100.0);
     }
 
-    public static String quantityToStr(long value) throws Exception {
+    public static String quantityToStr2(long value) throws Exception {
         if ((value % 1000) == 0) {
             return String.valueOf(value / 1000);
         } else {
             return StringUtils.quantityToString(value / 1000.0);
         }
+    }
+
+    public static String quantityToStr(long value) throws Exception {
+        return StringUtils.quantityToString(value / 1000.0);
     }
 
     public static String quantityToString(double value) {

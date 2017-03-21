@@ -18,7 +18,7 @@
         <jpos category="FiscalPrinter" version="1.9"/>
         <product description="Fiscal printer service" name="ShtrihFptr" url="http://www.javapos.com"/>
         <!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass -->
-        <prop name="portType" type="String" value="0"/>
+        <prop name="portType" type="String" value="2"/>
         <!-- portClass  -->
         <prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.SerialPrinterPort"/>
         <!--<prop name="portClass" type="String" value="com.shtrih.bluetooth.BTPrinterPort"/>-->
@@ -31,7 +31,7 @@
         <!--<prop name="portName" type="String" value="COM2"/> -->
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
-        <prop name="portName" type="String" value="COM4"/>
+        <prop name="portName" type="String" value="192.168.137.111:7778"/>
 		
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
@@ -47,9 +47,9 @@
 		<!-- TotalDiscount font -->
         <prop name="totalDiscountFont" type="String" value="5"/>
         <!-- Driver byte receive timeout -->
-        <prop name="byteTimeout" type="String" value="1000"/>
+        <prop name="byteTimeout" type="String" value="10000"/>
         <!-- Device byte receive timeout -->
-        <prop name="deviceByteTimeout" type="String" value="3000"/>
+        <prop name="deviceByteTimeout" type="String" value="10000"/>
         <!-- Device search enabled for all serial ports -->
         <prop name="searchByPortEnabled" type="String" value="0"/>
         <!-- Device search enabled for all baud rates -->
@@ -61,7 +61,7 @@
         <!-- System administrator password -->
         <prop name="sysAdminPassword" type="String" value="30"/>
         <!-- device state polling enabled -->
-        <prop name="pollEnabled" type="String" value="0"/>
+        <prop name="pollEnabled" type="String" value="1"/>
         <!-- device state polling interval in milliseconds -->
         <prop name="pollInterval" type="String" value="1000"/>
         <!-- Amount coefficient -->
@@ -112,7 +112,7 @@
         <!-- maxAckNumber -->
         <prop name="maxAckNumber" type="String" value="3"/>
         <!-- maxRepeatCount -->
-        <prop name="maxRepeatCount" type="String" value="30"/>
+        <prop name="maxRepeatCount" type="String" value="1"/>
         <!-- Payment types -->
         <!-- Payment types -->
         <prop name="payType0" type="String" value="0"/>
@@ -281,7 +281,7 @@
         <!-- Text report empty lines enabled -->
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- Receipt template -->
-		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
+		<prop name="ReceiptTemplateEnabled" type="String" value="0"/>
 		<prop name="FieldSeparator" type="String" value=";"/>
 		<prop name="ItemTableHeader" type="String" value=" №                  Цена со  Кол-;пп  Цена     Скидка скидкой  во    ИТОГО; ;"/>
 		<prop name="ItemRowFormat" type="String" value="%3cPOS% %38lTITLE%;    %8lPRICE% %6lDISCOUNT% %8lSUM%*%3QUAN%%=$10TOTAL_TAX%"/>

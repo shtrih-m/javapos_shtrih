@@ -640,7 +640,7 @@ class PrinterTest implements FiscalPrinterConst {
             System.out.println("FPTR_GD_PRINTER_ID: " + lines[0]);
 
             printer.setPOSID("1", "Кравцов В.В.");
-            readFSTickets();
+            //readFSTickets();
         } catch (Exception e) {
             e.printStackTrace();
         }
