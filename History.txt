@@ -7,11 +7,19 @@
 ********************************************************************************
 
   March 21 2017, 23:30
-  deviceServiceVersion = 1013395
+  deviceServiceVersion = 1013397
 	
   [-] Fix error with receipt format
   [+] Add directIO command SMFPTR_DIO_READ_FS_TICKETS
   [+] Add directIO command SMFPTR_DIO_READ_FS_TICKETS2
+  
+********************************************************************************
+
+  March 15 2017, 15:51
+  deviceServiceVersion = 1013396
+	
+  [+] Added TAX_LETTER tag to ReceiptTemplate
+  [+] Added MULT_NE_ONE tag to ReceiptTemplate
   
 ********************************************************************************
 

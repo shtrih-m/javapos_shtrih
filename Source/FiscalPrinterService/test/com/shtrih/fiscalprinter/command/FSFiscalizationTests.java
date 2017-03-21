@@ -26,4 +26,22 @@ public class FSFiscalizationTests {
 
         assertArrayEquals(expectedData, data);
     }
+
+    @Test
+    public void should_serialize_not_full_numbers() throws Exception {
+        FSFiscalization cmd = new FSFiscalization(
+                30, "7701234567", "0000000221017090", 17, 24);
+
+        byte[] data = cmd.encodeData();
+
+        byte[] expectedData = byteArray(
+                0xFF, 0x06,
+                0x1E, 0x00, 0x00, 0x00,
+                0x37, 0x37, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x00, 0x00,
+                0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x32, 0x32, 0x31, 0x30, 0x31, 0x37, 0x30, 0x39, 0x30, 0x00, 0x00, 0x00, 0x00,
+                0x11,
+                0x18);
+
+        assertArrayEquals(expectedData, data);
+    }
 }

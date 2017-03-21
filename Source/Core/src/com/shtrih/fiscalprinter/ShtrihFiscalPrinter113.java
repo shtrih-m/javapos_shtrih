@@ -12,22 +12,16 @@ package com.shtrih.fiscalprinter;
  * @author V.Kravtsov
  */
 import com.shtrih.barcode.PrinterBarcode;
-
-import jpos.BaseControl;
-import jpos.FiscalPrinter;
-import jpos.FiscalPrinterConst;
-import jpos.FiscalPrinterControl113;
-import jpos.JposConst;
-import jpos.JposException;
+import com.shtrih.fiscalprinter.command.*;
+import com.shtrih.jpos.fiscalprinter.SmFptrConst;
+import jpos.*;
 import jpos.events.DirectIOListener;
 import jpos.events.ErrorListener;
 import jpos.events.OutputCompleteListener;
 import jpos.events.StatusUpdateListener;
-
 import com.shtrih.fiscalprinter.command.*;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
 import java.util.Vector;
-
 import static jpos.FiscalPrinterConst.FPTR_PS_FISCAL_RECEIPT;
 
 /**
@@ -1536,7 +1530,18 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         executeCommand(command);
     }
 
-    public void fsFiscalization(FSFiscalization command) throws JposException {
+    public void fsStartFiscalization(int reportType) throws Exception {
+        FSStartFiscalization command = new FSStartFiscalization(getSysPassword(), reportType);
+        executeCommand(command);
+    }
+
+    public void fsFiscalization(String inn, String rnm, int taxSystemCode, int operationMode) throws JposException {
+        FSFiscalization command = new FSFiscalization(getSysPassword(), inn, rnm, taxSystemCode, operationMode);
+        executeCommand(command);
+    }
+
+    public void fsReFiscalization(String inn, String rnm, int taxSystemCode, int operationMode, int reasonCode) throws JposException {
+        FSReFiscalization command = new FSReFiscalization(getSysPassword(), inn, rnm, taxSystemCode, operationMode, reasonCode);
         executeCommand(command);
     }
 
@@ -1557,10 +1562,6 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public void fsOpenDay(FSOpenDay command) throws JposException {
-        executeCommand(command);
-    }
-
-    public void fsRegistrationReport(FSRegistrationReport command) throws JposException {
         executeCommand(command);
     }
 

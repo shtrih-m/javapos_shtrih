@@ -16,7 +16,7 @@ package com.shtrih.fiscalprinter.command;
 public class FSFiscalization extends PrinterCommand {
 
     // in
-    private final int sysPassword; // System sdministrator password (4 bytes)
+    private final int sysPassword; // System administrator password (4 bytes)
 
     private final String taxID;
     private final String regID;
@@ -39,7 +39,7 @@ public class FSFiscalization extends PrinterCommand {
     }
 
     public final String getText() {
-        return "Fiscal storage: start fiscalization";
+        return "Fiscal storage: fiscalization";
     }
 
     public void encode(CommandOutputStream out) throws Exception {

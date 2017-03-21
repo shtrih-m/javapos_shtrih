@@ -249,6 +249,18 @@ class PrinterTest implements FiscalPrinterConst {
             barcode.setText("2223183256141");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);
             printer.printBarcode(barcode);
+            
+            barcode = new PrinterBarcode();
+            barcode.setTextFont(1);
+            barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_ABOVE);
+            barcode.setBarWidth(2);
+            barcode.setHeight(100);
+            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
+            barcode.setLabel("EAN13: 2223432423401");
+            barcode.setText("2223432423401");
+            barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);
+            printer.printBarcode(barcode);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -676,7 +688,8 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void printFiscalReceipt() {
+    public void printFiscalReceipt() 
+    {
         //printZeroFiscalReceipt();
         //printFiscalReceipt666();
         //printFiscalReceipt107();
@@ -737,7 +750,7 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-
+    
     public void printFiscalReceipt1001() {
         try {
             printer.resetPrinter();
@@ -1001,6 +1014,9 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecItem("Водка БонАква сильногаз 1,0л ПЭТ", 0, (int) (qty * 1000), 4, (long) (unitPrice * 100), "");
 
             payment += (long) (0.1 * 100);
+            printer.printRecItem("Водка БонАква сильногаз 1,0л ПЭТ", 0, (int)(qty*1000), 4, (long)(unitPrice*100), "");
+
+            payment+=(long)(0.1*100);
             //printer.fsWriteTag(1074, "8-913-919-1205"); // Телефон платежного агента
             printer.printRecTotal(payment, payment, "1");
             //printer.directIO(0x39, null, "foo@example.com");
