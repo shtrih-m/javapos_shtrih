@@ -7,7 +7,7 @@
 ********************************************************************************
 
   March 21 2017, 23:30
-  deviceServiceVersion = 1013397
+  deviceServiceVersion = 1013398
 	
   [-] Fix error with receipt format
   [+] Add directIO command SMFPTR_DIO_READ_FS_TICKETS
