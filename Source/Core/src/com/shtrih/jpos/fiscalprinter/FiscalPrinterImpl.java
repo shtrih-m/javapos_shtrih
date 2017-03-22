@@ -2168,10 +2168,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             case SMFPTR_HEADER_MODE_DRIVER2:
                 return new DriverHeader2(printer);
 
+            case SMFPTR_HEADER_MODE_NULL:
+                return new NullHeader(printer);
+
             default:
                 return new DriverHeader(printer);
         }
-
     }
 
     private void createFilters() throws Exception {

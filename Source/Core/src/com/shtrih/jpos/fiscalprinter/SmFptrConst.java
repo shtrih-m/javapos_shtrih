@@ -599,6 +599,8 @@ public interface SmFptrConst {
     public static final int SMFPTR_HEADER_MODE_PRINTER = 1;
     // Header printed after receipt beginning
     public static final int SMFPTR_HEADER_MODE_DRIVER2 = 2;
+    // Header makes nothing
+    public static final int SMFPTR_HEADER_MODE_NULL = 3;
 
     /////////////////////////////////////////////////////////////////////
     // ReadFMTotals mode constants
