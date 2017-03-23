@@ -219,6 +219,7 @@
         <!-- 0 - header stored and printed with driver -->
         <!-- 1 - header stored and printed by printer, numHeaderLine and numTrailerLines are fixed -->
         <!-- 2 - header stored and printed with driver, header printed on receipt begin -->
+        <!-- 3 - header will be printed when printer configured to do so -->
         <prop name="headerMode" type="String" value="0"/>
         <!-- headerImagePosition,  -->
         <!-- SMFPTR_LOGO_AFTER_HEADER     = 0  -->

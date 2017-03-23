@@ -141,3 +141,4 @@ public class DeviceHeader implements PrinterHeader {
 			throws Exception {
 	}
 }
+
