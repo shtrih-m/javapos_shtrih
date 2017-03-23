@@ -940,4 +940,7 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return "";
     }
 
+    public boolean getCapFSCloseReceipt(){
+        return false;
+    }
 }

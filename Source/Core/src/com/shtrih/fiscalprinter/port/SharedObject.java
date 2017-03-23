@@ -35,12 +35,10 @@ public class SharedObject {
     public void addRef() 
     {
         refCount += 1;
-        logger.debug("refCount: " + refCount);
     }
 
     public void release() {
         refCount -= 1;
-        logger.debug("refCount: " + refCount);
     }
 
     public int getRefCount() {

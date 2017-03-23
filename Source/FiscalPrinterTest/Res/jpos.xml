@@ -18,7 +18,7 @@
         <jpos category="FiscalPrinter" version="1.9"/>
         <product description="Fiscal printer service" name="ShtrihFptr" url="http://www.javapos.com"/>
         <!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass -->
-        <prop name="portType" type="String" value="2"/>
+        <prop name="portType" type="String" value="0"/>
         <!-- portClass  -->
         <prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.SerialPrinterPort"/>
         <!--<prop name="portClass" type="String" value="com.shtrih.bluetooth.BTPrinterPort"/>-->
@@ -31,7 +31,8 @@
         <!--<prop name="portName" type="String" value="COM2"/> -->
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
-        <prop name="portName" type="String" value="192.168.137.111:7778"/>
+        <!--<prop name="portName" type="String" value="192.168.137.111:7778"/> -->
+        <prop name="portName" type="String" value="COM25"/>
 		
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
@@ -61,7 +62,7 @@
         <!-- System administrator password -->
         <prop name="sysAdminPassword" type="String" value="30"/>
         <!-- device state polling enabled -->
-        <prop name="pollEnabled" type="String" value="1"/>
+        <prop name="pollEnabled" type="String" value="0"/>
         <!-- device state polling interval in milliseconds -->
         <prop name="pollInterval" type="String" value="1000"/>
         <!-- Amount coefficient -->
@@ -269,7 +270,7 @@
         <!-- Receipt number request type 0 - Receipt number, 1 - fiscal document number, 2 - Receipt number in fiscal day -->
         <prop name="receiptNumberRequest" type="String" value="2"/>
         <!-- Enable discount calculation in Fiscal Storage printRecItemMethod 1 - enabled, 0 - disabled -->
-        <prop name="FSReceiptItemDiscountEnabled" type="String" value="1"/>
+        <prop name="FSReceiptItemDiscountEnabled" type="String" value="0"/>
         <!-- Enable discounts for Fiscal Storage printers 1 - enabled, 0 - disabled -->
         <prop name="FSDiscountEnabled" type="String" value="1"/>
         <!-- Combine item adjustments (enabled by default) -->
@@ -283,8 +284,8 @@
 		<!-- Receipt template -->
 		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
 		<prop name="FieldSeparator" type="String" value=";"/>
-		<prop name="ItemTableHeader" type="String" value="---------------------------------------------------; №                  Цена со  Кол-;пп  Цена     Скидка скидкой  во             ИТОГО;---------------------------------------------------;"/>
-		<prop name="ItemRowFormat" type="String" value="%3cPOS% %47lTITLE%;    %8lPRICE% %6lDISCOUNT% %8lSUM%*%3QUAN%%=$19TOTAL_TAX%"/>
+		<prop name="ItemTableHeader" type="String" value="Цена     Скидка  Цена со скидкой  Кол-во  ИТОГ  НДС"/>
+		<prop name="ItemRowFormat" type="String" value="%51lTITLE%;%8lPRICE% %6lDISCOUNT%  %8lSUM%         %3QUAN%%=$10TOTAL_TAX%"/>
 		<!-- <prop name="DiscountFormat" type="String" value="    СКИДКА  %29lTITLE%%=$10TOTAL%"/> -->
 		<prop name="DiscountFormat" type="String" value=""/>
 		<!-- <prop name="ChargeFormat" type="String"   value="    НАДБАВКА  %29lTITLE%%=$10TOTAL%"/> -->

@@ -22,49 +22,51 @@ import gnu.io.SerialPort;
  */
 public class SocketPort implements PrinterPort {
 
-    private boolean connected = false;
-    private int timeout = 1000;
     private Socket socket = null;
     private String portName = "";
+    private int readTimeout = 1000;
+    private int openTimeout = 1000;
     static CompositeLogger logger = CompositeLogger.getLogger(SocketPort.class);
 
     public SocketPort() throws Exception {
     }
 
     public void open() throws Exception {
-        open(0);
+        open(openTimeout);
+    }
+
+    public boolean isConnected() {
+        return socket != null;
     }
 
     public void open(int timeout) throws Exception {
-        if (connected) {
+        if (isConnected()) {
             return;
         }
 
+        this.openTimeout = timeout;
         socket = (Socket) SharedObjects.getInstance().findObject(portName);
         if (socket == null) {
             socket = new Socket();
             SharedObjects.getInstance().add(socket, portName);
 
             socket.setReuseAddress(true);
-            socket.setSoTimeout(this.timeout);
+            socket.setSoTimeout(openTimeout);
             socket.setTcpNoDelay(true);
-            
+
             StringTokenizer tokenizer = new StringTokenizer(portName, ":");
             String host = tokenizer.nextToken();
             int port = Integer.parseInt(tokenizer.nextToken());
             socket.connect(new InetSocketAddress(host, port), timeout);
         }
         SharedObjects.getInstance().addref(portName);
-        connected = true;
     }
 
-    public void close() throws Exception 
-    {
-        if (!connected) {
+    public void close() throws Exception {
+        if (!isConnected()) {
             return;
         }
 
-        connected = false;
         SharedObjects.getInstance().release(portName);
         socket.close();
         socket = null;
@@ -87,7 +89,6 @@ public class SocketPort implements PrinterPort {
         int result;
         long startTime = System.currentTimeMillis();
         for (;;) {
-            //Thread.sleep(0, 001);
             long currentTime = System.currentTimeMillis();
             if (in.available() > 0) {
                 result = in.read();
@@ -95,7 +96,7 @@ public class SocketPort implements PrinterPort {
                     return result;
                 }
             }
-            if ((currentTime - startTime) > timeout) {
+            if ((currentTime - startTime) > readTimeout) {
                 noConnectionError();
             }
         }
@@ -123,21 +124,14 @@ public class SocketPort implements PrinterPort {
         return data;
     }
 
-    public void connect() throws Exception {
-        if (!connected) {
-            open(timeout);
-        }
-    }
-
     public void write(byte[] b) throws Exception {
 
         checkLock();
-        open();
 
         OutputStream out = socket.getOutputStream();
         for (int i = 0; i < 2; i++) {
             try {
-                connect();
+                open();
                 out.write(b);
                 out.flush();
                 return;
@@ -163,7 +157,7 @@ public class SocketPort implements PrinterPort {
     }
 
     public void setTimeout(int timeout) throws Exception {
-        this.timeout = timeout;
+        this.readTimeout = timeout;
     }
 
     public String getPortName() {
@@ -199,5 +193,4 @@ public class SocketPort implements PrinterPort {
             throw new Exception("Not locked");
         }
     }
-
 }

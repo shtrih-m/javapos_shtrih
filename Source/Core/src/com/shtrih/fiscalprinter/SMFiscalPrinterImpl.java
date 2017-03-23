@@ -94,6 +94,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private boolean saveCommands = false;
     private Vector receiptCommands = new Vector();
     private boolean capOpenReceipt = true;
+    private boolean capFSCloseReceipt = false;
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params, FiscalPrinterImpl service) {
@@ -1808,7 +1809,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         readFonts();
 
         capFiscalStorage = readCapFiscalStorage();
-        if (capFiscalStorage) {
+        if (capFiscalStorage) 
+        {
+            capFSCloseReceipt = readCapFSCloseReceipt();
+                    
             discountMode = 2;
             String[] fieldValue = new String[1];
             int rc = readTable(17, 1, 3, fieldValue);
@@ -1826,6 +1830,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
+    private boolean readCapFSCloseReceipt() throws Exception {
+        FSCloseReceipt closeReceipt = new FSCloseReceipt();
+        closeReceipt.setSysPassword(sysPassword);
+        int rc = executeCommand(closeReceipt);
+        return isCommandSupported(rc);
+    }
+            
     private boolean readCapFiscalStorage() throws Exception {
         FSReadStatus command = new FSReadStatus();
         command.setSysPassword(sysPassword);
@@ -3101,4 +3112,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             fsWriteBlock(offset, blockData);
         }
     }
+    
+    public boolean getCapFSCloseReceipt()
+    {
+        return capFSCloseReceipt;
+    }
+    
 }

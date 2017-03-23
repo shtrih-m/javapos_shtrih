@@ -123,7 +123,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
         double d = unitPrice * Math.abs(quantity);
         long amount = MathUtils.round((d / 1000));
-        if (amount > price){
+        if ((amount > price)&&(getParams().FSReceiptItemDiscountEnabled)){
             printDiscount(amount-price, vatInfo, "");
         }
         getPrinter().printPostLine();

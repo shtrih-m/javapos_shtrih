@@ -54,8 +54,4 @@ public class Logger2 {
             logger.debug(prefix + (Hex.toHex(b, b.length)).toUpperCase());
         }
     }
-
-    public static void logTimeout(CompositeLogger logger, int timeout) {
-        logger.debug("setTimeout: " + timeout);
-    }
 }

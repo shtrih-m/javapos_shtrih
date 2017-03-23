@@ -84,6 +84,8 @@ import com.shtrih.jpos.fiscalprinter.PrintItem;
 
 public interface SMFiscalPrinter {
 
+    public boolean getCapFSCloseReceipt();
+    
     public boolean getCapFiscalStorage();
 
     public FptrParameters getParams();

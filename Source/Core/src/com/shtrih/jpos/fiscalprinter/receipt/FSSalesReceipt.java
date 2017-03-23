@@ -27,6 +27,7 @@ import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.FSCloseReceipt;
 import com.shtrih.fiscalprinter.command.AmountItem;
 import com.shtrih.fiscalprinter.command.CloseRecParams;
+import com.shtrih.fiscalprinter.command.EndFiscalReceipt;
 import com.shtrih.fiscalprinter.command.PriceItem;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.fiscalprinter.command.PrinterStatus;
@@ -274,23 +275,40 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     getDevice().disablePrint();
                 }
 
-                FSCloseReceipt closeReceipt = new FSCloseReceipt();
-                closeReceipt.setSysPassword(getPrinter().getPrinter().getUsrPassword());
-                for (int i = 0; i < 16; i++) {
-                    closeReceipt.setPayment(i, 0);
+                if (getDevice().getCapFSCloseReceipt())
+                {
+                    FSCloseReceipt closeReceipt = new FSCloseReceipt();
+                    closeReceipt.setSysPassword(getPrinter().getPrinter().getUsrPassword());
+                    for (int i = 0; i < 16; i++) {
+                        closeReceipt.setPayment(i, 0);
+                    }
+                    for (int i = 0; i < 4; i++) {
+                        closeReceipt.setPayment(i, payments[i]);
+                    }
+                    closeReceipt.setTax1(0);
+                    closeReceipt.setTax2(0);
+                    closeReceipt.setTax3(0);
+                    closeReceipt.setTax4(0);
+                    closeReceipt.setDiscount(discountAmount);
+                    closeReceipt.setText(getParams().closeReceiptText);
+                    getDevice().execute(closeReceipt);
+                } else
+                {
+                    CloseRecParams closeParams = new CloseRecParams();
+                    closeParams.setSum1(payments[0]);
+                    closeParams.setSum2(payments[1]);
+                    closeParams.setSum3(payments[2]);
+                    closeParams.setSum4(payments[3]);
+                    closeParams.setTax1(0);
+                    closeParams.setTax2(0);
+                    closeParams.setTax3(0);
+                    closeParams.setTax4(0);
+                    closeParams.setDiscount(0);
+                    closeParams.setText(getParams().closeReceiptText);
+                    getDevice().closeReceipt(closeParams);
                 }
-                for (int i = 0; i < 4; i++) {
-                    closeReceipt.setPayment(i, payments[i]);
-                }
-                closeReceipt.setTax1(0);
-                closeReceipt.setTax2(0);
-                closeReceipt.setTax3(0);
-                closeReceipt.setTax4(0);
-                closeReceipt.setDiscount(discountAmount);
-                closeReceipt.setText(getParams().closeReceiptText);
-                getPrinter().getPrinter().execute(closeReceipt);
-                getFiscalDay().closeFiscalRec();
 
+                getFiscalDay().closeFiscalRec();
                 if (!disablePrint) {
                     for (int i = 0; i < messages.size(); i++) {
                         getDevice().printText(messages.get(i));

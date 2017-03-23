@@ -610,8 +610,7 @@ public class PrinterModelDefault implements PrinterModel {
     }
 
     public int getHeaderHeight() throws Exception {
-        return (minHeaderLines)
-                * getFontHeight(new FontNumber(PrinterConst.FONT_NUMBER_NORMAL));
+        return minHeaderLines * 23;
     }
 
     public int getTrailerHeight() throws Exception {

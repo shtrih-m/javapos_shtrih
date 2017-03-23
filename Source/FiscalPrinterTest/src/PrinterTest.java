@@ -77,7 +77,12 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void setHeaderLines() {
         try {
-            printer.setHeaderLine(1, getLoadImageCommand("Logo.bmp") + "КАССОВЫЙ ЧЕК", false);
+            printer.clearLogo();
+            printer.clearImages();
+            printer.loadImage("Logo.bmp");
+            printer.addLogo(0, SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
+            printer.setHeaderLine(1, "КАССОВЫЙ ЧЕК", false);
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -693,7 +698,8 @@ class PrinterTest implements FiscalPrinterConst {
         //printZeroFiscalReceipt();
         //printFiscalReceipt666();
         //printFiscalReceipt107();
-        printFiscalReceipt102();
+        //printFiscalReceipt102();
+        printFiscalReceipt103();
     }
 
     public void printPaperReport() {
@@ -935,14 +941,11 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt103() {
         try {
             printer.resetPrinter();
-
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-            printer.printRecItem("1 3496906 KIT.Корм говяд.жел.д/взр.85г", 13585, 11000, 1, 1300, "");
-            printer.printRecItemAdjustment(1, "", 715, 1);
-            printer.printRecSubtotalAdjustment(1, "", 85);
-            printer.printRecSubtotal(13500);
-            printer.printRecTotal(13500, 13500, "30");
+            printer.printRecItem("1. Item" , 4990, 1000, 1, 9980, "");
+            printer.printRecItemAdjustment(1, "", 4990, 1);
+            printer.printRecTotal(4990, 4990, "30");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();

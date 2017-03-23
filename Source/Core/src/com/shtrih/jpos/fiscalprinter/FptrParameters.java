@@ -128,7 +128,7 @@ public class FptrParameters {
     public boolean checkTotalEnabled = false; 
     public int receiptNumberRequest = SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER; 
     public boolean FSDiscountEnabled = true;
-    public boolean FSReceiptItemDiscountEnabled = true;
+    public boolean FSReceiptItemDiscountEnabled = false;
     public boolean FSCombineItemAdjustments = true;
     public boolean textReportEnabled = false;
     public boolean readDiscountMode = true;
@@ -315,7 +315,7 @@ public class FptrParameters {
             SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER); 
         
         FSDiscountEnabled = reader.readBoolean("FSDiscountEnabled", true);
-        FSReceiptItemDiscountEnabled = reader.readBoolean("FSReceiptItemDiscountEnabled", true);
+        FSReceiptItemDiscountEnabled = reader.readBoolean("FSReceiptItemDiscountEnabled", false);
         FSCombineItemAdjustments = reader.readBoolean("FSCombineItemAdjustments", true);
         readDiscountMode = reader.readBoolean("readDiscountMode", true);
         FSPrintTags = reader.readBoolean("FSPrintTags", true);

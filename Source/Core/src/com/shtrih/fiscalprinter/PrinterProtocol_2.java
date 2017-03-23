@@ -77,7 +77,6 @@ public class PrinterProtocol_2 implements PrinterProtocol {
             throws Exception {
         port.open(0);
         int timeout = command.getTimeout();
-        Logger2.logTimeout(logger, timeout + byteTimeout);
         port.setTimeout(timeout + byteTimeout);
         try {
             sendCommand(command.encodeData());
@@ -107,7 +106,6 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         if (isSynchronized) {
             return;
         }
-        Logger2.logTimeout(logger, timeout);
         port.setTimeout(timeout);
         for (int i = 0; i < maxRepeatCount; i++) {
             try {

@@ -38,10 +38,10 @@ public class DriverHeader implements JposConst, PrinterHeader {
         this.printer = printer;
     }
 
-    public SMFiscalPrinter getPrinter(){
+    public SMFiscalPrinter getPrinter() {
         return printer;
     }
-    
+
     public FptrParameters getParams() {
         return printer.getParams();
     }
@@ -119,15 +119,23 @@ public class DriverHeader implements JposConst, PrinterHeader {
         trailer.set(number - 1, new HeaderLine(text, doubleWidth));
     }
 
+    private boolean validHeaderLineNumber(int number) throws Exception {
+        return ((number >= 1) && (number <= getNumHeaderLines()));
+    }
+
+    private boolean validTrailerLineNumber(int number) throws Exception {
+        return ((number >= 1) && (number <= getNumTrailerLines()));
+    }
+
     private void checkHeaderLineNumber(int number) throws Exception {
-        if ((number < 1) || (number > getNumHeaderLines())) {
+        if (!validHeaderLineNumber(number)) {
             throw new JposException(JposConst.JPOS_E_ILLEGAL,
                     Localizer.getString(Localizer.InvalidLineNumber));
         }
     }
 
     private void checkTrailerLineNumber(int number) throws Exception {
-        if ((number < 1) || (number > getNumTrailerLines())) {
+        if (!validTrailerLineNumber(number)) {
             throw new JposException(JposConst.JPOS_E_ILLEGAL,
                     Localizer.getString(Localizer.InvalidLineNumber));
         }
@@ -183,8 +191,7 @@ public class DriverHeader implements JposConst, PrinterHeader {
             imageHeight = image.getHeight() + lineSpacing;
         }
         if (imageHeight > headerHeight) {
-            if (getParams().logoMode == SmFptrConst.SMFPTR_LOGO_MODE_SPLIT_IMAGE)
-            {
+            if (getParams().logoMode == SmFptrConst.SMFPTR_LOGO_MODE_SPLIT_IMAGE) {
                 int firstLine = image.getStartPos() + 1;
                 printer.printGraphics(firstLine, firstLine + headerHeight);
                 printer.waitForPrinting();
@@ -202,7 +209,7 @@ public class DriverHeader implements JposConst, PrinterHeader {
         }
         printer.waitForPrinting();
     }
-    
+
     void printHeaderAfterCutter(String additionalHeader) throws Exception {
         printer.waitForPrinting();
         int imageHeight = 0;
@@ -214,8 +221,7 @@ public class DriverHeader implements JposConst, PrinterHeader {
             imageHeight = image.getHeight() + lineSpacing;
         }
         if (imageHeight > headerHeight) {
-            if (getParams().logoMode == SmFptrConst.SMFPTR_LOGO_MODE_SPLIT_IMAGE)
-            {
+            if (getParams().logoMode == SmFptrConst.SMFPTR_LOGO_MODE_SPLIT_IMAGE) {
                 int firstLine = image.getStartPos() + 1;
                 printer.printGraphics(firstLine + headerHeight + 1,
                         image.getEndPos());
@@ -243,7 +249,9 @@ public class DriverHeader implements JposConst, PrinterHeader {
     private int printLines(List<HeaderLine> lines, int num1, int num2) throws Exception {
         int result = 0;
         for (int i = num1 - 1; i < num2; i++) {
-            result += printLine(lines.get(i));
+            if (i < lines.size()) {
+                result += printLine(lines.get(i));
+            }
         }
         return result;
     }
