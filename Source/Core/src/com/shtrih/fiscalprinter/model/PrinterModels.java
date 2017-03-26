@@ -111,7 +111,7 @@ public class PrinterModels implements Serializable {
 		return null;
 	}
 
-	public PrinterModel itemByModel(int model) throws Exception {
+	public PrinterModel itemByModel(int model) {
 		for (int i = 0; i < size(); i++) {
 			PrinterModel result = get(i);
 			if (result.getModelID() == model) {

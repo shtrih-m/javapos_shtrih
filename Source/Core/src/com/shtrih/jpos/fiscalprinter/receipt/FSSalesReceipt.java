@@ -274,21 +274,38 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     getDevice().disablePrint();
                 }
 
-                FSCloseReceipt closeReceipt = new FSCloseReceipt();
-                closeReceipt.setSysPassword(getPrinter().getPrinter().getUsrPassword());
-                for (int i = 0; i < 16; i++) {
-                    closeReceipt.setPayment(i, 0);
+                if (getPrinter().getPrinter().getModel().getCapFSCloseCheck()) {
+
+                    FSCloseReceipt closeReceipt = new FSCloseReceipt(); // v2?
+                    closeReceipt.setSysPassword(getPrinter().getPrinter().getUsrPassword());
+                    for (int i = 0; i < 16; i++) {
+                        closeReceipt.setPayment(i, 0);
+                    }
+                    for (int i = 0; i < 4; i++) { // 4 or 16?
+                        closeReceipt.setPayment(i, payments[i]);
+                    }
+                    closeReceipt.setTax1(0);
+                    closeReceipt.setTax2(0);
+                    closeReceipt.setTax3(0);
+                    closeReceipt.setTax4(0);
+                    closeReceipt.setDiscount(discountAmount);
+                    closeReceipt.setText(getParams().closeReceiptText);
+                    getPrinter().getPrinter().execute(closeReceipt);
                 }
-                for (int i = 0; i < 4; i++) {
-                    closeReceipt.setPayment(i, payments[i]);
+                else{
+                    CloseRecParams closeParams = new CloseRecParams();
+                    closeParams.setSum1(payments[0]);
+                    closeParams.setSum2(payments[1]);
+                    closeParams.setSum3(payments[2]);
+                    closeParams.setSum4(payments[3]);
+                    closeParams.setTax1(0);
+                    closeParams.setTax2(0);
+                    closeParams.setTax3(0);
+                    closeParams.setTax4(0);
+                    closeParams.setDiscount(discountAmount);
+                    closeParams.setText(getParams().closeReceiptText);
+                    getPrinter().getPrinter().closeReceipt(closeParams);
                 }
-                closeReceipt.setTax1(0);
-                closeReceipt.setTax2(0);
-                closeReceipt.setTax3(0);
-                closeReceipt.setTax4(0);
-                closeReceipt.setDiscount(discountAmount);
-                closeReceipt.setText(getParams().closeReceiptText);
-                getPrinter().getPrinter().execute(closeReceipt);
                 getFiscalDay().closeFiscalRec();
 
                 if (!disablePrint) {

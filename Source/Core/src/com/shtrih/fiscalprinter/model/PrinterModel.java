@@ -274,4 +274,8 @@ public interface PrinterModel
     public int getPrintWidth();
     
     public void setPrintWidth(int value);
+
+    boolean getCapFSCloseCheck();
+
+    void setCapFSCloseCheck(boolean value);
 }

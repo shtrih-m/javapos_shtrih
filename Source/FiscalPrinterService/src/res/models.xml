@@ -1298,6 +1298,7 @@
             <DeviceFontDouble>2</DeviceFontDouble>
             <DeviceFontSmall>3</DeviceFontSmall>
             <SwapGraphicsLine>0</SwapGraphicsLine>
+            <CapFSCloseCheck>0</CapFSCloseCheck>
             <parameters>
                 <parameter>
                     <Name>DrawerEnabled</Name>

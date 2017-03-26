@@ -5,11 +5,12 @@
 package com.shtrih.fiscalprinter.model;
 
 /**
- *
  * @author V.Kravtsov
  */
+
 import java.util.Map;
 import java.util.HashMap;
+
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.PrinterFont;
@@ -29,7 +30,7 @@ public class PrinterModelDefault implements PrinterModel {
     private final int[] defFontHeight = {24, 24, 24, 24, 24, 24, 24};
 
     private final int[] defSupportedBaudRates = {2400, 4800, 9600, 19200,
-        38400, 57600, 115200};
+            38400, 57600, 115200};
     protected int id;
     protected int modelID;
     protected int protocolVersion;
@@ -95,6 +96,7 @@ public class PrinterModelDefault implements PrinterModel {
     private int maxOperationRegister = 0xFF;
     private boolean capGraphicsLineMargin;
     protected int printWidth;
+    private boolean capFSCloseCheck = true;
 
     /**
      * Creates a new instance of PrinterModelDefault
@@ -578,7 +580,7 @@ public class PrinterModelDefault implements PrinterModel {
     }
 
     public PrinterParameter addParameter(String name,
-            int table, int row, int field) {
+                                         int table, int row, int field) {
         PrinterParameter parameter = new PrinterParameter(name, "",
                 table, row, field);
         parameters.add(parameter);
@@ -592,7 +594,7 @@ public class PrinterModelDefault implements PrinterModel {
     public boolean getCapParameter(String paramName) throws Exception {
         return parameters.itemByName(paramName) != null;
     }
-    
+
     public int getLineSpacing() {
         return lineSpacing;
     }
@@ -749,6 +751,16 @@ public class PrinterModelDefault implements PrinterModel {
 
     public void setPrintWidth(int printWidth) {
         this.printWidth = printWidth;
+    }
+
+    @Override
+    public boolean getCapFSCloseCheck() {
+        return capFSCloseCheck;
+    }
+
+    @Override
+    public void setCapFSCloseCheck(boolean value) {
+        capFSCloseCheck = value;
     }
 
 }
