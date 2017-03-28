@@ -651,6 +651,15 @@ class PrinterTest implements FiscalPrinterConst {
             System.out.println("FPTR_GD_PRINTER_ID: " + lines[0]);
 
             printer.setPOSID("1", "Кравцов В.В.");
+
+            ShortPrinterStatus shortStatus = printer.readShortPrinterStatus();
+            LongPrinterStatus  longStatus = printer.readLongPrinterStatus();
+
+            String value = printer.readTable(5,2,1);
+            printer.writeTable(5,2,1, value);
+            String value2 = printer.readTable(5,2,1);
+            assert value.equals(value2);
+
             //readFSTickets();
         } catch (Exception e) {
             e.printStackTrace();
@@ -697,6 +706,7 @@ class PrinterTest implements FiscalPrinterConst {
     {
         //printZeroFiscalReceipt();
         //printFiscalReceipt666();
+
         //printFiscalReceipt107();
         //printFiscalReceipt102();
         printFiscalReceipt103();

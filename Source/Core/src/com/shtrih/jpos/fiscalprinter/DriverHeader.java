@@ -205,7 +205,7 @@ public class DriverHeader implements JposConst, PrinterHeader {
                 lineNumber--;
             }
             printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
-            printLines(header, 1, lineNumber);
+            printLines(header, 1, Math.min(getNumHeaderLines(), lineNumber));
         }
         printer.waitForPrinting();
     }
@@ -230,7 +230,7 @@ public class DriverHeader implements JposConst, PrinterHeader {
             }
             printLines(header);
         } else {
-            printLines(header, lineNumber + 1, header.size());
+            printLines(header, lineNumber + 1, getNumHeaderLines());
             printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
         }
         if (additionalHeader.length() > 0) {
@@ -247,8 +247,13 @@ public class DriverHeader implements JposConst, PrinterHeader {
     }
 
     private int printLines(List<HeaderLine> lines, int num1, int num2) throws Exception {
+        int iterateTo = Math.min(lines.size(), num2);
+
         int result = 0;
-        for (int i = num1 - 1; i < num2; i++) {
+        for (int i = num1 - 1; i < iterateTo; i++) {
+            if (i >= lines.size())
+                break;
+
             if (i < lines.size()) {
                 result += printLine(lines.get(i));
             }

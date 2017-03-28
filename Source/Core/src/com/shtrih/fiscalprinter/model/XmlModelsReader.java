@@ -5,9 +5,9 @@
 package com.shtrih.fiscalprinter.model;
 
 /**
- *
  * @author V.Kravtsov
  */
+
 import java.io.InputStream;
 import java.util.HashMap;
 
@@ -27,42 +27,12 @@ import org.w3c.dom.NamedNodeMap;
 
 public class XmlModelsReader {
 
-    private final PrinterModels models;
     private static CompositeLogger logger = CompositeLogger.getLogger(XmlModelsReader.class);
+
+    private final PrinterModels models;
 
     public XmlModelsReader(PrinterModels models) {
         this.models = models;
-    }
-
-    public Node getChildNode(Node node, String nodeName)
-            throws Exception {
-        Node result = findChildNode(node, nodeName);
-        if (result == null) {
-            throw new Exception("Child node not found");
-        }
-        return result;
-    }
-
-    public Node findChildNode(Node node, String nodeName) {
-        Node result = null;
-        NodeList list = node.getChildNodes();
-        for (int i = 0; i < list.getLength(); i++) {
-            result = list.item(i);
-            if (result.getNodeName().equalsIgnoreCase(nodeName)) {
-                return result;
-            }
-        }
-        return null;
-    }
-
-    public void loadFile(String fileName) throws Exception {
-        Document document = XmlUtils.parse(fileName);
-        parse(document);
-    }
-
-    public void loadRes(String fileName) throws Exception {
-        InputStream stream = this.getClass().getResourceAsStream(fileName);
-        load(stream);
     }
 
     public void load(InputStream stream) throws Exception {
@@ -95,6 +65,27 @@ public class XmlModelsReader {
         }
     }
 
+    private Node getChildNode(Node node, String nodeName)
+            throws Exception {
+        Node result = findChildNode(node, nodeName);
+        if (result == null) {
+            throw new Exception("Child node not found");
+        }
+        return result;
+    }
+
+    private Node findChildNode(Node node, String nodeName) {
+        Node result = null;
+        NodeList list = node.getChildNodes();
+        for (int i = 0; i < list.getLength(); i++) {
+            result = list.item(i);
+            if (result.getNodeName().equalsIgnoreCase(nodeName)) {
+                return result;
+            }
+        }
+        return null;
+    }
+
     private String readParameterStr(Node node, String paramName)
             throws Exception {
         //logger.debug("readParameterStr, " + paramName);
@@ -108,38 +99,6 @@ public class XmlModelsReader {
             }
         }
         return result;
-    }
-
-    private int readParameterInt(Node node, String paramName) throws Exception {
-        String s = readParameterStr(node, paramName);
-        return Integer.valueOf(s).intValue();
-    }
-
-    private int readParameterInt(Node node, String paramName, int defValue)
-            throws Exception {
-        int result = defValue;
-        try {
-            String s = readParameterStr(node, paramName);
-            result = Integer.valueOf(s).intValue();
-        } catch (Exception e) {
-            //logger.error(e);
-        }
-        return result;
-    }
-
-    private int[] readParameterIntArray(Node node, String paramName)
-            throws Exception {
-        String s = readParameterStr(node, paramName);
-        return StringUtils.strToIntArray(s);
-    }
-
-    private boolean readParameterBool(Node node, String paramName)
-            throws Exception {
-        String paramValue = readParameterStr(node, paramName);
-        if ((paramValue.equals("")) || paramValue.equalsIgnoreCase("0")) {
-            return false;
-        }
-        return true;
     }
 
     private void loadModel(Node node) throws Exception {
@@ -230,6 +189,7 @@ public class XmlModelsReader {
             model.setMinOperationRegister(readParameterInt(node, "MinOperationRegister", 0));
             model.setMaxOperationRegister(readParameterInt(node, "MaxOperationRegister", 0xFF));
             model.setCapGraphicsLineMargin(readParameterBool(node, "CapGraphicsLineMargin"));
+            model.setCapFSCloseCheck(readParameterBool(node, "CapFSCloseCheck", true));
 
             loadParameters(node, model.getParameters());
 
@@ -239,7 +199,7 @@ public class XmlModelsReader {
         }
     }
 
-    public void loadParameters(Node node, PrinterParameters items)
+    private void loadParameters(Node node, PrinterParameters items)
             throws Exception {
         Element element = (Element) node;
         NodeList parametersNodes = element.getElementsByTagName("parameters");
@@ -269,7 +229,7 @@ public class XmlModelsReader {
         }
     }
 
-    public void loadValues(ParameterValues values, Node node) throws Exception {
+    private void loadValues(ParameterValues values, Node node) throws Exception {
         Element element = (Element) node;
         Node paramsNode = element.getElementsByTagName("values").item(0);
         NodeList nodes = element.getElementsByTagName("value");
@@ -280,5 +240,47 @@ public class XmlModelsReader {
             item.setFieldValue(readParameterInt(itemNode, "FieldValue"));
             values.add(item);
         }
+    }
+
+    private int readParameterInt(Node node, String paramName) throws Exception {
+        String s = readParameterStr(node, paramName);
+        return Integer.valueOf(s).intValue();
+    }
+
+    private int readParameterInt(Node node, String paramName, int defValue)
+            throws Exception {
+        int result = defValue;
+        try {
+            String s = readParameterStr(node, paramName);
+            result = Integer.valueOf(s).intValue();
+        } catch (Exception e) {
+            //logger.error(e);
+        }
+        return result;
+    }
+
+    private int[] readParameterIntArray(Node node, String paramName)
+            throws Exception {
+        String s = readParameterStr(node, paramName);
+        return StringUtils.strToIntArray(s);
+    }
+
+    private boolean readParameterBool(Node node, String paramName)
+            throws Exception {
+        return readParameterBool(node, paramName, false);
+    }
+
+    private boolean readParameterBool(Node node, String paramName, boolean defaultValue)
+            throws Exception {
+        String paramValue = readParameterStr(node, paramName);
+        if (paramValue.equals("")) {
+            return defaultValue;
+        }
+
+        if (paramValue.equalsIgnoreCase("0")) {
+            return false;
+        }
+        
+        return true;
     }
 }

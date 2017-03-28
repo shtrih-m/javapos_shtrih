@@ -292,7 +292,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     closeReceipt.setDiscount(discountAmount);
                     closeReceipt.setText(getParams().closeReceiptText);
                     getDevice().execute(closeReceipt);
-                } else
+                } 
+                else
                 {
                     CloseRecParams closeParams = new CloseRecParams();
                     closeParams.setSum1(payments[0]);
@@ -303,11 +304,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     closeParams.setTax2(0);
                     closeParams.setTax3(0);
                     closeParams.setTax4(0);
-                    closeParams.setDiscount(0);
+                    closeParams.setDiscount(discountAmount);
                     closeParams.setText(getParams().closeReceiptText);
                     getDevice().closeReceipt(closeParams);
                 }
-
                 getFiscalDay().closeFiscalRec();
                 if (!disablePrint) {
                     for (int i = 0; i < messages.size(); i++) {
