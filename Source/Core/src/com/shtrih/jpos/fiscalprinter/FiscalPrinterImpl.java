@@ -2046,6 +2046,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             port.setPortName(params.portName);
             port.open(timeout);
             printer.connect();
+            
+            int baudRateIndex = printer.getBaudRateIndex(params.getBaudRate());
+            printer.writePortParams(0, baudRateIndex, params.getDeviceByteTimeout());
+            params.setBaudRate(getModel().getSupportedBaudRates()[baudRateIndex]);
+            
             printer.readDeviceMetrics();
             getPrinter().initialize();
         }

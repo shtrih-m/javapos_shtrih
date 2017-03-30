@@ -24,8 +24,8 @@ public class FptrParameters {
 
     public static final int defaultGraphicsLineDelay = 200;
 
-    private int byteTimeout = 1000;
-    private int deviceByteTimeout = 1000;
+    private int byteTimeout = 3000;
+    private int deviceByteTimeout = 3000;
     private int statusCommand = PrinterConst.SMFP_STATUS_COMMAND_11H;
     private int graphicsLineDelay = defaultGraphicsLineDelay;
     private int portType = SmFptrConst.PORT_TYPE_SERIAL;
