@@ -20,6 +20,10 @@ import com.shtrih.util.StringUtils;
 
 public class PrinterDate {
 
+    public static PrinterDate now(){
+        return new PrinterDate();
+    }
+
     private final int day;
     private final int month;
     private final int year;
