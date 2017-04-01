@@ -177,7 +177,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     // State
     private boolean duplicateReceipt;
     private int outputID;
-    private int powerNotify = JPOS_PN_DISABLED;
+    private int powerNotify = JPOS_PN_ENABLED;
     private int powerState;
     private int countryCode;
     private int errorLevel;
@@ -359,7 +359,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         // state
         duplicateReceipt = false;
         outputID = 0;
-        powerNotify = JPOS_PN_DISABLED;
+        powerNotify = JPOS_PN_ENABLED;
         powerState = JPOS_PS_UNKNOWN;
         countryCode = FPTR_CC_RUSSIA;
         errorLevel = FPTR_EL_NONE;
@@ -2047,9 +2047,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             port.open(timeout);
             printer.connect();
             
-            int baudRateIndex = printer.getBaudRateIndex(params.getBaudRate());
-            printer.writePortParams(0, baudRateIndex, params.getDeviceByteTimeout());
-            params.setBaudRate(getModel().getSupportedBaudRates()[baudRateIndex]);
             
             printer.readDeviceMetrics();
             getPrinter().initialize();
