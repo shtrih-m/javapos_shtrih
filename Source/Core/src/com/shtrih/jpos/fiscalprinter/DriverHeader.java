@@ -50,16 +50,26 @@ public class DriverHeader implements JposConst, PrinterHeader {
         return printer.getModel();
     }
 
+    boolean validIndex(int index, int count) {
+        return (index >= 0) && (index < count);
+    }
+
     @Override
     public HeaderLine getHeaderLine(int number) throws Exception {
         checkHeaderLineNumber(number);
-        return header.get(number - 1);
+        if (validIndex(number - 1, header.size())) {
+            return header.get(number - 1);
+        }
+        return new HeaderLine();
     }
 
     @Override
     public HeaderLine getTrailerLine(int number) throws Exception {
         checkTrailerLineNumber(number);
-        return trailer.get(number - 1);
+        if (validIndex(number - 1, trailer.size())) {
+            return trailer.get(number - 1);
+        }
+        return new HeaderLine();
     }
 
     @Override
@@ -251,8 +261,9 @@ public class DriverHeader implements JposConst, PrinterHeader {
 
         int result = 0;
         for (int i = num1 - 1; i < iterateTo; i++) {
-            if (i >= lines.size())
+            if (i >= lines.size()) {
                 break;
+            }
 
             if (i < lines.size()) {
                 result += printLine(lines.get(i));

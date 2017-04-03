@@ -6,6 +6,20 @@
 
 ********************************************************************************
 
+  April 3 2017, 13:00
+  deviceServiceVersion = 1013405
+	
+  [-] Fixed error "Index out of bounds" on loading properties
+
+********************************************************************************
+
+  April 1 2017, 14:50
+  deviceServiceVersion = 1013404
+	
+  [-] Changed default value of property powerNotify to JPOS_PN_ENABLED
+  
+********************************************************************************
+
   March 28 2017, 11:20
   deviceServiceVersion = 1013401
 	
