@@ -6,6 +6,14 @@
 
 ********************************************************************************
 
+  April 3 2017, 16:00
+  deviceServiceVersion = 1013406
+	
+  [-] Fixed error with receipt format
+  [-] Fixed error with writing tables
+
+********************************************************************************
+
   April 3 2017, 13:00
   deviceServiceVersion = 1013405
 	
