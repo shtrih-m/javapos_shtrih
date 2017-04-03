@@ -820,6 +820,10 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
+    public byte[] getTLVData(int tagId, String tagValue) throws Exception{
+        return null;
+    }
+    
     public FSReadStatus fsReadStatus() throws Exception {
         return null;
     }
