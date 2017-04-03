@@ -905,9 +905,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setTax3(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setTax4(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setText(text);
+        /*
         if (getParams().subAdjustmentOrder == PrinterConst.ADJUSTMENT_ORDER_CORRECT) {
             items.add(item);
         }
+        */
         discounts.add(item);
         addTotal(-amount);
     }
@@ -977,10 +979,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         items.add(new FSTLVItem(data));
     }
 
-    private void fsWriteTag2(int tagId, String tagValue) throws Exception {
-        TLVList list = new TLVList();
-        list.add(tagId, tagValue);
-        fsWriteTLV(list.getData());
+    private void fsWriteTag2(int tagId, String tagValue) throws Exception 
+    {
+        fsWriteTLV(getDevice().getTLVData(tagId, tagValue));
     }
 
     public void fsWriteTag(int tagId, String tagValue) throws Exception {

@@ -6,11 +6,12 @@
 
 ********************************************************************************
 
-  April 3 2017, 16:00
-  deviceServiceVersion = 1013406
+  April 3 2017, 18:40
+  deviceServiceVersion = 1013407
 	
   [-] Fixed error with receipt format
   [-] Fixed error with writing tables
+  [-] Fixed error with writing tags 15000, 15001, 15002
 
 ********************************************************************************
 

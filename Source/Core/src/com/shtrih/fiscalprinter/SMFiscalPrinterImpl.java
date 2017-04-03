@@ -1809,10 +1809,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         readFonts();
 
         capFiscalStorage = readCapFiscalStorage();
-        if (capFiscalStorage) 
-        {
+        if (capFiscalStorage) {
             capFSCloseReceipt = readCapFSCloseReceipt();
-                    
+
             discountMode = 2;
             String[] fieldValue = new String[1];
             int rc = readTable(17, 1, 3, fieldValue);
@@ -1836,7 +1835,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         int rc = executeCommand(closeReceipt);
         return isCommandSupported(rc);
     }
-            
+
     private boolean readCapFiscalStorage() throws Exception {
         FSReadStatus command = new FSReadStatus();
         command.setSysPassword(sysPassword);
@@ -2048,7 +2047,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             if (barcode.getType() != SmFptrConst.SMFPTR_BARCODE_EAN13) {
                 throw new Exception(
                         Localizer
-                        .getString(Localizer.PrinterSupportesEAN13Only));
+                                .getString(Localizer.PrinterSupportesEAN13Only));
             }
 
             if (barcode.isTextAbove()) {
@@ -2847,13 +2846,26 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             beginFiscalDay();
             waitForPrinting();
         }
+    }
 
+    public byte[] getTLVData(int tagId, String tagValue) throws Exception {
+        TLVList list = new TLVList();
+        switch (tagId) {
+            case 15001:
+            case 15002: {
+                list.add(tagId, Integer.valueOf(tagValue), 4);
+                break;
+            }
+            default:
+                list.add(tagId, tagValue);
+                break;
+
+        }
+        return list.getData();
     }
 
     public int fsWriteTag(int tagId, String tagValue) throws Exception {
-        TLVList list = new TLVList();
-        list.add(tagId, tagValue);
-        return fsWriteTLV(list.getData());
+        return fsWriteTLV(getTLVData(tagId, tagValue));
     }
 
     public LongPrinterStatus getLongStatus() throws Exception {
@@ -3112,10 +3124,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             fsWriteBlock(offset, blockData);
         }
     }
-    
-    public boolean getCapFSCloseReceipt()
-    {
+
+    public boolean getCapFSCloseReceipt() {
         return capFSCloseReceipt;
     }
-    
+
 }

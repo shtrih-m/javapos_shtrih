@@ -463,6 +463,8 @@ public interface SMFiscalPrinter {
 
     public int fsWriteTLV(byte[] tlv) throws Exception;
 
+    public byte[] getTLVData(int tagId, String tagValue) throws Exception;
+    
     public FSReadStatus fsReadStatus() throws Exception;
     
     public FSReadDayParameters fsReadDayParameters() throws Exception;

@@ -46,7 +46,7 @@
         <!-- Subtotal text -->
         <prop name="subtotalText" type="String" value="ПОДЫТОГ:"/>
 		<!-- Subtotal font -->
-        <prop name="subtotalFont" type="String" value="1"/>
+        <prop name="subtotalFont" type="String" value="5"/>
         <!-- Driver byte receive timeout -->
         <prop name="byteTimeout" type="String" value="10000"/>
         <!-- Device byte receive timeout -->
@@ -259,7 +259,7 @@
         <!-- Barcode text position NOTPRINTED=0, ABOVE=1, BELOW=2, BOTH=3 -->
         <prop name="barcodeTextPosition" type="String" value="2"/>
         <!-- Barcode text font, 1..7, default 1 -->
-        <prop name="barcodeTextFont" type="String" value="1"/>
+        <prop name="barcodeTextFont" type="String" value="5"/>
         <!-- Barcode aspect ratio -->
         <prop name="barcodeAspectRatio" type="String" value="3"/>
         <!-- Compatibility level, 0 - NONE, 1 - FULL -->

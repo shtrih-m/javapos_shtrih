@@ -956,6 +956,12 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecItem("1. Item" , 4990, 1000, 1, 9980, "");
             printer.printRecItemAdjustment(1, "", 4990, 1);
             printer.printRecMessage("#*~*#http://check.egais.ru?id=49ede7b2-14ab-4503-bd12-c148083c87a6&dt=2403171823&cn=030000006536");
+            printer.printRecSubtotalAdjustment(1, "СКИДКА", 90);
+            printer.fsWriteTag(15000, "FGHGF987987");
+            printer.fsWriteTag(15001, "2345");
+            printer.fsWriteTag(15002, "98798");
+
+
             printer.printRecTotal(4990, 4990, "30");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
