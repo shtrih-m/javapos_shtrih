@@ -1723,4 +1723,40 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         return (Vector<FSTicket>) object[0];
     }
 
+    /**
+     * Техническое обнуление
+     */
+    public void technicalReset() throws JposException {
+        ResetFM command = new ResetFM();
+        executeCommand(command);
+    }
+
+    /**
+     * Установка даты
+     */
+    public void writeDate(PrinterDate date) throws Exception{
+        SetDateCommand  cmd = new SetDateCommand(getSysPassword(), date);
+        executeCommand(cmd);
+    }
+
+    /**
+     * Подтверждение даты
+     */
+    public void confirmDate(PrinterDate date) throws Exception{
+        ConfirmDate  cmd = new ConfirmDate();
+        cmd.setPassword(getSysPassword());
+        cmd.setDate(date);
+        executeCommand(cmd);
+    }
+
+    /**
+     * Установка времени
+     */
+    public void writeTime(PrinterTime time) throws Exception{
+        WriteTime  cmd = new WriteTime();
+        cmd.setPassword(getSysPassword());
+        cmd.setTime(time);
+        executeCommand(cmd);
+    }
+
 }

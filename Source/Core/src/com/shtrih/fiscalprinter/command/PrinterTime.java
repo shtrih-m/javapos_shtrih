@@ -20,6 +20,10 @@ import com.shtrih.util.StringUtils;
 
 public class PrinterTime {
 
+    public static PrinterTime now(){
+        return new PrinterTime();
+    }
+
     private final int hour;
     private final int min;
     private final int sec;
