@@ -1967,8 +1967,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
         // Do not write tables SMFP_TABLE_TEXT and SMFP_TABLE_PAYTYPE
         // to not break correct driver behavior
-        if ((field.getTable() != PrinterConst.SMFP_TABLE_TEXT)
-                && (field.getTable() != PrinterConst.SMFP_TABLE_PAYTYPE)) {
+        if (field.getTable() != PrinterConst.SMFP_TABLE_TEXT) {
             // if field have correct number
             if (printer.isValidField(field.getTable(), field.getRow(),
                     field.getField())) {

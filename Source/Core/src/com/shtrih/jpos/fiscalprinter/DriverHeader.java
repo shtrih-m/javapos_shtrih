@@ -56,7 +56,7 @@ public class DriverHeader implements JposConst, PrinterHeader {
 
     @Override
     public HeaderLine getHeaderLine(int number) throws Exception {
-        checkHeaderLineNumber(number);
+        //checkHeaderLineNumber(number);
         if (validIndex(number - 1, header.size())) {
             return header.get(number - 1);
         }
@@ -65,7 +65,7 @@ public class DriverHeader implements JposConst, PrinterHeader {
 
     @Override
     public HeaderLine getTrailerLine(int number) throws Exception {
-        checkTrailerLineNumber(number);
+        //checkTrailerLineNumber(number);
         if (validIndex(number - 1, trailer.size())) {
             return trailer.get(number - 1);
         }
