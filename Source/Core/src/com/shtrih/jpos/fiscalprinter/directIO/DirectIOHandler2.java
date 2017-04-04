@@ -357,6 +357,14 @@ public class DirectIOHandler2 {
                 new DIOReadFSTickets2(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS3:
+                new DIOReadFSTickets3(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS4:
+                new DIOReadFSTickets4(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
@@ -506,6 +514,7 @@ public class DirectIOHandler2 {
             case  SmFptrConst.SMFPTR_DIO_PARAM_TAX_PASSWORD:
                 service.getPrinter().setTaxPassword(value);
                 break;
+                
                 
         }
     }

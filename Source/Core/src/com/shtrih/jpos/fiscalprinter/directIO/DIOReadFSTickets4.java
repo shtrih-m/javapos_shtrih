@@ -14,15 +14,15 @@ import com.shtrih.fiscalprinter.command.FSTicket;
 import com.shtrih.jpos.DIOUtils;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 
-public class DIOReadFSTickets2 extends DIOItem {
+public class DIOReadFSTickets4 extends DIOItem {
 
-    public DIOReadFSTickets2(FiscalPrinterImpl service) {
+    public DIOReadFSTickets4(FiscalPrinterImpl service) {
         super(service);
     }
 
     public void execute(int[] data, Object object) throws Exception {
         Object[] items = (Object[]) object;
-        items[0] = service.getPrinter().fsReadTickets(data);
+        items[0] = service.getPrinter().fsReadTickets(data[0]);
     }
 
 }

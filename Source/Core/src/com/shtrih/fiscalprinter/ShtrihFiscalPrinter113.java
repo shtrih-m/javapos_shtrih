@@ -1722,6 +1722,21 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS2, numbers, object);
         return (Vector<FSTicket>) object[0];
     }
+    
+    public void fsReadTickets3(int number1, Object object) throws Exception {
+        int[] data = new int[1];
+        data[0] = number1;
+        directIO(SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS3, data, object);
+    }
+
+    public Vector<FSTicket> fsReadTickets4(int number1) throws Exception {
+        int[] data = new int[1];
+        data[0] = number1;
+        Object[] object = new Object[1];
+        object[0] = null;
+        directIO(SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS4, data, object);
+        return (Vector<FSTicket>) object[0];
+    }
 
     /**
      * Техническое обнуление
@@ -1734,16 +1749,16 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     /**
      * Установка даты
      */
-    public void writeDate(PrinterDate date) throws Exception{
-        SetDateCommand  cmd = new SetDateCommand(getSysPassword(), date);
+    public void writeDate(PrinterDate date) throws Exception {
+        SetDateCommand cmd = new SetDateCommand(getSysPassword(), date);
         executeCommand(cmd);
     }
 
     /**
      * Подтверждение даты
      */
-    public void confirmDate(PrinterDate date) throws Exception{
-        ConfirmDate  cmd = new ConfirmDate();
+    public void confirmDate(PrinterDate date) throws Exception {
+        ConfirmDate cmd = new ConfirmDate();
         cmd.setPassword(getSysPassword());
         cmd.setDate(date);
         executeCommand(cmd);
@@ -1752,8 +1767,8 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     /**
      * Установка времени
      */
-    public void writeTime(PrinterTime time) throws Exception{
-        WriteTime  cmd = new WriteTime();
+    public void writeTime(PrinterTime time) throws Exception {
+        WriteTime cmd = new WriteTime();
         cmd.setPassword(getSysPassword());
         cmd.setTime(time);
         executeCommand(cmd);

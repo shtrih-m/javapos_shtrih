@@ -3128,5 +3128,34 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public boolean getCapFSCloseReceipt() {
         return capFSCloseReceipt;
     }
-
+    
+    public Vector<FSTicket> fsReadTickets(int[] numbers) throws Exception {
+        Vector<FSTicket> tickets = new Vector<FSTicket>();
+        for (int i = 0; i < numbers.length; i++) {
+            FSReadDocTicket command = new FSReadDocTicket();
+            command.setSysPassword(getSysPassword());
+            command.setDocNumber(numbers[i]);
+            int rc = executeCommand(command);
+            byte[] ticket = command.getTicket();
+            tickets.add(new FSTicket(rc, ticket));
+        }
+        return tickets;
+    }
+    
+    public Vector<FSTicket> fsReadTickets(int number1) throws Exception 
+    {
+        Vector<FSTicket> tickets = new Vector<FSTicket>();
+        FSReadStatus status = fsReadStatus();
+        long number2 = status.getDocNumber();
+       
+        for (int i = number1; i <= number2; i++) {
+            FSReadDocTicket command = new FSReadDocTicket();
+            command.setSysPassword(getSysPassword());
+            command.setDocNumber(i);
+            int rc = executeCommand(command);
+            byte[] ticket = command.getTicket();
+            tickets.add(new FSTicket(rc, ticket));
+        }
+        return tickets;
+    }    
 }

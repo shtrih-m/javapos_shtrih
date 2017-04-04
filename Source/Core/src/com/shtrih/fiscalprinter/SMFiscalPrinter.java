@@ -34,6 +34,7 @@ import com.shtrih.fiscalprinter.command.FSReadFiscalization;
 import com.shtrih.fiscalprinter.command.FSReadSerial;
 import com.shtrih.fiscalprinter.command.FSReadStatus;
 import com.shtrih.fiscalprinter.command.FSReceiptDiscount;
+import com.shtrih.fiscalprinter.command.FSTicket;
 import com.shtrih.fiscalprinter.command.FlexCommands;
 import com.shtrih.fiscalprinter.command.IPrinterEvents;
 import com.shtrih.fiscalprinter.command.LongPrinterStatus;
@@ -530,5 +531,9 @@ public interface SMFiscalPrinter {
     byte[] fsReadBlockData() throws Exception;
 
     void fsWriteBlockData(byte[] data) throws Exception;
+    
+    public Vector<FSTicket> fsReadTickets(int[] numbers) throws Exception;
+    
+    public Vector<FSTicket> fsReadTickets(int number1) throws Exception;    
 }
 

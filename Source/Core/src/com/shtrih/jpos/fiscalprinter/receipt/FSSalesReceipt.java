@@ -257,8 +257,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 correctPayments();
                 int discountAmount = 0;
                 if (!isDiscountAffectTotal()) {
-                    if (discounts.getTotal() < 100) {
+                    if (discounts.getTotal() < 100) 
+                    {
                         discountAmount = (int) discounts.getTotal();
+                        discounts.clear();
                     } else {
                         addItemsDiscounts();
                     }
@@ -905,11 +907,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setTax3(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setTax4(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setText(text);
-        /*
         if (getParams().subAdjustmentOrder == PrinterConst.ADJUSTMENT_ORDER_CORRECT) {
             items.add(item);
         }
-        */
         discounts.add(item);
         addTotal(-amount);
     }

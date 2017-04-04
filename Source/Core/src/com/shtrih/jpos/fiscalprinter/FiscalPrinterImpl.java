@@ -4625,16 +4625,5 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return "";
     }
 
-    public Vector<FSTicket> fsReadTickets(int[] numbers) throws Exception {
-        Vector<FSTicket> tickets = new Vector<FSTicket>();
-        for (int i = 0; i < numbers.length; i++) {
-            FSReadDocTicket command = new FSReadDocTicket();
-            command.setSysPassword(printer.getSysPassword());
-            command.setDocNumber(numbers[i]);
-            int rc = printer.executeCommand(command);
-            byte[] ticket = command.getTicket();
-            tickets.add(new FSTicket(rc, ticket));
-        }
-        return tickets;
-    }
+
 }
