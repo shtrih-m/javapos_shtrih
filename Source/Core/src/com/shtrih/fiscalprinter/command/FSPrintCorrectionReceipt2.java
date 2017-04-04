@@ -18,8 +18,10 @@ import com.shtrih.util.BitUtils;
 Сформировать чек коррекции V2 FF4AH
 Код команды FF4Ah . Длина сообщения: 69 байт.
 Пароль системного администратора: 4 байта
-Тип коррекции :1 байт
-Признак расчета:1байт
+Тип коррекции :1 байт  «0» - самостоятельно, «1» - по предписанию
+Признак расчета:1байт («1» (коррекция прихода, операция, при которой пользователь вносит денежные
+средства коррекции) и «3» (коррекция расхода, операция, при которой пользователь изымает денежные
+средства).
 Сумма расчёта :5 байт
 Сумма по чеку наличными:5 байт
 Сумма по чеку электронными:5 байт
@@ -40,6 +42,7 @@ import com.shtrih.util.BitUtils;
 Номер ФД: 4 байта
 Фискальный признак: 4 байт
 */
+
 
 public class FSPrintCorrectionReceipt2 extends PrinterCommand {
 
@@ -72,6 +75,7 @@ public class FSPrintCorrectionReceipt2 extends PrinterCommand {
         out.writeInt(getSysPassword());
         out.writeByte(correctionType);
         out.writeByte(paymentType);
+        out.writeLong(total, 5);
         out.writeLong(payments[0], 5);
         out.writeLong(payments[1], 5);
         out.writeLong(payments[2], 5);

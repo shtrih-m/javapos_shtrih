@@ -709,9 +709,33 @@ class PrinterTest implements FiscalPrinterConst {
 
         //printFiscalReceipt107();
         //printFiscalReceipt102();
-        printFiscalReceipt103();
+        //printFiscalReceipt103();
+        printCorrectionReceipt();
     }
 
+    public void printCorrectionReceipt(){
+        try {
+            long payments[] = new long[5]; 
+            long taxTotals[] = new long[6]; 
+            payments[0] = 100;
+            payments[1] = 100;
+            payments[2] = 100;
+            payments[3] = 100;
+            payments[4] = 100;
+            taxTotals[0] = 1; 
+            taxTotals[1] = 2; 
+            taxTotals[2] = 3; 
+            taxTotals[3] = 4; 
+            taxTotals[4] = 5; 
+            taxTotals[5] = 6; 
+            
+            printer.fsPrintCorrectionReceipt3(0, 1, 500, payments, taxTotals, 1);
+        
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void printPaperReport() {
         try {
             System.out.println("CapRecPresent: " + printer.getCapRecPresent());

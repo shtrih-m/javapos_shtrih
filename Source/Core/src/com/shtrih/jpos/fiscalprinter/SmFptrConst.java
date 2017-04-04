@@ -460,6 +460,8 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_READ_FS_TICKETS3 = 0x41;
     public static final int SMFPTR_DIO_READ_FS_TICKETS4 = 0x42;
     
+    public static final int SMFPTR_DIO_PRINT_CORRECTION = 0x43;
+    
     
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
