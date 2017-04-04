@@ -615,6 +615,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     command.setRepeatNeeded(true);
                     break;
 
+                case SMFP_EFPTR_RECBUF_OVERFLOW:
+                    boolean recOpened = printer.readPrinterStatus().getPrinterMode().isReceiptOpened();
+                    if (!recOpened) {
+                        printer.sleep(1000);
+                        command.setRepeatNeeded(true);
+                    }
+
             }
         } catch (Exception e) {
             logger.error("commandExecuted", e);
@@ -1121,7 +1128,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             throw new JposException(
                     JPOS_E_ILLEGAL,
                     Localizer
-                    .getString(Localizer.receiptDuplicationNotSupported));
+                            .getString(Localizer.receiptDuplicationNotSupported));
         }
         duplicateReceipt = aduplicateReceipt;
     }
@@ -1595,7 +1602,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         if (!getCapAdditionalTrailer()) {
             throw new JposException(JPOS_E_ILLEGAL,
                     Localizer
-                    .getString(Localizer.additionalTrailerNotSupported));
+                            .getString(Localizer.additionalTrailerNotSupported));
         }
         return encodeText(additionalTrailer);
     }
@@ -1605,7 +1612,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         if (!getCapAdditionalTrailer()) {
             throw new JposException(JPOS_E_ILLEGAL,
                     Localizer
-                    .getString(Localizer.additionalTrailerNotSupported));
+                            .getString(Localizer.additionalTrailerNotSupported));
         }
         additionalTrailer = decodeText(value);
     }
@@ -1637,7 +1644,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             throw new JposException(
                     JPOS_E_ILLEGAL,
                     Localizer
-                    .getString(Localizer.multipleContractorsNotSupported));
+                            .getString(Localizer.multipleContractorsNotSupported));
         }
         contractorId = value;
     }
@@ -2045,8 +2052,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             port.setPortName(params.portName);
             port.open(timeout);
             printer.connect();
-            
-            
+
             printer.readDeviceMetrics();
             getPrinter().initialize();
         }
@@ -2366,7 +2372,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         printDocEnd();
 
         // open receipt again
-        if (isReceiptOpened) {
+        if (isReceiptOpenned) {
             getPrinter().check(getPrinter().printReceiptCommands());
             getPrinter().clearReceiptCommands();
         }
@@ -4185,7 +4191,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     if (writePointCount >= MaxStateCount) {
                         throw new Exception(
                                 Localizer
-                                .getString(Localizer.WriteDecimalPointFailed));
+                                        .getString(Localizer.WriteDecimalPointFailed));
                     }
                     break;
 
@@ -4624,6 +4630,5 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public String getReceiptName(int receiptType) {
         return "";
     }
-
 
 }

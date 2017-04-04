@@ -424,6 +424,8 @@ public interface PrinterConst {
     public static final int SMFP_EFPTR_EJ_CONNECT_ERROR = 0xA0;
     // Electronic journal missing
     public static final int SMFP_EFPTR_EJ_MISSING = 0xA1;
+    // REceipt buffer overflow
+    public static final int SMFP_EFPTR_RECBUF_OVERFLOW = 0x4B;
     
 
     // ###################################################################

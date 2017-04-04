@@ -204,7 +204,7 @@ public abstract class CustomReceipt implements FiscalReceipt {
         getPrinter().printText(station, message, font);
     }
 
-    public void printNormal(int station, String data) throws Exception {
+    public void printNormal(int station, String data) throws Exception{
         getPrinter().printText(getPrinter().getStation(station), data,
                 getParams().font);
     }
