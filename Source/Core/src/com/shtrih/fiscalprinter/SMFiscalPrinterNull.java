@@ -74,6 +74,7 @@ import com.shtrih.util.BitUtils;
 import com.shtrih.fiscalprinter.command.FMTotals;
 import com.shtrih.fiscalprinter.command.FSReadExpDate;
 import com.shtrih.fiscalprinter.command.FSReadSerial;
+import com.shtrih.fiscalprinter.command.FSTicket;
 import com.shtrih.jpos.fiscalprinter.PrintItem;
 
 /**
@@ -947,4 +948,13 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public boolean getCapFSCloseReceipt(){
         return false;
     }
+    
+    public Vector<FSTicket> fsReadTickets(int[] numbers) throws Exception{
+        return null;
+    }
+    
+    public Vector<FSTicket> fsReadTickets(int number1) throws Exception{
+        return null;
+    }    
+    
 }

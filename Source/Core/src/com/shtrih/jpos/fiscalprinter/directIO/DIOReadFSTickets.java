@@ -21,7 +21,7 @@ public class DIOReadFSTickets extends DIOItem {
     }
 
     public void execute(int[] data, Object object) throws Exception {
-        Vector<FSTicket> tickets = service.fsReadTickets(data);
+        Vector<FSTicket> tickets = service.getPrinter().fsReadTickets(data);
         int[] resultCodes = null;
         byte[][] ticketData = null;
         if (tickets.size() > 0) {
