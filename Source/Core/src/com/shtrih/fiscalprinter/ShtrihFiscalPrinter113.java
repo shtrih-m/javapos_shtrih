@@ -1578,16 +1578,38 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public void fsPrintCorrectionReceipt3(
-        int correctionType, int paymentType, long total, long[] payments,
-        long[] taxTotals, int taxSystem) throws JposException 
+        int correctionType, 
+        int paymentType, 
+        long total, 
+        long payments0,
+        long payments1,
+        long payments2,
+        long payments3,
+        long payments4,
+        long taxTotals0, 
+        long taxTotals1, 
+        long taxTotals2, 
+        long taxTotals3, 
+        long taxTotals4, 
+        long taxTotals5, 
+        int taxSystem) throws JposException 
     {
-        Object[] params = new Object[6];
+        Object[] params = new Object[15];
         params[0] = correctionType;
         params[1] = paymentType;
         params[2] = total;
-        params[3] = payments;
-        params[4] = taxTotals;
-        params[5] = taxSystem;
+        params[3] = payments0;
+        params[4] = payments1;
+        params[5] = payments2;
+        params[6] = payments3;
+        params[7] = payments4;
+        params[8] = taxTotals0;
+        params[9] = taxTotals1;
+        params[10] = taxTotals2;
+        params[11] = taxTotals3;
+        params[12] = taxTotals4;
+        params[13] = taxTotals5;
+        params[14] = taxSystem;
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_CORRECTION, null, params);
     }
     

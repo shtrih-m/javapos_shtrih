@@ -208,6 +208,10 @@ public class FSPrintCorrectionReceipt2 extends PrinterCommand {
         this.payments = payments;
     }
 
+    public void setPayment(int index, long payment) {
+        this.payments[index] = payment;
+    }
+    
     /**
      * @return the taxTotals
      */
@@ -222,6 +226,10 @@ public class FSPrintCorrectionReceipt2 extends PrinterCommand {
         this.taxTotals = taxTotals;
     }
 
+    public void setTaxTotal(int index, long taxTotal) {
+        this.taxTotals[index] = taxTotal;
+    }
+    
     /**
      * @return the taxSystem
      */

@@ -29,9 +29,18 @@ public class DIOPrintCorrectionReceipt extends DIOItem {
         command.setCorrectionType((Integer)params[0]);
         command.setPaymentType((Integer)params[1]);
         command.setTotal((Long)params[2]);
-        command.setPayments((long[])params[3]);
-        command.setTaxTotals((long[])params[4]);
-        command.setTaxSystem((Integer)params[5]);
+        command.setPayment(0, (Long)params[3]);
+        command.setPayment(1, (Long)params[4]);
+        command.setPayment(2, (Long)params[5]);
+        command.setPayment(3, (Long)params[6]);
+        command.setPayment(4, (Long)params[7]);
+        command.setTaxTotal(0, (Long)params[8]);
+        command.setTaxTotal(1, (Long)params[9]);
+        command.setTaxTotal(2, (Long)params[10]);
+        command.setTaxTotal(3, (Long)params[11]);
+        command.setTaxTotal(4, (Long)params[12]);
+        command.setTaxTotal(5, (Long)params[13]);
+        command.setTaxSystem((Integer)params[14]);
         service.getPrinter().execute(command);
         
     }

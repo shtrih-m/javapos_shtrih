@@ -715,21 +715,38 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printCorrectionReceipt(){
         try {
-            long payments[] = new long[5]; 
-            long taxTotals[] = new long[6]; 
-            payments[0] = 100;
-            payments[1] = 100;
-            payments[2] = 100;
-            payments[3] = 100;
-            payments[4] = 100;
-            taxTotals[0] = 1; 
-            taxTotals[1] = 2; 
-            taxTotals[2] = 3; 
-            taxTotals[3] = 4; 
-            taxTotals[4] = 5; 
-            taxTotals[5] = 6; 
-            
-            printer.fsPrintCorrectionReceipt3(0, 1, 500, payments, taxTotals, 1);
+            int correctionType = 0;
+            int paymentType = 1;
+            long total = 500;
+            long payments0 = 100;
+            long payments1 = 100;
+            long payments2 = 100;
+            long payments3 = 100;
+            long payments4 = 100;
+            long taxTotals0 = 1;
+            long taxTotals1 = 2;
+            long taxTotals2 = 3;
+            long taxTotals3 = 4;
+            long taxTotals4 = 5;
+            long taxTotals5 = 6;
+            int taxSystem = 0;
+
+            printer.fsPrintCorrectionReceipt3(
+                correctionType, 
+                paymentType, 
+                total, 
+                payments0,
+                payments1,
+                payments2,
+                payments3,
+                payments4,
+                taxTotals0, 
+                taxTotals1, 
+                taxTotals2, 
+                taxTotals3, 
+                taxTotals4, 
+                taxTotals5, 
+                taxSystem);
         
         } catch (Exception e) {
             e.printStackTrace();
