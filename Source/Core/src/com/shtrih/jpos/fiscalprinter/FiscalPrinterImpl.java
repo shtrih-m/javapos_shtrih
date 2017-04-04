@@ -2372,7 +2372,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         printDocEnd();
 
         // open receipt again
-        if (isReceiptOpenned) {
+        if (isReceiptOpened) {
             getPrinter().check(getPrinter().printReceiptCommands());
             getPrinter().clearReceiptCommands();
         }
