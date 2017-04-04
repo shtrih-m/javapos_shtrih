@@ -1592,9 +1592,10 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         long taxTotals3, 
         long taxTotals4, 
         long taxTotals5, 
-        int taxSystem) throws JposException 
+        int taxSystem,
+        Object[] outParams) throws JposException 
     {
-        Object[] params = new Object[15];
+        Object[] params = new Object[18];
         params[0] = correctionType;
         params[1] = paymentType;
         params[2] = total;
@@ -1611,6 +1612,12 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         params[13] = taxTotals5;
         params[14] = taxSystem;
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_CORRECTION, null, params);
+        int receiptNumber = (Integer)params[15];
+        int documentNumber = (Integer)params[16];
+        long documentDigest = (Long)params[17];
+        outParams[0] = receiptNumber;
+        outParams[1] = documentNumber;
+        outParams[2] = documentDigest;
     }
     
     public void fsStartCalcReport(FSStartCalcReport command) throws JposException {

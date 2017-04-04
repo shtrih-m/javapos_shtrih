@@ -730,6 +730,7 @@ class PrinterTest implements FiscalPrinterConst {
             long taxTotals4 = 5;
             long taxTotals5 = 6;
             int taxSystem = 0;
+            Object[] outParams = new Object[3];
 
             printer.fsPrintCorrectionReceipt3(
                 correctionType, 
@@ -746,7 +747,15 @@ class PrinterTest implements FiscalPrinterConst {
                 taxTotals3, 
                 taxTotals4, 
                 taxTotals5, 
-                taxSystem);
+                taxSystem, 
+                outParams);
+            int receiptNumber = (Integer)outParams[0];
+            int documentNumber = (Integer)outParams[1];
+            long documentDigest = (Long)outParams[2];
+            
+            System.out.println("receiptNumber: " + receiptNumber);
+            System.out.println("documentNumber: " + documentNumber);
+            System.out.println("documentDigest: " + documentDigest);
         
         } catch (Exception e) {
             e.printStackTrace();

@@ -57,7 +57,7 @@ public class FSPrintCorrectionReceipt2 extends PrinterCommand {
     // out
     private int receiptNumber;
     private int documentNumber;
-    private int documentDigest;
+    private long documentDigest;
      
 
     public FSPrintCorrectionReceipt2() {
@@ -93,7 +93,7 @@ public class FSPrintCorrectionReceipt2 extends PrinterCommand {
     public void decode(CommandInputStream in) throws Exception {
         setReceiptNumber(in.readShort());
         setDocumentNumber(in.readInt());
-        setDocumentDigest(in.readInt());
+        setDocumentDigest(in.readLong(4));
     }
 
     /**
@@ -155,14 +155,14 @@ public class FSPrintCorrectionReceipt2 extends PrinterCommand {
     /**
      * @return the documentDigest
      */
-    public int getDocumentDigest() {
+    public long getDocumentDigest() {
         return documentDigest;
     }
 
     /**
      * @param documentDigest the documentDigest to set
      */
-    public void setDocumentDigest(int documentDigest) {
+    public void setDocumentDigest(long documentDigest) {
         this.documentDigest = documentDigest;
     }
 

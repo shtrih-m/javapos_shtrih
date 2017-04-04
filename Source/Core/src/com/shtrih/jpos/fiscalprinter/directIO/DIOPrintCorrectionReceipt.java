@@ -42,7 +42,9 @@ public class DIOPrintCorrectionReceipt extends DIOItem {
         command.setTaxTotal(5, (Long)params[13]);
         command.setTaxSystem((Integer)params[14]);
         service.getPrinter().execute(command);
-        
+        params[15] = command.getReceiptNumber();
+        params[16] = command.getDocumentNumber();
+        params[17] = command.getDocumentDigest();
     }
 
 }
