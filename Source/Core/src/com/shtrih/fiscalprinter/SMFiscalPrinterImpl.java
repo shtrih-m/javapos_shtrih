@@ -30,6 +30,8 @@ import jpos.JposConst;
 
 import java.io.ByteArrayOutputStream;
 import java.security.InvalidParameterException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -443,6 +445,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         ReadShortStatus command = new ReadShortStatus(usrPassword);
         execute(command);
         shortStatus = command.getStatus();
+        
+        NumberFormat formatter = new DecimalFormat("#0.00");
+        String text = formatter.format(command.getStatus().getPowerVoltage());
+        logger.debug("Power voltage: " + text + " V");          
+        
         return shortStatus;
     }
 
