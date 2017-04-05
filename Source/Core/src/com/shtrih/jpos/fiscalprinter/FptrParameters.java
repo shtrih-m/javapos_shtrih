@@ -148,6 +148,7 @@ public class FptrParameters {
     public int printerIDMode = PrinterConst.PRINTER_ID_SERIAL;
     public int swapGraphicsLine = PrinterConst.SWAP_LINE_AUTO;
     public int subAdjustmentOrder = PrinterConst.ADJUSTMENT_ORDER_CORRECT;
+    public boolean subtotalTextEnabled = true;
     
 
     public FptrParameters() throws Exception {
@@ -343,6 +344,7 @@ public class FptrParameters {
         printerIDMode = reader.readInteger("PrinterIDMode", PrinterConst.PRINTER_ID_SERIAL);
         swapGraphicsLine = reader.readInteger("swapGraphicsLine", PrinterConst.SWAP_LINE_AUTO);
         subAdjustmentOrder = reader.readInteger("subAdjustmentOrder", PrinterConst.ADJUSTMENT_ORDER_CORRECT);
+        subtotalTextEnabled = reader.readBoolean("subtotalTextEnabled", true);
         
         // paymentNames
         String paymentName;
