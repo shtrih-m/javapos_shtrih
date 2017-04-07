@@ -18,6 +18,8 @@ public class JposConfig {
 
 	public static void configure(String deviceName, String portName, Context context)
 			throws Exception {
+		LogbackConfig.configure(SysUtils.getFilesPath() + "tinyJavaPosTester.log");
+
 		copyAsset("jpos.xml", SysUtils.getFilesPath() + "jpos.xml", context);
 		String fileURL = "file://" + SysUtils.getFilesPath() + "jpos.xml";
 		System.setProperty(
