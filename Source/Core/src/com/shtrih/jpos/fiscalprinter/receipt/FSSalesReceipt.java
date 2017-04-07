@@ -117,7 +117,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             int vatInfo, long unitPrice, String unitName) throws Exception {
         openReceipt(PrinterConst.SMFP_RECTYPE_SALE);
         printSale(price, quantity, unitPrice, getParams().department,
-                vatInfo, description);
+                vatInfo, description, unitName);
     }
 
     // pack discounts
@@ -457,7 +457,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             throws Exception {
         openReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
         printSale(amount, 1000, amount, getParams().department, vatInfo,
-                description);
+                description, "");
     }
 
     public void addTextItem(String text) throws Exception {
@@ -484,7 +484,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     vatInfo, description);
         } else {
             printSale(price, quantity, unitPrice, getParams().department,
-                    vatInfo, description);
+                    vatInfo, description, unitName);
         }
     }
 
@@ -593,7 +593,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     description);
         } else {
             printSale(0, quantity, amount, getParams().department, vatInfo,
-                    description);
+                    description, "");
         }
 
     }
@@ -723,7 +723,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             throws Exception {
         openReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
         printSale(amount, quantity, unitAmount, getParams().department, vatInfo,
-                description);
+                description, unitName);
 
     }
 
@@ -798,11 +798,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             quantity = 1000;
         }
         quantity = correctQuantity(price, quantity, unitPrice);
-        doPrintSale(price, -quantity, unitPrice, department, vatInfo, description);
+        doPrintSale(price, -quantity, unitPrice, department, vatInfo, description, "");
     }
 
     public void printSale(long price, long quantity, long unitPrice,
-            int department, int vatInfo, String description) throws Exception {
+            int department, int vatInfo, String description, 
+            String unitName) throws Exception {
         if (unitPrice == 0) {
             if (price != 0) {
                 quantity = 1000;
@@ -812,11 +813,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             quantity = 1000;
         }
         quantity = correctQuantity(price, quantity, unitPrice);
-        doPrintSale(price, quantity, unitPrice, department, vatInfo, description);
+        doPrintSale(price, quantity, unitPrice, department, vatInfo, 
+                description, unitName);
     }
 
     public void doPrintSale(long price, long quantity, long unitPrice,
-            int department, int vatInfo, String description) throws Exception {
+            int department, int vatInfo, String description, String unitName) throws Exception {
         logger.debug(
                 "price: " + price
                 + ", quantity: " + quantity
@@ -848,6 +850,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
         FSSaleReceiptItem item = new FSSaleReceiptItem();
         item.setPrice(unitPrice);
+        item.setUnitPrice(unitPrice);
         item.setQuantity(quantity);
         item.setDepartment(department);
         item.setTax1(vatInfo);
@@ -858,6 +861,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setPreLine(getPreLine());
         item.setPostLine(getPostLine());
         item.setPos(recItems.size() + 1);
+        item.setUnitName(unitName);
         lastItem = item;
 
         items.add(item);
@@ -1029,7 +1033,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         line = StringUtils.left(line, 4) + item.getText();
         getDevice().printText(line);
 
-        line = StringUtils.quantityToStr(item.getQuantity()) + " X "
+        
+        line = getParams().quantityToStr(item.getQuantity(), item.getUnitName()) + " X "
                 + StringUtils.amountToString(item.getPrice()) + " ="
                 + StringUtils.amountToString(item.getAmount())
                 + getTaxLetter(tax);

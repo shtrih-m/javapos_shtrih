@@ -17,22 +17,21 @@
         <vendor name="SHTRIH-M" url="http://www.shtrih-m.com"/>
         <jpos category="FiscalPrinter" version="1.9"/>
         <product description="Fiscal printer service" name="ShtrihFptr" url="http://www.javapos.com"/>
-        <!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass -->
-        <prop name="portType" type="String" value="2"/>
         <!-- portClass  -->
         <prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.SerialPrinterPort"/>
         <!--<prop name="portClass" type="String" value="com.shtrih.bluetooth.BTPrinterPort"/>-->
         <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
         <!-- ProtocolType, 0 - protocol 1, 1 - protocol 2 -->
         <prop name="protocolType" type="String" value="0"/>
+        <!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass -->
+        <prop name="portType" type="String" value="0"/>
         <!--Port name-->
         <!--For serial ports - COM1, for TCP ports: host:port - "10.11.7.210:12345" -->
         <!--<prop name="portName" type="String" value="10.11.7.210:12345"/> -->
         <!--<prop name="portName" type="String" value="COM2"/> -->
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
-        <prop name="portName" type="String" value="192.168.137.111:7778"/> 
-        <!--<prop name="portName" type="String" value="COM4"/>-->
+        <prop name="portName" type="String" value="COM4"/> 
 		
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
@@ -286,7 +285,7 @@
 		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
 		<prop name="FieldSeparator" type="String" value=";"/>
 		<prop name="ItemTableHeader" type="String" value="Цена     Скидка  Цена со скидкой  Кол-во  ИТОГ  НДС"/>
-		<prop name="ItemRowFormat" type="String" value="%51lTITLE%;%8lPRICE% %6lDISCOUNT%  %8lSUM%         %3QUAN%%=$10TOTAL_TAX%"/>
+		<prop name="ItemRowFormat" type="String" value="%51lTITLE%;%8lUNITPRICE% %6lDISCOUNT%  %8lPRICE%         %3QUAN%%=$10TOTAL%   %TAX_LETTER%"/>
 		<!-- <prop name="DiscountFormat" type="String" value="    СКИДКА  %29lTITLE%%=$10TOTAL%"/> -->
 		<prop name="DiscountFormat" type="String" value=""/>
 		<!-- <prop name="ChargeFormat" type="String"   value="    НАДБАВКА  %29lTITLE%%=$10TOTAL%"/> -->

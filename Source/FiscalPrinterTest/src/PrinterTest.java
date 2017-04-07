@@ -243,28 +243,8 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printEan13() {
         try {
-            PrinterBarcode barcode = new PrinterBarcode();
-            barcode.setTextFont(1);
-            barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_ABOVE);
-            barcode.setBarWidth(3);
-            barcode.setAspectRatio(3);
-            barcode.setHeight(100);
-            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
-            barcode.setLabel("EAN13: 2223183256141");
-            barcode.setText("2223183256141");
-            barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);
-            printer.printBarcode(barcode);
-            
-            barcode = new PrinterBarcode();
-            barcode.setTextFont(1);
-            barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_ABOVE);
-            barcode.setBarWidth(2);
-            barcode.setHeight(100);
-            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
-            barcode.setLabel("EAN13: 2223432423401");
-            barcode.setText("2223432423401");
-            barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);
-            printer.printBarcode(barcode);
+            printer.printBarcode("2223183256141", "2223183256141", 
+                    2, 45, 1, 3, 1, 1, 3);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -709,8 +689,8 @@ class PrinterTest implements FiscalPrinterConst {
 
         //printFiscalReceipt107();
         //printFiscalReceipt102();
-        //printFiscalReceipt103();
-        printCorrectionReceipt();
+        //printCorrectionReceipt();
+        printFiscalReceipt103();
     }
 
     public void printCorrectionReceipt(){
@@ -1003,14 +983,14 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-            printer.printRecItem("1. Item" , 4990, 1000, 1, 9980, "");
-            printer.printRecItemAdjustment(1, "", 4990, 1);
+            printer.printRecItem("Item 1" , 123, 1000, 1, 123, "");
+            printer.printRecItemAdjustment(1, "СКИДКА", 50, 1);
+            printer.printRecItem("Item 2" , 246, 2000, 1, 123, "");
+            printer.printRecItemAdjustment(1, "СКИДКА", 100, 1);
             printer.printRecSubtotalAdjustment(1, "СКИДКА", 90);
             printer.fsWriteTag(15000, "FGHGF987987");
             printer.fsWriteTag(15001, "2345");
             printer.fsWriteTag(15002, "98798");
-
-
             printer.printRecTotal(4990, 4990, "30");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {

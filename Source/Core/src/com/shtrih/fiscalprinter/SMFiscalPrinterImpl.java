@@ -1216,15 +1216,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void openReceipt(int receiptType) throws Exception {
         logger.debug("openReceipt");
 
+        openFiscalDay();
         PrinterStatus status = waitForPrinting();
-        if (capOpenFiscalDay) {
-            if (status.getPrinterMode().isDayClosed()) {
-                if (succeeded(beginFiscalDay())) {
-                    waitForPrinting();
-                }
-            }
-        }
-
         if (!status.getPrinterMode().isReceiptOpened()) {
             OpenReceipt command = new OpenReceipt();
             command.setPassword(usrPassword);
@@ -2020,9 +2013,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 bc = bc.substring(0, 12);
             }
             barcode.setText(bc);
-            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DEVICE);
+            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DEVICE); 
         }
-
+        
         switch (barcode.getPrintType()) {
             case SmFptrConst.SMFPTR_PRINTTYPE_AUTO:
                 if (getModel().getCapBarcodeSupported(barcode.getType())) {
@@ -3165,4 +3158,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
         return tickets;
     }    
+    
+    public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) 
+            throws Exception
+    {
+        openFiscalDay();
+        return executeCommand(command);
+    }
 }

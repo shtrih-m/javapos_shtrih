@@ -82,6 +82,7 @@ import com.shtrih.jpos.fiscalprinter.PrinterImages;
 import com.shtrih.jpos.fiscalprinter.ReceiptImages;
 import com.shtrih.fiscalprinter.command.TextLine;
 import com.shtrih.jpos.fiscalprinter.PrintItem;
+import com.shtrih.fiscalprinter.command.FSPrintCorrectionReceipt2;
 
 public interface SMFiscalPrinter {
 
@@ -535,5 +536,7 @@ public interface SMFiscalPrinter {
     public Vector<FSTicket> fsReadTickets(int[] numbers) throws Exception;
     
     public Vector<FSTicket> fsReadTickets(int number1) throws Exception;    
+    
+    public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws Exception;
 }
 

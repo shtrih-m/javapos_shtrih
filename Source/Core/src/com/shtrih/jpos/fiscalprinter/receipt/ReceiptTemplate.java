@@ -187,11 +187,14 @@ public class ReceiptTemplate {
             return item.getText();
         }
 
+        if (f.tag.equals("UNITPRICE")) {
+            return StringUtils.amountToString(item.getUnitPrice());
+        }
         if (f.tag.equals("PRICE")) {
             return StringUtils.amountToString(item.getPrice());
         }
         if (f.tag.equals("QUAN")) {
-            return StringUtils.quantityToStr(item.getQuantity());
+            return getParams().quantityToStr(item.getQuantity(), item.getUnitName());
         }
         if (f.tag.equals("SUM")) {
             return StringUtils.amountToString(item.getPriceWithDiscount());

@@ -23,6 +23,7 @@ public class FSSaleReceiptItem {
 
     private int pos = 0;
     private long price;
+    private long unitPrice;
     private long quantity;
     private int department;
     private int tax1;
@@ -32,6 +33,7 @@ public class FSSaleReceiptItem {
     private String text;
     private String preLine = "";
     private String postLine = "";
+    private String unitName = "";
     private long voidAmount = 0;
     private final FSDiscounts discounts = new FSDiscounts();
     private CompositeLogger logger = CompositeLogger.getLogger(FiscalPrinterImpl.class);
@@ -52,6 +54,18 @@ public class FSSaleReceiptItem {
         return item;
     }
 
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String value) {
+        this.unitName = value;
+    }
+
+    public void setUnitPrice(long value) {
+        this.unitPrice = value;
+    }
+    
     public void setPreLine(String value) {
         this.preLine = value;
     }
@@ -81,11 +95,7 @@ public class FSSaleReceiptItem {
     }
 
     public long getTotal() {
-        return getAmount() - discounts.getTotal();
-    }
-
-    public long getDiscountTotal() {
-        return discounts.getTotal();
+        return getAmount();
     }
 
     public void addDiscount(FSDiscount discount) {
@@ -114,13 +124,22 @@ public class FSSaleReceiptItem {
     }
 
     public long getTotalDiscount() {
+        return discounts.getTotal() * 1000 / quantity;
+    }
+
+    public long getDiscountTotal() {
         return discounts.getTotal();
     }
 
+    
     public long getPrice() {
         return price;
     }
 
+    public long getUnitPrice() {
+        return unitPrice;
+    }
+    
     public long getQuantity() {
         return quantity;
     }
@@ -207,9 +226,9 @@ public class FSSaleReceiptItem {
     }
 
     public long getPriceWithDiscount() {
-        return getTotal()*1000/quantity;
+        return getTotal() * 1000 / quantity;
     }
-    
+
     public long getAmount() {
         return PrinterAmount.getAmount(getPrice(), getQuantity());
     }

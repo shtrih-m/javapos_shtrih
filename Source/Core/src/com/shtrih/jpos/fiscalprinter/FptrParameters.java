@@ -19,6 +19,9 @@ import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.jpos.JposPropertyReader;
 import com.shtrih.util.CompositeLogger;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 public class FptrParameters {
 
@@ -124,9 +127,9 @@ public class FptrParameters {
     public int FSConnectTimeout = 3000; // 3000 ms
     public int FSPollPeriod = 3000; // 3000 ms - poll period
     public int compatibilityLevel = SmFptrConst.SMFPTR_COMPAT_LEVEL_NONE;
-    public boolean checkTotal = false; 
-    public boolean checkTotalEnabled = false; 
-    public int receiptNumberRequest = SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER; 
+    public boolean checkTotal = false;
+    public boolean checkTotalEnabled = false;
+    public int receiptNumberRequest = SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER;
     public boolean FSDiscountEnabled = true;
     public boolean FSReceiptItemDiscountEnabled = false;
     public boolean FSCombineItemAdjustments = true;
@@ -137,7 +140,7 @@ public class FptrParameters {
     public boolean textReportEmptyLinesEnabled = true;
     public boolean ReceiptTemplateEnabled = false;
     public String ItemTableHeader = null;
-    public String ItemRowFormat=null;
+    public String ItemRowFormat = null;
     public String discountFormat = null;
     public String chargeFormat = null;
     public boolean capJrnPresent = true;
@@ -149,7 +152,7 @@ public class FptrParameters {
     public int swapGraphicsLine = PrinterConst.SWAP_LINE_AUTO;
     public int subAdjustmentOrder = PrinterConst.ADJUSTMENT_ORDER_CORRECT;
     public boolean subtotalTextEnabled = true;
-    
+    public String weightUnitName = "г.";
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -226,10 +229,10 @@ public class FptrParameters {
         statusCommand = reader.readInteger("statusCommand",
                 PrinterConst.SMFP_STATUS_COMMAND_DS);
         messagesFileName = reader.readString("messagesFileName", "shtrihjavapos_en.properties");
-        if (messagesFileName.equals("")){
+        if (messagesFileName.equals("")) {
             messagesFileName = "shtrihjavapos_en.properties";
         }
-                
+
         wrapText = reader.readBoolean("wrapText", true);
         recCloseSleepTime = reader.readInteger("recCloseSleepTime", 0);
         cutType = reader.readInteger("cutType",
@@ -312,9 +315,9 @@ public class FptrParameters {
         receiptVoidText = reader.readString("receiptVoidText",
                 "ЧЕК ОТМЕНЕН");
         checkTotalEnabled = reader.readBoolean("checkTotalEnabled", false);
-        receiptNumberRequest = reader.readInteger("receiptNumberRequest", 
-            SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER); 
-        
+        receiptNumberRequest = reader.readInteger("receiptNumberRequest",
+                SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER);
+
         FSDiscountEnabled = reader.readBoolean("FSDiscountEnabled", true);
         FSReceiptItemDiscountEnabled = reader.readBoolean("FSReceiptItemDiscountEnabled", false);
         FSCombineItemAdjustments = reader.readBoolean("FSCombineItemAdjustments", true);
@@ -327,16 +330,16 @@ public class FptrParameters {
         subtotalFont = new FontNumber(reader.readInteger("subtotalFont", PrinterConst.FONT_NUMBER_NORMAL));
         discountFont = new FontNumber(reader.readInteger("discountFont", PrinterConst.FONT_NUMBER_NORMAL));
         ItemTableHeader = reader.readString("ItemTableHeader", "");
-        
+
         ItemRowFormat = reader.readString("ItemRowFormat", "%TITLE% %QUAN% X %PRICE%");
         ItemRowFormat = StringUtils.rtrim(ItemRowFormat);
-                
+
         discountFormat = reader.readString("DiscountFormat", "");
         discountFormat = StringUtils.rtrim(discountFormat);
-        
+
         chargeFormat = reader.readString("ChargeFormat", "");
         chargeFormat = StringUtils.rtrim(chargeFormat);
-        
+
         capJrnPresent = reader.readBoolean("capJrnPresent", true);
         nonFiscalHeaderEnabled = reader.readBoolean("nonFiscalHeaderEnabled", false);
         fsHeaderEnabled = reader.readBoolean("fsHeaderEnabled", false);
@@ -345,7 +348,8 @@ public class FptrParameters {
         swapGraphicsLine = reader.readInteger("swapGraphicsLine", PrinterConst.SWAP_LINE_AUTO);
         subAdjustmentOrder = reader.readInteger("subAdjustmentOrder", PrinterConst.ADJUSTMENT_ORDER_CORRECT);
         subtotalTextEnabled = reader.readBoolean("subtotalTextEnabled", true);
-        
+        weightUnitName = reader.readString("weightUnitName", "г.");
+
         // paymentNames
         String paymentName;
         String propertyName;
@@ -489,12 +493,23 @@ public class FptrParameters {
         preLine = "";
         postLine = "";
     }
-    
+
     public void clearPreLine() {
         preLine = "";
     }
-    
+
     public void clearPostLine() {
         postLine = "";
     }
+
+    public String quantityToStr(long value, String unitName) throws Exception {
+        String result;
+        if (((value % 1000) == 0) && (!unitName.equalsIgnoreCase(weightUnitName))) {
+            result = String.valueOf(value / 1000);
+        } else {
+            result = StringUtils.quantityToString(value / 1000.0);
+        }
+        return result;
+    }
+
 }

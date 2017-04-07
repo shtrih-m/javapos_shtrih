@@ -72,6 +72,7 @@ import com.shtrih.jpos.fiscalprinter.PrinterImage;
 import com.shtrih.jpos.fiscalprinter.ReceiptImages;
 import com.shtrih.util.BitUtils;
 import com.shtrih.fiscalprinter.command.FMTotals;
+import com.shtrih.fiscalprinter.command.FSPrintCorrectionReceipt2;
 import com.shtrih.fiscalprinter.command.FSReadExpDate;
 import com.shtrih.fiscalprinter.command.FSReadSerial;
 import com.shtrih.fiscalprinter.command.FSTicket;
@@ -957,4 +958,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return null;
     }    
     
+    public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws Exception
+    {
+        return 0;
+    }
 }

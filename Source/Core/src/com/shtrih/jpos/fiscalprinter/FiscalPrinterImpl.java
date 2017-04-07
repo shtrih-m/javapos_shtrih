@@ -3688,6 +3688,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void setPOSID(String POSID, String cashierID) throws Exception {
         checkOnLine();
+        
+        getPrinter().writeTable(1, 1, 1, POSID);
+        
         cashierID = decodeText(cashierID);
 
         checkEnabled();
