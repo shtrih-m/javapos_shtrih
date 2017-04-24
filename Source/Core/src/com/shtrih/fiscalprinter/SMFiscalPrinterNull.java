@@ -807,6 +807,11 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void fsWriteBlockData(byte[] data) throws Exception {
     }
 
+    @Override
+    public String ReadRnm() throws Exception {
+        return null;
+    }
+
     public String getErrorText(int code) throws Exception {
         return "";
     }

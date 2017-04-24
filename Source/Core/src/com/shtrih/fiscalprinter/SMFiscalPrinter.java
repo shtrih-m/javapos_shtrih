@@ -9,9 +9,8 @@
 package com.shtrih.fiscalprinter;
 
 /**
- *
  * @author V.Kravtsov
-*/
+ */
 
 import java.util.Vector;
 
@@ -87,7 +86,7 @@ import com.shtrih.fiscalprinter.command.FSPrintCorrectionReceipt2;
 public interface SMFiscalPrinter {
 
     public boolean getCapFSCloseReceipt();
-    
+
     public boolean getCapFiscalStorage();
 
     public FptrParameters getParams();
@@ -172,16 +171,16 @@ public interface SMFiscalPrinter {
             throws Exception;
 
     public int writeTable(int tableNumber, int rowNumber, int fieldNumber,
-            String fieldValue) throws Exception;
+                          String fieldValue) throws Exception;
 
     public String readTable(int tableNumber, int rowNumber, int fieldNumber)
             throws Exception;
-    
-    public String readTable(String tableName, String fieldName) 
+
+    public String readTable(String tableName, String fieldName)
             throws Exception;
-    
+
     public int readTable(int tableNumber, int rowNumber, int fieldNumber,
-            String[] fieldValue) throws Exception;
+                         String[] fieldValue) throws Exception;
 
     public int readTableInfo(int tableNumber, Object[] out) throws Exception;
 
@@ -216,18 +215,18 @@ public interface SMFiscalPrinter {
     public long readCashRegister(int number) throws Exception;
 
     public long readCashRegisterCorrection(int number) throws Exception;
-    
+
     public PrintEJDayReportOnDates printEJDayReportOnDates(EJDate date1,
-            EJDate date2, int reportType) throws Exception;
+                                                           EJDate date2, int reportType) throws Exception;
 
     public PrintFMReportDates printFMReportDates(PrinterDate date1,
-            PrinterDate date2, int reportType) throws Exception;
+                                                 PrinterDate date2, int reportType) throws Exception;
 
     public PrintEJDayReportOnDays printEJReportDays(int day1, int day2,
-            int reportType) throws Exception;
+                                                    int reportType) throws Exception;
 
     public PrintFMReportDays printFMReportDays(int day1, int day2,
-            int reportType) throws Exception;
+                                               int reportType) throws Exception;
 
     public void printSale(PriceItem item) throws Exception;
 
@@ -317,7 +316,7 @@ public interface SMFiscalPrinter {
     public void setBaudRate(int baudRate) throws Exception;
 
     public boolean connectDevice(int baudRate, int deviceBaudRate,
-            int deviceByteTimeout) throws Exception;
+                                 int deviceByteTimeout) throws Exception;
 
     public void checkBaudRate(int value) throws Exception;
 
@@ -429,9 +428,9 @@ public interface SMFiscalPrinter {
     public FMTotals readFMTotals(int mode) throws Exception;
 
     public FMTotals readFPTotals(int mode) throws Exception;
-    
+
     public FMTotals readFSTotals() throws Exception;
-    
+
     public void setEscPrinter(NCR7167Printer escPrinter);
 
     public int beginFiscalDay() throws Exception;
@@ -468,9 +467,9 @@ public interface SMFiscalPrinter {
     public byte[] getTLVData(int tagId, String tagValue) throws Exception;
     
     public FSReadStatus fsReadStatus() throws Exception;
-    
+
     public FSReadDayParameters fsReadDayParameters() throws Exception;
-    
+
     public boolean isFiscalized() throws Exception;
 
     public int readDayNumber() throws Exception;
@@ -480,58 +479,60 @@ public interface SMFiscalPrinter {
     public void writeCasierName(String name) throws Exception;
 
     public void writeAdminName(String name) throws Exception;
-    
+
     public void disablePrint() throws Exception;
-    
+
     public FSReadFiscalization fsReadFiscalization() throws Exception;
-    
-    public FSReadCommStatus fsReadCommStatus() throws Exception;    
-    
+
+    public FSReadCommStatus fsReadCommStatus() throws Exception;
+
     public void startSaveCommands();
-    
+
     public void stopSaveCommands();
-    
+
     public void clearReceiptCommands();
-    
+
     public int printReceiptCommands() throws Exception;
-    
+
     public int fsReceiptDiscount(FSReceiptDiscount command) throws Exception;
-    
+
     public String getDepartmentName(int number) throws Exception;
-    
+
     public String getTaxName(int number) throws Exception;
-    
+
     public int getTaxRate(int number) throws Exception;
-   
+
     public int getDiscountMode() throws Exception;
-    
+
     public int printDocHeader(String title, int number) throws Exception;
-    
+
     public void printLines(String line1, String line2) throws Exception;
-    
+
     public void printItems(Vector<PrintItem> items) throws Exception;
 
     public void printFSHeader() throws Exception;
-    
+
     public PrinterModel getModel() throws Exception;
-    
+
     public boolean getCapOpenReceipt() throws Exception;
-    
+
     public FSReadSerial fsReadSerial() throws Exception;
 
     public String readFullSerial() throws Exception;
 
     public FSReadExpDate fsReadExpDate() throws Exception;
-    
+
     public void checkDiscountMode(int mode) throws Exception;
-    
+
     public void printReceiptHeader(String docName) throws Exception;
-    
+
     public String getReceiptName(int receiptType);
 
     byte[] fsReadBlockData() throws Exception;
 
     void fsWriteBlockData(byte[] data) throws Exception;
+
+    String ReadRnm() throws Exception;
     
     public Vector<FSTicket> fsReadTickets(int[] numbers) throws Exception;
     

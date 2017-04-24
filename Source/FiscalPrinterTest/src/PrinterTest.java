@@ -9,6 +9,8 @@
 /////////////////////////////////////////////////////////////////////
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import java.io.FileReader;
 import java.io.BufferedReader;
@@ -629,6 +631,14 @@ class PrinterTest implements FiscalPrinterConst {
             String[] lines = new String[1];
             printer.getData(FPTR_GD_PRINTER_ID, null, lines);
             System.out.println("FPTR_GD_PRINTER_ID: " + lines[0]);
+
+            List<String> results = new ArrayList<String>();
+            printer.directIO(SmFptrConst.SMFPTR_DIO_READ_FS_PARAMS, null, results);
+            System.out.println("FSSerialNumber: " + results.get(0));
+            System.out.println("Rnm: " + results.get(1));
+            System.out.println("Unsent documents: " + results.get(2));
+
+            System.out.println("Cash in drawer: " + printer.readCashRegister(241).getValue() / 100.0d);
 
             printer.setPOSID("1", "Кравцов В.В.");
 

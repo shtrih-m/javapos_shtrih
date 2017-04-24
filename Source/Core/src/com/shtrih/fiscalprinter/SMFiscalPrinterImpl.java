@@ -2748,6 +2748,16 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return readTable(tableNumber, 1, 1).trim();
     }
 
+    @Override
+    public String ReadRnm() throws Exception {
+        int tableNumber = 18;
+        if (isShtrihMobile()) {
+            tableNumber = 14;
+        }
+
+        return readTable(tableNumber, 1, 3).trim();
+    }
+
     private boolean isShtrihMobile() throws Exception {
         return getModel().getModelID() == 19;
     }

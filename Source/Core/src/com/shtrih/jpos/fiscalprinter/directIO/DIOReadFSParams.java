@@ -62,7 +62,7 @@ public class DIOReadFSParams extends DIOItem {
         SMFiscalPrinter printer = getPrinter();
         
         String fsserial = printer.fsReadSerial().getSerial();
-        String rnm = printer.readTable(18, 1, 3);
+        String rnm = printer.ReadRnm();
         
         FSReadStatus fsStatus = printer.fsReadStatus();
         FSReadExpDate expDate = printer.fsReadExpDate();
