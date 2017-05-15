@@ -15,6 +15,7 @@ import com.shtrih.fiscalprinter.command.ContinuePrint;
 import com.shtrih.fiscalprinter.command.DeviceMetrics;
 import com.shtrih.fiscalprinter.command.EndFiscalReceipt;
 import com.shtrih.fiscalprinter.command.EndTest;
+import com.shtrih.fiscalprinter.command.FDOParameters;
 import com.shtrih.fiscalprinter.command.FSReadCommStatus;
 import com.shtrih.fiscalprinter.command.FSReadDayParameters;
 import com.shtrih.fiscalprinter.command.FSReadFiscalization;
@@ -358,10 +359,10 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
-    public long readCashRegisterCorrection(int number) throws Exception{
+    public long readCashRegisterCorrection(int number) throws Exception {
         return 0;
     }
-    
+
     public PrintEJDayReportOnDates printEJDayReportOnDates(EJDate date1,
             EJDate date2, int reportType) throws Exception {
         return new PrintEJDayReportOnDates();
@@ -382,8 +383,7 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return new PrintFMReportDays();
     }
 
-    public void printSale(PriceItem item) throws Exception 
-    {
+    public void printSale(PriceItem item) throws Exception {
     }
 
     public void printVoidSale(PriceItem item) throws Exception {
@@ -495,8 +495,7 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
-    public int cutPaper(int cutType) throws Exception 
-    {
+    public int cutPaper(int cutType) throws Exception {
         return 0;
     }
 
@@ -555,10 +554,11 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void writeFields(PrinterFields fields) throws Exception {
     }
 
-    public void updateTableInfo(int tableNumber) throws Exception {
+    public PrinterTable getTable(int tableNumber) throws Exception {
+        return null;
     }
 
-    public boolean isValidField(int tableNumber, int rowNumber, int fieldNumber)
+    public boolean isValidField(PrinterField field)
             throws Exception {
         return true;
     }
@@ -627,10 +627,15 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void readTable(PrinterTable table) throws Exception {
     }
 
-    public void writeField(PrinterField field) throws Exception {
+    public int writeField(PrinterField field) throws Exception {
+        return 0;
     }
 
-    public void readField(PrinterField field) throws Exception {
+    public void writeField2(PrinterField field) throws Exception {
+    }
+
+    public PrinterField readField(PrinterField field) throws Exception {
+        return field;
     }
 
     public void printGraphics(int line1, int line2) throws Exception {
@@ -827,10 +832,10 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
-    public byte[] getTLVData(int tagId, String tagValue) throws Exception{
+    public byte[] getTLVData(int tagId, String tagValue) throws Exception {
         return null;
     }
-    
+
     public FSReadStatus fsReadStatus() throws Exception {
         return null;
     }
@@ -951,20 +956,47 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return "";
     }
 
-    public boolean getCapFSCloseReceipt(){
+    public boolean getCapFSCloseReceipt() {
+        return false;
+    }
+
+    public Vector<FSTicket> fsReadTickets(int[] numbers) throws Exception {
+        return null;
+    }
+
+    public Vector<FSTicket> fsReadTickets(int firstFSDocumentNumber, int documentCount) throws Exception {
+        return null;
+    }
+
+    public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws Exception {
+        return 0;
+    }
+
+    public boolean getCapDisableDiscountText() {
+        return false;
+    }
+
+    public int getMessageLength() throws Exception {
+        return 36;
+    }
+
+    public int getMessageLength(FontNumber font) throws Exception {
+        return 36;
+    }
+
+    public boolean isSubtotalInHeader() {
+        return false;
+    }
+
+    public boolean isDiscountInHeader() {
         return false;
     }
     
-    public Vector<FSTicket> fsReadTickets(int[] numbers) throws Exception{
-        return null;
+    public int reboot() throws Exception{
+        return 0;
     }
     
-    public Vector<FSTicket> fsReadTickets(int number1) throws Exception{
+    public FDOParameters readFDOParameters() throws Exception{
         return null;
-    }    
-    
-    public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws Exception
-    {
-        return 0;
     }
 }

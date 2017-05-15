@@ -122,8 +122,9 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
             }
         }
         double d = unitPrice * Math.abs(quantity);
-        long amount = MathUtils.round((d / 1000));
-        if ((amount > price)&&(getParams().FSReceiptItemDiscountEnabled)){
+        long amount = MathUtils.round((d / 1000.0));
+        if (amount > price)
+        {
             printDiscount(amount-price, vatInfo, "");
         }
         getPrinter().printPostLine();
@@ -290,13 +291,13 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_DISCOUNT:
                 description = getPrinter().printDescription(description);
-                amount = getPrinter().getSubtotal() * amount / 10000;
+                amount = Math.round(getPrinter().getSubtotal() * amount / 10000.0);
                 printDiscount(amount, 0, description);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_SURCHARGE:
                 description = getPrinter().printDescription(description);
-                amount = getPrinter().getSubtotal() * amount / 10000;
+                amount = Math.round(getPrinter().getSubtotal() * amount / 10000.0);
                 printCharge(amount, 0, description);
                 break;
 
@@ -451,12 +452,12 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_DISCOUNT:
-                amount = getPrinter().getSubtotal() * amount / 10000;
+                amount = Math.round(getPrinter().getSubtotal() * amount / 10000.0);
                 printCharge(amount, 0, "");
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_SURCHARGE:
-                amount = getPrinter().getSubtotal() * amount / 10000;
+                amount = Math.round(getPrinter().getSubtotal() * amount / 10000.0);
                 printDiscount(amount, 0, "");
                 break;
 

@@ -163,6 +163,10 @@ public class PrinterModelDefault implements PrinterModel {
         deviceFontSmall = 3;
         swapGraphicsLine = false;
         capGraphicsLineMargin = false;
+        
+        addParameter(PrinterConst.SMFP_PARAMID_FDO_SERVER_HOST, 19, 1, 1);
+        addParameter(PrinterConst.SMFP_PARAMID_FDO_SERVER_PORT, 19, 1, 2);
+        addParameter(PrinterConst.SMFP_PARAMID_FDO_SERVER_TIMEOUT, 19, 1, 3);
     }
 
     public int getId() {
@@ -761,5 +765,4 @@ public class PrinterModelDefault implements PrinterModel {
     public void setCapFSCloseCheck(boolean value) {
         capFSCloseCheck = value;
     }
-
 }

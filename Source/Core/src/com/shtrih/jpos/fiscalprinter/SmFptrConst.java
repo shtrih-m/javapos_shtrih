@@ -462,6 +462,7 @@ public interface SmFptrConst {
     
     public static final int SMFPTR_DIO_PRINT_CORRECTION = 0x43;
     
+    public static final int SMFPTR_DIO_READ_TOTALS = 0x44;
     
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:

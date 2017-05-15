@@ -127,7 +127,8 @@ public class DeviceHeader implements PrinterHeader {
 
 	@Override
 	public void beginDocument(String additionalHeader, String additionalTrailer)
-			throws Exception {
+			throws Exception 
+        {
 		printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
 		printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
 		if (additionalHeader.length() > 0) {

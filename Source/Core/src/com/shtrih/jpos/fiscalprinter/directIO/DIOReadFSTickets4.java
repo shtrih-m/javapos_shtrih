@@ -22,7 +22,12 @@ public class DIOReadFSTickets4 extends DIOItem {
 
     public void execute(int[] data, Object object) throws Exception {
         Object[] items = (Object[]) object;
-        items[0] = service.getPrinter().fsReadTickets(data[0]);
+        int firstFSDocumentNumber = data[0];
+        int documentCount = 0;
+        if (data.length > 1){
+            documentCount = data[1];
+        }
+        items[0] = service.getPrinter().fsReadTickets(firstFSDocumentNumber, documentCount);
     }
 
 }

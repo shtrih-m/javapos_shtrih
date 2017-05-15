@@ -20,23 +20,17 @@ public class DIOReadFSTickets extends DIOItem {
         super(service);
     }
 
-    public void execute(int[] data, Object object) throws Exception {
+    public void execute(int[] data, Object object) throws Exception 
+    {
+        Object[] outParams = (Object[])object;
         Vector<FSTicket> tickets = service.getPrinter().fsReadTickets(data);
-        int[] resultCodes = null;
-        byte[][] ticketData = null;
-        if (tickets.size() > 0) {
-            resultCodes = new int[tickets.size()];
-            ticketData = new byte[tickets.size()][];
-        }
+        String[] lines = new String[tickets.size()];
         for (int i = 0; i < tickets.size(); i++) {
+            if (i > (lines.length-1)) break;
             FSTicket ticket = tickets.get(i);
-            resultCodes[i] = ticket.getResultCode();
-            ticketData[i] = ticket.getData();
+            lines[i] = tickets.get(i).getText();
         }
-
-        Object[] items = (Object[]) object;
-        items[0] = resultCodes;
-        items[1] = ticketData;
+        outParams[0] = lines;
     }
 
 }

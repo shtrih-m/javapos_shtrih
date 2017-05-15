@@ -573,7 +573,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
 
     public int getLineLength() throws Exception {
-        return printer.getModel().getTextLength(FontNumber.getNormalFont());
+        return printer.getMessageLength(FontNumber.getNormalFont());
     }
 
     public void add(String s1, String s2) throws Exception {

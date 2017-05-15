@@ -18,6 +18,8 @@ import com.shtrih.util.StringUtils;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.jpos.JposPropertyReader;
+import static com.shtrih.jpos.fiscalprinter.SmFptrConst.SMFPTR_HEADER_MODE_DRIVER;
+import static com.shtrih.jpos.fiscalprinter.SmFptrConst.SMFPTR_HEADER_MODE_DRIVER2;
 import com.shtrih.util.CompositeLogger;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -31,6 +33,7 @@ public class FptrParameters {
     private int deviceByteTimeout = 3000;
     private int statusCommand = PrinterConst.SMFP_STATUS_COMMAND_11H;
     private int graphicsLineDelay = defaultGraphicsLineDelay;
+    public int barcodeDelay = 0;
     private int portType = SmFptrConst.PORT_TYPE_SERIAL;
     private int baudRate = 4800;
     public String portClass = "com.shtrih.fiscalprinter.port.SerialPrinterPort";
@@ -131,7 +134,6 @@ public class FptrParameters {
     public boolean checkTotalEnabled = false;
     public int receiptNumberRequest = SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER;
     public boolean FSDiscountEnabled = true;
-    public boolean FSReceiptItemDiscountEnabled = false;
     public boolean FSCombineItemAdjustments = true;
     public boolean textReportEnabled = false;
     public boolean readDiscountMode = true;
@@ -140,6 +142,7 @@ public class FptrParameters {
     public boolean textReportEmptyLinesEnabled = true;
     public boolean ReceiptTemplateEnabled = false;
     public String ItemTableHeader = null;
+    public String ItemTableTrailer = null;
     public String ItemRowFormat = null;
     public String discountFormat = null;
     public String chargeFormat = null;
@@ -153,6 +156,12 @@ public class FptrParameters {
     public int subAdjustmentOrder = PrinterConst.ADJUSTMENT_ORDER_CORRECT;
     public boolean subtotalTextEnabled = true;
     public String weightUnitName = "г.";
+    public String firmwarePath = "firmware";
+    public boolean graphicsLineEnabled = true;
+    public String preLinePrefix = "";
+    public String postLinePrefix = "";
+    public boolean combineReceiptItems = false;
+    public boolean printRecVoidItemAmount = false;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -319,7 +328,6 @@ public class FptrParameters {
                 SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER);
 
         FSDiscountEnabled = reader.readBoolean("FSDiscountEnabled", true);
-        FSReceiptItemDiscountEnabled = reader.readBoolean("FSReceiptItemDiscountEnabled", false);
         FSCombineItemAdjustments = reader.readBoolean("FSCombineItemAdjustments", true);
         readDiscountMode = reader.readBoolean("readDiscountMode", true);
         FSPrintTags = reader.readBoolean("FSPrintTags", true);
@@ -330,6 +338,7 @@ public class FptrParameters {
         subtotalFont = new FontNumber(reader.readInteger("subtotalFont", PrinterConst.FONT_NUMBER_NORMAL));
         discountFont = new FontNumber(reader.readInteger("discountFont", PrinterConst.FONT_NUMBER_NORMAL));
         ItemTableHeader = reader.readString("ItemTableHeader", "");
+        ItemTableTrailer = reader.readString("ItemTableTrailer", "");
 
         ItemRowFormat = reader.readString("ItemRowFormat", "%TITLE% %QUAN% X %PRICE%");
         ItemRowFormat = StringUtils.rtrim(ItemRowFormat);
@@ -349,7 +358,15 @@ public class FptrParameters {
         subAdjustmentOrder = reader.readInteger("subAdjustmentOrder", PrinterConst.ADJUSTMENT_ORDER_CORRECT);
         subtotalTextEnabled = reader.readBoolean("subtotalTextEnabled", true);
         weightUnitName = reader.readString("weightUnitName", "г.");
-
+        firmwarePath = reader.readString("firmwarePath", "firmware");
+        graphicsLineEnabled = reader.readBoolean("graphicsLineEnabled", true);
+        barcodeDelay = reader.readInteger("barcodeDelay", 0);
+        preLinePrefix = reader.readString("preLinePrefix", "");
+        postLinePrefix = reader.readString("postLinePrefix", "");
+        combineReceiptItems = reader.readBoolean("combineReceiptItems", false);
+        printRecVoidItemAmount = reader.readBoolean("printRecVoidItemAmount", false);
+        
+        
         // paymentNames
         String paymentName;
         String propertyName;
@@ -502,7 +519,10 @@ public class FptrParameters {
         postLine = "";
     }
 
-    public String quantityToStr(long value, String unitName) throws Exception {
+    public String quantityToStr(long value, String unitName) throws Exception 
+    {
+        value = Math.abs(value);
+        
         String result;
         if (((value % 1000) == 0) && (!unitName.equalsIgnoreCase(weightUnitName))) {
             result = String.valueOf(value / 1000);
@@ -512,4 +532,8 @@ public class FptrParameters {
         return result;
     }
 
+    public boolean isDriverHeader(){
+        return (headerMode == SMFPTR_HEADER_MODE_DRIVER)||
+                (headerMode == SMFPTR_HEADER_MODE_DRIVER2);
+    }
 }

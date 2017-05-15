@@ -75,8 +75,7 @@ public class ReceiptPrinterImpl implements ReceiptPrinter {
     private String formatStrings(String line1, String line2) throws Exception {
         int len;
         String S = "";
-        len = printer.getModel().getTextLength(printer.getParams().getFont())
-                - line2.length();
+        len = printer.getMessageLength() - line2.length();
 
         for (int i = 0; i < len; i++) {
             if (i < line1.length()) {
@@ -137,7 +136,7 @@ public class ReceiptPrinterImpl implements ReceiptPrinter {
 
     
     public int getTextLength() throws Exception {
-        return printer.getModel().getTextLength(params.font);
+        return printer.getMessageLength();
     }
 
     

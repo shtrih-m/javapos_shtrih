@@ -31,8 +31,8 @@
         <!--<prop name="portName" type="String" value="COM2"/> -->
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
-        <prop name="portName" type="String" value="COM4"/> 
-		
+        <!--<prop name="portName" type="String" value="192.168.137.111:7778"/> -->
+        <prop name="portName" type="String" value="COM4"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="1"/>
@@ -65,7 +65,7 @@
         <!-- device state polling interval in milliseconds -->
         <prop name="pollInterval" type="String" value="1000"/>
         <!-- Amount coefficient -->
-        <prop name="amountFactor" type="String" value="1"/>
+        <prop name="amountFactor" type="String" value="0.01"/>
         <!-- Quantity coefficient -->
         <prop name="quantityFactor" type="String" value="1"/>
         <!-- Strings encoding -->
@@ -274,7 +274,7 @@
         <!-- Enable discounts for Fiscal Storage printers 1 - enabled, 0 - disabled -->
         <prop name="FSDiscountEnabled" type="String" value="1"/>
         <!-- Combine item adjustments (enabled by default) -->
-		<prop name="FSCombineItemAdjustments" type="String" value="0"/>
+		<prop name="FSCombineItemAdjustments" type="String" value="1"/>
         <!-- Text report enabled -->
         <prop name="textReportEnabled" type="String" value="0"/>
         <!-- Text report file name -->
@@ -284,8 +284,9 @@
 		<!-- Receipt template -->
 		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
 		<prop name="FieldSeparator" type="String" value=";"/>
-		<prop name="ItemTableHeader" type="String" value="Цена     Скидка  Цена со скидкой  Кол-во  ИТОГ  НДС"/>
-		<prop name="ItemRowFormat" type="String" value="%51lTITLE%;%8lUNITPRICE% %6lDISCOUNT%  %8lPRICE%         %3QUAN%%=$10TOTAL%   %TAX_LETTER%"/>
+		<prop name="ItemTableHeader" type="String" value="---------------------------------------------------;Цена     Скидка  Цена со скидкой  Кол-во  ИТОГ  НДС;---------------------------------------------------;"/>
+		<prop name="ItemTableTrailer" type="String" value=""/>
+		<prop name="ItemRowFormat" type="String" value="%51lTITLE%;%8lPRICE% %6lDISCOUNT%  %8lSUM%  %10QUAN%  %=$10TOTAL_TAX%"/>
 		<!-- <prop name="DiscountFormat" type="String" value="    СКИДКА  %29lTITLE%%=$10TOTAL%"/> -->
 		<prop name="DiscountFormat" type="String" value=""/>
 		<!-- <prop name="ChargeFormat" type="String"   value="    НАДБАВКА  %29lTITLE%%=$10TOTAL%"/> -->
@@ -296,6 +297,18 @@
 		<prop name="subAdjustmentOrder" type="String" value="1"/>
 		<!-- swapGraphicsLine, 0 - auto, 1 - False, 2 - true -->
 		<prop name="swapGraphicsLine" type="String" value="0"/>
+		<!-- graphicsLineEnabled -->
+		<prop name="graphicsLineEnabled" type="String" value="0"/>
+		<!-- Delay after barcode printed -->
+		<prop name="barcodeDelay" type="String" value="100"/>
+		<!-- PreLine prefix -->
+		<prop name="preLinePrefix" type="String" value="   "/>
+		<!-- PostLine prefix -->
+		<prop name="postLinePrefix" type="String" value="   "/>
+		<!-- combineReceiptItems -->
+		<prop name="combineReceiptItems" type="String" value="0"/>
+		<!-- printRecVoidItemAmount -->
+		<prop name="printRecVoidItemAmount" type="String" value="0"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>

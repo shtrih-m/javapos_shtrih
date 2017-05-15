@@ -8,7 +8,7 @@
  */
 package com.shtrih.fiscalprinter.model;
 
-/**
+/**FsS
  *
  * @author V.Kravtsov
  */

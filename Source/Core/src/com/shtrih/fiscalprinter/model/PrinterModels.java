@@ -74,6 +74,7 @@ public class PrinterModels implements Serializable {
 			add(new PrinterModelYarus02K());
 			add(new PrinterModelASPDElves());
 			add(new PrinterModelShtrihFRFBelarus());
+			add(new PrinterModelShtrihMobileF());
 		} catch (Exception e) {
 			logger.error(e);
 		}

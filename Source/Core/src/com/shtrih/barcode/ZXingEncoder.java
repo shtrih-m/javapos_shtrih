@@ -30,8 +30,37 @@ public class ZXingEncoder implements SmBarcodeEncoder {
         this.yScale = yScale;
     }
 
+    static int getStandardUPCEANChecksum(CharSequence s) throws Exception {
+        int length = s.length();
+        int sum = 0;
+        for (int i = length - 1; i >= 0; i -= 2) {
+            int digit = s.charAt(i) - '0';
+            if (digit < 0 || digit > 9) {
+                throw new Exception("Invalid digit value");
+            }
+            sum += digit;
+        }
+        sum *= 3;
+        for (int i = length - 2; i >= 0; i -= 2) {
+            int digit = s.charAt(i) - '0';
+            if (digit < 0 || digit > 9) {
+                throw new Exception("Invalid digit value");
+            }
+            sum += digit;
+        }
+        return (1000 - sum) % 10;
+    }
+
     public SmBarcode encode(PrinterBarcode barcode) throws Exception {
         switch (barcode.getType()) {
+            case SmFptrConst.SMFPTR_BARCODE_EAN13:
+                String text = barcode.getText();
+                if (text.length() == 12) {
+                    text += String.valueOf(getStandardUPCEANChecksum(text));
+                    barcode.setText(text);
+                }
+                break;
+
             case SmFptrConst.SMFPTR_BARCODE_PDF417:
                 return encodePDF417(barcode);
         }

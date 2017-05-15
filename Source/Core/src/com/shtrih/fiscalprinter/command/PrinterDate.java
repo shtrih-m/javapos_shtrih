@@ -20,7 +20,7 @@ import com.shtrih.util.StringUtils;
 
 public class PrinterDate {
 
-    public static PrinterDate now(){
+    public static PrinterDate now() {
         return new PrinterDate();
     }
 
@@ -54,11 +54,11 @@ public class PrinterDate {
     }
 
     public String toJposString() {
-        return StringUtils.intToStr(day, 2) + 
-                StringUtils.intToStr(month, 2) + 
-                StringUtils.intToStr(year + 2000, 4);
+        return StringUtils.intToStr(day, 2)
+                + StringUtils.intToStr(month, 2)
+                + StringUtils.intToStr(year + 2000, 4);
     }
-    
+
     public String toString() {
         return StringUtils.intToStr(day, 2) + "."
                 + StringUtils.intToStr(month, 2) + "."
@@ -70,7 +70,7 @@ public class PrinterDate {
                 + StringUtils.intToStr(month, 2) + "."
                 + StringUtils.intToStr(year, 2);
     }
-    
+
     // 01.02.09
     public static String toText(PrinterDate date) {
         return StringUtils.intToStr(date.getDay(), 2) + "."
@@ -87,6 +87,28 @@ public class PrinterDate {
         return new PrinterDate(day, month, year);
     }
 
+    public boolean isEqual(PrinterDate date) {
+        return (date.getDay() == getDay())
+                && (date.getMonth() == getMonth())
+                && (date.getYear() == getYear());
+    }
+
+    public boolean isEqualOrOlder(PrinterDate date) {
+        return ((year >= date.getYear())
+                && (month >= date.getMonth())
+                && (day >= date.getDay()));
+    }
+
+    public boolean isOlder(PrinterDate date) {
+        if (year < date.getYear()) return false;
+        if (year > date.getYear()) return true;
+        if (month < date.getMonth()) return false;
+        if (month > date.getMonth()) return true;
+        if (day < date.getDay()) return false;
+        if (day > date.getDay()) return true;
+        return false;
+    }
+    
     public static boolean compare(PrinterDate date1, PrinterDate date2) {
         return (date1.getDay() == date2.getDay())
                 && (date1.getMonth() == date2.getMonth())

@@ -84,7 +84,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.loadImage("Logo.bmp");
             printer.addLogo(0, SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
             printer.setHeaderLine(1, "КАССОВЫЙ ЧЕК", false);
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -171,9 +171,9 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printBarcodes() {
-        printEan13();
+        //printEan13();
         //printQRCode();
-        //printAllBarcodes();
+        printAllBarcodes();
     }
 
     public void printJournalCurrentDay() {
@@ -245,9 +245,11 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printEan13() {
         try {
-            printer.printBarcode("2223183256141", "2223183256141", 
+            printer.printBarcode("2223183256141", "2223183256141",
                     2, 45, 1, 3, 1, 1, 3);
 
+            printer.printBarcode("222318325614", "2223183256141",
+                    2, 45, 1, 3, 1, 1, 3);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -631,7 +633,7 @@ class PrinterTest implements FiscalPrinterConst {
             String[] lines = new String[1];
             printer.getData(FPTR_GD_PRINTER_ID, null, lines);
             System.out.println("FPTR_GD_PRINTER_ID: " + lines[0]);
-
+            printer.setPOSID("34", "Кравцов В.В.");
             List<String> results = new ArrayList<String>();
             printer.directIO(SmFptrConst.SMFPTR_DIO_READ_FS_PARAMS, null, results);
             System.out.println("FSSerialNumber: " + results.get(0));
@@ -640,17 +642,6 @@ class PrinterTest implements FiscalPrinterConst {
 
             System.out.println("Cash in drawer: " + printer.readCashRegister(241).getValue() / 100.0d);
 
-            printer.setPOSID("1", "Кравцов В.В.");
-
-            ShortPrinterStatus shortStatus = printer.readShortPrinterStatus();
-            LongPrinterStatus  longStatus = printer.readLongPrinterStatus();
-
-            String value = printer.readTable(5,2,1);
-            printer.writeTable(5,2,1, value);
-            String value2 = printer.readTable(5,2,1);
-            assert value.equals(value2);
-
-            //readFSTickets();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -692,18 +683,11 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void printFiscalReceipt() 
-    {
-        //printZeroFiscalReceipt();
-        //printFiscalReceipt666();
-
-        //printFiscalReceipt107();
-        //printFiscalReceipt102();
-        //printCorrectionReceipt();
-        printFiscalReceipt103();
+    public void printFiscalReceipt() {
+        printFiscalReceipt1048();
     }
 
-    public void printCorrectionReceipt(){
+    public void printCorrectionReceipt() {
         try {
             int correctionType = 0;
             int paymentType = 1;
@@ -723,35 +707,35 @@ class PrinterTest implements FiscalPrinterConst {
             Object[] outParams = new Object[3];
 
             printer.fsPrintCorrectionReceipt3(
-                correctionType, 
-                paymentType, 
-                total, 
-                payments0,
-                payments1,
-                payments2,
-                payments3,
-                payments4,
-                taxTotals0, 
-                taxTotals1, 
-                taxTotals2, 
-                taxTotals3, 
-                taxTotals4, 
-                taxTotals5, 
-                taxSystem, 
-                outParams);
-            int receiptNumber = (Integer)outParams[0];
-            int documentNumber = (Integer)outParams[1];
-            long documentDigest = (Long)outParams[2];
-            
+                    correctionType,
+                    paymentType,
+                    total,
+                    payments0,
+                    payments1,
+                    payments2,
+                    payments3,
+                    payments4,
+                    taxTotals0,
+                    taxTotals1,
+                    taxTotals2,
+                    taxTotals3,
+                    taxTotals4,
+                    taxTotals5,
+                    taxSystem,
+                    outParams);
+            int receiptNumber = (Integer) outParams[0];
+            int documentNumber = (Integer) outParams[1];
+            long documentDigest = (Long) outParams[2];
+
             System.out.println("receiptNumber: " + receiptNumber);
             System.out.println("documentNumber: " + documentNumber);
             System.out.println("documentDigest: " + documentDigest);
-        
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     public void printPaperReport() {
         try {
             System.out.println("CapRecPresent: " + printer.getCapRecPresent());
@@ -806,7 +790,7 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
+
     public void printFiscalReceipt1001() {
         try {
             printer.resetPrinter();
@@ -993,31 +977,358 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-            printer.printRecItem("Item 1" , 123, 1000, 1, 123, "");
-            printer.printRecItemAdjustment(1, "СКИДКА", 50, 1);
-            printer.printRecItem("Item 2" , 246, 2000, 1, 123, "");
-            printer.printRecItemAdjustment(1, "СКИДКА", 100, 1);
-            printer.printRecSubtotalAdjustment(1, "СКИДКА", 90);
-            printer.fsWriteTag(15000, "FGHGF987987");
-            printer.fsWriteTag(15001, "2345");
-            printer.fsWriteTag(15002, "98798");
-            printer.printRecTotal(4990, 4990, "30");
+            printer.printRecItem("БАНАНЫ", 587000, 852, 1, 689000, "");
+            printer.printRecItem("ПАКЕТ-СУМКА ПСД ЛОГО", 69900, 1000, 1, 69900, "");
+            printer.printRecItem("ЧАЙ АХМАД КЛАСС 100Г", 989000, 1000, 1, 989000, "");
+            printer.printRecItem("Т/Б РОМ.ЛУГ БЕЛ.4РУЛ", 439900, 1000, 1, 439900, "");
+            printer.printRecItem("РЯЖЕН.ЗЕЛ.3,2-4%500Г", 428900, 1000, 2, 428900, "");
+            printer.printRecItem("КОРМ Д/С ВХ ТЕЛ 325Г", 549000, 1000, 1, 549000, "");
+            printer.printRecItem("МОЛОКО ЗЕЛ.ТОП.1КГ", 739000, 1000, 2, 739000, "");
+            printer.printRecItem("МАСЛО ЗС ПОДС 0,5Л", 679000, 1000, 2, 679000, "");
+            printer.printRecItem("Б/ГАЗА 0,5Л", 129900, 1000, 1, 129900, "");
+            printer.printRecItem("Б/ГАЗА 0,5Л", 129900, 1000, 1, 129900, "");
+            printer.printRecItem("БУЛОЧ.ПОВЫШ.КАЛОР100", 149900, 1000, 2, 149900, "");
+            printer.printRecItem("СЛИВКИ ПРОСТ.10% 20Г", 59900, 1000, 2, 59900, "");
+            printer.printRecItem("СЛИВКИ ПРОСТ.10% 20Г", 59900, 1000, 2, 59900, "");
+            printer.printRecItem("СЛИВКИ ПРОСТ.10% 20Г", 59900, 1000, 2, 59900, "");
+            printer.printRecItem("СЛИВКИ ПРОСТ.10% 20Г", 59900, 1000, 2, 59900, "");
+            printer.printRecItem("БАНАНЫ СУШЕНЫЕ 100ГР", 549000, 1000, 1, 549000, "");
+            printer.printRecItem("ФУНДУК СУШЕНЫЙ 50 ГР", 799000, 1000, 1, 799000, "");
+            printer.printRecItem("СОЛОМКА ВАНИЛЬ 200Г", 339900, 1000, 2, 339900, "");
+            printer.printRecItem("КАЛИНОВ РОДНИК 9Л", 649000, 1000, 1, 649000, "");
+            printer.printRecTotal(7467900, 7467900, "30");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public void printFiscalReceipt1044() {
+        try {
+            printer.resetPrinter();
+
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+            
+            printer.printRecItem("КАЙСА ВЕС", 2009700, 718, 1, 2799000, "");
+            printer.printRecItemAdjustment(1, "", 201000, 1);
+            
+            //printer.printRecItemVoid("КАЙСА ВЕС", 2009700, 718, 1, 2799000, "");
+            //printer.printRecItemAdjustment(2, "", 201000, 1);
+            
+            printer.printRecVoidItem("КАЙСА ВЕС", 2009700, 718, 0, 0, 1);
+            printer.printRecItemAdjustment(2, "", 201000, 1);
+            
+            printer.printRecTotal(400000000, 400000000, "1");
+  
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void printFiscalReceipt1045() {
+        try {
+            printer.resetPrinter();
+
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+            
+            printer.printRecItem("БИФШТЕКС/ГОВЯД.335Г", 1199000, 1000, 2, 1199000, "");
+            printer.printRecItem("БИФШТЕКС/ГОВЯД.335Г", 1199000, 1000, 2, 1199000, "");
+            printer.printRecItemAdjustment(1, "", 1199000, 2);
+            printer.printRecItem("ПАКЕТ МАЙКА 38 Х 59", 25000, 1000, 1, 25000, "");
+            printer.printRecItem("ПАКЕТ МАЙКА 38 Х 59", 25000, 1000, 1, 25000, "");
+            printer.printRecVoidItem("БИФШТЕКС/ГОВЯД.335Г", 1199000, 1000, 0, 0, 2);
+            printer.printRecItemAdjustment(2, "", 1199000, 2);
+            printer.printRecVoidItem("БИФШТЕКС/ГОВЯД.335Г", 1199000, 1000, 0, 0, 2);
+            
+            printer.printRecTotal(5000000, 5000000, "1");
+                    
+                    
+  
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+  
+    public void printFiscalReceipt1046() {
+        try {
+            printer.resetPrinter();
+
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+    
+            printer.printRecItem("ФУТБОЛКА МУЖ СВ-СЕР", 3399000, 1000, 1, 3399000, "");
+            printer.printRecItem("ФУТБОЛКА МУЖ БЕЛАЯ", 3999000, 1000, 1, 3999000, "");
+            printer.printRecItem("ПАКЕТ МАЙКА 38 Х 59", 175000, 7000, 1, 25000, "");
+            printer.printRecItem("МУКА В/С ГЛОБУС 2КГ", 3174000, 6000, 2, 529000, "");
+            printer.printRecItem("КАКТУС", 899000, 1000, 1, 899000, "");
+            printer.printRecItem("КАЛЬЦЕОЛЯРИЯ", 2499000, 1000, 1, 2499000, "");
+            printer.printRecItem("КАРТОФЕЛЬ МОЛОД ВЕС", 1540700, 3082, 2, 499900, "");
+            printer.printRecItem("ЖИДКОСТЬ Д/РОЗЖИГА", 849000, 1000, 1, 849000, "");
+            printer.printRecItem("КАРТОФЕЛЬ МОЛОД ВЕС", 1668200, 3337, 2, 499900, "");
+            printer.printRecItem("МАСЛО Т.ОЗ.82,5%450Г", 2359000, 1000, 2, 2359000, "");
+            printer.printRecItem("ПЕРЧАТКИ ОБЛИВНЫЕ XL", 329900, 1000, 1, 329900, "");
+            printer.printRecItem("СПИЧКИ ГАЗОВЫЕ", 599900, 1000, 1, 599900, "");
+            printer.printRecItem("КАРТОФЕЛЬ МОЛОД ВЕС", 1498200, 2997, 2, 499900, "");
+            printer.printRecItem("ЖИДК.Д/РОЗЖИГА 0,5Л", 579000, 1000, 1, 579000, "");
+            printer.printRecItem("ЙОГУРТ ЦАРКА П/М400Г", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("ЛУК РЕПЧАТЫЙ", 361000, 1577, 2, 228900, "");
+            printer.printRecItem("КОЛБ.ДОКТОРСКАЯ 500Г", 2899000, 1000, 2, 2899000, "");
+            printer.printRecItem("КИНЗА          100ГР", 549000, 1000, 2, 549000, "");
+            printer.printRecItem("ПЕРЧАТКИ ОБЛИВНЫЕ XL", 329900, 1000, 1, 329900, "");
+            printer.printRecItem("ХЛОПЬЯ 7 ЗЛАКОВ400ГР", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("ХЛОПЬЯ 7 ЗЛАКОВ400ГР", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("ТВОРОГ РОСТАГ.9%180Г", 629000, 1000, 2, 629000, "");
+            printer.printRecItem("ТЕРМОМЕТР КОМНАТН.", 3499000, 1000, 1, 3499000, "");
+            printer.printRecItem("СИЛИКОНОВАЯ", 999000, 1000, 1, 999000, "");
+            printer.printRecItem("ЛУК РЕПЧАТЫ", 588700, 2572, 2, 228900, "");
+            printer.printRecItem("МАСЛО Т.ОЗ.82,5%450", 2359000, 1000, 2, 2359000, "");
+            printer.printRecItem("ЙОГУРТ ЦАРКА КЛ.400", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("ТЕРМОМЕТР УНИВЕРС.", 1699000, 1000, 1, 1699000, "");
+            printer.printRecItem("ОГУРЦЫ ПУПЫР 300 Г", 849000, 1000, 2, 849000, "");
+            printer.printRecItem("ЙОГУРТ ЦАРКА Ч.400", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("БАТ DUR BAS АЛК АА2", 1149000, 1000, 1, 1149000, "");
+            printer.printRecItem("ГРЕЧКА МИСТРАЛЬ 2К", 1599000, 1000, 2, 1599000, "");
+            printer.printRecItem("ГРЕЧКА МИСТРАЛЬ 2К", 1599000, 1000, 2, 1599000, "");
+            printer.printRecItem("СМЕТАНА БЛ 26% 315", 829000, 1000, 2, 829000, "");
+            printer.printRecItem("РИС КРАСНОДАРСКИЙ900", 799000, 1000, 2, 799000, "");
+            printer.printRecItem("РИС КРАСНОДАРСКИЙ900", 799000, 1000, 2, 799000, "");
+            printer.printRecItem("СЕРВЕЛАТ БРАУНШВ С/", 939800, 188, 2, 4999000, "");
+            printer.printRecItem("ТВОРОГ ВКУСН.9% 350", 1179000, 1000, 2, 1179000, "");
+            printer.printRecItem("ЙОГУРТ ЦАРКА П/М400", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("ЙОГУРТ ЦАРКА БР.400", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("Й-Т ЦАРКА МАЛИНА400", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("ЙОГУРТ ЦАРКА ,5%400", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("ЙОГУРТ ЦАРКА Г/Я400", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("ЙОГУРТ ЦАРКА Ч.400", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("ТВ.БР.-ЛИТОВС.7%200", 1378000, 2000, 2, 689000, "");
+            printer.printRecItem("МОРКОВЬ МЫТАЯ ВЕ", 662600, 1657, 2, 399900, "");
+            printer.printRecItem("ТВ.РОКИШКИО 9% 400", 1689000, 1000, 2, 1689000, "");
+            printer.printRecItem("ЙОГУРТ ЦАРКА КЛ.400", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("УКРОП ПАКЕТ 100 Г", 369900, 1000, 2, 369900, "");
+            printer.printRecItem("ИВАН ЧАЙ С ДУШИЦ 50", 1169000, 1000, 1, 1169000, "");
+            printer.printRecItem("ГУБКА КИВИ ЭКС.ЧЕ", 1249000, 1000, 1, 1249000, "");
+            printer.printRecItem("СЫР РОСCИЙСКИЙ 45% ", 1621500, 306, 2, 5299000, "");
+            printer.printRecItem("Й-Т ЦАРКА МАЛИНА400", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("ЙОГУРТ ЦАРКА Г/Я400", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("ЙОГУРТ ЦАРКА БР.400", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("ЙОГУРТ ЦАРКА ,5%400", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("КОФЕ ЖАРД МОЛ ЭСП250", 1490000, 1000, 1, 1490000, "");
+            printer.printRecItem("ДАНОН ТВ.НАТУР.5%170", 448900, 1000, 2, 448900, "");
+            printer.printRecItem("ДАНОН ТВ.НАТУР.5%170", 448900, 1000, 2, 448900, "");
+            printer.printRecItem("РЕДИ", 331700, 332, 2, 999000, "");
+            printer.printRecItem("МОРКОВЬ МЫТАЯ ВЕ", 578700, 1447, 2, 399900, "");
+            printer.printRecItem("КАРТОФЕЛЬ МОЛОД ВЕС", 1733200, 3467, 2, 499900, "");
+            printer.printRecItem("МОЛОКО ГЛОБУС ОТ.900", 629000, 1000, 2, 629000, "");
+            printer.printRecItem("МОЛОКО ГЛОБУС ОТ.900", 629000, 1000, 2, 629000, "");
+            printer.printRecItem("КАРМ АРИАН ПЭТ 1,5", 449900, 1000, 1, 449900, "");
+            printer.printRecItem("КОНФ БАБ/ФУНДУК ВЕ", 1781600, 440, 1, 4049000, "");
+            printer.printRecItem("САЦЕБЕЛИ ЗАСТ 300", 919000, 1000, 1, 919000, "");
+            printer.printRecItem("ПЕРЕЦ ЖЕЛТЫ", 983500, 492, 2, 1999000, "");
+            printer.printRecItem("СЫР ЛАРЕЦ Т/С 50%ВЕ", 1529800, 225, 2, 6799000, "");
+            printer.printRecItem("КОЛБ.КРАКОВС.П/К 400", 2799000, 1000, 2, 2799000, "");
+            printer.printRecItem("ТОМАТ", 2462900, 1332, 2, 1849000, "");
+            printer.printRecItem("КОЛБ.ДОКТОРСКАЯ 500", 2899000, 1000, 2, 2899000, "");
+            printer.printRecItem("Й-Т ЦАРКА КИВИ 400", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("Й-Т ЦАРКА КИВИ 400", 499900, 1000, 2, 499900, "");
+            printer.printRecItem("НАП СПРАЙТ ОГУР 0,5", 499900, 1000, 1, 499900, "");
+            printer.printRecItem("ЯЙЦО ОКСКОЕ С0 30Ш", 2429000, 1000, 2, 2429000, "");
+            printer.printRecItem("ЯЙЦО ОКСКОЕ С0 30Ш", 2429000, 1000, 2, 2429000, "");
+            printer.printRecItem("ЖУРН САША И МАШ", 384900, 1000, 2, 384900, "");
+            printer.printRecItem("ВНЕКЛАССНЫЙ ЖУРНА", 599000, 1000, 2, 599000, "");
+            printer.printRecItem("БАТОН НАРЕЗНОЙ 400", 279900, 1000, 2, 279900, "");
+            printer.printRecItem("БАТОН АРБАТСКИЙ 350", 79000, 1000, 2, 79000, "");
+            printer.printRecItem("ПАКЕТ МАЙКА 38 Х 59", 25000, 1000, 1, 25000, "");
+            printer.printRecItem("БУЛОЧ ФИЛИП ИЗЮМ5Х60", 449900, 1000, 2, 449900, "");
+            printer.printRecItem("БАТОН АРБАТСКИЙ 350", 79000, 1000, 2, 79000, "");
+            printer.printRecItem("ХЛЕБ АРБАТСКИЙ 500Г", 239900, 1000, 2, 239900, "");
+            printer.printRecTotal(91969100, 91969100, "8");
+    
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void printFiscalReceipt1047() {
+        try {
+            printer.resetPrinter();
+
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+    
+            printer.printRecItem("ПАКЕТ МАЙКА 38 Х 59", 25000, 1000, 1, 25000, "");
+            printer.printRecItem("ПЕЧ БАМБ МОЛОЧ100Г", 599000, 1000, 1, 599000, "");
+            printer.printRecItem("ПЕЧ БАМБ МОЛОЧ100Г", 599000, 1000, 1, 599000, "");
+            printer.printRecItemAdjustment(1,"", 299500, 1);
+            printer.printRecItemAdjustment(1, "", 299500, 1);
+            printer.printRecVoidItem("ПЕЧ БАМБ МОЛОЧ100Г", 599000, 1000, 0, 0, 1);
+            printer.printRecItemAdjustment(2,"", 299500, 1);
+            printer.printRecItemAdjustment(2,"", 299500, 1);
+            printer.printRecVoidItem("ПЕЧ БАМБ МОЛОЧ100Г", 599000, 1000, 0, 0, 1);
+            printer.printRecSubtotal(25000);
+            printer.printRecTotal(25000, 5000, "39");
+            printer.printRecTotal(25000, 20000, "1");
+    
+            printer.endFiscalReceipt(false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+   
+    public void printFiscalReceipt1049() {
+        try {
+            printer.resetPrinter();
+
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+    
+            //100 + 100 + 119.9 - 11.99 + 119.9 - 131.89
+            printer.printRecItem("МОРОЖ НЕСКВИК ЭСКИМО", 1000000, 1000, 2, 1000000, "");
+            printer.printRecItem("МОРОЖ НЕСКВИК ЭСКИМО", 1000000, 1000, 2, 1000000, "");
+            printer.printRecItem("БИФШТЕКС/ГОВЯД.335Г", 1199000, 1000, 2, 1199000, "");
+            printer.printRecItemAdjustment(1, "", 119900, 2);
+            printer.printRecItem("БИФШТЕКС/ГОВЯД.335Г", 1199000, 1000, 2, 1199000, "");
+            printer.printRecItemAdjustment(1, "", 1318900, 2);    
+    
+            printer.printRecTotal(25000000, 25000000, "1");
+            printer.endFiscalReceipt(false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void printFiscalReceipt1048() {
+        try {
+            printer.resetPrinter();
+
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+            
+            //300 - 30 + 100 - 10 - 300 + 30 = 90
+                    
+            printer.printRecMessage("01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789");
+            
+            printer.printRecItem("01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789", 
+                3000000, 1000, 2, 3000000, "");
+            
+            printer.printRecItemAdjustment(1, "", 300000, 2);
+            printer.printRecItem("ФУТБОЛКА ЖЕН 10657 X", 1000000, 1000, 1, 1000000, "");
+            printer.printRecItemAdjustment(1,"", 100000, 1);
+            printer.printRecItem("ФУТБОЛКА ЖЕН 10657 X", 1000000, 1000, 1, 1000000, "");
+            printer.printRecItemAdjustment(1,"", 100000, 1);
+            printer.printRecVoidItem("КОМАРОВСКИЙ   ОРЗ:РУ", 3000000, 1000, 0, 0, 2);
+            printer.printRecItemAdjustment(2, "", 300000, 2);
+            printer.printRecTotal(1800000, 1800000, "1");
+            
+            printer.printRecMessage("01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789");
+            printer.printBarcode("2223183256141", "2223183256141",
+                    2, 45, 1, 3, 1, 1, 3);
+            
+            printer.endFiscalReceipt(false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void printFiscalReceipt104() {
         try {
             printer.resetPrinter();
 
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-            for (int i = 0; i <= 20; i++) {
-                printer.printRecItem("Receipt Item " + i, 1, 1000, 1, 1, "");
-            }
-            printer.printRecTotal(50000, 50000, "0");
+             
+            printer.printRecItem("СЫР КОРОЛЬ АРТУР ВЕС", 2343200, 378, 2, 6199000, "");
+            printer.printRecItemAdjustment(1, "", 234300, 2);
+            // 2108900
+            printer.printRecItem("КАЛЬМАР ТУШКА ВЕС", 1478700, 646, 2, 2289000, "");
+            printer.printRecItemAdjustment(1, "", 147900, 2);
+            //1478700 - 147900 = 1330800
+            
+            printer.printRecItem("ФОРЕЛЬ ЧИЛ. БАЛЫК ХК", 7218000, 602, 2, 11990000, "");
+            printer.printRecItemAdjustment(1, "", 721800, 2);
+            //7218000 - 721800 = 6496200
+            
+            printer.printRecItem("САВОРИН ТУШКА Х/К  В", 1786400, 358, 2, 4990000, "");
+            printer.printRecItemAdjustment(1, "", 178600, 2);
+            //1786400 - 178600 = 1607800
+            
+            printer.printRecItem("МАСЛЯНАЯ ФИЛЕ Х/К", 4277100, 446, 2, 9590000, "");
+            printer.printRecItemAdjustment(1, "", 427700, 2);
+            //4277100 - 427700 = 3849400
+            
+            printer.printRecItem("КАРП ЖИВОЙ ВЕС", 2785700, 1752, 2, 1590000, "");
+            printer.printRecItemAdjustment(1, "", 278600, 2);
+            // 2785700 - 278600 = 2507100
+            
+            printer.printRecItem("СЫРОК ВАНИЛЬ 45Г РАЭ", 1519000, 10000, 2, 151900, "");
+            printer.printRecItemAdjustment(1, "", 152000, 2);
+            //1519000 - 152000 = 1367000
+            
+            printer.printRecItem("КАРБОНАД В/К ВЕС", 5225200, 804, 1, 6499000, "");
+            printer.printRecItemAdjustment(1, "", 522500, 1);
+            //5225200 - 522500 = 4702700
+            
+            printer.printRecItem("КОЛБ ЗЕРНИСТАЯ С/К", 2914300, 286, 2, 10190000, "");
+            printer.printRecItemAdjustment(1, "", 291400, 2);
+            //2914300 - 291400 = 2622900
+            
+            printer.printRecItem("КАЙСА ВЕС", 2009700, 718, 1, 2799000, "");
+            printer.printRecItemAdjustment(1, "", 201000, 1);
+            //2009700 - 201000 = 1808700
+            
+            printer.printRecItem("ВИНО ЛАЗАРЕВКА", 1599000, 1000, 1, 1599000, "");
+            printer.printRecItemAdjustment(1, "", 159900, 1);
+            // 1599000 - 159900 = 1439100
+                    
+            printer.printRecItem("ЧИПСЫ ХРУСТ КАРТ 160", 599000, 1000, 1, 599000, "");
+            printer.printRecItemAdjustment(1, "", 59900, 1);
+            // 599000 - 59900 = 539100
+            
+            printer.printRecItem("САЛЯМИ БОГАТЫРЬ С/К", 3331700, 285, 2, 11690000, "");
+            printer.printRecItemAdjustment(1, "", 333200, 2);
+            // 3331700 - 333200 = 2998500
+            
+            printer.printRecItem("ПИВО ВАШ ВЫБОР 1,5Л", 749000, 1000, 1, 749000, "");
+            printer.printRecItemAdjustment(1, "", 74900, 1);
+            // 749000 - 74900 = 674100
+            
+            printer.printRecItem("ЯБЛОКИ СЕЗОННЫЕ  ВЕС", 435800, 794, 1, 548900, "");
+            printer.printRecItemAdjustment(1, "", 43600, 1);
+            //435800 - 43600 = 392200
+            
+            printer.printRecItem("МЫЛО ХОЗ. АИСТ 150Г.", 1399000, 10000, 1, 139900, "");
+            printer.printRecItemAdjustment(1, "", 140000, 1);
+            //1399000 - 140000 = 1259000
+            
+            printer.printRecVoidItem("КАЙСА ВЕС", 2009700, 718, 0, 0, 1);
+            printer.printRecItemAdjustment(2, "", 201000, 1);
+            // 3000000
+            // 2799000 + 201000 = 2598000
+            
+            printer.printRecItem("АБРИКОС СУШЕНЫЙ ВЕС", 2867300, 717, 1, 3999000, "");
+            printer.printRecItemAdjustment(1, "", 286700, 1);
+            printer.printRecItem("МАК СПИРАЛИ 500Г", 400000, 1000, 2, 400000, "");
+            printer.printRecItemAdjustment(1, "", 40000, 2);
+            printer.printRecItem("МАК СПИРАЛИ 500Г", 400000, 1000, 2, 400000, "");
+            printer.printRecItemAdjustment(1, "", 40000, 2);
+            printer.printRecItem("ГОЛЕНЬ ИНД БЕСКОСТ", 2292700, 831, 2, 2759000, "");
+            printer.printRecItemAdjustment(1, "", 229300, 2);
+            printer.printRecItem("МАК ВЕРМИШЕЛЬ 500Г", 400000, 1000, 2, 400000, "");
+            printer.printRecItemAdjustment(1, "", 40000, 2);
+            
+            printer.printRecSubtotal(39618818);
+            printer.printRecTotal(39618800, 8800, "39");
+            printer.printRecTotal(39618800, 40000000, "1");
+            
+            //4363.82
+  
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1073,9 +1384,9 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecItem("Водка БонАква сильногаз 1,0л ПЭТ", 0, (int) (qty * 1000), 4, (long) (unitPrice * 100), "");
 
             payment += (long) (0.1 * 100);
-            printer.printRecItem("Водка БонАква сильногаз 1,0л ПЭТ", 0, (int)(qty*1000), 4, (long)(unitPrice*100), "");
+            printer.printRecItem("Водка БонАква сильногаз 1,0л ПЭТ", 0, (int) (qty * 1000), 4, (long) (unitPrice * 100), "");
 
-            payment+=(long)(0.1*100);
+            payment += (long) (0.1 * 100);
             //printer.fsWriteTag(1074, "8-913-919-1205"); // Телефон платежного агента
             printer.printRecTotal(payment, payment, "1");
             //printer.directIO(0x39, null, "foo@example.com");
@@ -1193,8 +1504,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecMessage("printRecMessage2");
             printer.printNormal(FPTR_S_RECEIPT, "printNormal2");
 
-            printer.printRecItem("Тестовый товар", 10000, 1000, 0, 10000, "");
-            printer.printRecSubtotalAdjustment(FPTR_AT_AMOUNT_DISCOUNT, "", 600);
+            printer.printRecItem("Тестовый товар", 100, 1000, 0, 100, "");
             printer.printRecItem("Батарейка Alkaline Stam", 20, 0, 1, 20, "");
             printer.printRecItemVoid("Батарейка Alkaline Stam", 20, 0, 1, 20, "");
             printer.printRecSubtotal(9500);
@@ -1202,7 +1512,6 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecMessage("printRecMessage3");
             printer.printNormal(FPTR_S_RECEIPT, "printNormal3");
 
-            printer.setDiscountAmount(99);
             printer.printRecTotal(9500, 9500, "0");
 
             printer.printRecMessage("printRecMessage4");
@@ -1340,7 +1649,7 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printFiscalReceipt3() {
-        printFiscalReceipt104();
+        printFiscalReceipt1044();
     }
 
     public void printFiscalReceipt4() {
@@ -2522,47 +2831,56 @@ class PrinterTest implements FiscalPrinterConst {
         printer.endFiscalReceipt(true);
     }
 
-    public void readFSTickets() throws Exception {
-        System.out.println("readFSTickets()");
+    public void fsReadTickets() throws Exception {
+        System.out.println("fsReadTickets()");
         int[] numbers = new int[10];
         for (int i = 0; i < numbers.length; i++) {
             numbers[i] = i;
         }
-        Object[] out = new Object[2];
-        printer.fsReadTickets(numbers, out);
-        int[] resultCodes = (int[])out[0];
-        byte[][] ticketsData = (byte[][])out[1];
-                
-        for (int i = 0; i < numbers.length; i++) 
-        {
-            int resultCode = resultCodes[i];
-            byte[] ticketData = ticketsData[i];
-            String s = String.valueOf(resultCode);
-            if ((resultCode == 0)&& (ticketData != null)) {
-                s = resultCode + ": " + Hex.toHex(ticketData);
-            }
-            s = String.valueOf(i) + ". " + s;
-            System.out.println(s);
+        printTickets(printer.fsReadTickets(numbers));
+    }
+
+    public void fsReadTickets2() throws Exception {
+        System.out.println("fsReadTickets2()");
+        int[] numbers = new int[10];
+        for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = i;
         }
+        printTickets(printer.fsReadTickets2(numbers));
+    }
+
+    public void fsReadTickets3() throws Exception {
+        System.out.println("readFSTickets3(1, 10)");
+        printTickets(printer.fsReadTickets3(1, 10));
     }
     
-    public void readFSTickets2() throws Exception {
-        System.out.println("readFSTickets2()");
-        int[] numbers = new int[10];
-        for (int i = 0; i < numbers.length; i++) {
-            numbers[i] = i;
+    public void fsReadTickets4() throws Exception {
+        System.out.println("readFSTickets4(1, 10)");
+        printTickets(printer.fsReadTickets4(1, 10));
+    }
+
+    public void printTickets(String[] lines) throws Exception {
+        for (int i = 0; i < lines.length; i++) {
+            System.out.println(lines[i]);
         }
-        Vector<FSTicket> tickets = printer.fsReadTickets2(numbers);
+    }
+
+    public void printTickets(Vector<FSTicket> tickets) throws Exception {
         for (int i = 0; i < tickets.size(); i++) {
             FSTicket ticket = tickets.get(i);
             String s = String.valueOf(ticket.getResultCode());
-            if ((ticket.getResultCode() == 0)&& (ticket.getData() != null)) {
+            if ((ticket.getResultCode() == 0) && (ticket.getData() != null)) {
                 s = ticket.getResultCode() + ": " + Hex.toHex(ticket.getData());
             }
             s = String.valueOf(i) + ". " + s;
             System.out.println(s);
+
+            System.out.println("Date: " + ticket.getDate().toString());
+            System.out.println("Time: " + ticket.getTime().toString());
+            System.out.println("Document MAC: " + Hex.toHex(ticket.getDocumentMAC()));
+            System.out.println("Document number: " + ticket.getDocumentNumber());
+            System.out.println("Text: " + ticket.getText());
         }
     }
 
-     
 }

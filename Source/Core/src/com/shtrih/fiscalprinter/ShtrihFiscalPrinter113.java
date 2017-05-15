@@ -1791,8 +1791,11 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
                 new Integer(amount));
     }
 
-    public void fsReadTickets(int[] numbers, Object object) throws Exception {
+    public String[] fsReadTickets(int[] numbers) throws Exception 
+    {
+        Object[] object = new Object[1];
         directIO(SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS, numbers, object);
+        return (String[])object[0];
     }
 
     public Vector<FSTicket> fsReadTickets2(int[] numbers) throws Exception {
@@ -1802,12 +1805,23 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         return (Vector<FSTicket>) object[0];
     }
     
-    public void fsReadTickets3(int number1, Object object) throws Exception {
+    public String[] fsReadTickets3(int number1) throws Exception {
+        Object[] object = new Object[1];
         int[] data = new int[1];
         data[0] = number1;
         directIO(SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS3, data, object);
+        return (String[])object[0];
     }
 
+    public String[] fsReadTickets3(int number1, int count) throws Exception {
+        Object[] object = new Object[1];
+        int[] data = new int[2];
+        data[0] = number1;
+        data[1] = count;
+        directIO(SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS3, data, object);
+        return (String[])object[0];
+    }
+    
     public Vector<FSTicket> fsReadTickets4(int number1) throws Exception {
         int[] data = new int[1];
         data[0] = number1;
@@ -1817,6 +1831,16 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         return (Vector<FSTicket>) object[0];
     }
 
+    public Vector<FSTicket> fsReadTickets4(int number1, int count) throws Exception {
+        int[] data = new int[2];
+        data[0] = number1;
+        data[1] = count;
+        Object[] object = new Object[1];
+        object[0] = null;
+        directIO(SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS4, data, object);
+        return (Vector<FSTicket>) object[0];
+    }
+    
     /**
      * Техническое обнуление
      */
@@ -1852,5 +1876,19 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         cmd.setTime(time);
         executeCommand(cmd);
     }
+    
+    public void readTotals(long[] totals) throws Exception
+    {
+        int[] data = new int[1];
+        data[0] = SmFptrConst.FMTOTALS_ALL_FISCALIZATIONS;
+        Long[] object = new Long[4];
+        directIO(SmFptrConst.SMFPTR_DIO_READ_TOTALS, data, object);
+        
+        totals[0] = (Long)object[0];
+        totals[1] = (Long)object[1];
+        totals[2] = (Long)object[2];
+        totals[3] = (Long)object[3];
+    }
+            
 
 }

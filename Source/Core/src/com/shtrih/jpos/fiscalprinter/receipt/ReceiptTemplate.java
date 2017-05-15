@@ -23,6 +23,7 @@ public class ReceiptTemplate {
 
     private final ReceiptContext context;
     private String[] headerLines = null;
+    private String[] trailerLines = null;
     private TemplateLine[] itemTemplate = null;
     private TemplateLine[] discountTemplate = null;
     private TemplateLine[] chargeTemplate = null;
@@ -45,6 +46,7 @@ public class ReceiptTemplate {
     private void parseFormatLines() throws Exception {
         String fieldSeparator = getParams().fieldSeparator;
         headerLines = getParams().ItemTableHeader.split(fieldSeparator);
+        trailerLines = getParams().ItemTableTrailer.split(fieldSeparator);
         // item
         String[] lines = getParams().ItemRowFormat.split(fieldSeparator);
         itemTemplate = new TemplateLine[lines.length];
@@ -56,8 +58,7 @@ public class ReceiptTemplate {
         // discount
         lines = getParams().discountFormat.split(fieldSeparator);
         discountTemplate = new TemplateLine[lines.length];
-        for (int i = 0; i < lines.length; i++) 
-        {
+        for (int i = 0; i < lines.length; i++) {
             TemplateLine templateLine = FormatLineParser.getLineFromString(lines[i]);
             templateLine.parseLine();
             discountTemplate[i] = templateLine;
@@ -65,8 +66,7 @@ public class ReceiptTemplate {
         // charge
         lines = getParams().chargeFormat.split(fieldSeparator);
         chargeTemplate = new TemplateLine[lines.length];
-        for (int i = 0; i < lines.length; i++) 
-        {
+        for (int i = 0; i < lines.length; i++) {
             TemplateLine templateLine = FormatLineParser.getLineFromString(lines[i]);
             templateLine.parseLine();
             chargeTemplate[i] = templateLine;
@@ -77,10 +77,14 @@ public class ReceiptTemplate {
         return headerLines;
     }
 
+    public String[] getTrailerLines() {
+        return trailerLines;
+    }
+
     public String[] getReceiptItemLines(FSSaleReceiptItem item) throws Exception {
         Vector<String> lines = new Vector<String>();
 
-        if (item.getQuantity() < 0) {
+        if (item.getIsStorno()) {
             lines.add("СТОРНО");
         }
         for (TemplateLine templateLine : itemTemplate) {
@@ -98,7 +102,7 @@ public class ReceiptTemplate {
         }
         return lines.toArray(new String[0]);
     }
-    
+
     public String[] getChargeLines(FSDiscount item) throws Exception {
         Vector<String> lines = new Vector<String>();
         for (TemplateLine templateLine : chargeTemplate) {
@@ -107,7 +111,7 @@ public class ReceiptTemplate {
         }
         return lines.toArray(new String[0]);
     }
-    
+
     /**
      *
      * @param line template line to prepare
@@ -166,7 +170,7 @@ public class ReceiptTemplate {
         String s = String.format(line.getOutputFmt(), (String[]) fmts);
         return s;
     }
-    
+
     private String getDiscountTagContents(Field f, FSDiscount item) throws Exception {
         if (f.tag.equals("TITLE")) {
             return item.getText();
@@ -177,7 +181,15 @@ public class ReceiptTemplate {
         }
         throw new ParsingException("Unknown tag: " + f.tag);
     }
-    
+
+    public String getSign(FSSaleReceiptItem item) {
+        if (item.getIsStorno()) {
+            return "-";
+        } else {
+            return "";
+        }
+    }
+
     private String getTagContents(Field f, FSSaleReceiptItem item) throws Exception {
         if (f.tag.equals("POS")) {
             return String.valueOf(item.getPos());
@@ -191,7 +203,7 @@ public class ReceiptTemplate {
             return StringUtils.amountToString(item.getUnitPrice());
         }
         if (f.tag.equals("PRICE")) {
-            return StringUtils.amountToString(item.getPrice());
+            return StringUtils.amountToString(item.getUnitPrice());
         }
         if (f.tag.equals("QUAN")) {
             return getParams().quantityToStr(item.getQuantity(), item.getUnitName());
@@ -200,20 +212,21 @@ public class ReceiptTemplate {
             return StringUtils.amountToString(item.getPriceWithDiscount());
         }
 
-        if (f.tag.equals("DISCOUNT")) 
-        {
-            long amount = item.getTotalDiscount();
-            if (amount == 0) return "";
+        if (f.tag.equals("DISCOUNT")) {
+            long amount = item.getPriceDiscount();
+            if (amount == 0) {
+                return "";
+            }
             return StringUtils.amountToString(amount);
         }
         if (f.tag.equals("TOTAL")) {
-            return StringUtils.amountToString(item.getTotal());
+            return getSign(item) + StringUtils.amountToString(item.getTotal());
         }
         if (f.tag.equals("TOTAL_TAX")) {
-            return StringUtils.amountToString(item.getTotal()) + "_"
+            return getSign(item) + StringUtils.amountToString(item.getTotal()) + "_"
                     + getTaxLetter(item.getTax1());
         }
-        if (f.tag.equals("TAX_LETTER")){
+        if (f.tag.equals("TAX_LETTER")) {
             return getTaxLetter(item.getTax1());
         }
         if (f.tag.equals("MULT_NE_ONE")) {
@@ -268,7 +281,7 @@ public class ReceiptTemplate {
     private String formatStrings(FontNumber font, String line1, String line2) throws Exception {
         int len;
         StringBuilder sb = new StringBuilder();
-        len = context.getService().getModel().getTextLength(font)
+        len = context.getService().getPrinter().getMessageLength(font)
                 - line2.length();
 
         for (int i = 0; i < len; i++) {

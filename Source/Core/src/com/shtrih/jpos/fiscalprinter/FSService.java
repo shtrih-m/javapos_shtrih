@@ -5,14 +5,16 @@
  */
 package com.shtrih.jpos.fiscalprinter;
 
-import com.shtrih.fiscalprinter.SMFiscalPrinter;
-import com.shtrih.util.CompositeLogger;
-import com.shtrih.util.Hex;
-
+import java.net.Socket;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
-import java.net.Socket;
+
+import com.shtrih.util.Hex;
+import com.shtrih.util.CompositeLogger;
+import com.shtrih.fiscalprinter.SMFiscalPrinter;
+import com.shtrih.fiscalprinter.command.FDOParameters;
+
 
 /**
  * @author V.Kravtsov
@@ -21,10 +23,10 @@ public class FSService implements Runnable {
 
     private CompositeLogger logger = CompositeLogger.getLogger(FSService.class);
 
-    private String host;
-    private int port;
-    private final int connectTimeout;
+    
+    FDOParameters parameters;
     private int pollPeriod;
+    private int connectTimeout;
     private Thread thread = null;
     private boolean stopFlag = false;
     private final SMFiscalPrinter printer;
@@ -37,11 +39,9 @@ public class FSService implements Runnable {
     public void run() {
         try {
             while (true) {
-                try {
-                    // TODO: move table numbers to PrinterModel
-                    host = printer.readTable(15, 1, 1);
-                    port = Integer.valueOf(printer.readTable(15, 1, 2));
-                    pollPeriod = Integer.valueOf(printer.readTable(15, 1, 3)) * 1000;
+                try 
+                {
+                    parameters = printer.readFDOParameters();
                     break;
                 } catch (Exception e) {
                     Thread.sleep(10 * 1000);
@@ -86,7 +86,8 @@ public class FSService implements Runnable {
     private byte[] sendData(byte[] data) throws Exception {
         Socket socket = new Socket();
         socket.setSoTimeout(connectTimeout);
-        socket.connect(new InetSocketAddress(host, port));
+        socket.connect(new InetSocketAddress(parameters.getHost(), 
+                Integer.valueOf(parameters.getPort())));
         socket.getOutputStream().write(data);
         InputStream in = socket.getInputStream();
 

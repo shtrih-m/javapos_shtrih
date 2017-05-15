@@ -123,24 +123,25 @@ public class StringUtils {
         }
     }
 
-    public static String amountToString(long amount) {
+    public static String amountToString(long value) {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(
                 Locale.getDefault());
         symbols.setDecimalSeparator('.');
         DecimalFormat formatter = new DecimalFormat("0.00", symbols);
-        return formatter.format(amount / 100.0);
+        return formatter.format(Math.abs(value) / 100.0);
+
     }
 
     public static String quantityToStr2(long value) throws Exception {
         if ((value % 1000) == 0) {
-            return String.valueOf(value / 1000);
+            return String.valueOf(Math.abs(value) / 1000);
         } else {
             return StringUtils.quantityToString(value / 1000.0);
         }
     }
 
     public static String quantityToStr(long value) throws Exception {
-        return StringUtils.quantityToString(value / 1000.0);
+        return StringUtils.quantityToString(Math.abs(value) / 1000.0);
     }
 
     public static String quantityToString(double value) {
@@ -148,7 +149,7 @@ public class StringUtils {
                 Locale.getDefault());
         symbols.setDecimalSeparator('.');
         DecimalFormat formatter = new DecimalFormat("0.000", symbols);
-        return formatter.format(value);
+        return formatter.format(Math.abs(value));
     }
 
     public static String alignLines(String line1, String line2, int len) {

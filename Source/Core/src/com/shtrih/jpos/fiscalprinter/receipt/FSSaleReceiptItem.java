@@ -35,6 +35,7 @@ public class FSSaleReceiptItem {
     private String postLine = "";
     private String unitName = "";
     private long voidAmount = 0;
+    private boolean isStorno;
     private final FSDiscounts discounts = new FSDiscounts();
     private CompositeLogger logger = CompositeLogger.getLogger(FiscalPrinterImpl.class);
 
@@ -54,6 +55,14 @@ public class FSSaleReceiptItem {
         return item;
     }
 
+    public boolean getIsStorno(){
+        return isStorno;
+    }
+    
+    public void setIsStorno(boolean value){
+        this.isStorno = value;
+    }
+    
     public String getUnitName() {
         return unitName;
     }
@@ -123,11 +132,13 @@ public class FSSaleReceiptItem {
         return discounts;
     }
 
-    public long getTotalDiscount() {
-        return discounts.getTotal() * 1000 / quantity;
+    public long getPriceDiscount() 
+    {
+        if (quantity == 0) return 0;
+        return Math.abs(discounts.getTotal() * 1000 / quantity);
     }
 
-    public long getDiscountTotal() {
+    public long getTotalDiscount() {
         return discounts.getTotal();
     }
 
@@ -226,10 +237,11 @@ public class FSSaleReceiptItem {
     }
 
     public long getPriceWithDiscount() {
-        return getTotal() * 1000 / quantity;
+        if (quantity == 0) return 0;
+        return Math.abs(Math.round(getTotal() * 1000.0 / quantity));
     }
 
     public long getAmount() {
-        return PrinterAmount.getAmount(getPrice(), getQuantity());
+        return Math.abs(PrinterAmount.getAmount(getPrice(), getQuantity()) - discounts.getTotal());
     }
 }

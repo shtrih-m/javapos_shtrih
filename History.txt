@@ -6,6 +6,74 @@
 
 ********************************************************************************
 
+  May 5 2017, 12:50
+  deviceServiceVersion = 1013426
+	
+  [+] Added parameter "combineReceiptItems" to combine receipt items,
+      that has equal price and text
+	  
+  [-] Fixed error with surcharge
+
+********************************************************************************
+
+  April 26 2017, 21:50
+  deviceServiceVersion = 1013420
+	
+  [-] Fixed error with storno
+  
+********************************************************************************
+
+  April 25 2017, 16:10
+  deviceServiceVersion = 1013418
+	
+  [-] Fixed error with price truncation instead of rounding
+  
+********************************************************************************
+
+  April 20 2017, 12:55
+  deviceServiceVersion = 1013416
+	
+  [-] Removed parameter FSReceiptItemDiscountEnabled
+  
+********************************************************************************
+
+  April 17 2017, 14:25
+  deviceServiceVersion = 1013415
+	
+  [-] Fixed error with initialization on firmware prior to 12.04.2017
+  
+********************************************************************************
+
+  April 13 2017, 23:25
+  deviceServiceVersion = 1013414
+	
+  [-] Fixed error with receipt format
+  
+********************************************************************************
+
+  April 12 2017, 14:40
+  deviceServiceVersion = 1013413
+	
+  [-] Fixed error with receipt format
+  [-] Changed red tickets implementation
+
+********************************************************************************
+
+  April 11 2017, 22:20
+  deviceServiceVersion = 1013412
+	
+  [+] Added DirectIO command SMFPTR_DIO_READ_TOTALS to read printer totalizers
+
+********************************************************************************
+
+  April 11 2017, 18:50
+  deviceServiceVersion = 1013411
+	
+  [-] Fixed error with EAN-13 barcode height on NCR-001K fiscal printer
+  [+] Added discount text processing
+
+********************************************************************************
+
   April 7 2017, 23:10
   deviceServiceVersion = 1013410
 	

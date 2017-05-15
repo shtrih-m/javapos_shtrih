@@ -185,6 +185,7 @@ public class DriverHeader implements JposConst, PrinterHeader {
                     printer.getParams().getFont());
         }
         printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_AFTER_ADDTRAILER);
+        printer.printText(PrinterConst.SMFP_STATION_REC, " ", printer.getParams().getFont());
         printer.waitForPrinting();
     }
 

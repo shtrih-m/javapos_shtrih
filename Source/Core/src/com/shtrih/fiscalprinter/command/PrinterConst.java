@@ -83,6 +83,12 @@ public interface PrinterConst {
     // NCR001
     public static final int PRINTER_MODEL_NCR001 = 17;
 
+    // ШТРИХ-МОБАЙЛ-Ф
+    public static final int PRINTER_MODEL_SHTRIH_MOBILE_F = 19;
+        
+    // РИТЕЙЛ-01Ф
+    public static final int PRINTER_MODEL_RETAIL_01F = 22;
+    
     // YARUS-02K
     public static final int PRINTER_MODEL_YARUS02K = 248;
 
@@ -567,15 +573,21 @@ public interface PrinterConst {
     // Receipt format enabled
     public static final String SMFP_PARAMID_RECFORMAT_ENABLED = "ReceiptFormatEnabled";
     // НАИМЕНОВАНИЕ В ОПЕРАЦИИ
-    public static final String SMFPTR_PARAMID_ITM_NAME_LEN = "ReceiptItemNameLength";
+    public static final String SMFP_PARAMID_ITM_NAME_LEN = "ReceiptItemNameLength";
     // ТЕКСТ В СКИДКЕ
-    public static final String SMFPTR_PARAMID_DSC_TEXT_LEN = "DiscountTextLength";
+    public static final String SMFP_PARAMID_DSC_TEXT_LEN = "DiscountTextLength";
     // ТЕКСТ В НАДБАВКЕ
-    public static final String SMFPTR_PARAMID_CHR_TEXT_LEN = "ChargeTextLength";
+    public static final String SMFP_PARAMID_CHR_TEXT_LEN = "ChargeTextLength";
     // ТЕКСТ В СТОРНО СКИДКИ
-    public static final String SMFPTR_PARAMID_DSCVOID_TEXT_LEN = "DiscountVoidTextLength";
+    public static final String SMFP_PARAMID_DSCVOID_TEXT_LEN = "DiscountVoidTextLength";
     // ТЕКСТ В СТОРНО НАДБАВКИ
-    public static final String SMFPTR_PARAMID_CHRVOID_TEXT_LEN = "ChargeVoidTextLength";
+    public static final String SMFP_PARAMID_CHRVOID_TEXT_LEN = "ChargeVoidTextLength";
+    // FDO server host
+    public static final String SMFP_PARAMID_FDO_SERVER_HOST = "FDOServerHost";
+    // FDO server port
+    public static final String SMFP_PARAMID_FDO_SERVER_PORT = "FDOServerPort";
+    // FDO server timeout
+    public static final String SMFP_PARAMID_FDO_SERVER_TIMEOUT = "FDOServerTimeout";
     
     // ////////////////////////////////////////////////////////////////////////
     // Model ID constants
@@ -606,6 +618,7 @@ public interface PrinterConst {
     public static final int SMFP_MODELID_SHTRIH_LIGHT_FRK2 = 22;
     public static final int SMFP_MODELID_ELVES_ASPD = 23;
     public static final int SMFP_MODELID_NCR001 = 24;
+    public static final int SMFP_MODELID_SHTRIH_MOBILE_F = 25;
 
     // ////////////////////////////////////////////////////////////////////////
     // Error codes

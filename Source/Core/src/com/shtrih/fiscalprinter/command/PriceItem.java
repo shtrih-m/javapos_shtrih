@@ -68,7 +68,9 @@ public class PriceItem {
      * @param price
      * the price to set
      */
-    public void setPrice(long price) throws Exception {
+    public void setPrice(long price) throws Exception 
+    {
+        price = Math.abs(price);
         MethodParameter.checkRange(price, 0, 0xFFFFFFFFFFL, "price");
         this.price = price;
     }
@@ -78,6 +80,8 @@ public class PriceItem {
      * the quantity to set
      */
     public void setQuantity(long quantity) throws Exception {
+        quantity = Math.abs(quantity);
+        MethodParameter.checkRange(price, 0, 0xFFFFFFFFFFL, "price");
         this.quantity = quantity;
     }
 
