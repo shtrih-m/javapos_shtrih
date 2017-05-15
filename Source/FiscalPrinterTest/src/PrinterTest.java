@@ -1209,27 +1209,12 @@ class PrinterTest implements FiscalPrinterConst {
 
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-            
-            //300 - 30 + 100 - 10 - 300 + 30 = 90
-                    
-            printer.printRecMessage("01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789");
-            
-            printer.printRecItem("01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789", 
-                3000000, 1000, 2, 3000000, "");
-            
-            printer.printRecItemAdjustment(1, "", 300000, 2);
-            printer.printRecItem("ФУТБОЛКА ЖЕН 10657 X", 1000000, 1000, 1, 1000000, "");
-            printer.printRecItemAdjustment(1,"", 100000, 1);
-            printer.printRecItem("ФУТБОЛКА ЖЕН 10657 X", 1000000, 1000, 1, 1000000, "");
-            printer.printRecItemAdjustment(1,"", 100000, 1);
-            printer.printRecVoidItem("КОМАРОВСКИЙ   ОРЗ:РУ", 3000000, 1000, 0, 0, 2);
-            printer.printRecItemAdjustment(2, "", 300000, 2);
-            printer.printRecTotal(1800000, 1800000, "1");
-            
-            printer.printRecMessage("01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789");
-            printer.printBarcode("2223183256141", "2223183256141",
-                    2, 45, 1, 3, 1, 1, 3);
-            
+            printer.printRecItem("ШПРОТЫ ГЛОБУС 160 Г", 629100, 1000, 2, 699000, "");
+            printer.printRecItem("ШПРОТЫ ГЛОБУС 160 Г", 629100, 1000, 2, 699000, "");
+            printer.printRecItem("ШПРОТЫ ГЛОБУС 160 Г", 629100, 1000, 2, 699000, "");
+            printer.printRecSubtotal(1677600);
+            printer.printRecTotal(1887300, 2300, "39");
+            printer.printRecTotal(1887300, 2000000, "1");
             printer.endFiscalReceipt(false);
 
         } catch (Exception e) {
