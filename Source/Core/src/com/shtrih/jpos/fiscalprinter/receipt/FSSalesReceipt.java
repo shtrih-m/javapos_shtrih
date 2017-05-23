@@ -915,8 +915,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             addTotal(amount);
         }
         clearPrePostLine();
-        if ((price > 0) && (amount - price) > 0) {
-            printDiscount(amount - price, vatInfo, "");
+        if (getParams().FSReceiptItemDiscountEnabled) {
+            if ((price > 0) && (amount - price) > 0) {
+                printDiscount(amount - price, vatInfo, "");
+            }
         }
     }
 

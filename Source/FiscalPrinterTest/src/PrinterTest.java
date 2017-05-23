@@ -1010,22 +1010,71 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
             
-            printer.printRecItem("КАЙСА ВЕС", 2009700, 718, 1, 2799000, "");
-            printer.printRecItemAdjustment(1, "", 201000, 1);
-            
-            //printer.printRecItemVoid("КАЙСА ВЕС", 2009700, 718, 1, 2799000, "");
-            //printer.printRecItemAdjustment(2, "", 201000, 1);
-            
-            printer.printRecVoidItem("КАЙСА ВЕС", 2009700, 718, 0, 0, 1);
-            printer.printRecItemAdjustment(2, "", 201000, 1);
-            
-            printer.printRecTotal(400000000, 400000000, "1");
+            printer.printRecItem("ПЕЛЬМЕНИ РЯЗАН. 1КГ", 2799000, 1000, 2, 2799000, "");
+            printer.printRecItem("ПЕЛЬМЕНИ РЯЗАН. 1КГ", 2519100, 1000, 2, 2799000, "");
+            printer.printRecItem("ДЕКОР.ПАННО ЕЛКА", 1259100, 1000, 1, 1399000,"");
+            printer.printRecItem("ДЕКОР.ПАННО ЕЛКА", 1259100, 1000, 1, 1399000,"");
+            printer.printRecVoidItem("ПЕЛЬМЕНИ РЯЗАН. 1КГ", -2519100, 1000, 0, 0, 2);
+            printer.printRecSubtotal(5037400);
+            printer.printRecTotal(2518200, 3200, "39");
+            printer.printRecTotal(2518200, 3000000, "1");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void printFiscalReceipt10445() {
+        try {
+            printer.resetPrinter();
+
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+            /*
+            printer.printRecItem("СВЕЧА ПИРАМИДА", 2519100, 1000, 1, 2799000, "");
+            printer.printRecItem("ДЕКОР.ПАННО ЕЛКА", 1259100, 1000, 1, 1399000,"");
+            printer.printRecItem("ДЕКОР.ПАННО ЕЛКА", 1259100, 1000, 1, 1399000,"");
+            printer.printRecItem("КЕФИР МОЛ.ИСТ.1  930", 417500, 1000, 2, 463900, "");
+            printer.printRecItem("КЕФИР МОЛ.ИСТ.1  930", 417500, 1000, 2, 463900,"");
+            printer.printRecItem(КЕФИР МОЛ.ИСТ.1  930, -46600, 1000, 2, 463900,   )
+            printer.printRecSubtotal(4662700)
+            printer.printRecTotal(3306600, 1600, 39)
+            printer.printRecTotal(3306600, 3500000, 1)
+*/
   
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    
+
+    public void printFiscalReceipt10444() {
+        try {
+            printer.resetPrinter();
+
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+            
+            printer.printRecMessage(" ");
+            printer.printRecMessage("               Кассовый чек               ");
+            printer.printRecItem("*2021023 ТИРЛИМ Печен.сах.со сг.мол.400г", 3305, 1000, 1, 3305, "");
+            printer.printRecItem("*3358752 КУХ.Печен.КУРАБЬЕ ОРИГИНАЛ.130г", 3755, 1000, 1, 3755, "");
+            printer.printRecItem("*3376015 ПОСИД.ПеченьеТВОРОЖсдоб.изюм250", 4505, 1000, 1, 4505, "");
+            printer.printRecItem("*3422398 GREENF.Чай ПР.АСС.чер.25х2г", 5900, 1000, 1, 5900, "");
+            printer.printRecMessage("                                          ");
+            printer.printRecSubtotal(17465);
+            printer.printRecSubtotalAdjustment(1, "", 65);
+            printer.printRecSubtotal(17400);
+            printer.printRecTotal(17400, 17400, "30");
+
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
     
     public void printFiscalReceipt1045() {
         try {
@@ -1634,7 +1683,8 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printFiscalReceipt3() {
-        printFiscalReceipt1044();
+        //printFiscalReceipt1044();
+        printFiscalReceipt10444();
     }
 
     public void printFiscalReceipt4() {

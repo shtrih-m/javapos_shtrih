@@ -6,6 +6,14 @@
 
 ********************************************************************************
 
+  May 23 2017, 13:30
+  deviceServiceVersion = 1013428
+	
+  [-] Fixed error with receipt item discount, added parameter 
+      FSReceiptItemDiscountEnabled
+  
+********************************************************************************
+
   May 15 2017, 19:30
   deviceServiceVersion = 1013427
 	
