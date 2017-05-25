@@ -18,14 +18,14 @@
 		<prop name="portType" type="String" value="3"/>
 		<!-- portClass  -->
 		<!--<prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.FtdiPrinterPort"/>  -->
-		<prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.BluetoothPort"/> 
+		<prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.HohoSerialPort"/>
 		<!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
 		<!-- ProtocolType, 0 - protocol 1, 1 - protocol 2 -->
 		<prop name="protocolType" type="String" value="1"/>
 		<!--Port name-->
 		<!--For serial ports - COM1, for TCP ports: host:port - "10.11.7.210:12345" -->
 		<!--<prop name="portName" type="String" value="10.11.7.210:12345"/> -->
-		<prop name="portName" type="String" value="192.168.1.87:7778"/>
+		<prop name="portName" type="String" value=""/>
 		<!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
 		<prop name="baudRate" type="String" value="115200"/>
 		<!--Default department-->

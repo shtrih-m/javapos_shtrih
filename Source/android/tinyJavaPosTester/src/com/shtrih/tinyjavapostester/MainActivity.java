@@ -15,6 +15,7 @@ import com.google.zxing.pdf417.encoder.Compaction;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
+import com.shtrih.util.StaticContext;
 import com.shtrih.util.SysUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        StaticContext.setContext(getApplicationContext());
         printer = new ShtrihFiscalPrinter(new FiscalPrinter());
     }
 

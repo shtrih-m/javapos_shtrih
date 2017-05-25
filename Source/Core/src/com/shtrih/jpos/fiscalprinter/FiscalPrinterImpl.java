@@ -13,6 +13,7 @@ import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.shtrih.fiscalprinter.port.SerialPrinterPort;
 import com.shtrih.jpos.fiscalprinter.receipt.*;
 import com.shtrih.util.*;
 import com.shtrih.fiscalprinter.command.*;
@@ -42,7 +43,6 @@ import com.shtrih.fiscalprinter.SmFiscalPrinterException;
 import com.shtrih.fiscalprinter.model.PrinterModel;
 import com.shtrih.fiscalprinter.port.PrinterPort;
 import com.shtrih.fiscalprinter.port.PrinterPortFactory;
-import com.shtrih.fiscalprinter.port.SerialPrinterPort;
 import com.shtrih.fiscalprinter.receipt.PrinterReceipt;
 import com.shtrih.fiscalprinter.table.CsvTablesReader;
 import com.shtrih.fiscalprinter.table.CsvTablesWriter;

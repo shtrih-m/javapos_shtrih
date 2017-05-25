@@ -283,10 +283,10 @@
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- Receipt template -->
 		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
-		<prop name="FieldSeparator" type="String" value=";"/>
-		<prop name="ItemTableHeader" type="String" value="---------------------------------------------------;Цена     Скидка  Цена со скидкой  Кол-во  ИТОГ  НДС;---------------------------------------------------;"/>
+		<prop name="FieldSeparator" type="String" value=":"/>
+		<prop name="ItemTableHeader" type="String" value="                 Цена со:№пп Цена  Скидка скидкой Кол-во   ИТОГО: "/>
 		<prop name="ItemTableTrailer" type="String" value=""/>
-		<prop name="ItemRowFormat" type="String" value="%51lTITLE%;%8lPRICE% %6lDISCOUNT%  %8lSUM%  %10QUAN%  %=$10TOTAL_TAX%"/>
+		<prop name="ItemRowFormat" type="String" value="%3cPOS% %38lTITLE%: %8lPRICE% %6lDISCOUNT% %8lSUM%*%5QUAN%%=$11TOTAL_TAX%: "/>
 		<!-- <prop name="DiscountFormat" type="String" value="    СКИДКА  %29lTITLE%%=$10TOTAL%"/> -->
 		<prop name="DiscountFormat" type="String" value=""/>
 		<!-- <prop name="ChargeFormat" type="String"   value="    НАДБАВКА  %29lTITLE%%=$10TOTAL%"/> -->

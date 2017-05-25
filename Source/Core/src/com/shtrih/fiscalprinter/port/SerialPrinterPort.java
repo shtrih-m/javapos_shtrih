@@ -12,7 +12,6 @@
  */
 package com.shtrih.fiscalprinter.port;
 
-import static com.shtrih.fiscalprinter.port.SocketPort.logger;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 
