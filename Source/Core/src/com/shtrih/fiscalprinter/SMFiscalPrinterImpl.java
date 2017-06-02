@@ -102,6 +102,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private boolean capFSTotals = true;
     private boolean subtotalInHeader = false;
     private boolean discountInHeader = false;
+    private int headerHeigth = 0;
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params, FiscalPrinterImpl service) {
@@ -1815,10 +1816,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     // 17,1,18,1,0,0,3,"Rus компактный заголовок","0"
-    public void initialize() throws Exception {
+    public void initialize() throws Exception 
+    {
         logger.debug("initialize()");
         readFonts();
-
+        headerHeigth = getModel().getHeaderHeight();
         capFiscalStorage = readCapFiscalStorage();
         if (capFiscalStorage) 
         {
@@ -1847,6 +1849,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             rc = readTable(18, 1, 9, fieldValue);
             if (succeeded(rc)) {
                 fsAddress = fieldValue[0];
+            }
+            
+            rc = readTable(10, 1, 1, fieldValue);
+            if (succeeded(rc)){
+                headerHeigth = Integer.valueOf(fieldValue[0]);
             }
         }
     }
@@ -2400,8 +2407,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public int getLineHeight(FontNumber font) throws Exception {
-        return getModel().getFontHeight(font) - getModel().getLineSpacing()
-                + getLineSpacing();
+        return getModel().getFontHeight(font) + getLineSpacing();
     }
 
     public void checkImageSize(int firstLine, int imageWidth, int imageHeight)
@@ -3248,6 +3254,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void printSeparator(int separatorType, int height) throws Exception {
         printGraphicLine(height, getSeparatorData(separatorType));
         waitForPrinting();
+    }
+    
+    public int getHeaderHeight() throws Exception{
+        return headerHeigth;
     }
 
 }

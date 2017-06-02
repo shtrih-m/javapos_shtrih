@@ -999,4 +999,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public FDOParameters readFDOParameters() throws Exception{
         return null;
     }
+    
+    public int getHeaderHeight() throws Exception{
+        return 88;
+    }
 }

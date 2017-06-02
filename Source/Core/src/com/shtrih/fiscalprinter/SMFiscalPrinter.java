@@ -556,4 +556,6 @@ public interface SMFiscalPrinter {
     public FDOParameters readFDOParameters() throws Exception;
     
     public String ReadRnm() throws Exception;
+    
+    public int getHeaderHeight() throws Exception;
 }

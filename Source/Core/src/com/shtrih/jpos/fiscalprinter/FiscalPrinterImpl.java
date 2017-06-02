@@ -3542,7 +3542,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             printDocStart();
             getPrinter().printZReport();
             fiscalDay.close();
-            printDocEnd();
+            try{
+                printDocEnd();
+            } catch (Exception e) {
+                logger.error("printZReport: " + e.getMessage());
+            }
         } else {
             throw new JposException(JPOS_E_ILLEGAL);
         }

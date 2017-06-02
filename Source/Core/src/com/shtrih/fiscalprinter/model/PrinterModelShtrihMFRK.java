@@ -50,13 +50,13 @@ public class PrinterModelShtrihMFRK extends PrinterModelDefault {
 		capDoubleWidth = true;
 		capDuplicateReceipt = true;
 		amountDecimalPlace = 2;
-		numHeaderLines = 4;
+		numHeaderLines = 3;
 		numTrailerLines = 3;
 		trailerTableNumber = 4;
 		headerTableNumber = 4;
 		headerTableRow = 11;
 		trailerTableRow = 1;
-		minHeaderLines = 4;
+		minHeaderLines = 5;
 		minTrailerLines = 0;
 		capFullCut = true;
 		capPartialCut = true;

@@ -2,6 +2,7 @@ package com.shtrih.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import android.util.Log;
 
 /**
  *
@@ -29,22 +30,28 @@ public class CompositeLogger {
     }
     
     public synchronized void fatal(String text, Throwable e) {
+        Log.e(text, e.getMessage());
         log4JLogger.error(text, e);
     }
     
     public synchronized void error(String text, Throwable e) {
+
+        Log.e(text, e.getMessage());
         log4JLogger.error(text, e);
     }
     
     public synchronized void error(Throwable e) {
+        Log.e("", e.getMessage());
         log4JLogger.error("Error", e);
     }
     
     public synchronized void error(String text) {
+        Log.e("", text);
         log4JLogger.error(text);
     }
     
     public synchronized void debug(String text) {
+        Log.d("", text);
         log4JLogger.debug(text);
     }
 }

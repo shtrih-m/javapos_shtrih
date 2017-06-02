@@ -24,24 +24,34 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.content.Context;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 
 import java.util.List;
 
 
 public class HohoSerialPort implements PrinterPort {
 
-    private Context context;
     private int timeout = 1000;
     private int baudRate = 9600;
     private String portName = "";
     private UsbSerialPort port = null;
     private static CompositeLogger logger = CompositeLogger.getLogger(HohoSerialPort.class);
+    private static final String ACTION_USB_PERMISSION = "com.shtrih.fiscalprinter.port.USB_PERMISSION";
 
     /**
      * Creates a new instance of PrinterPort
      */
     public HohoSerialPort()
     {
+    }
+
+    private Context getContext() throws Exception {
+        Context context = StaticContext.getContext();
+        if (context == null) throw new Exception("Context not defined");
+        return context;
     }
 
     public void checkOpened() throws Exception {
@@ -77,10 +87,12 @@ public class HohoSerialPort implements PrinterPort {
 
         if (isClosed())
         {
-            Context context = StaticContext.getContext();
-            if (context == null) throw new Exception("Context not defined");
-            UsbManager usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
+            logger.debug("open");
+
+            UsbManager usbManager = (UsbManager) getContext().getSystemService(Context.USB_SERVICE);
             List<UsbSerialDriver> drivers = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager);
+            logger.debug("drivers.size: " + drivers.size());
+
             // Show all devices
             for (int i = 0; i < drivers.size(); i++) {
                 UsbDevice device = drivers.get(i).getDevice();

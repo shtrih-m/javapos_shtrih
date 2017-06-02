@@ -1,7 +1,13 @@
 package com.shtrih.tinyjavapostester;
 
 import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+import android.util.Log;
+
 
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.pdf417.encoder.Compaction;
@@ -41,9 +49,89 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setFilter();
+        findSerialPortDevice();
+
         StaticContext.setContext(getApplicationContext());
         printer = new ShtrihFiscalPrinter(new FiscalPrinter());
+
     }
+
+    public static final String ACTION_USB_DISCONNECTED = "com.felhr.usbservice.USB_DISCONNECTED";
+    public static final String ACTION_USB_STATE = "android.hardware.usb.action.USB_STATE";
+    public static final String ACTION_USB_ATTACHED = "android.hardware.usb.action.USB_DEVICE_ATTACHED";
+    public static final String ACTION_USB_DETACHED = "android.hardware.usb.action.USB_DEVICE_DETACHED";
+    private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
+    public static final String ACTION_USB_PERMISSION_GRANTED = "com.felhr.usbservice.USB_PERMISSION_GRANTED";
+    public static final String ACTION_USB_PERMISSION_NOT_GRANTED = "com.felhr.usbservice.USB_PERMISSION_NOT_GRANTED";
+    private static final String TAG = "USBList";
+
+    private void findSerialPortDevice()
+    {
+        UsbManager usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
+        // This snippet will try to open the first encountered usb device connected, excluding usb root hubs
+        HashMap<String, UsbDevice> usbDevices = usbManager.getDeviceList();
+        if (!usbDevices.isEmpty()) {
+            for (Map.Entry<String, UsbDevice> entry : usbDevices.entrySet()) {
+                UsbDevice device = entry.getValue();
+                int deviceVID = device.getVendorId();
+                int devicePID = device.getProductId();
+
+                Log.d(TAG, "opening device VID: " + deviceVID + ", PID " + devicePID);
+                PendingIntent mPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
+                usbManager.requestPermission(device, mPendingIntent);
+            }
+        } else {
+            Log.d(TAG, "no usb devices");
+        }
+    }
+
+    private void setFilter() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_USB_PERMISSION);
+        filter.addAction(ACTION_USB_DETACHED);
+        filter.addAction(ACTION_USB_ATTACHED);
+        filter.addAction(ACTION_USB_STATE);
+        registerReceiver(usbReceiver, filter);
+    }
+
+    private final BroadcastReceiver usbReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context arg0, Intent arg1)
+        {
+            Log.d("onReceive", arg1.getAction());
+            if (arg1.getAction().equals(ACTION_USB_PERMISSION))
+            {
+                boolean granted = arg1.getExtras().getBoolean(UsbManager.EXTRA_PERMISSION_GRANTED);
+                if (granted) // User accepted our USB connection. Try to open the device as a serial port
+                {
+                    Intent intent = new Intent(ACTION_USB_PERMISSION_GRANTED);
+                    arg0.sendBroadcast(intent);
+                    Log.d(TAG, "permission granted for USB ");
+                } else // User not accepted our USB connection. Send an Intent to the Main Activity
+                {
+                    Intent intent = new Intent(ACTION_USB_PERMISSION_NOT_GRANTED);
+                    arg0.sendBroadcast(intent);
+                    Log.d(TAG, "permission not granted for USB");
+                }
+            }
+
+            if (arg1.getAction().equals(ACTION_USB_STATE))
+            {
+                findSerialPortDevice(); // A USB device has been attached. Try to open it as a Serial port
+            }
+
+            if (arg1.getAction().equals(ACTION_USB_ATTACHED))
+            {
+                findSerialPortDevice(); // A USB device has been attached. Try to open it as a Serial port
+            }
+            if (arg1.getAction().equals(ACTION_USB_DETACHED)) {
+                // Usb device was disconnected. send an intent to the Main Activity
+                Intent intent = new Intent(ACTION_USB_DISCONNECTED);
+                arg0.sendBroadcast(intent);
+            }
+        }
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -67,14 +155,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void connectToDevice(final String address) throws Exception {
+        Log.d("", "connectToDevice");
+        UsbManager usbManager = (UsbManager) getApplicationContext().getSystemService(Context.USB_SERVICE);
+        for (final UsbDevice usbDevice : usbManager.getDeviceList().values()) {
+            Log.d("usbDevice", "vendorId: " + usbDevice.getVendorId());
+            Log.d("usbDevice", "productId: " + usbDevice.getProductId());
+        }
+        /*
         JposConfig.configure("ShtrihFptr", address, getApplicationContext());
-
         if (printer.getState() != JposConst.JPOS_S_CLOSED) {
             printer.close();
         }
         printer.open("ShtrihFptr");
         printer.claim(3000);
         printer.setDeviceEnabled(true);
+        */
     }
 
     @Override
