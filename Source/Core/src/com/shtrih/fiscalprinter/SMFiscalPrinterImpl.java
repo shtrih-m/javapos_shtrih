@@ -28,6 +28,7 @@ import com.shtrih.printer.ncr7167.NCR7167Printer;
 import com.shtrih.util.*;
 import jpos.JposConst;
 
+
 import java.io.ByteArrayOutputStream;
 import java.security.InvalidParameterException;
 import java.text.DecimalFormat;
@@ -175,7 +176,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
                 if (command.getResultCode() != 0) {
                     String text = getErrorText(command.getResultCode());
-                    logger.error(text);
+                    logger.error(text + ", " + command.getParametersText());
                 }
                 afterCommand(command);
             } catch (Exception e) {

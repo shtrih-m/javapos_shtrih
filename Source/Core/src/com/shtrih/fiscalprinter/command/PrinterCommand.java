@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.shtrih.fiscalprinter.SmFiscalPrinterException;
 import com.shtrih.util.Localizer;
 import com.shtrih.fiscalprinter.AnswerCodeException;
+import com.shtrih.util.Hex;
 
 public abstract class PrinterCommand {
 
@@ -67,7 +68,7 @@ public abstract class PrinterCommand {
     public byte[] getTxData() {
         return txData;
     }
-    
+
     public byte[] getRxData() {
         return rxData;
     }
@@ -86,8 +87,7 @@ public abstract class PrinterCommand {
                 resultCode = in.readByte();
             }
         } else {
-            if (code != getCode()) 
-            {
+            if (code != getCode()) {
                 throw new AnswerCodeException("Invalid answer code");
             }
             resultCode = in.readByte();
@@ -102,7 +102,7 @@ public abstract class PrinterCommand {
         out.reset();
         int code = getCode();
         if (code > 0xFF) {
-            out.writeByte( (code >> 8) & 0xFF);
+            out.writeByte((code >> 8) & 0xFF);
             out.writeByte(code & 0xFF);
         } else {
             out.writeByte(code);
@@ -173,5 +173,13 @@ public abstract class PrinterCommand {
 
     public void setRepeatEnabled(boolean value) {
         repeatEnabled = value;
+    }
+
+    public String getParametersText() {
+        try {
+            return Hex.toHex2(encodeData());
+        } catch (Exception e) {
+            return "";
+        }
     }
 }

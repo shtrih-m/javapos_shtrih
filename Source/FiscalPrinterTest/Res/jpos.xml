@@ -65,7 +65,7 @@
         <!-- device state polling interval in milliseconds -->
         <prop name="pollInterval" type="String" value="1000"/>
         <!-- Amount coefficient -->
-        <prop name="amountFactor" type="String" value="0.01"/>
+        <prop name="amountFactor" type="String" value="1"/>
         <!-- Quantity coefficient -->
         <prop name="quantityFactor" type="String" value="1"/>
         <!-- Strings encoding -->

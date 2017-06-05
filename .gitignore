@@ -29,3 +29,7 @@
 /Source/android/tinyJavaPosTester/dist
 /Source/android/FptrServiceAndroid/src/com/shtrih/util/ServiceVersion.java
 
+/Source/QRTest/dist/
+/Source/TestShtrih/build/
+/Source/TestShtrih/dist/
+/Source/TestShtrih/nbproject/private/

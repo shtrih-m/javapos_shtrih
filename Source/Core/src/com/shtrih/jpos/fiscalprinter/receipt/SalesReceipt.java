@@ -629,7 +629,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
             item.setText(description);
             getPrinter().getPrinter().printVoidItem(item);
             getReceipt().printStorno(item);
-            vatAmounts[vatInfo] = vatAmounts[vatInfo] - vatInfo;
+            vatAmounts[vatInfo] = vatAmounts[vatInfo] - vatAmount;
         } else {
             PriceItem item = new PriceItem();
             item.setPrice(price);

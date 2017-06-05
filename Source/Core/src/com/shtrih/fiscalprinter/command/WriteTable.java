@@ -6,24 +6,25 @@
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
  */
-
 package com.shtrih.fiscalprinter.command;
 
 /**
  *
  * @author V.Kravtsov
  */
-
+import com.shtrih.util.Hex;
 import com.shtrih.util.MethodParameter;
 
-/****************************************************************************
+/**
+ * **************************************************************************
  * Set Table Field Value Command: 1EH. Length: (9+X) bytes. · System
  * Administrator password (4 bytes) 30 · Table (1 byte) · Row (2 bytes) · Field
  * (1 byte) · Value (X bytes) up to 40 bytes Answer: 1EH. Length: 2 bytes. ·
  * Result Code (1 byte)
- ****************************************************************************/
-
+ ***************************************************************************
+ */
 public final class WriteTable extends PrinterCommand {
+
     // in params
     private final int password;
     private final int tableNumber;
@@ -47,17 +48,14 @@ public final class WriteTable extends PrinterCommand {
         this.fieldValue = fieldValue;
     }
 
-    
     public final int getCode() {
         return 0x1E;
     }
 
-    
     public final String getText() {
         return "Write table";
     }
 
-    
     public void encode(CommandOutputStream out) throws Exception {
         out.writeInt(password);
         out.writeByte(tableNumber);
@@ -66,7 +64,11 @@ public final class WriteTable extends PrinterCommand {
         out.writeBytes(fieldValue);
     }
 
-    
+    public String getParametersText() {
+        return tableNumber + ";" + rowNumber + ";" + fieldNumber + ";" 
+                + Hex.toHex2(fieldValue);
+    }
+
     public void decode(CommandInputStream in) throws Exception {
     }
 }

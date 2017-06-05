@@ -135,7 +135,7 @@ public class FSSaleReceiptItem {
     public long getPriceDiscount() 
     {
         if (quantity == 0) return 0;
-        return Math.abs(discounts.getTotal() * 1000 / quantity);
+        return Math.abs(Math.round(discounts.getTotal() * 1000.0 / quantity));
     }
 
     public long getTotalDiscount() {
@@ -238,6 +238,7 @@ public class FSSaleReceiptItem {
 
     public long getPriceWithDiscount() {
         if (quantity == 0) return 0;
+        if (discounts.getTotal() == 0) return price;
         return Math.abs(Math.round(getTotal() * 1000.0 / quantity));
     }
 

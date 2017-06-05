@@ -172,8 +172,8 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printBarcodes() {
         //printEan13();
-        //printQRCode();
-        printAllBarcodes();
+        printQRCode();
+        //printAllBarcodes();
     }
 
     public void printJournalCurrentDay() {
@@ -192,8 +192,11 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    
     public void printQRCode() {
         try {
+            long time = System.currentTimeMillis();
+            
             String text1 = "http://check.egais.ru?id=fb8c9153-9d3d-40b9-a1a7-1cf35d637976&dt=2101171104&cn=020000272834";
             String text2 = "26544400044402170";
             String text = text1;
@@ -208,6 +211,10 @@ class PrinterTest implements FiscalPrinterConst {
             barcode.setText(text);
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_QR_CODE);
             printer.printBarcode(barcode);
+
+            time = System.currentTimeMillis() - time;
+            printer.printNormal(FPTR_S_RECEIPT, "Time: " + time + " ms.");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1258,18 +1265,36 @@ class PrinterTest implements FiscalPrinterConst {
 
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-            printer.printRecItem("ШПРОТЫ ГЛОБУС 160 Г", 629100, 1000, 2, 699000, "");
-            printer.printRecItem("ШПРОТЫ ГЛОБУС 160 Г", 629100, 1000, 2, 699000, "");
-            printer.printRecItem("ШПРОТЫ ГЛОБУС 160 Г", 629100, 1000, 2, 699000, "");
-            printer.printRecSubtotal(1677600);
-            printer.printRecTotal(1887300, 2300, "39");
-            printer.printRecTotal(1887300, 2000000, "1");
+            
+            printer.printRecItem("1 3493909 Бланк игр.ком.ВГЛ4 Спорт(Жил.л", 1, 1000, 3, 1, "");
+            printer.printRecItemVoid("2 3493909 Бланк игр.ком.ВГЛ4 Спорт(Жил.л", 1, 1000, 3, 1, "");
+            printer.printRecItem("3 3493909 Бланк игр.ком.ВГЛ4 Спорт(Жил.л", 1, 1000, 3, 1, "");
+            printer.printRecItemVoid("4 3493909 Бланк игр.ком.ВГЛ4 Спорт(Жил.л", 1, 1000, 3, 1, "");
+            printer.printRecItem("5 3493909 Бланк игр.ком.ВГЛ4 Спорт(Жил.л", 10000, 1000, 3, 10000, "");
+            printer.printRecSubtotal(10000);
+            printer.printRecTotal(10000, 10000, "");
             printer.endFiscalReceipt(false);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    
+    public void printFiscalReceipt10488() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("*102102 Яблоки102 *", 44450, 500, 2, 88899, "");
+            printer.printRecSubtotalAdjustment(1, "", 50);
+            printer.printRecTotal(44400, 44400, "0");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
     
     public void printFiscalReceipt104() {
         try {

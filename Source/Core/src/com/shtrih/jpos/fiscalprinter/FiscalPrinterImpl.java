@@ -1866,7 +1866,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void writeTables() throws Exception {
-        if (params.tableMode == SMFPTR_TABLE_MODE_AUTO) {
+        if (params.tableMode == SMFPTR_TABLE_MODE_AUTO) 
+        {
             writePaymentNames();
             if (params.isDriverHeader()) {
                 getPrinter().writeParameter(SMFP_PARAMID_CUT_MODE, 0);
