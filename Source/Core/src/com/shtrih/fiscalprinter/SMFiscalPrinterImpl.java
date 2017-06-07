@@ -445,6 +445,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command.getStatus();
     }
 
+    public PrinterModelParameters readPrinterModelParameters() throws Exception {
+        logger.debug("readPrinterModelParameters");
+        ReadPrinterModelParameters command = new ReadPrinterModelParameters();
+        execute(command);
+        return command.getStatus();
+    }
+
     public ShortPrinterStatus getShortStatus() {
         return shortStatus;
     }
@@ -1704,13 +1711,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return capLoadGraphics2 == Boolean.TRUE;
     }
 
+    private PrinterModelParameters modelParameters;
+
     public boolean getCapLoadGraphics3() throws Exception {
         if (capLoadGraphics3 == Boolean.NOTDEFINED) {
-            byte[] data = new byte[40];
-            for (int i = 0; i < data.length; i++) {
-                data[i] = 0;
-            }
-            if (isCommandSupported(loadGraphics3(1, data))) {
+
+            modelParameters = readPrinterModelParameters();
+
+            if (modelParameters.isGraphics512Supported()) {
                 capLoadGraphics3 = Boolean.TRUE;
             } else {
                 capLoadGraphics3 = Boolean.FALSE;
@@ -1743,7 +1751,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public boolean getCapPrintGraphics3() throws Exception {
         if (capPrintGraphics3 == Boolean.NOTDEFINED) {
-            if (isCommandSupported(printGraphics3(1, 2))) {
+            modelParameters = readPrinterModelParameters();
+
+            if (modelParameters.isGraphics512Supported()) {
                 capPrintGraphics3 = Boolean.TRUE;
             } else {
                 capPrintGraphics3 = Boolean.FALSE;
@@ -2386,9 +2396,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public int getMaxGraphicsWidth() throws Exception {
         if (getCapLoadGraphics3()) {
-            return 512;
+            return modelParameters.getGraphics512Width();
         } else {
-            return 320;
+            return modelParameters.getGraphicsWidth();
         }
     }
 
