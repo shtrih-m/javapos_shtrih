@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.shtrih.fiscalprinter.SmFiscalPrinterException;
 import com.shtrih.util.Localizer;
 import com.shtrih.fiscalprinter.AnswerCodeException;
+import static com.shtrih.fiscalprinter.SMFiscalPrinterImpl.charsetName;
 import com.shtrih.util.Hex;
 
 public abstract class PrinterCommand {
@@ -175,11 +176,22 @@ public abstract class PrinterCommand {
         repeatEnabled = value;
     }
 
-    public String getParametersText() {
+    public String getParametersText(FlexCommands commands) {
         try {
+            /*
+            FlexCommand command = commands.itemByCode(getCode());
+            if (command != null) {
+                CommandOutputStream out = new CommandOutputStream(charsetName);
+                encode(out);
+                command.getInParams().decode(out);
+                //command.getInParams()
+            }
+            */
+
             return Hex.toHex2(encodeData());
         } catch (Exception e) {
             return "";
         }
     }
+
 }

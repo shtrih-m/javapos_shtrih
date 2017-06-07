@@ -287,7 +287,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             } else {
                 correctPayments();
                 int discountAmount = 0;
-                if (!isDiscountAffectTotal()) {
+                if (!getDevice().getCapDiscount()) {
                     if (discounts.getTotal() < 100) {
                         discountAmount = (int) discounts.getTotal();
                         discounts.clear();
@@ -297,7 +297,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 }
                 printReceiptItems();
 
-                if (isDiscountAffectTotal() && (getParams().subAdjustmentOrder == PrinterConst.ADJUSTMENT_ORDER_RECEND)) {
+                if (getDevice().getCapDiscount() && (getParams().subAdjustmentOrder == PrinterConst.ADJUSTMENT_ORDER_RECEND)) {
                     for (int i = 0; i < discounts.size(); i++) {
                         printTotalDiscount(discounts.get(i));
                     }
@@ -349,7 +349,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printTotalDiscount(FSDiscount discount)
-            throws Exception {
+            throws Exception 
+    {
+        if (!getDevice().getCapDiscount()) return;
         FSReceiptDiscount item = new FSReceiptDiscount();
         item.setSysPassword(getDevice().getUsrPassword());
         if (discount.getAmount() > 0) {
@@ -386,7 +388,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printFSDiscount(FSDiscount discount)
-            throws Exception {
+            throws Exception 
+    {
+        if (!getDevice().getCapDiscount()) return;
+        
         AmountItem item = new AmountItem();
         item.setAmount(Math.abs(discount.getAmount()));
         item.setText(discount.getText());
@@ -409,10 +414,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 }
             }
         }
-    }
-
-    public boolean isDiscountAffectTotal() throws Exception {
-        return getDevice().getDiscountMode() == 0;
     }
 
     public void printFSSale(FSSaleReceiptItem item) throws Exception {
@@ -443,7 +444,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             item.setText("//" + item.getText());
         }
 
-        if (!isDiscountAffectTotal()) {
+        if (!getDevice().getCapDiscount()) {
             item.setPrice(item.getPriceWithDiscount());
         }
         if (!item.getIsStorno()) {

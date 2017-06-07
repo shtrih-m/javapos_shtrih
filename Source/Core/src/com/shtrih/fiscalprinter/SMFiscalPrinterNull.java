@@ -1003,4 +1003,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public int getHeaderHeight() throws Exception{
         return 88;
     }
+    
+    public boolean getCapDiscount(){
+        return true;
+    }
 }

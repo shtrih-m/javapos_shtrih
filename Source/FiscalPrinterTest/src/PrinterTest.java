@@ -691,7 +691,7 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printFiscalReceipt() {
-        printFiscalReceipt1048();
+        printFiscalReceipt10488();
     }
 
     public void printCorrectionReceipt() {
@@ -1286,7 +1286,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
             printer.printRecItem("*102102 Яблоки102 *", 44450, 500, 2, 88899, "");
-            printer.printRecSubtotalAdjustment(1, "", 50);
+            printer.printRecSubtotalAdjustment(1, "", 5000);
             printer.printRecTotal(44400, 44400, "0");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {

@@ -64,7 +64,7 @@ public final class WriteTable extends PrinterCommand {
         out.writeBytes(fieldValue);
     }
 
-    public String getParametersText() {
+    public String getParametersText(FlexCommands commands) {
         return tableNumber + ";" + rowNumber + ";" + fieldNumber + ";" 
                 + Hex.toHex2(fieldValue);
     }

@@ -28,7 +28,6 @@ import com.shtrih.printer.ncr7167.NCR7167Printer;
 import com.shtrih.util.*;
 import jpos.JposConst;
 
-
 import java.io.ByteArrayOutputStream;
 import java.security.InvalidParameterException;
 import java.text.DecimalFormat;
@@ -78,6 +77,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private NCR7167Printer escPrinter = new NCR7167Printer(null);
     private final PrinterFields fields = new PrinterFields();
     private final FiscalPrinterImpl service;
+    private boolean capDiscount = true;
     private boolean capDisableDiscountText = false;
     private Boolean capLoadGraphics1 = Boolean.NOTDEFINED;
     private Boolean capLoadGraphics2 = Boolean.NOTDEFINED;
@@ -176,7 +176,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
                 if (command.getResultCode() != 0) {
                     String text = getErrorText(command.getResultCode());
-                    logger.error(text + ", " + command.getParametersText());
+                    logger.error(text + ", " + command.getParametersText(commands));
                 }
                 afterCommand(command);
             } catch (Exception e) {
@@ -977,7 +977,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         String text = getRecItemText(item.getText());
         item.setText(text);
 
-        
         PrintSale command = new PrintSale(usrPassword, item);
         execute(command);
     }
@@ -1816,22 +1815,23 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return capDisableDiscountText;
     }
 
+    public boolean getCapDiscount() {
+        return capDiscount;
+    }
+
     // 17,1,18,1,0,0,3,"Rus компактный заголовок","0"
-    public void initialize() throws Exception 
-    {
+    public void initialize() throws Exception {
         logger.debug("initialize()");
-        readFonts();
         headerHeigth = getModel().getHeaderHeight();
         capFiscalStorage = readCapFiscalStorage();
-        if (capFiscalStorage) 
-        {
+        if (capFiscalStorage) {
             boolean isCompactHeader = false;
             String[] fieldValue = new String[1];
             int rc = readTable(17, 1, 18, fieldValue);
-            if (succeeded(rc)){
+            if (succeeded(rc)) {
                 isCompactHeader = fieldValue[0].equalsIgnoreCase("3");
             }
-            
+
             subtotalInHeader = isCompactHeader;
             discountInHeader = isCompactHeader;
 
@@ -1851,11 +1851,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             if (succeeded(rc)) {
                 fsAddress = fieldValue[0];
             }
-            
+
             rc = readTable(10, 1, 1, fieldValue);
-            if (succeeded(rc)){
+            if (succeeded(rc)) {
                 headerHeigth = Integer.valueOf(fieldValue[0]);
             }
+        }
+        capDiscount = true;
+        if (isShtrihMobile()) {
+            capDiscount = false;
+        } else {
+            capDiscount = discountMode == 0;
         }
     }
 
@@ -3232,7 +3238,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 
-/*
+    /*
         
 // Таблица 15, Параметры офд
 // Номер таблицы,Ряд,Поле,Размер поля,Тип поля,Мин. значение, Макс.значение, Название,Значение
@@ -3240,24 +3246,22 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 15,1,2,2,0,0,65535,'Tcp порт сервера офд','7779'
 15,1,3,2,0,0,65535,'Тайм-аут опроса офд, 1 с','5'
     
-*/
-    public FDOParameters readFDOParameters() throws Exception
-    {
-        if (capFiscalStorage)
-        {
+     */
+    public FDOParameters readFDOParameters() throws Exception {
+        if (capFiscalStorage) {
             String host = readTable(15, 1, 1);
             String port = readTable(15, 1, 2);
             return new FDOParameters(host, port);
         }
         return null;
-    } 
+    }
 
     public void printSeparator(int separatorType, int height) throws Exception {
         printGraphicLine(height, getSeparatorData(separatorType));
         waitForPrinting();
     }
-    
-    public int getHeaderHeight() throws Exception{
+
+    public int getHeaderHeight() throws Exception {
         return headerHeigth;
     }
 

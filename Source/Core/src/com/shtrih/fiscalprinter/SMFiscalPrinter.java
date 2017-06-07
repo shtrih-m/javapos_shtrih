@@ -558,4 +558,6 @@ public interface SMFiscalPrinter {
     public String ReadRnm() throws Exception;
     
     public int getHeaderHeight() throws Exception;
+    
+    public boolean getCapDiscount();
 }
