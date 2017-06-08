@@ -1,5 +1,5 @@
-/*
- * Copyright 2011 Google Inc.
+/* Copyright 2011-2013 Google Inc.
+ * Copyright 2013 mike wakerly <opensource@hoho.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,32 +15,34 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
  * USA.
+ *
+ * Project home page: https://github.com/mik3y/usb-serial-for-android
  */
 
-package com.hoho.android.usbserial.driver;
+package com.shtrih.hoho.android.usbserial.driver;
+
+import android.hardware.usb.UsbDevice;
+
+import java.util.List;
 
 /**
- * Generic unchecked exception for the usbserial package.
  *
  * @author mike wakerly (opensource@hoho.com)
  */
-@SuppressWarnings("serial")
-public class UsbSerialRuntimeException extends RuntimeException {
+public interface UsbSerialDriver {
 
-    public UsbSerialRuntimeException() {
-        super();
-    }
+    /**
+     * Returns the raw {@link UsbDevice} backing this port.
+     *
+     * @return the device
+     */
+    public UsbDevice getDevice();
 
-    public UsbSerialRuntimeException(String detailMessage, Throwable throwable) {
-        super(detailMessage, throwable);
-    }
-
-    public UsbSerialRuntimeException(String detailMessage) {
-        super(detailMessage);
-    }
-
-    public UsbSerialRuntimeException(Throwable throwable) {
-        super(throwable);
-    }
-
+    /**
+     * Returns all available ports for this device. This list must have at least
+     * one entry.
+     *
+     * @return the ports
+     */
+    public List<UsbSerialPort> getPorts();
 }

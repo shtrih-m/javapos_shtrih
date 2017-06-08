@@ -17,17 +17,13 @@ import java.util.Properties;
 import java.util.Vector;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.CompositeLogger;
-import com.hoho.android.usbserial.driver.*;
+import com.shtrih.hoho.android.usbserial.driver.*;
 import com.shtrih.util.StaticContext;
 
 import android.hardware.usb.UsbDeviceConnection;
 import android.content.Context;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 
 import java.util.List;
 
