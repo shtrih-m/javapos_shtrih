@@ -1889,6 +1889,11 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         totals[2] = (Long)object[2];
         totals[3] = (Long)object[3];
     }
-            
 
+    public FSDocumentInfo fsFindDocument(int documentNumber) throws Exception
+    {
+        FSFindDocument cmd = new FSFindDocument(getSysPassword(), documentNumber);
+        executeCommand(cmd);
+        return cmd.getDocument();
+    }
 }

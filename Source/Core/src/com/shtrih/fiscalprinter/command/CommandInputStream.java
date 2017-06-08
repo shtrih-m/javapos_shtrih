@@ -9,9 +9,9 @@
 package com.shtrih.fiscalprinter.command;
 
 /**
- *
  * @author V.Kravtsov
  */
+
 import java.io.ByteArrayInputStream;
 
 import com.shtrih.ej.EJDate;
@@ -44,6 +44,14 @@ public class CommandInputStream {
         return byteToInt(B);
     }
 
+    public byte[] readBytesToEnd() {
+        return readBytes(stream.available());
+    }
+
+    public FSDateTime readFSDate() {
+        return new FSDateTime(readBytes(FSDateTime.BodyLength));
+    }
+
     public int byteToInt(int B) {
         if (B < 0) {
             B = (int) (256 + B);
@@ -69,7 +77,7 @@ public class CommandInputStream {
         int min = readByte();
         return new PrinterTime(hour, min, 0);
     }
-    
+
     public PrinterDate readDate() {
         int day = readByte();
         int month = readByte();
@@ -82,8 +90,8 @@ public class CommandInputStream {
         int month = readByte();
         int day = readByte();
         return new PrinterDate(day, month, year);
-    }    
-    
+    }
+
     public EJDate readEJDate() {
         int year = readByte();
         int month = readByte();

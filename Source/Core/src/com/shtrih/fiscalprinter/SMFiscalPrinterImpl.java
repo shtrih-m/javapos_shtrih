@@ -30,10 +30,7 @@ import jpos.JposConst;
 
 import java.io.ByteArrayOutputStream;
 import java.security.InvalidParameterException;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -2849,9 +2846,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public FSFindDocument fsFindDocument(long docNumber) throws Exception {
-        FSFindDocument command = new FSFindDocument();
-        command.setSysPassword(sysPassword);
-        command.setDocNumber(docNumber);
+        FSFindDocument command = new FSFindDocument(sysPassword, docNumber);
         execute(command);
         return command;
     }
