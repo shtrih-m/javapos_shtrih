@@ -1280,17 +1280,36 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt10488() {
         try {
-//            printer.resetPrinter();
-//            printer.setFiscalReceiptType(4);
-//            printer.beginFiscalReceipt(false);
-//            printer.printRecItem("*102102 Яблоки102 *", 44450, 500, 2, 88899, "");
-//            printer.printRecSubtotalAdjustment(1, "", 5000);
-//            printer.printRecTotal(44400, 44400, "0");
-//            printer.endFiscalReceipt(false);
-//            int index = printer.loadImage("E:\\dev\\JPOS\\javapos_shtrih\\bin\\Logo2.bmp");
-//            printer.printImage(index);
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("*102102 Яблоки102 *", 44450, 500, 2, 88899, "");
+            printer.printRecSubtotalAdjustment(1, "", 5000);
+            printer.printRecTotal(44400, 44400, "0");
+            printer.endFiscalReceipt(false);
 
-            printNormalBarcode("PDF417: ", 74, "012345678912");
+//            printer.resetPrinter();
+//            printer.setFiscalReceiptType(FiscalPrinterConst.FPTR_RT_SALES);
+//            printer.beginFiscalReceipt(true);
+//            printer.printRecItem("test", 0, 1000, 1, 0, "");
+//
+//            PrinterBarcode barcode = new PrinterBarcode();
+//            barcode.setText("\"4C63A673C86B0976C0B24495848F6EF157792203A0D275\\n\"\n" +
+//                    "                            + \"1F525456644096478D256A910EFEABB67\"");
+//            //barcode.setLabel("PDF417 test");
+//            barcode.setType(SmFptrConst.SMFPTR_BARCODE_PDF417);
+//            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
+//            barcode.setHeight(200);
+//            barcode.setBarWidth(2);
+//            printer.printBarcode(barcode);
+//
+//            printer.printRecTotal(9049, 9049, "0");
+//            printer.endFiscalReceipt(true);
+//
+//            //printer.printNormal(FPTR_S_RECEIPT, getBarcode(SmFptrConst.SMFPTR_BARCODE_PDF417, "SHTRIH-M, Moscow, 2015"));
+//
+//            printer.printBarcode(barcode);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

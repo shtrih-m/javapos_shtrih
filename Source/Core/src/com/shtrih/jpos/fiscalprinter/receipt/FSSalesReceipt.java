@@ -1176,6 +1176,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printBarcode(PrinterBarcode barcode) throws Exception {
-        recItems.add(barcode);
+        items.add(barcode);
     }
 }

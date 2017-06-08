@@ -144,7 +144,14 @@ public class ZXingEncoder implements SmBarcodeEncoder {
         encoder.setCompaction(compaction);
         encoder.setCompact(isCompact);
         if (dimensions == null) {
-            if (maxWidth == 320) {
+
+            // 1. Вот тут самый мутный момент, получается здесь просто зашиты пресеты для разных значений ширины,
+            // наверное это должны быть какие-то настройки передаваемые в данный класс
+            
+            // 2. Не берется во внимание параметр высоты переданый в ШК, наверное он как-то должен конвертироваться
+            // в minRows?
+            
+            if (maxWidth <= 320) {
                 encoder.setDimensions(3, 3, 60, 2);
             } else {
                 encoder.setDimensions(9, 2, 60, 2);
