@@ -86,6 +86,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private Boolean capPrintGraphicsLine = Boolean.NOTDEFINED;
     private Boolean capPrintBarcode2 = Boolean.NOTDEFINED;
     private Boolean capPrintBarcode3 = Boolean.NOTDEFINED;
+    private boolean capFSPrintItem = false;
     private boolean capCutPaper = true;
     private String fsUser = "";
     private String fsAddress = "";
@@ -976,13 +977,32 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return result;
     }
 
+    public void fsPrintRecItem2(int operation, PriceItem item) throws Exception {
+        FSReceiptItem fsReceiptItem = new FSReceiptItem();
+        fsReceiptItem.setOperation(operation);
+        fsReceiptItem.setQuantity(item.getQuantity() * 1000);
+        fsReceiptItem.setPrice(item.getPrice());
+        fsReceiptItem.setAmount(0xFFFFFFFFFFL);
+        fsReceiptItem.setTaxAmount(0xFFFFFFFFFFL);
+        fsReceiptItem.setTax(item.getTax1());
+        fsReceiptItem.setDepartment(item.getDepartment());
+        fsReceiptItem.setPaymentType(0);
+        fsReceiptItem.setPaymentItem(0);
+        fsReceiptItem.setText(item.getText());
+        check(fsPrintRecItem(fsReceiptItem));
+    }
+
     public void printSale(PriceItem item) throws Exception {
         logger.debug("printSale");
         String text = getRecItemText(item.getText());
         item.setText(text);
 
-        PrintSale command = new PrintSale(usrPassword, item);
-        execute(command);
+        if (!capFSPrintItem) {
+            PrintSale command = new PrintSale(usrPassword, item);
+            execute(command);
+        } else {
+            fsPrintRecItem2(1, item);
+        }
     }
 
     public void printVoidSale(PriceItem item) throws Exception {
@@ -990,8 +1010,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         String text = getRecItemText(item.getText());
         item.setText(text);
 
-        PrintVoidSale command = new PrintVoidSale(usrPassword, item);
-        execute(command);
+        if (!capFSPrintItem) {
+            PrintVoidSale command = new PrintVoidSale(usrPassword, item);
+            execute(command);
+        } else {
+            fsPrintRecItem2(2, item);
+        }
     }
 
     public void printRefund(PriceItem item) throws Exception {
@@ -1000,8 +1024,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         String text = getRecItemText(item.getText());
         item.setText(text);
 
-        PrintRefund command = new PrintRefund(usrPassword, item);
-        execute(command);
+        if (!capFSPrintItem) {
+            PrintRefund command = new PrintRefund(usrPassword, item);
+            execute(command);
+        } else {
+            fsPrintRecItem2(3, item);
+        }
     }
 
     public void printVoidRefund(PriceItem item) throws Exception {
@@ -1010,8 +1038,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         String text = getRecItemText(item.getText());
         item.setText(text);
 
-        PrintVoidRefund command = new PrintVoidRefund(usrPassword, item);
-        execute(command);
+        if (!capFSPrintItem) {
+            PrintVoidRefund command = new PrintVoidRefund(usrPassword, item);
+            execute(command);
+        } else {
+            fsPrintRecItem2(4, item);
+        }
     }
 
     public PrintVoidItem printVoidItem(PriceItem item) throws Exception {
@@ -1829,6 +1861,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     // 17,1,18,1,0,0,3,"Rus компактный заголовок","0"
     public void initialize() throws Exception {
         logger.debug("initialize()");
+
+        readFonts();
         headerHeigth = getModel().getHeaderHeight();
         capFiscalStorage = readCapFiscalStorage();
         if (capFiscalStorage) {
@@ -1870,6 +1904,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         } else {
             capDiscount = discountMode == 0;
         }
+        capFSPrintItem = capFiscalStorage && (!isShtrihMobile());
     }
 
     private boolean readCapDisableDiscountText() throws Exception {
@@ -2923,6 +2958,25 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return fsWriteTLV(getTLVData(tagId, tagValue));
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Данные в массиве представлены в виде строки, в которой: 
+    // первые 4 байта – код справочника
+    // последующие 8 байт – код группы товаров
+    // последние 20 байт – код идентификации товара
+    ///////////////////////////////////////////////////////////////////////////
+    public int fsWriteTag1162(int catId, long groupId, String itemId)
+            throws Exception {
+        TLVWriter writer = new TLVWriter();
+        writer.add(catId, 4);
+        writer.add(groupId, 8);
+        writer.add(itemId, 20);
+        byte[] data = writer.getBytes();
+
+        writer.clear();
+        writer.add(1162, data);
+        return fsWriteTLV(writer.getBytes());
+    }
+
     public LongPrinterStatus getLongStatus() throws Exception {
         if (longStatus == null) {
             longStatus = readLongStatus();
@@ -3011,7 +3065,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             execute(command);
             stream.write(command.getData());
         }
-        TLVReader reader = new TLVReader();
+        TLVParser reader = new TLVParser();
         reader.read(stream.toByteArray());
         Vector<String> lines = reader.getPrintText();
         for (int i = 0; i < lines.size(); i++) {
@@ -3268,6 +3322,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public int getHeaderHeight() throws Exception {
         return headerHeigth;
+    }
+
+    public int fsPrintRecItem(FSReceiptItem item) throws Exception {
+        FSPrintRecItem command = new FSPrintRecItem();
+        command.setPassword(usrPassword);
+        command.setItem(item);
+        return executeCommand(command);
     }
 
 }

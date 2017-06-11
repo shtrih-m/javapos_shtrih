@@ -11,6 +11,7 @@ import com.shtrih.util.encoding.IBM866;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.Vector;
 
 /**
  * @author V.Kravtsov
@@ -19,16 +20,16 @@ public class TLVItem {
 
     private final int level;
     private final byte[] data;
-    private final TLVInfo info;
+    private final TLVTag tag;
 
-    public TLVItem(TLVInfo info, byte[] data, int level) {
-        this.info = info;
+    public TLVItem(TLVTag tag, byte[] data, int level) {
+        this.tag = tag;
         this.data = data;
         this.level = level;
     }
 
-    public TLVInfo getInfo() {
-        return info;
+    public TLVTag getTag() {
+        return tag;
     }
 
     public byte[] getData() {
@@ -42,6 +43,15 @@ public class TLVItem {
     public long toInt(byte[] d) {
         long result = 0;
         for (int i = d.length - 1; i >= 0; i--) {
+            result <<= 8;
+            result |= d[i] & 0xFF;
+        }
+        return result;
+    }
+
+    public long toInt(byte[] d, int len) {
+        long result = 0;
+        for (int i = len - 1; i >= 0; i--) {
             result <<= 8;
             result |= d[i] & 0xFF;
         }
@@ -130,28 +140,44 @@ public class TLVItem {
         return String.format(Locale.US, "%." + power + "f", result);
     }
 
+    public String toBitMask(byte[] data) {
+        int size = tag.getSize();
+        int value = (int) toInt(data, size);
+        String text = "";
+        Vector<TLVBit> bits = tag.getBits();
+        for (int i = 0; i < bits.size(); i++) {
+            TLVBit bit = bits.get(i);
+            if (BitUtils.testBit(value, bit.getBit())) {
+                if (!text.isEmpty()) {
+                    text += "/r/n";
+                }
+                text += bit.getName();
+            }
+        }
+        return text;
+    }
+
     public String getText() throws Exception {
-        switch (info.getType()) {
+        switch (tag.getType()) {
             case itByte:
                 return String.valueOf(toInt(data));
-            case itArray:
-                return Hex.toHex(data);
-            case itInt32:
+            case itUInt16:
                 return String.valueOf(toInt(data));
-            case itInt16:
+            case itUInt32:
                 return String.valueOf(toInt(data));
-            case itUnixTime:
-                return toDate(data).toString();
             case itVLN:
                 return String.format(Locale.US, "%.2f", toInt(data) / 100.0);
             case itFVLN:
                 return toFVLNS(data);
+            case itUnixTime:
+                return toDate(data).toString();
+            case itByteArray:
+                return Hex.toHex(data);
             case itASCII:
                 return toASCII(data).trim();
-            case itTaxSystem:
-                return taxSystemToStr((int) toInt(data));
-            case itCalcSign:
-                return calcTypeToStr((int) toInt(data));
+            case itBitMask:
+                return toBitMask(data);
+                
             default:
                 return "";
         }

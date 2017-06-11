@@ -464,6 +464,8 @@ public interface SmFptrConst {
     
     public static final int SMFPTR_DIO_READ_TOTALS = 0x44;
     
+    public static final int SMFPTR_DIO_FS_WRITE_TAG_1162 = 0x45;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

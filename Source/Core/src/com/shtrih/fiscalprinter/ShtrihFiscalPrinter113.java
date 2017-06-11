@@ -1734,6 +1734,21 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_TAG, data, tagValue);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // 1162	код товарной номенклатуры	
+    // Данные в массиве представлены в виде строки, в которой: 
+    // первые 4 байта –код справочника; 
+    // последующие 8 байт – код группы товаров; 
+    // последние 20 байт – код идентификации товара    
+
+    public void fsWriteTag1162(int catId, long groupId, String itemId) throws Exception {
+        String[] params = new String[3];
+        params[0] = String.valueOf(catId);
+        params[1] = String.valueOf(groupId);
+        params[2] = itemId;
+        directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_TAG_1162, null, params);
+    }
+    
     public void printDocEnd() throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_DOC_END, null, null);
     }

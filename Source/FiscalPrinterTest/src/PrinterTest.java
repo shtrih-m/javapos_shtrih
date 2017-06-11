@@ -1062,10 +1062,9 @@ class PrinterTest implements FiscalPrinterConst {
 
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-
-            printer.printRecMessage(" ");
+            printer.printRecMessage("12345678901234567890123456789012345678901234567890123456789012345678901234567890");
             printer.printRecMessage("               Кассовый чек               ");
-            printer.printRecItem("*2021023 ТИРЛИМ Печен.сах.со сг.мол.400г", 3305, 1000, 1, 3305, "");
+            printer.printRecItem("1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890", 3305, 1000, 1, 3305, "");
             printer.printRecItem("*3358752 КУХ.Печен.КУРАБЬЕ ОРИГИНАЛ.130г", 3755, 1000, 1, 3755, "");
             printer.printRecItem("*3376015 ПОСИД.ПеченьеТВОРОЖсдоб.изюм250", 4505, 1000, 1, 4505, "");
             printer.printRecItem("*3422398 GREENF.Чай ПР.АСС.чер.25х2г", 5900, 1000, 1, 5900, "");
@@ -1074,6 +1073,8 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecSubtotalAdjustment(1, "", 65);
             printer.printRecSubtotal(17400);
             printer.printRecTotal(17400, 17400, "30");
+            printEan13();
+            printQRCode();
 
             printer.endFiscalReceipt(false);
         } catch (Exception e) {

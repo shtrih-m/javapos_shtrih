@@ -991,20 +991,25 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public boolean isDiscountInHeader() {
         return false;
     }
-    
-    public int reboot() throws Exception{
+
+    public int reboot() throws Exception {
         return 0;
     }
-    
-    public FDOParameters readFDOParameters() throws Exception{
+
+    public FDOParameters readFDOParameters() throws Exception {
         return null;
     }
-    
-    public int getHeaderHeight() throws Exception{
+
+    public int getHeaderHeight() throws Exception {
         return 88;
     }
-    
-    public boolean getCapDiscount(){
+
+    public boolean getCapDiscount() {
         return true;
+    }
+
+    public int fsWriteTag1162(int catId, long groupId, String itemId)
+            throws Exception {
+        return 0;
     }
 }

@@ -7,6 +7,7 @@ import java.nio.ByteOrder;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author P.Zhirkov
@@ -17,7 +18,7 @@ public class TLVReaderTests {
     public void Should_decode_vln_tag() throws Exception {
         byte[] data =  fsWriteTag(1011, 12345);
 
-        TLVReader reader = new TLVReader();
+        TLVParser reader = new TLVParser();
         reader.read(data);
 
         List<TLVItem> items = reader.getItems();

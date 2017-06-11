@@ -43,7 +43,6 @@ import com.shtrih.util.BitUtils;
 Фискальный признак: 4 байт
 */
 
-
 public class FSPrintCorrectionReceipt2 extends PrinterCommand {
 
     // in

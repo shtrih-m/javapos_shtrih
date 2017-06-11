@@ -6,6 +6,14 @@
 
 ********************************************************************************
 
+  June 11 2017, 21:40
+  deviceServiceVersion = 1013431
+	
+  [+] Added command 0xFF46, print receipt item v2
+  [+] Barcode can be printed after receipt end
+  
+********************************************************************************
+
   June 5 2017, 17:50
   deviceServiceVersion = 1013430
 	

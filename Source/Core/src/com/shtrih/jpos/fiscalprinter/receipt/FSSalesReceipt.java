@@ -20,8 +20,8 @@ import com.shtrih.util.Localizer;
 import com.shtrih.util.StringUtils;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.MethodParameter;
-import com.shtrih.fiscalprinter.TLVInfo;
-import com.shtrih.fiscalprinter.TLVReader;
+import com.shtrih.fiscalprinter.TLVTag;
+import com.shtrih.fiscalprinter.TLVParser;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.FSCloseReceipt;
@@ -231,7 +231,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 getDevice().fsWriteTLV(tlvItem.getData());
 
                 if (getParams().FSPrintTags) {
-                    TLVReader reader = new TLVReader();
+                    TLVParser reader = new TLVParser();
                     reader.read(tlvItem.getData());
                     Vector<String> lines = reader.getPrintText();
                     messages.addAll(lines);

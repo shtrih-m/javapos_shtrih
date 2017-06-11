@@ -6,6 +6,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author P.Zhirkov
@@ -18,7 +21,7 @@ public class TLVItemTests {
 
         byte[] data = new byte[]{(byte) 0x8C, (byte) 0xA0, (byte) 0xAC, (byte) 0xA0, (byte) 0x2C, (byte) 0x20, (byte) 0xAC, (byte) 0xEB, (byte) 0xAB, (byte) 0xA0, (byte) 0x3B, (byte) 0x20, (byte) 0xE0, (byte) 0xA0, (byte) 0xAC, (byte) 0xE3, (byte) 0x21, (byte) 0x5F, (byte) 0x41, (byte) 0x61, (byte) 0x45, (byte) 0x29};
 
-        TLVItem item = new TLVItem(new TLVInfo(666, TLVInfo.TLVType.itASCII), data, 12);
+        TLVItem item = new TLVItem(new TLVTag(666, TLVTag.TLVType.itASCII), data, 12);
         assertEquals(s, item.getText());
     }
 
@@ -26,7 +29,7 @@ public class TLVItemTests {
     public void Should_decode_int() throws Exception {
         byte[] data = fsWriteTag(12345);
 
-        TLVItem item = new TLVItem(new TLVInfo(666, TLVInfo.TLVType.itVLN), data, 12);
+        TLVItem item = new TLVItem(new TLVTag(666, TLVTag.TLVType.itVLN), data, 12);
         assertEquals(12345, item.toInt(item.getData()));
         assertEquals("123.45", item.getText());
     }
@@ -35,7 +38,7 @@ public class TLVItemTests {
     public void Should_decode_vln() throws Exception {
         byte[] data = new byte[]{-124};
 
-        TLVItem item = new TLVItem(new TLVInfo(666, TLVInfo.TLVType.itVLN), data, 12);
+        TLVItem item = new TLVItem(new TLVTag(666, TLVTag.TLVType.itVLN), data, 12);
         assertEquals(132, item.toInt(item.getData()));
         assertEquals("1.32", item.getText());
     }
@@ -44,7 +47,7 @@ public class TLVItemTests {
     public void Should_decode_vln2() throws Exception {
         byte[] data = new byte[]{-124, 0};
 
-        TLVItem item = new TLVItem(new TLVInfo(666, TLVInfo.TLVType.itVLN), data, 12);
+        TLVItem item = new TLVItem(new TLVTag(666, TLVTag.TLVType.itVLN), data, 12);
         assertEquals(132, item.toInt(item.getData()));
         assertEquals("1.32", item.getText());
     }
@@ -53,7 +56,7 @@ public class TLVItemTests {
     public void Should_decode_vln3() throws Exception {
         byte[] data = new byte[]{-124, 0, 0, 0};
 
-        TLVItem item = new TLVItem(new TLVInfo(666, TLVInfo.TLVType.itVLN), data, 12);
+        TLVItem item = new TLVItem(new TLVTag(666, TLVTag.TLVType.itVLN), data, 12);
         assertEquals(132, item.toInt(item.getData()));
         assertEquals("1.32", item.getText());
     }
