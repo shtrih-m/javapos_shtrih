@@ -55,14 +55,14 @@ public class FSSaleReceiptItem {
         return item;
     }
 
-    public boolean getIsStorno(){
+    public boolean getIsStorno() {
         return isStorno;
     }
-    
-    public void setIsStorno(boolean value){
+
+    public void setIsStorno(boolean value) {
         this.isStorno = value;
     }
-    
+
     public String getUnitName() {
         return unitName;
     }
@@ -74,7 +74,7 @@ public class FSSaleReceiptItem {
     public void setUnitPrice(long value) {
         this.unitPrice = value;
     }
-    
+
     public void setPreLine(String value) {
         this.preLine = value;
     }
@@ -132,9 +132,10 @@ public class FSSaleReceiptItem {
         return discounts;
     }
 
-    public long getPriceDiscount() 
-    {
-        if (quantity == 0) return 0;
+    public long getPriceDiscount() {
+        if (quantity == 0) {
+            return 0;
+        }
         return Math.abs(Math.round(discounts.getTotal() * 1000.0 / quantity));
     }
 
@@ -142,7 +143,6 @@ public class FSSaleReceiptItem {
         return discounts.getTotal();
     }
 
-    
     public long getPrice() {
         return price;
     }
@@ -150,7 +150,7 @@ public class FSSaleReceiptItem {
     public long getUnitPrice() {
         return unitPrice;
     }
-    
+
     public long getQuantity() {
         return quantity;
     }
@@ -237,12 +237,36 @@ public class FSSaleReceiptItem {
     }
 
     public long getPriceWithDiscount() {
-        if (quantity == 0) return 0;
-        if (discounts.getTotal() == 0) return price;
-        return Math.abs(Math.round(getTotal() * 1000.0 / quantity));
+        if (quantity == 0) {
+            return 0;
+        }
+        if (discounts.getTotal() == 0) {
+            return price;
+        }
+        return Math.abs((long)(getTotal() * 1000.0 / quantity));
     }
 
     public long getAmount() {
         return Math.abs(PrinterAmount.getAmount(getPrice(), getQuantity()) - discounts.getTotal());
+    }
+
+    public FSSaleReceiptItem getSplitItem() {
+        FSSaleReceiptItem item = null;
+        if ((discounts.getTotal() > 0) && (quantity != 1000)) {
+            long amount = Math.round(getPriceWithDiscount() * quantity / 1000.0);
+            if (amount < getTotal()) {
+                item = new FSSaleReceiptItem();
+                item.price = getTotal() - amount;
+                item.unitPrice = 0;
+                item.quantity = 1000;
+                item.department = department;
+                item.tax1 = tax1;
+                item.tax2 = tax2;
+                item.tax3 = tax3;
+                item.tax4 = tax4;
+                item.text = text;
+            }
+        }
+        return item;
     }
 }

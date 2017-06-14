@@ -1284,33 +1284,15 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-            printer.printRecItem("*102102 Яблоки102 *", 44450, 500, 2, 88899, "");
-            printer.printRecSubtotalAdjustment(1, "", 5000);
-            printer.printRecTotal(44400, 44400, "0");
+            printer.printRecItem("1245 Шамп.АБ.ДЮР.РОССИЙСК.б.п/сл0.75", 99005, 1000, 1, 100000, "ST");
+            printer.printRecItemAdjustment(1, "", 995, 1);
+            printer.printRecItem("22233 ФН Сок ябл-персик.б/сах.200мл", 55, 4000, 2, 2590, "ST");
+            printer.printRecItemAdjustment(1, "", 10305, 2);
+            printer.printRecSubtotal(110360);
+            printer.printRecSubtotalAdjustment(1, "", 60);
+            printer.printRecSubtotal(99000);
+            printer.printRecTotal(99000, 99000, "00");
             printer.endFiscalReceipt(false);
-
-//            printer.resetPrinter();
-//            printer.setFiscalReceiptType(FiscalPrinterConst.FPTR_RT_SALES);
-//            printer.beginFiscalReceipt(true);
-//            printer.printRecItem("test", 0, 1000, 1, 0, "");
-//
-//            PrinterBarcode barcode = new PrinterBarcode();
-//            barcode.setText("\"4C63A673C86B0976C0B24495848F6EF157792203A0D275\\n\"\n" +
-//                    "                            + \"1F525456644096478D256A910EFEABB67\"");
-//            //barcode.setLabel("PDF417 test");
-//            barcode.setType(SmFptrConst.SMFPTR_BARCODE_PDF417);
-//            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
-//            barcode.setHeight(200);
-//            barcode.setBarWidth(2);
-//            printer.printBarcode(barcode);
-//
-//            printer.printRecTotal(9049, 9049, "0");
-//            printer.endFiscalReceipt(true);
-//
-//            //printer.printNormal(FPTR_S_RECEIPT, getBarcode(SmFptrConst.SMFPTR_BARCODE_PDF417, "SHTRIH-M, Moscow, 2015"));
-//
-//            printer.printBarcode(barcode);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
