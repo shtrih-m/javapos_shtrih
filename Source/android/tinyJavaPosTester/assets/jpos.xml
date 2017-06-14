@@ -18,7 +18,7 @@
 		<prop name="portType" type="String" value="3"/>
 		<!-- portClass  -->
 		<!--<prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.FtdiPrinterPort"/>  -->
-		<prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.HohoSerialPort"/>
+		<prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.BluetoothPort"/>
 		<!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
 		<!-- ProtocolType, 0 - protocol 1, 1 - protocol 2 -->
 		<prop name="protocolType" type="String" value="1"/>

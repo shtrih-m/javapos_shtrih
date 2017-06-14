@@ -397,6 +397,14 @@ public class DirectIOHandler {
             case SmFptrConst.SMFPTR_DIO_READ_TOTALS:
                 new DIOReadTotals(service).execute(data, object);
                 break;
+
+            case SmFptrConst.SMFPTR_DIO_PRINT_RAW_GRAPHICS:
+                new DIOPrintRawGraphics(service).execute(data, object);
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_READ_MAX_GRAPHICS_WIDTH:
+                new DIOReadMaxGraphicsWidth(service).execute(data, object);
+                break;
                 
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
