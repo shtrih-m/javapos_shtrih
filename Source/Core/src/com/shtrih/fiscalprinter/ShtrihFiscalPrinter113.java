@@ -1403,6 +1403,15 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         return data[0];
     }
 
+    /**
+     * @return max graphics width in pixels
+     */
+    public int readMaxGraphicsWidth() throws JposException {
+        int[] data = new int[1];
+        directIO(SmFptrConst.SMFPTR_DIO_READ_MAX_GRAPHICS_WIDTH, data, null);
+        return data[0];
+    }
+
     public String getDailyTotal() throws JposException {
         String[] data = new String[1];
         data[0] = "";
@@ -1910,5 +1919,10 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         FSFindDocument cmd = new FSFindDocument(getSysPassword(), documentNumber);
         executeCommand(cmd);
         return cmd.getDocument();
+    }
+
+    public void printRawGraphics(byte[][] data) throws Exception
+    {
+        directIO(SmFptrConst.SMFPTR_DIO_PRINT_RAW_GRAPHICS, new int[0], data);
     }
 }

@@ -288,6 +288,10 @@ public interface SMFiscalPrinter {
 
     public int printGraphics2(int line1, int line2) throws Exception;
 
+    int getMaxGraphicsWidth() throws Exception;
+
+    int loadRawGraphics(byte[][] data) throws Exception;
+
     public void printGraphics(int line1, int line2) throws Exception;
 
     public int printGraphicLine(int height, byte[] data) throws Exception;

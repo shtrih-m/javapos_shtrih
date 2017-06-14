@@ -33,6 +33,9 @@ public class DIOReadMaxGraphics {
     public void execute(int[] data, Object object) throws Exception {
 
         DIOUtils.checkDataMinLength(data, 1);
+
+        
+
         value1 = 1;
         value2 = 65535;
         if (!validBound(value2)) {

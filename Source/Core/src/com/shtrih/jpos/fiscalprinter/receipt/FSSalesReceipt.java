@@ -5,12 +5,15 @@
 package com.shtrih.jpos.fiscalprinter.receipt;
 
 /**
- *
  * @author V.Kravtsov
  */
+
 import com.shtrih.barcode.PrinterBarcode;
+
 import java.util.Vector;
 
+import com.shtrih.fiscalprinter.*;
+import com.shtrih.jpos.fiscalprinter.PrintItem;
 import jpos.JposConst;
 import jpos.JposException;
 import jpos.FiscalPrinterConst;
@@ -20,10 +23,6 @@ import com.shtrih.util.Localizer;
 import com.shtrih.util.StringUtils;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.MethodParameter;
-import com.shtrih.fiscalprinter.TLVTag;
-import com.shtrih.fiscalprinter.TLVParser;
-import com.shtrih.fiscalprinter.FontNumber;
-import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.FSCloseReceipt;
 import com.shtrih.fiscalprinter.command.AmountItem;
 import com.shtrih.fiscalprinter.command.CloseRecParams;
@@ -37,6 +36,7 @@ import com.shtrih.fiscalprinter.command.FSReceiptDiscount;
 import com.shtrih.fiscalprinter.command.TLVList;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
 import com.shtrih.jpos.fiscalprinter.receipt.template.TemplateLine;
+
 import static jpos.FiscalPrinterConst.FPTR_PS_FISCAL_RECEIPT_ENDING;
 
 public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
@@ -119,7 +119,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printRecItem(String description, long price, int quantity,
-            int vatInfo, long unitPrice, String unitName) throws Exception {
+                             int vatInfo, long unitPrice, String unitName) throws Exception {
         openReceipt(PrinterConst.SMFP_RECTYPE_SALE);
         printSale(price, quantity, unitPrice, getParams().department,
                 vatInfo, description, unitName);
@@ -220,6 +220,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             }
             if (item instanceof PrinterBarcode) {
                 getDevice().printBarcode((PrinterBarcode) item);
+                continue;
             }
 
             if (item instanceof FSDiscount) {
@@ -236,7 +237,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     Vector<String> lines = reader.getPrintText();
                     messages.addAll(lines);
                 }
+            }
 
+            if (item instanceof PrintItem) {
+                PrintItem printItem = (PrintItem) item;
+                printItem.print(getPrinter().getPrinter());
             }
         }
         printTemplateTrailer();
@@ -349,8 +354,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printTotalDiscount(FSDiscount discount)
-            throws Exception 
-    {
+            throws Exception {
         if (!getDevice().getCapDiscount()) return;
         FSReceiptDiscount item = new FSReceiptDiscount();
         item.setSysPassword(getDevice().getUsrPassword());
@@ -388,10 +392,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printFSDiscount(FSDiscount discount)
-            throws Exception 
-    {
+            throws Exception {
         if (!getDevice().getCapDiscount()) return;
-        
+
         AmountItem item = new AmountItem();
         item.setAmount(Math.abs(discount.getAmount()));
         item.setText(discount.getText());
@@ -492,14 +495,14 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printRecTotal(long total, long payment, long payType,
-            String description) throws Exception {
+                              String description) throws Exception {
         checkTotal(getSubtotal(), total);
         addPayment(payment, payType);
         clearPrePostLine();
     }
 
     public void printRecItemVoid(String description, long price, int quantity,
-            int vatInfo, long unitPrice, String unitName) throws Exception {
+                                 int vatInfo, long unitPrice, String unitName) throws Exception {
         openReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
 
         if (isSaleReceipt()) {
@@ -548,12 +551,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         if (!getParams().FSDiscountEnabled) {
             throw new JposException(JposConst.JPOS_E_ILLEGAL,
                     Localizer.getString(Localizer.methodNotSupported)
-                    + "adjustments forbidden with FS");
+                            + "adjustments forbidden with FS");
         }
     }
 
     public void printRecItemAdjustment(int adjustmentType, String description,
-            long amount, int vatInfo) throws Exception {
+                                       long amount, int vatInfo) throws Exception {
         checkDiscountsEnabled();
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
@@ -577,12 +580,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
-                        + "adjustmentType");
+                                + "adjustmentType");
         }
     }
 
     public void printRecSubtotalAdjustment(int adjustmentType,
-            String description, long amount) throws Exception {
+                                           String description, long amount) throws Exception {
         checkDiscountsEnabled();
         checkAdjustment(adjustmentType, amount);
         switch (adjustmentType) {
@@ -607,12 +610,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
-                        + "AdjustmentType");
+                                + "AdjustmentType");
         }
     }
 
     public void printRecVoidItem(String description, long amount, int quantity,
-            int adjustmentType, long adjustment, int vatInfo) throws Exception {
+                                 int adjustmentType, long adjustment, int vatInfo) throws Exception {
         openReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
         long total = Math.round(amount * quantity / 1000.0);
         if (isSaleReceipt()) {
@@ -634,17 +637,17 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printRecPackageAdjustment(int adjustmentType,
-            String description, String vatAdjustment) throws Exception {
+                                          String description, String vatAdjustment) throws Exception {
         printRecPackageAdjustment2(adjustmentType, vatAdjustment, 1);
     }
 
     public void printRecPackageAdjustVoid(int adjustmentType,
-            String vatAdjustment) throws Exception {
+                                          String vatAdjustment) throws Exception {
         printRecPackageAdjustment2(adjustmentType, vatAdjustment, -1);
     }
 
     public void printRecPackageAdjustment2(int adjustmentType,
-            String vatAdjustment, int factor) throws Exception {
+                                           String vatAdjustment, int factor) throws Exception {
         checkDiscountsEnabled();
         PackageAdjustments adjustments = new PackageAdjustments();
         adjustments.parse(vatAdjustment);
@@ -679,7 +682,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
-                        + "adjustmentType");
+                                + "adjustmentType");
         }
     }
 
@@ -710,12 +713,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
-                        + "adjustmentType");
+                                + "adjustmentType");
         }
     }
 
     public void printRecItemAdjustmentVoid(int adjustmentType,
-            String description, long amount, int vatInfo) throws Exception {
+                                           String description, long amount, int vatInfo) throws Exception {
         checkDiscountsEnabled();
         checkAdjustment(adjustmentType, amount);
         switch (adjustmentType) {
@@ -740,12 +743,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
-                        + "adjustmentType");
+                                + "adjustmentType");
         }
     }
 
     public void printRecItemRefund(String description, long amount,
-            int quantity, int vatInfo, long unitAmount, String unitName)
+                                   int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
         openReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
         printSale(amount, quantity, unitAmount, getParams().department, vatInfo,
@@ -754,7 +757,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printRecItemRefundVoid(String description, long amount,
-            int quantity, int vatInfo, long unitAmount, String unitName)
+                                       int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
         openReceipt(PrinterConst.SMFP_RECTYPE_SALE);
         printStorno(amount, quantity, unitAmount, getParams().department, vatInfo,
@@ -802,7 +805,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public long correctQuantity(long price, long quantity, long unitPrice) {
-        for (;;) {
+        for (; ; ) {
             double d = unitPrice * quantity;
             long amount = MathUtils.round(d / 1000.0);
             if (amount >= price) {
@@ -814,7 +817,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printStorno(long price, long quantity, long unitPrice,
-            int department, int vatInfo, String description) throws Exception {
+                            int department, int vatInfo, String description) throws Exception {
         if (unitPrice == 0) {
             if (price != 0) {
                 quantity = 1000;
@@ -828,8 +831,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printSale(long price, long quantity, long unitPrice,
-            int department, int vatInfo, String description,
-            String unitName) throws Exception {
+                          int department, int vatInfo, String description,
+                          String unitName) throws Exception {
         if (unitPrice == 0) {
             if (price != 0) {
                 quantity = 1000;
@@ -844,12 +847,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void doPrintSale(long price, long quantity, long unitPrice,
-            int department, int vatInfo, String description, String unitName,
-            boolean isStorno) throws Exception {
+                            int department, int vatInfo, String description, String unitName,
+                            boolean isStorno) throws Exception {
         logger.debug(
                 "price: " + price
-                + ", quantity: " + quantity
-                + ", unitPrice: " + unitPrice);
+                        + ", quantity: " + quantity
+                        + ", unitPrice: " + unitPrice);
 
         double d = unitPrice * Math.abs(quantity);
         long amount = MathUtils.round((d / 1000.0));
@@ -1053,12 +1056,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
-                        + "adjustmentType");
+                                + "adjustmentType");
         }
     }
 
     private void checkAdjustments(int adjustmentType,
-            PackageAdjustments adjustments) throws Exception {
+                                  PackageAdjustments adjustments) throws Exception {
         PackageAdjustment adjustment;
         for (int i = 0; i < adjustments.size(); i++) {
             adjustment = adjustments.getItem(i);
@@ -1177,5 +1180,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printBarcode(PrinterBarcode barcode) throws Exception {
         items.add(barcode);
+    }
+
+    public void printGraphics(PrinterGraphics graphics) throws Exception {
+        items.add(graphics);
     }
 }

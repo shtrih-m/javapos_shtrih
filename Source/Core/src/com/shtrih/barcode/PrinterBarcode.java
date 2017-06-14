@@ -156,3 +156,4 @@ public class PrinterBarcode implements PrintItem {
         printer.printBarcode(this);
     }
 }
+

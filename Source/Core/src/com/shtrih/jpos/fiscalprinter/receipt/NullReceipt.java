@@ -9,6 +9,7 @@ package com.shtrih.jpos.fiscalprinter.receipt;
  * @author V.Kravtsov
  */
 import com.shtrih.barcode.PrinterBarcode;
+import com.shtrih.fiscalprinter.PrinterGraphics;
 import jpos.JposConst;
 import jpos.JposException;
 
@@ -211,5 +212,9 @@ public class NullReceipt implements FiscalReceipt {
     
     public void printBarcode(PrinterBarcode barcode) throws Exception{
         getPrinter().getPrinter().printBarcode(barcode);
-    }    
+    }
+
+    public void printGraphics(PrinterGraphics graphics) throws Exception{
+        graphics.print(getPrinter().getPrinter());
+    }
 }

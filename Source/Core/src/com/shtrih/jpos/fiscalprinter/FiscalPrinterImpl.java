@@ -13,6 +13,7 @@ import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.shtrih.fiscalprinter.*;
 import com.shtrih.fiscalprinter.port.SerialPrinterPort;
 import com.shtrih.jpos.fiscalprinter.receipt.*;
 import com.shtrih.util.*;
@@ -33,13 +34,6 @@ import com.shtrih.ej.EJActivation;
 import com.shtrih.ej.EJDate;
 import com.shtrih.ej.EJReportParser;
 import com.shtrih.ej.EJStatus;
-import com.shtrih.fiscalprinter.DeviceException;
-import com.shtrih.fiscalprinter.FontNumber;
-import com.shtrih.fiscalprinter.PrinterProtocol;
-import com.shtrih.fiscalprinter.ProtocolFactory;
-import com.shtrih.fiscalprinter.SMFiscalPrinter;
-import com.shtrih.fiscalprinter.SMFiscalPrinterImpl;
-import com.shtrih.fiscalprinter.SmFiscalPrinterException;
 import com.shtrih.fiscalprinter.model.PrinterModel;
 import com.shtrih.fiscalprinter.port.PrinterPort;
 import com.shtrih.fiscalprinter.port.PrinterPortFactory;
@@ -4288,6 +4282,15 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             printItems.add(barcode);
         } else {
             receipt.printBarcode(barcode);
+        }
+    }
+
+    public void printRawGraphics(byte[][] data) throws Exception {
+        PrinterGraphics graphics = new PrinterGraphics(data);
+        if (isReceiptEnding()) {
+            printItems.add(graphics);
+        } else {
+            receipt.printGraphics(graphics);
         }
     }
 

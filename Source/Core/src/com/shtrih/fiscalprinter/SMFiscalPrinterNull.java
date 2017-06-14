@@ -491,6 +491,16 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
+    @Override
+    public int getMaxGraphicsWidth() throws Exception {
+        return 0;
+    }
+
+    @Override
+    public int loadRawGraphics(byte[][] data) throws Exception {
+        return 0;
+    }
+
     public int printGraphicLine(int height, byte[] data) throws Exception {
         return 0;
     }
