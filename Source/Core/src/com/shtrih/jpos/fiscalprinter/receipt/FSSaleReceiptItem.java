@@ -250,6 +250,10 @@ public class FSSaleReceiptItem {
         return Math.abs(PrinterAmount.getAmount(getPrice(), getQuantity()) - discounts.getTotal());
     }
 
+    public long getTotal2() {
+        return Math.abs(PrinterAmount.getAmount(getPriceWithDiscount(), getQuantity()));
+    }
+    
     public FSSaleReceiptItem getSplitItem() {
         FSSaleReceiptItem item = null;
         if ((discounts.getTotal() > 0) && (quantity != 1000)) {
@@ -257,7 +261,7 @@ public class FSSaleReceiptItem {
             if (amount < getTotal()) {
                 item = new FSSaleReceiptItem();
                 item.price = getTotal() - amount;
-                item.unitPrice = 0;
+                item.unitPrice = item.price;
                 item.quantity = 1000;
                 item.department = department;
                 item.tax1 = tax1;

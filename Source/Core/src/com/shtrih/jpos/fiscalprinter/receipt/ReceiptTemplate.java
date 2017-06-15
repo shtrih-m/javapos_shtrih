@@ -220,10 +220,10 @@ public class ReceiptTemplate {
             return StringUtils.amountToString(amount);
         }
         if (f.tag.equals("TOTAL")) {
-            return getSign(item) + StringUtils.amountToString(item.getTotal());
+            return getSign(item) + StringUtils.amountToString(item.getTotal2());
         }
         if (f.tag.equals("TOTAL_TAX")) {
-            return getSign(item) + StringUtils.amountToString(item.getTotal()) + "_"
+            return getSign(item) + StringUtils.amountToString(item.getTotal2()) + "_"
                     + getTaxLetter(item.getTax1());
         }
         if (f.tag.equals("TAX_LETTER")) {

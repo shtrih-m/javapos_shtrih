@@ -1284,6 +1284,17 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
+            printer.printRecItem("17333 Шок.KIND.CH.мол.с мол.нач. 100г", 41920, 5000, 1, 9300, "ST");
+            printer.printRecItemAdjustment(1, "", 4580, 1);
+            printer.printRecItem("5051 AHM.Чай EARL GREY 25х2г", 160469, 20000, 1, 8900, "ST");
+            printer.printRecItemAdjustment(1, "", 17531, 1);
+            printer.printRecItem("5051 AHM.Чай EARL GREY 25х2г", 64188, 8000, 1, 8900, "ST");
+            printer.printRecItemAdjustment(1, "", 7012, 1);
+            printer.printRecItem("5051 AHM.Чай EARL GREY 25х2г", 8023, 1000, 1, 8900, "ST");
+            printer.printRecItemAdjustment(1, "", 877, 1);
+            printer.printRecSubtotal(304600);
+            printer.printRecTotal(274600, 274600, "00");
+            /*
             printer.printRecItem("1245 Шамп.АБ.ДЮР.РОССИЙСК.б.п/сл0.75", 99005, 1000, 1, 100000, "ST");
             printer.printRecItemAdjustment(1, "", 995, 1);
             printer.printRecItem("22233 ФН Сок ябл-персик.б/сах.200мл", 55, 4000, 2, 2590, "ST");
@@ -1292,6 +1303,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecSubtotalAdjustment(1, "", 60);
             printer.printRecSubtotal(99000);
             printer.printRecTotal(99000, 99000, "00");
+            */
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
