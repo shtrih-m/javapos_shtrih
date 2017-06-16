@@ -213,11 +213,20 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             Object object = items.get(i);
             if (object instanceof FSSaleReceiptItem) {
                 FSSaleReceiptItem item = (FSSaleReceiptItem) object;
-                FSSaleReceiptItem splitItem = item.getSplitItem();
+                item.updatePrice();
+                FSSaleReceiptItem splitItem = item.getSplittedItem();
                 if (splitItem != null) {
                     items.insertElementAt(splitItem, i + 1);
                 }
-                //item.setPrice(item.getPriceWithDiscount());
+            }
+        }
+        int pos = 1;
+        for (int i = 0; i < items.size(); i++) {
+            Object object = items.get(i);
+            if (object instanceof FSSaleReceiptItem) {
+                FSSaleReceiptItem item = (FSSaleReceiptItem) object;
+                item.setPos(pos);
+                pos++;
             }
         }
     }
@@ -472,7 +481,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         if (!getDevice().getCapDiscount()) {
             priceItem.setPrice(item.getPriceWithDiscount());
         }
-                
+
         if (!item.getIsStorno()) {
             if (isSaleReceipt()) {
                 getDevice().printSale(priceItem);
@@ -926,7 +935,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             item.setText(description);
             item.setPreLine(getPreLine());
             item.setPostLine(getPostLine());
-            item.setPos(recItems.size() + 1);
             item.setUnitName(unitName);
             item.setIsStorno(isStorno);
             items.add(item);

@@ -171,8 +171,9 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printBarcodes() {
+        printCode128();
         //printEan13();
-        printQRCode();
+        //printQRCode();
         //printAllBarcodes();
     }
 
@@ -223,28 +224,16 @@ class PrinterTest implements FiscalPrinterConst {
     public void printCode128() {
         try {
             Object[] params = new Object[9];
-            params[0] = "TC5TC5TC5TC5TC5TCD"; // barcode data
-            params[1] = "TC5TC5TC5TC5TC5TCD"; // barcode label
+            params[0] = "001C0FC020617101000278"; // barcode data
+            params[1] = "001C0FC020617101000278"; // barcode label
             params[2] = new Integer(SmFptrConst.SMFPTR_BARCODE_CODE128); // barcode type
-            params[3] = new Integer(45); // barcode height in pixels
+            params[3] = new Integer(100); // barcode height in pixels
             params[4] = new Integer(1); // print type
             params[5] = new Integer(2); // barcode bar width in pixels
             params[6] = new Integer(0); // text position
             params[7] = new Integer(1); // text font
             params[8] = new Integer(3); // narrow to width ratio, 3 by default
             printer.directIO(SmFptrConst.SMFPTR_DIO_PRINT_BARCODE, null, params);
-            /*
-            PrinterBarcode barcode = new PrinterBarcode();
-            barcode.setTextFont(1);
-            barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_NOTPRINTED);
-            barcode.setBarWidth(2);
-            barcode.setHeight(100);
-            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
-            barcode.setLabel("CODE128: 0010004211016101000026");
-            barcode.setText("0010004211016101000026");
-            barcode.setType(SmFptrConst.SMFPTR_BARCODE_CODE128);
-            printer.printBarcode(barcode);
-             */
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1284,6 +1273,14 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
+            
+            printer.printRecItem("Item 1", 0, 8000, 1, 123, "ST");
+            printer.printRecItemAdjustment(1, "", 100, 1);
+            printer.printRecItem("Item 2", 0, 12340, 1, 123, "ST");
+            printer.printRecItemAdjustment(1, "", 1000, 1);
+            
+            
+            /*
             printer.printRecItem("17333 Шок.KIND.CH.мол.с мол.нач. 100г", 41920, 5000, 1, 9300, "ST");
             printer.printRecItemAdjustment(1, "", 4580, 1);
             printer.printRecItem("5051 AHM.Чай EARL GREY 25х2г", 160469, 20000, 1, 8900, "ST");
@@ -1294,7 +1291,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecItemAdjustment(1, "", 877, 1);
             printer.printRecSubtotal(304600);
             printer.printRecTotal(274600, 274600, "00");
-            /*
+            
             printer.printRecItem("1245 Шамп.АБ.ДЮР.РОССИЙСК.б.п/сл0.75", 99005, 1000, 1, 100000, "ST");
             printer.printRecItemAdjustment(1, "", 995, 1);
             printer.printRecItem("22233 ФН Сок ябл-персик.б/сах.200мл", 55, 4000, 2, 2590, "ST");
@@ -1304,6 +1301,8 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecSubtotal(99000);
             printer.printRecTotal(99000, 99000, "00");
             */
+            
+            printer.printRecTotal(2000000, 2000000, "00");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();

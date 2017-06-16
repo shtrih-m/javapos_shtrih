@@ -286,7 +286,7 @@
 		<prop name="FieldSeparator" type="String" value=":"/>
 		<prop name="ItemTableHeader" type="String" value="                 Цена со:№пп Цена  Скидка скидкой Кол-во   ИТОГО: "/>
 		<prop name="ItemTableTrailer" type="String" value=""/>
-		<prop name="ItemRowFormat" type="String" value="%3cPOS% %38lTITLE%: %8lPRICE% %6lDISCOUNT% %8lSUM%*%5QUAN%%=$11TOTAL_TAX%: "/>
+		<prop name="ItemRowFormat" type="String" value="%3cPOS% %38lTITLE%: %8lPRICE% %6lDISCOUNT% %8lSUM%*%10QUAN%%=$11TOTAL_TAX%: "/>
 		<!-- <prop name="DiscountFormat" type="String" value="    СКИДКА  %29lTITLE%%=$10TOTAL%"/> -->
 		<prop name="DiscountFormat" type="String" value=""/>
 		<!-- <prop name="ChargeFormat" type="String"   value="    НАДБАВКА  %29lTITLE%%=$10TOTAL%"/> -->
@@ -298,7 +298,7 @@
 		<!-- swapGraphicsLine, 0 - auto, 1 - False, 2 - true -->
 		<prop name="swapGraphicsLine" type="String" value="0"/>
 		<!-- graphicsLineEnabled -->
-		<prop name="graphicsLineEnabled" type="String" value="0"/>
+		<prop name="graphicsLineEnabled" type="String" value="1"/>
 		<!-- Delay after barcode printed -->
 		<prop name="barcodeDelay" type="String" value="100"/>
 		<!-- PreLine prefix -->

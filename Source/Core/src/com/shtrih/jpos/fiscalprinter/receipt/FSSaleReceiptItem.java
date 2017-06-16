@@ -23,6 +23,7 @@ public class FSSaleReceiptItem {
 
     private int pos = 0;
     private long price;
+    private long priceWithDiscount;
     private long unitPrice;
     private long quantity;
     private int department;
@@ -36,6 +37,7 @@ public class FSSaleReceiptItem {
     private String unitName = "";
     private long voidAmount = 0;
     private boolean isStorno;
+    private FSSaleReceiptItem splittedItem;
     private final FSDiscounts discounts = new FSDiscounts();
     private CompositeLogger logger = CompositeLogger.getLogger(FiscalPrinterImpl.class);
 
@@ -133,10 +135,7 @@ public class FSSaleReceiptItem {
     }
 
     public long getPriceDiscount() {
-        if (quantity == 0) {
-            return 0;
-        }
-        return Math.abs(Math.round(discounts.getTotal() * 1000.0 / quantity));
+        return price - priceWithDiscount;
     }
 
     public long getTotalDiscount() {
@@ -237,13 +236,7 @@ public class FSSaleReceiptItem {
     }
 
     public long getPriceWithDiscount() {
-        if (quantity == 0) {
-            return 0;
-        }
-        if (discounts.getTotal() == 0) {
-            return price;
-        }
-        return Math.abs((long)(getTotal() * 1000.0 / quantity));
+        return priceWithDiscount;
     }
 
     public long getAmount() {
@@ -253,24 +246,51 @@ public class FSSaleReceiptItem {
     public long getTotal2() {
         return Math.abs(PrinterAmount.getAmount(getPriceWithDiscount(), getQuantity()));
     }
-    
-    public FSSaleReceiptItem getSplitItem() {
-        FSSaleReceiptItem item = null;
-        if ((discounts.getTotal() > 0) && (quantity != 1000)) {
-            long amount = Math.round(getPriceWithDiscount() * quantity / 1000.0);
-            if (amount < getTotal()) {
-                item = new FSSaleReceiptItem();
-                item.price = getTotal() - amount;
-                item.unitPrice = item.price;
-                item.quantity = 1000;
-                item.department = department;
-                item.tax1 = tax1;
-                item.tax2 = tax2;
-                item.tax3 = tax3;
-                item.tax4 = tax4;
-                item.text = text;
+
+    public FSSaleReceiptItem getSplittedItem() {
+        return splittedItem;
+    }
+
+    public long calcPriceWithDiscount() {
+        if (quantity == 0) {
+            return 0;
+        }
+        if (discounts.getTotal() == 0) {
+            return price;
+        }
+        return Math.abs((long) (getTotal() * 1000.0 / quantity));
+    }
+
+    public void updatePrice() {
+        splittedItem = null;
+        if (discounts.getTotal() > 0) {
+            if (quantity == 1000) {
+                priceWithDiscount = price - discounts.getTotal();
+            } else {
+                priceWithDiscount = calcPriceWithDiscount();
+                long amount = Math.round(priceWithDiscount * quantity / 1000.0);
+                if (getTotal() - amount > 0) {
+                    long discountQuantity;
+                    if ((quantity % 1000) == 0) {
+                        discountQuantity = (quantity / 1000 - (getTotal() - getTotal2())) * 1000;
+                    } else {
+                        discountQuantity = quantity - (getTotal() - getTotal2());
+                    }
+                    splittedItem = new FSSaleReceiptItem();
+                    splittedItem.price = price;
+                    splittedItem.unitPrice = price;
+                    splittedItem.priceWithDiscount = priceWithDiscount + 1;
+                    splittedItem.quantity = quantity - discountQuantity;
+                    splittedItem.department = department;
+                    splittedItem.tax1 = tax1;
+                    splittedItem.tax2 = tax2;
+                    splittedItem.tax3 = tax3;
+                    splittedItem.tax4 = tax4;
+                    splittedItem.text = text;
+
+                    quantity = discountQuantity;
+                }
             }
         }
-        return item;
     }
 }
