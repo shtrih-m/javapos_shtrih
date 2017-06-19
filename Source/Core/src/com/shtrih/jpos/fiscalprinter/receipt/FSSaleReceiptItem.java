@@ -263,6 +263,7 @@ public class FSSaleReceiptItem {
 
     public void updatePrice() {
         splittedItem = null;
+        priceWithDiscount = price;
         if (discounts.getTotal() > 0) {
             if (quantity == 1000) {
                 priceWithDiscount = price - discounts.getTotal();
