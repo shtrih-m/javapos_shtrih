@@ -37,6 +37,7 @@ public class FSSaleReceiptItem {
     private String unitName = "";
     private long voidAmount = 0;
     private boolean isStorno;
+    private boolean priceUpdated = false;
     private FSSaleReceiptItem splittedItem;
     private final FSDiscounts discounts = new FSDiscounts();
     private CompositeLogger logger = CompositeLogger.getLogger(FiscalPrinterImpl.class);
@@ -261,7 +262,10 @@ public class FSSaleReceiptItem {
         return Math.abs((long) (getTotal() * 1000.0 / quantity));
     }
 
-    public void updatePrice() {
+    public void updatePrice() 
+    {
+        if (priceUpdated) return;
+        
         splittedItem = null;
         priceWithDiscount = price;
         if (discounts.getTotal() > 0) {
@@ -293,5 +297,6 @@ public class FSSaleReceiptItem {
                 }
             }
         }
+        priceUpdated = true;
     }
 }

@@ -217,6 +217,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 FSSaleReceiptItem splitItem = item.getSplittedItem();
                 if (splitItem != null) {
                     items.insertElementAt(splitItem, i + 1);
+                    i++;
                 }
             }
         }
