@@ -836,8 +836,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public int readCashRegister(CashRegister register) throws Exception {
         logger.debug("readCashRegister");
-        ReadCashRegister command = readCashRegister2(register.getNumber());
-        int result = command.getResultCode();
+        ReadCashRegister command = new ReadCashRegister(usrPassword, register.getNumber());
+        int result = executeCommand(command);
         if (result == 0) {
             register.setValue(command.getValue());
         }
@@ -854,7 +854,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public ReadCashRegister readCashRegister2(int number) throws Exception {
         logger.debug("readCashRegister");
         ReadCashRegister command = new ReadCashRegister(usrPassword, number);
-        executeCommand(command);
+        execute(command);
         return command;
     }
 
