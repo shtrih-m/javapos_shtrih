@@ -171,10 +171,10 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printBarcodes() {
-        printCode128();
+        //printCode128();
         //printEan13();
         //printQRCode();
-        //printAllBarcodes();
+        printAllBarcodes();
     }
 
     public void printJournalCurrentDay() {
