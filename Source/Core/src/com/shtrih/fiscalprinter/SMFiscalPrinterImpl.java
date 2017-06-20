@@ -854,7 +854,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public ReadCashRegister readCashRegister2(int number) throws Exception {
         logger.debug("readCashRegister");
         ReadCashRegister command = new ReadCashRegister(usrPassword, number);
-        execute(command);
+        executeCommand(command);
         return command;
     }
 
