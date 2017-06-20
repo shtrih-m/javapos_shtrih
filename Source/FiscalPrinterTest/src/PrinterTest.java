@@ -1273,6 +1273,25 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
+            printer.printRecItem("44444 Сироп Кленовый", 65, 1000, 6, 65, "ST");
+            printer.printRecItem("55555 Напиток Coca-Cola ZERO 2 л.", 10100, 1000, 5, 10100, "ST");
+            printer.printRecItem("66666 Напиток Coca-Cola газированный 2 л", 10155, 1000, 3, 10155, "ST");
+            printer.printRecItem("77777 Напиток Содовая 0,33 л.", 567, 1000, 2, 567, "ST");
+            printer.printRecItem("88888 Груши РОША                  1кг", 6899, 1000, 1, 6899, "г.");
+            printer.printRecItem("99999 Напиток гранатовый негазированный", 45169, 1000, 4, 45169, "ST");
+            printer.printRecSubtotalAdjustment(1, "", 55);
+            printer.printRecTotal(72900, 72900, "00");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+  
+    public void printFiscalReceipt104888() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
             
             printer.printRecItem("*1860 Напиток COCA-COLA газ.ПЭТ  2.0л", 738, 1000, 1, 738, "ST");
             printer.printRecSubtotalAdjustment(1, "", 8);

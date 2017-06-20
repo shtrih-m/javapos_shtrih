@@ -984,7 +984,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         fsReceiptItem.setPrice(item.getPrice());
         fsReceiptItem.setAmount(0xFFFFFFFFFFL);
         fsReceiptItem.setTaxAmount(0xFFFFFFFFFFL);
-        fsReceiptItem.setTax(item.getTax1());
+        fsReceiptItem.setTax(getTaxBits(item.getTax1()));
         fsReceiptItem.setDepartment(item.getDepartment());
         fsReceiptItem.setPaymentType(0);
         fsReceiptItem.setPaymentItem(0);
@@ -3411,6 +3411,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setPassword(usrPassword);
         command.setItem(item);
         return executeCommand(command);
+    }
+
+    public int getTaxBits(int tax) {
+        int result = 0;
+        if ((tax >= 1) && (tax <= 6)) {
+            result = BitUtils.setBit(tax - 1);
+        }
+        return result;
     }
 
 }
