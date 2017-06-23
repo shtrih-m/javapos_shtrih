@@ -85,7 +85,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private Boolean capPrintGraphicsLine = Boolean.NOTDEFINED;
     private Boolean capPrintBarcode2 = Boolean.NOTDEFINED;
     private Boolean capPrintBarcode3 = Boolean.NOTDEFINED;
-    private boolean capFSPrintItem = false;
+    private boolean capFSPrintItem = true;
     private boolean capCutPaper = true;
     private String fsUser = "";
     private String fsAddress = "";
@@ -977,7 +977,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return result;
     }
 
-    public void fsPrintRecItem2(int operation, PriceItem item) throws Exception {
+    public int fsPrintRecItem2(int operation, PriceItem item) throws Exception {
         FSReceiptItem fsReceiptItem = new FSReceiptItem();
         fsReceiptItem.setOperation(operation);
         fsReceiptItem.setQuantity(item.getQuantity() * 1000);
@@ -989,7 +989,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         fsReceiptItem.setPaymentType(0);
         fsReceiptItem.setPaymentItem(0);
         fsReceiptItem.setText(item.getText());
-        check(fsPrintRecItem(fsReceiptItem));
+        int rc = fsPrintRecItem(fsReceiptItem);
+        capFSPrintItem = isCommandSupported(rc);
+        return rc;
     }
 
     public void printSale(PriceItem item) throws Exception {
@@ -997,12 +999,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         String text = getRecItemText(item.getText());
         item.setText(text);
 
-        if (!capFSPrintItem) {
-            PrintSale command = new PrintSale(usrPassword, item);
-            execute(command);
-        } else {
-            fsPrintRecItem2(1, item);
+        if (capFSPrintItem) {
+            int rc = fsPrintRecItem2(1, item);
+            if (isCommandSupported(rc)) {
+                check(rc);
+                return;
+            }
         }
+        PrintSale command = new PrintSale(usrPassword, item);
+        execute(command);
     }
 
     public void printVoidSale(PriceItem item) throws Exception {
@@ -1010,12 +1015,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         String text = getRecItemText(item.getText());
         item.setText(text);
 
-        if (!capFSPrintItem) {
-            PrintVoidSale command = new PrintVoidSale(usrPassword, item);
-            execute(command);
-        } else {
-            fsPrintRecItem2(2, item);
+        if (capFSPrintItem) {
+            int rc = fsPrintRecItem2(2, item);
+            if (isCommandSupported(rc)) {
+                check(rc);
+                return;
+            }
         }
+        PrintVoidSale command = new PrintVoidSale(usrPassword, item);
+        execute(command);
     }
 
     public void printRefund(PriceItem item) throws Exception {
@@ -1024,12 +1032,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         String text = getRecItemText(item.getText());
         item.setText(text);
 
-        if (!capFSPrintItem) {
-            PrintRefund command = new PrintRefund(usrPassword, item);
-            execute(command);
-        } else {
-            fsPrintRecItem2(3, item);
+        if (capFSPrintItem) {
+            int rc = fsPrintRecItem2(3, item);
+            if (isCommandSupported(rc)) {
+                check(rc);
+                return;
+            }
         }
+        PrintRefund command = new PrintRefund(usrPassword, item);
+        execute(command);
     }
 
     public void printVoidRefund(PriceItem item) throws Exception {
@@ -1038,12 +1049,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         String text = getRecItemText(item.getText());
         item.setText(text);
 
-        if (!capFSPrintItem) {
-            PrintVoidRefund command = new PrintVoidRefund(usrPassword, item);
-            execute(command);
-        } else {
-            fsPrintRecItem2(4, item);
+        if (capFSPrintItem) {
+            int rc = fsPrintRecItem2(4, item);
+            if (isCommandSupported(rc)) {
+                check(rc);
+                return;
+            }
         }
+        PrintVoidRefund command = new PrintVoidRefund(usrPassword, item);
+        execute(command);
     }
 
     public PrintVoidItem printVoidItem(PriceItem item) throws Exception {
@@ -1921,7 +1935,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         } else {
             capDiscount = discountMode == 0;
         }
-        capFSPrintItem = capFiscalStorage && (!isShtrihMobile());
     }
 
     private boolean readCapDisableDiscountText() throws Exception {

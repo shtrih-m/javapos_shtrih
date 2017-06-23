@@ -171,10 +171,10 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printBarcodes() {
-        //printCode128();
+        printCode128();
         //printEan13();
         //printQRCode();
-        printAllBarcodes();
+        //printAllBarcodes();
     }
 
     public void printJournalCurrentDay() {
@@ -192,7 +192,6 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-
 
     public void printQRCode() {
         try {
@@ -680,7 +679,7 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printFiscalReceipt() {
-        printFiscalReceipt10488();
+        printFiscalReceipt104888();
     }
 
     public void printCorrectionReceipt() {

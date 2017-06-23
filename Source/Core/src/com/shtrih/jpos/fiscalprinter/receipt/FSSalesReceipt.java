@@ -43,6 +43,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private FSSaleReceiptItem lastItem = null;
     private long total = 0;
     private int receiptType = 0;
+    private int discountAmount = 0;
     private boolean isOpened = false;
     private boolean disablePrint = false;
     private String voidDescription = "";
@@ -52,7 +53,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private final long[] payments = new long[5]; // payment amounts
     private final FSDiscounts discounts = new FSDiscounts();
     private Vector<String> messages = new Vector<String>();
-    private int discountAmount = 0;
     private final ReceiptTemplate receiptTemplate;
     private static CompositeLogger logger = CompositeLogger.getLogger(FSSalesReceipt.class);
     private boolean subtotalPrinted = false;
