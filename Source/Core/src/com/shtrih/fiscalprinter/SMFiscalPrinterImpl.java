@@ -2259,8 +2259,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public boolean getSwapGraphicsLine() throws Exception {
         switch (params.swapGraphicsLine) {
-            case SWAP_LINE_AUTO:
-                return getModel().getSwapGraphicsLine();
+            case SWAP_LINE_AUTO: {
+                if (getDeviceMetrics().getDeviceName().equals("ШТРИХ-М-01Ф")) {
+                    return true;
+                } else {
+                    return getModel().getSwapGraphicsLine();
+                }
+            }
 
             case SWAP_LINE_TRUE:
                 return true;

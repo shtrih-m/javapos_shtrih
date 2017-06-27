@@ -679,7 +679,7 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printFiscalReceipt() {
-        printFiscalReceipt104888();
+        printFiscalReceipt1048888();
     }
 
     public void printCorrectionReceipt() {
@@ -1285,7 +1285,35 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-  
+
+    public void printFiscalReceipt1048888() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+    
+            printer.printRecItem("****            322 БАНАНЫ", 396700, 795, 1, 499000, "кг");
+            printer.printRecItem("****      100204414 БУЛКА ЧЕРКИЗОВСКАЯ1", 265000, 1000, 2, 265000, "шт");
+            printer.printRecItem("****  4607032421115 ХЛЕБ РИЖСКИЙ 1/400", 245000, 1000, 2, 245000, "шт");
+            printer.printRecItem("**02  4690228030437 ДЕСЕРТ ТВОРОЖНЫЙ ЧУД", 452000, 1000, 2, 452000, "шт");
+            printer.printRecItemAdjustment(1,  "ckugka", 104000, 2);
+            printer.printRecItem("**02  4690228030437 ДЕСЕРТ ТВОРОЖНЫЙ ЧУД", 452000, 1000, 2, 452000, "шт");
+            printer.printRecItemAdjustment(1, "ckugka", 104000, 2);
+            printer.printRecItem("****            112 МОРКОВЬ МЫТАЯ", 296500, 495, 2, 599000, "кг");
+            printer.printRecItem("****  4607072010348 ИКРА МИНТАЯ ПРОБОЙНА", 495000, 1000, 2, 495000, "шт");
+            printer.printRecItem("****             87 КАРТОФЕЛЬ УРОЖАЙ 201", 669500, 1525, 2, 439000, "кг");
+            printer.printRecSubtotal(3063700);
+            printer.printRecSubtotalAdjustment(1, "МАРКИ", 60000);
+            printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 3700);
+            printer.printRecTotal(3000000, 0, "20");
+            printer.printRecTotal(3000000, 10000000, "1");
+                    
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void printFiscalReceipt104888() {
         try {
             printer.resetPrinter();
