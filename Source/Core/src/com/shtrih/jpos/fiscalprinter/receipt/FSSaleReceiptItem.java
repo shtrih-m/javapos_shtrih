@@ -48,7 +48,7 @@ public class FSSaleReceiptItem {
     public PriceItem getPriceItem() throws Exception {
         PriceItem item = new PriceItem();
         item.setDepartment(department);
-        item.setPrice(price);
+        item.setPrice(getPriceWithDiscount());
         item.setQuantity(quantity);
         item.setTax1(tax1);
         item.setTax2(tax2);
@@ -265,7 +265,6 @@ public class FSSaleReceiptItem {
     public void updatePrice() 
     {
         if (priceUpdated) return;
-        
         splittedItem = null;
         priceWithDiscount = price;
         if (discounts.getTotal() > 0) {

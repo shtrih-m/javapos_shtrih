@@ -12,9 +12,6 @@ public class PayType {
     private final int value;
 
     public PayType(int value) throws Exception {
-        if ((value < 0) || (value > 3)) {
-            throw new Exception("Invalid payment value");
-        }
         this.value = value;
     }
 

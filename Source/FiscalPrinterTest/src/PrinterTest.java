@@ -679,7 +679,7 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printFiscalReceipt() {
-        printFiscalReceipt1048888();
+        printFiscalReceipt1051();
     }
 
     public void printCorrectionReceipt() {
@@ -1289,6 +1289,23 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt1048888() {
         try {
             printer.resetPrinter();
+            printer.printRecMessage("Кассовый чек 1");
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+            printer.printRecMessage("Кассовый чек 2");
+    
+            printer.printRecItem("Item 1", 396700, 795, 1, 499000, "кг");
+            printer.printRecTotal(396700, 396700, "13");
+                    
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printFiscalReceipt105() {
+        try {
+            printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
     
@@ -1313,7 +1330,7 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-
+    
     public void printFiscalReceipt104888() {
         try {
             printer.resetPrinter();
@@ -1460,7 +1477,7 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void printFiscalReceipt105() {
+    public void printFiscalReceipt1051() {
         try {
             printer.resetPrinter();
 
@@ -1474,6 +1491,9 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 22);
             printer.printRecSubtotal(0);
             printer.printRecTotal(10750, 10750, "1");
+            //printer.printRecTotal(10772, 10772, "1");
+            //printer.printRecTotal(10772, 10772, "1");
+            
             printer.printRecMessage(" ТОВАРОВ           1                      ");
             printer.printRecMessage(" **************************************** ");
             printer.printRecMessage("           Уважаемый покупатель!          ");

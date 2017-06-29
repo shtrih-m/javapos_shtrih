@@ -17,9 +17,9 @@ import com.shtrih.jpos.fiscalprinter.PrintItem;
  */
 public class TextLine implements PrintItem {
 
-    private final int station;
-    private final FontNumber font;
-    private final String line;
+    private int station;
+    private FontNumber font;
+    private String line;
 
     /** Creates a new instance of TextLine */
     public TextLine(int station, FontNumber font, String line) {
@@ -31,4 +31,26 @@ public class TextLine implements PrintItem {
     public void print(SMFiscalPrinter printer) throws Exception {
         printer.printText(station, line, font);
     }
+
+    /**
+     * @return the station
+     */
+    public int getStation() {
+        return station;
+    }
+
+        /**
+     * @return the font
+     */
+    public FontNumber getFont() {
+        return font;
+    }
+
+    /**
+     * @return the line
+     */
+    public String getLine() {
+        return line;
+    }
+
 }

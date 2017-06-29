@@ -61,7 +61,7 @@
         <!-- System administrator password -->
         <prop name="sysAdminPassword" type="String" value="30"/>
         <!-- device state polling enabled -->
-        <prop name="pollEnabled" type="String" value="1"/>
+        <prop name="pollEnabled" type="String" value="0"/>
         <!-- device state polling interval in milliseconds -->
         <prop name="pollInterval" type="String" value="1000"/>
         <!-- Amount coefficient -->
@@ -116,45 +116,22 @@
         <!-- Payment types -->
         <!-- Payment types -->
         <prop name="payType0" type="String" value="0"/>
-        <prop name="payType1" type="String" value="0"/>
-        <prop name="payType2" type="String" value="0"/>
-        <prop name="payType3" type="String" value="0"/>
-        <prop name="payType4" type="String" value="0"/>
-        <prop name="payType5" type="String" value="0"/>
-        <prop name="payType6" type="String" value="0"/>
-        <prop name="payType7" type="String" value="0"/>
-        <prop name="payType8" type="String" value="0"/>
-        <prop name="payType9" type="String" value="0"/>
-        <prop name="payType10" type="String" value="1"/>
-        <prop name="payType11" type="String" value="1"/>
-        <prop name="payType12" type="String" value="1"/>
-        <prop name="payType13" type="String" value="1"/>
-        <prop name="payType14" type="String" value="1"/>
-        <prop name="payType15" type="String" value="1"/>
-        <prop name="payType16" type="String" value="1"/>
-        <prop name="payType17" type="String" value="1"/>
-        <prop name="payType18" type="String" value="1"/>
-        <prop name="payType19" type="String" value="1"/>
-        <prop name="payType20" type="String" value="2"/>
-        <prop name="payType21" type="String" value="2"/>
-        <prop name="payType22" type="String" value="2"/>
-        <prop name="payType23" type="String" value="2"/>
-        <prop name="payType24" type="String" value="2"/>
-        <prop name="payType25" type="String" value="2"/>
-        <prop name="payType26" type="String" value="2"/>
-        <prop name="payType27" type="String" value="2"/>
-        <prop name="payType28" type="String" value="2"/>
-        <prop name="payType29" type="String" value="2"/>
-        <prop name="payType30" type="String" value="3"/>
-        <prop name="payType31" type="String" value="3"/>
-        <prop name="payType32" type="String" value="3"/>
-        <prop name="payType33" type="String" value="3"/>
-        <prop name="payType34" type="String" value="3"/>
-        <prop name="payType35" type="String" value="3"/>
-        <prop name="payType36" type="String" value="3"/>
-        <prop name="payType37" type="String" value="3"/>
-        <prop name="payType38" type="String" value="3"/>
-        <prop name="payType39" type="String" value="3"/>
+        <prop name="payType1" type="String" value="1"/>
+        <prop name="payType2" type="String" value="2"/>
+        <prop name="payType3" type="String" value="3"/>
+        <prop name="payType4" type="String" value="4"/>
+        <prop name="payType5" type="String" value="5"/>
+        <prop name="payType6" type="String" value="6"/>
+        <prop name="payType7" type="String" value="7"/>
+        <prop name="payType8" type="String" value="8"/>
+        <prop name="payType9" type="String" value="9"/>
+        <prop name="payType10" type="String" value="10"/>
+        <prop name="payType11" type="String" value="11"/>
+        <prop name="payType12" type="String" value="12"/>
+        <prop name="payType13" type="String" value="13"/>
+        <prop name="payType14" type="String" value="14"/>
+        <prop name="payType15" type="String" value="15"/>
+        <prop name="payType16" type="String" value="16"/>
 		<!-- Payment names -->
         <prop name="paymentName1" type="String" value="CASH"/>
         <prop name="paymentName2" type="String" value="CREDIT"/>

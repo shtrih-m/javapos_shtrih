@@ -1860,8 +1860,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void writeTables() throws Exception {
-        if (params.tableMode == SMFPTR_TABLE_MODE_AUTO) 
-        {
+        if (params.tableMode == SMFPTR_TABLE_MODE_AUTO) {
             writePaymentNames();
             if (params.isDriverHeader()) {
                 getPrinter().writeParameter(SMFP_PARAMID_CUT_MODE, 0);
@@ -2996,6 +2995,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkOnLine();
         checkPrinterState(FPTR_PS_MONITOR);
 
+        Vector<TextLine> messages = null;
+        if ((receipt != null) && (receipt instanceof NullReceipt)) {
+            messages = ((NullReceipt) receipt).getMessages();
+        }
         receipt = createReceipt(fiscalReceiptType);
 
         // Cancel receipt if it opened
@@ -3020,6 +3023,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         getPrinter().startSaveCommands();
         printDocStart();
         receipt.beginFiscalReceipt(printHeader);
+        if (messages != null) {
+            for (int i = 0; i < messages.size(); i++) {
+                TextLine line = messages.get(i);
+                receipt.printRecMessage(line.getStation(), line.getFont(), line.getLine());
+            }
+        }
     }
 
     private void sleep(long millis) {
@@ -3435,8 +3444,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecVoidItem(String description, long amount, int quantity,
-            int adjustmentType, long adjustment, int vatInfo) throws Exception 
-    {
+            int adjustmentType, long adjustment, int vatInfo) throws Exception {
         checkOnLine();
         description = decodeText(description);
         amount = convertAmount(amount);
@@ -3445,12 +3453,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
         checkQuantity(quantity);
         checkVatInfo(vatInfo);
-        
-        if (getParams().printRecVoidItemAmount)
-        {
+
+        if (getParams().printRecVoidItemAmount) {
             quantity = 1000;
         }
-        
+
         receipt.printRecVoidItem(description, amount, quantity, adjustmentType,
                 adjustment, vatInfo);
     }
@@ -3537,7 +3544,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             printDocStart();
             getPrinter().printZReport();
             fiscalDay.close();
-            try{
+            try {
                 printDocEnd();
             } catch (Exception e) {
                 logger.error("printZReport: " + e.getMessage());

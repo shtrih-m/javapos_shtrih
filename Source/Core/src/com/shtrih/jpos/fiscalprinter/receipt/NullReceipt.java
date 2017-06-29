@@ -15,16 +15,24 @@ import jpos.JposException;
 
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
+import com.shtrih.fiscalprinter.command.TextLine;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
+import com.shtrih.jpos.fiscalprinter.PrintItem;
+import java.util.Vector;
 
 public class NullReceipt implements FiscalReceipt {
 
     private boolean cancelled = false;
     private ReceiptContext context = null;
+    private final Vector<TextLine> messages = new Vector();
 
     public NullReceipt() {
     }
 
+    public Vector<TextLine> getMessages(){
+        return messages;
+    }
+    
     public NullReceipt(ReceiptContext context) {
         this.context = context;
     }
@@ -170,10 +178,9 @@ public class NullReceipt implements FiscalReceipt {
     }
 
     public void printRecMessage(int station, FontNumber font, String message)
-            throws Exception {
-        if (context != null) {
-            getPrinter().printText(station, message, font);
-        }
+            throws Exception 
+    {
+        messages.add(new TextLine(station, font, message));
     }
 
     public void printNormal(int station, String data) throws Exception {
