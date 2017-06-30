@@ -259,7 +259,11 @@ public class FSSaleReceiptItem {
         if (discounts.getTotal() == 0) {
             return price;
         }
-        return Math.abs((long) (getTotal() * 1000.0 / quantity));
+        long price1 = Math.abs(Math.round(getTotal() * 1000.0 / quantity));
+        if (Math.round(price1 * quantity/1000.0) > getTotal()){
+            price1--;
+        }
+        return price1;
     }
 
     public void updatePrice() 
@@ -273,12 +277,14 @@ public class FSSaleReceiptItem {
             } else {
                 priceWithDiscount = calcPriceWithDiscount();
                 long amount = Math.round(priceWithDiscount * quantity / 1000.0);
-                if (getTotal() - amount > 0) {
+                long total = getTotal();
+                long total2 = getTotal2();
+                if (total - amount > 0) {
                     long discountQuantity;
                     if ((quantity % 1000) == 0) {
-                        discountQuantity = (quantity / 1000 - (getTotal() - getTotal2())) * 1000;
+                        discountQuantity = (quantity / 1000 - (total - total2)) * 1000;
                     } else {
-                        discountQuantity = quantity - (getTotal() - getTotal2());
+                        discountQuantity = quantity - (total - total2);
                     }
                     splittedItem = new FSSaleReceiptItem();
                     splittedItem.price = price;

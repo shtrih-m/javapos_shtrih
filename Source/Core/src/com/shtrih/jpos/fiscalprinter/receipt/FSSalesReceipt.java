@@ -35,6 +35,8 @@ import com.shtrih.fiscalprinter.command.FSReceiptDiscount;
 import com.shtrih.fiscalprinter.command.TLVList;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
 import com.shtrih.jpos.fiscalprinter.receipt.template.TemplateLine;
+import com.shtrih.fiscalprinter.command.TextLine;
+import java.util.Vector;
 
 import static jpos.FiscalPrinterConst.FPTR_PS_FISCAL_RECEIPT_ENDING;
 
@@ -1166,4 +1168,5 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printGraphics(PrinterGraphics graphics) throws Exception {
         items.add(graphics);
     }
+    
 }

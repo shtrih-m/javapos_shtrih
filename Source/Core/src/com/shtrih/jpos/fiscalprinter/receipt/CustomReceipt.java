@@ -25,6 +25,8 @@ import com.shtrih.util.CompositeLogger;
 import static jpos.FiscalPrinterConst.FPTR_PS_MONITOR;
 import static jpos.FiscalPrinterConst.JPOS_EFPTR_BAD_ITEM_AMOUNT;
 import static jpos.JposConst.JPOS_E_EXTENDED;
+import com.shtrih.fiscalprinter.command.TextLine;
+import java.util.Vector;
 
 public abstract class CustomReceipt implements FiscalReceipt {
 
@@ -259,5 +261,5 @@ public abstract class CustomReceipt implements FiscalReceipt {
     public void printGraphics(PrinterGraphics graphics) throws Exception{
         graphics.print(getPrinter().getPrinter());
     }
-    
+
 }

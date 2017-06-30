@@ -224,4 +224,7 @@ public class NullReceipt implements FiscalReceipt {
     public void printGraphics(PrinterGraphics graphics) throws Exception{
         graphics.print(getPrinter().getPrinter());
     }
+    
+    public void setMessages(Vector<TextLine> messages){
+    }
 }

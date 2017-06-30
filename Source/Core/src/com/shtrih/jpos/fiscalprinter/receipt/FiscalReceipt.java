@@ -11,6 +11,8 @@ package com.shtrih.jpos.fiscalprinter.receipt;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.PrinterGraphics;
+import com.shtrih.fiscalprinter.command.TextLine;
+import java.util.Vector;
 
 public interface FiscalReceipt {
 
@@ -110,4 +112,5 @@ public interface FiscalReceipt {
     public void printBarcode(PrinterBarcode barcode) throws Exception;
 
     void printGraphics(PrinterGraphics graphics) throws Exception;
+    
 }
