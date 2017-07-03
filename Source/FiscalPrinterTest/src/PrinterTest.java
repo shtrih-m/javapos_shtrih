@@ -680,7 +680,8 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         //printFiscalReceipt1052();
-        printFiscalReceipt1048888();
+        printFiscalReceipt10488();
+        //printFiscalReceipt1048889();
     }
 
     public void printCorrectionReceipt() {
@@ -1294,6 +1295,8 @@ class PrinterTest implements FiscalPrinterConst {
 
             printer.printRecItem("Item 1", 396705, 795, 1, 499000, "кг");
             printer.printRecTotal(396705, 396705, "13");
+            
+            
 
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
@@ -1301,6 +1304,31 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    public void printFiscalReceipt1048889() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+            
+            printer.printRecItem("*1860 Напиток COCA-COLA газ.ПЭТ  2.0л", 264, 1000, 1, 300, "ST");
+            printer.printRecItemAdjustment(1, "", 36, 1);
+            printer.printRecItem("202 Томаты 1кг", 19124, 1695, 2, 12800, "г.");
+            printer.printRecItemAdjustment(1, "", 2572, 2);
+            printer.printRecItem("202 Томаты 1кг", 19123, 1695, 2, 12800, "г.");
+            printer.printRecItemAdjustment(1, "", 2573, 2);
+            printer.printRecItem("202 Томаты 1кг", 48457, 4295, 2, 12800, "г.");
+            printer.printRecItemAdjustment(1, "", 6519, 2);
+            printer.printRecSubtotal(98668);
+            printer.printRecSubtotalAdjustment(1, "", 68);
+            printer.printRecSubtotal(86900);
+            printer.printRecTotal(86900, 86900, "10");
+    
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void printFiscalReceipt105() {
         try {
             printer.resetPrinter();

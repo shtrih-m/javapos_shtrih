@@ -259,16 +259,14 @@ public class FSSaleReceiptItem {
         if (discounts.getTotal() == 0) {
             return price;
         }
-        long price1 = Math.abs(Math.round(getTotal() * 1000.0 / quantity));
-        if (Math.round(price1 * quantity/1000.0) > getTotal()){
-            price1--;
-        }
+        long price1 = Math.abs((long) (getTotal() * 1000.0 / quantity));
         return price1;
     }
 
-    public void updatePrice() 
-    {
-        if (priceUpdated) return;
+    public void updatePrice() {
+        if (priceUpdated) {
+            return;
+        }
         splittedItem = null;
         priceWithDiscount = price;
         if (discounts.getTotal() > 0) {
@@ -280,25 +278,45 @@ public class FSSaleReceiptItem {
                 long total = getTotal();
                 long total2 = getTotal2();
                 if (total - amount > 0) {
-                    long discountQuantity;
+                    long quantity2 = quantity;
+                    long price2 = priceWithDiscount;
                     if ((quantity % 1000) == 0) {
-                        discountQuantity = (quantity / 1000 - (total - total2)) * 1000;
+                        quantity2 = (quantity / 1000 - (total - total2)) * 1000;
                     } else {
-                        discountQuantity = quantity - (total - total2);
+                        for (int i = 0; i <= quantity; i++) 
+                        {
+                            long itemTotal = Math.round(i * priceWithDiscount / 1000.0)
+                                + Math.round((priceWithDiscount) * (quantity - i) / 1000.0);
+                            if (itemTotal == total) 
+                            {
+                                quantity2 = i;
+                                price2 = priceWithDiscount;
+                                break;
+                            }
+                            itemTotal = Math.round(i * priceWithDiscount / 1000.0)
+                                + Math.round((priceWithDiscount + 1) * (quantity - i) / 1000.0);
+                            if (itemTotal == total) 
+                            {
+                                quantity2 = i;
+                                price2 = priceWithDiscount + 1;
+                                break;
+                            }
+                        }
                     }
-                    splittedItem = new FSSaleReceiptItem();
-                    splittedItem.price = price;
-                    splittedItem.unitPrice = price;
-                    splittedItem.priceWithDiscount = priceWithDiscount + 1;
-                    splittedItem.quantity = quantity - discountQuantity;
-                    splittedItem.department = department;
-                    splittedItem.tax1 = tax1;
-                    splittedItem.tax2 = tax2;
-                    splittedItem.tax3 = tax3;
-                    splittedItem.tax4 = tax4;
-                    splittedItem.text = text;
-
-                    quantity = discountQuantity;
+                    if (quantity2 != quantity) {
+                        splittedItem = new FSSaleReceiptItem();
+                        splittedItem.price = price;
+                        splittedItem.unitPrice = price;
+                        splittedItem.priceWithDiscount = price2;
+                        splittedItem.quantity = quantity - quantity2;
+                        splittedItem.department = department;
+                        splittedItem.tax1 = tax1;
+                        splittedItem.tax2 = tax2;
+                        splittedItem.tax3 = tax3;
+                        splittedItem.tax4 = tax4;
+                        splittedItem.text = text;
+                    }
+                    quantity = quantity2;
                 }
             }
         }
