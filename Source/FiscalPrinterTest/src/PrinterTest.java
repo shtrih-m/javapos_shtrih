@@ -680,8 +680,9 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         //printFiscalReceipt1052();
-        printFiscalReceipt10488();
+        //printFiscalReceipt10488();
         //printFiscalReceipt1048889();
+        printFiscalReceipt23();
     }
 
     public void printCorrectionReceipt() {
@@ -1266,6 +1267,23 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    public void printFiscalReceipt23() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("88888 Груши РОША                  1кг", 10697, 3000, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 10000, 1);
+            printer.printRecSubtotal(20697);
+            printer.printRecSubtotalAdjustment(1, "", 97);
+            printer.printRecSubtotal(10600);
+            printer.printRecTotal(10600, 10600, "30");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+  
     public void printFiscalReceipt10488() {
         try {
             printer.resetPrinter();

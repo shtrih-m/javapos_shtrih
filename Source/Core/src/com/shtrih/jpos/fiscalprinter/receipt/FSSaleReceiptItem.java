@@ -281,6 +281,7 @@ public class FSSaleReceiptItem {
                     long quantity2 = quantity;
                     long price2 = priceWithDiscount;
                     if ((quantity % 1000) == 0) {
+                        price2 = priceWithDiscount + 1;
                         quantity2 = (quantity / 1000 - (total - total2)) * 1000;
                     } else {
                         for (int i = 0; i <= quantity; i++) 
