@@ -7,7 +7,7 @@
 ********************************************************************************
 
   July 5 2017, 22:00
-  deviceServiceVersion = 1013440
+  deviceServiceVersion = 1013443
 	
   [+] Added receipt type constants
     SMFPTR_RT_SALE      = 100;
