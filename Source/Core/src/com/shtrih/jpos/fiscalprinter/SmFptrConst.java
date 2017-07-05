@@ -8,6 +8,10 @@
  */
 package com.shtrih.jpos.fiscalprinter;
 
+import com.shtrih.fiscalprinter.command.PrinterConst;
+import static jpos.FiscalPrinterConst.FPTR_RT_SERVICE;
+import static jpos.FiscalPrinterConst.FPTR_RT_SIMPLE_INVOICE;
+
 /**
  * @author V.Kravtsov
  */
@@ -638,4 +642,13 @@ public interface SmFptrConst {
     public static final int SMFPTR_JRN_REPORT_DAY_NUMBER = 1;
     public static final int SMFPTR_JRN_REPORT_DOC_NUMBER = 2;
     public static final int SMFPTR_JRN_REPORT_DOC_RANGE = 3;
+    
+    // ///////////////////////////////////////////////////////////////////
+    // Receipt type constants
+    
+    public static final int SMFPTR_RT_SALE      = 100;
+    public static final int SMFPTR_RT_BUY       = 101;
+    public static final int SMFPTR_RT_RETSALE   = 102;
+    public static final int SMFPTR_RT_RETBUY    = 103;
+    
 }

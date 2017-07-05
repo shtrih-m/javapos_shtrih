@@ -1269,16 +1269,25 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt23() {
         try {
-            printer.resetPrinter();
-            printer.setFiscalReceiptType(4);
-            printer.beginFiscalReceipt(false);
-            printer.printRecItem("88888 Груши РОША                  1кг", 10697, 3000, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 10000, 1);
-            printer.printRecSubtotal(20697);
-            printer.printRecSubtotalAdjustment(1, "", 97);
-            printer.printRecSubtotal(10600);
-            printer.printRecTotal(10600, 10600, "30");
-            printer.endFiscalReceipt(false);
+            int[] recTypes = {
+                SmFptrConst.SMFPTR_RT_SALE, 
+                SmFptrConst.SMFPTR_RT_RETSALE, 
+                SmFptrConst.SMFPTR_RT_BUY,
+                SmFptrConst.SMFPTR_RT_RETBUY
+            };
+            for (int i=0;i<recTypes.length;i++)
+            {
+                printer.resetPrinter();
+                printer.setFiscalReceiptType(recTypes[i]);
+                printer.beginFiscalReceipt(false);
+                printer.printRecItem("88888 Груши РОША                  1кг", 10697, 3000, 1, 6899, "г.");
+                printer.printRecItemAdjustment(1, "", 10000, 1);
+                printer.printRecSubtotal(20697);
+                printer.printRecSubtotalAdjustment(1, "", 97);
+                printer.printRecSubtotal(10600);
+                printer.printRecTotal(10600, 10600, "30");
+                printer.endFiscalReceipt(false);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

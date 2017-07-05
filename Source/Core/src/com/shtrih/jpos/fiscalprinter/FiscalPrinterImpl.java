@@ -3141,13 +3141,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    private void checkSalesReceipt() throws Exception {
-        if (!isSalesReceipt()) {
-            throw new JposException(JPOS_E_ILLEGAL,
-                    Localizer.getString(Localizer.methodNotSupported));
-        }
-    }
-
     private void checkLongParam(long Value, long minValue, long maxValue,
             String propName) throws Exception {
         if (Value < minValue) {
@@ -3191,7 +3184,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         quantity = convertQuantity(quantity);
 
         checkEnabled();
-        checkSalesReceipt();
         checkReceiptStation();
         checkQuantity(quantity);
         checkPrice(price);
@@ -3279,7 +3271,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         amount = convertAmount(amount);
 
         checkEnabled();
-        checkSalesReceipt();
         checkVatInfo(vatInfo);
         checkAdjustment(adjustmentType, amount);
 
@@ -3357,7 +3348,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         amount = convertAmount(amount);
 
         checkEnabled();
-        checkSalesReceipt();
         checkVatInfo(vatInfo);
 
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
@@ -3373,8 +3363,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         amount = convertAmount(amount);
 
         checkEnabled();
-        checkSalesReceipt();
-
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
         receipt.printRecSubtotal(amount);
     }
@@ -3811,7 +3799,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         vatAdjustment = decodeText(vatAdjustment);
 
         checkEnabled();
-        checkSalesReceipt();
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
         receipt.printRecPackageAdjustment(adjustmentType, description,
                 vatAdjustment);
@@ -3827,7 +3814,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             String vatAdjustment) throws Exception {
         vatAdjustment = decodeText(vatAdjustment);
         checkEnabled();
-        checkSalesReceipt();
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
         receipt.printRecPackageAdjustVoid(adjustmentType, vatAdjustment);
     }
@@ -3843,7 +3829,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         amount = convertAmount(amount);
 
         checkEnabled();
-        checkSalesReceipt();
         checkVatInfo(vatInfo);
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
         receipt.printRecRefundVoid(description, amount, vatInfo);
@@ -3964,7 +3949,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         amount = convertAmount(amount);
 
         checkEnabled();
-        checkSalesReceipt();
         checkVatInfo(vatInfo);
         receipt.printRecItemAdjustmentVoid(adjustmentType, description, amount,
                 vatInfo);
@@ -4324,7 +4308,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         quantity = convertQuantity(quantity);
 
         checkEnabled();
-        checkSalesReceipt();
         checkReceiptStation();
         checkQuantity(quantity);
         checkPrice(amount);
@@ -4500,6 +4483,18 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             case FPTR_RT_REFUND:
                 return createSalesReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
 
+            case SmFptrConst.SMFPTR_RT_SALE: 
+                return createSalesReceipt(PrinterConst.SMFP_RECTYPE_SALE);
+                
+            case SmFptrConst.SMFPTR_RT_BUY: 
+                return createSalesReceipt(PrinterConst.SMFP_RECTYPE_BUY);
+                
+            case SmFptrConst.SMFPTR_RT_RETSALE: 
+                return createSalesReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
+                
+            case SmFptrConst.SMFPTR_RT_RETBUY: 
+                return createSalesReceipt(PrinterConst.SMFP_RECTYPE_RETBUY);
+                
             default:
                 throw new JposException(JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue));

@@ -109,11 +109,15 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         subtotalPrinted = false;
     }
 
-    public void openReceipt(int receiptType) throws Exception {
+    public void openReceipt(boolean isSale) throws Exception {
         if (!isOpened) {
             isOpened = true;
-            this.receiptType = receiptType;
-
+            if (!isSale)
+            {
+                if (receiptType == PrinterConst.SMFP_RECTYPE_SALE){
+                    receiptType = PrinterConst.SMFP_RECTYPE_BUY;
+                }
+            }
             getPrinter().openReceipt(receiptType);
             getPrinter().waitForPrinting();
         }
@@ -121,7 +125,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecItem(String description, long price, int quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
-        openReceipt(PrinterConst.SMFP_RECTYPE_SALE);
+        openReceipt(true);
         printSale(price, quantity, unitPrice, getParams().department,
                 vatInfo, description, unitName);
     }
@@ -437,11 +441,27 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
 
         PriceItem priceItem = item.getPriceItem();
-        if (!item.getIsStorno()) {
-            if (isSaleReceipt()) {
-                getDevice().printSale(priceItem);
-            } else {
-                getDevice().printVoidSale(priceItem);
+        if (!item.getIsStorno()) 
+        {
+            switch (receiptType)
+            { 
+                case PrinterConst.SMFP_RECTYPE_SALE:
+                    getDevice().printSale(priceItem);
+                    break;
+                    
+                case PrinterConst.SMFP_RECTYPE_RETSALE:
+                    getDevice().printVoidSale(priceItem);
+                    break;
+                    
+                case PrinterConst.SMFP_RECTYPE_BUY:
+                    getDevice().printRefund(priceItem);
+                    break;
+                    
+                case PrinterConst.SMFP_RECTYPE_RETBUY:
+                    getDevice().printVoidRefund(priceItem);
+                    break;
+                default:
+                    getDevice().printSale(priceItem);
             }
         } else {
             getDevice().printVoidItem(priceItem);
@@ -457,7 +477,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecRefund(String description, long amount, int vatInfo)
             throws Exception {
-        openReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
+        openReceipt(false);
         printSale(amount, 1000, amount, getParams().department, vatInfo,
                 description, "");
     }
@@ -483,7 +503,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecItemVoid(String description, long price, int quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
-        openReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
+        openReceipt(false);
 
         if (isSaleReceipt()) {
             printStorno(price, quantity, unitPrice, getParams().department,
@@ -530,8 +550,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void checkDiscountsEnabled() throws Exception {
         if (!getParams().FSDiscountEnabled) {
             throw new JposException(JposConst.JPOS_E_ILLEGAL,
-                    Localizer.getString(Localizer.methodNotSupported)
-                    + "adjustments forbidden with FS");
+                    "Adjustments forbidden with FS");
         }
     }
 
@@ -596,7 +615,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecVoidItem(String description, long amount, int quantity,
             int adjustmentType, long adjustment, int vatInfo) throws Exception {
-        openReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
+        openReceipt(false);
         long total = Math.round(amount * quantity / 1000.0);
         if (isSaleReceipt()) {
             printStorno(total, quantity, amount, getParams().department, vatInfo,
@@ -609,7 +628,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecRefundVoid(String description, long amount, int vatInfo)
             throws Exception {
-        openReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
+        openReceipt(false);
 
         printStorno(amount, 1000, 0, getParams().department, vatInfo,
                 description);
@@ -730,7 +749,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printRecItemRefund(String description, long amount,
             int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
-        openReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
+        openReceipt(false);
         printSale(amount, quantity, unitAmount, getParams().department, vatInfo,
                 description, unitName);
 
@@ -739,7 +758,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printRecItemRefundVoid(String description, long amount,
             int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
-        openReceipt(PrinterConst.SMFP_RECTYPE_SALE);
+        openReceipt(true);
         printStorno(amount, quantity, unitAmount, getParams().department, vatInfo,
                 description);
 
