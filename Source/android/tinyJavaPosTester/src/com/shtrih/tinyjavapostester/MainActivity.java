@@ -156,12 +156,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void connectToDevice(final String address) throws Exception {
         Log.d("", "connectToDevice");
+        /*
         UsbManager usbManager = (UsbManager) getApplicationContext().getSystemService(Context.USB_SERVICE);
         for (final UsbDevice usbDevice : usbManager.getDeviceList().values()) {
             Log.d("usbDevice", "vendorId: " + usbDevice.getVendorId());
             Log.d("usbDevice", "productId: " + usbDevice.getProductId());
         }
-        /*
+        */
+
         JposConfig.configure("ShtrihFptr", address, getApplicationContext());
         if (printer.getState() != JposConst.JPOS_S_CLOSED) {
             printer.close();
@@ -169,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
         printer.open("ShtrihFptr");
         printer.claim(3000);
         printer.setDeviceEnabled(true);
-        */
     }
 
     @Override
