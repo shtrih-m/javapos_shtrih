@@ -12,11 +12,13 @@ package com.shtrih.fiscalprinter.command;
 public class FDOParameters {
 
     private final String host;
-    private final String port;
+    private final int port;
+    private final int pollPeriodSeconds;
 
-    public FDOParameters(String host, String port) {
+    public FDOParameters(String host, int port, int pollPeriodSeconds) {
         this.host = host;
         this.port = port;
+        this.pollPeriodSeconds = pollPeriodSeconds;
     }
 
     /**
@@ -29,8 +31,11 @@ public class FDOParameters {
     /**
      * @return the port
      */
-    public String getPort() {
+    public int getPort() {
         return port;
     }
 
+    public int getPollPeriodSeconds() {
+        return pollPeriodSeconds;
+    }
 }

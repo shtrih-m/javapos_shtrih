@@ -3,13 +3,20 @@
 
   Project : SHTRIH-M JavaPOS fiscal printer driver
   Company : SHTRIH-M www.shtrih-m.ru (495) 787-6090
+  
+********************************************************************************
 
+  July 6 2017, 13:00
+  deviceServiceVersion = 1013446
+	
+  [-] Fixed OFD data sender service
+  
 ********************************************************************************
 
   July 6 2017, 13:00
   deviceServiceVersion = 1013445
 	
-  [+] Added parameter quantityCorrectionEnabled
+  [+] Added parameter quantityCorrectionEnabled 
   
 ********************************************************************************
   July 6 2017, 3:08
