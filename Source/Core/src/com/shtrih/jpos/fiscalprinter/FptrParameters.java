@@ -163,6 +163,7 @@ public class FptrParameters {
     public boolean combineReceiptItems = false;
     public boolean printRecVoidItemAmount = false;
     public boolean FSReceiptItemDiscountEnabled = false;
+    public boolean quantityCorrectionEnabled = true;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -367,6 +368,7 @@ public class FptrParameters {
         combineReceiptItems = reader.readBoolean("combineReceiptItems", false);
         printRecVoidItemAmount = reader.readBoolean("printRecVoidItemAmount", false);
         FSReceiptItemDiscountEnabled = reader.readBoolean("FSReceiptItemDiscountEnabled", false);
+        quantityCorrectionEnabled = reader.readBoolean("quantityCorrectionEnabled", true);
         
         
         // paymentNames

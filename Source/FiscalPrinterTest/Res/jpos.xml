@@ -286,6 +286,8 @@
 		<prop name="combineReceiptItems" type="String" value="0"/>
 		<!-- printRecVoidItemAmount -->
 		<prop name="printRecVoidItemAmount" type="String" value="0"/>
+		<!-- quantityCorrectionEnabled -->
+		<prop name="quantityCorrectionEnabled" type="String" value="1"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>

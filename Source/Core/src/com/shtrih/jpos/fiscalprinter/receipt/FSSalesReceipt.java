@@ -807,7 +807,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         logger.debug("Add amount: " + amount + ", total: " + total);
     }
 
-    public long correctQuantity(long price, long quantity, long unitPrice) {
+    public long correctQuantity(long price, long quantity, long unitPrice) 
+    {
+        if (!getParams().quantityCorrectionEnabled){
+            return quantity; 
+        }
+        
         for (;;) {
             double d = unitPrice * quantity;
             long amount = MathUtils.round(d / 1000.0);
