@@ -6,8 +6,8 @@
   
 ********************************************************************************
 
-  July 6 2017, 13:00
-  deviceServiceVersion = 1013446
+  July 6 2017, 13:32
+  deviceServiceVersion = 1013447
 	
   [-] Fixed OFD data sender service
   

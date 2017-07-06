@@ -666,40 +666,41 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return result[0];
     }
 
-    public int readTable(int tableNumber, int rowNumber, int fieldNumber,
-                         String[] fieldValue) throws Exception {
-        int result = 0;
-        logger.debug("readTable(" + String.valueOf(tableNumber) + ", "
-                + String.valueOf(rowNumber) + ", "
-                + String.valueOf(fieldNumber) + ")");
+    public int readTable(int tableNumber, int rowNumber, int fieldNumber, String[] fieldValue) throws Exception {
+        synchronized (port.getSyncObject()) {
+            int result = 0;
+            logger.debug("readTable(" + String.valueOf(tableNumber) + ", "
+                    + String.valueOf(rowNumber) + ", "
+                    + String.valueOf(fieldNumber) + ")");
 
-        PrinterField field = fields.find(tableNumber, rowNumber, fieldNumber);
-        if (field == null) {
-            result = updateFieldInfo(tableNumber, fieldNumber);
+            PrinterField field = fields.find(tableNumber, rowNumber, fieldNumber);
+            if (field == null) {
+                result = updateFieldInfo(tableNumber, fieldNumber);
+                if (failed(result)) {
+                    return result;
+                }
+            } else {
+                fieldValue[0] = field.getValue();
+                return result;
+            }
+
+            ReadTable commandReadTable = new ReadTable(sysPassword, tableNumber,
+                    rowNumber, fieldNumber);
+            result = executeCommand(commandReadTable);
             if (failed(result)) {
                 return result;
             }
-        } else {
-            fieldValue[0] = field.getValue();
+
+            String value = fieldInfo.bytesToField(commandReadTable.fieldValue,
+                    charsetName);
+
+            field = new PrinterField(fieldInfo, rowNumber);
+            field.setValue(value);
+            fields.add(field);
+
+            fieldValue[0] = value;
             return result;
         }
-
-        ReadTable commandReadTable = new ReadTable(sysPassword, tableNumber,
-                rowNumber, fieldNumber);
-        result = executeCommand(commandReadTable);
-        if (failed(result)) {
-            return result;
-        }
-
-        String value = fieldInfo.bytesToField(commandReadTable.fieldValue,
-                charsetName);
-
-        field = new PrinterField(fieldInfo, rowNumber);
-        field.setValue(value);
-        fields.add(field);
-
-        fieldValue[0] = value;
-        return result;
     }
 
     public int readTableInfo(int tableNumber, Object[] out) throws Exception {
