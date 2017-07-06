@@ -5,16 +5,18 @@
   Company : SHTRIH-M www.shtrih-m.ru (495) 787-6090
 
 ********************************************************************************
+
+  July 6 2017, 13:00
+  deviceServiceVersion = 1013445
+	
+  [+] Added parameter quantityCorrectionEnabled
+  
+********************************************************************************
   July 6 2017, 3:08
   deviceServiceVersion = 1013444
 	
   [+] Added FP to FSFindDocument
 
-  July 6 2017, 12:46
-  deviceServiceVersion = 1013444
-	
-  [+] Added parameter quantityCorrectionEnabled
-	
 ********************************************************************************
 
   July 5 2017, 22:00
