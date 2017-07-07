@@ -1582,6 +1582,13 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         executeCommand(command);
     }
 
+    public void fsPrintCorrectionReceipt(int operation, long amount) throws JposException {
+        Object[] params = new Object[2];
+        params[0] = new Integer(operation);
+        params[1] = new Long(amount);
+        directIO(SmFptrConst.SMFPTR_DIO_PRINT_CORRECTION, null, params);
+    }
+    
     public void fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws JposException {
         executeCommand(command);
     }
@@ -1620,7 +1627,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         params[12] = taxTotals4;
         params[13] = taxTotals5;
         params[14] = taxSystem;
-        directIO(SmFptrConst.SMFPTR_DIO_PRINT_CORRECTION, null, params);
+        directIO(SmFptrConst.SMFPTR_DIO_PRINT_CORRECTION2, null, params);
         int receiptNumber = (Integer)params[15];
         int documentNumber = (Integer)params[16];
         long documentDigest = (Long)params[17];
@@ -1662,7 +1669,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         params[12] = taxTotals4;
         params[13] = taxTotals5;
         params[14] = taxSystem;
-        directIO(SmFptrConst.SMFPTR_DIO_PRINT_CORRECTION, null, params);
+        directIO(SmFptrConst.SMFPTR_DIO_PRINT_CORRECTION2, null, params);
     }
     
     public void fsStartCalcReport(FSStartCalcReport command) throws JposException {

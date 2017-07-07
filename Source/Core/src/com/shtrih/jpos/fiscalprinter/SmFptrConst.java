@@ -464,7 +464,7 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_READ_FS_TICKETS3 = 0x41;
     public static final int SMFPTR_DIO_READ_FS_TICKETS4 = 0x42;
     
-    public static final int SMFPTR_DIO_PRINT_CORRECTION = 0x43;
+    public static final int SMFPTR_DIO_PRINT_CORRECTION2 = 0x43;
     
     public static final int SMFPTR_DIO_READ_TOTALS = 0x44;
     
@@ -474,6 +474,8 @@ public interface SmFptrConst {
 
     public static final int SMFPTR_DIO_READ_MAX_GRAPHICS_WIDTH = 0x47;
 
+    public static final int SMFPTR_DIO_PRINT_CORRECTION = 0x48;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

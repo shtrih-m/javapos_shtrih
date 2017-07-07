@@ -682,10 +682,19 @@ class PrinterTest implements FiscalPrinterConst {
         //printFiscalReceipt1052();
         //printFiscalReceipt10488();
         //printFiscalReceipt1048889();
-        printFiscalReceipt23();
+        printCorrectionReceipt();
     }
 
     public void printCorrectionReceipt() {
+        try {
+            printer.fsPrintCorrectionReceipt(1, 123);
+            printer.fsPrintCorrectionReceipt(3, 123);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printCorrectionReceipt2() {
         try {
             int correctionType = 0;
             int paymentType = 1;
@@ -1270,13 +1279,12 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt23() {
         try {
             int[] recTypes = {
-                SmFptrConst.SMFPTR_RT_SALE, 
-                SmFptrConst.SMFPTR_RT_RETSALE, 
+                SmFptrConst.SMFPTR_RT_SALE,
+                SmFptrConst.SMFPTR_RT_RETSALE,
                 SmFptrConst.SMFPTR_RT_BUY,
                 SmFptrConst.SMFPTR_RT_RETBUY
             };
-            for (int i=0;i<recTypes.length;i++)
-            {
+            for (int i = 0; i < recTypes.length; i++) {
                 printer.resetPrinter();
                 printer.setFiscalReceiptType(recTypes[i]);
                 printer.beginFiscalReceipt(false);
@@ -1292,7 +1300,7 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-  
+
     public void printFiscalReceipt10488() {
         try {
             printer.resetPrinter();
@@ -1322,8 +1330,6 @@ class PrinterTest implements FiscalPrinterConst {
 
             printer.printRecItem("Item 1", 396705, 795, 1, 499000, "кг");
             printer.printRecTotal(396705, 396705, "13");
-            
-            
 
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
@@ -1336,7 +1342,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-            
+
             printer.printRecItem("*1860 Напиток COCA-COLA газ.ПЭТ  2.0л", 264, 1000, 1, 300, "ST");
             printer.printRecItemAdjustment(1, "", 36, 1);
             printer.printRecItem("202 Томаты 1кг", 19124, 1695, 2, 12800, "г.");
@@ -1349,13 +1355,13 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecSubtotalAdjustment(1, "", 68);
             printer.printRecSubtotal(86900);
             printer.printRecTotal(86900, 86900, "10");
-    
+
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     public void printFiscalReceipt105() {
         try {
             printer.resetPrinter();

@@ -3378,6 +3378,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return tickets;
     }
 
+    public int fsPrintCorrectionReceipt(FSPrintCorrectionReceipt command)
+            throws Exception {
+        openFiscalDay();
+        return executeCommand(command);
+    }
+    
     public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command)
             throws Exception {
         openFiscalDay();

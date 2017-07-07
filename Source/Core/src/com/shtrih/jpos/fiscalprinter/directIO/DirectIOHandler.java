@@ -394,6 +394,10 @@ public class DirectIOHandler {
                 new DIOPrintCorrectionReceipt(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_PRINT_CORRECTION2:
+                new DIOPrintCorrectionReceipt2(service).execute(data, object);
+                break;
+                
             case SmFptrConst.SMFPTR_DIO_READ_TOTALS:
                 new DIOReadTotals(service).execute(data, object);
                 break;
