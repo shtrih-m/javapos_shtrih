@@ -76,7 +76,7 @@ public class FSService implements Runnable {
             printer.fsWriteBlockData(answer);
 
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("OFD data sending failed", e);
         }
     }
 
