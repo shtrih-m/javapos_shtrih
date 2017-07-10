@@ -12,9 +12,11 @@ import android.util.Log;
 public class CompositeLogger {
     
     private final Logger log4JLogger;
+    private final String className;
 
     private CompositeLogger(String className) {
         log4JLogger = LoggerFactory.getLogger(className);
+        this.className = className;
     }
     
     public static synchronized CompositeLogger getLogger(java.lang.Class c) {
@@ -30,28 +32,28 @@ public class CompositeLogger {
     }
     
     public synchronized void fatal(String text, Throwable e) {
-        Log.e(text, e.getMessage());
+        Log.e(className, text + " " + e);
         log4JLogger.error(text, e);
     }
     
     public synchronized void error(String text, Throwable e) {
 
-        Log.e(text, e.getMessage());
+        Log.e(className, text + " " + e);
         log4JLogger.error(text, e);
     }
     
     public synchronized void error(Throwable e) {
-        Log.e("", e.getMessage());
+        Log.e(className, "" + e);
         log4JLogger.error("Error", e);
     }
     
     public synchronized void error(String text) {
-        Log.e("", text);
+        Log.e(className, text);
         log4JLogger.error(text);
     }
     
     public synchronized void debug(String text) {
-        Log.d("", text);
+        Log.d(className, text);
         log4JLogger.debug(text);
     }
 }
