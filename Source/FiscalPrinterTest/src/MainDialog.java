@@ -231,7 +231,7 @@ public class MainDialog extends javax.swing.JDialog
                 btnPrintFiscalReceiptActionPerformed(evt);
             }
         });
-        pnlFptr1.add(btnPrintFiscalReceipt, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 210, 160, 26));
+        pnlFptr1.add(btnPrintFiscalReceipt, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 206, 160, 30));
 
         btnSetHeaderLines.setText("setHeaderLines");
         btnSetHeaderLines.addActionListener(new java.awt.event.ActionListener() {

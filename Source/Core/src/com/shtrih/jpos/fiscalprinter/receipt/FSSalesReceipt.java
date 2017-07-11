@@ -340,11 +340,14 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     for (int i = 0; i < payments.length; i++) {
                         closeReceipt.setPayment(i, payments[i]);
                     }
-                    closeReceipt.setTax1(0);
-                    closeReceipt.setTax2(0);
-                    closeReceipt.setTax3(0);
-                    closeReceipt.setTax4(0);
+                    closeReceipt.setTaxValue(0, 0);
+                    closeReceipt.setTaxValue(0, 1);
+                    closeReceipt.setTaxValue(0, 2);
+                    closeReceipt.setTaxValue(0, 3);
+                    closeReceipt.setTaxValue(0, 4);
+                    closeReceipt.setTaxValue(0, 5);
                     closeReceipt.setDiscount(discountAmount);
+                    closeReceipt.setTaxSystem(0);
                     closeReceipt.setText(getParams().closeReceiptText);
                     getDevice().execute(closeReceipt);
                 } else {
@@ -413,9 +416,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printFSSale(FSSaleReceiptItem item) throws Exception {
-        if (item.getQuantity() == 0) {
-            return;
-        }
 
         String preLine = item.getPreLine();
         if (preLine.length() > 0) {

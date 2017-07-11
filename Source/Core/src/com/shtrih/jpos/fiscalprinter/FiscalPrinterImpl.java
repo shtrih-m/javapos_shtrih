@@ -4243,7 +4243,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void deviceProc() {
-        logger.debug("deviceProc.begin");
         try {
             while (deviceThreadEnabled) {
                 checkDeviceStatus();
@@ -4253,7 +4252,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             logger.error("InterruptedException", e);
             Thread.currentThread().interrupt();
         }
-        logger.debug("deviceProc.end");
     }
 
     public int getMaxGraphicsWidth() throws Exception {

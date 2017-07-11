@@ -62,8 +62,10 @@ public class SharedObjects {
         return item.getItem();
     }
 
-    public synchronized void add(Object item, String name) {
-        items.add(new SharedObject(item, name));
+    public synchronized SharedObject add(Object item, String name) {
+        SharedObject object = new SharedObject(item, name);
+        items.add(object);
+        return object;
     }
 
     public synchronized void release(String name) {
