@@ -7,7 +7,7 @@
 ********************************************************************************
 
   July 11 2017, 17:00
-  deviceServiceVersion = 1013449
+  deviceServiceVersion = 1013450
 	
   [-] Fixed error in command 0xFF45, close receipt v2
   [-] Fixed error with printing receipt items with quantity = 0
