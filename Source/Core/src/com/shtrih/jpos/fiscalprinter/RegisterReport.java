@@ -18,6 +18,7 @@ import com.shtrih.fiscalprinter.command.FSReadCommStatus;
 public class RegisterReport {
 
     private int dayNumber = 0;
+    private String fsSerial = "";
     private final CashRegisters cashRegisters = new CashRegisters();
     private final Vector operRegisters = new Vector();
     private FMTotals lastFiscalization = new FMTotals();
@@ -93,5 +94,19 @@ public class RegisterReport {
      */
     public void setCapCommStatus(boolean capCommStatus) {
         this.capCommStatus = capCommStatus;
+    }
+
+    /**
+     * @return the fsSerial
+     */
+    public String getFsSerial() {
+        return fsSerial;
+    }
+
+    /**
+     * @param fsSerial the fsSerial to set
+     */
+    public void setFsSerial(String fsSerial) {
+        this.fsSerial = fsSerial;
     }
 }

@@ -105,6 +105,14 @@ public class CsvRegisterReportWriter {
                     + commStatus.getDocumentTime().toString();
             writer.write(line);
             writer.newLine();
+            // Fiscal printer parameters
+            line = "5"
+                    + Separator
+                    + String.valueOf(report.getDayNumber())
+                    + Separator
+                    + report.getFsSerial();
+            writer.write(line);
+            writer.newLine();
             }
 
             writer.flush();

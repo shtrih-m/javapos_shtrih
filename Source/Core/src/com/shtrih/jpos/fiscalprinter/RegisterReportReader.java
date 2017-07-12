@@ -16,6 +16,7 @@ import com.shtrih.fiscalprinter.command.CashRegisters;
 import com.shtrih.fiscalprinter.command.FMTotals;
 import com.shtrih.fiscalprinter.command.LongPrinterStatus;
 import com.shtrih.fiscalprinter.command.OperationRegister;
+import com.shtrih.util.StringUtils;
 
 public class RegisterReportReader {
 
@@ -85,6 +86,11 @@ public class RegisterReportReader {
         report.setCapCommStatus(printer.getCapFiscalStorage());
         if (printer.getCapFiscalStorage()) {
             report.setCommStatus(printer.fsReadCommStatus());
+            String serial = printer.fsReadSerial().getSerial().trim();
+            if (serial.length() < 16) {
+                serial = StringUtils.stringOfChar('0', 16 - serial.length()) + serial;
+            }
+            report.setFsSerial(serial);
         }
     }
 

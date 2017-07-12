@@ -6,6 +6,14 @@
   
 ********************************************************************************
 
+  July 12 2017, 17:35
+  deviceServiceVersion = 1013451
+	
+  [+] Added saving in ZReport.xml dayNumber and FsSerial values 
+  [+] Added saving in ZReport.csv dayNumber and FsSerial values 
+  
+********************************************************************************
+
   July 11 2017, 17:00
   deviceServiceVersion = 1013450
 	

@@ -50,6 +50,11 @@ public class XmlRegisterReportWriter {
             Document xmldoc = XmlUtils.newDocument();
             Element root = xmldoc.createElement("ZReport");
             xmldoc.appendChild(root);
+            
+            node = xmldoc.createElement("Parameters");
+            root.appendChild(node);
+            node.setAttribute("DayNumber", String.valueOf(report.getDayNumber()));
+            node.setAttribute("FSSerial", report.getFsSerial());
 
             registersNode = xmldoc.createElement("CashRegisters");
             root.appendChild(registersNode);
