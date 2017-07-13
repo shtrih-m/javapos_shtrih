@@ -520,6 +520,14 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_PARAM_SYS_PASSWORD = 8;
     public static final int SMFPTR_DIO_PARAM_TAX_PASSWORD = 9;
     
+    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_0   = 10;
+    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_1   = 11;
+    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_2   = 12;
+    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_3   = 13;
+    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_4   = 14;
+    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_5   = 15;
+    public static final int SMFPTR_DIO_PARAM_TAX_SYSTEM    = 16;
+    
     // ///////////////////////////////////////////////////////////////////
     // TableMode
     public static final int SMFPTR_TABLE_MODE_AUTO = 0;

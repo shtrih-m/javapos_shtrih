@@ -490,6 +490,35 @@ public class DirectIOHandler2 {
             case  SmFptrConst.SMFPTR_DIO_PARAM_TAX_PASSWORD:
                 paramValue = String.valueOf(service.getPrinter().getTaxPassword());
                 break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0:
+                paramValue = String.valueOf(service.getParams().taxValue[0]);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_1:
+                paramValue = String.valueOf(service.getParams().taxValue[1]);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_2:
+                paramValue = String.valueOf(service.getParams().taxValue[2]);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_3:
+                paramValue = String.valueOf(service.getParams().taxValue[3]);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_4:
+                paramValue = String.valueOf(service.getParams().taxValue[4]);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_5:
+                paramValue = String.valueOf(service.getParams().taxValue[5]);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM:
+                paramValue = String.valueOf(service.getParams().taxSystem);
+                break;
+                
         }
         ((String[]) object)[0] = paramValue;
     }
@@ -497,22 +526,22 @@ public class DirectIOHandler2 {
     public void dioSetDriverParameter(int[] data, Object object) throws Exception {
         DIOUtils.checkDataMinLength(data, 1);
         int paramID = data[0];
-        int value = Integer.parseInt(((String[]) object)[0]);
+        long value = Long.parseLong(((String[]) object)[0]);
         switch (paramID) {
             case SmFptrConst.SMFPTR_DIO_PARAM_REPORT_DEVICE:
-                service.getParams().reportDevice = value;
+                service.getParams().reportDevice = (int)value;
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_REPORT_TYPE:
-                service.getParams().reportType = value;
+                service.getParams().reportType = (int)value;
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_NUMHEADERLINES:
-                service.setNumHeaderLines(value);
+                service.setNumHeaderLines((int)value);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_NUMTRAILERLINES:
-                service.setNumTrailerLines(value);
+                service.setNumTrailerLines((int)value);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_POLL_ENABLED:
@@ -520,25 +549,52 @@ public class DirectIOHandler2 {
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_CUT_MODE:
-                getParams().cutMode = (value);
+                getParams().cutMode = ((int)value);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_FONT_NUMBER:
-                service.setFontNumber(value);
+                service.setFontNumber((int)value);
                 break;
                 
             case  SmFptrConst.SMFPTR_DIO_PARAM_SYS_PASSWORD:
-                service.getPrinter().setSysPassword(value);
+                service.getPrinter().setSysPassword((int)value);
                 break;
                 
             case  SmFptrConst.SMFPTR_DIO_PARAM_USR_PASSWORD:
-                service.getPrinter().setUsrPassword(value);
+                service.getPrinter().setUsrPassword((int)value);
                 break;
                 
             case  SmFptrConst.SMFPTR_DIO_PARAM_TAX_PASSWORD:
-                service.getPrinter().setTaxPassword(value);
+                service.getPrinter().setTaxPassword((int)value);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0:
+                service.getParams().taxValue[0] = value;
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_1:
+                service.getParams().taxValue[1] = value;
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_2:
+                service.getParams().taxValue[2] = value;
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_3:
+                service.getParams().taxValue[3] = value;
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_4:
+                service.getParams().taxValue[4] = value;
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_5:
+                service.getParams().taxValue[5] = value;
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM:
+                service.getParams().taxSystem = (int)value;
+                break;
                 
         }
     }

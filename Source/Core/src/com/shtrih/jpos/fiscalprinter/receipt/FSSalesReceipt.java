@@ -340,14 +340,14 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     for (int i = 0; i < payments.length; i++) {
                         closeReceipt.setPayment(i, payments[i]);
                     }
-                    closeReceipt.setTaxValue(0, 0);
-                    closeReceipt.setTaxValue(0, 1);
-                    closeReceipt.setTaxValue(0, 2);
-                    closeReceipt.setTaxValue(0, 3);
-                    closeReceipt.setTaxValue(0, 4);
-                    closeReceipt.setTaxValue(0, 5);
+                    closeReceipt.setTaxValue(0, getParams().taxValue[0]);
+                    closeReceipt.setTaxValue(1, getParams().taxValue[1]);
+                    closeReceipt.setTaxValue(2, getParams().taxValue[2]);
+                    closeReceipt.setTaxValue(3, getParams().taxValue[3]);
+                    closeReceipt.setTaxValue(4, getParams().taxValue[4]);
+                    closeReceipt.setTaxValue(5, getParams().taxValue[5]);
                     closeReceipt.setDiscount(discountAmount);
-                    closeReceipt.setTaxSystem(0);
+                    closeReceipt.setTaxSystem(getParams().taxSystem);
                     closeReceipt.setText(getParams().closeReceiptText);
                     getDevice().execute(closeReceipt);
                 } else {

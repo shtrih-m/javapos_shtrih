@@ -683,7 +683,8 @@ class PrinterTest implements FiscalPrinterConst {
         //printFiscalReceipt10488();
         //printFiscalReceipt1048889();
         //printCorrectionReceipt();
-        printNullReceipt();
+        //printNullReceipt();
+        printFiscalReceipt1053();
     }
 
     public void printCorrectionReceipt() {
@@ -1669,6 +1670,7 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    
     public void printFiscalReceipt1053() {
         try {
             printer.resetPrinter();
@@ -1676,14 +1678,41 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(true);
 
-            printer.printRecItem("809 Бананы 1кг", 10486, 1755, 1, 6290, "г.");
-            printer.printRecItemAdjustment(1, "", 553, 1);
-            printer.printRecItem("809 Бананы 1кг", 10486, 1755, 1, 6290, "г.");
-            printer.printRecItemAdjustment(1, "", 300, 1);
-            printer.printRecItem("809 Бананы 1кг", 10486, 1755, 1, 6290, "г.");
-            printer.printRecItemAdjustment(1, "", 1234, 1);
-            //printer.printRecTotal(29371, 29371, "0");
-            printer.printRecTotal(300000, 300000, "0");
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 424, 1);
+            printer.printRecSubtotal(50556);
+            printer.printRecSubtotalAdjustment(1, "", 56);
+            printer.printRecTotal(50500, 50500, "0");
+            printer.printRecMessage("                                          ");
+            printer.printRecMessage(" *****************************************");
+            printer.printRecMessage("                                          ");
+            printer.printRecMessage("         ЭТО ПРОСТО ДЛИННЫЙ ТЕКСТ         ");
+            printer.printRecMessage("                                          ");
+            printer.printRecMessage(" *****************************************");
 
             printer.endFiscalReceipt(false);
 

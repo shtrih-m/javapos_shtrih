@@ -87,12 +87,10 @@ public class FSCloseReceipt extends PrinterCommand {
             out.writeLong(payments[i], 5);
         }
         out.writeByte(discount);
-        out.writeLong(taxValues[0], 5);
-        out.writeLong(taxValues[1], 5);
-        out.writeLong(taxValues[2], 5);
-        out.writeLong(taxValues[3], 5);
-        out.writeLong(taxValues[4], 5);
-        out.writeLong(taxValues[5], 5);
+        for (int i = 0; i < taxValues.length; i++) 
+        {
+            out.writeLong(taxValues[i], 5);
+        }
         out.writeByte(taxSystem);
         out.writeString(text, 0);
     }
