@@ -220,7 +220,7 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void printCode128() {
+    public void printCode128_1() {
         try {
             Object[] params = new Object[9];
             params[0] = "001C0FC020617101000278"; // barcode data
@@ -233,6 +233,30 @@ class PrinterTest implements FiscalPrinterConst {
             params[7] = new Integer(1); // text font
             params[8] = new Integer(3); // narrow to width ratio, 3 by default
             printer.directIO(SmFptrConst.SMFPTR_DIO_PRINT_BARCODE, null, params);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void printCode128() {
+        try {
+            final int BARCODE_HEIGHT = 100;
+            final int BARCODE_WIDTH = 2;
+            final int TEXT_FONT = 1;
+            final int ASPECT_RATIO = 3;
+            final String text = "5511*106*17*1*1";
+
+            PrinterBarcode barcode = new PrinterBarcode();
+            barcode.setAspectRatio(ASPECT_RATIO);
+            barcode.setBarWidth(BARCODE_WIDTH);
+            barcode.setHeight(BARCODE_HEIGHT);
+            barcode.setLabel(text);
+            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
+            barcode.setText(text);
+            barcode.setTextFont(TEXT_FONT);
+            barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_ABOVE);
+            barcode.setType(SmFptrConst.SMFPTR_BARCODE_CODE128);
+            printer.printBarcode(barcode);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1575,7 +1599,7 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-            
+
     public void printFiscalReceipt1052() {
         try {
             printer.resetPrinter();
@@ -1670,7 +1694,6 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    
     public void printFiscalReceipt1053() {
         try {
             printer.resetPrinter();
@@ -1707,13 +1730,13 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecSubtotal(50556);
             printer.printRecSubtotalAdjustment(1, "", 56);
             printer.printRecTotal(50500, 50500, "0");
+            printCode128();
             printer.printRecMessage("                                          ");
             printer.printRecMessage(" *****************************************");
             printer.printRecMessage("                                          ");
             printer.printRecMessage("         ЭТО ПРОСТО ДЛИННЫЙ ТЕКСТ         ");
             printer.printRecMessage("                                          ");
             printer.printRecMessage(" *****************************************");
-
             printer.endFiscalReceipt(false);
 
         } catch (Exception e) {

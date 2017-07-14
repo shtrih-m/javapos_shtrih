@@ -743,7 +743,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 throw new JposException(JPOS_E_BUSY);
             }
 
-            checkOnLine();
+            checkEnabled();
             synchronized (printer) {
                 request.execute(this);
             }
@@ -1910,7 +1910,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void checkHealth(int level) throws Exception {
         checkEnabled();
-        checkOnLine();
         switch (level) {
             case JPOS_CH_INTERNAL:
                 checkHealthText = InternalCheckHelthReport.getReport(printer);
@@ -2273,7 +2272,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     // NonFiscal
     // ////////////////////////////////////////////////////////////////////////////
     public void beginNonFiscal() throws Exception {
-        checkOnLine();
+        checkEnabled();
         checkPrinterState(FPTR_PS_MONITOR);
         receipt = new NonfiscalReceipt(createReceiptContext());
         printDocStart();
@@ -2289,14 +2288,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printNormalAsync(int station, String data) throws Exception {
-        checkOnLine();
+        checkEnabled();
         data = decodeText(data);
         logoPosition = SMFPTR_LOGO_PRINT;
         receipt.printNormal(station, data);
     }
 
     public void printNormal(int station, String data) throws Exception {
-        checkOnLine();
+        checkEnabled();
         execute(new PrintNormalRequest(station, data));
     }
 
@@ -2366,7 +2365,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void endNonFiscal() throws Exception {
         synchronized (printer) {
-            checkOnLine();
+            checkEnabled();
             checkPrinterState(FPTR_PS_NONFISCAL);
             setPrinterState(FPTR_PS_MONITOR);
             printDocEnd();
@@ -2671,7 +2670,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void getData(int dataItem, int[] optArgs, String[] data)
             throws Exception {
-        checkOnLine();
+        checkEnabled();
         String result = "";
 
         long number;
@@ -2903,7 +2902,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void getDate(String[] Date) throws Exception {
-        checkOnLine();
+        checkEnabled();
         String result = "";
         if (Date.length < 1) {
             throw new JposException(JPOS_E_ILLEGAL,
@@ -2948,7 +2947,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void getTotalizer(int vatID, int optArgs, String[] data)
             throws Exception {
-        checkOnLine();
+        checkEnabled();
         String result = "";
         /*
          * switch (totalizerType) { case FPTR_TT_DAY: case FPTR_TT_DOCUMENT:
@@ -2992,7 +2991,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     // Fiscal Receipt
     // ////////////////////////////////////////////////////////////////////////////
     public void beginFiscalReceipt(boolean printHeader) throws Exception {
-        checkOnLine();
+        checkEnabled();
         checkPrinterState(FPTR_PS_MONITOR);
 
         Vector<TextLine> messages = null;
@@ -3045,7 +3044,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         logger.debug("endFiscalReceipt");
 
         synchronized (printer) {
-            checkOnLine();
+            checkEnabled();
             checkPrinterState(FPTR_PS_FISCAL_RECEIPT_ENDING);
 
             receipt.endFiscalReceipt(printHeader);
@@ -3097,7 +3096,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
      */
     public void printPeriodicTotalsReport(String date1, String date2)
             throws Exception {
-        checkOnLine();
+        checkEnabled();
         checkStateBusy();
         checkPrinterState(FPTR_PS_MONITOR);
 
@@ -3124,7 +3123,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void printPowerLossReport() throws Exception {
         checkEnabled();
-        checkOnLine();
         throw new JposException(JPOS_E_ILLEGAL);
     }
 
@@ -3210,7 +3208,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         filters.printRecItem(description, price, quantity, vatInfo, unitPrice,
                 unitName);
 
-        checkOnLine();
+        checkEnabled();
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
         execute(new PrintRecItemRequest(description, price, quantity, vatInfo,
                 unitPrice, unitName));
@@ -3236,7 +3234,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecMessage(String message) throws Exception {
-        checkOnLine();
+        checkEnabled();
         execute(new PrintRecMessageRequest(message));
     }
 
@@ -3290,7 +3288,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void printRecItemAdjustment(int adjustmentType, String description,
             long amount, int vatInfo) throws Exception {
-        checkOnLine();
+        checkEnabled();
         execute(new PrintRecItemAdjustmentRequest(adjustmentType, description,
                 amount, vatInfo));
     }
@@ -3311,7 +3309,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void printStrings(String line1, String line2) throws Exception {
-        checkOnLine();
+        checkEnabled();
         getPrinter().printText(SMFP_STATION_REC, formatStrings(line1, line2),
                 getFont());
     }
@@ -3331,14 +3329,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void printRecNotPaid(String description, long amount)
             throws Exception {
-        checkOnLine();
+        checkEnabled();
         throw new JposException(JPOS_E_ILLEGAL,
                 Localizer.getString(Localizer.notPaidReceiptsNotSupported));
     }
 
     public void printRecRefund(String description, long amount, int vatInfo)
             throws Exception {
-        checkOnLine();
+        checkEnabled();
         execute(new PrintRecRefundRequest(description, amount, vatInfo));
     }
 
@@ -3355,7 +3353,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecSubtotal(long amount) throws Exception {
-        checkOnLine();
+        checkEnabled();
         execute(new PrintRecSubtotalRequest(amount));
     }
 
@@ -3369,7 +3367,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void printRecSubtotalAdjustment(int adjustmentType,
             String description, long amount) throws Exception {
-        checkOnLine();
+        checkEnabled();
         execute(new PrintRecSubtotalAdjustmentRequest(adjustmentType,
                 description, amount));
     }
@@ -3387,7 +3385,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void printRecTotal(long total, long payment, String description)
             throws Exception {
-        checkOnLine();
+        checkEnabled();
         execute(new PrintRecTotalRequest(total, payment, description));
     }
 
@@ -3427,13 +3425,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecVoid(String description) throws Exception {
-        checkOnLine();
+        checkEnabled();
         execute(new PrintRecVoidRequest(description));
     }
 
     public void printRecVoidItem(String description, long amount, int quantity,
             int adjustmentType, long adjustment, int vatInfo) throws Exception {
-        checkOnLine();
+        checkEnabled();
         description = decodeText(description);
         amount = convertAmount(amount);
         quantity = convertQuantity(quantity);
@@ -3457,7 +3455,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
      */
     public void printReport(int reportType, String startNum, String endNum)
             throws Exception {
-        checkOnLine();
+        checkEnabled();
         startNum = decodeText(startNum);
         endNum = decodeText(endNum);
 
@@ -3510,7 +3508,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printXReport() throws Exception {
-        checkOnLine();
+        checkEnabled();
         checkStateBusy();
         checkPrinterState(FPTR_PS_MONITOR);
         printDocStart();
@@ -3519,7 +3517,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printZReport() throws Exception {
-        checkOnLine();
+        checkEnabled();
         checkStateBusy();
         checkPrinterState(FPTR_PS_MONITOR);
 
@@ -3601,7 +3599,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void resetPrinter() throws Exception {
         params.cancelIO = false;
-        checkOnLine();
+        checkEnabled();
         cancelReceipt();
         receiptType = 0;
         isReceiptOpened = false;
@@ -3609,7 +3607,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void setDate(String date) throws Exception {
-        checkOnLine();
+        checkEnabled();
         date = decodeText(date);
 
         checkEnabled();
@@ -3659,7 +3657,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void setHeaderLine(int lineNumber, String text, boolean doubleWidth) throws Exception {
-        checkOnLine();
+        checkEnabled();
         text = decodeText(text);
         logger.debug("setHeaderLine: " + text);
 
@@ -3679,16 +3677,18 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         logoPosition = SMFPTR_LOGO_PRINT;
     }
 
-    public void setPOSID(String POSID, String cashierID) throws Exception {
-        checkOnLine();
-
-        getPrinter().writeTable(1, 1, 1, POSID);
-
-        cashierID = decodeText(cashierID);
-
+    public void setPOSID(String POSID, String cashierID) throws Exception 
+    {
         checkEnabled();
-        getPrinter().writeAdminName(cashierID);
-        getPrinter().writeCasierName(cashierID);
+        if ((POSID != null) && (!POSID.isEmpty())){
+            getPrinter().writeTable(1, 1, 1, POSID);
+        }
+        if ((cashierID != null) && (!cashierID.isEmpty()))
+        {
+            cashierID = decodeText(cashierID);
+            getPrinter().writeAdminName(cashierID);
+            getPrinter().writeCasierName(cashierID);
+        }
     }
 
     public void setStoreFiscalID(String ID) throws Exception {
@@ -3697,7 +3697,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void setTrailerLine(int lineNumber, String text, boolean doubleWidth) throws Exception {
-        checkOnLine();
+        checkEnabled();
         text = decodeText(text);
         checkEnabled();
         logoPosition = params.trailerImagePosition;
@@ -3721,7 +3721,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
      */
     public void getVatEntry(int vatID, int optArgs, int[] vatRate)
             throws Exception {
-        checkOnLine();
+        checkEnabled();
         // 4 tax rates available in SHTRIH-M fiscal printers
         checkParamValue(vatID, 1, vatValues.length, "vatID");
         String[] vatValue = new String[1];
@@ -3733,7 +3733,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void setVatTable() throws Exception {
-        checkOnLine();
+        checkEnabled();
         for (int i = 0; i < vatValues.length; i++) {
             getPrinter().check(
                     printer.writeTable(SMFP_TABLE_TAX, i + 1, 1,
@@ -3742,7 +3742,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void setVatValue(int vatID, String vatValue) throws Exception {
-        checkOnLine();
+        checkEnabled();
         vatValue = decodeText(vatValue);
         // 4 tax rates available in SHTRIH-M fiscal printers
         checkParamValue(vatID, 1, vatValues.length, "vatID");
@@ -3752,7 +3752,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void verifyItem(String itemName, int vatID) throws Exception {
-        checkOnLine();
+        checkEnabled();
         throw new JposException(JPOS_E_ILLEGAL);
     }
 
@@ -3769,7 +3769,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecCash(long amount) throws Exception {
-        checkOnLine();
+        checkEnabled();
         execute(new PrintRecCashRequest(amount));
     }
 
@@ -3788,7 +3788,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void printRecPackageAdjustment(int adjustmentType,
             String description, String vatAdjustment) throws Exception {
-        checkOnLine();
+        checkEnabled();
         execute(new PrintRecPackageAdjustmentRequest(adjustmentType,
                 description, vatAdjustment));
     }
@@ -4117,10 +4117,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    private void checkOnLine() throws Exception {
-        checkEnabled();
-    }
-
     public void printFiscalDocumentLineAsync(String documentLine)
             throws Exception {
         checkEnabled();
@@ -4286,7 +4282,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void printRecItemRefund(String description, long amount,
             int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
-        checkOnLine();
+        checkEnabled();
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
 
         filters.printRecItemRefund(description, amount, quantity, vatInfo,
@@ -4320,7 +4316,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void printRecItemRefundVoid(String description, long amount,
             int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
-        checkOnLine();
+        checkEnabled();
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
 
         filters.printRecItemRefundVoid(description, amount, quantity, vatInfo,
