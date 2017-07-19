@@ -11,6 +11,7 @@
 	
   [+] Added feed paper DIO-command
   [-] Separate tag names for customer phone and customer email
+  [+] Added ability to set barcode vertical scaling factor
   
 ********************************************************************************
 

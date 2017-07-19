@@ -8,29 +8,22 @@
 //
 /////////////////////////////////////////////////////////////////////
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 import java.io.FileReader;
 import java.io.BufferedReader;
 
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.pdf417.encoder.Dimensions;
 import jpos.CashDrawer;
 import jpos.JposException;
 import jpos.FiscalPrinter;
 import jpos.FiscalPrinterConst;
-import jpos.events.DirectIOListener;
-import jpos.events.ErrorListener;
-import jpos.events.OutputCompleteListener;
-import jpos.events.StatusUpdateListener;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.cashdrawer.ShtrihCashDrawer;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
 import com.shtrih.printer.model.NCR7167;
-import com.shtrih.fiscalprinter.ShtrihFiscalPrinter113;
-import jpos.events.DirectIOEvent;
 import com.shtrih.fiscalprinter.command.*;
 import com.shtrih.util.Hex;
 import com.shtrih.barcode.PrinterBarcode;
@@ -660,6 +653,41 @@ class PrinterTest implements FiscalPrinterConst {
             System.out.println("Unsent documents: " + results.get(2));
 
             System.out.println("Cash in drawer: " + printer.readCashRegister(241).getValue() / 100.0d);
+
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM, 1);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("ITEM 1", 0, 1234, 0, 0, "");
+            printer.printRecMessage("Nonfiscal line 1");
+
+            printer.fsWriteCustomerEmail("nyx@mail.ru");
+            printer.fsWriteCustomerPhone("88006009090");
+
+            printer.printRecSubtotal(0);
+            printer.printRecTotal(0, 0, "1");
+
+
+            PrinterBarcode barcode = new PrinterBarcode();
+            barcode.setText("\"4C63A673C86B0976C0B24495848F6EF157792203A0D275\\n\"\n" +
+                    "                            + \"1F525456644096478D256A910EFEABB67\"");
+
+            barcode.setType(SmFptrConst.SMFPTR_BARCODE_PDF417);
+            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
+
+            barcode.setBarWidth(2);
+            barcode.setVScale(5);
+
+            Map<EncodeHintType, Object> params = new HashMap<EncodeHintType, Object>();
+// Измерения, тут мы задаем количество колонок и столбцов
+            params.put(EncodeHintType.PDF417_DIMENSIONS, new Dimensions(3, 3, 2, 60));
+// Можно задать уровень коррекции ошибок, по умолчанию он 0
+            params.put(EncodeHintType.ERROR_CORRECTION, 1);
+            barcode.addParameter(params);
+
+            printer.printBarcode(barcode);
+
+            printer.endFiscalReceipt(false);
+
+            printer.feedPaper(2);
 
         } catch (Exception e) {
             e.printStackTrace();
