@@ -2311,7 +2311,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             check(printBarcode3(barcode));
         } else {
             int hScale = barcode.getBarWidth();
-            int vScale = barcode.getBarWidth();
+            int vScale = barcode.getVScale();
             int loadHScale = hScale;
             int loadVScale = vScale;
             if (getCapLoadGraphics3()) {
