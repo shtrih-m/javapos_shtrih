@@ -1932,4 +1932,9 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     {
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_RAW_GRAPHICS, new int[0], data);
     }
+
+    public void feedPaper(int linesNumber) throws Exception
+    {
+        directIO(SmFptrConst.SMFPTR_DIO_FEED_PAPER, new int[]{linesNumber}, null);
+    }
 }
