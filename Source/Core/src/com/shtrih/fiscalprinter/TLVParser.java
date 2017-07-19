@@ -34,7 +34,17 @@ public class TLVParser {
         Vector<String> lines = new Vector<String>();
         for (int i = 0; i < items.size(); i++) {
             TLVItem item = items.get(i);
-            String line = item.getTag().getPrintName() + ": " + item.getText();
+
+            String tagName = item.getTag().getPrintName();
+            String itemText = item.getText();
+
+            // При выводе e-mail в приказе ФНС прописано, что строка должна начинаться с "ЭЛ. АДР. ПОКУПАТЕЛЯ".
+            // При выводе телефона - строка начинается с "ТЕЛ. ПОКУПАТЕЛЯ".
+            if(item.getTag().getId() == 1008) {
+                tagName = itemText.contains("@") ? "ЭЛ. АДР. ПОКУПАТЕЛЯ" : "ТЕЛ. ПОКУПАТЕЛЯ";
+            }
+
+            String line = tagName + ": " + itemText;
             lines.add(line);
         }
         return lines;

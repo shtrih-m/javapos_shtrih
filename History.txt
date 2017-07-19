@@ -6,6 +6,14 @@
   
 ********************************************************************************
 
+  July 19 2017, 14:00
+  deviceServiceVersion = 1013453
+	
+  [+] Added feed paper DIO-command
+  [-] Separate tag names for customer phone and customer email
+  
+********************************************************************************
+
   July 13 2017, 16:35
   deviceServiceVersion = 1013452
 	
