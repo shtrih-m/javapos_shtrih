@@ -475,7 +475,9 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_READ_MAX_GRAPHICS_WIDTH = 0x47;
 
     public static final int SMFPTR_DIO_PRINT_CORRECTION = 0x48;
-    
+
+    public static final int SMFPTR_DIO_FEED_PAPER = 0x49;
+
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

@@ -3,10 +3,7 @@ package com.shtrih.fiscalprinter.command;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.jpos.fiscalprinter.PrinterHeader;
-import com.shtrih.util.CompositeLogger;
-import com.shtrih.util.MathUtils;
-import com.shtrih.util.StringUtils;
-import com.shtrih.util.SysUtils;
+import com.shtrih.util.*;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -32,7 +29,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     private final PrinterHeader header;
     private final SMFiscalPrinter printer;
     private XReport report = new XReport();
-    private final String[] paymentNames = new String[4];
+    private final String[] paymentNames = new String[16];
     private final List<Operator> operators = new ArrayList<Operator>();
 
     private static String SFiscalSign = "ФП";
@@ -44,6 +41,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     private static String SCashOutText = "ВЫПЛАТА";
     private static String SStornoText = "СТОРНО";
     private static String STotalText = "ВСЕГО";
+    private static String SRoundingText = "ОКРУГЛЕНИЕ";
     private static String SDiscountText = "СКИДКА";
     private static String SChargeText = "НАДБАВКА";
     private static String SReceiptTotal = "ИТОГ";
@@ -89,6 +87,7 @@ public class TextDocumentFilter implements IPrinterEvents {
 
             switch (command.getCode()) {
                 case 0x85:
+                case 0xFF45:
                     receiptTotal = printer.getSubtotal();
                     break;
 
@@ -143,6 +142,10 @@ public class TextDocumentFilter implements IPrinterEvents {
                     printCashOut((PrintCashOut) command);
                     break;
 
+                case 0xFF46:
+                    printSale((FSPrintRecItem) command);
+                    break;
+
                 case 0x80:
                     printSale((PrintSale) command);
                     break;
@@ -165,6 +168,10 @@ public class TextDocumentFilter implements IPrinterEvents {
 
                 case 0x85:
                     endFiscalReceipt((EndFiscalReceipt) command);
+                    break;
+
+                case 0xFF45:
+                    endFiscalReceipt((FSCloseReceipt) command);
                     break;
 
                 case 0x86:
@@ -304,9 +311,51 @@ public class TextDocumentFilter implements IPrinterEvents {
         endDocument();
     }
 
+    private void endFiscalReceipt(FSCloseReceipt command) throws Exception {
+        FSCloseReceipt params = command;
+        receiptOpened = false;
+
+        add(params.getPrintableText());
+
+        if (params.getDiscount() > 0) {
+            // ВСЕГО
+            add(STotalText, summToStr(receiptTotal));
+            // ОКРУГЛЕНИЕ
+            add(SRoundingText, summToStr(command.getDiscount()));
+
+            receiptTotal = receiptTotal - command.getDiscount();
+        }
+
+        // TOTAL =123.34
+        add(SReceiptTotal, summToStr(receiptTotal));
+
+        // Payments
+        long[] payments = params.getPayments();
+        for (int i = 0; i < payments.length; i++) {
+            if(payments[i] > 0)
+                add(getPaymentName(i), summToStr(payments[i]));
+        }
+
+        // Change
+        if (command.getChange() > 0)
+            add(SChangeText, summToStr(command.getChange()));
+
+        addFiscalSign();
+        readEJReport(true);
+        endDocument();
+    }
+
+    private String getPaymentName(int paymentNumber) {
+        return paymentNames[paymentNumber];
+    }
+
     private void printSale(PrintSale command) throws Exception {
         operatorNumber = command.getOperator();
         openReceipt2(PrinterConst.SMFP_RECTYPE_SALE);
+        printReceiptItem(command.getItem());
+    }
+
+    private void printSale(FSPrintRecItem command) throws Exception {
         printReceiptItem(command.getItem());
     }
 
@@ -351,7 +400,7 @@ public class TextDocumentFilter implements IPrinterEvents {
 
     public String getTaxData(int tax1, int tax2, int tax3, int tax4) throws Exception {
         String result = "";
-        String taxLetters = " АБВГ";
+        String taxLetters = " АБВГДЕ";
         if (tax1 > 0)
             result += taxLetters.charAt(tax1);
         if (tax2 > 0)
@@ -391,6 +440,33 @@ public class TextDocumentFilter implements IPrinterEvents {
                     + getTaxData(item.getTax1(), item.getTax2(), item.getTax3(), item.getTax4());
             add(String.format("%02d", item.getDepartment()), line);
         }
+    }
+
+    private void printReceiptItem(FSReceiptItem item) throws Exception {
+        String line = "";
+        add(item.getText());
+        if (item.getQuantity() != 1000) {
+            line = String.format("%s X %s", quantityToStr(item.getQuantity()), amountToStr(item.getPrice()));
+            add("", line);
+
+            line = summToStr(item.getPrice(), item.getQuantity())
+                    + getTaxData(taxBitsToInt(item.getTax()), 0, 0, 0);
+            add(String.format("%02d", item.getDepartment()), line);
+        } else {
+            long amount = MathUtils.round(item.getQuantity() / 1000 * item.getPrice());
+            line = "=" + amountToStr(amount)
+                    + getTaxData(taxBitsToInt(item.getTax()), 0, 0, 0);
+            add(String.format("%02d", item.getDepartment()), line);
+        }
+    }
+
+    private int taxBitsToInt(int tax) {
+        for (int i = 0; i < 6; i++) {
+            if (BitUtils.testBit(tax, i))
+                return i + 1;
+        }
+
+        return 0;
     }
 
     public class Operator {
@@ -484,10 +560,10 @@ public class TextDocumentFilter implements IPrinterEvents {
                 operatorNumber = status.getOperatorNumber();
                 isFiscal = (status.getRegistrationNumber() > 0);
                 isEJPresent = status.getPrinterFlags().isEJPresent();
-                for (int i = 0; i <= 3; i++) {
+                for (int i = 0; i <= 15; i++) {
                     String[] fieldValue = new String[1];
-                    printer.check(printer.readTable(PrinterConst.SMFP_TABLE_PAYTYPE, i + 1, 1, fieldValue));
-                    paymentNames[i] = fieldValue[0];
+                    if(printer.readTable(PrinterConst.SMFP_TABLE_PAYTYPE, i + 1, 1, fieldValue) == 0)
+                        paymentNames[i] = fieldValue[0];
                 }
                 connected = true;
             } finally {
@@ -730,6 +806,12 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
 
     public void readEJReport(boolean isReceipt) throws Exception {
+        if(printer.getCapFiscalStorage())
+        {
+            ReadFiscalStorage();
+            return;
+        }
+
         if (!(isFiscal && isEJPresent))
             return;
 
@@ -746,7 +828,7 @@ public class TextDocumentFilter implements IPrinterEvents {
             rc = printer.executeCommand(command2);
             if (printer.succeeded(rc)) {
                 String line = command2.getData();
-                lines.add(line);
+                lines.add(line);                             
                 if ((line.length() > 0) && (line.contains("#"))) {
                     printer.cancelEJDocument();
                     break;
@@ -766,6 +848,13 @@ public class TextDocumentFilter implements IPrinterEvents {
                 addEJLine(lines.get(i));
             }
         }
+    }
+
+    private void ReadFiscalStorage() throws Exception {
+         long documentNumber = printer.fsReadStatus().getDocNumber();
+         long fp = printer.fsFindDocument(documentNumber).getDocument().getFP();
+
+         add(String.format("ФД:%d ФП:%10d", documentNumber, fp));
     }
 
     private void addEJLine(String s) throws Exception {

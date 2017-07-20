@@ -30,7 +30,12 @@ public class SmBarcode {
         if (graphicsWidth < width) {
             return;
         }
+
         int offset = (graphicsWidth - width * hScale) / (16 * hScale);
+
+        if(offset < 0)
+            return;
+
         for (int i = 0; i < height; i++) {
             byte[] b = new byte[offset + data[i].length];
             Arrays.fill(b, (byte) 0);

@@ -3,6 +3,23 @@
 
   Project : SHTRIH-M JavaPOS fiscal printer driver
   Company : SHTRIH-M www.shtrih-m.ru (495) 787-6090
+
+********************************************************************************
+
+  July 20 2017
+  deviceServiceVersion = 1013454
+	
+  [-] Added FSPrintRecItem and FSCloseReceipt support to text report
+  [-] Fixed text report payment type names
+    
+********************************************************************************
+
+  July 19 2017, 14:00
+  deviceServiceVersion = 1013453
+	
+  [+] Added feed paper DIO-command
+  [-] Separate tag names for customer phone and customer email
+  [+] Added ability to set barcode vertical scaling factor
   
 ********************************************************************************
 

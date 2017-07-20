@@ -13,7 +13,6 @@ import java.util.Vector;
 
 import com.shtrih.jpos.fiscalprinter.PrintItem;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
-import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 
 /**
  * @author V.Kravtsov
@@ -96,6 +95,21 @@ public class PrinterBarcode implements PrintItem {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    private int vscale;
+    private boolean isVScaleSet;
+
+    public int getVScale() {
+        if(isVScaleSet)
+            return vscale;
+        
+        return barWidth;
+    }
+
+    public void setVScale(int vscale) {
+        this.isVScaleSet = true;
+        this.vscale = vscale;
     }
 
     public int getType() {
