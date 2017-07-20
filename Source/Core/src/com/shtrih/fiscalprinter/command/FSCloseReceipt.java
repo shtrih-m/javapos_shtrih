@@ -171,6 +171,10 @@ public class FSCloseReceipt extends PrinterCommand {
         this.taxSystem = taxSystem;
     }
 
+
+    public String  getPrintableText() {
+        return text;
+    }
     /**
      * @param text the text to set
      */

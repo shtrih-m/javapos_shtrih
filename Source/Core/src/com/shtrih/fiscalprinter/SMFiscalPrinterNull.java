@@ -6,54 +6,7 @@ package com.shtrih.fiscalprinter;
 
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.ej.EJDate;
-import com.shtrih.fiscalprinter.command.AmountItem;
-import com.shtrih.fiscalprinter.command.Beep;
-import com.shtrih.fiscalprinter.command.BeginTest;
-import com.shtrih.fiscalprinter.command.CashRegister;
-import com.shtrih.fiscalprinter.command.CloseRecParams;
-import com.shtrih.fiscalprinter.command.ContinuePrint;
-import com.shtrih.fiscalprinter.command.DeviceMetrics;
-import com.shtrih.fiscalprinter.command.EndFiscalReceipt;
-import com.shtrih.fiscalprinter.command.EndTest;
-import com.shtrih.fiscalprinter.command.FDOParameters;
-import com.shtrih.fiscalprinter.command.FSReadCommStatus;
-import com.shtrih.fiscalprinter.command.FSReadDayParameters;
-import com.shtrih.fiscalprinter.command.FSReadFiscalization;
-import com.shtrih.fiscalprinter.command.FSReadStatus;
-import com.shtrih.fiscalprinter.command.FSReceiptDiscount;
-import com.shtrih.fiscalprinter.command.FSWriteTLV;
-import com.shtrih.fiscalprinter.command.FlexCommands;
-import com.shtrih.fiscalprinter.command.IPrinterEvents;
-import com.shtrih.fiscalprinter.command.LongPrinterStatus;
-import com.shtrih.fiscalprinter.command.OpenReceipt;
-import com.shtrih.fiscalprinter.command.OperationRegister;
-import com.shtrih.fiscalprinter.command.PriceItem;
-import com.shtrih.fiscalprinter.command.PrintCashIn;
-import com.shtrih.fiscalprinter.command.PrintCashOut;
-import com.shtrih.fiscalprinter.command.PrintCharge;
-import com.shtrih.fiscalprinter.command.PrintDiscount;
-import com.shtrih.fiscalprinter.command.PrintEJDayReportOnDates;
-import com.shtrih.fiscalprinter.command.PrintEJDayReportOnDays;
-import com.shtrih.fiscalprinter.command.PrintFMReportDates;
-import com.shtrih.fiscalprinter.command.PrintFMReportDays;
-import com.shtrih.fiscalprinter.command.PrintVoidCharge;
-import com.shtrih.fiscalprinter.command.PrintVoidDiscount;
-import com.shtrih.fiscalprinter.command.PrintVoidItem;
-import com.shtrih.fiscalprinter.command.PrintXReport;
-import com.shtrih.fiscalprinter.command.PrintZReport;
-import com.shtrih.fiscalprinter.command.PrinterCommand;
-import com.shtrih.fiscalprinter.command.PrinterDate;
-import com.shtrih.fiscalprinter.command.PrinterStatus;
-import com.shtrih.fiscalprinter.command.PrinterTime;
-import com.shtrih.fiscalprinter.command.ReadEJActivationReport;
-import com.shtrih.fiscalprinter.command.ReadEJStatus;
-import com.shtrih.fiscalprinter.command.ReadFMLastRecordDate;
-import com.shtrih.fiscalprinter.command.ReadFMTotals;
-import com.shtrih.fiscalprinter.command.ReadFieldInfo;
-import com.shtrih.fiscalprinter.command.ReadLongStatus;
-import com.shtrih.fiscalprinter.command.ReadTableInfo;
-import com.shtrih.fiscalprinter.command.ShortPrinterStatus;
-import com.shtrih.fiscalprinter.command.VoidFiscalReceipt;
+import com.shtrih.fiscalprinter.command.*;
 import com.shtrih.fiscalprinter.model.PrinterModel;
 import com.shtrih.fiscalprinter.model.PrinterModels;
 import com.shtrih.fiscalprinter.port.PrinterPort;
@@ -66,18 +19,9 @@ import com.shtrih.jpos.fiscalprinter.PrinterImages;
 import com.shtrih.printer.ncr7167.NCR7167Printer;
 import java.util.Vector;
 import com.shtrih.util.CompositeLogger;
-import com.shtrih.fiscalprinter.command.PrinterConst;
-import com.shtrih.fiscalprinter.command.ReadCashRegister;
-import com.shtrih.fiscalprinter.command.ReadOperationRegister;
 import com.shtrih.jpos.fiscalprinter.PrinterImage;
 import com.shtrih.jpos.fiscalprinter.ReceiptImages;
 import com.shtrih.util.BitUtils;
-import com.shtrih.fiscalprinter.command.FMTotals;
-import com.shtrih.fiscalprinter.command.FSPrintCorrectionReceipt;
-import com.shtrih.fiscalprinter.command.FSPrintCorrectionReceipt2;
-import com.shtrih.fiscalprinter.command.FSReadExpDate;
-import com.shtrih.fiscalprinter.command.FSReadSerial;
-import com.shtrih.fiscalprinter.command.FSTicket;
 import com.shtrih.jpos.fiscalprinter.PrintItem;
 
 /**
@@ -1021,6 +965,11 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
 
     public boolean getCapDiscount() {
         return true;
+    }
+
+    @Override
+    public FSFindDocument fsFindDocument(long docNumber) throws Exception {
+        return null;
     }
 
     public int fsWriteTag1162(int catId, long groupId, String itemId)
