@@ -854,7 +854,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 loadProperties();
 
                 updateDeviceMetrics();
-                checkEcrMode();
                 cancelReceipt();
                 writeTables();
                 // Init after write tables
@@ -2009,6 +2008,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             port.open(searchTimeout);
 
             printer.connect();
+            checkEcrMode();
 
             // always set port parameters to update byte
             // receive timeout in fiscal printer
@@ -2037,6 +2037,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             port.setPortName(params.portName);
             port.open(timeout);
             printer.connect();
+            checkEcrMode();
 
             printer.readDeviceMetrics();
             getPrinter().initialize();
@@ -3677,14 +3678,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         logoPosition = SMFPTR_LOGO_PRINT;
     }
 
-    public void setPOSID(String POSID, String cashierID) throws Exception 
-    {
+    public void setPOSID(String POSID, String cashierID) throws Exception {
         checkEnabled();
-        if ((POSID != null) && (!POSID.isEmpty())){
+        if ((POSID != null) && (!POSID.isEmpty())) {
             getPrinter().writeTable(1, 1, 1, POSID);
         }
-        if ((cashierID != null) && (!cashierID.isEmpty()))
-        {
+        if ((cashierID != null) && (!cashierID.isEmpty())) {
             cashierID = decodeText(cashierID);
             getPrinter().writeAdminName(cashierID);
             getPrinter().writeCasierName(cashierID);
@@ -4148,6 +4147,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         int stopTestCount = 0;
 
         for (;;) {
+            ReadLongStatus command = new ReadLongStatus();
+            command.setPassword(getPrinter().getUsrPassword());
+            int rc = getPrinter().executeCommand(command);
+            if ((rc == 0x74) || (rc == 0x78)) {
+                rc = 0;
+                technoReset();
+            }
+            getPrinter().check(rc);
             PrinterStatus status = getPrinter().waitForPrinting();
             switch (status.getPrinterMode().getValue()) {
                 case MODE_DUMPMODE:
@@ -4477,18 +4484,18 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             case FPTR_RT_REFUND:
                 return createSalesReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
 
-            case SmFptrConst.SMFPTR_RT_SALE: 
+            case SmFptrConst.SMFPTR_RT_SALE:
                 return createSalesReceipt(PrinterConst.SMFP_RECTYPE_SALE);
-                
-            case SmFptrConst.SMFPTR_RT_BUY: 
+
+            case SmFptrConst.SMFPTR_RT_BUY:
                 return createSalesReceipt(PrinterConst.SMFP_RECTYPE_BUY);
-                
-            case SmFptrConst.SMFPTR_RT_RETSALE: 
+
+            case SmFptrConst.SMFPTR_RT_RETSALE:
                 return createSalesReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
-                
-            case SmFptrConst.SMFPTR_RT_RETBUY: 
+
+            case SmFptrConst.SMFPTR_RT_RETBUY:
                 return createSalesReceipt(PrinterConst.SMFP_RECTYPE_RETBUY);
-                
+
             default:
                 throw new JposException(JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue));

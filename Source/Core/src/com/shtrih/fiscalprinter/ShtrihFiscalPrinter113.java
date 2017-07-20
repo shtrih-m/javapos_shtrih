@@ -11,17 +11,17 @@ package com.shtrih.fiscalprinter;
 /**
  * @author V.Kravtsov
  */
+
+import jpos.*;
+import java.util.Vector;
+import jpos.events.ErrorListener;
+import jpos.events.DirectIOListener;
+import jpos.events.StatusUpdateListener;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.command.*;
-import com.shtrih.jpos.fiscalprinter.SmFptrConst;
-import jpos.*;
-import jpos.events.DirectIOListener;
-import jpos.events.ErrorListener;
-import jpos.events.OutputCompleteListener;
-import jpos.events.StatusUpdateListener;
 import com.shtrih.fiscalprinter.command.*;
+import jpos.events.OutputCompleteListener;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
-import java.util.Vector;
 import static jpos.FiscalPrinterConst.FPTR_PS_FISCAL_RECEIPT;
 
 /**
@@ -1588,29 +1588,28 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         params[1] = new Long(amount);
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_CORRECTION, null, params);
     }
-    
+
     public void fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws JposException {
         executeCommand(command);
     }
 
     public void fsPrintCorrectionReceipt3(
-        int correctionType, 
-        int paymentType, 
-        long total, 
-        long payments0,
-        long payments1,
-        long payments2,
-        long payments3,
-        long payments4,
-        long taxTotals0, 
-        long taxTotals1, 
-        long taxTotals2, 
-        long taxTotals3, 
-        long taxTotals4, 
-        long taxTotals5, 
-        int taxSystem,
-        Object[] outParams) throws JposException 
-    {
+            int correctionType,
+            int paymentType,
+            long total,
+            long payments0,
+            long payments1,
+            long payments2,
+            long payments3,
+            long payments4,
+            long taxTotals0,
+            long taxTotals1,
+            long taxTotals2,
+            long taxTotals3,
+            long taxTotals4,
+            long taxTotals5,
+            int taxSystem,
+            Object[] outParams) throws JposException {
         Object[] params = new Object[18];
         params[0] = correctionType;
         params[1] = paymentType;
@@ -1628,31 +1627,30 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         params[13] = taxTotals5;
         params[14] = taxSystem;
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_CORRECTION2, null, params);
-        int receiptNumber = (Integer)params[15];
-        int documentNumber = (Integer)params[16];
-        long documentDigest = (Long)params[17];
+        int receiptNumber = (Integer) params[15];
+        int documentNumber = (Integer) params[16];
+        long documentDigest = (Long) params[17];
         outParams[0] = receiptNumber;
         outParams[1] = documentNumber;
         outParams[2] = documentDigest;
     }
-    
+
     public void fsPrintCorrectionReceipt3(
-        int correctionType, 
-        int paymentType, 
-        long total, 
-        long payments0,
-        long payments1,
-        long payments2,
-        long payments3,
-        long payments4,
-        long taxTotals0, 
-        long taxTotals1, 
-        long taxTotals2, 
-        long taxTotals3, 
-        long taxTotals4, 
-        long taxTotals5, 
-        int taxSystem) throws JposException 
-    {
+            int correctionType,
+            int paymentType,
+            long total,
+            long payments0,
+            long payments1,
+            long payments2,
+            long payments3,
+            long payments4,
+            long taxTotals0,
+            long taxTotals1,
+            long taxTotals2,
+            long taxTotals3,
+            long taxTotals4,
+            long taxTotals5,
+            int taxSystem) throws JposException {
         Object[] params = new Object[15];
         params[0] = correctionType;
         params[1] = paymentType;
@@ -1671,7 +1669,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         params[14] = taxSystem;
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_CORRECTION2, null, params);
     }
-    
+
     public void fsStartCalcReport(FSStartCalcReport command) throws JposException {
         executeCommand(command);
     }
@@ -1756,7 +1754,6 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     // первые 4 байта –код справочника; 
     // последующие 8 байт – код группы товаров; 
     // последние 20 байт – код идентификации товара    
-
     public void fsWriteTag1162(int catId, long groupId, String itemId) throws Exception {
         String[] params = new String[3];
         params[0] = String.valueOf(catId);
@@ -1764,7 +1761,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         params[2] = itemId;
         directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_TAG_1162, null, params);
     }
-    
+
     public void printDocEnd() throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_DOC_END, null, null);
     }
@@ -1822,11 +1819,10 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
                 new Integer(amount));
     }
 
-    public String[] fsReadTickets(int[] numbers) throws Exception 
-    {
+    public String[] fsReadTickets(int[] numbers) throws Exception {
         Object[] object = new Object[1];
         directIO(SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS, numbers, object);
-        return (String[])object[0];
+        return (String[]) object[0];
     }
 
     public Vector<FSTicket> fsReadTickets2(int[] numbers) throws Exception {
@@ -1835,13 +1831,13 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS2, numbers, object);
         return (Vector<FSTicket>) object[0];
     }
-    
+
     public String[] fsReadTickets3(int number1) throws Exception {
         Object[] object = new Object[1];
         int[] data = new int[1];
         data[0] = number1;
         directIO(SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS3, data, object);
-        return (String[])object[0];
+        return (String[]) object[0];
     }
 
     public String[] fsReadTickets3(int number1, int count) throws Exception {
@@ -1850,9 +1846,9 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         data[0] = number1;
         data[1] = count;
         directIO(SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS3, data, object);
-        return (String[])object[0];
+        return (String[]) object[0];
     }
-    
+
     public Vector<FSTicket> fsReadTickets4(int number1) throws Exception {
         int[] data = new int[1];
         data[0] = number1;
@@ -1871,7 +1867,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS4, data, object);
         return (Vector<FSTicket>) object[0];
     }
-    
+
     /**
      * Техническое обнуление
      */
@@ -1907,29 +1903,26 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         cmd.setTime(time);
         executeCommand(cmd);
     }
-    
-    public void readTotals(long[] totals) throws Exception
-    {
+
+    public void readTotals(long[] totals) throws Exception {
         int[] data = new int[1];
         data[0] = SmFptrConst.FMTOTALS_ALL_FISCALIZATIONS;
         Long[] object = new Long[4];
         directIO(SmFptrConst.SMFPTR_DIO_READ_TOTALS, data, object);
-        
-        totals[0] = (Long)object[0];
-        totals[1] = (Long)object[1];
-        totals[2] = (Long)object[2];
-        totals[3] = (Long)object[3];
+
+        totals[0] = (Long) object[0];
+        totals[1] = (Long) object[1];
+        totals[2] = (Long) object[2];
+        totals[3] = (Long) object[3];
     }
 
-    public FSDocumentInfo fsFindDocument(int documentNumber) throws Exception
-    {
+    public FSDocumentInfo fsFindDocument(int documentNumber) throws Exception {
         FSFindDocument cmd = new FSFindDocument(getSysPassword(), documentNumber);
         executeCommand(cmd);
         return cmd.getDocument();
     }
 
-    public void printRawGraphics(byte[][] data) throws Exception
-    {
+    public void printRawGraphics(byte[][] data) throws Exception {
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_RAW_GRAPHICS, new int[0], data);
     }
 }

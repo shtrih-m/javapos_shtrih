@@ -1701,42 +1701,9 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(true);
 
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 424, 1);
-            printer.printRecSubtotal(50556);
-            printer.printRecSubtotalAdjustment(1, "", 56);
-            printer.printRecTotal(50500, 50500, "0");
-            printCode128();
-            printer.printRecMessage("                                          ");
-            printer.printRecMessage(" *****************************************");
-            printer.printRecMessage("                                          ");
-            printer.printRecMessage("         ЭТО ПРОСТО ДЛИННЫЙ ТЕКСТ         ");
-            printer.printRecMessage("                                          ");
-            printer.printRecMessage(" *****************************************");
+            printer.printRecItem("100003 Swiffer Ersatztücher 10er", 499, 1000, 2, 499, "");
+            printer.printRecSubtotalAdjustment(2, "", 1);
+            printer.printRecTotal(500, 500, "00");
             printer.endFiscalReceipt(false);
 
         } catch (Exception e) {
