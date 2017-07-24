@@ -1,5 +1,7 @@
 package com.shtrih.fiscalprinter.command;
 
+import com.shtrih.util.StringUtils;
+
 public class FSDateTime {
     public static final int BodyLength = 5;
 
@@ -25,6 +27,15 @@ public class FSDateTime {
         minutes = data[4];
     }
 
+    public FSDateTime(PrinterDate date, PrinterTime time) {
+
+        year = date.getYear() + 2000;
+        month = date.getMonth();
+        day = date.getDay();
+        hours = time.getHour();
+        minutes = time.getMin();
+    }
+
     public boolean IsZero() {
         return year == 2000 && month == 0 && day == 0 && hours == 0 && minutes == 0;
     }
@@ -47,5 +58,13 @@ public class FSDateTime {
 
     public int getMinutes() {
         return minutes;
+    }
+
+    public String toString() {
+        return StringUtils.intToStr(day, 2) + "."
+                + StringUtils.intToStr(month, 2) + "."
+                + StringUtils.intToStr(year, 4) + " "
+                + StringUtils.intToStr(hours, 2) + ":"
+                + StringUtils.intToStr(minutes, 2);
     }
 }

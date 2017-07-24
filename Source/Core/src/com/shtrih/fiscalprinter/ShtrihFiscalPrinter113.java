@@ -19,10 +19,8 @@ import jpos.events.DirectIOListener;
 import jpos.events.StatusUpdateListener;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.command.*;
-import com.shtrih.fiscalprinter.command.*;
 import jpos.events.OutputCompleteListener;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
-import static jpos.FiscalPrinterConst.FPTR_PS_FISCAL_RECEIPT;
 
 /**
  * Wrapper class to help using directIO codes *
@@ -1684,6 +1682,20 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
 
     public void fsReadCommStatus(FSReadCommStatus command) throws JposException {
         executeCommand(command);
+    }
+
+    public FSCommunicationStatus fsReadCommStatus() throws JposException {
+        
+        FSReadCommStatus command = new FSReadCommStatus();
+        command.setSysPassword(getSysPassword());
+        executeCommand(command);
+
+        return new FSCommunicationStatus(
+                command.getQueueSize(),
+                command.getDocumentNumber(), 
+                new FSDateTime(command.getDocumentDate(), command.getDocumentTime()),
+                command.getStatus(),
+                command.getReadStatus());
     }
 
     public void fsReadDocTicket(FSReadDocTicket command) throws JposException {
