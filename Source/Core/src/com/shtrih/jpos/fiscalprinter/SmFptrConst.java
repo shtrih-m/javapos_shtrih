@@ -529,7 +529,8 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_PARAM_TAX_VALUE_4   = 14;
     public static final int SMFPTR_DIO_PARAM_TAX_VALUE_5   = 15;
     public static final int SMFPTR_DIO_PARAM_TAX_SYSTEM    = 16;
-    
+    public static final int SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT = 17;
+
     // ///////////////////////////////////////////////////////////////////
     // TableMode
     public static final int SMFPTR_TABLE_MODE_AUTO = 0;

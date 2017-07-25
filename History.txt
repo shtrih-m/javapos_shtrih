@@ -6,6 +6,12 @@
 
 ********************************************************************************
 
+  July 25 2017
+  deviceServiceVersion = 1013455
+	
+  [+] Added ability to pass position sum
+  [-] Fixed unhandled exception without details
+
   July 20 2017
   deviceServiceVersion = 1013454
 	

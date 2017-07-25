@@ -50,8 +50,7 @@ public class JposExceptionHandler implements JposConst, FiscalPrinterConst,
 
     public static JposException getJposException(Throwable e) {
         JposException jposException = getJposExceptionWithoutDetails(e);
-        if(!stripExceptionDetails)
-        {
+        if (!stripExceptionDetails && e != jposException) {
             jposException.initCause(e);
         }
 

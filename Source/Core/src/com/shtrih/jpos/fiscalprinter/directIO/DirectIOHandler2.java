@@ -599,6 +599,10 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM:
                 service.getParams().taxSystem = (int)value;
                 break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT:
+                service.getParams().itemTotalAmount = (int)value;
+                break;
                 
         }
     }

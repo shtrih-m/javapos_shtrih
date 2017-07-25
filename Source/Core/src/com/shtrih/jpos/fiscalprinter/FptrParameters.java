@@ -166,6 +166,7 @@ public class FptrParameters {
     public boolean quantityCorrectionEnabled = true;
     public long taxValue[] = new long[6];
     public int taxSystem = 0;
+    public Integer itemTotalAmount = null;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);

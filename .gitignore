@@ -13,6 +13,9 @@
 /Source/dist
 .gradle
 /Source/out
+/Source/FiscalPrinterService/out
+/Source/FiscalPrinterService.RXTXcomm/out
+/Source/FiscalPrinterTest/out
 .idea
 *.iml
 *.ipr

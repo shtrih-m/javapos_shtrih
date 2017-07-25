@@ -25,6 +25,7 @@ public class PriceItem {
     private int tax3;
     private int tax4;
     private String text;
+    private Integer totalAmount;
 
     /**
      * Creates a new instance of PriceItem
@@ -135,5 +136,13 @@ public class PriceItem {
 
     public long getAmount() {
         return PrinterAmount.getAmount(getPrice(), getQuantity());
+    }
+
+    public void setTotalAmount(Integer totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public Integer getTotalAmount() {
+        return totalAmount;
     }
 }

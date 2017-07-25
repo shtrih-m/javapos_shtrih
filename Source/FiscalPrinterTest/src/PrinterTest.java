@@ -606,7 +606,7 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void open(String DeviceName) {
+    public void open(String DeviceName) {               
         try {
             printer.open(DeviceName);
         } catch (Exception e) {
@@ -653,14 +653,68 @@ class PrinterTest implements FiscalPrinterConst {
             System.out.println("Unsent documents: " + results.get(2));
 
             System.out.println("Cash in drawer: " + printer.readCashRegister(241).getValue() / 100.0d);
-
-            FSCommunicationStatus commStatus = printer.fsReadCommStatus();
-            System.out.println("Unsent documents: " + commStatus.getUnsentDocumentsCount());
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void PrintCheckWithPassedPositionSum() throws Exception{
+        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM, 1);
+        printer.beginFiscalReceipt(true);
+
+        // Обычная позиция
+        printer.printRecItem("ITEM 1", 0, 1234, 0, 1000, "");
+
+        // Позиция с коррекцией
+        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 1235);
+        printer.printRecItem("ITEM 1", 0, 1234, 0, 1000, "");
+
+        printer.fsWriteCustomerPhone("+79006009090");
+
+        printer.printRecSubtotal(0);
+        printer.printRecTotal(0, 1234 + 1235, "1");
+
+        printer.endFiscalReceipt(false);
+    }
+
+    private void PrintCheckWithPDF417BarCodeAndFeed() throws Exception{
+        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM, 1);
+        printer.beginFiscalReceipt(true);
+        printer.printRecItem("ITEM 1", 0, 1234, 0, 1000, "");
+
+        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 1235);
+        printer.printRecItem("ITEM 1", 0, 1234, 0, 1000, "");
+        printer.printRecMessage("Nonfiscal line 1");
+
+        printer.fsWriteCustomerEmail("nyx@mail.ru");
+        //printer.fsWriteCustomerPhone("88006009090");
+
+        printer.printRecSubtotal(0);
+        printer.printRecTotal(0, 1234 + 1235, "1");
+
+
+        PrinterBarcode barcode = new PrinterBarcode();
+        barcode.setText("\"4C63A673C86B0976C0B24495848F6EF157792203A0D275\\n\"\n" +
+                "                            + \"1F525456644096478D256A910EFEABB67\"");
+
+        barcode.setType(SmFptrConst.SMFPTR_BARCODE_PDF417);
+        barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
+
+        barcode.setBarWidth(2);
+        barcode.setVScale(5);
+
+        Map<EncodeHintType, Object> params = new HashMap<EncodeHintType, Object>();
+// Измерения, тут мы задаем количество колонок и столбцов
+        params.put(EncodeHintType.PDF417_DIMENSIONS, new Dimensions(3, 3, 2, 60));
+// Можно задать уровень коррекции ошибок, по умолчанию он 0
+        params.put(EncodeHintType.ERROR_CORRECTION, 1);
+        barcode.addParameter(params);
+
+        printer.printBarcode(barcode);
+
+        printer.endFiscalReceipt(false);
+
+        printer.feedPaper(2);
     }
 
     public void disableDevice() {
@@ -1698,9 +1752,42 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(true);
 
-            printer.printRecItem("100003 Swiffer Ersatztücher 10er", 499, 1000, 2, 499, "");
-            printer.printRecSubtotalAdjustment(2, "", 1);
-            printer.printRecTotal(500, 500, "00");
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 2, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 3, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 4, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 5, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 6, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 423, 1);
+            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
+            printer.printRecItemAdjustment(1, "", 424, 1);
+            printer.printRecSubtotal(50556);
+            printer.printRecSubtotalAdjustment(1, "", 56);
+            printer.printRecTotal(50500, 50500, "0");
+            printCode128();
+            printer.printRecMessage("                                          ");
+            printer.printRecMessage(" *****************************************");
+            printer.printRecMessage("                                          ");
+            printer.printRecMessage("         ЭТО ПРОСТО ДЛИННЫЙ ТЕКСТ         ");
+            printer.printRecMessage("                                          ");
+            printer.printRecMessage(" *****************************************");
             printer.endFiscalReceipt(false);
 
         } catch (Exception e) {

@@ -40,7 +40,7 @@ public class FSSaleReceiptItem {
     private boolean priceUpdated = false;
     private FSSaleReceiptItem splittedItem;
     private final FSDiscounts discounts = new FSDiscounts();
-    private CompositeLogger logger = CompositeLogger.getLogger(FiscalPrinterImpl.class);
+    private Integer totalAmount = null;
 
     public FSSaleReceiptItem() {
     }
@@ -55,7 +55,12 @@ public class FSSaleReceiptItem {
         item.setTax3(tax3);
         item.setTax4(tax4);
         item.setText(text);
+        item.setTotalAmount(totalAmount);
         return item;
+    }
+
+    public void setTotalAmount(Integer value){
+        totalAmount = value;
     }
 
     public boolean getIsStorno() {

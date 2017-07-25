@@ -983,7 +983,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         fsReceiptItem.setOperation(operation);
         fsReceiptItem.setQuantity(item.getQuantity() * 1000);
         fsReceiptItem.setPrice(item.getPrice());
-        fsReceiptItem.setAmount(0xFFFFFFFFFFL);
+        fsReceiptItem.setAmount(item.getTotalAmount() == null ? 0xFFFFFFFFFFL : item.getTotalAmount());
         fsReceiptItem.setTaxAmount(0xFFFFFFFFFFL);
         fsReceiptItem.setTax(getTaxBits(item.getTax1()));
         fsReceiptItem.setDepartment(item.getDepartment());
@@ -3383,7 +3383,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         openFiscalDay();
         return executeCommand(command);
     }
-    
+
     public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command)
             throws Exception {
         openFiscalDay();
@@ -3428,10 +3428,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
             int portValue = readTableIntValueFromStringOrInt(tableNumber, portField);
             int pollPeriod = readTableIntValueFromStringOrInt(tableNumber, pollPeriodField);
-            
+
             return new FDOParameters(host, portValue, pollPeriod);
         }
-        
+
         return null;
     }
 
@@ -3440,11 +3440,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         FieldInfo fieldInfo = readFieldInfo(tableNumber, portField);
         int portValue;
-        if(fieldInfo.isInteger()) {
-            byte[] bytes = fieldInfo.fieldToBytes(port,charsetName);
-            portValue= FieldInfo.bytesToInt(bytes, bytes.length);
-        }
-        else{
+        if (fieldInfo.isInteger()) {
+            byte[] bytes = fieldInfo.fieldToBytes(port, charsetName);
+            portValue = FieldInfo.bytesToInt(bytes, bytes.length);
+        } else {
             portValue = Integer.valueOf(port);
         }
         return portValue;

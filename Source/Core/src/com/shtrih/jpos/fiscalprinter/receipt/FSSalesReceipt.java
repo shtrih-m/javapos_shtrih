@@ -863,7 +863,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 + ", unitPrice: " + unitPrice);
 
         double d = unitPrice * Math.abs(quantity);
-        long amount = MathUtils.round((d / 1000.0));
+        long amount = getParams().itemTotalAmount == null ?  MathUtils.round((d / 1000.0)) : getParams().itemTotalAmount;
 
         /*
          if (isStorno) {
@@ -913,8 +913,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             item.setPostLine(getPostLine());
             item.setUnitName(unitName);
             item.setIsStorno(isStorno);
+            
+            item.setTotalAmount(getParams().itemTotalAmount);
+            getParams().itemTotalAmount = null;
+            
             items.add(item);
             recItems.add(item);
+
         }
         if (!isStorno) {
             lastItem = item;
