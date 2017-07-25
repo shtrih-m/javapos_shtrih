@@ -648,10 +648,14 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setPOSID("34", "Кравцов В.В.");
             List<String> results = new ArrayList<String>();
             printer.directIO(SmFptrConst.SMFPTR_DIO_READ_FS_PARAMS, null, results);
-            System.out.println("FSSerialNumber: " + results.get(0));
-            System.out.println("Rnm: " + results.get(1));
-            System.out.println("Unsent documents: " + results.get(2));
 
+            FSStatusInfo fsStatus = printer.fsReadStatus();
+            FSCommunicationStatus fsCommunicationStatus = printer.fsReadCommStatus();
+
+            System.out.println("FSSerialNumber: " + fsStatus.getFsSerial());
+            System.out.println("Rnm: " + results.get(1));
+            System.out.println("Unsent documents: " + fsCommunicationStatus.getUnsentDocumentsCount());
+            
             System.out.println("Cash in drawer: " + printer.readCashRegister(241).getValue() / 100.0d);
         } catch (Exception e) {
             e.printStackTrace();

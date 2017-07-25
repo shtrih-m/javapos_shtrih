@@ -9,6 +9,8 @@
   July 25 2017
   deviceServiceVersion = 1013455
 	
+	[+] Added user friendly FS status reading method
+	[+] Added user friendly OFD communication status reading method
   [+] Added ability to pass position sum
   [-] Fixed unhandled exception without details
 
