@@ -179,7 +179,7 @@
 		<prop name="compatibilityLevel" type="String" value="0"/>
 
     <!-- Turn on/off FSSender service -->
-		<prop name="FSServiceEnabled" type="String" value="0"/>
+		<prop name="FSServiceEnabled" type="String" value="1"/>
 		<prop name="FSConnectTimeout" type="String" value="30000"/>
 		
     <!-- Log file enabled  -->

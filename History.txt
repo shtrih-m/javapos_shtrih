@@ -6,6 +6,14 @@
 
 ********************************************************************************
 
+  July 27 2017
+  deviceServiceVersion = 1013456
+	
+	[-] Fixed crash when FSService enabled on devices without FS
+	[-] Fixed bug when close method takes too long
+  
+********************************************************************************
+
   July 25 2017
   deviceServiceVersion = 1013455
 	
@@ -13,6 +21,8 @@
 	[+] Added user friendly OFD communication status reading method
   [+] Added ability to pass position sum
   [-] Fixed unhandled exception without details
+  
+********************************************************************************
 
   July 20 2017
   deviceServiceVersion = 1013454
