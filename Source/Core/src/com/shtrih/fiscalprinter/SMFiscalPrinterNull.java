@@ -972,6 +972,11 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return null;
     }
 
+    @Override
+    public boolean capReadFSBuffer() throws Exception {
+        return false;
+    }
+
     public int fsWriteTag1162(int catId, long groupId, String itemId)
             throws Exception {
         return 0;

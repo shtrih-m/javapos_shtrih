@@ -9,9 +9,9 @@
 package com.shtrih.fiscalprinter;
 
 /**
- *
  * @author V.Kravtsov
  */
+
 import java.util.Vector;
 
 import com.shtrih.ej.EJDate;
@@ -118,7 +118,7 @@ public interface SMFiscalPrinter {
             throws Exception;
 
     public int writeTable(int tableNumber, int rowNumber, int fieldNumber,
-            String fieldValue) throws Exception;
+                          String fieldValue) throws Exception;
 
     public String readTable(int tableNumber, int rowNumber, int fieldNumber)
             throws Exception;
@@ -127,7 +127,7 @@ public interface SMFiscalPrinter {
             throws Exception;
 
     public int readTable(int tableNumber, int rowNumber, int fieldNumber,
-            String[] fieldValue) throws Exception;
+                         String[] fieldValue) throws Exception;
 
     public int readTableInfo(int tableNumber, Object[] out) throws Exception;
 
@@ -164,16 +164,16 @@ public interface SMFiscalPrinter {
     public long readCashRegisterCorrection(int number) throws Exception;
 
     public PrintEJDayReportOnDates printEJDayReportOnDates(EJDate date1,
-            EJDate date2, int reportType) throws Exception;
+                                                           EJDate date2, int reportType) throws Exception;
 
     public PrintFMReportDates printFMReportDates(PrinterDate date1,
-            PrinterDate date2, int reportType) throws Exception;
+                                                 PrinterDate date2, int reportType) throws Exception;
 
     public PrintEJDayReportOnDays printEJReportDays(int day1, int day2,
-            int reportType) throws Exception;
+                                                    int reportType) throws Exception;
 
     public PrintFMReportDays printFMReportDays(int day1, int day2,
-            int reportType) throws Exception;
+                                               int reportType) throws Exception;
 
     public void printSale(PriceItem item) throws Exception;
 
@@ -267,7 +267,7 @@ public interface SMFiscalPrinter {
     public void setBaudRate(int baudRate) throws Exception;
 
     public boolean connectDevice(int baudRate, int deviceBaudRate,
-            int deviceByteTimeout) throws Exception;
+                                 int deviceByteTimeout) throws Exception;
 
     public void checkBaudRate(int value) throws Exception;
 
@@ -317,7 +317,7 @@ public interface SMFiscalPrinter {
     public int writeField(PrinterField field) throws Exception;
 
     public void writeField2(PrinterField field) throws Exception;
-    
+
     public PrinterField readField(PrinterField field) throws Exception;
 
     public int stopEJPrint() throws Exception;
@@ -415,9 +415,9 @@ public interface SMFiscalPrinter {
 
     public int fsWriteTag(int tagId, String tagValue) throws Exception;
 
-    public int fsWriteTag1162(int catId, long groupId, String itemId) 
-        throws Exception;
-            
+    public int fsWriteTag1162(int catId, long groupId, String itemId)
+            throws Exception;
+
     public int fsWriteTLV(byte[] tlv) throws Exception;
 
     public byte[] getTLVData(int tagId, String tagValue) throws Exception;
@@ -493,7 +493,7 @@ public interface SMFiscalPrinter {
     public Vector<FSTicket> fsReadTickets(int firstFSDocumentNumber, int documentCount) throws Exception;
 
     public int fsPrintCorrectionReceipt(FSPrintCorrectionReceipt command) throws Exception;
-    
+
     public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws Exception;
 
     public boolean getCapDisableDiscountText();
@@ -505,16 +505,18 @@ public interface SMFiscalPrinter {
     public boolean isSubtotalInHeader();
 
     public boolean isDiscountInHeader();
-    
+
     public int reboot() throws Exception;
-    
+
     public FDOParameters readFDOParameters() throws Exception;
-    
+
     public String ReadRnm() throws Exception;
-    
+
     public int getHeaderHeight() throws Exception;
-    
+
     public boolean getCapDiscount();
 
     public FSFindDocument fsFindDocument(long docNumber) throws Exception;
+
+    boolean capReadFSBuffer() throws Exception;
 }

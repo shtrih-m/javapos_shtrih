@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-
 /**
  * @author V.Kravtsov
  */
@@ -23,41 +22,73 @@ public class FSService implements Runnable {
     private CompositeLogger logger = CompositeLogger.getLogger(FSService.class);
 
 
-    private FDOParameters parameters;
-    private int connectTimeout;
-    private Thread thread = null;
-    private boolean stopFlag = false;
+    private final FDOParameters parameters;
+    private final int connectTimeout;
     private final SMFiscalPrinter printer;
 
-    public FSService(SMFiscalPrinter printer, FptrParameters parameters) {
+    private Thread thread = null;
+    private boolean stopFlag = true;
+
+    public FSService(SMFiscalPrinter printer, FptrParameters parameters, FDOParameters ofdParameters) {
+        if (printer == null)
+            throw new IllegalArgumentException("printer is null");
+        if (parameters == null)
+            throw new IllegalArgumentException("parameters is null");
+        if (ofdParameters == null)
+            throw new IllegalArgumentException("ofdParameters is null");
+
         this.printer = printer;
         this.connectTimeout = parameters.FSConnectTimeout;
+        this.parameters = ofdParameters;
     }
 
     public void run() {
         try {
+            logger.debug(String.format("Starting FSService, OFD %s:%d, connection timeout %d ms, poll period %d ms",
+                    parameters.getHost(),
+                    parameters.getPort(),
+                    connectTimeout,
+                    parameters.getPollPeriodSeconds() * 1000));
+
             while (true) {
                 try {
-                    parameters = printer.readFDOParameters();
+                    if (!printer.capReadFSBuffer()) {
+                        logger.debug("FSService stopped, buffer reading unsupported");
+                        return;
+                    }
+
+                    if (!printer.readTable(10, 1, 1).equals("1")) {
+                        logger.debug("FSService stopped, EoD disabled");
+                        return;
+                    }
+
                     break;
                 } catch (Exception e) {
-                    Thread.sleep(10 * 1000);
-                    logger.error("Failed to read FSSender parameters", e);
+                    logger.error("FSService support check failed", e);
                 }
             }
-
             while (!stopFlag) {
                 checkData();
+
+                if (stopFlag)
+                    break;
+
                 Thread.sleep(parameters.getPollPeriodSeconds() * 1000);
             }
+
+            logger.error("FSService stopped");
         } catch (InterruptedException e) {
-            logger.error("InterruptedException", e);
-            Thread.currentThread().interrupt();
+            logger.error("FSService stopped");
+        } catch (Exception e) {
+            logger.error("FSService unexpected exception", e);
         }
     }
 
     private void checkData() {
         try {
+            if (stopFlag)
+                return;
+
             byte[] data = printer.fsReadBlockData();
 
             if (data.length == 0) {
@@ -66,12 +97,18 @@ public class FSService implements Runnable {
 
             // System.out.println("FS -> OFD: " + Hex.toHex(data));
 
+            if (stopFlag)
+                return;
+
             byte[] answer = sendData(data);
             if (answer.length == 0) {
                 return;
             }
 
             // System.out.println("FS <- OFD: " + Hex.toHex(answer));
+
+            if (stopFlag)
+                return;
 
             printer.fsWriteBlockData(answer);
 
@@ -114,7 +151,7 @@ public class FSService implements Runnable {
     }
 
     private boolean isStarted() {
-        return thread != null;
+        return !stopFlag;
     }
 
     public void start() throws Exception {
@@ -127,8 +164,10 @@ public class FSService implements Runnable {
 
     public void stop() throws Exception {
         stopFlag = true;
-        if (thread != null)
-            thread.join();
+        if (thread != null) {
+//            thread.interrupt();
+//            thread.join();
+        }
 
         thread = null;
     }
