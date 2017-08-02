@@ -870,9 +870,15 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 try {
                     if (params.FSServiceEnabled && printer.getCapFiscalStorage()) {
 
-                        FDOParameters ofdParameters = printer.readFDOParameters();
-                        fsSenderService = new FSService(printer, params, ofdParameters);
-                        fsSenderService.start();
+                        if (!printer.capReadFSBuffer()) {
+                            logger.debug("FSService stopped, buffer reading unsupported");
+                        } else if (!printer.readTable(10, 1, 1).equals("1")) {
+                            logger.debug("FSService stopped, EoD disabled");
+                        } else {
+                            FDOParameters ofdParameters = printer.readFDOParameters();
+                            fsSenderService = new FSService(printer, params, ofdParameters);
+                            fsSenderService.start();
+                        }
                     }
                 } catch (Exception e) {
                     logger.error("Failed to start FSService", e);

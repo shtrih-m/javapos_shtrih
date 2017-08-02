@@ -27,7 +27,7 @@ public class FSService implements Runnable {
     private final SMFiscalPrinter printer;
 
     private Thread thread = null;
-    private boolean stopFlag = true;
+    private volatile boolean stopFlag = true;
 
     public FSService(SMFiscalPrinter printer, FptrParameters parameters, FDOParameters ofdParameters) {
         if (printer == null)
@@ -50,23 +50,6 @@ public class FSService implements Runnable {
                     connectTimeout,
                     parameters.getPollPeriodSeconds() * 1000));
 
-            while (true) {
-                try {
-                    if (!printer.capReadFSBuffer()) {
-                        logger.debug("FSService stopped, buffer reading unsupported");
-                        return;
-                    }
-
-                    if (!printer.readTable(10, 1, 1).equals("1")) {
-                        logger.debug("FSService stopped, EoD disabled");
-                        return;
-                    }
-
-                    break;
-                } catch (Exception e) {
-                    logger.error("FSService support check failed", e);
-                }
-            }
             while (!stopFlag) {
                 checkData();
 
@@ -119,24 +102,32 @@ public class FSService implements Runnable {
 
     private byte[] sendData(byte[] data) throws Exception {
         Socket socket = new Socket();
-        socket.setSoTimeout(connectTimeout);
-        socket.connect(new InetSocketAddress(parameters.getHost(), parameters.getPort()));
-        socket.getOutputStream().write(data);
-        InputStream in = socket.getInputStream();
+        try {
+            socket.setSoTimeout(connectTimeout);
+            socket.connect(new InetSocketAddress(parameters.getHost(), parameters.getPort()));
+            socket.getOutputStream().write(data);
+            InputStream in = socket.getInputStream();
 
-        int headerSize = 30;
-        byte[] header = new byte[headerSize];
+            int headerSize = 30;
+            byte[] header = new byte[headerSize];
 
-        Read(in, header, headerSize);
+            Read(in, header, headerSize);
 
-        int size = ((header[25] << 8)) | (header[24] & 0xFF);
+            int size = ((header[25] << 8)) | (header[24] & 0xFF);
 
-        byte[] answer = new byte[headerSize + size];
-        System.arraycopy(header, 0, answer, 0, headerSize);
-        if (size > 0) {
-            Read(in, answer, headerSize, size);
+            byte[] answer = new byte[headerSize + size];
+            System.arraycopy(header, 0, answer, 0, headerSize);
+            if (size > 0) {
+                Read(in, answer, headerSize, size);
+            }
+            return answer;
+        } finally {
+            try {
+                socket.close();
+            } catch (Exception e) {
+                logger.error("Socket close failed", e);
+            }
         }
-        return answer;
     }
 
     private void Read(InputStream in, byte[] buffer, int count) throws IOException {
@@ -165,7 +156,7 @@ public class FSService implements Runnable {
     public void stop() throws Exception {
         stopFlag = true;
         if (thread != null) {
-//            thread.interrupt();
+            thread.interrupt();
 //            thread.join();
         }
 
