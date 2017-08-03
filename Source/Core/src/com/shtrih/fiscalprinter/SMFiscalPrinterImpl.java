@@ -1152,25 +1152,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         PrintZReport command = new PrintZReport();
         command.setPassword(sysPassword);
         execute(command);
-        printCalcReport();
         return command;
-    }
-
-    public void printCalcReport() throws Exception {
-        if (!getCapFiscalStorage()) {
-            return;
-        }
-
-        try {
-            waitForPrinting();
-            FSReadCommStatus status = fsReadCommStatus();
-            printLines("КОЛИЧЕСТВО СООБЩЕНИЙ ДЛЯ ОФД:", String.valueOf(status.getQueueSize()));
-            printLines("НОМЕР ПЕРВОГО ДОКУМЕНТА ДЛЯ ОФД:", String.valueOf(status.getDocumentNumber()));
-            String docDate = status.getDocumentDate().toString() + " " + status.getDocumentTime().toString2();
-            printLines("ДАТА ПЕРВОГО ДОКУМЕНТА:", docDate);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
     }
 
     public int printDepartmentReport() throws Exception {
