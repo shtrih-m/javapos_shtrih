@@ -36,7 +36,7 @@ public class ReadPrinterModelParametersTests {
 
         cmd.decodeData(responseData);
 
-        PrinterModelParameters status = cmd.getStatus();
+        PrinterModelParameters status = cmd.getParameters();
 
         assertEquals(true, status.isGraphics512Supported());
         assertEquals(256, status.getGraphicsWidth());
@@ -56,7 +56,7 @@ public class ReadPrinterModelParametersTests {
 
         cmd.decodeData(responseData);
 
-        PrinterModelParameters status = cmd.getStatus();
+        PrinterModelParameters status = cmd.getParameters();
 
         assertEquals(true, status.isGraphics512Supported());
         assertEquals(512, status.getGraphicsWidth());

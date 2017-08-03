@@ -6,6 +6,21 @@
 
 ********************************************************************************
 
+  August 3 2017
+  deviceServiceVersion = 1013458
+	
+	[+] Added methods to start/stop and get status of FSService
+	[*] Fixed line graphics printing
+
+********************************************************************************
+
+  August 2 2017
+  deviceServiceVersion = 1013457
+	
+	[-] Fixed bug when FSService didn't stop after close
+
+********************************************************************************
+
   July 27 2017
   deviceServiceVersion = 1013456
 	

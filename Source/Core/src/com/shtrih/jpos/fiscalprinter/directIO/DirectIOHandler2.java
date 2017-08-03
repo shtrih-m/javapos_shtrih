@@ -429,7 +429,7 @@ public class DirectIOHandler2 {
 
     public void dioPrintLine(int[] data, Object object) throws Exception {
         int[] params = (int[]) object;
-        byte[] lineData = new byte[service.getModel().getPrintWidth() / 8];
+        byte[] lineData = new byte[service.getPrinter().getMaxGraphicsLineWidth() / 8];
         int lineHeight = params[0];
         int lineType = SmFptrConst.SMFPTR_LINE_TYPE_BLACK;
         if (params.length > 1) {

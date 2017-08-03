@@ -5,7 +5,7 @@ public class ReadPrinterModelParameters extends PrinterCommand {
     private final int requestType;
 
     // out params
-    private PrinterModelParameters status = null;
+    private PrinterModelParameters parameters = null;
 
     public ReadPrinterModelParameters() {
         // Тип запроса 1 – ПАРАМЕТРЫ МОДЕЛИ
@@ -17,7 +17,7 @@ public class ReadPrinterModelParameters extends PrinterCommand {
     }
 
     public final String getText() {
-        return "Get extended status";
+        return "Get extended parameters";
     }
 
     public final void encode(CommandOutputStream out) throws Exception {
@@ -25,11 +25,11 @@ public class ReadPrinterModelParameters extends PrinterCommand {
     }
 
     public final void decode(CommandInputStream in) throws Exception {
-        status = new PrinterModelParameters(in);
+        parameters = new PrinterModelParameters(in);
     }
 
-    public PrinterModelParameters getStatus() {
-        return status;
+    public PrinterModelParameters getParameters() {
+        return parameters;
     }
 
     public boolean getIsRepeatable() {

@@ -519,4 +519,6 @@ public interface SMFiscalPrinter {
     public FSFindDocument fsFindDocument(long docNumber) throws Exception;
 
     boolean capReadFSBuffer() throws Exception;
+
+    int getMaxGraphicsLineWidth() throws Exception;
 }

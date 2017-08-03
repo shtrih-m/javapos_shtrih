@@ -447,7 +447,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         logger.debug("readPrinterModelParameters");
         ReadPrinterModelParameters command = new ReadPrinterModelParameters();
         execute(command);
-        return command.getStatus();
+        return command.getParameters();
     }
 
     public ShortPrinterStatus getShortStatus() {
@@ -462,7 +462,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         /*
         NumberFormat formatter = new DecimalFormat("#0.00");
-        String text = formatter.format(command.getStatus().getPowerVoltage());
+        String text = formatter.format(command.getParameters().getPowerVoltage());
         logger.debug("Power voltage: " + text + " V");    
          */
         return shortStatus;
@@ -1890,7 +1890,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         ReadPrinterModelParameters command = new ReadPrinterModelParameters();
         if (executeCommand(command) == 0) {
-            modelParameters = command.getStatus();
+            modelParameters = command.getParameters();
         }
 
         headerHeigth = getModel().getHeaderHeight();
@@ -2467,6 +2467,16 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             } else {
                 return modelParameters.getGraphicsWidth();
             }
+        } else if (getCapLoadGraphics3()) {
+            return 512;
+        } else {
+            return 320;
+        }
+    }
+
+    public int getMaxGraphicsLineWidth() throws Exception {
+        if (modelParameters != null) {
+            return modelParameters.getGraphicsWidth();
         } else if (getCapLoadGraphics3()) {
             return 512;
         } else {
@@ -3286,7 +3296,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command;
     }
 
-    public boolean capReadFSBuffer() throws Exception{
+    public boolean capReadFSBuffer() throws Exception {
         FSReadBufferStatus command = new FSReadBufferStatus(sysPassword);
         return isCommandSupported(executeCommand(command));
     }

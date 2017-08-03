@@ -178,7 +178,7 @@ public class DirectIOHandler {
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PRINT_LINE:
-                byte[] lineData = new byte[service.getModel().getPrintWidth() / 8];
+                byte[] lineData = new byte[service.getPrinter().getMaxGraphicsLineWidth() / 8];
                 int lineHeight = data[0];
                 int lineType = SmFptrConst.SMFPTR_LINE_TYPE_BLACK;
                 if (data.length > 1) {

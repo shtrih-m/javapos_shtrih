@@ -15,6 +15,6 @@ public class DIOReadMaxGraphicsWidth {
 
         DIOUtils.checkDataMinLength(data, 1);
 
-        data[0] = service.getMaxGraphicsWidth();
+        data[0] = service.getPrinter().getMaxGraphicsWidth();
     }
 }

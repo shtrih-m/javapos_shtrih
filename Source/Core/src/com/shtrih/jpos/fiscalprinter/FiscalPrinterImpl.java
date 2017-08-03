@@ -4299,10 +4299,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public int getMaxGraphicsWidth() throws Exception {
-        return getModel().getMaxGraphicsWidth();
-    }
-
     public EJStatus getEJStatus() {
         return statusEJ;
     }

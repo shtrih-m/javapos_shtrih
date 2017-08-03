@@ -977,6 +977,11 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return false;
     }
 
+    @Override
+    public int getMaxGraphicsLineWidth() throws Exception {
+        return 0;
+    }
+
     public int fsWriteTag1162(int catId, long groupId, String itemId)
             throws Exception {
         return 0;

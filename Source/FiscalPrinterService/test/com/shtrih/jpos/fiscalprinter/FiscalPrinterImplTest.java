@@ -143,8 +143,8 @@ public class FiscalPrinterImplTest extends TestCase
         event = events.getEvents().get(0);
         assertEquals("StatusUpdateEvent", event.getClass().getName());
         sue = (StatusUpdateEvent)event;
-        assertEquals("sue.getStatus != FPTR_SUE_REC_EMPTY",
-            sue.getStatus(), FiscalPrinterConst.FPTR_SUE_REC_EMPTY);
+        assertEquals("sue.getParameters != FPTR_SUE_REC_EMPTY",
+            sue.getParameters(), FiscalPrinterConst.FPTR_SUE_REC_EMPTY);
         
         events.getEvents().clear();
         assertEquals(events.getEvents().size(), 0);
@@ -154,8 +154,8 @@ public class FiscalPrinterImplTest extends TestCase
         event = events.getEvents().get(0);
         assertEquals("StatusUpdateEvent", event.getClass().getName());
         sue = (StatusUpdateEvent)event;
-        assertEquals("sue.getStatus != FPTR_SUE_REC_NEAREMPTY",
-            sue.getStatus(), FiscalPrinterConst.FPTR_SUE_REC_NEAREMPTY);
+        assertEquals("sue.getParameters != FPTR_SUE_REC_NEAREMPTY",
+            sue.getParameters(), FiscalPrinterConst.FPTR_SUE_REC_NEAREMPTY);
         
         events.getEvents().clear();
         assertEquals(events.getEvents().size(), 0);
@@ -165,8 +165,8 @@ public class FiscalPrinterImplTest extends TestCase
         event = events.getEvents().get(0);
         assertEquals("StatusUpdateEvent", event.getClass().getName());
         sue = (StatusUpdateEvent)event;
-        assertEquals("sue.getStatus != FPTR_SUE_REC_PAPEROK",
-            sue.getStatus(), FiscalPrinterConst.FPTR_SUE_REC_PAPEROK);
+        assertEquals("sue.getParameters != FPTR_SUE_REC_PAPEROK",
+            sue.getParameters(), FiscalPrinterConst.FPTR_SUE_REC_PAPEROK);
     }
     
     public void testGetJrnPaperState() throws Exception {
@@ -209,8 +209,8 @@ public class FiscalPrinterImplTest extends TestCase
         event = events.getEvents().get(0);
         assertEquals("StatusUpdateEvent", event.getClass().getName());
         sue = (StatusUpdateEvent)event;
-        assertEquals("sue.getStatus != FPTR_SUE_JRN_EMPTY",
-            sue.getStatus(), FiscalPrinterConst.FPTR_SUE_JRN_EMPTY);
+        assertEquals("sue.getParameters != FPTR_SUE_JRN_EMPTY",
+            sue.getParameters(), FiscalPrinterConst.FPTR_SUE_JRN_EMPTY);
         
         events.getEvents().clear();
         assertEquals(events.getEvents().size(), 0);
@@ -220,8 +220,8 @@ public class FiscalPrinterImplTest extends TestCase
         event = events.getEvents().get(0);
         assertEquals("StatusUpdateEvent", event.getClass().getName());
         sue = (StatusUpdateEvent)event;
-        assertEquals("sue.getStatus != FPTR_SUE_JRN_NEAREMPTY",
-            sue.getStatus(), FiscalPrinterConst.FPTR_SUE_JRN_NEAREMPTY);
+        assertEquals("sue.getParameters != FPTR_SUE_JRN_NEAREMPTY",
+            sue.getParameters(), FiscalPrinterConst.FPTR_SUE_JRN_NEAREMPTY);
         
         events.getEvents().clear();
         assertEquals(events.getEvents().size(), 0);
@@ -231,8 +231,8 @@ public class FiscalPrinterImplTest extends TestCase
         event = events.getEvents().get(0);
         assertEquals("StatusUpdateEvent", event.getClass().getName());
         sue = (StatusUpdateEvent)event;
-        assertEquals("sue.getStatus != FPTR_SUE_JRN_PAPEROK",
-            sue.getStatus(), FiscalPrinterConst.FPTR_SUE_JRN_PAPEROK);
+        assertEquals("sue.getParameters != FPTR_SUE_JRN_PAPEROK",
+            sue.getParameters(), FiscalPrinterConst.FPTR_SUE_JRN_PAPEROK);
     }
     
     public void testGetSlpPaperState() throws Exception {
@@ -275,8 +275,8 @@ public class FiscalPrinterImplTest extends TestCase
         event = events.getEvents().get(0);
         assertEquals("StatusUpdateEvent", event.getClass().getName());
         sue = (StatusUpdateEvent)event;
-        assertEquals("sue.getStatus != FPTR_SUE_SLP_EMPTY",
-            sue.getStatus(), FiscalPrinterConst.FPTR_SUE_SLP_EMPTY);
+        assertEquals("sue.getParameters != FPTR_SUE_SLP_EMPTY",
+            sue.getParameters(), FiscalPrinterConst.FPTR_SUE_SLP_EMPTY);
         
         events.getEvents().clear();
         assertEquals(events.getEvents().size(), 0);
@@ -286,8 +286,8 @@ public class FiscalPrinterImplTest extends TestCase
         event = events.getEvents().get(0);
         assertEquals("StatusUpdateEvent", event.getClass().getName());
         sue = (StatusUpdateEvent)event;
-        assertEquals("sue.getStatus != FPTR_SUE_SLP_NEAREMPTY",
-            sue.getStatus(), FiscalPrinterConst.FPTR_SUE_SLP_NEAREMPTY);
+        assertEquals("sue.getParameters != FPTR_SUE_SLP_NEAREMPTY",
+            sue.getParameters(), FiscalPrinterConst.FPTR_SUE_SLP_NEAREMPTY);
         
         events.getEvents().clear();
         assertEquals(events.getEvents().size(), 0);
@@ -297,8 +297,8 @@ public class FiscalPrinterImplTest extends TestCase
         event = events.getEvents().get(0);
         assertEquals("StatusUpdateEvent", event.getClass().getName());
         sue = (StatusUpdateEvent)event;
-        assertEquals("sue.getStatus != FPTR_SUE_SLP_PAPEROK",
-            sue.getStatus(), FiscalPrinterConst.FPTR_SUE_SLP_PAPEROK);
+        assertEquals("sue.getParameters != FPTR_SUE_SLP_PAPEROK",
+            sue.getParameters(), FiscalPrinterConst.FPTR_SUE_SLP_PAPEROK);
     }
     
     
