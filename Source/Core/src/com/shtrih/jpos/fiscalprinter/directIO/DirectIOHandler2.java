@@ -392,6 +392,14 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_FEED_PAPER:
                 new DIOFeedPaper(service).execute(data, object);
                 break;
+
+            case SmFptrConst.SMFPTR_DIO_GET_FS_SERVICE_STATE:
+                new DIOGetFSServiceState(service).execute(data, object);
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_SET_FS_SERVICE_STATE:
+                new DIOSetFSServiceState(service).execute(data, object);
+                break;
                 
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,

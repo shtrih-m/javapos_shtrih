@@ -1959,4 +1959,26 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void feedPaper(int linesNumber) throws Exception {
         directIO(SmFptrConst.SMFPTR_DIO_FEED_PAPER, new int[]{linesNumber}, null);
     }
+
+
+    public boolean isFSServiceStarted() throws Exception {
+        Boolean[] object = new Boolean[1];
+        directIO(SmFptrConst.SMFPTR_DIO_GET_FS_SERVICE_STATE, null, object);
+
+        return object[0];
+    }
+
+    public void startFSService() throws Exception {
+
+        int[] data = new int[]{1};
+
+        directIO(SmFptrConst.SMFPTR_DIO_SET_FS_SERVICE_STATE, data, null);
+    }
+
+    public void stopFSService() throws Exception {
+
+        int[] data = new int[]{0};
+
+        directIO(SmFptrConst.SMFPTR_DIO_SET_FS_SERVICE_STATE, data, null);
+    }
 }

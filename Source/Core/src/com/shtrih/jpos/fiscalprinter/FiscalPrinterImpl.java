@@ -868,30 +868,17 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     startPoll();
                 }
                 try {
-                    if (params.FSServiceEnabled && printer.getCapFiscalStorage()) {
-
-                        if (!printer.capReadFSBuffer()) {
-                            logger.debug("FSService stopped, buffer reading unsupported");
-                        } else if (!printer.readTable(10, 1, 1).equals("1")) {
-                            logger.debug("FSService stopped, EoD disabled");
-                        } else {
-                            FDOParameters ofdParameters = printer.readFDOParameters();
-                            fsSenderService = new FSService(printer, params, ofdParameters);
-                            fsSenderService.start();
-                        }
-                    }
+                    startFSService();
                 } catch (Exception e) {
                     logger.error("Failed to start FSService", e);
+                    return;
                 }
             } else {
                 stopPoll();
                 connected = false;
                 setPowerState(JPOS_PS_UNKNOWN);
                 try {
-                    if (params.FSServiceEnabled) {
-                        fsSenderService.stop();
-                        fsSenderService = null;
-                    }
+                    stopFSService();
                 } catch (Exception e) {
                     logger.error("Failed to stop FSService", e);
                 }
@@ -899,6 +886,45 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
             this.deviceEnabled = deviceEnabled;
         }
+    }
+
+    public void startFSService() throws Exception {
+        if (fsSenderService != null)
+            return;
+
+        if (!params.FSServiceEnabled)
+            return;
+
+        if (!printer.getCapFiscalStorage())
+            return;
+
+        if (!printer.capReadFSBuffer()) {
+            logger.debug("FSService stopped, buffer reading unsupported");
+            return;
+        }
+
+        // TODO: check extended status
+
+        if (!printer.readTable(10, 1, 1).equals("1")) {
+            logger.debug("FSService stopped, EoD disabled");
+            return;
+        }
+
+        FDOParameters ofdParameters = printer.readFDOParameters();
+        fsSenderService = new FSService(printer, params, ofdParameters);
+        fsSenderService.start();
+    }
+
+    public void stopFSService() throws Exception {
+        if (fsSenderService == null)
+            return;
+
+        fsSenderService.stop();
+        fsSenderService = null;
+    }
+
+    public boolean isFSServiceRunning() {
+        return fsSenderService != null;
     }
 
     public void setNumHeaderLines(int numHeaderLines) throws Exception {

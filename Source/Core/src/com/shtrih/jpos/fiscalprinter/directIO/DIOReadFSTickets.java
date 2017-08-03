@@ -4,15 +4,10 @@
  */
 package com.shtrih.jpos.fiscalprinter.directIO;
 
-/**
- *
- * @author V.Kravtsov
- */
-import java.util.Vector;
-import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.FSTicket;
-import com.shtrih.jpos.DIOUtils;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
+
+import java.util.Vector;
 
 public class DIOReadFSTickets extends DIOItem {
 

@@ -657,6 +657,13 @@ class PrinterTest implements FiscalPrinterConst {
             System.out.println("Unsent documents: " + fsCommunicationStatus.getUnsentDocumentsCount());
 
             System.out.println("Cash in drawer: " + printer.readCashRegister(241).getValue() / 100.0d);
+
+            boolean isStarted = printer.isFSServiceStarted();
+            printer.startFSService();
+            isStarted = printer.isFSServiceStarted();
+            printer.stopFSService();
+            isStarted = printer.isFSServiceStarted();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
