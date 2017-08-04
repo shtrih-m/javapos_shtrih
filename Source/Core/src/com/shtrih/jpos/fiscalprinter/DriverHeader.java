@@ -35,8 +35,7 @@ public class DriverHeader implements JposConst, PrinterHeader {
     /**
      * Creates a new instance of PrinterHeader
      */
-    public DriverHeader(SMFiscalPrinter printer) 
-    {
+    public DriverHeader(SMFiscalPrinter printer) {
         this.printer = printer;
     }
 
@@ -92,9 +91,8 @@ public class DriverHeader implements JposConst, PrinterHeader {
     }
 
     @Override
-    public int getNumHeaderLines() throws Exception 
-    {
-        if (numHeaderLines == 0){
+    public int getNumHeaderLines() throws Exception {
+        if (numHeaderLines == 0) {
             numHeaderLines = printer.getModel().getNumHeaderLines();
             numHeaderLines = Math.max(getParams().numHeaderLines, numHeaderLines);
         }
@@ -109,16 +107,34 @@ public class DriverHeader implements JposConst, PrinterHeader {
     @Override
     public void setNumHeaderLines(int numHeaderLines) throws Exception {
         getParams().numHeaderLines = numHeaderLines;
-        for (int i = header.size(); i <= numHeaderLines; i++) {
-            header.add(new HeaderLine());
+
+        if (numHeaderLines <= 0) {
+            header.clear();
+        } else if (numHeaderLines > header.size()) {
+            for (int i = header.size(); i < numHeaderLines; i++) {
+                header.add(new HeaderLine());
+            }
+        } else {
+            for (int i = header.size(); i > numHeaderLines; i--) {
+                header.remove(i - 1);
+            }
         }
     }
 
     @Override
     public void setNumTrailerLines(int numTrailerLines) throws Exception {
         getParams().numTrailerLines = numTrailerLines;
-        for (int i = trailer.size(); i <= numTrailerLines; i++) {
-            trailer.add(new HeaderLine());
+
+        if (numTrailerLines <= 0) {
+            trailer.clear();
+        } else if (numTrailerLines > trailer.size()) {
+            for (int i = trailer.size(); i < numTrailerLines; i++) {
+                trailer.add(new HeaderLine());
+            }
+        } else {
+            for (int i = trailer.size(); i > numTrailerLines; i--) {
+                trailer.remove(i - 1);
+            }
         }
     }
 
@@ -192,15 +208,17 @@ public class DriverHeader implements JposConst, PrinterHeader {
                     printer.getParams().getFont());
         }
         printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_AFTER_ADDTRAILER);
-        printRecLine(" ");
-        printRecLine(" ");
+        if (getNumTrailerLines() >= 0) {
+            printRecLine(" ");
+            printRecLine(" ");
+        }
         printer.waitForPrinting();
     }
 
     void printHeaderBeforeCutter() throws Exception {
         printer.waitForPrinting();
         int imageHeight = 0;
-        
+
         int lineHeight = printer.getLineHeight(FontNumber.getNormalFont());
         int headerHeight = printer.getHeaderHeight();
         PrinterImage image = printer
@@ -243,7 +261,7 @@ public class DriverHeader implements JposConst, PrinterHeader {
                 printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
             }
             printLines(header);
-        } 
+        }
         if (additionalHeader.length() > 0) {
             printer.printText(PrinterConst.SMFP_STATION_REC, additionalHeader,
                     printer.getParams().getFont());
@@ -283,6 +301,9 @@ public class DriverHeader implements JposConst, PrinterHeader {
     }
 
     void printSpaceLines(int count) throws Exception {
+        if(getNumTrailerLines() < 0)
+            return;
+
         for (int i = 0; i < count; i++) {
             printRecLine(" ");
         }

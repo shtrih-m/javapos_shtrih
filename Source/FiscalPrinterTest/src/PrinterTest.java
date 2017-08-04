@@ -658,6 +658,49 @@ class PrinterTest implements FiscalPrinterConst {
 
             System.out.println("Cash in drawer: " + printer.readCashRegister(241).getValue() / 100.0d);
 
+            int numHeaderLines = printer.getNumHeaderLines();
+
+//            printer.setNumHeaderLines(numHeaderLines - 2);
+//            printer.setNumHeaderLines(numHeaderLines + 3);
+
+//            for (int i = 1; i <= numHeaderLines; i++) {
+//                printer.setHeaderLine(i, "Header line " + i, false);
+//            }
+
+            int trailerLines = printer.getNumTrailerLines();
+
+//            printer.setNumTrailerLines(trailerLines - 2);
+//            printer.setNumTrailerLines(trailerLines + 3);
+
+//            printer.setNumTrailerLines(trailerLines + 2);
+//
+//            trailerLines = printer.getNumTrailerLines();
+//
+//            for (int i = 1; i <= trailerLines; i++) {
+//                printer.setTrailerLine(i, "Trailer line " + i, false);
+//            }
+
+            printZeroFiscalReceipt();
+
+            printer.printLine(SmFptrConst.SMFPTR_LINE_TYPE_BLACK, 10);
+            printer.printLine(SmFptrConst.SMFPTR_LINE_TYPE_WHITE, 100);
+            printer.printLine(SmFptrConst.SMFPTR_LINE_TYPE_BLACK, 10);
+            printer.printLine(SmFptrConst.SMFPTR_LINE_TYPE_WHITE, 100);
+//
+//            printer.printLine(SmFptrConst.SMFPTR_LINE_TYPE_BLACK, 10);
+//
+//            printer.setNumHeaderLines(numHeaderLines - 2);
+//            printer.setNumTrailerLines(trailerLines - 2);
+//
+//            numHeaderLines = printer.getNumHeaderLines();
+//            trailerLines = printer.getNumTrailerLines();
+//
+//            printZeroFiscalReceipt();
+//
+//            printer.printLine(SmFptrConst.SMFPTR_LINE_TYPE_BLACK, 10);
+//
+//            printer.printLine(SmFptrConst.SMFPTR_LINE_TYPE_BLACK, 10);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -765,13 +808,7 @@ class PrinterTest implements FiscalPrinterConst {
         //printCorrectionReceipt();
         //printNullReceipt();
         try {
-            printer.open("ShtrihFptr");
-            printer.claim(3000);
-            printer.setDeviceEnabled(true);
             printFiscalReceipt1053();
-//            printer.setDeviceEnabled(false);
-//            printer.release();
-            printer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

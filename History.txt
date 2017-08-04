@@ -11,6 +11,7 @@
 	
 	[+] Added methods to start/stop and get status of FSService
 	[*] Fixed line graphics printing
+	[+] Added ability to disable trailer printing completely by setting numTrailerLines = -1
 
 ********************************************************************************
 

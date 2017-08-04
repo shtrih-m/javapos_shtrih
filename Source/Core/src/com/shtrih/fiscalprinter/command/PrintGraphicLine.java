@@ -49,7 +49,6 @@ public final class PrintGraphicLine extends PrinterCommand {
     public final void encode(CommandOutputStream out) throws Exception {
         out.writeInt(password);
         out.writeShort(height);
-        out.writeByte(7);
         out.writeBytes(data);
     }
 
