@@ -67,9 +67,9 @@
 		<!-- fieldsFileName to initialize printer tables -->
 		<prop name="fieldsFileName" type="String" value="Tables.csv"/>
 		<!-- Number of header lines -->
-		<prop name="numHeaderLines" type="String" value="3"/>
+		<prop name="numHeaderLines" type="String" value="4"/>
 		<!-- Number of trailer lines -->
-		<prop name="numTrailerLines" type="String" value="0"/>
+		<prop name="numTrailerLines" type="String" value="2"/>
 		<!-- Device to print report, 0 - fiscal memory (FM), 1 - electronic journal (EJ)  -->
 		<prop name="reportDevice" type="String" value="0"/>
 		<!-- Report type, 0 - short, 1 - full -->
@@ -106,6 +106,18 @@
 		<prop name="payType1" type="String" value="1"/>
 		<prop name="payType2" type="String" value="2"/>
 		<prop name="payType3" type="String" value="3"/>
+		<prop name="payType4" type="String" value="4"/>
+		<prop name="payType5" type="String" value="5"/>
+		<prop name="payType6" type="String" value="6"/>
+		<prop name="payType7" type="String" value="7"/>
+		<prop name="payType8" type="String" value="8"/>
+		<prop name="payType9" type="String" value="9"/>
+		<prop name="payType10" type="String" value="10"/>
+		<prop name="payType11" type="String" value="11"/>
+		<prop name="payType12" type="String" value="12"/>
+		<prop name="payType13" type="String" value="13"/>
+		<prop name="payType14" type="String" value="14"/>
+		<prop name="payType15" type="String" value="15"/>
 		<!-- Payment names -->
 		<!-- <prop name="paymentName1" type="String" value="НАЛИЧНЫМИ"/> -->
 		<!-- <prop name="paymentName2" type="String" value="paymentName2"/> -->
