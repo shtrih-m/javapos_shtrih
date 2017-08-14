@@ -332,7 +332,7 @@ public class TextDocumentFilter implements IPrinterEvents {
         // Payments
         long[] payments = params.getPayments();
         for (int i = 0; i < payments.length; i++) {
-            if(payments[i] > 0)
+            if (payments[i] > 0)
                 add(getPaymentName(i), summToStr(payments[i]));
         }
 
@@ -416,7 +416,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
 
     private String summToStr(long price, long quantity) {
-        long amount = MathUtils.round(quantity / 1000 * price);
+        long amount = MathUtils.round(quantity / 1000.0d * price);
         return summToStr(amount);
     }
 
@@ -445,19 +445,15 @@ public class TextDocumentFilter implements IPrinterEvents {
     private void printReceiptItem(FSReceiptItem item) throws Exception {
         String line = "";
         add(item.getText());
-        if (item.getQuantity() != 1000) {
-            line = String.format("%s X %s", quantityToStr(item.getQuantity()), amountToStr(item.getPrice()));
-            add("", line);
 
-            line = summToStr(item.getPrice(), item.getQuantity())
-                    + getTaxData(taxBitsToInt(item.getTax()), 0, 0, 0);
-            add(String.format("%02d", item.getDepartment()), line);
-        } else {
-            long amount = MathUtils.round(item.getQuantity() / 1000 * item.getPrice());
-            line = "=" + amountToStr(amount)
-                    + getTaxData(taxBitsToInt(item.getTax()), 0, 0, 0);
-            add(String.format("%02d", item.getDepartment()), line);
-        }
+        long qty = item.getQuantity() / 1000;
+
+        line = String.format("%s X %s", quantityToStr(qty), amountToStr(item.getPrice()));
+        add("", line);
+
+        line = summToStr(item.getPrice(), qty)
+                + getTaxData(taxBitsToInt(item.getTax()), 0, 0, 0);
+        add(String.format("%02d", item.getDepartment()), line);
     }
 
     private int taxBitsToInt(int tax) {
@@ -562,7 +558,7 @@ public class TextDocumentFilter implements IPrinterEvents {
                 isEJPresent = status.getPrinterFlags().isEJPresent();
                 for (int i = 0; i <= 15; i++) {
                     String[] fieldValue = new String[1];
-                    if(printer.readTable(PrinterConst.SMFP_TABLE_PAYTYPE, i + 1, 1, fieldValue) == 0)
+                    if (printer.readTable(PrinterConst.SMFP_TABLE_PAYTYPE, i + 1, 1, fieldValue) == 0)
                         paymentNames[i] = fieldValue[0];
                 }
                 connected = true;
@@ -806,8 +802,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
 
     public void readEJReport(boolean isReceipt) throws Exception {
-        if(printer.getCapFiscalStorage())
-        {
+        if (printer.getCapFiscalStorage()) {
             ReadFiscalStorage();
             return;
         }
@@ -828,7 +823,7 @@ public class TextDocumentFilter implements IPrinterEvents {
             rc = printer.executeCommand(command2);
             if (printer.succeeded(rc)) {
                 String line = command2.getData();
-                lines.add(line);                             
+                lines.add(line);
                 if ((line.length() > 0) && (line.contains("#"))) {
                     printer.cancelEJDocument();
                     break;
@@ -851,10 +846,10 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
 
     private void ReadFiscalStorage() throws Exception {
-         long documentNumber = printer.fsReadStatus().getDocNumber();
-         long fp = printer.fsFindDocument(documentNumber).getDocument().getFP();
+        long documentNumber = printer.fsReadStatus().getDocNumber();
+        long fp = printer.fsFindDocument(documentNumber).getDocument().getFP();
 
-         add(String.format("ФД:%d ФП:%10d", documentNumber, fp));
+        add(String.format("ФД:%d ФП:%10d", documentNumber, fp));
     }
 
     private void addEJLine(String s) throws Exception {

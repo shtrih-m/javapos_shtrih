@@ -6,6 +6,11 @@
 
 ********************************************************************************
 
+  August 14 2017
+  deviceServiceVersion = 1013459
+	
+	[*] Fixed SKL generation when using FSSale command
+
   August 3 2017
   deviceServiceVersion = 1013458
 	
