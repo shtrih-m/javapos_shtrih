@@ -385,7 +385,7 @@ public class FptrParameters {
         String paymentName;
         String propertyName;
         paymentNames.clear();
-        for (int i = 1; i <= 4; i++) {
+        for (int i = 1; i <= 16; i++) {
             propertyName = "paymentName" + String.valueOf(i);
             if (entry.hasPropertyWithName(propertyName)) {
                 paymentName = (String) entry.getPropertyValue(propertyName);
