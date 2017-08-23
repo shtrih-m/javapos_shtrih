@@ -920,6 +920,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             item.setTotalAmount(getParams().itemTotalAmount);
             getParams().itemTotalAmount = null;
 
+            item.setPaymentType(getParams().paymentType);
+            item.setSubjectType(getParams().subjectType);
+
+
             items.add(item);
             recItems.add(item);
 

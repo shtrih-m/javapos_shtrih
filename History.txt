@@ -14,6 +14,7 @@
   [*] Fixed #20: get rid of hardcoded payment names
   [+] Added printRecMessage overload which accepts font number
   [+] Added property openReceiptOnBegin to enable check opening on beginFiscalReceipt
+  [+] Added ability to pass paymentType and subjectType for check position
 
 ********************************************************************************
 

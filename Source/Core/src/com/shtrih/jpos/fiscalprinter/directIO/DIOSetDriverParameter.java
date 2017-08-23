@@ -93,6 +93,14 @@ public class DIOSetDriverParameter extends DIOItem {
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT:
                 service.getParams().itemTotalAmount = ((int[]) object)[0];
                 break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE:
+                service.getParams().paymentType = (byte)((int[]) object)[0];
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE:
+                service.getParams().subjectType = (byte)((int[]) object)[0];
+                break;
                 
         }
     }

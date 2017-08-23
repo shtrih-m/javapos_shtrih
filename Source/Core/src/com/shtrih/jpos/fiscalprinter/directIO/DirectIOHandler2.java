@@ -305,7 +305,7 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_CANCELIO:
                 getParams().cancelIO = true;
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_WRITE_TAG:
                 new DIOFSWriteTag(service).execute(data, object);
                 break;
@@ -313,15 +313,15 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_FS_WRITE_TAG_1162:
                 new DIOFSWriteTag(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_WRITE_TLV:
                 new DIOFSWriteTLV(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PRINT_DOC_END:
                 new DIOPrintDocEnd(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_DISABLE_PRINT:
                 new DIODisablePrint(service).execute(data, object);
                 break;
@@ -329,15 +329,15 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_PRINT_NON_FISCAL:
                 new DIOPrintNonFiscal(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_WRITE_CUSTOMER_EMAIL:
                 new DIOFSWriteCustomerEmail(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_WRITE_CUSTOMER_PHONE:
                 new DIOFSWriteCustomerPhone(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_PRINT_CALC_REPORT:
                 new DIOFSPrintCalcReport(service).execute(data, object);
                 break;
@@ -345,39 +345,39 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_PRINT_JOURNAL:
                 new DIOPrintJournal(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_SET_DISCOUNT_AMOUNT:
                 new DIOSetDiscountAmount(service).execute(data, object);
                 break;
-    
+
             case SmFptrConst.SMFPTR_DIO_READ_FS_PARAMS:
                 new DIOReadFSParams(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS:
                 new DIOReadFSTickets(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS2:
                 new DIOReadFSTickets2(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS3:
                 new DIOReadFSTickets3(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS4:
                 new DIOReadFSTickets4(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PRINT_CORRECTION2:
                 new DIOPrintCorrectionReceipt2(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PRINT_CORRECTION:
                 new DIOPrintCorrectionReceipt(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_READ_TOTALS:
                 new DIOReadTotals(service).execute(data, object);
                 break;
@@ -401,7 +401,7 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_SET_FS_SERVICE_STATE:
                 new DIOSetFSServiceState(service).execute(data, object);
                 break;
-                
+
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
@@ -491,47 +491,47 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_PARAM_FONT_NUMBER:
                 paramValue = String.valueOf(service.getFontNumber());
                 break;
-                
+
             case  SmFptrConst.SMFPTR_DIO_PARAM_SYS_PASSWORD:
                 paramValue = String.valueOf(service.getPrinter().getSysPassword());
                 break;
-                
+
             case  SmFptrConst.SMFPTR_DIO_PARAM_USR_PASSWORD:
                 paramValue = String.valueOf(service.getPrinter().getUsrPassword());
                 break;
-                
+
             case  SmFptrConst.SMFPTR_DIO_PARAM_TAX_PASSWORD:
                 paramValue = String.valueOf(service.getPrinter().getTaxPassword());
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0:
                 paramValue = String.valueOf(service.getParams().taxValue[0]);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_1:
                 paramValue = String.valueOf(service.getParams().taxValue[1]);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_2:
                 paramValue = String.valueOf(service.getParams().taxValue[2]);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_3:
                 paramValue = String.valueOf(service.getParams().taxValue[3]);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_4:
                 paramValue = String.valueOf(service.getParams().taxValue[4]);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_5:
                 paramValue = String.valueOf(service.getParams().taxValue[5]);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM:
                 paramValue = String.valueOf(service.getParams().taxSystem);
                 break;
-                
+
         }
         ((String[]) object)[0] = paramValue;
     }
@@ -568,43 +568,43 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_PARAM_FONT_NUMBER:
                 service.setFontNumber((int)value);
                 break;
-                
+
             case  SmFptrConst.SMFPTR_DIO_PARAM_SYS_PASSWORD:
                 service.getPrinter().setSysPassword((int)value);
                 break;
-                
+
             case  SmFptrConst.SMFPTR_DIO_PARAM_USR_PASSWORD:
                 service.getPrinter().setUsrPassword((int)value);
                 break;
-                
+
             case  SmFptrConst.SMFPTR_DIO_PARAM_TAX_PASSWORD:
                 service.getPrinter().setTaxPassword((int)value);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0:
                 service.getParams().taxValue[0] = value;
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_1:
                 service.getParams().taxValue[1] = value;
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_2:
                 service.getParams().taxValue[2] = value;
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_3:
                 service.getParams().taxValue[3] = value;
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_4:
                 service.getParams().taxValue[4] = value;
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_5:
                 service.getParams().taxValue[5] = value;
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM:
                 service.getParams().taxSystem = (int)value;
                 break;
@@ -612,7 +612,14 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT:
                 service.getParams().itemTotalAmount = (int)value;
                 break;
-                
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE:
+                service.getParams().paymentType = (byte)((int)value);
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE:
+                service.getParams().subjectType = (byte)((int)value);
+                break;
         }
     }
 
@@ -635,7 +642,7 @@ public class DirectIOHandler2 {
         params[0] = register;
     }
 
-    public void dioLoadImage(int[] data, Object object) throws Exception 
+    public void dioLoadImage(int[] data, Object object) throws Exception
     {
         String fileName = ((String[]) (object))[0];
         PrinterImage printerImage = new PrinterImage(fileName);

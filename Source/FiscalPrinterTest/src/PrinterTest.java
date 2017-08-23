@@ -706,15 +706,23 @@ class PrinterTest implements FiscalPrinterConst {
         printer.printRecItem("ITEM 1", 0, 1234, 0, 1000, "");
 
         // Позиция с коррекцией на +-1 копейку
+        // Сумма позиции будет сброшена драйвером после вызова printRecItem
         printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 1235);
         printer.printRecItem("ITEM 2", 0, 1234, 0, 1000, "");
+
+        // Позиция с признаком типа оплаты и признаком способа оплаты
+        // Признак типа оплаты
+        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, 4);
+        // Признак способа оплаты
+        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 1);
+        printer.printRecItem("ITEM 3", 0, 1234, 0, 1000, "");
 
         // Запись телефона покупателя
         printer.fsWriteCustomerPhone("+79006009090");
 
         // Оплата типом оплаты который привязан к jpos.xml к метке "0"
         // <prop name="payType0" type="String" value="0"/>
-        printer.printRecTotal(0, 1235, "0");
+        printer.printRecTotal(0, 1235 + 1234, "0");
 
         // Оплата типом оплаты который привязан к jpos.xml к метке "2"
         // <prop name="payType2" type="String" value="2"/>

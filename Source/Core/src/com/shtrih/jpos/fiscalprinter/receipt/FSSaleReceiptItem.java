@@ -41,6 +41,8 @@ public class FSSaleReceiptItem {
     private FSSaleReceiptItem splittedItem;
     private final FSDiscounts discounts = new FSDiscounts();
     private Integer totalAmount = null;
+    private Byte paymentType;
+    private Byte subjectType;
 
     public FSSaleReceiptItem() {
     }
@@ -56,6 +58,9 @@ public class FSSaleReceiptItem {
         item.setTax4(tax4);
         item.setText(text);
         item.setTotalAmount(totalAmount);
+        item.setPaymentType(paymentType);
+        item.setSubjectType(subjectType);
+
         return item;
     }
 
@@ -327,5 +332,13 @@ public class FSSaleReceiptItem {
             }
         }
         priceUpdated = true;
+    }
+
+    public void setPaymentType(Byte paymentType) {
+        this.paymentType = paymentType;
+    }
+
+    public void setSubjectType(Byte subjectType) {
+        this.subjectType = subjectType;
     }
 }

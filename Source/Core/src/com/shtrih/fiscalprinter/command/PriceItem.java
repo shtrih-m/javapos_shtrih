@@ -26,6 +26,8 @@ public class PriceItem {
     private int tax4;
     private String text;
     private Integer totalAmount;
+    private Byte paymentType;
+    private Byte subjectType;
 
     /**
      * Creates a new instance of PriceItem
@@ -144,5 +146,21 @@ public class PriceItem {
 
     public Integer getTotalAmount() {
         return totalAmount;
+    }
+
+    public Byte getPaymentType() {
+        return paymentType;
+    }
+
+    public Byte getSubjectType() {
+        return subjectType;
+    }
+
+    public void setPaymentType(Byte paymentType) {
+        this.paymentType = paymentType;
+    }
+
+    public void setSubjectType(Byte subjectType) {
+        this.subjectType = subjectType;
     }
 }
