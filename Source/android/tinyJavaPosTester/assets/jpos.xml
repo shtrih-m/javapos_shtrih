@@ -198,5 +198,9 @@
     <prop name="logEnabled" type="String" value="1"/>
 		<!-- Hide internal exception details  -->
 		<prop name="stripExceptionDetails" type="String" value="0"/>
+		
+		<!-- открывать чек при вызове метода beginFiscalReceipt, 
+         а не по первому вызову printRecItem -->
+		<prop name="openReceiptOnBegin" type="String" value="1"/>
 	</JposEntry>
 </JposEntries>

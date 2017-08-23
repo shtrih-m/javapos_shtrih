@@ -110,6 +110,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         clearReceipt();
         getDevice().printFSHeader();
         subtotalPrinted = false;
+
+        if (getParams().openReceiptOnBegin)
+            openReceipt(true);
     }
 
     public void openReceipt(boolean isSale) throws Exception {
@@ -913,7 +916,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             item.setPostLine(getPostLine());
             item.setUnitName(unitName);
             item.setIsStorno(isStorno);
-            
+
             item.setTotalAmount(getParams().itemTotalAmount);
             getParams().itemTotalAmount = null;
 

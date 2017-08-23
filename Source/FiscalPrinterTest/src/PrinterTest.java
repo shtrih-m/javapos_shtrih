@@ -690,10 +690,10 @@ class PrinterTest implements FiscalPrinterConst {
 
     private void PrintCheckWithPassedPositionSum() throws Exception {
         // Задаем тип чека SMFPTR_RT_SALE, SMFPTR_RT_RETSALE, SMFPTR_RT_BUY, SMFPTR_RT_RETBUY
-        printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETSALE);
+        printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
 
         // Указываем систему налогообложения
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM, 2);
+        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM, 1);
 
         // Начинаем фискальный документ
         printer.beginFiscalReceipt(true);
