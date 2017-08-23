@@ -22,11 +22,11 @@ public class BitUtils {
     private BitUtils() {
     }
 
-    public static int setBit(int bit) {
+    public static long setBit(int bit) {
         return (1 << bit);
     }
 
-    public static boolean testBit(int data, int bit) {
+    public static boolean testBit(long data, int bit) {
         return (setBit(bit) & data) != 0;
     }
 

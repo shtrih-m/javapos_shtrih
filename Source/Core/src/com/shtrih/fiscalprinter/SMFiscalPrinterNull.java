@@ -446,7 +446,7 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
-    public int printGraphicLine(int height, byte[] data) throws Exception {
+    public int printGraphicLine(int station, int height, byte[] data) throws Exception {
         return 0;
     }
 
@@ -985,5 +985,12 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public int fsWriteTag1162(int catId, long groupId, String itemId)
             throws Exception {
         return 0;
+    }
+    
+    public void setIsFooter(boolean value){
+    }
+    
+    public boolean isCapFooterFlag(){
+        return false;
     }
 }

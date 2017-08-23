@@ -53,6 +53,7 @@ import com.shtrih.jpos.fiscalprinter.directIO.DIOReadShortStatus;
 import com.shtrih.jpos.fiscalprinter.directIO.DIOReadLongStatus;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
+import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_STATION_REC;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
 
 /**
@@ -189,7 +190,7 @@ public class DirectIOHandler {
                 } else {
                     Arrays.fill(lineData, (byte) 0xFF);
                 }
-                getPrinter().printGraphicLine(lineHeight, lineData);
+                getPrinter().printGraphicLine(SMFP_STATION_REC, lineHeight, lineData);
                 getPrinter().waitForPrinting();
                 break;
 

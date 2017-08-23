@@ -454,6 +454,9 @@ public interface PrinterConst {
     /** Slip station **/
     public static final int SMFP_STATION_SLP = 0x04;
 
+    /** Footer **/
+    public static final int SMFP_STATION_FOOTER = 0x80;
+    
     /** Receipt & journal stations **/
     public static final int SMFP_STATION_RECJRN = 0x03;
 

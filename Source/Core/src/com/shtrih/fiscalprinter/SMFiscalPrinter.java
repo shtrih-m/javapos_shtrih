@@ -240,7 +240,7 @@ public interface SMFiscalPrinter {
 
     public void printGraphics(int line1, int line2) throws Exception;
 
-    public int printGraphicLine(int height, byte[] data) throws Exception;
+    public int printGraphicLine(int station, int height, byte[] data) throws Exception;
 
     public int cutPaper(int cutType) throws Exception;
 
@@ -521,4 +521,8 @@ public interface SMFiscalPrinter {
     boolean capReadFSBuffer() throws Exception;
 
     int getMaxGraphicsLineWidth() throws Exception;
+
+    void setIsFooter(boolean value);
+
+    boolean isCapFooterFlag();
 }

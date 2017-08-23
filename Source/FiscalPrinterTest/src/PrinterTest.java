@@ -230,7 +230,30 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-
+    
+    private void printAztecBarcode() {
+        try {
+            PrinterBarcode barcode = new PrinterBarcode();
+            barcode.setAspectRatio(3);
+            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
+            barcode.setTextFont(1);
+            barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_ABOVE);
+                
+            barcode.setBarWidth(4);
+            barcode.setText(
+                    "https://checkl.fsrar.ru?id=fa07210-0041-4dc6-"
+                            + "bbf2-1634282724418amdt=191015161"
+                            + "71amcn=0100000062870D0682B61230689D76826FAC92C5DC29955F0E3B5663B4"
+                            + "4C63A673C86B0976C0B24495848F6EF157792203A0D275"
+                            + "1F525456644096478D256A910EFEABB67");
+            barcode.setLabel("Aztec: ");
+            barcode.setType(SmFptrConst.SMFPTR_BARCODE_AZTEC);
+            printer.printBarcode(barcode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+            
     private void printCode128() {
         try {
             final int BARCODE_HEIGHT = 100;
@@ -659,47 +682,7 @@ class PrinterTest implements FiscalPrinterConst {
             System.out.println("Cash in drawer: " + printer.readCashRegister(241).getValue() / 100.0d);
 
             int numHeaderLines = printer.getNumHeaderLines();
-
-//            printer.setNumHeaderLines(numHeaderLines - 2);
-//            printer.setNumHeaderLines(numHeaderLines + 3);
-
-//            for (int i = 1; i <= numHeaderLines; i++) {
-//                printer.setHeaderLine(i, "Header line " + i, false);
-//            }
-
             int trailerLines = printer.getNumTrailerLines();
-
-//            printer.setNumTrailerLines(trailerLines - 2);
-//            printer.setNumTrailerLines(trailerLines + 3);
-
-//            printer.setNumTrailerLines(trailerLines + 2);
-//
-//            trailerLines = printer.getNumTrailerLines();
-//
-//            for (int i = 1; i <= trailerLines; i++) {
-//                printer.setTrailerLine(i, "Trailer line " + i, false);
-//            }
-
-            printZeroFiscalReceipt();
-
-            printer.printLine(SmFptrConst.SMFPTR_LINE_TYPE_BLACK, 10);
-            printer.printLine(SmFptrConst.SMFPTR_LINE_TYPE_WHITE, 100);
-            printer.printLine(SmFptrConst.SMFPTR_LINE_TYPE_BLACK, 10);
-            printer.printLine(SmFptrConst.SMFPTR_LINE_TYPE_WHITE, 100);
-//
-//            printer.printLine(SmFptrConst.SMFPTR_LINE_TYPE_BLACK, 10);
-//
-//            printer.setNumHeaderLines(numHeaderLines - 2);
-//            printer.setNumTrailerLines(trailerLines - 2);
-//
-//            numHeaderLines = printer.getNumHeaderLines();
-//            trailerLines = printer.getNumTrailerLines();
-//
-//            printZeroFiscalReceipt();
-//
-//            printer.printLine(SmFptrConst.SMFPTR_LINE_TYPE_BLACK, 10);
-//
-//            printer.printLine(SmFptrConst.SMFPTR_LINE_TYPE_BLACK, 10);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -807,11 +790,7 @@ class PrinterTest implements FiscalPrinterConst {
         //printFiscalReceipt1048889();
         //printCorrectionReceipt();
         //printNullReceipt();
-        try {
-            printFiscalReceipt1053();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        printFiscalReceipt1053();
     }
 
     public void printCorrectionReceipt() {
@@ -1834,6 +1813,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecSubtotalAdjustment(1, "", 56);
             printer.printRecTotal(50500, 50500, "0");
             printCode128();
+            printAztecBarcode();
             printer.printRecMessage("                                          ");
             printer.printRecMessage(" *****************************************");
             printer.printRecMessage("                                          ");

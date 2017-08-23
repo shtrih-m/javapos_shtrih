@@ -36,6 +36,7 @@ import java.util.Vector;
 public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     enum Boolean {
+
         NOTDEFINED, TRUE, FALSE
     }
 
@@ -78,6 +79,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private Boolean capLoadGraphics1 = Boolean.NOTDEFINED;
     private Boolean capLoadGraphics2 = Boolean.NOTDEFINED;
     private Boolean capLoadGraphics3 = Boolean.NOTDEFINED;
+    private boolean capGraphics3Scale = false;
     private Boolean capPrintGraphics1 = Boolean.NOTDEFINED;
     private Boolean capPrintGraphics2 = Boolean.NOTDEFINED;
     private Boolean capPrintGraphics3 = Boolean.NOTDEFINED;
@@ -98,13 +100,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private boolean capOpenReceipt = true;
     private boolean capFSCloseReceipt = false;
     private boolean capFSTotals = true;
+    private boolean capFooterFlag = false;
     private boolean subtotalInHeader = false;
     private boolean discountInHeader = false;
     private int headerHeigth = 0;
+    private boolean isFooter = false;
     private PrinterModelParameters modelParameters = null;
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
-                               FptrParameters params, FiscalPrinterImpl service) {
+            FptrParameters params, FiscalPrinterImpl service) {
         this.port = port;
         this.device = device;
         this.params = params;
@@ -310,9 +314,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     private boolean isReceiptCommand(PrinterCommand command) throws Exception {
         int[] codes = {
-                0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89,
-                0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F,
-                0xFF0C, 0xFF0D, 0x12, 0x17, 0x2F
+            0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89,
+            0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F,
+            0xFF0C, 0xFF0D, 0x12, 0x17, 0x2F
         };
         for (int i = 0; i < codes.length; i++) {
             if (command.getCode() == codes[i]) {
@@ -461,9 +465,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         shortStatus = command.getStatus();
 
         /*
-        NumberFormat formatter = new DecimalFormat("#0.00");
-        String text = formatter.format(command.getParameters().getPowerVoltage());
-        logger.debug("Power voltage: " + text + " V");    
+         NumberFormat formatter = new DecimalFormat("#0.00");
+         String text = formatter.format(command.getParameters().getPowerVoltage());
+         logger.debug("Power voltage: " + text + " V");    
          */
         return shortStatus;
     }
@@ -476,6 +480,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             throw new InvalidParameterException("printString, line = null");
         }
 
+        station = getPrintStation(station);
         PrintString command = new PrintString(usrPassword, station, line);
         execute(command);
         return command.getOperator();
@@ -485,6 +490,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         logger.debug("printBoldString(" + String.valueOf(station) + ", '"
                 + line + "')");
 
+        station = getPrintStation(station);
         PrintBoldString command = new PrintBoldString();
         command.setPassword(usrPassword);
         command.setStation(station);
@@ -502,11 +508,19 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         execute(command);
     }
 
+    public int getPrintStation(int station) {
+        if (isFooter) {
+            station = station + SMFP_STATION_FOOTER;
+        }
+        return station;
+    }
+
     public int printStringFont(int station, FontNumber font, String line)
             throws Exception {
         logger.debug("printStringFont(" + String.valueOf(station) + ", '"
                 + String.valueOf(font.getValue()) + ", '" + line + "')");
 
+        station = getPrintStation(station);
         PrintStringFont command = new PrintStringFont(usrPassword, station,
                 font, line);
 
@@ -595,7 +609,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public int writeTable(int tableNumber, int rowNumber, int fieldNumber,
-                          String fieldValue) throws Exception {
+            String fieldValue) throws Exception {
         int result = 0;
         logger.debug("writeTable(" + String.valueOf(tableNumber) + ", "
                 + String.valueOf(rowNumber) + ", "
@@ -859,10 +873,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     /*
-        185.Накопление скидок с продаж в смене
-        186.Накопление скидок с покупок в смене
-        187.Накопление скидок с возврата продаж в смене
-        188.Накопление скидок с возврата покупок в смене
+     185.Накопление скидок с продаж в смене
+     186.Накопление скидок с покупок в смене
+     187.Накопление скидок с возврата продаж в смене
+     188.Накопление скидок с возврата покупок в смене
      */
     public boolean isDayDiscountRegister(int number) throws Exception {
         return (number >= 185) && (number <= 188);
@@ -902,7 +916,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public PrintEJDayReportOnDates printEJDayReportOnDates(EJDate date1,
-                                                           EJDate date2, int reportType) throws Exception {
+            EJDate date2, int reportType) throws Exception {
         logger.debug("printEJDayReportOnDates");
         PrintEJDayReportOnDates command = new PrintEJDayReportOnDates();
         command.setPassword(sysPassword);
@@ -914,7 +928,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public PrintFMReportDates printFMReportDates(PrinterDate date1,
-                                                 PrinterDate date2, int reportType) throws Exception {
+            PrinterDate date2, int reportType) throws Exception {
         logger.debug("printFMReportDates");
         PrintFMReportDates command = new PrintFMReportDates();
         command.setPassword(taxPassword);
@@ -926,7 +940,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public PrintEJDayReportOnDays printEJReportDays(int day1, int day2,
-                                                    int reportType) throws Exception {
+            int reportType) throws Exception {
         logger.debug("printEJReportDays");
         PrintEJDayReportOnDays command = new PrintEJDayReportOnDays();
         command.setPassword(sysPassword);
@@ -938,7 +952,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public PrintFMReportDays printFMReportDays(int day1, int day2,
-                                               int reportType) throws Exception {
+            int reportType) throws Exception {
         logger.debug("printFMReportDays");
         PrintFMReportDays command = new PrintFMReportDays();
         command.setPassword(taxPassword);
@@ -1152,7 +1166,29 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         PrintZReport command = new PrintZReport();
         command.setPassword(sysPassword);
         execute(command);
+        printCalcReport();
         return command;
+    }
+
+    public void printCalcReport() throws Exception {
+        if (!params.calcReportEnabled) {
+            return;
+        }
+
+        if (!getCapFiscalStorage()) {
+            return;
+        }
+
+        try {
+            waitForPrinting();
+            FSReadCommStatus status = fsReadCommStatus();
+            printLines("КОЛИЧЕСТВО СООБЩЕНИЙ ДЛЯ ОФД:", String.valueOf(status.getQueueSize()));
+            printLines("НОМЕР ПЕРВОГО ДОКУМЕНТА ДЛЯ ОФД:", String.valueOf(status.getDocumentNumber()));
+            String docDate = status.getDocumentDate().toString() + " " + status.getDocumentTime().toString2();
+            printLines("ДАТА ПЕРВОГО ДОКУМЕНТА:", docDate);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
     }
 
     public int printDepartmentReport() throws Exception {
@@ -1344,11 +1380,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         execute(command);
     }
 
-    public int printGraphicLine(int height, byte[] data) throws Exception {
+    public int printGraphicLine(int station, int height, byte[] data) throws Exception {
         logger.debug("printGraphicLine");
 
-        PrintGraphicLine command = new PrintGraphicLine(usrPassword, height,
-                data);
+        station = getPrintStation(station);
+        PrintGraphicLine command = new PrintGraphicLine();
+        command.setPassword(usrPassword);
+        command.setHeight(height);
+        command.setStation(station);
+        command.setData(data);
         sleep(params.getGraphicsLineDelay());
         return executeCommand(command);
     }
@@ -1415,7 +1455,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         logger.debug("waitForPrinting");
         PrinterStatus status = null;
         try {
-            for (; ; ) {
+            for (;;) {
                 status = readPrinterStatus();
                 switch (status.getSubmode()) {
                     case ECR_SUBMODE_IDLE: {
@@ -1526,7 +1566,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public boolean connectDevice(int baudRate, int deviceBaudRate,
-                                 int deviceByteTimeout) throws Exception {
+            int deviceByteTimeout) throws Exception {
         setBaudRate(baudRate);
         LongPrinterStatus status = readLongStatus();
         writePortParams(status.getPortNumber(),
@@ -1814,7 +1854,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             for (int i = 0; i < data.length; i++) {
                 data[i] = 0;
             }
-            if (isCommandSupported(printGraphicLine(1, data))) {
+            
+            if (isCommandSupported(printGraphicLine(SMFP_STATION_REC, 1, data))) {
                 capPrintGraphicsLine = Boolean.TRUE;
             } else {
                 capPrintGraphicsLine = Boolean.FALSE;
@@ -1877,6 +1918,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         headerHeigth = getModel().getHeaderHeight();
         capFiscalStorage = readCapFiscalStorage();
+        capFooterFlag = capFiscalStorage;
         if (capFiscalStorage) {
             boolean isCompactHeader = false;
             String[] fieldValue = new String[1];
@@ -1913,6 +1955,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         capDiscount = true;
         if (isShtrihMobile()) {
             capDiscount = false;
+            capGraphics3Scale = true;
         } else {
             capDiscount = discountMode == 0;
         }
@@ -2134,7 +2177,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             if (barcode.getType() != SmFptrConst.SMFPTR_BARCODE_EAN13) {
                 throw new Exception(
                         Localizer
-                                .getString(Localizer.PrinterSupportesEAN13Only));
+                        .getString(Localizer.PrinterSupportesEAN13Only));
             }
 
             if (barcode.isTextAbove()) {
@@ -2276,7 +2319,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             if (getSwapGraphicsLine()) {
                 data = BitUtils.swapBits(data);
             }
-            printGraphicLine(barcode.getHeight(), data);
+            printGraphicLine(SMFP_STATION_REC, barcode.getHeight(), data);
         } else {
             bc.setFirstLine(getImageFirstLine());
             bc.setHScale(1);
@@ -2294,9 +2337,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             int vScale = barcode.getVScale();
             int loadHScale = hScale;
             int loadVScale = vScale;
-            if (getCapLoadGraphics3()) {
-                loadHScale = 1;
-                loadVScale = 1;
+            if (getCapLoadGraphics3()) 
+            {
+                if (capGraphics3Scale)
+                {
+                    loadHScale = 1;
+                    loadVScale = 1;
+                } else
+                {
+                    hScale = 1;
+                    vScale = 1;
+                }
             } else if (getCapPrintScaled()) {
                 hScale = 1;
                 loadVScale = 1;
@@ -2358,13 +2409,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (getCapLoadGraphics3()) {
             loadBarcode512(barcode);
 
+            int flags = getPrintStation(SMFP_STATION_REC);
             PrintGraphics3 command = new PrintGraphics3();
             command.setPassword(usrPassword);
             command.setLine1(barcode.getFirstLine());
             command.setLine2(barcode.getFirstLine() + barcode.getHeight() - 1);
             command.setVscale(barcode.getVScale());
             command.setHscale(barcode.getHScale());
-            command.setFlags(2);
+            command.setFlags(flags);
             execute(command);
         } else {
             for (int i = 0; i < barcode.getHeight(); i++) {
@@ -2498,8 +2550,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (imageWidth > maxGraphicsWidth) {
             throw new Exception(
                     Localizer.getString(Localizer.InvalidImageWidth) + ", "
-                            + String.valueOf(imageWidth) + " > "
-                            + String.valueOf(maxGraphicsWidth));
+                    + String.valueOf(imageWidth) + " > "
+                    + String.valueOf(maxGraphicsWidth));
         }
     }
 
@@ -2516,9 +2568,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         byte[] SEPARATOR_PATTERN_BLACK = {(byte) 0xFF};
         byte[] SEPARATOR_PATTERN_WHITE = {0x00};
         byte[] SEPARATOR_PATTERN_DOTTED_1 = {(byte) 0xFF, (byte) 0xFF,
-                (byte) 0xFF, 0x00, 0x00, 0x00};
+            (byte) 0xFF, 0x00, 0x00, 0x00};
         byte[] SEPARATOR_PATTERN_DOTTED_2 = {(byte) 0xFF, (byte) 0xFF,
-                (byte) 0xFF, (byte) 0xFF, 0x00, 0x00, 0x00, 0x00};
+            (byte) 0xFF, (byte) 0xFF, 0x00, 0x00, 0x00, 0x00};
         byte[] pattern;
 
         switch (separatorType) {
@@ -2764,8 +2816,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (image.getWidth() > getMaxGraphicsWidth()) {
             throw new Exception(
                     Localizer.getString(Localizer.InvalidImageWidth) + ", "
-                            + String.valueOf(image.getWidth()) + " > "
-                            + String.valueOf(getMaxGraphicsWidth()));
+                    + String.valueOf(image.getWidth()) + " > "
+                    + String.valueOf(getMaxGraphicsWidth()));
         }
         // write image to device
         if (getCapLoadGraphics3()) {
@@ -3240,11 +3292,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     private static String[] docNames = {
-            "ПРОДАЖА", "ПОКУПКА", "ВОЗВРАТ ПРОДАЖИ", "ВОЗВРАТ ПОКУПКИ"
+        "ПРОДАЖА", "ПОКУПКА", "ВОЗВРАТ ПРОДАЖИ", "ВОЗВРАТ ПОКУПКИ"
     };
 
     private static String[] fsDocNames = {
-            "ПРИХОД", "РАСХОД", "ВОЗВРАТ ПРИХОДА", "ВОЗВРАТ РАСХОДА"
+        "ПРИХОД", "РАСХОД", "ВОЗВРАТ ПРИХОДА", "ВОЗВРАТ РАСХОДА"
     };
 
     public String getReceiptName(int receiptType) {
@@ -3351,7 +3403,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public Vector<FSTicket> fsReadTickets(int firstFSDocumentNumber,
-                                          int documentCount) throws Exception {
+            int documentCount) throws Exception {
         Vector<FSTicket> tickets = new Vector<FSTicket>();
         FSReadStatus status = fsReadStatus();
         long lastFSDocumentNumber = status.getDocNumber();
@@ -3401,11 +3453,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     /*
         
-// Таблица 15, Параметры офд
-// Номер таблицы,Ряд,Поле,Размер поля,Тип поля,Мин. значение, Макс.значение, Название,Значение
-15,1,1,16,1,0,65535,'Ip адрес сервера офд','91.107.67.212'
-15,1,2,2,0,0,65535,'Tcp порт сервера офд','7779'
-15,1,3,2,0,0,65535,'Тайм-аут опроса офд, 1 с','5'
+     // Таблица 15, Параметры офд
+     // Номер таблицы,Ряд,Поле,Размер поля,Тип поля,Мин. значение, Макс.значение, Название,Значение
+     15,1,1,16,1,0,65535,'Ip адрес сервера офд','91.107.67.212'
+     15,1,2,2,0,0,65535,'Tcp порт сервера офд','7779'
+     15,1,3,2,0,0,65535,'Тайм-аут опроса офд, 1 с','5'
     
      */
     public FDOParameters readFDOParameters() throws Exception {
@@ -3417,7 +3469,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             final int hostField = 1;
             final int portField = 2;
             final int pollPeriodField = 3;
-
 
             String host = readTable(tableNumber, 1, hostField);
 
@@ -3456,7 +3507,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void printSeparator(int separatorType, int height) throws Exception {
-        printGraphicLine(height, getSeparatorData(separatorType));
+        printGraphicLine(SMFP_STATION_REC, height, getSeparatorData(separatorType));
         waitForPrinting();
     }
 
@@ -3474,9 +3525,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public int getTaxBits(int tax) {
         int result = 0;
         if ((tax >= 1) && (tax <= 6)) {
-            result = BitUtils.setBit(tax - 1);
+            result = (int) BitUtils.setBit(tax - 1);
         }
         return result;
+    }
+
+    public void setIsFooter(boolean value) {
+        isFooter = value;
+    }
+
+    public boolean isCapFooterFlag() {
+        return capFooterFlag;
     }
 
 }

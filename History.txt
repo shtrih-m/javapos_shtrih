@@ -9,7 +9,7 @@
   August 15 2017
   deviceServiceVersion = 1013460
 	
-	[*] Fixed max payment type number when reading payment type names
+  [-] Fixed max payment type number when reading payment type names
 	
 
 ********************************************************************************
@@ -17,39 +17,39 @@
   August 14 2017
   deviceServiceVersion = 1013459
 	
-	[*] Fixed SKL generation when using FSSale command
+  [-] Fixed SKL generation when using FSSale command
 	
 ********************************************************************************
 
   August 3 2017
   deviceServiceVersion = 1013458
 	
-	[+] Added methods to start/stop and get status of FSService
-	[*] Fixed line graphics printing
-	[+] Added ability to disable trailer printing completely by setting numTrailerLines = -1
+  [+] Added methods to start/stop and get status of FSService
+  [-] Fixed line graphics printing
+  [+] Added ability to disable trailer printing completely by setting numTrailerLines = -1
 
 ********************************************************************************
 
   August 2 2017
   deviceServiceVersion = 1013457
 	
-	[-] Fixed bug when FSService didn't stop after close
+  [-] Fixed bug when FSService didn't stop after close
 
 ********************************************************************************
 
   July 27 2017
   deviceServiceVersion = 1013456
 	
-	[-] Fixed crash when FSService enabled on devices without FS
-	[-] Fixed bug when close method takes too long
+  [-] Fixed crash when FSService enabled on devices without FS
+  [-] Fixed bug when close method takes too long
   
 ********************************************************************************
 
   July 25 2017
   deviceServiceVersion = 1013455
 	
-	[+] Added user friendly FS status reading method
-	[+] Added user friendly OFD communication status reading method
+  [+] Added user friendly FS status reading method
+  [+] Added user friendly OFD communication status reading method
   [+] Added ability to pass position sum
   [-] Fixed unhandled exception without details
   

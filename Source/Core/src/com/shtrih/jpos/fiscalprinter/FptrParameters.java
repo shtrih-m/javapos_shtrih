@@ -167,6 +167,7 @@ public class FptrParameters {
     public long taxValue[] = new long[6];
     public int taxSystem = 0;
     public Integer itemTotalAmount = null;
+    public boolean calcReportEnabled = false;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -379,6 +380,7 @@ public class FptrParameters {
         printRecVoidItemAmount = reader.readBoolean("printRecVoidItemAmount", false);
         FSReceiptItemDiscountEnabled = reader.readBoolean("FSReceiptItemDiscountEnabled", false);
         quantityCorrectionEnabled = reader.readBoolean("quantityCorrectionEnabled", true);
+        calcReportEnabled = reader.readBoolean("calcReportEnabled", false);
         
         
         // paymentNames
