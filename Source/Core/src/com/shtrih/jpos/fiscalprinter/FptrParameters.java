@@ -31,7 +31,7 @@ public class FptrParameters {
 
     private int byteTimeout = 3000;
     private int deviceByteTimeout = 3000;
-    private int statusCommand = PrinterConst.SMFP_STATUS_COMMAND_11H;
+    private int statusCommand = PrinterConst.SMFP_STATUS_COMMAND_DS;
     private int graphicsLineDelay = defaultGraphicsLineDelay;
     public int barcodeDelay = 0;
     private int portType = SmFptrConst.PORT_TYPE_SERIAL;

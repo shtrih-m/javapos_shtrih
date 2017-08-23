@@ -42,7 +42,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public PrinterProtocol device;
     // delay on wait
-    public static final int TimeToSleep = 100;
+    public static final int TimeToSleep = 500;
     public static final int SMFP_EFPTR_PREVCOMMAND_TimeToSleep = 333;
     public static String charsetName = "Cp1251"; // device charset name
     // tax officer password
