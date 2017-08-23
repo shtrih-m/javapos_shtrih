@@ -792,6 +792,17 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         printer.printRecMessage(encodeString(message));
     }
 
+    public void printRecMessage(String message, int fontNumber) throws JposException {
+        int oldFontNumber = getFontNumber();
+        try {
+            setFontNumber(fontNumber);
+            
+            printRecMessage(encodeString(message));
+        } finally {
+            setFontNumber(oldFontNumber);
+        }
+    }
+
     public void printRecNotPaid(String description, long amount)
             throws JposException {
         printer.printRecNotPaid(encodeString(description), amount);

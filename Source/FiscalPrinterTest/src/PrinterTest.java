@@ -230,7 +230,7 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
+
     private void printAztecBarcode() {
         try {
             PrinterBarcode barcode = new PrinterBarcode();
@@ -238,7 +238,7 @@ class PrinterTest implements FiscalPrinterConst {
             barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
             barcode.setTextFont(1);
             barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_ABOVE);
-                
+
             barcode.setBarWidth(4);
             barcode.setText(
                     "https://checkl.fsrar.ru?id=fa07210-0041-4dc6-"
@@ -253,7 +253,7 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-            
+
     private void printCode128() {
         try {
             final int BARCODE_HEIGHT = 100;
@@ -681,8 +681,7 @@ class PrinterTest implements FiscalPrinterConst {
 
             System.out.println("Cash in drawer: " + printer.readCashRegister(241).getValue() / 100.0d);
 
-            int numHeaderLines = printer.getNumHeaderLines();
-            int trailerLines = printer.getNumTrailerLines();
+            PrintCheckWithPassedPositionSum();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -690,21 +689,38 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     private void PrintCheckWithPassedPositionSum() throws Exception {
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM, 1);
+        // Задаем тип чека SMFPTR_RT_SALE, SMFPTR_RT_RETSALE, SMFPTR_RT_BUY, SMFPTR_RT_RETBUY
+        printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETSALE);
+
+        // Указываем систему налогообложения
+        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM, 2);
+
+        // Начинаем фискальный документ
         printer.beginFiscalReceipt(true);
 
+        // Печать строки шрифтом 2
+        // Печатаем текст
+        printer.printRecMessage("же не манж пасижур",2);
+        
         // Обычная позиция
         printer.printRecItem("ITEM 1", 0, 1234, 0, 1000, "");
 
-        // Позиция с коррекцией
+        // Позиция с коррекцией на +-1 копейку
         printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 1235);
-        printer.printRecItem("ITEM 1", 0, 1234, 0, 1000, "");
+        printer.printRecItem("ITEM 2", 0, 1234, 0, 1000, "");
 
+        // Запись телефона покупателя
         printer.fsWriteCustomerPhone("+79006009090");
 
-        printer.printRecSubtotal(0);
-        printer.printRecTotal(0, 1234 + 1235, "1");
+        // Оплата типом оплаты который привязан к jpos.xml к метке "0"
+        // <prop name="payType0" type="String" value="0"/>
+        printer.printRecTotal(0, 1235, "0");
 
+        // Оплата типом оплаты который привязан к jpos.xml к метке "2"
+        // <prop name="payType2" type="String" value="2"/>
+        printer.printRecTotal(0, 1235, "2");
+
+        // Закрыть фискальный документ
         printer.endFiscalReceipt(false);
     }
 

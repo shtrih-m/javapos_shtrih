@@ -3,14 +3,21 @@
 
   Project : SHTRIH-M JavaPOS fiscal printer driver
   Company : SHTRIH-M www.shtrih-m.ru (495) 787-6090
+  Url     : https://github.com/shtrih-m/javapos_shtrih
+
+********************************************************************************
+
+  August 23 2017
+  deviceServiceVersion = 1013461
+	
+  [+] Added printRecMessage overload which accepts font number
 
 ********************************************************************************
 
   August 15 2017
   deviceServiceVersion = 1013460
 	
-  [-] Fixed max payment type number when reading payment type names
-	
+  [-] Fixed max payment type number when reading payment type names	
 
 ********************************************************************************
 
