@@ -45,10 +45,6 @@ public class TextDocumentFilter implements IPrinterEvents {
     private static String SDiscountText = "СКИДКА";
     private static String SChargeText = "НАДБАВКА";
     private static String SReceiptTotal = "ИТОГ";
-    private static String SCashPayment = "НАЛИЧНЫМИ";
-    private static String SCreditPayment = "КРЕДИТОМ";
-    private static String STarePayment = "ТАРОЙ";
-    private static String SCardPayment = "ПЛАТ. КАРТОЙ";
     private static String SChangeText = "СДАЧА";
     private static String SReceiptCancelled = "ЧЕК АННУЛИРОВАН";
     private static String SDiscountStornoText = "СТОРНО СКИДКИ";
@@ -291,16 +287,16 @@ public class TextDocumentFilter implements IPrinterEvents {
         add(SReceiptTotal, summToStr(receiptTotal));
         // Payments
         if (params.getSum1() > 0) {
-            add(SCashPayment, summToStr(params.getSum1()));
+            add(getPaymentName(0), summToStr(params.getSum1()));
         }
         if (params.getSum2() > 0) {
-            add(SCreditPayment, summToStr(params.getSum2()));
+            add(getPaymentName(1), summToStr(params.getSum2()));
         }
         if (params.getSum3() > 0) {
-            add(STarePayment, summToStr(params.getSum3()));
+            add(getPaymentName(2), summToStr(params.getSum3()));
         }
         if (params.getSum4() > 0) {
-            add(SCardPayment, summToStr(params.getSum4()));
+            add(getPaymentName(3), summToStr(params.getSum4()));
         }
         // Change
         if (command.getChange() > 0)

@@ -11,6 +11,8 @@
   deviceServiceVersion = 1013461
 	
   [+] Added printRecMessage overload which accepts font number
+  [*] Fixed rext printing with font number in check
+  [*] Fixed #20: get rid of hardcoded payment names
 
 ********************************************************************************
 
