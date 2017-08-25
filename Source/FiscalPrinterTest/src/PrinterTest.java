@@ -691,7 +691,7 @@ class PrinterTest implements FiscalPrinterConst {
     private void PrintCheckWithPassedPositionSum() throws Exception {
         // Задаем тип чека SMFPTR_RT_SALE, SMFPTR_RT_RETSALE, SMFPTR_RT_BUY, SMFPTR_RT_RETBUY
         printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
-
+        
         // Указываем систему налогообложения
         printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM, 1);
 
@@ -701,7 +701,7 @@ class PrinterTest implements FiscalPrinterConst {
         // Печать строки шрифтом 2
         // Печатаем текст
         printer.printRecMessage("же не манж пасижур",2);
-        
+
         // Обычная позиция
         printer.printRecItem("ITEM 1", 0, 1234, 0, 1000, "");
 
@@ -710,10 +710,12 @@ class PrinterTest implements FiscalPrinterConst {
         printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 1235);
         printer.printRecItem("ITEM 2", 0, 1234, 0, 1000, "");
 
-        // Позиция с признаком типа оплаты и признаком способа оплаты
-        // Признак типа оплаты
+        // Позиция с признаком способа расчета и признаком предмета расчета
+        // 1214, признак способа расчета, если не указывать будет 0
+        // ВНИМАНИЕ: значение сохраняется после вызова printRecItem
         printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, 4);
-        // Признак способа оплаты
+        // 1212, признак предмета расчета, если не указывать будет 0
+        // ВНИМАНИЕ: значение сохраняется после вызова printRecItem
         printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 1);
         printer.printRecItem("ITEM 3", 0, 1234, 0, 1000, "");
 
