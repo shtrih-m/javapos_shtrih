@@ -482,6 +482,8 @@ public interface SmFptrConst {
 
     public static final int SMFPTR_DIO_SET_FS_SERVICE_STATE = 0x4B;
 
+    public static final int SMFPTR_DIO_CONTINUE_PRINT = 0x4C;
+
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

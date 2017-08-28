@@ -1992,4 +1992,9 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
 
         directIO(SmFptrConst.SMFPTR_DIO_SET_FS_SERVICE_STATE, data, null);
     }
+
+    public void continuePrint() throws Exception {
+
+        directIO(SmFptrConst.SMFPTR_DIO_CONTINUE_PRINT, new int[0], null);
+    }
 }

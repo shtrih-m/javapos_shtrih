@@ -11,6 +11,7 @@
   deviceServiceVersion = 1013462
 	
   [*] Errors suppressed when paper ended after check closed
+  [+] Added print continuation DIO-command and method
   
 ********************************************************************************
 

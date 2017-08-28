@@ -418,6 +418,10 @@ public class DirectIOHandler {
             case SmFptrConst.SMFPTR_DIO_GET_FS_SERVICE_STATE:
                 new DIOGetFSServiceState(service).execute(data, object);
                 break;
+
+            case SmFptrConst.SMFPTR_DIO_CONTINUE_PRINT:
+                new DIOContinuePrint(service).execute(data, object);
+                break;
                 
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
