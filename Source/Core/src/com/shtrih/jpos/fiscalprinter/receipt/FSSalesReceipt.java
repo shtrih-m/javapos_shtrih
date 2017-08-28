@@ -369,15 +369,23 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     closeParams.setText(getParams().closeReceiptText);
                     getDevice().closeReceipt(closeParams);
                 }
-                getFiscalDay().closeFiscalRec();
-                if (!disablePrint) {
-                    for (int i = 0; i < messages.size(); i++) {
-                        getDevice().printText(messages.get(i));
+                try {
+                    getFiscalDay().closeFiscalRec();
+                    if (!disablePrint) {
+                        for (int i = 0; i < messages.size(); i++) {
+                            getDevice().printText(messages.get(i));
+                        }
                     }
+                } catch (Exception e) {
+                    logger.error("Receipt messages printing failed", e);
                 }
             }
         }
-        printEndingItems();
+        try {
+            printEndingItems();
+        } catch (Exception e) {
+            logger.error("Receipt ending items printing failed", e);
+        }
     }
 
     public void printTotalDiscount(FSDiscount discount)

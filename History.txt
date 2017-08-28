@@ -7,6 +7,13 @@
 
 ********************************************************************************
 
+  August 28 2017
+  deviceServiceVersion = 1013462
+	
+  [*] Errors suppressed when paper ended after check closed
+  
+********************************************************************************
+
   August 23 2017
   deviceServiceVersion = 1013461
 	
