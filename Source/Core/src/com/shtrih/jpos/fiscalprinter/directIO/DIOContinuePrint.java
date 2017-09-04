@@ -12,3 +12,4 @@ public class DIOContinuePrint extends DIOItem {
         service.getPrinter().continuePrint();
     }
 }
+

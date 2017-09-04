@@ -525,4 +525,8 @@ public interface SMFiscalPrinter {
     void setIsFooter(boolean value);
 
     boolean isCapFooterFlag();
+
+    FSReadDocument fsRequestDocumentTLV(int documentNumber) throws Exception;
+
+    byte[] fsReadDocumentTLVBlock() throws Exception;
 }

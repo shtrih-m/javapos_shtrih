@@ -3197,14 +3197,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void fsReadDocumentTLV(int number) throws Exception {
         logger.debug("fsReadDocumentTLV");
-        FSReadDocument readDocument = new FSReadDocument();
-        readDocument.setDocNumber(number);
-        readDocument.setSysPassword(sysPassword);
+        FSReadDocument readDocument = new FSReadDocument(sysPassword, number);
         execute(readDocument);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         while (stream.size() < readDocument.getDocSize()) {
-            FSReadDocumentBlock command = new FSReadDocumentBlock();
-            command.setSysPassword(sysPassword);
+            FSReadDocumentBlock command = new FSReadDocumentBlock(sysPassword);
             execute(command);
             stream.write(command.getData());
         }
@@ -3214,6 +3211,18 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         for (int i = 0; i < lines.size(); i++) {
             logger.debug(lines.get(i));
         }
+    }
+
+    public FSReadDocument fsRequestDocumentTLV(int documentNumber) throws Exception {
+        FSReadDocument readDocument = new FSReadDocument(sysPassword, documentNumber);
+        execute(readDocument);
+        return readDocument;
+    }
+
+    public byte[] fsReadDocumentTLVBlock() throws Exception {
+        FSReadDocumentBlock command = new FSReadDocumentBlock(sysPassword);
+        execute(command);
+        return command.getData();
     }
 
     public void printLines(String line1, String line2) throws Exception {

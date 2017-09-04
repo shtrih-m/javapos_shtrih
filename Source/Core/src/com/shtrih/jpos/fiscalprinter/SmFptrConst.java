@@ -482,7 +482,15 @@ public interface SmFptrConst {
 
     public static final int SMFPTR_DIO_SET_FS_SERVICE_STATE = 0x4B;
 
+    /**
+     * Send "Continue print" command
+     */
     public static final int SMFPTR_DIO_CONTINUE_PRINT = 0x4C;
+
+    /**
+     * Read document TLV from FS archive
+     */
+    public static final int SMFPTR_DIO_FS_READ_DOCUMENT_TLV = 0x4E;
 
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:

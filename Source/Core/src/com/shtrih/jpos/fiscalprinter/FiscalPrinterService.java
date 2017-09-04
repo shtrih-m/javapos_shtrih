@@ -1604,14 +1604,14 @@ public class FiscalPrinterService extends DeviceService implements
 
 	public void getData(int dataItem, int[] optArgs, String[] data)
 			throws JposException {
-		logger.debug("getData(" + String.valueOf(dataItem) + ", "
+		logger.debug("getTLV(" + String.valueOf(dataItem) + ", "
 				+ String.valueOf(optArgs) + ", " + String.valueOf(data) + ")");
 		try {
 			impl.getData(dataItem, optArgs, data);
 		} catch (Throwable e) {
 			handleException(e);
 		}
-		logger.debug("getData: OK");
+		logger.debug("getTLV: OK");
 	}
 
 

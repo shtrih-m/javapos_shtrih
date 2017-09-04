@@ -1,16 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.fiscalprinter.command;
 
 /**
- *
- * @author V.Kravtsov
- */
-
-/*
 
 Запросить фискальный документ в TLV формате FF3AH
     Код команды FF3Аh . Длина сообщения: 10 байт.
@@ -22,7 +12,6 @@ package com.shtrih.fiscalprinter.command;
     Длина фискального документа: 2 байта
 
 */
-
 public class FSReadDocument extends PrinterCommand {
 
     private int sysPassword; // System sdministrator password (4 bytes)
@@ -31,7 +20,9 @@ public class FSReadDocument extends PrinterCommand {
     private int docType;
     private int docSize;
 
-    public FSReadDocument() {
+    public FSReadDocument(int sysPassword, long docNumber) {
+        this.sysPassword = sysPassword;
+        this.docNumber = docNumber;
     }
 
     public final int getCode() {
@@ -48,8 +39,8 @@ public class FSReadDocument extends PrinterCommand {
     }
 
     public void decode(CommandInputStream in) throws Exception {
-        setDocType(in.readShort());
-        setDocSize(in.readShort());
+        docType = in.readShort();
+        docSize = in.readShort();
     }
 
     /**
@@ -60,24 +51,10 @@ public class FSReadDocument extends PrinterCommand {
     }
 
     /**
-     * @param sysPassword the sysPassword to set
-     */
-    public void setSysPassword(int sysPassword) {
-        this.sysPassword = sysPassword;
-    }
-
-    /**
      * @return the docNumber
      */
     public long getDocNumber() {
         return docNumber;
-    }
-
-    /**
-     * @param docNumber the docNumber to set
-     */
-    public void setDocNumber(long docNumber) {
-        this.docNumber = docNumber;
     }
 
     /**
@@ -88,26 +65,11 @@ public class FSReadDocument extends PrinterCommand {
     }
 
     /**
-     * @param docType the docType to set
-     */
-    public void setDocType(int docType) {
-        this.docType = docType;
-    }
-
-    /**
      * @return the docSize
      */
     public int getDocSize() {
         return docSize;
     }
-
-    /**
-     * @param docSize the docSize to set
-     */
-    public void setDocSize(int docSize) {
-        this.docSize = docSize;
-    }
-    
 }
     
 

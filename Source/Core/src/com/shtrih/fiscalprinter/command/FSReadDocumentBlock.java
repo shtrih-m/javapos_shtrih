@@ -6,18 +6,12 @@
 package com.shtrih.fiscalprinter.command;
 
 /**
- *
- * @author V.Kravtsov
- */
-
-/*
-Чтение TLV фискального документа FF3BH
-Код команды FF3Bh . Длина сообщения: 6 байт.
-Пароль системного администратора: 4 байта
-Ответ:	    FF3Bh Длина сообщения: 1+N байт.
-Код ошибки:1 байт
-TLV структура: N байт 
-
+ * Чтение TLV фискального документа FF3BH
+ * Код команды FF3Bh . Длина сообщения: 6 байт.
+ * Пароль системного администратора: 4 байта
+ * Ответ: FF3Bh Длина сообщения: 1+N байт.
+ * Код ошибки:1 байт
+ * TLV структура: N байт
  */
 public class FSReadDocumentBlock extends PrinterCommand {
 
@@ -25,7 +19,8 @@ public class FSReadDocumentBlock extends PrinterCommand {
     // out
     private byte[] data;
 
-    public FSReadDocumentBlock() {
+    public FSReadDocumentBlock(int sysPassword) {
+        this.sysPassword = sysPassword;
     }
 
     public final int getCode() {
@@ -41,7 +36,7 @@ public class FSReadDocumentBlock extends PrinterCommand {
     }
 
     public void decode(CommandInputStream in) throws Exception {
-        setData(in.readBytes(in.getSize()));
+        data = in.readBytes(in.getSize());
     }
 
     /**
@@ -52,24 +47,9 @@ public class FSReadDocumentBlock extends PrinterCommand {
     }
 
     /**
-     * @param sysPassword the sysPassword to set
-     */
-    public void setSysPassword(int sysPassword) {
-        this.sysPassword = sysPassword;
-    }
-
-    /**
      * @return the data
      */
     public byte[] getData() {
         return data;
     }
-
-    /**
-     * @param data the data to set
-     */
-    public void setData(byte[] data) {
-        this.data = data;
-    }
-
 }

@@ -422,6 +422,10 @@ public class DirectIOHandler {
             case SmFptrConst.SMFPTR_DIO_CONTINUE_PRINT:
                 new DIOContinuePrint(service).execute(data, object);
                 break;
+
+            case SmFptrConst.SMFPTR_DIO_FS_READ_DOCUMENT_TLV:
+                new DIOCReadDocumentTLV(service).execute(data, object);
+                break;
                 
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,

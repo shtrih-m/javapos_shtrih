@@ -7,11 +7,12 @@
 
 ********************************************************************************
 
-  August 28 2017
+  September 04 2017
   deviceServiceVersion = 1013462
 	
   [*] Errors suppressed when paper ended after check closed
   [+] Added print continuation DIO-command and method
+  [+] Added method fsReadDocumentTLV to allow document TLV reading
   
 ********************************************************************************
 

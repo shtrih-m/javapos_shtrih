@@ -993,4 +993,14 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public boolean isCapFooterFlag(){
         return false;
     }
+
+    @Override
+    public FSReadDocument fsRequestDocumentTLV(int documentNumber) throws Exception {
+        return null;
+    }
+
+    @Override
+    public byte[] fsReadDocumentTLVBlock() throws Exception {
+        return new byte[0];
+    }
 }

@@ -529,19 +529,19 @@ public class FiscalPrinterImplTest extends TestCase
         instance.setPrinter(printer);
         instance.claimed = true;
         instance.deviceEnabled = true;
-        instance.getData(dataItem, optArgs, data);
+        instance.getTLV(dataItem, optArgs, data);
         assertEquals(documentNumber, Integer.parseInt(data[0]));
         
         status.setMode(PrinterConst.ECRMODE_RECSELL);
         instance.printerState = FiscalPrinterConst.FPTR_PS_MONITOR;
-        instance.getData(dataItem, optArgs, data);
+        instance.getTLV(dataItem, optArgs, data);
         assertEquals(documentNumber + 1, Integer.parseInt(data[0]));
         
         documentNumber = 9999;
         status.setDocumentNumber(documentNumber);
         status.setMode(PrinterConst.ECRMODE_RECSELL);
         instance.printerState = FiscalPrinterConst.FPTR_PS_MONITOR;
-        instance.getData(dataItem, optArgs, data);
+        instance.getTLV(dataItem, optArgs, data);
         assertEquals(1, Integer.parseInt(data[0]));
     }
     

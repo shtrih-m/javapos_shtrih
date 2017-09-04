@@ -796,7 +796,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         int oldFontNumber = getFontNumber();
         try {
             setFontNumber(fontNumber);
-            
+
             printRecMessage(encodeString(message));
         } finally {
             setFontNumber(oldFontNumber);
@@ -1996,5 +1996,16 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void continuePrint() throws Exception {
 
         directIO(SmFptrConst.SMFPTR_DIO_CONTINUE_PRINT, new int[0], null);
+    }
+
+    public DocumentTLV fsReadDocumentTLV(int documentNumber) throws Exception {
+
+        Object[] outParams = new Object[2];
+        directIO(SmFptrConst.SMFPTR_DIO_FS_READ_DOCUMENT_TLV, new int[]{documentNumber}, outParams);
+
+        int documentType = (Integer) outParams[0];
+        byte[] tlv = (byte[]) outParams[1];
+
+        return new DocumentTLV(documentNumber, documentType, tlv);
     }
 }

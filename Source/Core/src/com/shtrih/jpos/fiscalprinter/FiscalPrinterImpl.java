@@ -2880,7 +2880,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                         + "dataItem");
         }
         data[0] = encodeText(result);
-        logger.debug("getData(" + getDataItemText(dataItem) + ")=" + result);
+        logger.debug("getTLV(" + getDataItemText(dataItem) + ")=" + result);
     }
 
     public long readReceiptNumber() throws Exception {
