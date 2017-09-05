@@ -139,6 +139,7 @@ public class FptrParameters {
     public boolean readDiscountMode = true;
     public String textReportFileName = "documents.txt";
     public boolean FSPrintTags = true;
+    public int FSTagsPlacement = 0;
     public boolean textReportEmptyLinesEnabled = true;
     public boolean ReceiptTemplateEnabled = false;
     public String ItemTableHeader = null;
@@ -347,6 +348,7 @@ public class FptrParameters {
         FSCombineItemAdjustments = reader.readBoolean("FSCombineItemAdjustments", true);
         readDiscountMode = reader.readBoolean("readDiscountMode", true);
         FSPrintTags = reader.readBoolean("FSPrintTags", true);
+        FSTagsPlacement = reader.readInteger("FSTagsPlacement", 0);
 
         textReportEnabled = reader.readBoolean("textReportEnabled", false);
         textReportFileName = reader.readString("textReportFileName", "");

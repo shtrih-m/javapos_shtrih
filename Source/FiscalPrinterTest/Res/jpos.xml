@@ -288,6 +288,16 @@
 		<prop name="printRecVoidItemAmount" type="String" value="0"/>
 		<!-- quantityCorrectionEnabled -->
 		<prop name="quantityCorrectionEnabled" type="String" value="1"/>
+		
+		<!-- Печать описани тэгов средствами драйвера -->
+		<prop name="FSPrintTags" type="String" value="1"/>
+		
+		<!-- Место печати тэгов в документе, если включена опция FSPrintTags:
+		     0 - после закрытия
+		     1 - в месте отправки, например, если тэг был отправлен до печати любой позиции
+		         он будет напечатан сразу после заголовка чека.
+		-->
+		<prop name="FSTagsPlacement" type="String" value="0"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>

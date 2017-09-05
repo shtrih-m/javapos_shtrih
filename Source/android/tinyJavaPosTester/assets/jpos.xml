@@ -185,13 +185,26 @@
 		<prop name="textReportFileName" type="String" value="archive.txt"/>
 		<!-- Text report empty lines enabled -->
 		<prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
-		<!-- Print TLV tags passed to receipt -->
+		
+		<!-- Печать описани переданных в принтер тэгов средствами драйвера -->
 		<prop name="FSPrintTags" type="String" value="1"/>
+		
+		<!-- Место печати тэгов в документе, если включена опция FSPrintTags:
+		     0 - после закрытия
+		     1 - в месте отправки, например, если тэг был отправлен до печати любой позиции
+		         он будет напечатан сразу после заголовка чека.
+		-->
+		<prop name="FSTagsPlacement" type="String" value="0"/>
 		
 		<prop name="compatibilityLevel" type="String" value="0"/>
 
-    <!-- Turn on/off FSSender service -->
+        <!-- Отправка данных в ОФД средствами драйвера, если данная возможность 
+             поддержана/включена в ФР:
+             0 - выкл.
+             1 - вкл. -->
 		<prop name="FSServiceEnabled" type="String" value="1"/>
+		
+		<!-- Таймаут ожидания ответа от ОФД в мс. Используется при включенной отпции FSServiceEnabled. -->
 		<prop name="FSConnectTimeout" type="String" value="30000"/>
 		
     <!-- Log file enabled  -->

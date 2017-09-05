@@ -698,6 +698,14 @@ class PrinterTest implements FiscalPrinterConst {
         // Начинаем фискальный документ
         printer.beginFiscalReceipt(true);
 
+        int oldFontNumber = printer.getFontNumber();
+        printer.setFontNumber(5);
+        try {
+            // Запись телефона покупателя
+            printer.fsWriteCustomerPhone("+79006009090");
+        }finally {
+            printer.setFontNumber(oldFontNumber);
+        }
         // Печать строки шрифтом 2
         // Печатаем текст
         printer.printRecMessage("же не манж пасижур",2);
@@ -718,9 +726,6 @@ class PrinterTest implements FiscalPrinterConst {
         // ВНИМАНИЕ: значение сохраняется после вызова printRecItem
         printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 1);
         printer.printRecItem("ITEM 3", 0, 1234, 0, 1000, "");
-
-        // Запись телефона покупателя
-        printer.fsWriteCustomerPhone("+79006009090");
 
         // Оплата типом оплаты который привязан к jpos.xml к метке "0"
         // <prop name="payType0" type="String" value="0"/>

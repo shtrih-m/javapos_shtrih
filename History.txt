@@ -7,6 +7,13 @@
 
 ********************************************************************************
 
+  September 05 2017
+  deviceServiceVersion = 1013463
+	
+  [+] Added ability to print FSTags description when they passed with current font
+  
+********************************************************************************
+
   September 04 2017
   deviceServiceVersion = 1013462
 	
