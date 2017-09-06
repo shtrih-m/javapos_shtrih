@@ -35,6 +35,26 @@ public class TLVParser {
         for (int i = 0; i < items.size(); i++) {
             TLVItem item = items.get(i);
 
+            // 1084	дополнительный реквизит пользователя
+            if(item.getTag().getId() == 1084){
+                continue;
+            }
+
+            // 1085	наименование дополнительного реквизита пользователя
+            if(item.getTag().getId() == 1085){
+                continue;
+            }
+
+            // 1086	значение дополнительного реквизита пользователя
+            if(item.getTag().getId() == 1086){
+                continue;
+            }
+
+            // 1203	ИНН кассира
+            if(item.getTag().getId() == 1203){
+                continue;
+            }
+
             String tagName = item.getTag().getPrintName();
             String itemText = item.getText();
 
