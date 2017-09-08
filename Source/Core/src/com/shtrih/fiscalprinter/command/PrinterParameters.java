@@ -64,4 +64,8 @@ public class PrinterParameters {
         return result;
     }
 
+    public void add(String name, String text,
+            int tableNumber, int rowNumber, int fieldNumber) {
+        add(new PrinterParameter(name, text, tableNumber, rowNumber, fieldNumber));
+    }
 }

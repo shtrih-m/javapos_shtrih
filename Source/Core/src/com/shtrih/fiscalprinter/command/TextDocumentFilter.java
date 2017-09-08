@@ -841,11 +841,11 @@ public class TextDocumentFilter implements IPrinterEvents {
         }
     }
 
-    private void ReadFiscalStorage() throws Exception {
-        long documentNumber = printer.fsReadStatus().getDocNumber();
-        long fp = printer.fsFindDocument(documentNumber).getDocument().getFP();
-
-        add(String.format("ФД:%d ФП:%10d", documentNumber, fp));
+    private void ReadFiscalStorage() throws Exception 
+    {
+        long docNumber = printer.fsReadStatus().getDocNumber();
+        long docSign = printer.fsFindDocument(docNumber).getDocument().getDocSign();
+        add(String.format("ФД:%d ФП:%10d", docNumber, docSign));
     }
 
     private void addEJLine(String s) throws Exception {

@@ -407,9 +407,13 @@ public class DirectIOHandler2 {
                 break;
 
             case SmFptrConst.SMFPTR_DIO_FS_READ_DOCUMENT_TLV:
-                new DIOCReadDocumentTLV(service).execute(data, object);
+                new DIOReadDocumentTLV(service).execute(data, object);
                 break;
 
+            case SmFptrConst.SMFPTR_DIO_FS_READ_DAY_OPEN:
+                new DIOReadDayOpen(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)

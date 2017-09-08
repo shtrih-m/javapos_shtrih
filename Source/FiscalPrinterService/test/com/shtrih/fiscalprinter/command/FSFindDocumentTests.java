@@ -5,6 +5,20 @@ import org.junit.Test;
 import static com.shtrih.util.ByteUtils.byteArray;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author P.Zhirkov
@@ -35,9 +49,9 @@ public class FSFindDocumentTests {
 
         cmd.decodeData(responseData);
 
-        FSDocumentInfo document = cmd.getDocument();
+        FSDocument document = cmd.getDocument();
 
-        assertEquals(3, document.getDocumentType().getValue());
+        assertEquals(3, document.getDocType().getValue());
         assertEquals(false, document.getSentToOFD());
         assertArrayEquals(byteArray(
                 0x01, 0x20, 0x4E, 0x00, 0x00, 0x00
@@ -48,7 +62,7 @@ public class FSFindDocumentTests {
         assertEquals(24, document.getDateTime().getDay());
         assertEquals(20, document.getDateTime().getHours());
         assertEquals(53, document.getDateTime().getMinutes());
-        assertEquals(0xA3, document.getDocumentNumber());
+        assertEquals(0xA3, document.getDocNumber());
         assertEquals(0x2E4BEAEBL, document.getFP());
     }
 
@@ -67,9 +81,9 @@ public class FSFindDocumentTests {
 
         cmd.decodeData(responseData);
 
-        FSDocumentInfo document = cmd.getDocument();
+        FSDocument document = cmd.getDocument();
 
-        assertEquals(1, document.getDocumentType().getValue());
+        assertEquals(1, document.getDocType().getValue());
         assertEquals(false, document.getSentToOFD());
         assertArrayEquals(byteArray(
                 0x35, 0x30, 0x32, 0x34, 0x30, 0x35, 0x34, 0x34, 0x34, 0x35,
@@ -83,7 +97,7 @@ public class FSFindDocumentTests {
         assertEquals(6, document.getDateTime().getDay());
         assertEquals(2, document.getDateTime().getHours());
         assertEquals(52, document.getDateTime().getMinutes());
-        assertEquals(1, document.getDocumentNumber());
+        assertEquals(1, document.getDocNumber());
         assertEquals(1305583543, document.getFP());
     }
 
@@ -102,9 +116,9 @@ public class FSFindDocumentTests {
 
         cmd.decodeData(responseData);
 
-        FSDocumentInfo document = cmd.getDocument();
+        FSDocument document = cmd.getDocument();
 
-        assertEquals(11, document.getDocumentType().getValue());
+        assertEquals(11, document.getDocType().getValue());
         assertEquals(false, document.getSentToOFD());
         assertArrayEquals(byteArray(
                 0x35, 0x30, 0x32, 0x34, 0x30, 0x35, 0x34, 0x34, 0x34, 0x35,
@@ -118,7 +132,7 @@ public class FSFindDocumentTests {
         assertEquals(6, document.getDateTime().getDay());
         assertEquals(2, document.getDateTime().getHours());
         assertEquals(53, document.getDateTime().getMinutes());
-        assertEquals(2, document.getDocumentNumber());
+        assertEquals(2, document.getDocNumber());
         assertEquals(412805154, document.getFP());
     }
 
@@ -133,9 +147,9 @@ public class FSFindDocumentTests {
 
         cmd.decodeData(responseData);
 
-        FSDocumentInfo document = cmd.getDocument();
+        FSDocument document = cmd.getDocument();
 
-        assertEquals(2, document.getDocumentType().getValue());
+        assertEquals(2, document.getDocType().getValue());
         assertEquals(false, document.getSentToOFD());
         assertArrayEquals(byteArray(
                 0x01, 0x00
@@ -146,7 +160,7 @@ public class FSFindDocumentTests {
         assertEquals(6, document.getDateTime().getDay());
         assertEquals(2, document.getDateTime().getHours());
         assertEquals(53, document.getDateTime().getMinutes());
-        assertEquals(3, document.getDocumentNumber());
+        assertEquals(3, document.getDocNumber());
         assertEquals(3501121883L, document.getFP());
     }
 
@@ -161,9 +175,9 @@ public class FSFindDocumentTests {
 
         cmd.decodeData(responseData);
 
-        FSDocumentInfo document = cmd.getDocument();
+        FSDocument document = cmd.getDocument();
 
-        assertEquals(5, document.getDocumentType().getValue());
+        assertEquals(5, document.getDocType().getValue());
         assertEquals(false, document.getSentToOFD());
         assertArrayEquals(byteArray(
                 0x01, 0x00
@@ -174,7 +188,7 @@ public class FSFindDocumentTests {
         assertEquals(6, document.getDateTime().getDay());
         assertEquals(2, document.getDateTime().getHours());
         assertEquals(54, document.getDateTime().getMinutes());
-        assertEquals(6, document.getDocumentNumber());
+        assertEquals(6, document.getDocNumber());
         assertEquals(3647013117L, document.getFP());
     }
 }

@@ -21,12 +21,12 @@ public class TLVParser {
 
     private int level = 0;
     private final TLVTags tags = new TLVTags();
-    private final Vector<TLVItem> items = new Vector<TLVItem>();
+    private final TLVItems items = new TLVItems();
 
     public TLVParser() {
     }
 
-    public Vector<TLVItem> getItems() {
+    public TLVItems getItems() {
         return items;
     }
 

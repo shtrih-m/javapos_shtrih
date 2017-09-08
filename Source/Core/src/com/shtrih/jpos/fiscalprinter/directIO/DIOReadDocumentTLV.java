@@ -6,9 +6,9 @@ import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 
 import java.io.ByteArrayOutputStream;
 
-public class DIOCReadDocumentTLV extends DIOItem {
+public class DIOReadDocumentTLV extends DIOItem {
 
-    public DIOCReadDocumentTLV(FiscalPrinterImpl service) {
+    public DIOReadDocumentTLV(FiscalPrinterImpl service) {
         super(service);
     }
 

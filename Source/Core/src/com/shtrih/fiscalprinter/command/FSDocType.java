@@ -18,7 +18,7 @@ public class FSDocType {
     // 00h – нет открытого документа
     public static final int FS_DOCTYPE_NONE = 0;
     // 01h – отчет о фискализации
-    public static final int FS_DOCTYPE_FISCAL_OPEN = 1;
+    public static final int FS_DOCTYPE_REG_REPORT = 1;
     // 02h – отчет об открытии смены
     public static final int FS_DOCTYPE_DAYOPEN = 2;
     // 04h – кассовый чек
@@ -46,11 +46,15 @@ public class FSDocType {
         return docType;
     }
 
+    public boolean isDayOpen() {
+        return docType == FS_DOCTYPE_DAYOPEN;
+    }
+
     public String getText() {
         switch (docType) {
             case FS_DOCTYPE_NONE:
                 return "None";
-            case FS_DOCTYPE_FISCAL_OPEN:
+            case FS_DOCTYPE_REG_REPORT:
                 return "Open fiscal mode";
             case FS_DOCTYPE_DAYOPEN:
                 return "Open fiscal day";

@@ -765,4 +765,9 @@ public class PrinterModelDefault implements PrinterModel {
     public void setCapFSCloseCheck(boolean value) {
         capFSCloseCheck = value;
     }
+    
+    public void addParameter(String name, String text, 
+            int tableNumber, int rowNumber, int fieldNumber){
+        parameters.add(name, text, tableNumber, rowNumber, fieldNumber);
+    }
 }

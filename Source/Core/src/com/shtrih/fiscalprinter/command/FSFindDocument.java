@@ -19,7 +19,7 @@ public class FSFindDocument extends PrinterCommand {
     private final int sysPassword; // System sdministrator password (4 bytes)
     private final long docNumber;
     // out
-    private FSDocumentInfo document;
+    private FSDocument document;
 
     public FSFindDocument(int sysPassword, long docNumber) {
         this.sysPassword = sysPassword;
@@ -39,11 +39,26 @@ public class FSFindDocument extends PrinterCommand {
         out.writeLong(docNumber, 4);
     }
 
-    public void decode(CommandInputStream in) throws Exception {
-        document = new FSDocumentInfo(in);
+    public void decode(CommandInputStream in) throws Exception 
+    {
+        int docType = in.readByte();
+        switch (docType)
+        {
+            case FSDocType.FS_DOCTYPE_REG_REPORT:
+                document = new FSRegistrationReport(in, docType);
+                break;
+                
+            case FSDocType.FS_DOCTYPE_DAYOPEN:
+                document = new FSOpenDayReport(in, docType);
+                break;
+                
+            default: 
+                document = new FSDocument(in, docType);
+                
+        }
     }
 
-    public FSDocumentInfo getDocument() {
+    public FSDocument getDocument() {
         return document;
     }
 }

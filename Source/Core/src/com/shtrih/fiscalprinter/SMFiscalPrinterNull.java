@@ -768,7 +768,7 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     }
 
     @Override
-    public String ReadRnm() throws Exception {
+    public String readRnm() throws Exception {
         return null;
     }
 
@@ -1002,5 +1002,17 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     @Override
     public byte[] fsReadDocumentTLVBlock() throws Exception {
         return new byte[0];
+    }
+    
+    public byte[] fsReadDocumentTLV(int docNumber) throws Exception{
+        return null;
+    }
+    
+    public Vector<String> fsReadDocumentTLVAsText(int docNumber) throws Exception{
+        return null;
+    }
+    
+    public FSDocument fsFindLastDocument(int docType) throws Exception{
+        return null;
     }
 }

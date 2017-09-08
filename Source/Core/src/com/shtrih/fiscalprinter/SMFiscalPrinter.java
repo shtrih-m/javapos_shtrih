@@ -510,7 +510,7 @@ public interface SMFiscalPrinter {
 
     public FDOParameters readFDOParameters() throws Exception;
 
-    public String ReadRnm() throws Exception;
+    public String readRnm() throws Exception;
 
     public int getHeaderHeight() throws Exception;
 
@@ -529,4 +529,10 @@ public interface SMFiscalPrinter {
     FSReadDocument fsRequestDocumentTLV(int documentNumber) throws Exception;
 
     byte[] fsReadDocumentTLVBlock() throws Exception;
+    
+    FSDocument fsFindLastDocument(int docType) throws Exception;
+    
+    byte[] fsReadDocumentTLV(int docNumber) throws Exception;
+    
+    Vector<String> fsReadDocumentTLVAsText(int docNumber) throws Exception;
 }

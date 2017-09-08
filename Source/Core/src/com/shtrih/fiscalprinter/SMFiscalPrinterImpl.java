@@ -1854,7 +1854,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             for (int i = 0; i < data.length; i++) {
                 data[i] = 0;
             }
-            
+
             if (isCommandSupported(printGraphicLine(SMFP_STATION_REC, 1, data))) {
                 capPrintGraphicsLine = Boolean.TRUE;
             } else {
@@ -1958,6 +1958,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             capGraphics3Scale = true;
         } else {
             capDiscount = discountMode == 0;
+        }
+        
+        if (capFiscalStorage)
+        {
+            if (isShtrihMobile()) 
+            {
+                getModel().addParameter("fdoName", "", 14, 1, 10);
+            } else
+            {
+                getModel().addParameter("fdoName", "", 18, 1, 10);
+            }
         }
     }
 
@@ -2337,14 +2348,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             int vScale = barcode.getVScale();
             int loadHScale = hScale;
             int loadVScale = vScale;
-            if (getCapLoadGraphics3()) 
-            {
-                if (capGraphics3Scale)
-                {
+            if (getCapLoadGraphics3()) {
+                if (capGraphics3Scale) {
                     loadHScale = 1;
                     loadVScale = 1;
-                } else
-                {
+                } else {
                     hScale = 1;
                     vScale = 1;
                 }
@@ -2974,7 +2982,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     @Override
-    public String ReadRnm() throws Exception {
+    public String readRnm() throws Exception {
         int tableNumber = 18;
         if (isShtrihMobile()) {
             tableNumber = 14;
@@ -3195,24 +3203,33 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 
-    public void fsReadDocumentTLV(int number) throws Exception {
-        logger.debug("fsReadDocumentTLV");
-        FSReadDocument readDocument = new FSReadDocument(sysPassword, number);
-        execute(readDocument);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        while (stream.size() < readDocument.getDocSize()) {
-            FSReadDocumentBlock command = new FSReadDocumentBlock(sysPassword);
-            execute(command);
-            stream.write(command.getData());
-        }
+    public Vector<String> fsReadDocumentTLVAsText(int docNumber) throws Exception {
+        logger.debug("fsReadDocumentTLVAsText");
+        byte[] ba = fsReadDocumentTLV(docNumber);
         TLVParser reader = new TLVParser();
-        reader.read(stream.toByteArray());
+        reader.read(ba);
         Vector<String> lines = reader.getPrintText();
         for (int i = 0; i < lines.size(); i++) {
             logger.debug(lines.get(i));
         }
+        return lines;
     }
 
+    public byte[] fsReadDocumentTLV(int docNumber) throws Exception {
+        FSReadDocument readDocument = fsRequestDocumentTLV(docNumber);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        try {
+            while (stream.size() < readDocument.getDocSize()) {
+                byte[] tlvBlock = fsReadDocumentTLVBlock();
+                stream.write(tlvBlock);
+            }
+        } finally {
+            stream.close();
+        }
+        return stream.toByteArray();
+    }
+    
+    
     public FSReadDocument fsRequestDocumentTLV(int documentNumber) throws Exception {
         FSReadDocument readDocument = new FSReadDocument(sysPassword, documentNumber);
         execute(readDocument);
@@ -3547,4 +3564,20 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return capFooterFlag;
     }
 
+    public FSDocument fsFindLastDocument(int docType) throws Exception
+    {
+        FSReadStatus fsStatus = fsReadStatus();
+        long docNumber = fsStatus.getDocNumber();
+        while (true)
+        {
+            if (docNumber == 0) break;
+            FSFindDocument fs = fsFindDocument(docNumber);
+            if (fs.getDocument().getDocType() == docType){
+                return fs.getDocument();
+            }
+            docNumber--;
+        }
+        return null;
+    }
+    
 }

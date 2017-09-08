@@ -242,10 +242,10 @@ class PrinterTest implements FiscalPrinterConst {
             barcode.setBarWidth(4);
             barcode.setText(
                     "https://checkl.fsrar.ru?id=fa07210-0041-4dc6-"
-                            + "bbf2-1634282724418amdt=191015161"
-                            + "71amcn=0100000062870D0682B61230689D76826FAC92C5DC29955F0E3B5663B4"
-                            + "4C63A673C86B0976C0B24495848F6EF157792203A0D275"
-                            + "1F525456644096478D256A910EFEABB67");
+                    + "bbf2-1634282724418amdt=191015161"
+                    + "71amcn=0100000062870D0682B61230689D76826FAC92C5DC29955F0E3B5663B4"
+                    + "4C63A673C86B0976C0B24495848F6EF157792203A0D275"
+                    + "1F525456644096478D256A910EFEABB67");
             barcode.setLabel("Aztec: ");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_AZTEC);
             printer.printBarcode(barcode);
@@ -351,10 +351,10 @@ class PrinterTest implements FiscalPrinterConst {
             barcode.setBarWidth(4);
             barcode.setText(
                     "https://checkl.fsrar.ru?id=fa07210-0041-4dc6-"
-                            + "bbf2-1634282724418amdt=191015161"
-                            + "71amcn=0100000062870D0682B61230689D76826FAC92C5DC29955F0E3B5663B4"
-                            + "4C63A673C86B0976C0B24495848F6EF157792203A0D275"
-                            + "1F525456644096478D256A910EFEABB67");
+                    + "bbf2-1634282724418amdt=191015161"
+                    + "71amcn=0100000062870D0682B61230689D76826FAC92C5DC29955F0E3B5663B4"
+                    + "4C63A673C86B0976C0B24495848F6EF157792203A0D275"
+                    + "1F525456644096478D256A910EFEABB67");
             // Aztec
             barcode.setLabel("Aztec: ");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_AZTEC);
@@ -371,7 +371,7 @@ class PrinterTest implements FiscalPrinterConst {
             barcode.setBarWidth(2);
             barcode.setText(
                     "4C63A673C86B0976C0B24495848F6EF157792203A0D275\n"
-                            + "1F525456644096478D256A910EFEABB67");
+                    + "1F525456644096478D256A910EFEABB67");
             barcode.setLabel("PDF417: ");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_PDF417);
             printBarcode(barcode);
@@ -591,9 +591,9 @@ class PrinterTest implements FiscalPrinterConst {
                 String fieldValue = printer.readTable(table, row, field);
                 System.out.println(
                         "Table " + String.valueOf(table) + ", "
-                                + "Row " + String.valueOf(row) + ", "
-                                + "Field " + String.valueOf(field) + ": "
-                                + fieldValue);
+                        + "Row " + String.valueOf(row) + ", "
+                        + "Field " + String.valueOf(field) + ": "
+                        + fieldValue);
             }
         }
         // payment names
@@ -605,9 +605,9 @@ class PrinterTest implements FiscalPrinterConst {
                 String fieldValue = printer.readTable(table, row, field);
                 System.out.println(
                         "Table " + String.valueOf(table) + ", "
-                                + "Row " + String.valueOf(row) + ", "
-                                + "Field " + String.valueOf(field) + ": "
-                                + fieldValue);
+                        + "Row " + String.valueOf(row) + ", "
+                        + "Field " + String.valueOf(field) + ": "
+                        + fieldValue);
             }
         }
         // FPTR_DIO_WRITE_PAYMENT_NAME
@@ -665,6 +665,8 @@ class PrinterTest implements FiscalPrinterConst {
         try {
             printer.setDeviceEnabled(true);
 
+            readLastDayOpen();
+            
             String[] lines = new String[1];
             printer.getData(FPTR_GD_PRINTER_ID, null, lines);
             System.out.println("FPTR_GD_PRINTER_ID: " + lines[0]);
@@ -678,11 +680,26 @@ class PrinterTest implements FiscalPrinterConst {
             System.out.println("FSSerialNumber: " + fsStatus.getFsSerial());
             System.out.println("Rnm: " + results.get(1));
             System.out.println("Unsent documents: " + fsCommunicationStatus.getUnsentDocumentsCount());
-
             System.out.println("Cash in drawer: " + printer.readCashRegister(241).getValue() / 100.0d);
 
-            PrintCheckWithPassedPositionSum();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    private void readLastDayOpen() {
+        System.out.println("readLastDayOpen");
+        try {
+            Vector<String> lines = printer.fsReadDayOpen();
+            System.out.println("Номер смены      : " + lines.get(0));
+            System.out.println("Тип документа    : " + lines.get(1));
+            System.out.println("Дата и время     : " + lines.get(2));
+            System.out.println("РН ККТ           : " + lines.get(3));
+            System.out.println("ЗН ККТ           : " + lines.get(4));
+            System.out.println("Номер ФН         : " + lines.get(5));
+            System.out.println("Номер ФД         : " + lines.get(6));
+            System.out.println("ФПД              : " + lines.get(7));
+            System.out.println("Наименование ОФД : " + lines.get(8));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -691,7 +708,7 @@ class PrinterTest implements FiscalPrinterConst {
     private void PrintCheckWithPassedPositionSum() throws Exception {
         // Задаем тип чека SMFPTR_RT_SALE, SMFPTR_RT_RETSALE, SMFPTR_RT_BUY, SMFPTR_RT_RETBUY
         printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
-        
+
         // Указываем систему налогообложения
         printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM, 1);
 
@@ -700,7 +717,7 @@ class PrinterTest implements FiscalPrinterConst {
 
         // Печать строки шрифтом 2
         // Печатаем текст
-        printer.printRecMessage("же не манж пасижур",2);
+        printer.printRecMessage("же не манж пасижур", 2);
 
         // Обычная позиция
         printer.printRecItem("ITEM 1", 0, 1234, 0, 1000, "");
@@ -749,10 +766,9 @@ class PrinterTest implements FiscalPrinterConst {
         printer.printRecSubtotal(0);
         printer.printRecTotal(0, 1234 + 1235, "1");
 
-
         PrinterBarcode barcode = new PrinterBarcode();
-        barcode.setText("\"4C63A673C86B0976C0B24495848F6EF157792203A0D275\\n\"\n" +
-                "                            + \"1F525456644096478D256A910EFEABB67\"");
+        barcode.setText("\"4C63A673C86B0976C0B24495848F6EF157792203A0D275\\n\"\n"
+                + "                            + \"1F525456644096478D256A910EFEABB67\"");
 
         barcode.setType(SmFptrConst.SMFPTR_BARCODE_PDF417);
         barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
@@ -1413,10 +1429,10 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt23() {
         try {
             int[] recTypes = {
-                    SmFptrConst.SMFPTR_RT_SALE,
-                    SmFptrConst.SMFPTR_RT_RETSALE,
-                    SmFptrConst.SMFPTR_RT_BUY,
-                    SmFptrConst.SMFPTR_RT_RETBUY
+                SmFptrConst.SMFPTR_RT_SALE,
+                SmFptrConst.SMFPTR_RT_RETSALE,
+                SmFptrConst.SMFPTR_RT_BUY,
+                SmFptrConst.SMFPTR_RT_RETBUY
             };
             for (int i = 0; i < recTypes.length; i++) {
                 printer.resetPrinter();
@@ -2207,18 +2223,18 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt8() {
         String[] headerLines = {
-                " ",
-                "               ООО \"ГИПЕРГЛОБУС\"         ",
-                "       г. Щелково, Пролетарский пр-т 18  ",
-                "             тел.: (495) 221-85-00       ",
-                "                 www.globus.ru           ",
-                " "};
+            " ",
+            "               ООО \"ГИПЕРГЛОБУС\"         ",
+            "       г. Щелково, Пролетарский пр-т 18  ",
+            "             тел.: (495) 221-85-00       ",
+            "                 www.globus.ru           ",
+            " "};
 
         String[] trailerLines = {
-                " ",
-                "              Спасибо за покупку!        ",
-                "          Будем рады Вас видеть снова!   ",
-                " "};
+            " ",
+            "              Спасибо за покупку!        ",
+            "          Будем рады Вас видеть снова!   ",
+            " "};
 
         String additionalHeader = "Ваш кассир сегодня:\r\n"
                 + "ИВАНИЛОВА Г.Л.\r\n"
@@ -2551,7 +2567,7 @@ class PrinterTest implements FiscalPrinterConst {
                 String fileName = "Logo" + String.valueOf(i) + ".bmp";
                 printer.printNormal(FPTR_S_RECEIPT,
                         "Loading IMAGE" + String.valueOf(i) + " from file "
-                                + fileName + " ...");
+                        + fileName + " ...");
                 try {
                     printer.loadImage(fileName);
                     printer.printNormal(FPTR_S_RECEIPT, "OK, "
@@ -2933,7 +2949,7 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void testSynchronization(String fptrDeviceName,
-                                    String cashDeviceName) {
+            String cashDeviceName) {
         try {
             logger.debug("testSynchronization");
             int i = 0;
@@ -3035,15 +3051,15 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printNCRFiscalReceipt() {
         String[] headerLines = {
-                "                                                ",
-                "             34400, Rostov-Na-Donu              ",
-                "             RIKHARDA ZORGE UL. 33              ",
-                "                ???. 79081735904                "
+            "                                                ",
+            "             34400, Rostov-Na-Donu              ",
+            "             RIKHARDA ZORGE UL. 33              ",
+            "                ???. 79081735904                "
         };
 
         String[] trailerLines = {
-                "              Спасибо за покупку!        ",
-                "          Будем рады Вас видеть снова!   "
+            "              Спасибо за покупку!        ",
+            "          Будем рады Вас видеть снова!   "
         };
 
         try {
