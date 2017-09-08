@@ -79,4 +79,10 @@ public class TLVWriter {
         add(data.length, 2);
         add(data);
     }
+
+    public void add(int tagId, long value, int len) throws Exception {
+        add(tagId, 2);
+        add(len, 2);
+        add(value, len);
+    }
 }

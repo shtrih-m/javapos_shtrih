@@ -264,10 +264,18 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 getDevice().fsWriteTLV(tlvItem.getData());
 
                 if (getParams().FSPrintTags) {
+
                     TLVParser reader = new TLVParser();
                     reader.read(tlvItem.getData());
                     Vector<String> lines = reader.getPrintText();
-                    messages.addAll(lines);
+
+                    if (getParams().FSTagsPlacement == 1) {
+                        for (String line : lines) {
+                            getDevice().printText(SMFP_STATION_REC, line, tlvItem.getFont());
+                        }
+                    } else {
+                        messages.addAll(lines);
+                    }
                 }
             }
 
@@ -1100,13 +1108,19 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public class FSTLVItem {
 
         private final byte[] data;
+        private FontNumber font;
 
-        public FSTLVItem(byte[] data) {
+        public FSTLVItem(byte[] data, FontNumber font) {
             this.data = data;
+            this.font = font;
         }
 
         public byte[] getData() {
             return data;
+        }
+
+        public FontNumber getFont() {
+            return font;
         }
     }
 
@@ -1119,7 +1133,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void fsWriteTLV(byte[] data) throws Exception {
-        items.add(new FSTLVItem(data));
+        items.add(new FSTLVItem(data, getParams().getFont()));
     }
 
     private void fsWriteTag2(int tagId, String tagValue) throws Exception {
