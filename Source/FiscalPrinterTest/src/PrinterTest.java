@@ -666,6 +666,8 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setDeviceEnabled(true);
 
             readLastDayOpen();
+            readLastDayClose();
+            readLastReceipt();
             
             String[] lines = new String[1];
             printer.getData(FPTR_GD_PRINTER_ID, null, lines);
@@ -705,6 +707,41 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    private void readLastDayClose() {
+        System.out.println("readLastDayClose");
+        try {
+            Vector<String> lines = printer.fsReadDayClose();
+            System.out.println("Номер смены      : " + lines.get(0));
+            System.out.println("Тип документа    : " + lines.get(1));
+            System.out.println("Дата и время     : " + lines.get(2));
+            System.out.println("РН ККТ           : " + lines.get(3));
+            System.out.println("ЗН ККТ           : " + lines.get(4));
+            System.out.println("Номер ФН         : " + lines.get(5));
+            System.out.println("Номер ФД         : " + lines.get(6));
+            System.out.println("ФПД              : " + lines.get(7));
+            System.out.println("Наименование ОФД : " + lines.get(8));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void readLastReceipt() {
+        System.out.println("readLastReceipt");
+        try {
+            Vector<String> lines = printer.fsReadReceipt();
+            System.out.println("Тип документа      : " + lines.get(0));
+            System.out.println("Квитанция получена : " + lines.get(1));
+            System.out.println("Дата и время       : " + lines.get(2));
+            System.out.println("Номер ФД           : " + lines.get(3));
+            System.out.println("ФПД                : " + lines.get(4));
+            System.out.println("Тип операции       : " + lines.get(5));
+            System.out.println("Сумма              : " + lines.get(6));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
     private void PrintCheckWithPassedPositionSum() throws Exception {
         // Задаем тип чека SMFPTR_RT_SALE, SMFPTR_RT_RETSALE, SMFPTR_RT_BUY, SMFPTR_RT_RETBUY
         printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);

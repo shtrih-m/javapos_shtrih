@@ -502,6 +502,11 @@ public interface SmFptrConst {
      */
     public static final int SMFPTR_DIO_FS_READ_DAY_CLOSE = 0x50;
     
+    /**
+     * Read last document
+     */
+    public static final int SMFPTR_DIO_FS_READ_RECEIPT = 0x51;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

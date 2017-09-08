@@ -15,7 +15,7 @@ import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import java.io.ByteArrayOutputStream;
 import com.shtrih.fiscalprinter.TLVItems;
 import java.util.Vector;
-import com.shtrih.fiscalprinter.command.FSOpenDayReport;
+import com.shtrih.fiscalprinter.command.FSCloseDayReport;
 
 /**
  *
@@ -56,7 +56,7 @@ public class DIOReadDayClose extends DIOItem {
     public void execute(int[] data, Object object) throws Exception 
     {
         Vector<String> lines = (Vector<String>)object;
-        FSOpenDayReport doc = (FSOpenDayReport)getPrinter().fsFindLastDocument(FSDocType.FS_DOCTYPE_DAYCLOSE);
+        FSCloseDayReport doc = (FSCloseDayReport)getPrinter().fsFindLastDocument(FSDocType.FS_DOCTYPE_DAYCLOSE);
         // Номер смены
         lines.add(String.valueOf(doc.getDayNumber()));
         // Тип документа (отчет об открытии)

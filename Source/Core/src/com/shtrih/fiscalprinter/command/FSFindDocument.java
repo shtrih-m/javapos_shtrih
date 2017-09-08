@@ -52,6 +52,14 @@ public class FSFindDocument extends PrinterCommand {
                 document = new FSOpenDayReport(in, docType);
                 break;
                 
+            case FSDocType.FS_DOCTYPE_DAYCLOSE:
+                document = new FSCloseDayReport(in, docType);
+                break;
+                
+            case FSDocType.FS_DOCTYPE_RECEIPT:
+                document = new FSDocumentReceipt(in, docType);
+                break;
+                
             default: 
                 document = new FSDocument(in, docType);
                 

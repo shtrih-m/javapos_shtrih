@@ -21,10 +21,10 @@ public class FSDocType {
     public static final int FS_DOCTYPE_REG_REPORT = 1;
     // 02h – отчет об открытии смены
     public static final int FS_DOCTYPE_DAYOPEN = 2;
-    // 04h – кассовый чек
-    public static final int FS_DOCTYPE_RECEIPT = 4;
-    // 08h – отчет о закрытии смены
-    public static final int FS_DOCTYPE_DAYCLOSE = 8;
+    // 03h – кассовый чек
+    public static final int FS_DOCTYPE_RECEIPT = 3;
+    // 05h – отчет о закрытии смены
+    public static final int FS_DOCTYPE_DAYCLOSE = 5;
     // 10h – отчет о закрытии фискального режима
     public static final int FS_DOCTYPE_FISCAL_CLOSE = 16;
     /*
