@@ -2012,4 +2012,10 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_FS_READ_DAY_OPEN, null, lines);
         return lines;
     }
+    
+    public Vector<String> fsReadDayClose() throws Exception {
+        Vector<String> lines = new Vector<String>();
+        directIO(SmFptrConst.SMFPTR_DIO_FS_READ_DAY_CLOSE, null, lines);
+        return lines;
+    }
 }

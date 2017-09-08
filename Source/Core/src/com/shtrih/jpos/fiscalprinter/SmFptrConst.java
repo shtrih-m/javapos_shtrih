@@ -497,6 +497,11 @@ public interface SmFptrConst {
      */
     public static final int SMFPTR_DIO_FS_READ_DAY_OPEN = 0x4F;
     
+    /**
+     * Read last fiscal day close document
+     */
+    public static final int SMFPTR_DIO_FS_READ_DAY_CLOSE = 0x50;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

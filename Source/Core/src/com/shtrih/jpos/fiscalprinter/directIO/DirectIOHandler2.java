@@ -414,6 +414,10 @@ public class DirectIOHandler2 {
                 new DIOReadDayOpen(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_FS_READ_DAY_CLOSE:
+                new DIOReadDayClose(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
