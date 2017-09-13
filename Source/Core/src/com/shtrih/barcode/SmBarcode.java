@@ -1,19 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.barcode;
 
 import java.util.Arrays;
 
 /**
- *
  * @author V.Kravtsov
  */
 public class SmBarcode {
 
-    private final byte[][] data;
+    private byte[][] data;
     private final int width;
     private final int height;
     private int firstLine = 1;
@@ -31,19 +25,28 @@ public class SmBarcode {
             return;
         }
 
-        int offset = (graphicsWidth - width * hScale) / (16 * hScale);
+        int offset = ((graphicsWidth - width * hScale) / hScale) / 2;
 
-        if(offset < 0)
+        if (offset <= 0)
             return;
 
         for (int i = 0; i < height; i++) {
-            byte[] b = new byte[offset + data[i].length];
+            byte[] b = new byte[(graphicsWidth + 7) / 8];
             Arrays.fill(b, (byte) 0);
-            for (int j = 0; j < data[i].length; j++) {
-                b[offset + j] = data[i][j];
+            for (int j = 0; j < width; j++) {
+                byte bit = (byte) Math.pow(2, j % 8);
+                if ((data[i][getByteNumberForBit(j)] & bit) == bit) {
+                    byte bitMapped = (byte) Math.pow(2, (offset + j) % 8);
+                    int byteNumber = getByteNumberForBit(offset + j);
+                    b[byteNumber] |= bitMapped;
+                }
             }
             data[i] = b;
         }
+    }
+
+    private int getByteNumberForBit(int bitNumber){
+        return  bitNumber / 8;
     }
 
     public int getWidth() {

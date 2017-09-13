@@ -7,9 +7,10 @@
 
 ********************************************************************************
 
-  September 06 2017
+  September 13 2017
   deviceServiceVersion = 1013464
 	
+  [*] Fixed generated bar code centering logic
   [-] FSPrintTags: do not print 1084, 1085, 1086, 1203 tags
   
 ********************************************************************************
