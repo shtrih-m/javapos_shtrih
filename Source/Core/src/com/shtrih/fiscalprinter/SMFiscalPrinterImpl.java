@@ -106,6 +106,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private int headerHeigth = 0;
     private boolean isFooter = false;
     private PrinterModelParameters modelParameters = null;
+    private String serial  = "";
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params, FiscalPrinterImpl service) {
@@ -1959,14 +1960,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         } else {
             capDiscount = discountMode == 0;
         }
-        
-        if (capFiscalStorage)
-        {
-            if (isShtrihMobile()) 
-            {
+
+        if (capFiscalStorage) {
+            if (isShtrihMobile()) {
                 getModel().addParameter("fdoName", "", 14, 1, 10);
-            } else
-            {
+            } else {
                 getModel().addParameter("fdoName", "", 18, 1, 10);
             }
         }
@@ -2973,12 +2971,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     @Override
     public String readFullSerial() throws Exception {
-        int tableNumber = 18;
-        if (isShtrihMobile()) {
-            tableNumber = 14;
+        if (serial.isEmpty()) {
+            int tableNumber = 18;
+            if (isShtrihMobile()) {
+                tableNumber = 14;
+            }
+            serial = readTable(tableNumber, 1, 1).trim();
         }
-
-        return readTable(tableNumber, 1, 1).trim();
+        return serial;
     }
 
     @Override
@@ -3228,8 +3228,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
         return stream.toByteArray();
     }
-    
-    
+
     public FSReadDocument fsRequestDocumentTLV(int documentNumber) throws Exception {
         FSReadDocument readDocument = new FSReadDocument(sysPassword, documentNumber);
         execute(readDocument);
@@ -3564,20 +3563,20 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return capFooterFlag;
     }
 
-    public FSDocument fsFindLastDocument(int docType) throws Exception
-    {
+    public FSDocument fsFindLastDocument(int docType) throws Exception {
         FSReadStatus fsStatus = fsReadStatus();
         long docNumber = fsStatus.getDocNumber();
-        while (true)
-        {
-            if (docNumber == 0) break;
+        while (true) {
+            if (docNumber == 0) {
+                break;
+            }
             FSFindDocument fs = fsFindDocument(docNumber);
-            if (fs.getDocument().getDocType() == docType){
+            if (fs.getDocument().getDocType() == docType) {
                 return fs.getDocument();
             }
             docNumber--;
         }
         return null;
     }
-    
+
 }
