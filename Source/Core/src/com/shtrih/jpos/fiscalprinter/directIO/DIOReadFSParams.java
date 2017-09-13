@@ -11,6 +11,7 @@ package com.shtrih.jpos.fiscalprinter.directIO;
 
 import java.util.List;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
+import com.shtrih.fiscalprinter.command.FDOParameters;
 import com.shtrih.fiscalprinter.command.FSReadCommStatus;
 import com.shtrih.fiscalprinter.command.FSReadDayParameters;
 import com.shtrih.fiscalprinter.command.FSReadFiscalization;
@@ -48,12 +49,17 @@ public class DIOReadFSParams extends DIOItem {
 9 - номер последнего ФД
 10 - дата и время последнего ФД (DDMMYYYYhhmm)
 11 - фискальный признак последнего ФД
+12 - ЗН ККТ
+13 - Модель ФР
+14 - Наименование ОФД
+15 - Адрес сервера ОФД
+16 - № порта
+17 - Таймаут ожидание ответа от ОФД
+    
 
-6. 01.02.2018
-7. 6
-8. 53
-9. 169
-10. 24.01.201719:36
+    
+    
+
     
 */
     
@@ -87,6 +93,19 @@ public class DIOReadFSParams extends DIOItem {
         list.add(String.valueOf(dayParams.getDayNumber()));
         list.add(String.valueOf(fsStatus.getDocNumber()));
         list.add(fsStatus.getDate().toJposString() + fsStatus.getTime().toJposString());
+        // 12 - ЗН ККТ
+        list.add(printer.readFullSerial());
+        // 13 - Модель ФР
+        list.add(printer.getDeviceMetrics().getDeviceName());
+        // 14 - Наименование ОФД
+        list.add(getPrinter().readParameter("fdoName"));
+        // 15 - Адрес сервера ОФД
+        FDOParameters fdoParameters = printer.readFDOParameters();
+        list.add(fdoParameters.getHost());
+        // 16 - № порта
+        list.add(String.valueOf(fdoParameters.getPort()));
+        // 17 - Таймаут ожидание ответа от ОФД
+        list.add(String.valueOf(fdoParameters.getPollPeriodSeconds()));
     }
 
     
