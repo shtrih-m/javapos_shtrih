@@ -1956,10 +1956,11 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         totals[3] = (Long) object[3];
     }
 
-    public FSDocument fsFindDocument(int documentNumber) throws Exception {
+    public FSDocumentInfo fsFindDocument(long documentNumber) throws Exception {
         FSFindDocument cmd = new FSFindDocument(getSysPassword(), documentNumber);
         executeCommand(cmd);
-        return cmd.getDocument();
+        FSDocument doc = cmd.getDocument();
+        return new FSDocumentInfo(doc.getDocType(), doc.isTicketReceived(), doc.getData(), doc.getDateTime(), doc.getDocNumber(), doc.getDocSign());
     }
 
     public void printRawGraphics(byte[][] data) throws Exception {

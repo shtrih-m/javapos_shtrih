@@ -7,11 +7,19 @@
 
 ********************************************************************************
 
-  September 13 2017
+  September 14 2017
   deviceServiceVersion = 1013464
 	
   [*] Fixed generated bar code centering logic
   [-] FSPrintTags: do not print 1084, 1085, 1086, 1203 tags
+  [+] Added FSDocumentInfo to make compatibility breakage of fsFindDocument less impactful
+  [+] Added directIO commands SMFPTR_DIO_FS_READ_DAY_OPEN, SMFPTR_DIO_FS_READ_DAY_CLOSE and 
+      SMFPTR_DIO_FS_READ_RECEIPT 
+  [+] Added device serial number caching
+  [+] Added new parameters for SMFPTR_DIO_READ_FS_PARAMS
+ BREAKING CHANGES:
+  [!] FSDocumentInfo: changed getDocumentNumber return value from int to long
+  [!] FSDocumentInfo: getDocumentType changed return value from FSDocType to int
   
 ********************************************************************************
 
