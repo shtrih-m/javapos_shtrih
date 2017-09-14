@@ -21,7 +21,7 @@ public class TLVReaderTests {
         TLVParser reader = new TLVParser();
         reader.read(data);
 
-        List<TLVItem> items = reader.getItems();
+        TLVItems items = reader.getItems();
         assertEquals(1, items.size());
 
         TLVItem item = items.get(0);

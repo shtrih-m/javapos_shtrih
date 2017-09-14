@@ -44,7 +44,16 @@ public class CommandInputStream {
         return byteToInt(B);
     }
 
-    public byte[] readBytesToEnd() {
+    public void mark(){
+        stream.mark(stream.available());
+    }
+            
+    public void reset(){
+        stream.reset();
+    }
+    
+    public byte[] readBytesToEnd() 
+    {
         return readBytes(stream.available());
     }
 

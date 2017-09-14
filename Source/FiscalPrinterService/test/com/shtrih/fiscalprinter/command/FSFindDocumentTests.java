@@ -67,8 +67,8 @@ public class FSFindDocumentTests {
 
         FSDocument document = cmd.getDocument();
 
-        assertEquals(3, document.getDocType().getValue());
-        assertEquals(false, document.getSentToOFD());
+        assertEquals(3, document.getDocType());
+        assertEquals(false, document.isTicketReceived());
         assertArrayEquals(byteArray(
                 0x01, 0x20, 0x4E, 0x00, 0x00, 0x00
         ), document.getData());
@@ -79,7 +79,7 @@ public class FSFindDocumentTests {
         assertEquals(20, document.getDateTime().getHours());
         assertEquals(53, document.getDateTime().getMinutes());
         assertEquals(0xA3, document.getDocNumber());
-        assertEquals(0x2E4BEAEBL, document.getFP());
+        assertEquals(0x2E4BEAEBL, document.getDocSign());
     }
 
     @Test
@@ -99,8 +99,8 @@ public class FSFindDocumentTests {
 
         FSDocument document = cmd.getDocument();
 
-        assertEquals(1, document.getDocType().getValue());
-        assertEquals(false, document.getSentToOFD());
+        assertEquals(1, document.getDocType());
+        assertEquals(false, document.isTicketReceived());
         assertArrayEquals(byteArray(
                 0x35, 0x30, 0x32, 0x34, 0x30, 0x35, 0x34, 0x34, 0x34, 0x35,
                 0x20, 0x20, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x31, 0x33,
@@ -114,7 +114,7 @@ public class FSFindDocumentTests {
         assertEquals(2, document.getDateTime().getHours());
         assertEquals(52, document.getDateTime().getMinutes());
         assertEquals(1, document.getDocNumber());
-        assertEquals(1305583543, document.getFP());
+        assertEquals(1305583543, document.getDocSign());
     }
 
     @Test
@@ -134,8 +134,8 @@ public class FSFindDocumentTests {
 
         FSDocument document = cmd.getDocument();
 
-        assertEquals(11, document.getDocType().getValue());
-        assertEquals(false, document.getSentToOFD());
+        assertEquals(11, document.getDocType());
+        assertEquals(false, document.isTicketReceived());
         assertArrayEquals(byteArray(
                 0x35, 0x30, 0x32, 0x34, 0x30, 0x35, 0x34, 0x34, 0x34, 0x35,
                 0x20, 0x20, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x31, 0x33,
@@ -149,7 +149,7 @@ public class FSFindDocumentTests {
         assertEquals(2, document.getDateTime().getHours());
         assertEquals(53, document.getDateTime().getMinutes());
         assertEquals(2, document.getDocNumber());
-        assertEquals(412805154, document.getFP());
+        assertEquals(412805154, document.getDocSign());
     }
 
     @Test
@@ -165,8 +165,8 @@ public class FSFindDocumentTests {
 
         FSDocument document = cmd.getDocument();
 
-        assertEquals(2, document.getDocType().getValue());
-        assertEquals(false, document.getSentToOFD());
+        assertEquals(2, document.getDocType());
+        assertEquals(false, document.isTicketReceived());
         assertArrayEquals(byteArray(
                 0x01, 0x00
         ), document.getData());
@@ -177,7 +177,7 @@ public class FSFindDocumentTests {
         assertEquals(2, document.getDateTime().getHours());
         assertEquals(53, document.getDateTime().getMinutes());
         assertEquals(3, document.getDocNumber());
-        assertEquals(3501121883L, document.getFP());
+        assertEquals(3501121883L, document.getDocSign());
     }
 
     @Test
@@ -193,8 +193,8 @@ public class FSFindDocumentTests {
 
         FSDocument document = cmd.getDocument();
 
-        assertEquals(5, document.getDocType().getValue());
-        assertEquals(false, document.getSentToOFD());
+        assertEquals(5, document.getDocType());
+        assertEquals(false, document.isTicketReceived());
         assertArrayEquals(byteArray(
                 0x01, 0x00
         ), document.getData());
@@ -205,7 +205,7 @@ public class FSFindDocumentTests {
         assertEquals(2, document.getDateTime().getHours());
         assertEquals(54, document.getDateTime().getMinutes());
         assertEquals(6, document.getDocNumber());
-        assertEquals(3647013117L, document.getFP());
+        assertEquals(3647013117L, document.getDocSign());
     }
 }
 
