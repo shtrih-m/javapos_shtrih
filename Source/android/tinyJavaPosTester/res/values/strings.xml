@@ -16,6 +16,7 @@
     <string name="action_print_current_day_journal">Print current day journal</string>
     <string name="action_print_duplicate_receipt">Print duplicate receipt</string>
     <string name="action_connect_to_device_direct">Connect to Wi-Fi device</string>
+    <string name="action_connect_to_usb_device">Connect to USB device</string>
 
 
 </resources>

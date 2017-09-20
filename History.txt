@@ -6,6 +6,12 @@
   Url     : https://github.com/shtrih-m/javapos_shtrih
 
 ********************************************************************************
+  September 21 2017
+  deviceServiceVersion = 1013465
+	
+  [+] Added USB device support to Android version
+    
+********************************************************************************
 
   September 14 2017
   deviceServiceVersion = 1013464

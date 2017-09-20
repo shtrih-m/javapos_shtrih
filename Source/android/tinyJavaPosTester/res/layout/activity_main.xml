@@ -68,5 +68,12 @@
             android:layout_height="wrap_content"
             android:onClick="connectToDeviceDirect"
             android:text="@string/action_connect_to_device_direct" />
+
+        <Button
+            android:id="@+id/btnConnectToUSBDevice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="connectToUSBDevice"
+            android:text="@string/action_connect_to_usb_device" />
     </LinearLayout>
 </ScrollView>

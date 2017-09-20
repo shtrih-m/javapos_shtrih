@@ -21,7 +21,18 @@ import android.util.Log;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.pdf417.encoder.Compaction;
 import com.shtrih.barcode.PrinterBarcode;
+import com.shtrih.fiscalprinter.PrinterProtocol;
+import com.shtrih.fiscalprinter.PrinterProtocol_1;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
+import com.shtrih.fiscalprinter.command.DeviceMetrics;
+import com.shtrih.fiscalprinter.command.PrinterCommand;
+import com.shtrih.fiscalprinter.command.ReadDeviceMetrics;
+import com.shtrih.fiscalprinter.command.ReadShortStatus;
+import com.shtrih.fiscalprinter.command.ShortPrinterStatus;
+import com.shtrih.fiscalprinter.port.PrinterPort;
+import com.shtrih.fiscalprinter.port.UsbPrinterPort;
+import com.shtrih.hoho.android.usbserial.driver.UsbSerialDriver;
+import com.shtrih.hoho.android.usbserial.driver.UsbSerialProber;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
 import com.shtrih.util.StaticContext;
 import com.shtrih.util.SysUtils;
@@ -29,10 +40,12 @@ import com.shtrih.util.SysUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.ThreadFactory;
 
 import jpos.FiscalPrinter;
 import jpos.JposConst;
@@ -66,8 +79,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String ACTION_USB_PERMISSION_NOT_GRANTED = "com.felhr.usbservice.USB_PERMISSION_NOT_GRANTED";
     private static final String TAG = "USBList";
 
-    private void findSerialPortDevice()
-    {
+    private void findSerialPortDevice() {
         UsbManager usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
         // This snippet will try to open the first encountered usb device connected, excluding usb root hubs
         HashMap<String, UsbDevice> usbDevices = usbManager.getDeviceList();
@@ -97,11 +109,9 @@ public class MainActivity extends AppCompatActivity {
 
     private final BroadcastReceiver usbReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context arg0, Intent arg1)
-        {
+        public void onReceive(Context arg0, Intent arg1) {
             Log.d("onReceive", arg1.getAction());
-            if (arg1.getAction().equals(ACTION_USB_PERMISSION))
-            {
+            if (arg1.getAction().equals(ACTION_USB_PERMISSION)) {
                 boolean granted = arg1.getExtras().getBoolean(UsbManager.EXTRA_PERMISSION_GRANTED);
                 if (granted) // User accepted our USB connection. Try to open the device as a serial port
                 {
@@ -116,13 +126,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            if (arg1.getAction().equals(ACTION_USB_STATE))
-            {
+            if (arg1.getAction().equals(ACTION_USB_STATE)) {
                 findSerialPortDevice(); // A USB device has been attached. Try to open it as a Serial port
             }
 
-            if (arg1.getAction().equals(ACTION_USB_ATTACHED))
-            {
+            if (arg1.getAction().equals(ACTION_USB_ATTACHED)) {
                 findSerialPortDevice(); // A USB device has been attached. Try to open it as a Serial port
             }
             if (arg1.getAction().equals(ACTION_USB_DETACHED)) {
@@ -430,13 +438,80 @@ public class MainActivity extends AppCompatActivity {
         try {
             thrd.join();
             Toast.makeText(this, "Успех", Toast.LENGTH_LONG).show();
-        }
-        catch (InterruptedException e)
-        {
+        } catch (InterruptedException e) {
         }
 //            Thread.sleep(100);
 //        } catch (InterruptedException e) {
 //
 //        }
     }
+
+    public void connectToUSBDevice(View view) {
+
+//        UsbPrinterPort.Context = getApplicationContext();
+//
+//        try {
+//            PrinterPort port = new UsbPrinterPort();
+//            PrinterProtocol protocol = new PrinterProtocol_1(port);
+//
+//            port.open(3000);
+//            protocol.connect();
+//
+//            ReadDeviceMetrics cmd = new ReadDeviceMetrics();
+//
+//            protocol.send(cmd);
+//            DeviceMetrics metrics = cmd.getDeviceMetrics();
+//            Log.d(TAG, metrics.getDeviceName());
+//        } catch (Exception e) {
+//            Log.e(TAG, "failed", e);
+//            return;
+//        } finally {
+//            UsbPrinterPort.Context = null;
+//        }
+//
+        try {
+            UsbManager usbManager = (UsbManager) getApplicationContext().getSystemService(Context.USB_SERVICE);
+            List<UsbSerialDriver> usbs = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager);
+
+            if (usbs.size() == 0) {
+                Log.e(TAG, "Не найдено ни одного устройства");
+                return;
+            }
+
+            int deviceId = usbs.get(0).getDevice().getDeviceId();
+            SysUtils.setFilesPath(this.getFilesDir().getAbsolutePath());
+            JposConfig.configure("ShtrihFptr", String.format(Locale.ENGLISH, "%d", deviceId), getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        try {
+
+            UsbPrinterPort.Context = getApplicationContext();
+
+            try {
+                printer.open("ShtrihFptr");
+            } finally {
+                UsbPrinterPort.Context = null;
+            }
+
+            printer.claim(3000);
+            printer.setDeviceEnabled(true);
+
+
+        } catch (Exception e) {
+            Log.e(TAG, "failed", e);
+        } finally {
+//            try {
+//                printer.close();
+//            } catch (JposException e) {
+//                Log.e(TAG, "failed", e);
+//            }
+
+        }
+    }
+
+
 }
+

@@ -21,6 +21,7 @@
 
 package com.shtrih.hoho.android.usbserial.driver;
 
+import android.hardware.usb.UsbConfiguration;
 import android.hardware.usb.UsbConstants;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
@@ -239,6 +240,7 @@ public class CdcAcmSerialDriver implements UsbSerialDriver {
         public int read(byte[] dest, int timeoutMillis) throws IOException {
             if (mEnableAsyncReads) {
               final UsbRequest request = new UsbRequest();
+
               try {
                 request.initialize(mConnection, mReadEndpoint);
                 final ByteBuffer buf = ByteBuffer.wrap(dest);
