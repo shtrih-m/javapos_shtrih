@@ -34,4 +34,11 @@ public class FSStatus {
     public boolean isTransferCompleted() {
         return BitUtils.testBit(code, 3);
     }
+
+    /**
+     * @return the code
+     */
+    public int getCode() {
+        return code;
+    }
 }

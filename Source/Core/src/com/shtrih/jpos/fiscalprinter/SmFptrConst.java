@@ -507,6 +507,16 @@ public interface SmFptrConst {
      */
     public static final int SMFPTR_DIO_FS_READ_RECEIPT = 0x51;
     
+    /**
+     * Read FS status
+     */
+    public static final int SMFPTR_DIO_FS_READ_STATUS = 0x52;
+    
+    /**
+     * Find FS document
+     */
+    public static final int SMFPTR_DIO_FS_FIND_DOCUMENT = 0x53;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

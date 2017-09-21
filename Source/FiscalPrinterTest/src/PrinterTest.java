@@ -27,6 +27,7 @@ import com.shtrih.printer.model.NCR7167;
 import com.shtrih.fiscalprinter.command.*;
 import com.shtrih.util.Hex;
 import com.shtrih.barcode.PrinterBarcode;
+import com.shtrih.util.StringUtils;
 
 class PrinterTest implements FiscalPrinterConst {
 
@@ -664,7 +665,10 @@ class PrinterTest implements FiscalPrinterConst {
     public void enableDevice() {
         try {
             printer.setDeviceEnabled(true);
-
+            readFSStatus();
+            findFSDocument();
+            
+            /*
             readLastDayOpen();
             readLastDayClose();
             readLastReceipt();
@@ -683,12 +687,54 @@ class PrinterTest implements FiscalPrinterConst {
             System.out.println("Rnm: " + results.get(1));
             System.out.println("Unsent documents: " + fsCommunicationStatus.getUnsentDocumentsCount());
             System.out.println("Cash in drawer: " + printer.readCashRegister(241).getValue() / 100.0d);
+            */
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private void readFSStatus() 
+    {
+        System.out.println("readFSStatus");
+        try {
+            int[] data = null;
+            String[] lines = new String[9];
+            printer.directIO(SmFptrConst.SMFPTR_DIO_FS_READ_STATUS, data, lines);
+            
+            System.out.println("Lifecycle code  : " + lines[0]);
+            System.out.println("Document type   : " + lines[1]);
+            System.out.println("isDocReceived   : " + lines[2]);
+            System.out.println("isDayOpened     : " + lines[3]);
+            System.out.println("Flags           : " + lines[4]);
+            System.out.println("Date            : " + lines[5]);
+            System.out.println("Time            : " + lines[6]);
+            System.out.println("FS serial       : " + lines[7]);
+            System.out.println("Document number : " + lines[8]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void findFSDocument()
+    {
+        System.out.println("findFSDocument");
+        try {
+            int[] data = new int[1];
+            data[0] = 1;
+            String[] lines = new String[5];
+            printer.directIO(SmFptrConst.SMFPTR_DIO_FS_FIND_DOCUMENT, data, lines);
+            
+            System.out.println("Document type    : " + lines[0]);
+            System.out.println("IsTicketReceived : " + lines[1]);
+            System.out.println("Date and time    : " + lines[2]);
+            System.out.println("Document number  : " + lines[3]);
+            System.out.println("Document sign    : " + lines[4]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     private void readLastDayOpen() {
         System.out.println("readLastDayOpen");
         try {

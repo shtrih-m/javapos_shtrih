@@ -439,6 +439,14 @@ public class DirectIOHandler {
                 new DIOReadReceipt(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_FS_READ_STATUS:
+                new DIOFSReadStatus(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_FS_FIND_DOCUMENT:
+                new DIOFSFindDocument(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)

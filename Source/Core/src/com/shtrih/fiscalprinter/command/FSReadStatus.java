@@ -50,8 +50,8 @@ public class FSReadStatus extends PrinterCommand {
     // out
     private FSStatus status;        // Status code
     private FSDocType docType;      // Document type
-    private boolean isDocReceived;  // Document data received  
-    private boolean isDayOpened;    // Fiscal day is opened
+    private boolean docReceived;  // Document data received  
+    private boolean dayOpened;    // Fiscal day is opened
     private int flags;
     private PrinterDate date;
     private PrinterTime time;
@@ -130,29 +130,29 @@ public class FSReadStatus extends PrinterCommand {
     /**
      * @return the isDocReceived
      */
-    public boolean isIsDocReceived() {
-        return isDocReceived;
+    public boolean isDocReceived() {
+        return docReceived;
     }
 
     /**
      * @param isDocReceived the isDocReceived to set
      */
     public void setIsDocReceived(boolean isDocReceived) {
-        this.isDocReceived = isDocReceived;
+        this.docReceived = isDocReceived;
     }
 
     /**
      * @return the isDayOpened
      */
-    public boolean isIsDayOpened() {
-        return isDayOpened;
+    public boolean isDayOpened() {
+        return dayOpened;
     }
 
     /**
      * @param isDayOpened the isDayOpened to set
      */
     public void setIsDayOpened(boolean isDayOpened) {
-        this.isDayOpened = isDayOpened;
+        this.dayOpened = isDayOpened;
     }
 
     /**
