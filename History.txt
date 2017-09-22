@@ -6,6 +6,14 @@
   Url     : https://github.com/shtrih-m/javapos_shtrih
 
 ********************************************************************************
+
+  September 22 2017
+  deviceServiceVersion = 1013466
+	
+  [+] Added directIO command SMFPTR_DIO_FS_READ_STATUS = 0x52;
+  [+] Added directIO command SMFPTR_DIO_FS_FIND_DOCUMENT = 0x53;
+    
+********************************************************************************
   September 21 2017
   deviceServiceVersion = 1013465
 	
