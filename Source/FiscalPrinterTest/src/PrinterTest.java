@@ -665,8 +665,11 @@ class PrinterTest implements FiscalPrinterConst {
     public void enableDevice() {
         try {
             printer.setDeviceEnabled(true);
-            readFSStatus();
-            findFSDocument();
+
+            printCheckWithSmallSum();
+
+            //readFSStatus();
+            //findFSDocument();
             
             /*
             readLastDayOpen();
@@ -834,6 +837,25 @@ class PrinterTest implements FiscalPrinterConst {
         // Оплата типом оплаты который привязан к jpos.xml к метке "2"
         // <prop name="payType2" type="String" value="2"/>
         printer.printRecTotal(0, 1235, "2");
+
+        // Закрыть фискальный документ
+        printer.endFiscalReceipt(false);
+    }
+
+    private void printCheckWithSmallSum() throws Exception {
+        // Задаем тип чека SMFPTR_RT_SALE, SMFPTR_RT_RETSALE, SMFPTR_RT_BUY, SMFPTR_RT_RETBUY
+        printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+
+        // Указываем систему налогообложения
+        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM, 1);
+
+        // Начинаем фискальный документ
+        printer.beginFiscalReceipt(true);
+
+        // Обычная позиция
+        printer.printRecItem("ITEM 1", 120, 6000, 1, 20, "");
+
+        printer.printRecTotal(120, 120, "0");
 
         // Закрыть фискальный документ
         printer.endFiscalReceipt(false);
