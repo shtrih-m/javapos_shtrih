@@ -21,6 +21,7 @@ import android.util.Log;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.pdf417.encoder.Compaction;
 import com.shtrih.barcode.PrinterBarcode;
+import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.PrinterProtocol;
 import com.shtrih.fiscalprinter.PrinterProtocol_1;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
@@ -150,9 +151,15 @@ public class MainActivity extends AppCompatActivity {
 
                     String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
                     try {
+                        long startedAt = System.currentTimeMillis();
                         connectToDevice(address);
+                        long doneAt = System.currentTimeMillis();
+                        String message = "Blutooth connected in " + (doneAt - startedAt) + " ms";
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                        Log.d(TAG, message);
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "Blutooth connection failed", Toast.LENGTH_LONG).show();
                     }
                 }
                 break;
@@ -285,19 +292,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void printReceipt(View v) {
-        Thread t = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    printSalesReceipt();
-                    printRefundReceipt();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
+        try {
+            long startedAt = System.currentTimeMillis();
 
-        t.start();
+            String[] text = ("«Мой дядя самых честных правил,\n" +
+                    "Когда не в шутку занемог,\n" +
+                    "Он уважать себя заставил\n" +
+                    "И лучше выдумать не мог.\n" +
+                    "Его пример другим наука;\n" +
+                    "Но, боже мой, какая скука\n" +
+                    "С больным сидеть и день и ночь,\n" +
+                    "Не отходя ни шагу прочь!\n" +
+                    "Какое низкое коварство\n" +
+                    "Полуживого забавлять,\n" +
+                    "Ему подушки поправлять,\n" +
+                    "Печально подносить лекарство,\n" +
+                    "Вздыхать и думать про себя:\n" +
+                    "Когда же черт возьмет тебя!»").split("\n");
+
+            for (String line : text) {
+                printer.printText(line);
+            }
+
+            printSalesReceipt();
+            printRefundReceipt();
+
+            printer.printText("ПервыйВторойТретий", new FontNumber(1), 0x4F);
+            printer.printText("ПервыйВторойТретий", new FontNumber(1), 0x4F);
+            printer.printText("ПервыйВторойТретий", new FontNumber(1), 0x4F);
+
+            long doneAt = System.currentTimeMillis();
+
+            String message = "Printed in " + (doneAt - startedAt) + "ms";
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            Log.d(TAG, message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void printSalesReceipt() throws JposException, InterruptedException {

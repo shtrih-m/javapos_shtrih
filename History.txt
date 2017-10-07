@@ -7,10 +7,19 @@
 
 ********************************************************************************
 
+  October 07 2017
+  deviceServiceVersion = 1013468
+	
+  [*] Improved BluetoothPort performance in certain circumstances
+
+********************************************************************************
+
   October 03 2017
   deviceServiceVersion = 1013467
 	
   [*] Fixed SMFPTR_DIO_PRINT_CORRECTION2 added result code check
+
+********************************************************************************
 
   September 22 2017
   deviceServiceVersion = 1013466
