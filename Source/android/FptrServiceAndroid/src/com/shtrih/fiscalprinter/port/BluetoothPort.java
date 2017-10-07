@@ -1,14 +1,3 @@
-/*
- * PrinterPort.java
- *
- * Created on August 30 2007, 12:29
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-/**
- * @author V.Kravtsov
- */
 package com.shtrih.fiscalprinter.port;
 
 import android.bluetooth.BluetoothAdapter;
@@ -22,8 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
-import java.util.Vector;
 
+/**
+ * @author V.Kravtsov
+ */
 public class BluetoothPort implements PrinterPort {
     private static final UUID MY_UUID = UUID
             .fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -34,13 +25,10 @@ public class BluetoothPort implements PrinterPort {
     private BluetoothSocket socket = null;
     private static CompositeLogger logger = CompositeLogger.getLogger(BluetoothPort.class);
 
-    /**
-     * Creates a new instance of BluetoothPort
-     */
     public BluetoothPort() {
     }
 
-    public void checkOpened() throws Exception {
+    private void checkOpened() throws Exception {
         if (socket == null) {
             throw new Exception("Port is not opened");
         }
@@ -142,8 +130,8 @@ public class BluetoothPort implements PrinterPort {
         }
     }
 
-    public void waitBluetoothAdapterStateOn(BluetoothAdapter adapter,
-                                            int timeout) throws Exception {
+    private void waitBluetoothAdapterStateOn(BluetoothAdapter adapter,
+                                             int timeout) throws Exception {
         long startTime = System.currentTimeMillis();
         for (; ; ) {
             long currentTime = System.currentTimeMillis();
@@ -164,7 +152,7 @@ public class BluetoothPort implements PrinterPort {
             try {
                 socket.close();
             } catch (Exception e) {
-                logger.error(e);
+                logger.error("Bluethooth socket close failed", e);
             }
 
             inputStream = null;
@@ -186,21 +174,9 @@ public class BluetoothPort implements PrinterPort {
         this.timeout = timeout;
     }
 
-    public synchronized void updateBaudRate() throws Exception {
-    }
-
-    public void readAll() throws Exception {
-        InputStream stream = inputStream;
-        stream.skip(stream.available());
-    }
-
-    private void noConnectionError() throws Exception {
-        throw new IOException(Localizer.getString(Localizer.NoConnection));
-    }
-
-    public void connect() throws Exception {
+    private void connect() throws Exception {
         if (socket == null) {
-            open(10000);
+            open(openTimeout);
         }
     }
 
@@ -211,18 +187,16 @@ public class BluetoothPort implements PrinterPort {
             try {
                 if (i == 1)
                     connect();
-                OutputStream stream = outputStream;//getPort().getOutputStream();
-                stream.write(b);
-                stream.flush();
+
+                outputStream.write(b);
+                outputStream.flush();
+
                 return;
             } catch (IOException e) {
-                inputStream = null;
-                outputStream = null;
-                socket.close();
-                socket = null;
+                close();
+
                 if (i == 1)
                     throw e;
-                logger.error(e);
             }
         }
     }
@@ -234,92 +208,26 @@ public class BluetoothPort implements PrinterPort {
         write(data);
     }
 
-//    @Override
-//    public byte[] readBytes1(int len) throws Exception {
-//        byte[] data = new byte[len];
-//        for (int i = 0; i < len; i++) {
-//            data[i] = (byte) doReadByte();
-//        }
-//        return data;
-//    }
-
     @Override
     public byte[] readBytes(int len) throws Exception {
-        InputStream is = inputStream;
-        long startTime = System.currentTimeMillis();
-
         byte[] data = new byte[len];
-
-        int readCount = 0;
-
-        for (; ; ) {
-            long currentTime = System.currentTimeMillis();
-            int currentReadCount = is.read(data, readCount, len - readCount);
-
-            if (currentReadCount < 0)
-                noConnectionError();
-
-            readCount += currentReadCount;
-
-            if (readCount == len) {
-                return data;
-            }
-
-            if ((currentTime - startTime) > timeout) {
-                noConnectionError();
-            }
+        for (int i = 0; i < len; i++) {
+            data[i] = (byte) readByte();
         }
+        return data;
     }
 
     @Override
     public int readByte() throws Exception {
-        return doReadByte();
-    }
-
-    private int doReadByte1() throws Exception {
-        int result;
-        InputStream is = inputStream;
-        long startTime = System.currentTimeMillis();
-        for (; ; ) {
-            long currentTime = System.currentTimeMillis();
-            if (is.available() > 0) {
-                result = is.read();
-                if (result >= 0) {
-                    return result;
-                }
-            }
-            if ((currentTime - startTime) > timeout) {
-                noConnectionError();
-            }
+        int result = inputStream.read();
+        if (result < 0) {
+            noConnectionError();
         }
+
+        return result;
     }
 
-    private int doReadByte() throws Exception {
-        int result;
-        InputStream is = inputStream;//getPort().getInputStream();
-        long startTime = System.currentTimeMillis();
-        for (; ; ) {
-            long currentTime = System.currentTimeMillis();
-            if (is.available() > 0) {
-                result = is.read();
-                if (result >= 0) {
-                    return result;
-                }
-            }
-            if ((currentTime - startTime) > timeout) {
-                noConnectionError();
-            }
-        }
+    private void noConnectionError() throws Exception {
+        throw new IOException(Localizer.getString(Localizer.NoConnection));
     }
-
-    public void flushOut() throws Exception {
-        outputStream.flush();
-    }
-
-    public String[] getPortNames() throws Exception {
-        Vector<String> result = new Vector<String>();
-        result.add(BluetoothAdapter.getDefaultAdapter().getAddress());
-        return result.toArray(new String[result.size()]);
-    }
-
 }

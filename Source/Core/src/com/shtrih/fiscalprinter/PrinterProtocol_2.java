@@ -167,11 +167,14 @@ public class PrinterProtocol_2 implements PrinterProtocol {
     }
 
     public byte[] readBytes(int count) throws Exception {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        for (int i = 0; i < count; i++) {
-            stream.write(readByte());
+
+        byte[] result = new byte[count];
+
+        for (int i = 0;i<count;i++){
+            result[i] = (byte)readByte();
         }
-        return stream.toByteArray();
+
+        return result;
     }
 
     public int readWord() throws Exception {

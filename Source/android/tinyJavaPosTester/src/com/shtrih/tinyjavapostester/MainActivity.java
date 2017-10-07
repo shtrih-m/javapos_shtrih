@@ -26,6 +26,8 @@ import com.shtrih.fiscalprinter.PrinterProtocol;
 import com.shtrih.fiscalprinter.PrinterProtocol_1;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
 import com.shtrih.fiscalprinter.command.DeviceMetrics;
+import com.shtrih.fiscalprinter.command.FSDocumentInfo;
+import com.shtrih.fiscalprinter.command.FSStatusInfo;
 import com.shtrih.fiscalprinter.command.PrinterCommand;
 import com.shtrih.fiscalprinter.command.ReadDeviceMetrics;
 import com.shtrih.fiscalprinter.command.ReadShortStatus;
@@ -295,48 +297,23 @@ public class MainActivity extends AppCompatActivity {
         try {
             long startedAt = System.currentTimeMillis();
 
-            String[] text = ("«Мой дядя самых честных правил,\n" +
-                    "Когда не в шутку занемог,\n" +
-                    "Он уважать себя заставил\n" +
-                    "И лучше выдумать не мог.\n" +
-                    "Его пример другим наука;\n" +
-                    "Но, боже мой, какая скука\n" +
-                    "С больным сидеть и день и ночь,\n" +
-                    "Не отходя ни шагу прочь!\n" +
-                    "Какое низкое коварство\n" +
-                    "Полуживого забавлять,\n" +
-                    "Ему подушки поправлять,\n" +
-                    "Печально подносить лекарство,\n" +
-                    "Вздыхать и думать про себя:\n" +
-                    "Когда же черт возьмет тебя!»").split("\n");
-
-            for (String line : text) {
-                printer.printText(line);
-            }
-
             printSalesReceipt();
             printRefundReceipt();
 
-            printer.printText("ПервыйВторойТретий", new FontNumber(1), 0x4F);
-            printer.printText("ПервыйВторойТретий", new FontNumber(1), 0x4F);
-            printer.printText("ПервыйВторойТретий", new FontNumber(1), 0x4F);
-
             long doneAt = System.currentTimeMillis();
 
-            String message = "Printed in " + (doneAt - startedAt) + "ms";
+            String message = "Printed in " + (doneAt - startedAt) + " ms";
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
             Log.d(TAG, message);
         } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Receipt printing failed", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void printSalesReceipt() throws JposException, InterruptedException {
+    private void printSalesReceipt() throws Exception {
         int howMuch = rand.nextInt(10);
         howMuch += 1; // guarantee
-        if (printer == null) {
-            return;
-        }
 
         long payment = 0;
         printer.resetPrinter();
@@ -354,14 +331,14 @@ public class MainActivity extends AppCompatActivity {
         printer.directIO(0x39, null, "foo@example.com");
 
         printer.endFiscalReceipt(false);
+
+        FSStatusInfo status = printer.fsReadStatus();
+        FSDocumentInfo document = printer.fsFindDocument(status.getDocNumber());
     }
 
-    private void printRefundReceipt() throws JposException, InterruptedException {
+    private void printRefundReceipt() throws Exception {
         int howMuch = rand.nextInt(10);
         howMuch += 1; // guarantee
-        if (printer == null) {
-            return;
-        }
 
         long payment = 0;
         printer.resetPrinter();
@@ -376,6 +353,9 @@ public class MainActivity extends AppCompatActivity {
         }
         printer.printRecTotal(payment, payment, "1");
         printer.endFiscalReceipt(false);
+
+        FSStatusInfo status = printer.fsReadStatus();
+        FSDocumentInfo document = printer.fsFindDocument(status.getDocNumber());
     }
 
     private void printReceipt2() throws JposException, InterruptedException {
