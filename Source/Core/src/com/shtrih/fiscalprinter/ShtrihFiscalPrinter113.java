@@ -1588,6 +1588,12 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         executeCommand(command);
     }
 
+    public void fsCancelDocument() throws JposException {
+        FSCancelDoc command = new FSCancelDoc();
+        command.setSysPassword(getSysPassword());
+        executeCommand(command);
+    }
+
     public void fsReadFiscalization(FSReadFiscalization command) throws JposException {
         executeCommand(command);
     }
@@ -1601,6 +1607,12 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public void fsStartCorrectionReceipt(FSStartCorrectionReceipt command) throws JposException {
+        executeCommand(command);
+    }
+
+    public void fsStartCorrectionReceipt() throws JposException {
+        FSStartCorrectionReceipt command = new FSStartCorrectionReceipt();
+        command.setSysPassword(getSysPassword());
         executeCommand(command);
     }
 
@@ -1786,6 +1798,12 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         int[] data = new int[1];
         data[0] = tagId;
         directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_TAG, data, tagValue);
+    }
+
+    public void fsWriteTag(int tagId, long value, int length) throws Exception {
+        TLVWriter tlv = new TLVWriter();
+        tlv.add(tagId, value, length);
+        fsWriteTLV(tlv.getBytes());
     }
 
     ///////////////////////////////////////////////////////////////////////////

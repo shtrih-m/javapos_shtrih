@@ -199,11 +199,11 @@ public class NullReceipt implements FiscalReceipt {
     }
 
     public void fsWriteTLV(byte[] data) throws Exception {
-        notOpenedException();
+        getPrinter().getPrinter().fsWriteTLV(data);
     }
 
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
-        notOpenedException();
+        getPrinter().getPrinter().fsWriteTag(tagId, tagValue);
     }
 
     public void fsWriteCustomerEmail(String text) throws Exception {

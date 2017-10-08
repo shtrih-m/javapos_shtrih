@@ -27,11 +27,16 @@ public class FSDocType {
     public static final int FS_DOCTYPE_DAYCLOSE = 5;
     // 10h – отчет о закрытии фискального режима
     public static final int FS_DOCTYPE_FISCAL_CLOSE = 16;
+
+    /**
+     * 14h – Кассовый чек коррекции
+     */
+    public static final int FS_DOCTYPE_CORRECTION_RECEIPT = 0x14;
     /*
       11h – Бланк строкой отчетности
       12h - Отчет об изменении параметров регистрации ККТ в связи с заменой ФН
       13h – Отчет об изменении параметров регистрации ККТ
-      14h – Кассовый чек коррекции
+
       15h – БСО коррекции
       17h – Отчет о текущем состоянии расчетов
      */

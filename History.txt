@@ -4,7 +4,15 @@
   Project : SHTRIH-M JavaPOS fiscal printer driver
   Company : SHTRIH-M www.shtrih-m.ru (495) 787-6090
   Url     : https://github.com/shtrih-m/javapos_shtrih
+  
+********************************************************************************
 
+  October 08 2017
+  deviceServiceVersion = 1013469
+	
+  [*] Fixed error when writing TLV and receipt not opened
+  [+] Added fsWriteTag(int tagId, long value, int length), fsStartCorrectionReceipt() and fsCancelDocument() methods
+  
 ********************************************************************************
 
   October 07 2017
