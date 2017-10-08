@@ -7,7 +7,7 @@
 * JavaSE 1.6
 * Android 2.3.3
 
-Документация доступна [здесь](Doc/SHTRIH/JposShtrih.docx)
+Документация доступна [здесь](Doc/SHTRIH/JposShtrih.docx), а так же на [вики](https://github.com/shtrih-m/javapos_shtrih/wiki)
 
 [Shtrih-M](http://www.shtrih-m.ru) JavaPOS fiscal printer driver
 =========
@@ -18,4 +18,4 @@
 * JavaSE 1.6
 * Android 2.3.3
 
-Documentation available [here](Doc/SHTRIH/JposShtrih.docx)
+Documentation available [here](Doc/SHTRIH/JposShtrih.docx) and on [wiki](https://github.com/shtrih-m/javapos_shtrih/wiki)
