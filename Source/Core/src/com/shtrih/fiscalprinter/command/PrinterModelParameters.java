@@ -94,8 +94,10 @@ public class PrinterModelParameters implements PrinterConst {
     // 41 – Печать графики с масштабированием (команда 4FH)
     private final boolean capScaleGraphics;        
     // 42 – Загрузка и печать графики-512 (команды 4DH, 4EH)
-    private final boolean capGraphics512;          
-    
+    private final boolean capGraphics512;
+    // 44 - Поддержка EoD ("Ethernet" over Driver)
+    private final boolean capEoD;
+
     
     // Ширина печати шрифтом 1(1 байт)
     private final int font1Width;
@@ -187,7 +189,8 @@ public class PrinterModelParameters implements PrinterConst {
         capEJ5 = BitUtils.testBit(flags, 40);                
         capScaleGraphics = BitUtils.testBit(flags, 41);      
         capGraphics512 = BitUtils.testBit(flags, 42);
-        
+        capEoD = BitUtils.testBit(flags, 44);
+
         font1Width = in.readByte();
         font2Width = in.readByte();
         firsGraphicsLineNumber = in.readByte();
@@ -219,6 +222,10 @@ public class PrinterModelParameters implements PrinterConst {
 
     public boolean isGraphics512Supported(){
         return capGraphics512;
+    }
+
+    public boolean isCapEoD(){
+        return capEoD;
     }
 
     public int getGraphics512Width() {

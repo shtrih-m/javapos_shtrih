@@ -75,5 +75,12 @@
             android:layout_height="wrap_content"
             android:onClick="connectToUSBDevice"
             android:text="@string/action_connect_to_usb_device" />
+
+        <Button
+            android:id="@+id/btnReadFSCommStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="readFSCommStatus"
+            android:text="@string/action_read_fs_comm_status" />
     </LinearLayout>
 </ScrollView>

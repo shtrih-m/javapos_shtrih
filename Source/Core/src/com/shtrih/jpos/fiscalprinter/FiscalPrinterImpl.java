@@ -929,8 +929,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             return;
         }
 
-        // TODO: check extended status
-        if (!printer.readTable(10, 1, 1).equals("1")) {
+        PrinterModelParameters modelParams = printer.readPrinterModelParameters();
+
+        if (!modelParams.isCapEoD()) {
             logger.debug("FSService stopped, EoD disabled");
             return;
         }

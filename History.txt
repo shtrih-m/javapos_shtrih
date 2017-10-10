@@ -8,6 +8,14 @@
 ********************************************************************************
 
   October 10 2017
+  deviceServiceVersion = 1013471
+	
+  [+] Added EoD support for other then Mobile-F devices
+  [*] Fixed long OFD response handling
+
+********************************************************************************
+
+  October 10 2017
   deviceServiceVersion = 1013470
 	
   [-] Fixed error with saving properties

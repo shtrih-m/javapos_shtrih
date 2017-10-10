@@ -1011,7 +1011,12 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public Vector<String> fsReadDocumentTLVAsText(int docNumber) throws Exception{
         return null;
     }
-    
+
+    @Override
+    public PrinterModelParameters readPrinterModelParameters() throws Exception {
+        return null;
+    }
+
     public FSDocument fsFindLastDocument(int docType) throws Exception{
         return null;
     }

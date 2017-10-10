@@ -3412,7 +3412,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 dataSize = blockSize;
             }
             byte[] blockData = new byte[dataSize];
-            System.arraycopy(data, offset, blockData, offset, dataSize);
+            System.arraycopy(data, offset, blockData, 0, dataSize);
             fsWriteBlock(offset, blockData);
         }
     }
@@ -3498,9 +3498,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public FDOParameters readFDOParameters() throws Exception {
         if (capFiscalStorage) {
 
-            final int tableNumber = 15;
+            final int tableNumber = isShtrihMobile() ? 15 : 19;
 
-            //final int tableNumber = readPrinterModelParameters().OFDTable;
+            //final int tableNumber = c().OFDTable;
             final int hostField = 1;
             final int portField = 2;
             final int pollPeriodField = 3;
@@ -3508,7 +3508,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             String host = readTable(tableNumber, 1, hostField);
 
             int portValue = readTableIntValueFromStringOrInt(tableNumber, portField);
-            int pollPeriod = readTableIntValueFromStringOrInt(tableNumber, pollPeriodField);
+            int pollPeriod = isShtrihMobile() ? readTableIntValueFromStringOrInt(tableNumber, pollPeriodField) : 5;
 
             return new FDOParameters(host, portValue, pollPeriod);
         }

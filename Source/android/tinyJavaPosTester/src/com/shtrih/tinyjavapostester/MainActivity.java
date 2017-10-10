@@ -26,6 +26,7 @@ import com.shtrih.fiscalprinter.PrinterProtocol;
 import com.shtrih.fiscalprinter.PrinterProtocol_1;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
 import com.shtrih.fiscalprinter.command.DeviceMetrics;
+import com.shtrih.fiscalprinter.command.FSCommunicationStatus;
 import com.shtrih.fiscalprinter.command.FSDocumentInfo;
 import com.shtrih.fiscalprinter.command.FSStatusInfo;
 import com.shtrih.fiscalprinter.command.PrinterCommand;
@@ -307,7 +308,20 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, message);
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "Receipt printing failed", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void readFSCommStatus(View v) {
+        try {
+            FSCommunicationStatus status = printer.fsReadCommStatus();
+
+            String message = "Unsent documents " + status.getUnsentDocumentsCount();
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            Log.d(TAG, message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 

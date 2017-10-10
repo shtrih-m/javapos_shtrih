@@ -137,7 +137,12 @@ public class FSService implements Runnable {
     private void Read(InputStream in, byte[] buffer, int offset, int count) throws IOException {
         int readCount = 0;
         while (readCount < count) {
-            readCount += in.read(buffer, offset + readCount, count - readCount);
+            int newBytes = in.read(buffer, offset + readCount, count - readCount);
+
+            if(newBytes < 0)
+                throw new IOException("Connection reset by OFD");
+
+            readCount += newBytes;
         }
     }
 

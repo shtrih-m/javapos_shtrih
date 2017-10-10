@@ -535,4 +535,6 @@ public interface SMFiscalPrinter {
     byte[] fsReadDocumentTLV(int docNumber) throws Exception;
     
     Vector<String> fsReadDocumentTLVAsText(int docNumber) throws Exception;
+
+    PrinterModelParameters readPrinterModelParameters() throws Exception;
 }
