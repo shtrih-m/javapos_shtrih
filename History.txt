@@ -7,6 +7,14 @@
   
 ********************************************************************************
 
+  October 10 2017
+  deviceServiceVersion = 1013470
+	
+  [-] Fixed error with saving properties
+  [-] Fixed error with printing receipt header
+  
+********************************************************************************
+
   October 08 2017
   deviceServiceVersion = 1013469
 	
