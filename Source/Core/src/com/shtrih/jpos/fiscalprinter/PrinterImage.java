@@ -114,14 +114,11 @@ public class PrinterImage {
     // read image from file
     public void readFile() throws Exception 
     {
-        logger.debug("readFile.0");
-        
         ImageReader reader = new ImageReader(fileName);
         lines = reader.getData();
         height = reader.getHeight();
         width = reader.getWidth();
         digest = reader.getDigest();
-        logger.debug("readFile.1");
     }
 
     public void centerImage(int graphicsWidth) {

@@ -35,11 +35,24 @@ public class CommandInputStream {
         stream = new ByteArrayInputStream(data);
     }
 
+    public int available() {
+        return stream.available();
+    }
+    
     public int getSize() {
         return stream.available();
     }
-
-    public int readByte() {
+    
+    public void checkAvailable(int len) throws Exception
+    {
+        if (stream.available() < len){
+            throw new Exception("No data available");
+        }
+    }
+        
+    public int readByte() throws Exception
+    {
+        checkAvailable(1);
         int B = (byte) stream.read();
         return byteToInt(B);
     }
@@ -52,12 +65,13 @@ public class CommandInputStream {
         stream.reset();
     }
     
-    public byte[] readBytesToEnd() 
+    public byte[] readBytesToEnd() throws Exception
     {
         return readBytes(stream.available());
     }
 
-    public FSDateTime readFSDate() {
+    public FSDateTime readFSDate() throws Exception
+    {
         return new FSDateTime(readBytes(FSDateTime.BodyLength));
     }
 
@@ -74,41 +88,47 @@ public class CommandInputStream {
         return ((ch1 << 8) + (ch2 << 0));
     }
 
-    public PrinterTime readTime() {
+    public PrinterTime readTime() throws Exception
+    {
         int hour = readByte();
         int min = readByte();
         int sec = readByte();
         return new PrinterTime(hour, min, sec);
     }
 
-    public PrinterTime readTime2() {
+    public PrinterTime readTime2() throws Exception
+    {
         int hour = readByte();
         int min = readByte();
         return new PrinterTime(hour, min, 0);
     }
 
-    public PrinterDate readDate() {
+    public PrinterDate readDate() throws Exception
+    {
         int day = readByte();
         int month = readByte();
         int year = readByte();
         return new PrinterDate(day, month, year);
     }
 
-    public PrinterDate readDateYMD() {
+    public PrinterDate readDateYMD() throws Exception
+    {
         int year = readByte();
         int month = readByte();
         int day = readByte();
         return new PrinterDate(day, month, year);
     }
 
-    public EJDate readEJDate() {
+    public EJDate readEJDate() throws Exception
+    {
         int year = readByte();
         int month = readByte();
         int day = readByte();
         return new EJDate(day, month, year);
     }
 
-    public EJTime readEJTime() {
+    public EJTime readEJTime() throws Exception
+    {
         int hour = readByte();
         int min = readByte();
         return new EJTime(hour, min);
@@ -164,8 +184,10 @@ public class CommandInputStream {
         return result;
     }
 
-    public byte[] readBytes(int len) {
+    public byte[] readBytes(int len) throws Exception
+    {
         byte[] b = new byte[len];
+        checkAvailable(len);
         stream.read(b, 0, len);
         return b;
     }

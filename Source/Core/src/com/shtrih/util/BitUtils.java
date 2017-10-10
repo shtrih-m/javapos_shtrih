@@ -23,7 +23,7 @@ public class BitUtils {
     }
 
     public static long setBit(int bit) {
-        return (1 << bit);
+        return 1L << bit;
     }
 
     public static boolean testBit(long data, int bit) {

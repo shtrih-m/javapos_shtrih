@@ -4469,8 +4469,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void saveProperties() throws Exception {
         logger.debug("saveProperties");
         try {
+            String serial = "FiscalPrinter_" + getPrinter().readFullSerial();
             XmlPropWriter writer = new XmlPropWriter("FiscalPrinter",
-                    physicalDeviceName);
+                    serial);
             writer.write(getPrinterImages());
             writer.write(printer.getReceiptImages());
             writer.writePrinterHeader(header);
@@ -4486,11 +4487,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private void loadProperties() throws Exception {
         logger.debug("loadProperties");
         try {
+            String serial = "FiscalPrinter_" + getPrinter().readFullSerial();
             String fileName = getPropsFileName();
             File f = new File(fileName);
             if (f.exists()) {
                 XmlPropReader reader = new XmlPropReader();
-                reader.load("FiscalPrinter", physicalDeviceName, fileName);
+                reader.load("FiscalPrinter", serial, fileName);
                 reader.read(getPrinterImages());
                 reader.read(printer.getReceiptImages());
                 reader.readPrinterHeader(header);

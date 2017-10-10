@@ -37,15 +37,15 @@
         <!--Default department-->
         <prop name="department" type="String" value="1"/>
         <!-- Default font number -->
-        <prop name="fontNumber" type="String" value="5"/>
+        <prop name="fontNumber" type="String" value="1"/>
 		<!-- discountFont -->
-        <prop name="discountFont" type="String" value="5"/>
+        <prop name="discountFont" type="String" value="1"/>
         <!-- Close Receipt text -->
         <prop name="closeReceiptText" type="String" value=""/>
         <!-- Subtotal text -->
         <prop name="subtotalText" type="String" value="ПОДЫТОГ:"/>
 		<!-- Subtotal font -->
-        <prop name="subtotalFont" type="String" value="5"/>
+        <prop name="subtotalFont" type="String" value="1"/>
         <!-- Driver byte receive timeout -->
         <prop name="byteTimeout" type="String" value="10000"/>
         <!-- Device byte receive timeout -->
@@ -79,9 +79,9 @@
         <!-- fieldsFilesPath to initialize printer tables -->
         <prop name="fieldsFilesPath" type="String" value="tables\"/>
         <!-- Number of header lines -->
-        <prop name="numHeaderLines" type="String" value="0"/>
+        <prop name="numHeaderLines" type="String" value="4"/>
         <!-- Number of trailer lines -->
-        <prop name="numTrailerLines" type="String" value="0"/>
+        <prop name="numTrailerLines" type="String" value="3"/>
         <!-- Device to print report, 0 - fiscal memory (FM), 1 - electronic journal (EJ)  -->
         <prop name="reportDevice" type="String" value="0"/>
         <!-- Report type, 0 - short, 1 - full -->
@@ -235,7 +235,7 @@
         <!-- Barcode text position NOTPRINTED=0, ABOVE=1, BELOW=2, BOTH=3 -->
         <prop name="barcodeTextPosition" type="String" value="2"/>
         <!-- Barcode text font, 1..7, default 1 -->
-        <prop name="barcodeTextFont" type="String" value="5"/>
+        <prop name="barcodeTextFont" type="String" value="1"/>
         <!-- Barcode aspect ratio -->
         <prop name="barcodeAspectRatio" type="String" value="3"/>
         <!-- Compatibility level, 0 - NONE, 1 - FULL -->
@@ -259,7 +259,7 @@
         <!-- Text report empty lines enabled -->
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- Receipt template -->
-		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
+		<prop name="ReceiptTemplateEnabled" type="String" value="0"/>
 		<prop name="FieldSeparator" type="String" value=":"/>
 		<prop name="ItemTableHeader" type="String" value="                 Цена со:№пп Цена  Скидка скидкой Кол-во   ИТОГО: "/>
 		<prop name="ItemTableTrailer" type="String" value=""/>

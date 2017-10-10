@@ -18,7 +18,7 @@ package com.shtrih.fiscalprinter.command;
  * Print graphic line Command: C5H. Length: X + 7 bytes. · 
  * Operator password (4 bytes) 
  * Number of repetitions (2 bytes) 
- * Station (1 byte) 
+ * Station (1 byte) (if supported)
  * Graphical data (X bytes) 
  * 
  * Answer: C5H. Length: 3 bytes. 
@@ -29,10 +29,11 @@ package com.shtrih.fiscalprinter.command;
 
 public final class PrintGraphicLine extends PrinterCommand {
     // in
-    private int password; // Operator password
-    private int height;   // Number of repetitions
-    private int station;  // Station
-    private byte[] data;  // Graphical data
+    private int password;       // Operator password
+    private int height;         // Number of repetitions
+    private boolean capFlags;   // Flags byte is supported
+    private int flags;          // Flags 
+    private byte[] data;        // Graphical data
     // out
     private int operator = 0;
 
@@ -53,7 +54,9 @@ public final class PrintGraphicLine extends PrinterCommand {
     public final void encode(CommandOutputStream out) throws Exception {
         out.writeInt(getPassword());
         out.writeShort(getHeight());
-        out.writeByte(getStation());
+        if (capFlags){
+            out.writeByte(flags);
+        }
         out.writeBytes(getData());
     }
 
@@ -94,17 +97,31 @@ public final class PrintGraphicLine extends PrinterCommand {
     }
 
     /**
-     * @return the station
+     * @return the capFlags
      */
-    public int getStation() {
-        return station;
+    public boolean getCapFlags() {
+        return capFlags;
+    }
+    
+    /**
+     * @param capFlags
+     */
+    public void setCapFlags(boolean value) {
+        this.capFlags = value;
+    }
+    
+    /**
+     * @return the flags
+     */
+    public int getFlags() {
+        return flags;
     }
 
     /**
-     * @param station the station to set
+     * @param flags
      */
-    public void setStation(int station) {
-        this.station = station;
+    public void setFlags(int flags) {
+        this.flags = flags;
     }
 
     /**

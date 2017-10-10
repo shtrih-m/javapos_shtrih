@@ -86,7 +86,7 @@ public class PrinterModelParameters implements PrinterConst {
     // 36 – Поддержка команды 6BH "Возврат названия ошибоки"
     private final boolean capCommand6B;            
     // 37 – Поддержка флагов печати для команд печати расширенной графики C3H и печати графической линии C5H
-    private final boolean capFlagsGraphicsEx;      
+    private final boolean capGraphicsFlags;      
     // 39 – Поддержка МФП
     private final boolean capMFP;                  
     // 40 – Поддержка ЭКЛЗ5
@@ -142,7 +142,8 @@ public class PrinterModelParameters implements PrinterConst {
     // Количество линий в буфере графики-512 (2 байта)
     private final int graphics512HeightLines;
 
-    public PrinterModelParameters(CommandInputStream in) throws Exception {
+    public PrinterModelParameters(CommandInputStream in) throws Exception 
+    {
         flags = in.readLong(8);
         capJrnNearEndSensor = BitUtils.testBit(flags, 0);    
         capRecNearEndSensor = BitUtils.testBit(flags, 1);    
@@ -181,12 +182,11 @@ public class PrinterModelParameters implements PrinterConst {
         capSlpInPrintCommands = BitUtils.testBit(flags, 34); 
         capGraphicsC4 = BitUtils.testBit(flags, 35);         
         capCommand6B = BitUtils.testBit(flags, 36);          
-        capFlagsGraphicsEx = BitUtils.testBit(flags, 37);    
+        capGraphicsFlags = BitUtils.testBit(flags, 37);    
         capMFP = BitUtils.testBit(flags, 39);                
         capEJ5 = BitUtils.testBit(flags, 40);                
         capScaleGraphics = BitUtils.testBit(flags, 41);      
-        capGraphics512 = BitUtils.testBit(flags, 42);        
-        
+        capGraphics512 = BitUtils.testBit(flags, 42);
         
         font1Width = in.readByte();
         font2Width = in.readByte();
@@ -201,8 +201,16 @@ public class PrinterModelParameters implements PrinterConst {
         taxModeFieldNumber = in.readByte();
         maxCommandLength = in.readShort();
         graphicsWidthBytes = in.readByte();
-        graphics512WidthBytes = in.readByte();
-        graphics512HeightLines = in.readShort();
+        if (in.available() >= 1){
+            graphics512WidthBytes = in.readByte();
+        } else{
+            graphics512WidthBytes = 0;
+        }
+        if (in.available() >= 2){
+            graphics512HeightLines = in.readShort();
+        } else{
+            graphics512HeightLines = 0;
+        }
     }
 
     public int getGraphicsWidth() {
@@ -210,7 +218,7 @@ public class PrinterModelParameters implements PrinterConst {
     }
 
     public boolean isGraphics512Supported(){
-        return getGraphics512WidthBytes() > 0;
+        return capGraphics512;
     }
 
     public int getGraphics512Width() {
@@ -589,10 +597,10 @@ public class PrinterModelParameters implements PrinterConst {
     }
 
     /**
-     * @return the capFlagsGraphicsEx
+     * @return the capGraphicsFlags
      */
-    public boolean isCapFlagsGraphicsEx() {
-        return capFlagsGraphicsEx;
+    public boolean isCapGraphicsFlags() {
+        return capGraphicsFlags;
     }
 
     /**

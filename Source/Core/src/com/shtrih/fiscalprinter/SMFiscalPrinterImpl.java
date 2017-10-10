@@ -1388,7 +1388,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         PrintGraphicLine command = new PrintGraphicLine();
         command.setPassword(usrPassword);
         command.setHeight(height);
-        command.setStation(station);
+        command.setFlags(station);
+        command.setCapFlags(capGraphicsFlags());
         command.setData(data);
         sleep(params.getGraphicsLineDelay());
         return executeCommand(command);
@@ -1776,9 +1777,18 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return capLoadGraphics2 == Boolean.TRUE;
     }
 
+    public boolean capGraphicsFlags(){
+        return (capModelParameters() && (modelParameters.isCapGraphicsFlags()));
+    }
+            
+    public boolean capModelParameters(){
+        return modelParameters != null;
+    }
+    
     public boolean getCapLoadGraphics3() throws Exception {
-        if (capLoadGraphics3 == Boolean.NOTDEFINED) {
-            if (modelParameters != null) {
+        if (capLoadGraphics3 == Boolean.NOTDEFINED) 
+        {
+            if (capModelParameters()) {
                 if (modelParameters.isGraphics512Supported()) {
                     capLoadGraphics3 = Boolean.TRUE;
                 } else {
@@ -1823,7 +1833,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public boolean getCapPrintGraphics3() throws Exception {
         if (capPrintGraphics3 == Boolean.NOTDEFINED) {
-            if (modelParameters != null) {
+            if (capModelParameters()) {
                 if (modelParameters.isGraphics512Supported()) {
                     capPrintGraphics3 = Boolean.TRUE;
                 } else {
@@ -2501,7 +2511,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public int getMaxGraphicsWidth() throws Exception {
-        if (modelParameters != null) {
+        if (capModelParameters()) {
             if (getCapLoadGraphics3()) {
                 return modelParameters.getGraphics512Width();
             } else {
@@ -2515,7 +2525,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public int getMaxGraphicsLineWidth() throws Exception {
-        if (modelParameters != null) {
+        if (capModelParameters()) {
             return modelParameters.getGraphicsWidth();
         } else if (getCapLoadGraphics3()) {
             return 512;
