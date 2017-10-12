@@ -19,8 +19,8 @@ public class BluetoothPort implements PrinterPort {
     private static final UUID MY_UUID = UUID
             .fromString("00001101-0000-1000-8000-00805F9B34FB");
 
-    private int timeout = 10000;
-    private int openTimeout = 10000;
+    private int timeout = 5000;
+    private int openTimeout = 5000;
     private String portName = "";
     private BluetoothSocket socket = null;
     private static CompositeLogger logger = CompositeLogger.getLogger(BluetoothPort.class);
@@ -53,8 +53,8 @@ public class BluetoothPort implements PrinterPort {
 
     @Override
     public Object getSyncObject() throws Exception {
-        checkOpened();
-        return socket;
+        //checkOpened();
+        return this;
     }
 
     @Override
@@ -106,27 +106,35 @@ public class BluetoothPort implements PrinterPort {
             if (device == null) {
                 throw new Exception("Failed to get BluetoothDevice by address");
             }
-            socket = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);
-            if (socket == null) {
-                throw new Exception("Failed to get bluetooth device socket");
-            }
             try {
+
+                socket = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);
+                if (socket == null) {
+                    throw new Exception("Failed to get bluetooth device socket");
+                }
+
                 socket.connect();
                 inputStream = socket.getInputStream();
                 outputStream = socket.getOutputStream();
                 return;
             } catch (IOException e) {
+                close();
             }
-            // IOException - create new socket
-            socket = (BluetoothSocket) device.getClass()
-                    .getMethod("createRfcommSocket", new Class[]{int.class})
-                    .invoke(device, 1);
-            if (socket == null) {
-                throw new Exception("Failed to get bluetooth device socket");
+            try {
+                // IOException - create new socket
+                socket = (BluetoothSocket) device.getClass()
+                        .getMethod("createRfcommSocket", new Class[]{int.class})
+                        .invoke(device, 1);
+                if (socket == null) {
+                    throw new Exception("Failed to get bluetooth device socket");
+                }
+                socket.connect();
+                inputStream = socket.getInputStream();
+                outputStream = socket.getOutputStream();
+            } catch (Exception e) {
+                close();
+                throw e;
             }
-            socket.connect();
-            inputStream = socket.getInputStream();
-            outputStream = socket.getOutputStream();
         }
     }
 
@@ -154,11 +162,11 @@ public class BluetoothPort implements PrinterPort {
             } catch (Exception e) {
                 logger.error("Bluethooth socket close failed", e);
             }
-
-            inputStream = null;
-            outputStream = null;
-            socket = null;
         }
+
+        inputStream = null;
+        outputStream = null;
+        socket = null;
     }
 
     public synchronized boolean isOpened() {
@@ -183,21 +191,12 @@ public class BluetoothPort implements PrinterPort {
     @Override
     public void write(byte[] b) throws Exception {
         connect();
-        for (int i = 0; i < 2; i++) {
-            try {
-                if (i == 1)
-                    connect();
-
-                outputStream.write(b);
-                outputStream.flush();
-
-                return;
-            } catch (IOException e) {
-                close();
-
-                if (i == 1)
-                    throw e;
-            }
+        try {
+            outputStream.write(b);
+            outputStream.flush();
+        } catch (IOException e) {
+            close();
+            throw e;
         }
     }
 
@@ -219,12 +218,17 @@ public class BluetoothPort implements PrinterPort {
 
     @Override
     public int readByte() throws Exception {
-        int result = inputStream.read();
-        if (result < 0) {
-            noConnectionError();
-        }
+        try {
+            int result = inputStream.read();
+            if (result < 0) {
+                noConnectionError();
+            }
 
-        return result;
+            return result;
+        } catch (Exception e) {
+            close();
+            throw e;
+        }
     }
 
     private void noConnectionError() throws Exception {

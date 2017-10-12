@@ -5,7 +5,9 @@
 package com.shtrih.fiscalprinter;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
+import com.shtrih.jpos.fiscalprinter.directIO.DIOExecuteCommand;
 import com.shtrih.util.CompositeLogger;
 
 import com.shtrih.fiscalprinter.command.CommandOutputStream;
@@ -113,20 +115,22 @@ public class PrinterProtocol_2 implements PrinterProtocol {
                 frameNumber = readAnswer();
                 isSynchronized = true;
                 stepFrameNumber();
-                break;
+                return;
             } catch (Exception e) {
                 logger.error(e);
             }
         }
+
+        throw new IOException("Frames sync failed");
     }
 
-    public void sendCommand(byte[] data) throws Exception {
+    private void sendCommand(byte[] data) throws Exception {
         byte[] tx = frame.encode(data);
         Logger2.logTx(logger, tx);
         port.write(tx);
     }
 
-    public void stepFrameNumber() {
+    private void stepFrameNumber() {
         if (frameNumber == 0xFFFF) {
             frameNumber = 0;
         } else {
@@ -134,7 +138,7 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         }
     }
 
-    public int readAnswer() throws Exception {
+    private int readAnswer() throws Exception {
         while (readByte() != Frame.STX) {
         }
         int len = readWord();
@@ -177,7 +181,7 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         return result;
     }
 
-    public int readWord() throws Exception {
+    private int readWord() throws Exception {
         int b1 = readByte();
         int b2 = readByte();
         return b1 + (b2 << 8);

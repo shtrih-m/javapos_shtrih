@@ -29,6 +29,7 @@ import com.shtrih.fiscalprinter.command.DeviceMetrics;
 import com.shtrih.fiscalprinter.command.FSCommunicationStatus;
 import com.shtrih.fiscalprinter.command.FSDocumentInfo;
 import com.shtrih.fiscalprinter.command.FSStatusInfo;
+import com.shtrih.fiscalprinter.command.LongPrinterStatus;
 import com.shtrih.fiscalprinter.command.PrinterCommand;
 import com.shtrih.fiscalprinter.command.ReadDeviceMetrics;
 import com.shtrih.fiscalprinter.command.ReadShortStatus;
@@ -153,16 +154,19 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == Activity.RESULT_OK) {
 
                     String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+                    long startedAt = System.currentTimeMillis();
                     try {
-                        long startedAt = System.currentTimeMillis();
                         connectToDevice(address);
                         long doneAt = System.currentTimeMillis();
                         String message = "Blutooth connected in " + (doneAt - startedAt) + " ms";
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
                         Log.d(TAG, message);
                     } catch (Exception e) {
+                        long doneAt = System.currentTimeMillis();
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "Blutooth connection failed", Toast.LENGTH_LONG).show();
+                        String message = e.getMessage() + ". In " + (doneAt - startedAt) + " ms";
+                        Log.d(TAG, message);
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
                     }
                 }
                 break;
@@ -189,6 +193,10 @@ public class MainActivity extends AppCompatActivity {
         printer.open("ShtrihFptr");
         printer.claim(3000);
         printer.setDeviceEnabled(true);
+
+        LongPrinterStatus status = printer.readLongPrinterStatus();
+        Log.d(TAG, "" + status.getFiscalID());
+        Log.d(TAG, status.getFiscalIDText());
     }
 
     @Override

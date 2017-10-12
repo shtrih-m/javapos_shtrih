@@ -13,12 +13,14 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 
-public interface IPrinterEvents 
-{
+public interface IPrinterEvents {
     public void init();
 
     public void done();
-    public void afterCommand(PrinterCommand command);
-    public void beforeCommand(PrinterCommand command);
+
+    public void afterCommand(PrinterCommand command) throws Exception;
+
+    public void beforeCommand(PrinterCommand command) throws Exception;
+
     public void printerStatusRead(PrinterStatus status);
 }

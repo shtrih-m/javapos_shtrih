@@ -8,6 +8,7 @@ import com.shtrih.util.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +70,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
 
     @Override
-    public void beforeCommand(PrinterCommand command) {
+    public void beforeCommand(PrinterCommand command) throws Exception {
         if (!enabled)
             return;
         if (command.isFailed())
@@ -93,13 +94,15 @@ public class TextDocumentFilter implements IPrinterEvents {
                     break;
 
             }
+        } catch (IOException e) {
+            throw e;
         } catch (Exception e) {
             logger.error(e);
         }
     }
 
     @Override
-    public void afterCommand(PrinterCommand command) {
+    public void afterCommand(PrinterCommand command) throws Exception {
         if (!enabled)
             return;
         if (command.isFailed())
@@ -194,7 +197,9 @@ public class TextDocumentFilter implements IPrinterEvents {
                     openReceipt((OpenReceipt) command);
                     break;
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
+            throw e;
+        }catch (Exception e) {
             logger.error(e);
         }
     }
@@ -841,8 +846,7 @@ public class TextDocumentFilter implements IPrinterEvents {
         }
     }
 
-    private void ReadFiscalStorage() throws Exception 
-    {
+    private void ReadFiscalStorage() throws Exception {
         long docNumber = printer.fsReadStatus().getDocNumber();
         long docSign = printer.fsFindDocument(docNumber).getDocument().getDocSign();
         add(String.format("ФД:%d ФП:%10d", docNumber, docSign));

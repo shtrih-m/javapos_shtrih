@@ -20,6 +20,8 @@ import com.shtrih.fiscalprinter.command.PrinterStatus;
 import com.shtrih.util.FileUtils;
 import com.shtrih.util.SysUtils;
 
+import java.io.IOException;
+
 /**
  * @author V.Kravtsov
  */
@@ -74,7 +76,7 @@ public class ReceiptReportFilter implements IPrinterEvents {
 
     }
 
-    public void afterCommand(PrinterCommand command) {
+    public void afterCommand(PrinterCommand command) throws Exception{
         switch (command.getCode()) {
             case 0x50:
                 PrintCashIn cashInCommand = (PrintCashIn) command;
@@ -119,7 +121,7 @@ public class ReceiptReportFilter implements IPrinterEvents {
     }
 
     
-    public void beforeCommand(PrinterCommand command) {
+    public void beforeCommand(PrinterCommand command) throws Exception {
         try {
             LongPrinterStatus status;
             switch (command.getCode()) {
@@ -173,6 +175,9 @@ public class ReceiptReportFilter implements IPrinterEvents {
 
                     }
             }
+
+        } catch (IOException e) {
+            throw e;
         } catch (Exception e) {
             logger.error(e);
         }
