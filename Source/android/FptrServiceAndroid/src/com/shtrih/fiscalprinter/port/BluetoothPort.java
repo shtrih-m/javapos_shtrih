@@ -160,7 +160,7 @@ public class BluetoothPort implements PrinterPort {
             try {
                 socket.close();
             } catch (Exception e) {
-                logger.error("Bluethooth socket close failed", e);
+                logger.error("Bluetooth socket close failed", e);
             }
         }
 
