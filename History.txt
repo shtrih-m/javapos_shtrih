@@ -8,7 +8,7 @@
 ********************************************************************************
 
   October 18 2017
-  deviceServiceVersion = 1013472
+  deviceServiceVersion = 1013473
 	
   [-] Removed writing cut mode and drawer mode in tables
   
