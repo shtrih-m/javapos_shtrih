@@ -569,7 +569,7 @@ public interface PrinterConst {
 
     // Automatic drawer open
     public static final String SMFP_PARAMID_DRAWER_ENABLED = "DrawerEnabled";
-    // Automatic receipt cut after close
+    // Automatic receipt cut after closSMFP_PARAMID_CUT_MODEe
     public static final String SMFP_PARAMID_CUT_MODE = "CutMode";
     // Line spacing
     public static final String SMFP_PARAMID_LINE_SPACING = "LineSpacing";
