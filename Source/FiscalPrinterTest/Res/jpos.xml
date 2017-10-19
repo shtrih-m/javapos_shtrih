@@ -32,7 +32,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/> -->
-        <prop name="portName" type="String" value="COM24"/>
+        <prop name="portName" type="String" value="COM4"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="1"/>
@@ -176,7 +176,7 @@
         <!-- Paper cut delay in milliseconds -->
         <prop name="cutPaperDelay" type="String" value="0"/>
         <!-- Sales Receipt type, 0 - normal, 1 - GLOBUS -->
-        <prop name="salesReceiptType" type="String" value="0"/>
+        <prop name="salesReceiptType" type="String" value="1"/>
         <!-- Amount field length -->
         <prop name="RFAmountLength" type="String" value="8"/>
         <!-- Quantity field length -->
@@ -247,11 +247,11 @@
         <!-- Receipt number request type 0 - Receipt number, 1 - fiscal document number, 2 - Receipt number in fiscal day -->
         <prop name="receiptNumberRequest" type="String" value="2"/>
         <!-- Enable discount calculation in Fiscal Storage printRecItemMethod 1 - enabled, 0 - disabled -->
-        <prop name="FSReceiptItemDiscountEnabled" type="String" value="0"/>
+        <prop name="FSReceiptItemDiscountEnabled" type="String" value="1"/>
         <!-- Enable discounts for Fiscal Storage printers 1 - enabled, 0 - disabled -->
         <prop name="FSDiscountEnabled" type="String" value="1"/>
         <!-- Combine item adjustments (enabled by default) -->
-		<prop name="FSCombineItemAdjustments" type="String" value="1"/>
+		<prop name="FSCombineItemAdjustments" type="String" value="0"/>
         <!-- Text report enabled -->
         <prop name="textReportEnabled" type="String" value="0"/>
         <!-- Text report file name -->
@@ -271,7 +271,7 @@
 		
 		<prop name="nonFiscalHeaderEnabled" type="String" value="1"/>
 		<!-- Subtotal adjustment order, 0 - correct, 1 - at receipt end -->
-		<prop name="subAdjustmentOrder" type="String" value="1"/>
+		<prop name="subAdjustmentOrder" type="String" value="0"/>
 		<!-- swapGraphicsLine, 0 - auto, 1 - False, 2 - true -->
 		<prop name="swapGraphicsLine" type="String" value="0"/>
 		<!-- graphicsLineEnabled -->

@@ -957,13 +957,7 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printFiscalReceipt() {
-        //printFiscalReceipt1052();
-        //printFiscalReceipt10488();
-        //printFiscalReceipt1048889();
-        //printCorrectionReceipt();
-        printNullReceipt();
-        //printFiscalReceipt1053();
-        //printCorrectionReceipt2();
+        printFiscalReceipt1054();
     }
 
     public void printCorrectionReceipt() {
@@ -1984,54 +1978,33 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt1053() {
         try {
             printer.resetPrinter();
-
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(true);
-
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 2, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 3, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 4, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 5, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 6, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 423, 1);
-            printer.printRecItem("88888 Груши РОША                  1кг", 4312, 625, 1, 6899, "г.");
-            printer.printRecItemAdjustment(1, "", 424, 1);
-            printer.printRecSubtotal(50556);
-            printer.printRecSubtotalAdjustment(1, "", 56);
-            printer.printRecTotal(50500, 50500, "0");
-            printCode128();
-            printAztecBarcode();
-            printer.printRecMessage("                                          ");
-            printer.printRecMessage(" *****************************************");
-            printer.printRecMessage("                                          ");
-            printer.printRecMessage("         ЭТО ПРОСТО ДЛИННЫЙ ТЕКСТ         ");
-            printer.printRecMessage("                                          ");
-            printer.printRecMessage(" *****************************************");
-            printer.endFiscalReceipt(false);
-
+            printer.printRecItem("Кафетерий КОТЛЕТА КУРИ", 721900, 382, 1, 1890000, "");
+            printer.printRecSubtotal(721900);
+            printer.printRecTotal(721900, 721900, "0");
+            printer.endFiscalReceipt(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public void printFiscalReceipt1054() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("АИ-92           N  3", 100036, 27110, 1, 3690, "");
+            printer.printRecSubtotal(100036);
+            printer.printRecSubtotalAdjustment(1, "скидка округления 0.36", 36);
+            printer.printRecTotal(100036, 100000, "0");
+            printer.endFiscalReceipt(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
     public void printFiscalReceipt666() {
         try {
             printer.resetPrinter();
