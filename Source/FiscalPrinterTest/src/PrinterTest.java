@@ -1994,10 +1994,12 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(true);
-            printer.printRecItem("АИ-92           N  3", 100036, 27110, 1, 3690, "");
-            printer.printRecSubtotal(100036);
-            printer.printRecSubtotalAdjustment(1, "скидка округления 0.36", 36);
-            printer.printRecTotal(100036, 100000, "0");
+            for (int i=0;i<19;i++){
+                printer.printRecItem("4607001777021 КОФЕ ЯКОБС МОНАРХ ВЕ", 28990, 1000, 1, 28990, "шт");
+            }
+            printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 10);
+            printer.printRecTotal(550800, 550800, "1");
+            
             printer.endFiscalReceipt(true);
         } catch (Exception e) {
             e.printStackTrace();

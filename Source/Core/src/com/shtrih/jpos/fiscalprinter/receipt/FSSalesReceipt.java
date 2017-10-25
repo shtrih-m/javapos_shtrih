@@ -1058,11 +1058,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setTax3(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setTax4(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setText(text);
-        if (getParams().subAdjustmentOrder == PrinterConst.ADJUSTMENT_ORDER_CORRECT) {
-            items.add(item);
-        } else{
-            discounts.add(item);
-        }
+        discounts.add(item);
         addTotal(-amount);
     }
 

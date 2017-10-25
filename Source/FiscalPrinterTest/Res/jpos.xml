@@ -251,7 +251,7 @@
         <!-- Enable discounts for Fiscal Storage printers 1 - enabled, 0 - disabled -->
         <prop name="FSDiscountEnabled" type="String" value="1"/>
         <!-- Combine item adjustments (enabled by default) -->
-		<prop name="FSCombineItemAdjustments" type="String" value="0"/>
+		<prop name="FSCombineItemAdjustments" type="String" value="1"/>
         <!-- Text report enabled -->
         <prop name="textReportEnabled" type="String" value="0"/>
         <!-- Text report file name -->
