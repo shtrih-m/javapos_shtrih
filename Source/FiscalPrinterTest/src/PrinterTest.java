@@ -957,7 +957,7 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printFiscalReceipt() {
-        printFiscalReceipt1054();
+        printFiscalReceipt101();
     }
 
     public void printCorrectionReceipt() {
@@ -2138,36 +2138,16 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt101() {
         try {
             printer.resetPrinter();
-
-            printer.printRecMessage("Кассовый чек");
-            printer.printRecMessage("printRecMessage1");
-            printer.printNormal(FPTR_S_RECEIPT, "printNormal1");
-
             printer.setFiscalReceiptType(FPTR_RT_SALES);
             printer.beginFiscalReceipt(true);
-
-            printer.printRecMessage("printRecMessage2");
-            printer.printNormal(FPTR_S_RECEIPT, "printNormal2");
-
             printer.printRecItem("Тестовый товар", 100, 1000, 0, 100, "");
-            printer.printRecItem("Батарейка Alkaline Stam", 20, 0, 1, 20, "");
-            printer.printRecItemVoid("Батарейка Alkaline Stam", 20, 0, 1, 20, "");
-            printer.printRecSubtotal(9500);
-
-            printer.printRecMessage("printRecMessage3");
-            printer.printNormal(FPTR_S_RECEIPT, "printNormal3");
-
+            printer.printRecItem("Батарейка Alkaline Stam", 200, 1000, 1, 200, "");
+            printer.printRecItem("Батарейка Alkaline Stam", 300, 1000, 1, 300, "");
+            printer.printRecItemVoid("Батарейка Alkaline Stam", 200, 200, 1, 200, "");
+            printer.printRecItemVoid("Батарейка Alkaline Stam", 300, 500, 1, 300, "");
             printer.printRecTotal(9500, 9500, "0");
-
-            printer.printRecMessage("printRecMessage4");
-            printer.printNormal(FPTR_S_RECEIPT, "printNormal4");
-
-            printer.printBarcode("1234567890123", "", SmFptrConst.SMFPTR_BARCODE_EAN13,
-                    100, SmFptrConst.SMFPTR_PRINTTYPE_DRIVER, 2, 0, 1, 0);
-
-            printQRCode();
-
             printer.endFiscalReceipt(true);
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
