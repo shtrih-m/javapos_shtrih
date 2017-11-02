@@ -171,6 +171,7 @@ public class FptrParameters {
     public Byte subjectType = null;
     public boolean calcReportEnabled = false;
     public boolean openReceiptOnBegin = false;
+    public boolean printVoidedReceipt = false;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -385,6 +386,7 @@ public class FptrParameters {
         quantityCorrectionEnabled = reader.readBoolean("quantityCorrectionEnabled", true);
         calcReportEnabled = reader.readBoolean("calcReportEnabled", false);
         openReceiptOnBegin = reader.readBoolean("openReceiptOnBegin", false);
+        printVoidedReceipt = reader.readBoolean("printVoidedReceipt", false);
 
         // paymentNames
         String paymentName;

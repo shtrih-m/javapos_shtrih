@@ -2136,18 +2136,17 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printFiscalReceipt101() {
-        try {
+        try 
+        {
             printer.resetPrinter();
+            printer.writeTable(1, 1, 12, "0");
             printer.setFiscalReceiptType(FPTR_RT_SALES);
             printer.beginFiscalReceipt(true);
             printer.printRecItem("Тестовый товар", 100, 1000, 0, 100, "");
-            printer.printRecItem("Батарейка Alkaline Stam", 200, 1000, 1, 200, "");
-            printer.printRecItem("Батарейка Alkaline Stam", 300, 1000, 1, 300, "");
-            printer.printRecItemVoid("Батарейка Alkaline Stam", 200, 200, 1, 200, "");
-            printer.printRecItemVoid("Батарейка Alkaline Stam", 300, 500, 1, 300, "");
             printer.printRecTotal(9500, 9500, "0");
-            printer.endFiscalReceipt(true);
-            
+            printer.printRecVoid("ЧЕК АННУЛИРОВАН");
+            printer.endFiscalReceipt(false);
+            printer.writeTable(1, 1, 12, "1");
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -3309,7 +3309,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             printLines2(line1, line2);
             // 2
             line1 = readTable(2, status.getOperatorNumber(), 2);
-            line2 = String.format("#%04d", status.getDocumentNumber());
+            line2 = String.format("#%04d", status.getDocumentNumber() + 1);
             printLines2(line1, line2);
             // 3
             line1 = docName;

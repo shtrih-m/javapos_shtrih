@@ -32,7 +32,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/> -->
-        <prop name="portName" type="String" value="COM4"/>
+        <prop name="portName" type="String" value="COM37"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="1"/>
@@ -298,6 +298,7 @@
 		         он будет напечатан сразу после заголовка чека.
 		-->
 		<prop name="FSTagsPlacement" type="String" value="0"/>
+		<prop name="printVoidedReceipt" type="String" value="1"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>
