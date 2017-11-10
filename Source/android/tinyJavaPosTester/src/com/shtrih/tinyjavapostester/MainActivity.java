@@ -348,9 +348,10 @@ public class MainActivity extends AppCompatActivity {
             String itemName = items[rand.nextInt(items.length)];
             printer.printRecItem(itemName, price, 0, 0, 0, "");
         }
+
         printer.printRecTotal(payment, payment, "1");
 
-        printer.directIO(0x39, null, "foo@example.com");
+        printer.directIO(0x39, null, "foo@example.comfoo@example.comfoo@example.comfoo@example.comfoo@example.comfoo@example.com1234567890foo@example.comfoo@example.comfoo@example.comfoo@example.comfoo@example.comfoo@example.com1234567890123456789012345678901234567890123456789012345678");
 
         printer.endFiscalReceipt(false);
 

@@ -219,12 +219,25 @@ public class BluetoothPort implements PrinterPort {
     @Override
     public int readByte() throws Exception {
         try {
-            int result = inputStream.read();
-            if (result < 0) {
-                noConnectionError();
-            }
+            int result;
+            InputStream is = inputStream;
+            long startTime = System.currentTimeMillis();
+            while (true) {
+                if (is.available() == 0) {
+                    long currentTime = System.currentTimeMillis();
+                    if ((currentTime - startTime) > timeout) {
+                        noConnectionError();
+                    }
+                } else {
+                    result = is.read();
 
-            return result;
+                    if (result < 0) {
+                        noConnectionError();
+                    }
+
+                    return result;
+                }
+            }
         } catch (Exception e) {
             close();
             throw e;
