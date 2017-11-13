@@ -302,6 +302,30 @@ public class MainActivity extends AppCompatActivity {
         printer.printImage(imageIndex);
     }
 
+    public void printText(View v) {
+        try {
+            long startedAt = System.currentTimeMillis();
+
+            printer.resetPrinter();
+
+            String text = "«Мой дядя самых честных правил";
+            int lines = 100;
+
+            for (int i = 0; i < lines; i++) {
+                printer.printText(text);
+            }
+
+            long doneAt = System.currentTimeMillis();
+
+            String message = "Printed in " + (doneAt - startedAt) + " ms";
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            Log.d(TAG, message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
     public void printReceipt(View v) {
         try {
             long startedAt = System.currentTimeMillis();
@@ -351,7 +375,7 @@ public class MainActivity extends AppCompatActivity {
 
         printer.printRecTotal(payment, payment, "1");
 
-        printer.directIO(0x39, null, "foo@example.comfoo@example.comfoo@example.comfoo@example.comfoo@example.comfoo@example.com1234567890foo@example.comfoo@example.comfoo@example.comfoo@example.comfoo@example.comfoo@example.com1234567890123456789012345678901234567890123456789012345678");
+        printer.directIO(0x39, null, "foo@example.com");
 
         printer.endFiscalReceipt(false);
 

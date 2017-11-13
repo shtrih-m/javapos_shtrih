@@ -82,5 +82,12 @@
             android:layout_height="wrap_content"
             android:onClick="readFSCommStatus"
             android:text="@string/action_read_fs_comm_status" />
+
+        <Button
+            android:id="@+id/btnPrintText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="printText"
+            android:text="@string/action_print_text" />
     </LinearLayout>
 </ScrollView>
