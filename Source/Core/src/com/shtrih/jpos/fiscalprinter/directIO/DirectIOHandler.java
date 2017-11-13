@@ -447,6 +447,10 @@ public class DirectIOHandler {
                 new DIOFSFindDocument(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_FS_DISABLE_DOCEND:
+                new DIODisableDocEnd(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)

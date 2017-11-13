@@ -517,6 +517,11 @@ public interface SmFptrConst {
      */
     public static final int SMFPTR_DIO_FS_FIND_DOCUMENT = 0x53;
     
+    /**
+     * Disable document end printing
+     */
+    public static final int SMFPTR_DIO_FS_DISABLE_DOCEND = 0x54;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

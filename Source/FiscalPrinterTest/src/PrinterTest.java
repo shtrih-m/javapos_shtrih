@@ -2139,14 +2139,23 @@ class PrinterTest implements FiscalPrinterConst {
         try 
         {
             printer.resetPrinter();
-            printer.writeTable(1, 1, 12, "0");
-            printer.setFiscalReceiptType(FPTR_RT_SALES);
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETSALE);
             printer.beginFiscalReceipt(true);
-            printer.printRecItem("Тестовый товар", 100, 1000, 0, 100, "");
-            printer.printRecTotal(9500, 9500, "0");
-            printer.printRecVoid("ЧЕК АННУЛИРОВАН");
+            printer.printRecItem("4607001777021 КОФЕ ЯКОБС МОНАРХ ВЕ", 28990, 1000, 1, 28990, "шт");
+            printer.printRecItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 14985, 1500, 1, 9990, "кг");
+            //printer.printRecItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 14985, 1500, 1, 9990, "кг");
+            //printer.printRecVoidItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 9990, 1500, 0, 0, 1);
+            printer.printRecSubtotal(43975);
+            printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 25);
+            printer.printRecTotal(43950, 43950, "1");
+            
+            printer.disableDocEnd();
             printer.endFiscalReceipt(false);
-            printer.writeTable(1, 1, 12, "1");
+            printer.printText("Дополнительная строка 1");
+            printer.printText("Дополнительная строка 2");
+            printer.printText("Дополнительная строка 3");
+            printer.printDocEnd();
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

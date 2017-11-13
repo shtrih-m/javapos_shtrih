@@ -529,14 +529,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printRecItemVoid(String description, long price, int quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
         openReceipt(false);
-
-        if (isSaleReceipt()) {
-            printStorno(price, quantity, unitPrice, getParams().department,
-                    vatInfo, description);
-        } else {
-            printSale(price, quantity, unitPrice, getParams().department,
-                    vatInfo, description, unitName);
-        }
+        printStorno(price, quantity, unitPrice, getParams().department,
+            vatInfo, description);
     }
 
     private String formatStrings(String line1, String line2) throws Exception {
@@ -642,13 +636,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             int adjustmentType, long adjustment, int vatInfo) throws Exception {
         openReceipt(false);
         long total = Math.round(amount * quantity / 1000.0);
-        if (isSaleReceipt()) {
-            printStorno(total, quantity, amount, getParams().department, vatInfo,
-                    description);
-        } else {
-            printSale(total, quantity, amount, getParams().department, vatInfo,
-                    description, "");
-        }
+        printStorno(total, quantity, amount, getParams().department, vatInfo,
+                description);
     }
 
     public void printRecRefundVoid(String description, long amount, int vatInfo)

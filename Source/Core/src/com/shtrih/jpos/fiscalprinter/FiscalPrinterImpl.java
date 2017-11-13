@@ -223,6 +223,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private boolean isInReceiptTrailer = false;
     private TextDocumentFilter filter = null;
     private FSService fsSenderService;
+    private boolean docEndEnabled = true;
 
     public void setTextDocumentFilterEnablinessTo(boolean value) {
         filter.setEnabled(value);
@@ -514,6 +515,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
+    public void disableDocEnd() throws Exception 
+    {
+        docEndEnabled = false;
+    }
+    
     private void checkPaperStatus(PrinterStatus status) throws Exception {
         if (isRecPresent) {
             isRecPresent = status.getPrinterFlags().isRecPresent();
@@ -3093,6 +3099,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 receipt.printRecMessage(line.getStation(), line.getFont(), line.getLine());
             }
         }
+        docEndEnabled = true;
     }
 
     private void sleep(long millis) {
@@ -3115,7 +3122,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             receipt.endFiscalReceipt(printHeader);
             getPrinter().stopSaveCommands();
 
-            if (!receipt.getDisablePrint()) {
+            if (docEndEnabled && (!receipt.getDisablePrint())) {
                 // Print may not respond for some time
                 sleep(getParams().recCloseSleepTime);
                 if (!receipt.getCapAutoCut()) {
@@ -3127,6 +3134,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     }
                 }
             }
+            docEndEnabled = true;
             setPrinterState(FPTR_PS_MONITOR);
             receipt = new NullReceipt(createReceiptContext());
             params.nonFiscalDocNumber++;
