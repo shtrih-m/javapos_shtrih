@@ -6,6 +6,13 @@
   Url     : https://github.com/shtrih-m/javapos_shtrih
 
 ********************************************************************************
+  November, 13 2017
+  deviceServiceVersion = 1013478
+	
+  [+] Added directIO command SMFPTR_DIO_FS_DISABLE_DOCEND to 
+      disable document end and paper cut in endFiscalReceipt method
+  
+********************************************************************************
 
   November, 2 2017
   deviceServiceVersion = 1013477
