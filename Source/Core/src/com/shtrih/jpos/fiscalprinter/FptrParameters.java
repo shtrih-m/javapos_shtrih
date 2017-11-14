@@ -163,7 +163,7 @@ public class FptrParameters {
     public boolean combineReceiptItems = false;
     public boolean printRecVoidItemAmount = false;
     public boolean FSReceiptItemDiscountEnabled = false;
-    public boolean quantityCorrectionEnabled = true;
+    public boolean quantityCorrectionEnabled = false;
     public long taxValue[] = new long[6];
     public int taxSystem = 0;
     public Integer itemTotalAmount = null;

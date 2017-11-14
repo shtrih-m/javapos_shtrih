@@ -98,6 +98,7 @@ public abstract class CustomReceipt implements FiscalReceipt {
     public void endFiscalReceipt(boolean printHeader) throws Exception {
     }
 
+    
     public void printRecItem(String description, long price, int quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
         notSupported();

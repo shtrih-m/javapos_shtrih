@@ -209,7 +209,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private String logicalName = "";
     private boolean asyncMode = false;
     private FiscalReceipt receipt = new NullReceipt();
-    private final Vector<PrintItem> printItems = new Vector();
     private final PrinterReceipt printerReceipt = new PrinterReceipt();
     private boolean connected = false;
     private boolean isLicenseValid = false;
@@ -219,7 +218,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private int receiptType = 0;
     private boolean isRecPresent = true;
     private boolean inAfterCommand = false;
-    private boolean inBeforeCommand = false;
     private boolean isInReceiptTrailer = false;
     private TextDocumentFilter filter = null;
     private FSService fsSenderService;
@@ -515,11 +513,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public void disableDocEnd() throws Exception 
-    {
+    public void disableDocEnd() throws Exception {
         docEndEnabled = false;
     }
-    
+
     private void checkPaperStatus(PrinterStatus status) throws Exception {
         if (isRecPresent) {
             isRecPresent = status.getPrinterFlags().isRecPresent();
@@ -540,28 +537,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void beforeCommand(PrinterCommand command) {
-        if (inBeforeCommand) {
-            return;
-        }
-
-        inBeforeCommand = true;
-        try {
-            if ((command.getCode() == 0x85) || (command.getCode() == 0xFF45)) {
-                if (getPrinter().isCapFooterFlag()) {
-                    getPrinter().setIsFooter(true);
-                    try {
-                        getPrinter().printItems(printItems);
-                    } finally {
-                        getPrinter().setIsFooter(false);
-                    }
-                }
-            }
-
-        } catch (Exception e) {
-            logger.error("beforeCommand", e);
-        }
-        inBeforeCommand = false;
-
     }
 
     @Override
@@ -1933,8 +1908,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    private void writeTables() throws Exception 
-    {
+    private void writeTables() throws Exception {
         writeFieldsFile();
     }
 
@@ -2387,9 +2361,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         synchronized (printer) {
             isInReceiptTrailer = true;
             getPrinter().waitForPrinting();
-            if (!getPrinter().isCapFooterFlag()) {
-                getPrinter().printItems(printItems);
-            }
             header.endDocument(additionalHeader, additionalTrailer);
             isInReceiptTrailer = false;
         }
@@ -2405,7 +2376,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     private void printReportEnd() throws Exception {
         try {
-            getPrinter().printItems(printItems);
             header.endDocument("", "");
         } catch (Exception e) {
             // ignore print errors
@@ -3089,7 +3059,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         fiscalDay.open();
 
         setPrinterState(FPTR_PS_FISCAL_RECEIPT);
-        printItems.clear();
         getPrinter().startSaveCommands();
         printDocStart();
         receipt.beginFiscalReceipt(printHeader);
@@ -3113,7 +3082,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void endFiscalReceipt(boolean printHeader) throws Exception {
-        logger.debug("endFiscalReceipt");
+        logger.debug("endF");
 
         synchronized (printer) {
             checkEnabled();
@@ -3122,17 +3091,18 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             receipt.endFiscalReceipt(printHeader);
             getPrinter().stopSaveCommands();
 
-            if (docEndEnabled && (!receipt.getDisablePrint())) {
-                // Print may not respond for some time
-                sleep(getParams().recCloseSleepTime);
-                if (!receipt.getCapAutoCut()) {
-                    try {
-                        printDocEnd();
-                    } catch (Exception e) {
-                        // ignore print errors because cashin is succeeded
-                        logger.error("endFiscalReceipt: " + e.getMessage());
+            try {
+                if (!receipt.getDisablePrint()) {
+                    sleep(getParams().recCloseSleepTime);
+                    if (docEndEnabled) {
+                        if (!receipt.getCapAutoCut()) {
+                            printDocEnd();
+                        }
                     }
                 }
+            } catch (Exception e) {
+                // ignore print errors because cashin is succeeded
+                logger.error("endFiscalReceipt: " + e.getMessage());
             }
             docEndEnabled = true;
             setPrinterState(FPTR_PS_MONITOR);
@@ -3290,11 +3260,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void printRecMessageAsync(int station, FontNumber font,
             String message) throws Exception {
         message = decodeText(message);
-        if (isReceiptEnding()) {
-            printItems.add(new TextLine(station, font, message));
-        } else {
-            receipt.printRecMessage(station, font, message);
-        }
+        receipt.printRecMessage(station, font, message);
     }
 
     public boolean isReceiptEnding() {
@@ -3676,7 +3642,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         cancelReceipt();
         receiptType = 0;
         isReceiptOpened = false;
-        printItems.clear();
     }
 
     public void setDate(String date) throws Exception {
@@ -4338,20 +4303,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printBarcode(PrinterBarcode barcode) throws Exception {
-        if (isReceiptEnding()) {
-            printItems.add(barcode);
-        } else {
-            receipt.printBarcode(barcode);
-        }
+        receipt.printBarcode(barcode);
     }
 
     public void printRawGraphics(byte[][] data) throws Exception {
         PrinterGraphics graphics = new PrinterGraphics(data);
-        if (isReceiptEnding()) {
-            printItems.add(graphics);
-        } else {
-            receipt.printGraphics(graphics);
-        }
+        receipt.printGraphics(graphics);
     }
 
     public void printRecItemRefund(String description, long amount,

@@ -515,7 +515,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public int getPrintStation(int station) {
-        if (isFooter) {
+        if (capFooterFlag && isFooter) {
             station = station + SMFP_STATION_FOOTER;
         }
         return station;

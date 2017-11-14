@@ -2141,44 +2141,44 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETSALE);
             printer.beginFiscalReceipt(true);
-            printer.printRecItem("4607001777021 КОФЕ ЯКОБС МОНАРХ ВЕ", 28990, 1000, 1, 28990, "шт");
-            printer.printRecItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 14985, 1500, 1, 9990, "кг");
-            //printer.printRecItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 14985, 1500, 1, 9990, "кг");
-            //printer.printRecVoidItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 9990, 1500, 0, 0, 1);
-            printer.printRecSubtotal(43975);
-            printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 25);
-            printer.printRecTotal(43950, 43950, "1");
+            
+            printer.printRecItem("Item 1", 107466, 4497, 1, 23897, "");
+            printer.printRecTotal(200000, 200000, "");
             
             printer.disableDocEnd();
             printer.endFiscalReceipt(false);
-            printer.printText("Дополнительная строка 1");
-            printer.printText("Дополнительная строка 2");
-            printer.printText("Дополнительная строка 3");
+            printer.printNormal(FPTR_S_RECEIPT, "Дополнительная строка 1");
+            printer.printNormal(FPTR_S_RECEIPT, "Дополнительная строка 2");
+            printer.printNormal(FPTR_S_RECEIPT, "Дополнительная строка 3");
             printer.printDocEnd();
             
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    
     public void printFiscalReceipt102() {
-        try {
+        try 
+        {
             printer.resetPrinter();
-            printer.setCheckTotal(true);
-            printer.setFiscalReceiptType(FPTR_RT_SALES);
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETSALE);
             printer.beginFiscalReceipt(true);
-            printer.printRecItem("1860 Напиток COCA-COLA газ.ПЭТ  2.0л", 3000, 0, 1, 0, "");
-            printer.printRecItemAdjustment(1, "", 1000, 0);
-            printer.printRecItem("1860 Напиток COCA-COLA газ.ПЭТ  2.0л", 3000, 0, 1, 0, "");
-            printer.printRecItemAdjustment(1, "", 1000, 0);
-            printer.printRecItem("1860 Напиток COCA-COLA газ.ПЭТ  2.0л", 3000, 0, 1, 0, "");
-            printer.printRecItemAdjustment(1, "", 1000, 0);
-
-            printer.printRecSubtotal(50000);
-            printer.printRecSubtotalAdjustment(1, "", 85);
-            printer.printRecTotal(50000, 50000, "");
-
-            printer.endFiscalReceipt(true);
+            
+            printer.printRecMessage("5095 1234/045/008   13.11.17 18:09 AC-00");
+            printer.printRecItem("КОНТЕЙНЕР СКЛ. LOGO", 499900, 1000, 1, 499900, "");
+            printer.printRecVoid("* * * *** ЧЕК ОТМЕНЕН *** * * *");
+            printer.printRecMessage("1 2000152395007 КОНТЕЙНЕР СКЛ. LOGO 1");
+            printer.printRecMessage("   49,99 * 1 = 49,99");
+            printer.printRecMessage("ПОДИТОГ: 49,99");
+            printer.printRecMessage("*** ЧЕК ОТМЕНЕН ***");
+            
+            printer.disableDocEnd();
+            printer.endFiscalReceipt(false);
+            printer.printNormal(FPTR_S_RECEIPT, "Дополнительная строка 1");
+            printer.printNormal(FPTR_S_RECEIPT, "Дополнительная строка 2");
+            printer.printNormal(FPTR_S_RECEIPT, "Дополнительная строка 3");
+            printer.printDocEnd();
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

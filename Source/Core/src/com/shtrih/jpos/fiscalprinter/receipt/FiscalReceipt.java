@@ -112,5 +112,4 @@ public interface FiscalReceipt {
     public void printBarcode(PrinterBarcode barcode) throws Exception;
 
     void printGraphics(PrinterGraphics graphics) throws Exception;
-    
 }

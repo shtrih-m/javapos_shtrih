@@ -287,7 +287,7 @@
 		<!-- printRecVoidItemAmount -->
 		<prop name="printRecVoidItemAmount" type="String" value="0"/>
 		<!-- quantityCorrectionEnabled -->
-		<prop name="quantityCorrectionEnabled" type="String" value="1"/>
+		<prop name="quantityCorrectionEnabled" type="String" value="0"/>
 		
 		<!-- Печать описани тэгов средствами драйвера -->
 		<prop name="FSPrintTags" type="String" value="1"/>
