@@ -1286,37 +1286,6 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void printFiscalReceipt103() {
-        try {
-            printer.resetPrinter();
-            printer.setFiscalReceiptType(4);
-            printer.beginFiscalReceipt(false);
-            printer.printRecItem("БАНАНЫ", 587000, 852, 1, 689000, "");
-            printer.printRecItem("ПАКЕТ-СУМКА ПСД ЛОГО", 69900, 1000, 1, 69900, "");
-            printer.printRecItem("ЧАЙ АХМАД КЛАСС 100Г", 989000, 1000, 1, 989000, "");
-            printer.printRecItem("Т/Б РОМ.ЛУГ БЕЛ.4РУЛ", 439900, 1000, 1, 439900, "");
-            printer.printRecItem("РЯЖЕН.ЗЕЛ.3,2-4%500Г", 428900, 1000, 2, 428900, "");
-            printer.printRecItem("КОРМ Д/С ВХ ТЕЛ 325Г", 549000, 1000, 1, 549000, "");
-            printer.printRecItem("МОЛОКО ЗЕЛ.ТОП.1КГ", 739000, 1000, 2, 739000, "");
-            printer.printRecItem("МАСЛО ЗС ПОДС 0,5Л", 679000, 1000, 2, 679000, "");
-            printer.printRecItem("Б/ГАЗА 0,5Л", 129900, 1000, 1, 129900, "");
-            printer.printRecItem("Б/ГАЗА 0,5Л", 129900, 1000, 1, 129900, "");
-            printer.printRecItem("БУЛОЧ.ПОВЫШ.КАЛОР100", 149900, 1000, 2, 149900, "");
-            printer.printRecItem("СЛИВКИ ПРОСТ.10% 20Г", 59900, 1000, 2, 59900, "");
-            printer.printRecItem("СЛИВКИ ПРОСТ.10% 20Г", 59900, 1000, 2, 59900, "");
-            printer.printRecItem("СЛИВКИ ПРОСТ.10% 20Г", 59900, 1000, 2, 59900, "");
-            printer.printRecItem("СЛИВКИ ПРОСТ.10% 20Г", 59900, 1000, 2, 59900, "");
-            printer.printRecItem("БАНАНЫ СУШЕНЫЕ 100ГР", 549000, 1000, 1, 549000, "");
-            printer.printRecItem("ФУНДУК СУШЕНЫЙ 50 ГР", 799000, 1000, 1, 799000, "");
-            printer.printRecItem("СОЛОМКА ВАНИЛЬ 200Г", 339900, 1000, 2, 339900, "");
-            printer.printRecItem("КАЛИНОВ РОДНИК 9Л", 649000, 1000, 1, 649000, "");
-            printer.printRecTotal(7467900, 7467900, "30");
-            printer.endFiscalReceipt(false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void printFiscalReceipt1044() {
         try {
             printer.resetPrinter();
@@ -2141,6 +2110,49 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETSALE);
             printer.beginFiscalReceipt(true);
+            printer.printRecItem("ТОМАТЫ БАКИНСКИЕ ВЕС", 10746600, 4497, 2, 2389700, "");
+            printer.printRecItem("КРАБ ПАЛ ВИЧИ 200Г", 285900, 1000, 2, 285900, "");
+            printer.printRecTotal(999999900, 999999900, "1");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printFiscalReceipt101_1() {
+        try 
+        {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETSALE);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("4607001777021 КОФЕ ЯКОБС МОНАРХ ВЕ", 2899000, 1000, 1, 2899000, "шт");
+            printer.printRecItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 1498500, 1500, 1, 999000, "кг");
+            printer.printRecItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 1498500, 1500, 1, 999000, "кг");
+            printer.printRecVoidItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 999000, 1500, 0, 0, 1);
+            printer.printRecSubtotal(4397500);
+            printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 2500);
+            printer.printRecTotal(4395000, 4395000, "1");
+            printer.printRecMessage("");
+            printer.printRecMessage(" **************************************** ");
+            printer.printRecMessage("      Если у Вас есть замечания или       ");
+            printer.printRecMessage("  предложения, звоните 8-800-500-72-04    ");
+            printer.printRecMessage("     ****** СПАСИБО ЗА ПОКУПКУ ******     ");
+            printer.printRecMessage("------------------------------------------");
+            printer.printRecMessage(" КАССИР        002   Барабанова Екатерина ");
+            printer.printRecMessage("*1058 0085/002/002    10.11.17 14:20 AC-00");
+            printer.printRecMessage("------------------------------------------");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void printFiscalReceipt102() {
+        try 
+        {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETSALE);
+            printer.beginFiscalReceipt(true);
             
             printer.printRecItem("Item 1", 107466, 4497, 1, 23897, "");
             printer.printRecTotal(200000, 200000, "");
@@ -2157,7 +2169,7 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
     
-    public void printFiscalReceipt102() {
+    public void printFiscalReceipt103() {
         try 
         {
             printer.resetPrinter();

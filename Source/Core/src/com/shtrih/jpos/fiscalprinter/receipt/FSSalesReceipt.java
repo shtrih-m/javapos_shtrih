@@ -903,11 +903,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         long amount = getParams().itemTotalAmount == null ? MathUtils.round((d / 1000.0)) : getParams().itemTotalAmount;
         FSSaleReceiptItem item = null;
         if (isStorno) {
-            for (int i = recItems.size() - 1; i >= 0; i--) {
-                item = (FSSaleReceiptItem) recItems.get(i);
-                if ((item.getText().equalsIgnoreCase(description))
-                        && (item.getPrice() == price)
-                        && (item.getQuantity() >= quantity)) {
+            for (int i = recItems.size()-1; i >= 0; i--) {
+                FSSaleReceiptItem recitem = (FSSaleReceiptItem) recItems.get(i);
+                if ((recitem.getText().equalsIgnoreCase(description))
+                        && (recitem.getUnitPrice() == unitPrice)
+                        && (recitem.getQuantity() >= quantity)) 
+                {
+                    item = recitem;
                     break;
                 }
             }
