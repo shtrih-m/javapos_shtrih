@@ -7,6 +7,13 @@
 
 ********************************************************************************
 
+  November, 15 2017
+  deviceServiceVersion = 1013482
+	
+  [-] Changed default value of property quantityCorrectionEnabled=false
+
+********************************************************************************
+
   November, 13 2017
   deviceServiceVersion = 1013479
 	
