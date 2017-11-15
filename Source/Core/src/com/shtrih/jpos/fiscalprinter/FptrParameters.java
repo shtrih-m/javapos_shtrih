@@ -383,7 +383,7 @@ public class FptrParameters {
         combineReceiptItems = reader.readBoolean("combineReceiptItems", false);
         printRecVoidItemAmount = reader.readBoolean("printRecVoidItemAmount", false);
         FSReceiptItemDiscountEnabled = reader.readBoolean("FSReceiptItemDiscountEnabled", false);
-        quantityCorrectionEnabled = reader.readBoolean("quantityCorrectionEnabled", true);
+        quantityCorrectionEnabled = reader.readBoolean("quantityCorrectionEnabled", false);
         calcReportEnabled = reader.readBoolean("calcReportEnabled", false);
         openReceiptOnBegin = reader.readBoolean("openReceiptOnBegin", false);
         printVoidedReceipt = reader.readBoolean("printVoidedReceipt", false);

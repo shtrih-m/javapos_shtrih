@@ -2110,9 +2110,12 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETSALE);
             printer.beginFiscalReceipt(true);
-            printer.printRecItem("ТОМАТЫ БАКИНСКИЕ ВЕС", 10746600, 4497, 2, 2389700, "");
+            
+            printer.printRecItem("ТОМАТЫ БАКИНСКИЕ ВЕС", 10745300, 4497, 2, 2389400, "");
             printer.printRecItem("КРАБ ПАЛ ВИЧИ 200Г", 285900, 1000, 2, 285900, "");
-            printer.printRecTotal(999999900, 999999900, "1");
+            printer.printRecSubtotal(11031200);
+            printer.printRecTotal(11031200, 1200, "39");
+            printer.printRecTotal(11031200, 100000000, "1");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
