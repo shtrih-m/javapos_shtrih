@@ -1001,7 +1001,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         fsReceiptItem.setOperation(operation);
         fsReceiptItem.setQuantity(item.getQuantity() * 1000);
         fsReceiptItem.setPrice(item.getPrice());
-        fsReceiptItem.setAmount(item.getTotalAmount() == null ? 0xFFFFFFFFFFL : item.getTotalAmount());
+        fsReceiptItem.setAmount(item.getTotalAmount());
         fsReceiptItem.setTaxAmount(0xFFFFFFFFFFL);
         fsReceiptItem.setTax(getTaxBits(item.getTax1()));
         fsReceiptItem.setDepartment(item.getDepartment());

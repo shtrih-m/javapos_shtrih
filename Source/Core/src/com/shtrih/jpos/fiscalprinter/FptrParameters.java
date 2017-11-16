@@ -166,7 +166,7 @@ public class FptrParameters {
     public boolean quantityCorrectionEnabled = false;
     public long taxValue[] = new long[6];
     public int taxSystem = 0;
-    public Integer itemTotalAmount = null;
+    public long itemTotalAmount = 0xFFFFFFFFFFL;
     public Byte paymentType = null;
     public Byte subjectType = null;
     public boolean calcReportEnabled = false;

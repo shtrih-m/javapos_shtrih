@@ -25,7 +25,7 @@ public class PriceItem {
     private int tax3;
     private int tax4;
     private String text;
-    private Integer totalAmount;
+    private long totalAmount = 0xFFFFFFFFFFL;
     private Byte paymentType;
     private Byte subjectType;
 
@@ -140,11 +140,11 @@ public class PriceItem {
         return PrinterAmount.getAmount(getPrice(), getQuantity());
     }
 
-    public void setTotalAmount(Integer totalAmount) {
+    public void setTotalAmount(long totalAmount) {
         this.totalAmount = totalAmount;
     }
 
-    public Integer getTotalAmount() {
+    public long getTotalAmount() {
         return totalAmount;
     }
 

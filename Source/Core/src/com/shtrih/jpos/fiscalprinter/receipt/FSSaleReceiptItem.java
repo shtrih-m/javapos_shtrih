@@ -40,7 +40,7 @@ public class FSSaleReceiptItem {
     private boolean priceUpdated = false;
     private FSSaleReceiptItem splittedItem;
     private final FSDiscounts discounts = new FSDiscounts();
-    private Integer totalAmount = null;
+    private long totalAmount = 0xFFFFFFFFFFL;
     private Byte paymentType;
     private Byte subjectType;
 
@@ -64,7 +64,7 @@ public class FSSaleReceiptItem {
         return item;
     }
 
-    public void setTotalAmount(Integer value){
+    public void setTotalAmount(long value){
         totalAmount = value;
     }
 
