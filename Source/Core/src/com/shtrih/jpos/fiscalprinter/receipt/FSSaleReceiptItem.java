@@ -279,7 +279,7 @@ public class FSSaleReceiptItem {
         }
         splittedItem = null;
         priceWithDiscount = price;
-        if (discounts.getTotal() > 0) {
+        //if (discounts.getTotal() > 0) {
             if (quantity == 1000) {
                 priceWithDiscount = price - discounts.getTotal();
             } else {
@@ -330,7 +330,7 @@ public class FSSaleReceiptItem {
                     quantity = quantity2;
                 }
             }
-        }
+        //}
         priceUpdated = true;
     }
 

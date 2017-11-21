@@ -128,8 +128,13 @@ public class StringUtils {
                 Locale.getDefault());
         symbols.setDecimalSeparator('.');
         DecimalFormat formatter = new DecimalFormat("0.00", symbols);
-        return formatter.format(Math.abs(value) / 100.0);
 
+         String result = formatter.format(Math.abs(value) / 100.0);
+
+         if(value < 0)
+             result = "-" + result;
+
+         return result;
     }
 
     public static String quantityToStr2(long value) throws Exception {
