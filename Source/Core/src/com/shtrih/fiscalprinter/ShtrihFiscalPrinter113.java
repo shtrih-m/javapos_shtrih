@@ -1565,16 +1565,39 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         executeCommand(command);
     }
 
+    /**
+     * Начать отчет о регистрации
+     * @param reportType
+     * Тип отчета:
+     *  00 – Отчет о регистрации КТТ
+     *  01 – Отчет  об  изменении параметров регистрации ККТ, в связи с заменой ФН
+     *  02 – Отчет  об  изменении параметров регистрации ККТ без замены ФН
+     */
     public void fsStartFiscalization(int reportType) throws Exception {
         FSStartFiscalization command = new FSStartFiscalization(getSysPassword(), reportType);
         executeCommand(command);
     }
 
+    /**
+     * Сформировать отчёт о регистрации
+     * @param inn ИНН
+     * @param rnm Регистрационный номер ККТ
+     * @param taxSystemCode Код системы налогообложения
+     * @param operationMode Режим работы
+     */
     public void fsFiscalization(String inn, String rnm, int taxSystemCode, int operationMode) throws JposException {
         FSFiscalization command = new FSFiscalization(getSysPassword(), inn, rnm, taxSystemCode, operationMode);
         executeCommand(command);
     }
 
+    /**
+     * Сформировать отчёт о перерегистрации
+     * @param inn ИНН
+     * @param rnm Регистрационный номер ККТ
+     * @param taxSystemCode Код системы налогообложения
+     * @param operationMode Режим работы
+     * @param reasonCode Код причины перерегистрации
+     */
     public void fsReFiscalization(String inn, String rnm, int taxSystemCode, int operationMode, int reasonCode) throws JposException {
         FSReFiscalization command = new FSReFiscalization(getSysPassword(), inn, rnm, taxSystemCode, operationMode, reasonCode);
         executeCommand(command);
