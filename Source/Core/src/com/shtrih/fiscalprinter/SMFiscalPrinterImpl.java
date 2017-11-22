@@ -1976,11 +1976,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
 
         if (capFiscalStorage) {
-            if (isShtrihMobile()) {
-                getModel().addParameter("fdoName", "", 14, 1, 10);
-            } else {
-                getModel().addParameter("fdoName", "", 18, 1, 10);
-            }
+            getModel().addParameter("fdoName", "", getFsTableNumber(), 1, 10);
         }
     }
 
@@ -2986,23 +2982,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     @Override
     public String readFullSerial() throws Exception {
         if (serial.isEmpty()) {
-            int tableNumber = 18;
-            if (isShtrihMobile()) {
-                tableNumber = 14;
-            }
-            serial = readTable(tableNumber, 1, 1).trim();
+            serial = readTable(getFsTableNumber(), 1, 1).trim();
         }
         return serial;
     }
 
     @Override
     public String readRnm() throws Exception {
-        int tableNumber = 18;
-        if (isShtrihMobile()) {
-            tableNumber = 14;
-        }
-
-        return readTable(tableNumber, 1, 3).trim();
+        return readTable(getFsTableNumber(), 1, 3).trim();
     }
 
     private boolean isShtrihMobile() throws Exception {
@@ -3502,7 +3489,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public FDOParameters readFDOParameters() throws Exception {
         if (capFiscalStorage) {
 
-            final int tableNumber = isShtrihMobile() ? 15 : 19;
+            final int tableNumber = getOfdTableNumber();
 
             //final int tableNumber = c().OFDTable;
             final int hostField = 1;
@@ -3518,6 +3505,20 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
 
         return null;
+    }
+
+    private int getOfdTableNumber() throws Exception {
+        PrinterModelParameters params = readPrinterModelParameters();
+        return params.capOfdTableNumber() ?
+                params.getOfdTableNumber() :
+                (isShtrihMobile() ? 15 : 19);
+    }
+
+    private int getFsTableNumber() throws Exception {
+        PrinterModelParameters params = readPrinterModelParameters();
+        return params.capFsTableNumber() ?
+                params.getFsTableNumber() :
+                (isShtrihMobile() ? 14 : 18);
     }
 
     private int readTableIntValueFromStringOrInt(int tableNumber, int portField) throws Exception {
