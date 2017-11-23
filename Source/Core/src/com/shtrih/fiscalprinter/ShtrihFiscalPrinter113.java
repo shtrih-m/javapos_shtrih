@@ -1580,10 +1580,23 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
 
     /**
      * Сформировать отчёт о регистрации
-     * @param inn ИНН
-     * @param rnm Регистрационный номер ККТ
-     * @param taxSystemCode Код системы налогообложения
-     * @param operationMode Режим работы
+     * @param inn ИНН 1018
+     * @param rnm Регистрационный номер ККТ 1037
+     * @param taxSystemCode Код системы налогообложения 1062, битовое поле:
+     *   0 Общая
+     *   1 Упрощенная доход
+     *   2 Упрощенная доход минус расход
+     *   3 Единый налог на вмененный доход
+     *   4 Единый сельскохозяйственный налог
+     *   5 Патентная система налогообложения
+     * @param operationMode Режим работы, битовое поле,
+     * определяет какие тэги признаков режимов работы будут переданы в документ регистрации:
+     *   0 признак шифрования 1056
+     *   1 признак автономного режима 1002
+     *   2 признак автоматического режима 1001
+     *   3 признак расчетов за услуги 1109
+     *   4 признак АС БСО 1110
+     *   5 признак ККТ для расчетов только в Интернет 1108
      */
     public void fsFiscalization(String inn, String rnm, int taxSystemCode, int operationMode) throws JposException {
         FSFiscalization command = new FSFiscalization(getSysPassword(), inn, rnm, taxSystemCode, operationMode);
@@ -1592,11 +1605,28 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
 
     /**
      * Сформировать отчёт о перерегистрации
-     * @param inn ИНН
-     * @param rnm Регистрационный номер ККТ
-     * @param taxSystemCode Код системы налогообложения
-     * @param operationMode Режим работы
-     * @param reasonCode Код причины перерегистрации
+     * @param inn ИНН 1018
+     * @param rnm Регистрационный номер ККТ 1037
+     * @param taxSystemCode Код системы налогообложения 1062, битовое поле:
+     *   0 Общая
+     *   1 Упрощенная доход
+     *   2 Упрощенная доход минус расход
+     *   3 Единый налог на вмененный доход
+     *   4 Единый сельскохозяйственный налог
+     *   5 Патентная система налогообложения
+     * @param operationMode Режим работы, битовое поле,
+     * определяет какие тэги признаков режимов работы будут переданы в документ перерегистрации:
+     *   0 признак шифрования 1056
+     *   1 признак автономного режима 1002
+     *   2 признак автоматического режима 1001
+     *   3 признак расчетов за услуги 1109
+     *   4 признак АС БСО 1110
+     *   5 признак ККТ для расчетов только в Интернет 1108
+     * @param reasonCode Код причины перерегистрации 1101:
+     *   1 Замена ФН
+     *   2 Замена ОФД
+     *   3 Изменение реквизитов
+     *   4 Изменение настроек ККТ
      */
     public void fsReFiscalization(String inn, String rnm, int taxSystemCode, int operationMode, int reasonCode) throws JposException {
         FSReFiscalization command = new FSReFiscalization(getSysPassword(), inn, rnm, taxSystemCode, operationMode, reasonCode);
