@@ -1933,7 +1933,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         headerHeigth = getModel().getHeaderHeight();
         capFiscalStorage = readCapFiscalStorage();
-        capFooterFlag = capFiscalStorage;
+        capFooterFlag = capModelParameters() && modelParameters.isCapGraphicsFlags();
+        
         if (capFiscalStorage) {
             boolean isCompactHeader = false;
             String[] fieldValue = new String[1];

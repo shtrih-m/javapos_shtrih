@@ -287,7 +287,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         printTemplateTrailer();
     }
 
-    public void printEndingItems() throws Exception {
+    public void printEndingItems() throws Exception 
+    {
+        if (disablePrint) return;
         getPrinter().waitForPrinting();
         for (int i = 0; i < endingItems.size(); i++) {
             Object item = endingItems.get(i);
@@ -311,8 +313,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void endFiscalReceipt(boolean printHeader) throws Exception 
-    {
+    public void endFiscalReceipt(boolean printHeader) throws Exception {
         subtotalPrinted = false;
         if (!isOpened) {
             return;
@@ -334,7 +335,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         if (disablePrint) {
             getDevice().disablePrint();
         }
-        
+
         if (!cancelled && getDevice().isCapFooterFlag()) {
             getDevice().setIsFooter(true);
             try {
@@ -402,28 +403,16 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 logger.error("Receipt messages printing failed", e);
             }
         }
-        try {
-            printEndingItems();
-        } catch (Exception e) {
-            logger.error("Receipt ending items printing failed", e);
+
+        if (cancelled || (!getDevice().isCapFooterFlag())) {
+            try {
+                printEndingItems();
+            } catch (Exception e) {
+                logger.error("Receipt ending items printing failed", e);
+            }
         }
     }
 
-    /*
-    public void printRecMessages() throws Exception {
-        getPrinter().waitForPrinting();
-        getPrinter().setIsFooter(true);
-        try {
-            getPrinter().printItems(printItems);
-            printItems.clear();
-        } finally {
-            getPrinter().setIsFooter(false);
-        }
-    }
-
-    public void printEndingItems() throws Exception {
-
-     */
     public void printTotalDiscount(FSDiscount discount)
             throws Exception {
         if (!getDevice().getCapDiscount()) {

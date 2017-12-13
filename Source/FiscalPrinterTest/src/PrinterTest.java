@@ -78,7 +78,8 @@ class PrinterTest implements FiscalPrinterConst {
             printer.clearImages();
             printer.loadImage("Logo.bmp");
             printer.addLogo(0, SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
-            printer.setHeaderLine(1, "Header line 1", false);
+            // 
+            printer.setHeaderLine(1, getLoadImageCommand("Logo.bmp"), false);
             printer.setHeaderLine(2, "Header line 2", false);
             printer.setHeaderLine(3, "Header line 3", false);
             printer.setHeaderLine(4, "Header line 4", false);
@@ -956,10 +957,62 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void printFiscalReceipt() {
-        printFiscalReceipt101();
+    public void printFiscalReceipt() 
+    {
+        printFiscalReceipt102(true);
+        printFiscalReceipt102(false);
     }
 
+    public void disablePrint() {
+        try {
+            printer.disablePrint();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void printFiscalReceipt102(boolean disablePrint) {
+        try 
+        {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(FPTR_RT_SALES);
+            printer.beginFiscalReceipt(true);
+            if (disablePrint){
+                printer.disablePrint();
+            }
+            printer.printRecItem("Item 1", 107466, 4497, 1, 23897, "");
+            printer.printRecTotal(200000, 200000, "");
+            
+            String text1 = "http://check.egais.ru?id=fb8c9153-9d3d-40b9-a1a7-1cf35d637976&dt=2101171104&cn=020000272834";
+            String text2 = "26544400044402170";
+            String text = text1;
+
+            PrinterBarcode barcode = new PrinterBarcode();
+            barcode.setTextFont(1);
+            barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_NOTPRINTED);
+            barcode.setBarWidth(5);
+            barcode.setHeight(100);
+            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
+            barcode.setLabel("QR code: " + text);
+            barcode.setText(text);
+            barcode.setType(SmFptrConst.SMFPTR_BARCODE_QR_CODE);
+            printer.printBarcode(barcode);
+            
+            printer.printRecMessage("printRecMessage 1", 2);
+            printer.printRecMessage("printRecMessage 2", 2);
+            printer.printRecMessage("printRecMessage 3", 2);
+            printer.printRecMessage("printRecMessage 4", 2);
+            printer.printRecMessage("printRecMessage 5", 2);
+            
+            
+            printer.endFiscalReceipt(false);
+            
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void printCorrectionReceipt() {
         try {
             printer.fsPrintCorrectionReceipt(1, 123);
@@ -1283,37 +1336,6 @@ class PrinterTest implements FiscalPrinterConst {
         System.out.println("List size: " + list.size());
         for (int i = 0; i < list.size(); i++) {
             System.out.println(String.valueOf(i) + ". " + list.get(i));
-        }
-    }
-
-    public void printFiscalReceipt103() {
-        try {
-            printer.resetPrinter();
-            printer.setFiscalReceiptType(4);
-            printer.beginFiscalReceipt(false);
-            printer.printRecItem("БАНАНЫ", 587000, 852, 1, 689000, "");
-            printer.printRecItem("ПАКЕТ-СУМКА ПСД ЛОГО", 69900, 1000, 1, 69900, "");
-            printer.printRecItem("ЧАЙ АХМАД КЛАСС 100Г", 989000, 1000, 1, 989000, "");
-            printer.printRecItem("Т/Б РОМ.ЛУГ БЕЛ.4РУЛ", 439900, 1000, 1, 439900, "");
-            printer.printRecItem("РЯЖЕН.ЗЕЛ.3,2-4%500Г", 428900, 1000, 2, 428900, "");
-            printer.printRecItem("КОРМ Д/С ВХ ТЕЛ 325Г", 549000, 1000, 1, 549000, "");
-            printer.printRecItem("МОЛОКО ЗЕЛ.ТОП.1КГ", 739000, 1000, 2, 739000, "");
-            printer.printRecItem("МАСЛО ЗС ПОДС 0,5Л", 679000, 1000, 2, 679000, "");
-            printer.printRecItem("Б/ГАЗА 0,5Л", 129900, 1000, 1, 129900, "");
-            printer.printRecItem("Б/ГАЗА 0,5Л", 129900, 1000, 1, 129900, "");
-            printer.printRecItem("БУЛОЧ.ПОВЫШ.КАЛОР100", 149900, 1000, 2, 149900, "");
-            printer.printRecItem("СЛИВКИ ПРОСТ.10% 20Г", 59900, 1000, 2, 59900, "");
-            printer.printRecItem("СЛИВКИ ПРОСТ.10% 20Г", 59900, 1000, 2, 59900, "");
-            printer.printRecItem("СЛИВКИ ПРОСТ.10% 20Г", 59900, 1000, 2, 59900, "");
-            printer.printRecItem("СЛИВКИ ПРОСТ.10% 20Г", 59900, 1000, 2, 59900, "");
-            printer.printRecItem("БАНАНЫ СУШЕНЫЕ 100ГР", 549000, 1000, 1, 549000, "");
-            printer.printRecItem("ФУНДУК СУШЕНЫЙ 50 ГР", 799000, 1000, 1, 799000, "");
-            printer.printRecItem("СОЛОМКА ВАНИЛЬ 200Г", 339900, 1000, 2, 339900, "");
-            printer.printRecItem("КАЛИНОВ РОДНИК 9Л", 649000, 1000, 1, 649000, "");
-            printer.printRecTotal(7467900, 7467900, "30");
-            printer.endFiscalReceipt(false);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -2139,25 +2161,48 @@ class PrinterTest implements FiscalPrinterConst {
         try 
         {
             printer.resetPrinter();
+            printer.setFiscalReceiptType(FPTR_RT_SALES);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("АИ-95-К5        N  1", 1001600, 3130, 1, 320000, "");
+            printer.printRecSubtotal(1001600);
+             printer.printRecSubtotalAdjustment(1, "скидка округления 0.16", 1600);
+            printer.printRecTotal(1001600, 1000000, "0");
+            printer.endFiscalReceipt(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printFiscalReceipt101_1() {
+        try 
+        {
+            printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETSALE);
             printer.beginFiscalReceipt(true);
-            
-            printer.printRecItem("Item 1", 107466, 4497, 1, 23897, "");
-            printer.printRecTotal(200000, 200000, "");
-            
-            printer.disableDocEnd();
+            printer.printRecItem("4607001777021 КОФЕ ЯКОБС МОНАРХ ВЕ", 2899000, 1000, 1, 2899000, "шт");
+            printer.printRecItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 1498500, 1500, 1, 999000, "кг");
+            printer.printRecItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 1498500, 1500, 1, 999000, "кг");
+            printer.printRecVoidItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 999000, 1500, 0, 0, 1);
+            printer.printRecSubtotal(4397500);
+            printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 2500);
+            printer.printRecTotal(4395000, 4395000, "1");
+            printer.printRecMessage("");
+            printer.printRecMessage(" **************************************** ");
+            printer.printRecMessage("      Если у Вас есть замечания или       ");
+            printer.printRecMessage("  предложения, звоните 8-800-500-72-04    ");
+            printer.printRecMessage("     ****** СПАСИБО ЗА ПОКУПКУ ******     ");
+            printer.printRecMessage("------------------------------------------");
+            printer.printRecMessage(" КАССИР        002   Барабанова Екатерина ");
+            printer.printRecMessage("*1058 0085/002/002    10.11.17 14:20 AC-00");
+            printer.printRecMessage("------------------------------------------");
             printer.endFiscalReceipt(false);
-            printer.printNormal(FPTR_S_RECEIPT, "Дополнительная строка 1");
-            printer.printNormal(FPTR_S_RECEIPT, "Дополнительная строка 2");
-            printer.printNormal(FPTR_S_RECEIPT, "Дополнительная строка 3");
-            printer.printDocEnd();
-            
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     
-    public void printFiscalReceipt102() {
+    
+    public void printFiscalReceipt103() {
         try 
         {
             printer.resetPrinter();
@@ -3298,7 +3343,7 @@ class PrinterTest implements FiscalPrinterConst {
                 throw new Exception("getDrawerNumber");
             }
             driver.readDrawerState();
-            driver.openCashDrawer(2);
+            driver.openCashDrawer(0);
 
         } catch (Exception e) {
             e.printStackTrace();
