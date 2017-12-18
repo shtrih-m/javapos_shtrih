@@ -13,6 +13,54 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5sp"
+                    android:text="@string/lblPositions" />
+
+                <EditText
+                    android:id="@+id/nbPositionsCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5sp"
+                    android:layout_marginRight="5sp"
+                    android:inputType="number"
+                    android:text="@string/defaultPositionsCount" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5sp"
+                    android:layout_marginRight="5sp"
+                    android:text="@string/lblTextStrings" />
+
+                <EditText
+                    android:id="@+id/nbTextStringsCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:text="@string/defaultTextStringsCount" />
+            </LinearLayout>
+        </LinearLayout>
+
         <Button
             android:id="@+id/btnPrintReceipt"
             android:layout_width="match_parent"
@@ -61,6 +109,43 @@
             android:layout_height="wrap_content"
             android:onClick="printDuplicateReceipt"
             android:text="@string/action_print_duplicate_receipt" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lblNetworkAddress" />
+
+                <EditText
+                    android:id="@+id/tbNetworkAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:text="@string/defaultNetworkAddress" />
+
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lblProtocol" />
+
+                <Spinner
+                    android:id="@+id/cbProtocol"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            </TableRow>
+
+        </TableLayout>
 
         <Button
             android:id="@+id/btnConnectToDeviceDirect"

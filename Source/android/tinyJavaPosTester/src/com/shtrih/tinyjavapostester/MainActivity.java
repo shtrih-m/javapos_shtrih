@@ -8,33 +8,28 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
-import android.util.Log;
-
 
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.pdf417.encoder.Compaction;
 import com.shtrih.barcode.PrinterBarcode;
-import com.shtrih.fiscalprinter.FontNumber;
-import com.shtrih.fiscalprinter.PrinterProtocol;
-import com.shtrih.fiscalprinter.PrinterProtocol_1;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
-import com.shtrih.fiscalprinter.command.DeviceMetrics;
 import com.shtrih.fiscalprinter.command.FSCommunicationStatus;
 import com.shtrih.fiscalprinter.command.FSDocumentInfo;
 import com.shtrih.fiscalprinter.command.FSStatusInfo;
 import com.shtrih.fiscalprinter.command.LongPrinterStatus;
-import com.shtrih.fiscalprinter.command.PrinterCommand;
-import com.shtrih.fiscalprinter.command.ReadDeviceMetrics;
-import com.shtrih.fiscalprinter.command.ReadShortStatus;
-import com.shtrih.fiscalprinter.command.ShortPrinterStatus;
-import com.shtrih.fiscalprinter.port.PrinterPort;
 import com.shtrih.fiscalprinter.port.UsbPrinterPort;
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialProber;
@@ -45,7 +40,7 @@ import com.shtrih.util.SysUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -58,9 +53,33 @@ import jpos.JposException;
 
 public class MainActivity extends AppCompatActivity {
 
+    class EnumViewModel {
+        private final String value;
+        private final String description;
+
+        public EnumViewModel(String value, String description) {
+
+            this.value = value;
+            this.description = description;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return description;
+        }
+    }
+
     private ShtrihFiscalPrinter printer = null;
     private final Random rand = new Random();
     private final String[] items = {"Кружка", "Ложка", "Миска", "Нож"};
+
+    private EditText tbNetworkAddress;
+
+    private String selectedProtocol;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +88,29 @@ public class MainActivity extends AppCompatActivity {
 
         setFilter();
         findSerialPortDevice();
+
+        tbNetworkAddress = (EditText) findViewById(R.id.tbNetworkAddress);
+
+        Spinner cbProtocol = (Spinner) findViewById(R.id.cbProtocol);
+
+        ArrayList<EnumViewModel> protocols = new ArrayList<>();
+        protocols.add(new EnumViewModel("0", "1.0"));
+        protocols.add(new EnumViewModel("1", "2.0"));
+
+        ArrayAdapter<EnumViewModel> protocolsAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, protocols);
+
+        cbProtocol.setAdapter(protocolsAdapter);
+        cbProtocol.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                EnumViewModel vm = (EnumViewModel) parent.getItemAtPosition(position);
+                selectedProtocol = vm.getValue();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         StaticContext.setContext(getApplicationContext());
         printer = new ShtrihFiscalPrinter(new FiscalPrinter());
@@ -186,7 +228,13 @@ public class MainActivity extends AppCompatActivity {
         }
         */
 
-        JposConfig.configure("ShtrihFptr", address, getApplicationContext());
+        HashMap<String, String> props = new HashMap<>();
+        props.put("portName", address);
+        props.put("portType", "3");
+        props.put("protocolType", "1");
+        props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothPort");
+
+        JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
         if (printer.getState() != JposConst.JPOS_S_CLOSED) {
             printer.close();
         }
@@ -303,45 +351,122 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void printText(View v) {
-        try {
-            long startedAt = System.currentTimeMillis();
 
-            printer.resetPrinter();
+        final int lines = 100;
 
-            String text = "«Мой дядя самых честных правил";
-            int lines = 100;
+        new PrintTextTask(lines).execute();
+    }
 
-            for (int i = 0; i < lines; i++) {
-                printer.printText(text);
+    private class PrintTextTask extends AsyncTask<Void, Void, String> {
+
+        private final int lines;
+
+        private long startedAt;
+        private long doneAt;
+
+        public PrintTextTask(int lines) {
+            this.lines = lines;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+                printer.resetPrinter();
+
+                String text = "«Мой дядя самых честных правил";
+
+                for (int i = 0; i < lines; i++) {
+                    printer.printText(text);
+                }
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
             }
+        }
 
-            long doneAt = System.currentTimeMillis();
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
 
-            String message = "Printed in " + (doneAt - startedAt) + " ms";
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-            Log.d(TAG, message);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            if (result == null)
+                showMessage("Успех " + (doneAt - startedAt) + " мс");
+            else
+                showMessage(result);
         }
     }
 
     public void printReceipt(View v) {
-        try {
-            long startedAt = System.currentTimeMillis();
 
-            printSalesReceipt();
-            printRefundReceipt();
 
-            long doneAt = System.currentTimeMillis();
+        final int positions = Integer.parseInt(((EditText) findViewById(R.id.nbPositionsCount)).getText().toString());
+        final int strings = Integer.parseInt(((EditText) findViewById(R.id.nbTextStringsCount)).getText().toString());
 
-            String message = "Printed in " + (doneAt - startedAt) + " ms";
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-            Log.d(TAG, message);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        new PrintReceiptTask(positions, strings).execute();
+    }
+
+    private class PrintReceiptTask extends AsyncTask<Void, Void, String> {
+
+        private final int positions;
+        private final int strings;
+
+        private long startedAt;
+        private long doneAt;
+
+        public PrintReceiptTask(int positions, int strings) {
+            this.positions = positions;
+            this.strings = strings;
         }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+                printSalesReceipt(positions, strings);
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            if (result == null)
+                showMessage("Успех " + (doneAt - startedAt) + " мс");
+            else
+                showMessage(result);
+        }
+    }
+
+    private void showMessage(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        Log.d(TAG, message);
     }
 
     public void readFSCommStatus(View v) {
@@ -357,20 +482,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void printSalesReceipt() throws Exception {
-        int howMuch = rand.nextInt(10);
-        howMuch += 1; // guarantee
+    private void printSalesReceipt(final int positions, final int strings) throws Exception {
 
         long payment = 0;
         printer.resetPrinter();
         printer.setFiscalReceiptType(jpos.FiscalPrinterConst.FPTR_RT_SALES);
         printer.beginFiscalReceipt(false);
-        for (int i = 0; i < howMuch; i++) {
+        for (int i = 0; i < positions; i++) {
             long price = Math.abs(rand.nextLong() % 1000);
             payment += price;
 
             String itemName = items[rand.nextInt(items.length)];
             printer.printRecItem(itemName, price, 0, 0, 0, "");
+
+            for (int j = 0; j < strings; j++) {
+                printer.printRecMessage("Продажа № " + (i + 1) + ", строка " + (j + 1));
+            }
         }
 
         printer.printRecTotal(payment, payment, "1");
@@ -429,18 +556,50 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void printZReport(View v) {
-        Thread t = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    printer.printZReport();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        t.start();
+        new PrintZReportTask().execute();
     }
+
+    private class PrintZReportTask extends AsyncTask<Void, Void, String> {
+
+        private long startedAt;
+        private long doneAt;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+                printer.resetPrinter();
+
+                printer.printZReport();
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            if (result == null)
+                showMessage("Успех " + (doneAt - startedAt) + " мс");
+            else
+                showMessage(result);
+        }
+    }
+
 
     public void openFiscalDay(View v) {
         try {
@@ -467,41 +626,61 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void connectToDeviceDirect(View view) {
-        try {
-            SysUtils.setFilesPath(this.getFilesDir().getAbsolutePath());
-            JposConfig.configure("ShtrihFptr", "192.168.42.150:7778", getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
+
+        new ConnectToWiFiDeviceTask(tbNetworkAddress.getText().toString()).execute();
+    }
+
+    private class ConnectToWiFiDeviceTask extends AsyncTask<Void, Void, String> {
+
+        private String address;
+        private long startedAt;
+        private long doneAt;
+
+        public ConnectToWiFiDeviceTask(String address) {
+
+            this.address = address;
         }
 
-        Thread thrd = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    if (printer.getState() != JposConst.JPOS_S_CLOSED) {
-                        printer.close();
-                    }
-                    printer.open("ShtrihFptr");
-                    printer.claim(3000);
-                    printer.setDeviceEnabled(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-//
-//        try {
-        thrd.start();
-        try {
-            thrd.join();
-            Toast.makeText(this, "Успех", Toast.LENGTH_LONG).show();
-        } catch (InterruptedException e) {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
         }
-//            Thread.sleep(100);
-//        } catch (InterruptedException e) {
-//
-//        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+                SysUtils.setFilesPath(getApplicationContext().getFilesDir().getAbsolutePath());
+                JposConfig.configure("ShtrihFptr", address, getApplicationContext(), "2", selectedProtocol);
+
+                if (printer.getState() != JposConst.JPOS_S_CLOSED) {
+                    printer.close();
+                }
+                printer.open("ShtrihFptr");
+                printer.claim(3000);
+                printer.setDeviceEnabled(true);
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            if (result == null)
+                showMessage("Успех " + (doneAt - startedAt) + " мс");
+            else
+                showMessage(result);
+        }
     }
 
     public void connectToUSBDevice(View view) {
@@ -538,7 +717,14 @@ public class MainActivity extends AppCompatActivity {
 
             int deviceId = usbs.get(0).getDevice().getDeviceId();
             SysUtils.setFilesPath(this.getFilesDir().getAbsolutePath());
-            JposConfig.configure("ShtrihFptr", String.format(Locale.ENGLISH, "%d", deviceId), getApplicationContext());
+
+            HashMap<String, String> props = new HashMap<>();
+            props.put("portName", String.format(Locale.ENGLISH, "%d", deviceId));
+            props.put("protocolType", "0");
+            props.put("portType", "3");
+            props.put("portClass", "com.shtrih.fiscalprinter.port.UsbPrinterPort");
+
+            JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
         } catch (Exception e) {
             e.printStackTrace();
             return;

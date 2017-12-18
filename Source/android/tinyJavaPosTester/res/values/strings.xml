@@ -19,6 +19,11 @@
     <string name="action_connect_to_usb_device">Connect to USB device</string>
     <string name="action_read_fs_comm_status">Read FS comm status</string>
     <string name="action_print_text">Print text</string>
-
-
+    <string name="defaultNetworkAddress">127.0.0.1:12345</string>
+    <string name="lblNetworkAddress">Network address</string>
+    <string name="lblPositions">Positions</string>
+    <string name="lblProtocol">Protocol</string>
+    <string name="lblTextStrings">Text lines</string>
+    <string name="defaultPositionsCount">5</string>
+    <string name="defaultTextStringsCount">5</string>
 </resources>
