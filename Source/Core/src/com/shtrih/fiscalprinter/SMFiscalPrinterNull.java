@@ -820,6 +820,9 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void disablePrint() throws Exception {
     }
 
+    public void enablePrint() throws Exception{
+    }
+    
     public FSReadFiscalization fsReadFiscalization() throws Exception {
         return null;
     }

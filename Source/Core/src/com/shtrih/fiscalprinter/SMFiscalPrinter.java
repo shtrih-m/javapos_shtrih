@@ -438,6 +438,8 @@ public interface SMFiscalPrinter {
 
     public void disablePrint() throws Exception;
 
+    public void enablePrint() throws Exception;
+    
     public FSReadFiscalization fsReadFiscalization() throws Exception;
 
     public FSReadCommStatus fsReadCommStatus() throws Exception;

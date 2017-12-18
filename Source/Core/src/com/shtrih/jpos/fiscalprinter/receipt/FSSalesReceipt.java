@@ -59,7 +59,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private Vector<String> messages = new Vector<String>();
     private final ReceiptTemplate receiptTemplate;
     private static CompositeLogger logger = CompositeLogger.getLogger(FSSalesReceipt.class);
-    private boolean subtotalPrinted = false;
 
     public FSSalesReceipt(ReceiptContext context, int receiptType) throws Exception {
         super(context);
@@ -108,7 +107,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void beginFiscalReceipt(boolean printHeader) throws Exception {
         clearReceipt();
         getDevice().printFSHeader();
-        subtotalPrinted = false;
 
         if (getParams().openReceiptOnBegin) {
             openReceipt(true);
@@ -314,7 +312,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void endFiscalReceipt(boolean printHeader) throws Exception {
-        subtotalPrinted = false;
         if (!isOpened) {
             return;
         }
@@ -410,6 +407,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             } catch (Exception e) {
                 logger.error("Receipt ending items printing failed", e);
             }
+        }
+        if (disablePrint) {
+            getDevice().enablePrint();
         }
     }
 
@@ -560,16 +560,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         return S + line2;
     }
 
-    public void printRecSubtotal(long amount) throws Exception {
+    public void printRecSubtotal(long amount) throws Exception 
+    {
         checkTotal(getSubtotal(), amount);
-        if (!getDevice().isSubtotalInHeader()) {
-            if (!subtotalPrinted) {
-                if (getParams().subtotalTextEnabled) {
-                    addTextItem(formatStrings(getParams().subtotalText,
-                            "=" + StringUtils.amountToString(getSubtotal())));
-                }
-                subtotalPrinted = true;
-            }
+        if (getParams().subtotalTextEnabled) {
+            addTextItem(formatStrings(getParams().subtotalText,
+                    "=" + StringUtils.amountToString(getSubtotal())));
         }
     }
 

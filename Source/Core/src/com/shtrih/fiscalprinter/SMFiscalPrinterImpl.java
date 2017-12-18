@@ -3175,6 +3175,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         // !!! write table and by name
         writeTable(17, 1, 7, "1");
     }
+    public void enablePrint() throws Exception {
+        // !!! write table and by name
+        writeTable(17, 1, 7, "0");
+    }
+    
 
     public int fsReceiptDiscount(FSReceiptDiscount command) throws Exception {
         return executeCommand(command);
