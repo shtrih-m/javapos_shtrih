@@ -5,17 +5,15 @@
  */
 package com.shtrih.fiscalprinter.port;
 
+import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.Localizer;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.StringTokenizer;
-
-import com.shtrih.util.CompositeLogger;
-
-import com.shtrih.util.Localizer;
-import gnu.io.SerialPort;
 
 /**
  * @author V.Kravtsov
@@ -39,6 +37,9 @@ public class SocketPort implements PrinterPort {
         return socket != null;
     }
 
+    private InputStream inputStream;
+    private OutputStream outputStream;
+
     public void open(int timeout) throws Exception {
         if (isConnected()) {
             return;
@@ -59,7 +60,11 @@ public class SocketPort implements PrinterPort {
             int port = Integer.parseInt(tokenizer.nextToken());
             socket.connect(new InetSocketAddress(host, port), timeout);
         }
+
         SharedObjects.getInstance().addref(portName);
+
+        inputStream = socket.getInputStream();
+        outputStream = socket.getOutputStream();
     }
 
     public void close() throws Exception {
@@ -70,6 +75,8 @@ public class SocketPort implements PrinterPort {
         SharedObjects.getInstance().release(portName);
         socket.close();
         socket = null;
+        inputStream = null;
+        outputStream = null;
         Thread.sleep(100);
     }
 
@@ -85,7 +92,7 @@ public class SocketPort implements PrinterPort {
         checkLock();
         open();
 
-        InputStream in = socket.getInputStream();
+        InputStream in = inputStream;
         int result;
         long startTime = System.currentTimeMillis();
         for (;;) {
@@ -110,7 +117,7 @@ public class SocketPort implements PrinterPort {
         checkLock();
         open();
 
-        InputStream in = socket.getInputStream();
+        InputStream in = inputStream;
         byte[] data = new byte[len];
         int offset = 0;
         while (len > 0) {
@@ -128,7 +135,7 @@ public class SocketPort implements PrinterPort {
 
         checkLock();
 
-        OutputStream out = socket.getOutputStream();
+        OutputStream out = outputStream;
         for (int i = 0; i < 2; i++) {
             try {
                 open();
@@ -170,14 +177,6 @@ public class SocketPort implements PrinterPort {
         }
         close();
         this.portName = portName;
-    }
-
-    public InputStream getInputStream() throws Exception {
-        return socket.getInputStream();
-    }
-
-    public OutputStream getOutputStream() throws Exception {
-        return socket.getOutputStream();
     }
 
     public Object getSyncObject() throws Exception {
