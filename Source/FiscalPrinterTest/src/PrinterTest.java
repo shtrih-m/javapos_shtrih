@@ -3532,18 +3532,27 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-            printer.printRecItem("Item 1", 300, 1, 1, 300, "");
-            //printer.printRecSubtotalAdjustment(1, "", 0);
-            
-            printer.printRecSubtotal(1);
-            printer.printRecSubtotal(2);
-            printer.printRecSubtotal(3);
-            printer.printRecSubtotal(4);
-                    
+            printer.printRecRefund("Item 1", 300, 1);
             printer.printRecTotal(300, 300, "description");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    
+    public void printFiscalReceipt145_1() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("Item 1", 300, 1, 1, 300, "");
+            printer.printRecSubtotalAdjustment(1, "", 0);
+            printer.printRecTotal(300, 300, "description");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
 }

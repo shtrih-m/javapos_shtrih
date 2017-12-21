@@ -118,7 +118,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             isOpened = true;
             if (!isSale) {
                 if (receiptType == PrinterConst.SMFP_RECTYPE_SALE) {
-                    receiptType = PrinterConst.SMFP_RECTYPE_BUY;
+                    receiptType = PrinterConst.SMFP_RECTYPE_RETSALE;
                 }
             }
             getPrinter().openReceipt(receiptType);
