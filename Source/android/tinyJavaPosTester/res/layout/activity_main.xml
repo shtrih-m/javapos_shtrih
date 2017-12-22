@@ -26,15 +26,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5sp"
+                    android:layout_marginRight="5dip"
                     android:text="@string/lblPositions" />
 
                 <EditText
                     android:id="@+id/nbPositionsCount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5sp"
-                    android:layout_marginRight="5sp"
+                    android:layout_marginEnd="5dip"
+                    android:layout_marginRight="5dip"
                     android:inputType="number"
                     android:text="@string/defaultPositionsCount" />
             </LinearLayout>
@@ -48,8 +48,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5sp"
-                    android:layout_marginRight="5sp"
+                    android:layout_marginEnd="5dip"
+                    android:layout_marginRight="5dip"
                     android:text="@string/lblTextStrings" />
 
                 <EditText
@@ -112,35 +112,43 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:stretchColumns="1"
+            >
 
-            <TableRow>
+            <TableRow android:layout_width="match_parent">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/lblNetworkAddress" />
+                    android:text="@string/lblNetworkAddress"
+                    android:layout_marginRight="5dip"
+                    android:layout_marginEnd="5dip"/>
 
                 <EditText
                     android:id="@+id/tbNetworkAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:text="@string/defaultNetworkAddress" />
+                    android:text="@string/defaultNetworkAddress"
+                    />
 
             </TableRow>
 
             <TableRow>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/lblProtocol" />
+                    android:text="@string/lblProtocol"
+                    android:layout_marginRight="5dip"
+                    android:layout_marginEnd="5dip"/>
 
                 <Spinner
                     android:id="@+id/cbProtocol"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_column="1"
                     />
 
             </TableRow>
@@ -174,5 +182,12 @@
             android:layout_height="wrap_content"
             android:onClick="printText"
             android:text="@string/action_print_text" />
+
+        <Button
+            android:id="@+id/btnDisconnect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="disconnect"
+            android:text="@string/action_disconnect" />
     </LinearLayout>
 </ScrollView>

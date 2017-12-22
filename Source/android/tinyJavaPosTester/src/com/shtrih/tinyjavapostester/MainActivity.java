@@ -2,16 +2,20 @@ package com.shtrih.tinyjavapostester;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -81,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
 
     private String selectedProtocol;
 
+    private final String PREFERENCES_NAME = "MainActivity";
+    private final String PREFERENCES_IP_KEY = "NetworkAddress";
+    private final String PREFERENCES_PROTOCOL_KEY = "Protocol";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +97,26 @@ public class MainActivity extends AppCompatActivity {
         setFilter();
         findSerialPortDevice();
 
+        final SharedPreferences pref = this.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+
         tbNetworkAddress = (EditText) findViewById(R.id.tbNetworkAddress);
+        tbNetworkAddress.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence c, int start, int before, int count) {
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString(PREFERENCES_IP_KEY, c.toString());
+                editor.apply();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence c, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable c) {
+            }
+        });
 
         Spinner cbProtocol = (Spinner) findViewById(R.id.cbProtocol);
 
@@ -97,20 +124,30 @@ public class MainActivity extends AppCompatActivity {
         protocols.add(new EnumViewModel("0", "1.0"));
         protocols.add(new EnumViewModel("1", "2.0"));
 
+        String savedAddress = pref.getString(PREFERENCES_IP_KEY, "127.0.0.1:12345");
+        tbNetworkAddress.setText(savedAddress);
+
         ArrayAdapter<EnumViewModel> protocolsAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, protocols);
 
         cbProtocol.setAdapter(protocolsAdapter);
         cbProtocol.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 EnumViewModel vm = (EnumViewModel) parent.getItemAtPosition(position);
                 selectedProtocol = vm.getValue();
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putInt(PREFERENCES_PROTOCOL_KEY, position);
+                editor.apply();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+        int savedProtocolIndex = pref.getInt(PREFERENCES_PROTOCOL_KEY, 0);
+        cbProtocol.setSelection(savedProtocolIndex);
 
         StaticContext.setContext(getApplicationContext());
         printer = new ShtrihFiscalPrinter(new FiscalPrinter());
@@ -354,23 +391,28 @@ public class MainActivity extends AppCompatActivity {
 
         final int lines = 100;
 
-        new PrintTextTask(lines).execute();
+        new PrintTextTask(this, lines).execute();
     }
 
     private class PrintTextTask extends AsyncTask<Void, Void, String> {
 
+        private final Activity parent;
         private final int lines;
 
         private long startedAt;
         private long doneAt;
+        private ProgressDialog dialog;
 
-        public PrintTextTask(int lines) {
+        public PrintTextTask(Activity parent, int lines) {
+            this.parent = parent;
             this.lines = lines;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Printing receipt", "Please wait...", true);
         }
 
         @Override
@@ -401,6 +443,64 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage("Успех " + (doneAt - startedAt) + " мс");
+            else
+                showMessage(result);
+        }
+    }
+
+    public void disconnect(View v) {
+        new DisconnectTask(this).execute();
+    }
+
+    private class DisconnectTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+
+        private long startedAt;
+        private long doneAt;
+        private ProgressDialog dialog;
+
+        public DisconnectTask(Activity parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Disconnecting", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+                if (printer.getState() != JposConst.JPOS_S_CLOSED) {
+                    printer.close();
+                }
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
             if (result == null)
                 showMessage("Успех " + (doneAt - startedAt) + " мс");
             else
@@ -414,18 +514,21 @@ public class MainActivity extends AppCompatActivity {
         final int positions = Integer.parseInt(((EditText) findViewById(R.id.nbPositionsCount)).getText().toString());
         final int strings = Integer.parseInt(((EditText) findViewById(R.id.nbTextStringsCount)).getText().toString());
 
-        new PrintReceiptTask(positions, strings).execute();
+        new PrintReceiptTask(this, positions, strings).execute();
     }
 
     private class PrintReceiptTask extends AsyncTask<Void, Void, String> {
 
+        private final Activity parent;
         private final int positions;
         private final int strings;
 
         private long startedAt;
         private long doneAt;
+        private ProgressDialog dialog;
 
-        public PrintReceiptTask(int positions, int strings) {
+        public PrintReceiptTask(Activity parent, int positions, int strings) {
+            this.parent = parent;
             this.positions = positions;
             this.strings = strings;
         }
@@ -433,6 +536,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Printing receipt", "Please wait...", true);
         }
 
         @Override
@@ -456,6 +561,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+
+            dialog.dismiss();
 
             if (result == null)
                 showMessage("Успех " + (doneAt - startedAt) + " мс");
@@ -556,17 +663,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void printZReport(View v) {
-        new PrintZReportTask().execute();
+        new PrintZReportTask(this).execute();
     }
 
     private class PrintZReportTask extends AsyncTask<Void, Void, String> {
 
+        private final Activity parent;
         private long startedAt;
         private long doneAt;
+        private ProgressDialog dialog;
+
+        public PrintZReportTask(Activity parent) {
+            this.parent = parent;
+        }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Printing Z-report", "Please wait...", true);
         }
 
         @Override
@@ -592,6 +707,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+
+            dialog.dismiss();
 
             if (result == null)
                 showMessage("Успех " + (doneAt - startedAt) + " мс");
@@ -627,16 +744,21 @@ public class MainActivity extends AppCompatActivity {
 
     public void connectToDeviceDirect(View view) {
 
-        new ConnectToWiFiDeviceTask(tbNetworkAddress.getText().toString()).execute();
+        new ConnectToWiFiDeviceTask(this, tbNetworkAddress.getText().toString()).execute();
     }
 
     private class ConnectToWiFiDeviceTask extends AsyncTask<Void, Void, String> {
 
-        private String address;
+        private final Activity parent;
+        private final String address;
+
         private long startedAt;
         private long doneAt;
 
-        public ConnectToWiFiDeviceTask(String address) {
+        private ProgressDialog dialog;
+
+        public ConnectToWiFiDeviceTask(Activity parent, String address) {
+            this.parent = parent;
 
             this.address = address;
         }
@@ -644,6 +766,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Connecting to device", "Please wait...", true);
         }
 
         @Override
@@ -675,6 +799,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+
+            dialog.dismiss();
 
             if (result == null)
                 showMessage("Успех " + (doneAt - startedAt) + " мс");
