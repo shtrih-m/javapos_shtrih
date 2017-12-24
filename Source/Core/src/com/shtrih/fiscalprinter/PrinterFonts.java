@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class PrinterFonts {
 
-    private final Map<FontNumber, PrinterFont> list = new HashMap<>();
+    private final Map<FontNumber, PrinterFont> list = new HashMap<FontNumber, PrinterFont>();
 
     private final SMFiscalPrinterImpl printer;
 
