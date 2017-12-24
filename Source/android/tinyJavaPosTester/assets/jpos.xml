@@ -207,8 +207,8 @@
 		<!-- Таймаут ожидания ответа от ОФД в мс. Используется при включенной отпции FSServiceEnabled. -->
 		<prop name="FSConnectTimeout" type="String" value="30000"/>
 		
-        <!-- Log file enabled  -->
-        <prop name="logEnabled" type="String" value="1"/>
+        <!-- Писать лог, на десктопе управляет записью лога в файл, на Андроиде - выводом лога в logcat  -->
+        <prop name="logEnabled" type="String" value="0"/>
 
 		<!-- Hide internal exception details  -->
 		<prop name="stripExceptionDetails" type="String" value="0"/>
