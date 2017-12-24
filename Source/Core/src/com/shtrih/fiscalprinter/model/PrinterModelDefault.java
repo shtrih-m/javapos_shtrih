@@ -8,24 +8,19 @@ package com.shtrih.fiscalprinter.model;
  * @author V.Kravtsov
  */
 
-import java.util.Map;
-import java.util.HashMap;
-
-import com.shtrih.util.CompositeLogger;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.PrinterFont;
 import com.shtrih.fiscalprinter.PrinterFonts;
-import com.shtrih.fiscalprinter.SMFiscalPrinterImpl;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.fiscalprinter.command.PrinterParameter;
 import com.shtrih.fiscalprinter.command.PrinterParameters;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
+import com.shtrih.util.CompositeLogger;
 
 public class PrinterModelDefault implements PrinterModel {
 
     public static CompositeLogger logger = CompositeLogger.getLogger(PrinterModelDefault.class);
 
-    private HashMap fontMap = new HashMap();
     private final int[] defTextLength = {36, 18, 36, 36, 36, 36, 36};
     private final int[] defFontHeight = {24, 24, 24, 24, 24, 24, 24};
 
@@ -78,7 +73,7 @@ public class PrinterModelDefault implements PrinterModel {
     protected int[] fontHeight = new int[0];
     protected int[] supportedBaudRates = new int[0];
     protected int lineSpacing = 5;
-    private PrinterFonts fonts = new PrinterFonts();
+    private PrinterFonts fonts;
     private final PrinterParameters parameters = new PrinterParameters();
     protected boolean capFiscalCut = true;
     protected boolean capCashInAutoCut = false;
@@ -148,15 +143,6 @@ public class PrinterModelDefault implements PrinterModel {
         maxGraphicsHeight = 255;
         capOpenReceipt = false;
         capFiscalCut = true;
-
-        fonts.clear();
-        fonts.add(1, 12, 25, 432);
-        fonts.add(2, 24, 77, 432);
-        fonts.add(3, 12, 29, 432);
-        fonts.add(4, 24, 41, 432);
-        fonts.add(5, 10, 26, 432);
-        fonts.add(6, 12, 41, 432);
-        fonts.add(7, 12, 41, 432);
 
         deviceFontNormal = 1;
         deviceFontDouble = 2;
@@ -279,15 +265,13 @@ public class PrinterModelDefault implements PrinterModel {
         return result;
     }
 
-    public int getTextLength(FontNumber fontNumber) {
-        int result = 36;
+    public int getTextLength(FontNumber fontNumber) throws Exception {
         PrinterFont font = fonts.find(fontNumber);
         if (font != null) {
-            result = font.getWidthInChars();
+            return font.getWidthInChars();
         } else {
-            result = getTextLength2(fontNumber);
+            return getTextLength2(fontNumber);
         }
-        return result;
     }
 
     public int getFontHeight(FontNumber font) throws Exception {
@@ -607,21 +591,8 @@ public class PrinterModelDefault implements PrinterModel {
         return fonts;
     }
 
-    public PrinterFont getFont(FontNumber font) throws Exception {
-        return fonts.itemByNumber(font);
-    }
-
-    public int getFontWidth(FontNumber font) throws Exception {
-        return fonts.itemByNumber(font).getCharWidth();
-    }
-
     public int getHeaderHeight() throws Exception {
         return minHeaderLines * 23;
-    }
-
-    public int getTrailerHeight() throws Exception {
-        return (minTrailerLines)
-                * getFontHeight(new FontNumber(PrinterConst.FONT_NUMBER_NORMAL));
     }
 
     public boolean getCapCashInAutoCut() {

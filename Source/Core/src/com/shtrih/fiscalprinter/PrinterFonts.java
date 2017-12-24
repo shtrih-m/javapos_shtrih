@@ -1,62 +1,31 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.fiscalprinter;
 
-/**
- *
- * @author V.Kravtsov
- */
-import java.util.Vector;
+import com.shtrih.fiscalprinter.command.PrinterException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PrinterFonts {
 
-    private final Vector list = new Vector();
+    private final Map<FontNumber, PrinterFont> list = new HashMap<>();
 
-    /**
-     * Creates a new instance of PrinterFonts
-     */
-    public PrinterFonts() {
+    private final SMFiscalPrinterImpl printer;
+
+    public PrinterFonts(SMFiscalPrinterImpl printer) {
+        this.printer = printer;
     }
 
-    public void clear() {
-        list.clear();
-    }
+    public PrinterFont find(FontNumber number) throws Exception {
+        if (list.containsKey(number))
+            return list.get(number);
 
-    public void add(PrinterFont item) {
-        list.add(item);
-    }
-
-    public PrinterFont add(int number, int charWidth, int charHeight, int paperWidth)
-            throws Exception {
-        PrinterFont font = new PrinterFont(new FontNumber(number), charWidth,
-                charHeight, paperWidth);
-        list.add(font);
-        return font;
-    }
-
-    public int size() {
-        return list.size();
-    }
-
-    public boolean validIndex(int index) {
-        return (index >= 0) && (index < size());
-    }
-
-    public PrinterFont get(int index) {
-        return (PrinterFont) list.get(index);
-    }
-
-    public PrinterFont find(FontNumber number) {
-        for (int i = 0; i < size(); i++) {
-            PrinterFont item = get(i);
-            if (item.getNumber().isEqual(number)) 
-            {
-                return item;
-            }
+        try {
+            PrinterFont font = printer.readFont(number.getValue());
+            list.put(number, font);
+            return font;
+        } catch (PrinterException e) {
+            return null;
         }
-        return null;
     }
 
     public PrinterFont itemByNumber(FontNumber number) throws Exception {

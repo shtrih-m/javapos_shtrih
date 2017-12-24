@@ -32,28 +32,28 @@ public class CompositeLogger {
     }
     
     public synchronized void fatal(String text, Throwable e) {
-        Log.e(className, text + " " + e);
+        //Log.e(className, text + " " + e);
         log4JLogger.error(text, e);
     }
     
     public synchronized void error(String text, Throwable e) {
 
-        Log.e(className, text + " " + e);
+        //Log.e(className, text + " " + e);
         log4JLogger.error(text, e);
     }
     
     public synchronized void error(Throwable e) {
-        Log.e(className, "" + e);
+        //Log.e(className, "" + e);
         log4JLogger.error("Error", e);
     }
     
     public synchronized void error(String text) {
-        Log.e(className, text);
+        //Log.e(className, text);
         log4JLogger.error(text);
     }
     
     public synchronized void debug(String text) {
-        Log.d(className, text);
+        //Log.d(className, text);
         log4JLogger.debug(text);
     }
 }

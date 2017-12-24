@@ -1924,17 +1924,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void initialize() throws Exception {
         logger.debug("initialize()");
 
-        readFonts();
+        isHeaderHeightInitialized = false;
+        getModel().setFonts(new PrinterFonts(this));
 
         ReadPrinterModelParameters command = new ReadPrinterModelParameters();
         if (executeCommand(command) == 0) {
             modelParameters = command.getParameters();
         }
 
-        headerHeigth = getModel().getHeaderHeight();
         capFiscalStorage = readCapFiscalStorage();
         capFooterFlag = capModelParameters() && modelParameters.isCapGraphicsFlags();
-        
+
         if (capFiscalStorage) {
             boolean isCompactHeader = false;
             String[] fieldValue = new String[1];
@@ -1963,10 +1963,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 fsAddress = fieldValue[0];
             }
 
-            rc = readTable(10, 1, 1, fieldValue);
-            if (succeeded(rc)) {
-                headerHeigth = Integer.valueOf(fieldValue[0]);
-            }
+//            rc = readTable(10, 1, 1, fieldValue);
+//            if (succeeded(rc)) {
+//                headerHeigth = Integer.valueOf(fieldValue[0]);
+//            }
         }
         capDiscount = true;
         if (isShtrihMobile()) {
@@ -1982,7 +1982,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     private boolean readCapDisableDiscountText() throws Exception {
-        PrinterDate date1 = new PrinterDate(10, 04, 17);
+        PrinterDate date1 = new PrinterDate(10, 4, 17);
         PrinterDate date2 = readLongStatus().getFirmwareDate();
         return date2.isEqualOrOlder(date1);
     }
@@ -2331,7 +2331,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
 
         if (getCapPrintGraphicsLine() && getParams().graphicsLineEnabled) {
-            int width = getModel().getFonts().get(0).getPaperWidth();
+            int width = getModel().getFonts().itemByNumber(FontNumber.getNormalFont()).getPaperWidth();
             bc.setHScale(1);
             bc.setVScale(1);
             bc.centerBarcode(width);
@@ -2708,28 +2708,16 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return (String[]) (lines.toArray(new String[0]));
     }
 
-    public void readFonts() throws Exception {
-        PrinterFonts fonts = new PrinterFonts();
-        int fontNumber = 1;
-        int fontCount = 15;
-        while (fontNumber <= fontCount) {
-            ReadFontMetrics command = new ReadFontMetrics();
-            command.setPassword(sysPassword);
-            command.setFont(fontNumber);
-            if (executeCommand(command) != 0) {
-                break;
-            }
-            fonts.add(
-                    fontNumber,
-                    command.getCharWidth(),
-                    command.getCharHeight(),
-                    command.getPaperWidth());
-            fontNumber++;
-            fontCount = command.getFontCount();
-        }
-        if (fonts.size() > 0) {
-            getModel().setFonts(fonts);
-        }
+    public PrinterFont readFont(int fontNumber) throws Exception {
+        ReadFontMetrics command = new ReadFontMetrics();
+        command.setPassword(sysPassword);
+        command.setFont(fontNumber);
+        check(executeCommand(command));
+        return new PrinterFont(
+                new FontNumber(fontNumber),
+                command.getCharWidth(),
+                command.getCharHeight(),
+                command.getPaperWidth());
     }
 
     public void updateModels() {
@@ -2949,16 +2937,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public void printBlankSpace(int height) throws Exception {
-        FontNumber font = FontNumber.getNormalFont();
-        int lineHeight = getLineHeight(font);
-        int lineCount = (height + lineHeight - 1) / lineHeight;
-        for (int i = 0; i < lineCount; i++) {
-            printLine(SMFP_STATION_REC, " ", font);
-        }
-        waitForPrinting();
-    }
-
     public FSReadStatus fsReadStatus() throws Exception {
         FSReadStatus command = new FSReadStatus();
         command.setSysPassword(sysPassword);
@@ -3175,11 +3153,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         // !!! write table and by name
         writeTable(17, 1, 7, "1");
     }
+
     public void enablePrint() throws Exception {
         // !!! write table and by name
         writeTable(17, 1, 7, "0");
     }
-    
+
 
     public int fsReceiptDiscount(FSReceiptDiscount command) throws Exception {
         return executeCommand(command);
@@ -3557,7 +3536,23 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         waitForPrinting();
     }
 
+    private boolean isHeaderHeightInitialized = false;
+
     public int getHeaderHeight() throws Exception {
+        if(isHeaderHeightInitialized)
+            return headerHeigth;
+
+        headerHeigth = getModel().getHeaderHeight();
+
+        if (capFiscalStorage) {
+            String[] fieldValue = new String[1];
+            int rc = readTable(10, 1, 1, fieldValue);
+            if (succeeded(rc)) {
+                headerHeigth = Integer.valueOf(fieldValue[0]);
+            }
+        }
+
+        isHeaderHeightInitialized = true;
         return headerHeigth;
     }
 

@@ -223,8 +223,6 @@ public interface PrinterModel
     
     int getHeaderHeight() throws Exception;
 
-    int getTrailerHeight() throws Exception;
-    
     boolean getCapCashInAutoCut();
 
     boolean getCapCashOutAutoCut();

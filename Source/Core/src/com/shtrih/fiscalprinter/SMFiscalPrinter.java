@@ -398,8 +398,6 @@ public interface SMFiscalPrinter {
 
     public void loadImage(PrinterImage image, boolean addImage) throws Exception;
 
-    public void printBlankSpace(int height) throws Exception;
-
     public void waitForFiscalMemory() throws Exception;
 
     public void waitForElectronicJournal() throws Exception;

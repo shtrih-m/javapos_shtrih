@@ -213,7 +213,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private boolean connected = false;
     private boolean isLicenseValid = false;
     private EJStatus statusEJ = null;
-    private EJActivation aEJActivation = new EJActivation();
     private final MonitoringServerX5 monitoringServer = new MonitoringServerX5(this);
     private int receiptType = 0;
     private boolean isRecPresent = true;
@@ -863,9 +862,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 // Init after write tables
                 getPrinter().initialize();
 
-                readTables();
-                readPrinterStatus();
-                readEJActivation();
+                isTablesRead = false;
+                //readTables();
+                //readPrinterStatus();
+                //readEJActivation();
 
                 // if polling enabled - create device thread
                 if (params.pollEnabled) {
@@ -996,17 +996,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             if (readEJStatus.getResultCode() == 0) {
                 statusEJ = readEJStatus.getStatus();
             }
-        }
-    }
-
-    private void readEJActivation() throws Exception {
-        LongPrinterStatus longStatus = readLongStatus();
-        if ((longStatus.getRegistrationNumber() > 0)
-                && (longStatus.getPrinterFlags().isEJPresent())) {
-            String[] lines = printer.readEJActivationText(6);
-            aEJActivation = EJReportParser.parseEJActivation(lines);
-        } else {
-            aEJActivation = new EJActivation();
         }
     }
 
@@ -2081,8 +2070,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             printer.connect();
             checkEcrMode();
 
-            printer.readDeviceMetrics();
-            getPrinter().initialize();
+            //getPrinter().initialize();
         }
     }
 
@@ -4529,6 +4517,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
+    private boolean isTablesRead = false;
+
     private FiscalReceipt createSalesReceipt(int receiptType) throws Exception {
         FiscalReceipt result;
         if (printer.getCapFiscalStorage()) {
@@ -4536,8 +4526,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         } else if (params.salesReceiptType == SMFPTR_RECEIPT_NORMAL) {
             result = new SalesReceipt(createReceiptContext(), receiptType);
         } else {
-            result = new GlobusSalesReceipt(createReceiptContext(),
-                    PrinterConst.SMFP_RECTYPE_SALE);
+            if(!isTablesRead) {
+                readTables();
+                isTablesRead = true;
+            }
+            result = new GlobusSalesReceipt(createReceiptContext(), PrinterConst.SMFP_RECTYPE_SALE);
         }
         return result;
     }
@@ -4586,8 +4579,15 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return printer.getCommandTimeout(code);
     }
 
-    public EJActivation getEJActivation() {
-        return aEJActivation;
+    public EJActivation getEJActivation() throws Exception {
+        LongPrinterStatus longStatus = readLongStatus();
+        if ((longStatus.getRegistrationNumber() > 0)
+                && (longStatus.getPrinterFlags().isEJPresent())) {
+            String[] lines = printer.readEJActivationText(6);
+           return EJReportParser.parseEJActivation(lines);
+        } else {
+            return new EJActivation();
+        }
     }
 
     public int loadLogo(String fileName) throws Exception {
