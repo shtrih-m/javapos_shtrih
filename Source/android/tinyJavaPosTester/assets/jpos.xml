@@ -170,7 +170,7 @@
 		<prop name="receiptReportEnabled" type="String" value="1"/>
 		<!-- Receipt report file name -->
 		<prop name="receiptReportFileName" type="String" value="ZCheckReport.xml"/>
-		<!-- openReceiptType, 0 - open receipt on item print, 1 - open receipt in beginFiscalReceipt -->
+		<!-- openReceiptType, 0 - open receipt on item print, 1 - open receipt on beginFiscalReceipt -->
 		<prop name="openReceiptType" type="String" value="1"/>
 		<prop name="licFilePath" type="String" value="mptks"/>
 		<!-- headerMode, the way how to print header and trailer lines -->
@@ -180,7 +180,7 @@
 		<!-- 3 - header will be printed when printer configured to do so -->
 		<prop name="headerMode" type="String" value="3"/>
 		<!-- Text report enabled -->
-		<prop name="textReportEnabled" type="String" value="1"/>
+		<prop name="textReportEnabled" type="String" value="0"/>
 		<!-- Text report file name -->
 		<prop name="textReportFileName" type="String" value="archive.txt"/>
 		<!-- Text report empty lines enabled -->
@@ -194,7 +194,7 @@
 		     1 - в месте отправки, например, если тэг был отправлен до печати любой позиции
 		         он будет напечатан сразу после заголовка чека.
 		-->
-		<prop name="FSTagsPlacement" type="String" value="0"/>
+		<prop name="FSTagsPlacement" type="String" value="1"/>
 		
 		<prop name="compatibilityLevel" type="String" value="0"/>
 

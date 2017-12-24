@@ -57,7 +57,7 @@ import jpos.JposException;
 
 public class MainActivity extends AppCompatActivity {
 
-    class EnumViewModel {
+    private class EnumViewModel {
         private final String value;
         private final String description;
 
@@ -82,11 +82,15 @@ public class MainActivity extends AppCompatActivity {
     private final String[] items = {"Кружка", "Ложка", "Миска", "Нож"};
 
     private EditText tbNetworkAddress;
+    private EditText nbTextStringCount;
+    private EditText nbPositionsCount;
 
     private String selectedProtocol;
 
     private final String PREFERENCES_NAME = "MainActivity";
     private final String PREFERENCES_IP_KEY = "NetworkAddress";
+    private final String PREFERENCES_CHECK_POSITIONS_COUNT_KEY = "CheckPositionsCount";
+    private final String PREFERENCES_CHECK_STRINGS_COUNT_KEY = "CheckStringsCount";
     private final String PREFERENCES_PROTOCOL_KEY = "Protocol";
 
     @Override
@@ -100,32 +104,19 @@ public class MainActivity extends AppCompatActivity {
         final SharedPreferences pref = this.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
 
         tbNetworkAddress = (EditText) findViewById(R.id.tbNetworkAddress);
-        tbNetworkAddress.addTextChangedListener(new TextWatcher() {
+        restoreAndSaveChangesTo(tbNetworkAddress, pref, PREFERENCES_IP_KEY, "127.0.0.1:12345");
 
-            @Override
-            public void onTextChanged(CharSequence c, int start, int before, int count) {
-                SharedPreferences.Editor editor = pref.edit();
-                editor.putString(PREFERENCES_IP_KEY, c.toString());
-                editor.apply();
-            }
+        nbPositionsCount = (EditText) findViewById(R.id.nbPositionsCount);
+        restoreAndSaveChangesTo(nbPositionsCount, pref, PREFERENCES_CHECK_POSITIONS_COUNT_KEY, "5");
 
-            @Override
-            public void beforeTextChanged(CharSequence c, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable c) {
-            }
-        });
+        nbTextStringCount = (EditText) findViewById(R.id.nbTextStringsCount);
+        restoreAndSaveChangesTo(nbTextStringCount, pref, PREFERENCES_CHECK_STRINGS_COUNT_KEY, "5");
 
         Spinner cbProtocol = (Spinner) findViewById(R.id.cbProtocol);
 
         ArrayList<EnumViewModel> protocols = new ArrayList<>();
         protocols.add(new EnumViewModel("0", "1.0"));
         protocols.add(new EnumViewModel("1", "2.0"));
-
-        String savedAddress = pref.getString(PREFERENCES_IP_KEY, "127.0.0.1:12345");
-        tbNetworkAddress.setText(savedAddress);
 
         ArrayAdapter<EnumViewModel> protocolsAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, protocols);
 
@@ -152,6 +143,29 @@ public class MainActivity extends AppCompatActivity {
         StaticContext.setContext(getApplicationContext());
         printer = new ShtrihFiscalPrinter(new FiscalPrinter());
 
+    }
+
+    private void restoreAndSaveChangesTo(final EditText edit, final SharedPreferences pref, final String key, final String defaultValue) {
+        edit.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence c, int start, int before, int count) {
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString(key, c.toString());
+                editor.apply();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence c, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable c) {
+            }
+        });
+
+        String savedAddress = pref.getString(key, defaultValue);
+        edit.setText(savedAddress);
     }
 
     public static final String ACTION_USB_DISCONNECTED = "com.felhr.usbservice.USB_DISCONNECTED";
@@ -511,8 +525,8 @@ public class MainActivity extends AppCompatActivity {
     public void printReceipt(View v) {
 
 
-        final int positions = Integer.parseInt(((EditText) findViewById(R.id.nbPositionsCount)).getText().toString());
-        final int strings = Integer.parseInt(((EditText) findViewById(R.id.nbTextStringsCount)).getText().toString());
+        final int positions = Integer.parseInt(nbPositionsCount.getText().toString());
+        final int strings = Integer.parseInt(nbTextStringCount.getText().toString());
 
         new PrintReceiptTask(this, positions, strings).execute();
     }
