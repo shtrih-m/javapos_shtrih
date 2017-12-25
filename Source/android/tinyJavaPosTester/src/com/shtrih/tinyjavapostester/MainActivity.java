@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.pdf417.encoder.Compaction;
+import com.google.zxing.pdf417.encoder.Dimensions;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
 import com.shtrih.fiscalprinter.command.FSCommunicationStatus;
@@ -247,26 +248,94 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == Activity.RESULT_OK) {
 
                     String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-                    long startedAt = System.currentTimeMillis();
-                    try {
-                        connectToDevice(address);
-                        long doneAt = System.currentTimeMillis();
-                        String message = "Blutooth connected in " + (doneAt - startedAt) + " ms";
-                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-                        Log.d(TAG, message);
-                    } catch (Exception e) {
-                        long doneAt = System.currentTimeMillis();
-                        e.printStackTrace();
-                        String message = e.getMessage() + ". In " + (doneAt - startedAt) + " ms";
-                        Log.d(TAG, message);
-                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-                    }
+//                    long startedAt = System.currentTimeMillis();
+//                    try {
+//                        connectToDevice(address);
+//                        long doneAt = System.currentTimeMillis();
+//                        String message = "Blutooth connected in " + (doneAt - startedAt) + " ms";
+//                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+//                        Log.d(TAG, message);
+//                    } catch (Exception e) {
+//                        long doneAt = System.currentTimeMillis();
+//                        e.printStackTrace();
+//                        String message = e.getMessage() + ". In " + (doneAt - startedAt) + " ms";
+//                        Log.d(TAG, message);
+//                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+//                    }
+
+                    new ConnectToBluetoothDeviceTask(this, address).execute();
                 }
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
         }
 
+    }
+
+    private class ConnectToBluetoothDeviceTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+        private final String address;
+
+        private long startedAt;
+        private long doneAt;
+
+        private ProgressDialog dialog;
+
+        public ConnectToBluetoothDeviceTask(Activity parent, String address) {
+            this.parent = parent;
+
+            this.address = address;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Connecting to device", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+                HashMap<String, String> props = new HashMap<>();
+                props.put("portName", address);
+                props.put("portType", "3");
+                props.put("protocolType", "1");
+                props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothPort");
+
+                JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
+                if (printer.getState() != JposConst.JPOS_S_CLOSED) {
+                    printer.close();
+                }
+                printer.open("ShtrihFptr");
+                printer.claim(3000);
+                printer.setDeviceEnabled(true);
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage("Успех " + (doneAt - startedAt) + " мс");
+            else
+                showMessage(result);
+        }
     }
 
     public void connectToDevice(final String address) throws Exception {
@@ -320,32 +389,134 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void printEAN13Barcode(View v) {
-        try {
-            PrinterBarcode barcode = new PrinterBarcode();
-            barcode.setText("460704243915");
-            barcode.setLabel("EAN13 test");
-            barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);
-            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
-            barcode.setHeight(100);
-            barcode.setBarWidth(2);
-            printer.printBarcode(barcode);
-        } catch (Exception e) {
-            e.printStackTrace();
+        new PrintEAN13BarcodeTask(this).execute();
+    }
+
+    private class PrintEAN13BarcodeTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+        private long startedAt;
+        private long doneAt;
+        private ProgressDialog dialog;
+
+        public PrintEAN13BarcodeTask(Activity parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Printing EAN13 barcode", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+
+                PrinterBarcode barcode = new PrinterBarcode();
+                barcode.setText("460704243915");
+                barcode.setLabel("EAN13 test");
+                barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);
+                barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
+                barcode.setHeight(100);
+                barcode.setBarWidth(2);
+                printer.printBarcode(barcode);
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage("Успех " + (doneAt - startedAt) + " мс");
+            else
+                showMessage(result);
         }
     }
 
     public void printPDF417Barcode(View v) {
-        try {
-            PrinterBarcode barcode = new PrinterBarcode();
-            barcode.setText("SHTRIH-M, Moscow, 2015");
-            barcode.setLabel("PDF417 test");
-            barcode.setType(SmFptrConst.SMFPTR_BARCODE_PDF417);
-            barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
-            barcode.setHeight(100);
-            barcode.setBarWidth(2);
-            printer.printBarcode(barcode);
-        } catch (Exception e) {
-            e.printStackTrace();
+        new PrintPDF417BarcodeTask(this).execute();
+    }
+
+    private class PrintPDF417BarcodeTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+        private long startedAt;
+        private long doneAt;
+        private ProgressDialog dialog;
+
+        public PrintPDF417BarcodeTask(Activity parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Printing PDF417 barcode", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... p) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+
+                PrinterBarcode barcode = new PrinterBarcode();
+                barcode.setText("\"4C63A673C86B0976C0B24495848F6EF157792203A0D275\\n\"\n"
+                        + "                            + \"1F525456644096478D256A910EFEABB67\"");
+
+                barcode.setType(SmFptrConst.SMFPTR_BARCODE_PDF417);
+                barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
+
+                barcode.setBarWidth(2);
+                barcode.setVScale(5);
+
+                Map<EncodeHintType, Object> params = new HashMap<EncodeHintType, Object>();
+// Измерения, тут мы задаем количество колонок и столбцов
+                params.put(EncodeHintType.PDF417_DIMENSIONS, new Dimensions(3, 3, 2, 60));
+// Можно задать уровень коррекции ошибок, по умолчанию он 0
+                params.put(EncodeHintType.ERROR_CORRECTION, 1);
+                barcode.addParameter(params);
+
+                printer.printBarcode(barcode);
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage("Успех " + (doneAt - startedAt) + " мс");
+            else
+                showMessage(result);
         }
     }
 
@@ -591,15 +762,60 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void readFSCommStatus(View v) {
-        try {
-            FSCommunicationStatus status = printer.fsReadCommStatus();
+        new ReadFSCommStatusTask(this).execute();
+    }
 
-            String message = "Unsent documents " + status.getUnsentDocumentsCount();
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-            Log.d(TAG, message);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+    private class ReadFSCommStatusTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+
+        private int documentsCount;
+
+        private long startedAt;
+        private long doneAt;
+        private ProgressDialog dialog;
+
+        public ReadFSCommStatusTask(Activity parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Reading FS comm status", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+
+                FSCommunicationStatus status = printer.fsReadCommStatus();
+                documentsCount = status.getUnsentDocumentsCount();
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage("Unsent documents " + documentsCount + " in " + (doneAt - startedAt) + " ms");
+            else
+                showMessage(result);
         }
     }
 
@@ -620,6 +836,9 @@ public class MainActivity extends AppCompatActivity {
                 printer.printRecMessage("Продажа № " + (i + 1) + ", строка " + (j + 1));
             }
         }
+
+        String barcode = "025.0024.221217.0012";
+        printer.printBarcode(barcode, barcode, SmFptrConst.SMFPTR_BARCODE_CODE39, 100, SmFptrConst.SMFPTR_PRINTTYPE_DRIVER, 1, SmFptrConst.SMFPTR_TEXTPOS_BELOW, 1, 1);
 
         printer.printRecTotal(payment, payment, "1");
 
@@ -733,26 +952,163 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void openFiscalDay(View v) {
-        try {
-            printer.openFiscalDay();
-        } catch (Exception e) {
-            e.printStackTrace();
+        new OpenFiscalDayTask(this).execute();
+    }
+
+    private class OpenFiscalDayTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+        private long startedAt;
+        private long doneAt;
+        private ProgressDialog dialog;
+
+        public OpenFiscalDayTask(Activity parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Opening fiscal day", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+                printer.resetPrinter();
+
+                printer.openFiscalDay();
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage("Успех " + (doneAt - startedAt) + " мс");
+            else
+                showMessage(result);
         }
     }
 
     public void printJournalCurrentDay(View v) {
-        try {
-            printer.printJournalCurrentDay();
-        } catch (Exception e) {
-            e.printStackTrace();
+        new PrintJournalCurrentDayTask(this).execute();
+    }
+
+    private class PrintJournalCurrentDayTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+        private long startedAt;
+        private long doneAt;
+        private ProgressDialog dialog;
+
+        public PrintJournalCurrentDayTask(Activity parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Printing journal current day", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+                printer.printJournalCurrentDay();
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage("Успех " + (doneAt - startedAt) + " мс");
+            else
+                showMessage(result);
         }
     }
 
     public void printDuplicateReceipt(View v) {
-        try {
-            printer.printDuplicateReceipt();
-        } catch (Exception e) {
-            e.printStackTrace();
+        new PrintDuplicateReceiptTask(this).execute();
+    }
+
+    private class PrintDuplicateReceiptTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+        private long startedAt;
+        private long doneAt;
+        private ProgressDialog dialog;
+
+        public PrintDuplicateReceiptTask(Activity parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Printing duplicate receipt", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+                printer.printDuplicateReceipt();
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage("Успех " + (doneAt - startedAt) + " мс");
+            else
+                showMessage(result);
         }
     }
 

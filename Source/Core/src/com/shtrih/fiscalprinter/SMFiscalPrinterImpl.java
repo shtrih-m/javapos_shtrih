@@ -2341,8 +2341,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             throw new Exception("Barcode type is not supported");
         }
 
-        if (getCapPrintGraphicsLine() && getParams().graphicsLineEnabled) {
-            int width = getModel().getFonts().itemByNumber(FontNumber.getNormalFont()).getPaperWidth();
+        if (getParams().graphicsLineEnabled) {
+            int width = getMaxGraphicsLineWidth();
             bc.setHScale(1);
             bc.setVScale(1);
             bc.centerBarcode(width);
