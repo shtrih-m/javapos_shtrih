@@ -76,7 +76,7 @@ public class TLVReaderTests {
     @Test
     public void Should_correctly_print_vln_tags() throws Exception {
         TLVWriter stlvDataWriter = new TLVWriter();
-        stlvDataWriter.add(1184, 1234567,8);
+        stlvDataWriter.add(1184, 1234567, 8);
         byte[] data = stlvDataWriter.getBytes();
 
         TLVParser reader = new TLVParser();
@@ -113,5 +113,159 @@ public class TLVReaderTests {
         List<String> items = reader.getPrintText();
         assertEquals(1, items.size());
         assertEquals("ТЕЛ. ПОКУПАТЕЛЯ: +79006008070", items.get(0));
+    }
+
+    @Test
+    public void Should_correctly_print_tag_1075() throws Exception {
+        TLVWriter stlvDataWriter = new TLVWriter();
+        stlvDataWriter.add(1075, "+79006008070");
+        byte[] data = stlvDataWriter.getBytes();
+
+        TLVParser reader = new TLVParser();
+        reader.read(data);
+
+        List<String> items = reader.getPrintText();
+        assertEquals(1, items.size());
+        assertEquals("ТЛФ.ОП.ПЕРЕВОДА: +79006008070", items.get(0));
+    }
+
+    @Test
+    public void Should_correctly_print_tag_1044() throws Exception {
+        TLVWriter stlvDataWriter = new TLVWriter();
+        stlvDataWriter.add(1044, "+79006008070");
+        byte[] data = stlvDataWriter.getBytes();
+
+        TLVParser reader = new TLVParser();
+        reader.read(data);
+
+        List<String> items = reader.getPrintText();
+        assertEquals(1, items.size());
+        assertEquals("ОП.БАНК.АГЕНТА: +79006008070", items.get(0));
+    }
+
+    @Test
+    public void Should_correctly_print_tag_1073() throws Exception {
+        TLVWriter stlvDataWriter = new TLVWriter();
+        stlvDataWriter.add(1073, "+79006008070");
+        byte[] data = stlvDataWriter.getBytes();
+
+        TLVParser reader = new TLVParser();
+        reader.read(data);
+
+        List<String> items = reader.getPrintText();
+        assertEquals(1, items.size());
+        assertEquals("ТЛФ.ПЛ.АГЕНТА: +79006008070", items.get(0));
+    }
+
+    @Test
+    public void Should_correctly_print_tag_1074() throws Exception {
+        TLVWriter stlvDataWriter = new TLVWriter();
+        stlvDataWriter.add(1074, "+79006008070");
+        byte[] data = stlvDataWriter.getBytes();
+
+        TLVParser reader = new TLVParser();
+        reader.read(data);
+
+        List<String> items = reader.getPrintText();
+        assertEquals(1, items.size());
+        assertEquals("ТЛФ.ОП.ПР.ПЛАТЕЖА: +79006008070", items.get(0));
+    }
+
+    @Test
+    public void Should_correctly_print_tag_1026() throws Exception {
+        TLVWriter stlvDataWriter = new TLVWriter();
+        stlvDataWriter.add(1026, "+79006008070");
+        byte[] data = stlvDataWriter.getBytes();
+
+        TLVParser reader = new TLVParser();
+        reader.read(data);
+
+        List<String> items = reader.getPrintText();
+        assertEquals(1, items.size());
+        assertEquals("ОПЕРАТОР: +79006008070", items.get(0));
+    }
+
+    @Test
+    public void Should_correctly_print_tag_1005() throws Exception {
+        TLVWriter stlvDataWriter = new TLVWriter();
+        stlvDataWriter.add(1005, "+79006008070");
+        byte[] data = stlvDataWriter.getBytes();
+
+        TLVParser reader = new TLVParser();
+        reader.read(data);
+
+        List<String> items = reader.getPrintText();
+        assertEquals(1, items.size());
+        assertEquals("АДР. ОПЕРАТОРА: +79006008070", items.get(0));
+    }
+
+    @Test
+    public void Should_correctly_print_tag_1016() throws Exception {
+        TLVWriter stlvDataWriter = new TLVWriter();
+        stlvDataWriter.add(1016, "+79006008070");
+        byte[] data = stlvDataWriter.getBytes();
+
+        TLVParser reader = new TLVParser();
+        reader.read(data);
+
+        List<String> items = reader.getPrintText();
+        assertEquals(1, items.size());
+        assertEquals("ИНН ОП. ПЕРЕВОДА: +79006008070", items.get(0));
+    }
+
+    @Test
+    public void Should_correctly_print_tag_1171() throws Exception {
+        TLVWriter stlvDataWriter = new TLVWriter();
+        stlvDataWriter.add(1171, "+79006008070");
+        byte[] data = stlvDataWriter.getBytes();
+
+        TLVParser reader = new TLVParser();
+        reader.read(data);
+
+        List<String> items = reader.getPrintText();
+        assertEquals(1, items.size());
+        assertEquals("ТЛФ. ПОСТ.: +79006008070", items.get(0));
+    }
+
+    @Test
+    public void Should_correctly_print_agent_type() throws Exception {
+        TLVWriter stlvDataWriter = new TLVWriter();
+        stlvDataWriter.add(1057, 127, 1);
+        byte[] data = stlvDataWriter.getBytes();
+
+        TLVParser reader = new TLVParser();
+        reader.read(data);
+
+        List<String> items = reader.getPrintText();
+        assertEquals(1, items.size());
+        assertEquals("БАНК. ПЛ. АГЕНТ БАНК. ПЛ. СУБАГЕНТ ПЛ. АГЕНТ ПЛ. СУБАГЕНТ ПОВЕРЕННЫЙ КОМИССИОНЕР АГЕНТ", items.get(0));
+    }
+
+    @Test
+    public void Should_correctly_print_agent_type2() throws Exception {
+        TLVWriter stlvDataWriter = new TLVWriter();
+        stlvDataWriter.add(1057, 21, 1);
+        byte[] data = stlvDataWriter.getBytes();
+
+        TLVParser reader = new TLVParser();
+        reader.read(data);
+
+        List<String> items = reader.getPrintText();
+        assertEquals(1, items.size());
+        assertEquals("БАНК. ПЛ. АГЕНТ ПЛ. АГЕНТ ПОВЕРЕННЫЙ", items.get(0));
+    }
+
+    @Test
+    public void Should_correctly_print_agent_type3() throws Exception {
+        TLVWriter stlvDataWriter = new TLVWriter();
+        stlvDataWriter.add(1057, 32, 1);
+        byte[] data = stlvDataWriter.getBytes();
+
+        TLVParser reader = new TLVParser();
+        reader.read(data);
+
+        List<String> items = reader.getPrintText();
+        assertEquals(1, items.size());
+        assertEquals("КОМИССИОНЕР", items.get(0));
     }
 }

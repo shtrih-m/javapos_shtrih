@@ -5,16 +5,11 @@
  */
 package com.shtrih.fiscalprinter;
 
-import com.shtrih.ej.EJDate;
-import com.shtrih.ej.EJTime;
-import com.shtrih.fiscalprinter.command.PrinterDate;
-import com.shtrih.fiscalprinter.command.PrinterTime;
 import com.shtrih.util.encoding.IBM866;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
 /**
- *
  * @author V.Kravtsov
  */
 public class TLVWriter {

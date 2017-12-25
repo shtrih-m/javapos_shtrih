@@ -40,6 +40,10 @@ public class TLVItem {
         return level;
     }
 
+    public long toInt(){
+        return toInt(data);
+    }
+
     public long toInt(byte[] d) {
         long result = 0;
         for (int i = d.length - 1; i >= 0; i--) {

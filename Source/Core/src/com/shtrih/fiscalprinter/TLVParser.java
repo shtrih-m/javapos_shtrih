@@ -6,16 +6,16 @@
 package com.shtrih.fiscalprinter;
 
 /**
- *
  * @author V.Kravtsov
  */
-import java.util.Date;
-import java.util.Vector;
+
+import java.util.*;
 import java.io.ByteArrayInputStream;
 
 import com.shtrih.util.Hex;
 import com.shtrih.util.BitUtils;
 import com.shtrih.fiscalprinter.command.CommandInputStream;
+import com.sun.deploy.util.OrderedHashSet;
 
 public class TLVParser {
 
@@ -36,22 +36,22 @@ public class TLVParser {
             TLVItem item = items.get(i);
 
             // 1084	дополнительный реквизит пользователя
-            if(item.getTag().getId() == 1084){
+            if (item.getTag().getId() == 1084) {
                 continue;
             }
 
             // 1085	наименование дополнительного реквизита пользователя
-            if(item.getTag().getId() == 1085){
+            if (item.getTag().getId() == 1085) {
                 continue;
             }
 
             // 1086	значение дополнительного реквизита пользователя
-            if(item.getTag().getId() == 1086){
+            if (item.getTag().getId() == 1086) {
                 continue;
             }
 
             // 1203	ИНН кассира
-            if(item.getTag().getId() == 1203){
+            if (item.getTag().getId() == 1203) {
                 continue;
             }
 
@@ -60,11 +60,35 @@ public class TLVParser {
 
             // При выводе e-mail в приказе ФНС прописано, что строка должна начинаться с "ЭЛ. АДР. ПОКУПАТЕЛЯ".
             // При выводе телефона - строка начинается с "ТЕЛ. ПОКУПАТЕЛЯ".
-            if(item.getTag().getId() == 1008) {
+            if (item.getTag().getId() == 1008) {
                 tagName = itemText.contains("@") ? "ЭЛ. АДР. ПОКУПАТЕЛЯ" : "ТЕЛ. ПОКУПАТЕЛЯ";
             }
 
             String line = tagName + ": " + itemText;
+
+            if (item.getTag().getId() == 1057) {
+                line = "";
+                if (BitUtils.testBit(item.toInt(), 0))
+                    line += "БАНК. ПЛ. АГЕНТ";
+                if (BitUtils.testBit(item.toInt(), 1))
+                    line += " БАНК. ПЛ. СУБАГЕНТ";
+                if (BitUtils.testBit(item.toInt(), 2))
+                    line += " ПЛ. АГЕНТ";
+                if (BitUtils.testBit(item.toInt(), 3))
+                    line += " ПЛ. СУБАГЕНТ";
+                if (BitUtils.testBit(item.toInt(), 4))
+                    line += " ПОВЕРЕННЫЙ";
+                if (BitUtils.testBit(item.toInt(), 5))
+                    line += " КОМИССИОНЕР";
+                if (BitUtils.testBit(item.toInt(), 6))
+                    line += " АГЕНТ";
+
+                line = line.trim();
+            }
+
+            if (line.equals(""))
+                continue;
+
             lines.add(line);
         }
         return lines;
