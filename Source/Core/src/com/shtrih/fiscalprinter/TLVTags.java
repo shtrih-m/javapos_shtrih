@@ -41,7 +41,7 @@ public class TLVTags {
         add(1000, "наименование документа", "НАИМ. ДОК.", TLVTag.TLVType.itASCII, 0);
         add(1001, "признак автоматического режима", "ПРИЗН. АВТОМ. РЕЖ.", TLVTag.TLVType.itByte, 1);
         add(1002, "признак автономного режима", "ПРИЗН. АВТОНОМН. РЕЖ.", TLVTag.TLVType.itByte, 1);
-        add(1005, "адрес оператора перевода", "АДР. ОПЕРАТОРА", TLVTag.TLVType.itASCII, 256);
+        add(1005, "адрес оператора перевода", "АДР. ОП. ПЕРЕВОДА", TLVTag.TLVType.itASCII, 256);
         add(1008, "телефон или электронный адрес покупателя", "ТЕЛ. ИЛИ EMAIL ПОКУПАТЕЛЯ", TLVTag.TLVType.itASCII, 64);
         add(1009, "адрес расчетов", "АДР.РАСЧЕТОВ", TLVTag.TLVType.itASCII, 256);
         // Старые теги
@@ -57,7 +57,7 @@ public class TLVTags {
         add(1021, "кассир", "КАССИР", TLVTag.TLVType.itASCII, 64);
         add(1022, "код ответа ОФД", "КОД ОТВЕРА ОФД", TLVTag.TLVType.itByte, 1);
         add(1023, "количество предмета расчета", "КОЛ-ВО ПРЕДМ. РАСЧЕТА", TLVTag.TLVType.itFVLN, 8);
-        add(1026, "наименование оператора перевода", "ОПЕРАТОР", TLVTag.TLVType.itASCII, 64);
+        add(1026, "наименование оператора перевода", "ОПЕРАТОР ПЕРЕВОДА", TLVTag.TLVType.itASCII, 64);
         add(1030, "наименование предмета расчета", "НАИМЕН. ПРЕДМ. РАСЧЕТА", TLVTag.TLVType.itASCII, 128);
         add(1031, "сумма по чеку (БСО) наличными", "СУММА ПО ЧЕКУ НАЛ (БСО)", TLVTag.TLVType.itVLN, 6);
         add(1036, "номер автомата", "НОМЕР АВТОМАТА", TLVTag.TLVType.itASCII, 20);
@@ -67,7 +67,7 @@ public class TLVTags {
         add(1041, "номер ФН", "НОМЕР ФН", TLVTag.TLVType.itASCII, 16);
         add(1042, "номер чека за смену", "НОМЕР ЧЕКА ЗА СМЕНУ", TLVTag.TLVType.itUInt32, 4);
         add(1043, "стоимость предмета расчета", "СТОИМ. ПРЕДМ. РАСЧЕТА", TLVTag.TLVType.itVLN, 6);
-        add(1044, "операция платежного агента", "ОП.БАНК.АГЕНТА", TLVTag.TLVType.itASCII, 24);
+        add(1044, "операция платежного агента", "ОП. АГЕНТА", TLVTag.TLVType.itASCII, 24);
         // Старый тег
         add(1045, "операция банковского субагента", "ОПЕРАЦИЯ БАНК. СУБАГЕНТА", TLVTag.TLVType.itASCII, 24);
 
@@ -89,9 +89,9 @@ public class TLVTags {
         add(1060, "адрес сайта ФНС", "АДР. САЙТА ФНС", TLVTag.TLVType.itASCII, 256);
         add(1062, "системы налогообложения", "СИСТЕМЫ НАЛОГООБЛ.", TLVTag.TLVType.itByte, 1);
         add(1068, "сообщение оператора для ФН", "СООБЩ. ОПЕРАТОРА ДЛЯ ФН", TLVTag.TLVType.itSTLV, 9);
-        add(1073, "телефон платежного агента", "ТЛФ.ПЛ.АГЕНТА", TLVTag.TLVType.itASCII, 19);
-        add(1074, "телефон оператора по приему платежей", "ТЛФ.ОП.ПР.ПЛАТЕЖА", TLVTag.TLVType.itASCII, 19);
-        add(1075, "телефон оператора перевода", "ТЛФ.ОП.ПЕРЕВОДА", TLVTag.TLVType.itASCII, 19);
+        add(1073, "телефон платежного агента", "ТЛФ. ПЛ. АГЕНТА", TLVTag.TLVType.itASCII, 19);
+        add(1074, "телефон оператора по приему платежей", "ТЛФ. ОП. ПР. ПЛАТЕЖА", TLVTag.TLVType.itASCII, 19);
+        add(1075, "телефон оператора перевода", "ТЛФ. ОП. ПЕРЕВОДА", TLVTag.TLVType.itASCII, 19);
         add(1077, "ФП документа", "ФП ДОКУМЕНТА", TLVTag.TLVType.itByteArray, 6);
         add(1078, "ФП оператора", "ФП ОПЕРАТОРА", TLVTag.TLVType.itByteArray, 16);
         add(1079, "цена за единицу предмета расчета", "ЦЕНА ЗА ЕД. ПРЕДМ. РАСЧ.", TLVTag.TLVType.itVLN, 6);

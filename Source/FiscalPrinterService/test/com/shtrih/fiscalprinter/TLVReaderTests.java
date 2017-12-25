@@ -126,7 +126,7 @@ public class TLVReaderTests {
 
         List<String> items = reader.getPrintText();
         assertEquals(1, items.size());
-        assertEquals("ТЛФ.ОП.ПЕРЕВОДА: +79006008070", items.get(0));
+        assertEquals("ТЛФ. ОП. ПЕРЕВОДА: +79006008070", items.get(0));
     }
 
     @Test
@@ -140,7 +140,7 @@ public class TLVReaderTests {
 
         List<String> items = reader.getPrintText();
         assertEquals(1, items.size());
-        assertEquals("ОП.БАНК.АГЕНТА: +79006008070", items.get(0));
+        assertEquals("ОП. АГЕНТА: +79006008070", items.get(0));
     }
 
     @Test
@@ -154,7 +154,7 @@ public class TLVReaderTests {
 
         List<String> items = reader.getPrintText();
         assertEquals(1, items.size());
-        assertEquals("ТЛФ.ПЛ.АГЕНТА: +79006008070", items.get(0));
+        assertEquals("ТЛФ. ПЛ. АГЕНТА: +79006008070", items.get(0));
     }
 
     @Test
@@ -168,7 +168,7 @@ public class TLVReaderTests {
 
         List<String> items = reader.getPrintText();
         assertEquals(1, items.size());
-        assertEquals("ТЛФ.ОП.ПР.ПЛАТЕЖА: +79006008070", items.get(0));
+        assertEquals("ТЛФ. ОП. ПР. ПЛАТЕЖА: +79006008070", items.get(0));
     }
 
     @Test
@@ -182,7 +182,7 @@ public class TLVReaderTests {
 
         List<String> items = reader.getPrintText();
         assertEquals(1, items.size());
-        assertEquals("ОПЕРАТОР: +79006008070", items.get(0));
+        assertEquals("ОПЕРАТОР ПЕРЕВОДА: +79006008070", items.get(0));
     }
 
     @Test
@@ -196,7 +196,7 @@ public class TLVReaderTests {
 
         List<String> items = reader.getPrintText();
         assertEquals(1, items.size());
-        assertEquals("АДР. ОПЕРАТОРА: +79006008070", items.get(0));
+        assertEquals("АДР. ОП. ПЕРЕВОДА: +79006008070", items.get(0));
     }
 
     @Test
