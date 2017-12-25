@@ -1,21 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.fiscalprinter;
 
-/**
- * @author V.Kravtsov
- */
 
 import java.util.*;
-import java.io.ByteArrayInputStream;
-
-import com.shtrih.util.Hex;
 import com.shtrih.util.BitUtils;
 import com.shtrih.fiscalprinter.command.CommandInputStream;
-import com.sun.deploy.util.OrderedHashSet;
 
 public class TLVParser {
 
