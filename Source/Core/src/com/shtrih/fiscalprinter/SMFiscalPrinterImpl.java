@@ -1915,11 +1915,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private boolean isCapDisableDiscountTextInitialized = false;
 
     public boolean getCapDisableDiscountText() throws Exception {
-        if (isCapDisableDiscountTextInitialized)
-            return capDisableDiscountText;
+        if (!isCapDisableDiscountTextInitialized) {
+            capDisableDiscountText = readCapDisableDiscountText();
+            isCapDisableDiscountTextInitialized = true;
+        }
 
-        capDisableDiscountText = readCapDisableDiscountText();
-        isCapDisableDiscountTextInitialized = true;
         return capDisableDiscountText;
     }
 
@@ -1933,6 +1933,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         isCapDisableDiscountTextInitialized = false;
         isHeaderHeightInitialized = false;
+        isFsHeaderDataInitialized = false;
+
         getModel().setFonts(new PrinterFonts(this));
 
         ReadPrinterModelParameters command = new ReadPrinterModelParameters();
@@ -1944,6 +1946,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         capFooterFlag = capModelParameters() && modelParameters.isCapGraphicsFlags();
 
         if (capFiscalStorage) {
+
+            int fsTableNumber = getFsTableNumber();
+
             boolean isCompactHeader = false;
             String[] fieldValue = new String[1];
             int rc = readTable(17, 1, 18, fieldValue);
@@ -1962,19 +1967,21 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             if (succeeded(rc)) {
                 discountMode = Integer.parseInt(fieldValue[0]);
             }
-            rc = readTable(18, 1, 7, fieldValue);
-            if (succeeded(rc)) {
-                fsUser = fieldValue[0];
-            }
-            rc = readTable(18, 1, 9, fieldValue);
-            if (succeeded(rc)) {
-                fsAddress = fieldValue[0];
-            }
+//            rc = readTable(fsTableNumber, 1, 7, fieldValue);
+//            if (succeeded(rc)) {
+//                fsUser = fieldValue[0];
+//            }
+//            rc = readTable(fsTableNumber, 1, 9, fieldValue);
+//            if (succeeded(rc)) {
+//                fsAddress = fieldValue[0];
+//            }
 
 //            rc = readTable(10, 1, 1, fieldValue);
 //            if (succeeded(rc)) {
 //                headerHeigth = Integer.valueOf(fieldValue[0]);
 //            }
+
+            getModel().addParameter("fdoName", "", fsTableNumber, 1, 10);
         }
         capDiscount = true;
         if (isShtrihMobile()) {
@@ -1982,10 +1989,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             capGraphics3Scale = true;
         } else {
             capDiscount = discountMode == 0;
-        }
-
-        if (capFiscalStorage) {
-            getModel().addParameter("fdoName", "", getFsTableNumber(), 1, 10);
         }
     }
 
@@ -3262,8 +3265,27 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         items.clear();
     }
 
+    private boolean isFsHeaderDataInitialized = false;
+
     public void printFSHeader() throws Exception {
         if (getCapFiscalStorage() && getParams().fsHeaderEnabled) {
+            if (!isFsHeaderDataInitialized) {
+                int fsTableNumber = getFsTableNumber();
+
+                String[] fieldValue = new String[1];
+
+                int rc = readTable(fsTableNumber, 1, 7, fieldValue);
+                if (succeeded(rc)) {
+                    fsUser = fieldValue[0];
+                }
+                rc = readTable(fsTableNumber, 1, 9, fieldValue);
+                if (succeeded(rc)) {
+                    fsAddress = fieldValue[0];
+                }
+
+                isFsHeaderDataInitialized = true;
+            }
+
             printText(fsUser);
             printText(fsAddress);
         }
