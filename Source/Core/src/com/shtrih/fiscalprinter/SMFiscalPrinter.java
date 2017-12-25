@@ -496,7 +496,7 @@ public interface SMFiscalPrinter {
 
     public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws Exception;
 
-    public boolean getCapDisableDiscountText();
+    public boolean getCapDisableDiscountText() throws Exception;
 
     public int getMessageLength() throws Exception;
 

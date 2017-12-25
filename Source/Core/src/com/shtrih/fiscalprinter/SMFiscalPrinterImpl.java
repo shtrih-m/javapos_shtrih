@@ -1912,7 +1912,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return capPrintBarcode3 == Boolean.TRUE;
     }
 
-    public boolean getCapDisableDiscountText() {
+    private boolean isCapDisableDiscountTextInitialized = false;
+
+    public boolean getCapDisableDiscountText() throws Exception {
+        if (isCapDisableDiscountTextInitialized)
+            return capDisableDiscountText;
+
+        capDisableDiscountText = readCapDisableDiscountText();
+        isCapDisableDiscountTextInitialized = true;
         return capDisableDiscountText;
     }
 
@@ -1924,6 +1931,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void initialize() throws Exception {
         logger.debug("initialize()");
 
+        isCapDisableDiscountTextInitialized = false;
         isHeaderHeightInitialized = false;
         getModel().setFonts(new PrinterFonts(this));
 
@@ -1946,8 +1954,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             subtotalInHeader = isCompactHeader;
             discountInHeader = isCompactHeader;
 
-            capDisableDiscountText = readCapDisableDiscountText();
-            capFSCloseReceipt = readCapFSCloseReceipt();
+//            capDisableDiscountText = readCapDisableDiscountText();
+//            capFSCloseReceipt = readCapFSCloseReceipt();
 
             discountMode = 2;
             rc = readTable(17, 1, 3, fieldValue);
@@ -3539,7 +3547,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private boolean isHeaderHeightInitialized = false;
 
     public int getHeaderHeight() throws Exception {
-        if(isHeaderHeightInitialized)
+        if (isHeaderHeightInitialized)
             return headerHeigth;
 
         headerHeigth = getModel().getHeaderHeight();
