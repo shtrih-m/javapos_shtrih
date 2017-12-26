@@ -2114,4 +2114,12 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
 
         return (byte[]) outParams[0];
     }
+
+    public byte[] readFiscalizationTLV(int fiscalizationNumber) throws Exception {
+
+        Object[] outParams = new Object[1];
+        directIO(SmFptrConst.SMFPTR_DIO_FS_READ_FISCALIZATION_TLV, new int[]{fiscalizationNumber}, outParams);
+
+        return (byte[]) outParams[0];
+    }
 }

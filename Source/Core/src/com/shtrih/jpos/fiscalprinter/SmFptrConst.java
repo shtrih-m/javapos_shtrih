@@ -526,6 +526,11 @@ public interface SmFptrConst {
      * Read fiscalization tag
      */
     public static final int SMFPTR_DIO_FS_READ_FISCALIZATION_TAG = 0x55;
+
+    /**
+     * Read fiscalization TLV by number
+     */
+    public static final int SMFPTR_DIO_FS_READ_FISCALIZATION_TLV = 0x56;
     
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:

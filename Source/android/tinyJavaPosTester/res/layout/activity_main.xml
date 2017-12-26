@@ -15,7 +15,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -190,11 +191,66 @@
             android:onClick="disconnect"
             android:text="@string/action_disconnect" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dip"
+                    android:layout_marginRight="5dip"
+                    android:text="@string/lblFiscalizationNumber" />
+
+                <EditText
+                    android:id="@+id/nbFiscalizationNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dip"
+                    android:layout_marginRight="5dip"
+                    android:inputType="number" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dip"
+                    android:layout_marginRight="5dip"
+                    android:text="@string/lblTagNumber" />
+
+                <EditText
+                    android:id="@+id/nbTagNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+            </LinearLayout>
+        </LinearLayout>
+
         <Button
             android:id="@+id/btnReadFiscalizationTag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="readFiscalizationTag"
             android:text="@string/action_read_fiscalization_tag" />
+
+        <Button
+            android:id="@+id/btnReadFiscalizationTLV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="readFiscalizationTLV"
+            android:text="@string/action_read_fiscalization_tlv" />
     </LinearLayout>
 </ScrollView>

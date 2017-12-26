@@ -87,14 +87,10 @@ public class MainActivity extends AppCompatActivity {
     private EditText tbNetworkAddress;
     private EditText nbTextStringCount;
     private EditText nbPositionsCount;
+    private EditText nbFiscalizationNumber;
+    private EditText nbTagNumber;
 
     private String selectedProtocol;
-
-    private final String PREFERENCES_NAME = "MainActivity";
-    private final String PREFERENCES_IP_KEY = "NetworkAddress";
-    private final String PREFERENCES_CHECK_POSITIONS_COUNT_KEY = "CheckPositionsCount";
-    private final String PREFERENCES_CHECK_STRINGS_COUNT_KEY = "CheckStringsCount";
-    private final String PREFERENCES_PROTOCOL_KEY = "Protocol";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,16 +100,22 @@ public class MainActivity extends AppCompatActivity {
         setFilter();
         findSerialPortDevice();
 
-        final SharedPreferences pref = this.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+        final SharedPreferences pref = this.getSharedPreferences("MainActivity", Context.MODE_PRIVATE);
 
         tbNetworkAddress = (EditText) findViewById(R.id.tbNetworkAddress);
-        restoreAndSaveChangesTo(tbNetworkAddress, pref, PREFERENCES_IP_KEY, "127.0.0.1:12345");
+        restoreAndSaveChangesTo(tbNetworkAddress, pref, "NetworkAddress", "127.0.0.1:12345");
 
         nbPositionsCount = (EditText) findViewById(R.id.nbPositionsCount);
-        restoreAndSaveChangesTo(nbPositionsCount, pref, PREFERENCES_CHECK_POSITIONS_COUNT_KEY, "5");
+        restoreAndSaveChangesTo(nbPositionsCount, pref, "CheckPositionsCount", "5");
 
         nbTextStringCount = (EditText) findViewById(R.id.nbTextStringsCount);
-        restoreAndSaveChangesTo(nbTextStringCount, pref, PREFERENCES_CHECK_STRINGS_COUNT_KEY, "5");
+        restoreAndSaveChangesTo(nbTextStringCount, pref, "CheckStringsCount", "5");
+
+        nbFiscalizationNumber = (EditText) findViewById(R.id.nbFiscalizationNumber);
+        restoreAndSaveChangesTo(nbFiscalizationNumber, pref, "nbFiscalizationNumber", "1");
+
+        nbTagNumber = (EditText) findViewById(R.id.nbTagNumber);
+        restoreAndSaveChangesTo(nbTagNumber, pref, "nbTagNumber", "1041");
 
         Spinner cbProtocol = (Spinner) findViewById(R.id.cbProtocol);
 
@@ -122,6 +124,8 @@ public class MainActivity extends AppCompatActivity {
         protocols.add(new EnumViewModel("1", "2.0"));
 
         ArrayAdapter<EnumViewModel> protocolsAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, protocols);
+
+        final String PREFERENCES_PROTOCOL_KEY = "Protocol";
 
         cbProtocol.setAdapter(protocolsAdapter);
         cbProtocol.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -1182,27 +1186,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void connectToUSBDevice(View view) {
 
-//        UsbPrinterPort.Context = getApplicationContext();
-//
-//        try {
-//            PrinterPort port = new UsbPrinterPort();
-//            PrinterProtocol protocol = new PrinterProtocol_1(port);
-//
-//            port.open(3000);
-//            protocol.connect();
-//
-//            ReadDeviceMetrics cmd = new ReadDeviceMetrics();
-//
-//            protocol.send(cmd);
-//            DeviceMetrics metrics = cmd.getDeviceMetrics();
-//            Log.d(TAG, metrics.getDeviceName());
-//        } catch (Exception e) {
-//            Log.e(TAG, "failed", e);
-//            return;
-//        } finally {
-//            UsbPrinterPort.Context = null;
-//        }
-//
         try {
             UsbManager usbManager = (UsbManager) getApplicationContext().getSystemService(Context.USB_SERVICE);
             List<UsbSerialDriver> usbs = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager);
@@ -1255,8 +1238,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void readFiscalizationTag(View view) {
 
-        final int fiscalizationNumber = Integer.parseInt(nbPositionsCount.getText().toString());
-        final int tagNumber = Integer.parseInt(nbTextStringCount.getText().toString());
+        final int fiscalizationNumber = Integer.parseInt(nbFiscalizationNumber.getText().toString());
+        final int tagNumber = Integer.parseInt(nbTagNumber.getText().toString());
 
         new ReadFiscalizationTagTask(this, fiscalizationNumber, tagNumber).execute();
     }
@@ -1284,7 +1267,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            dialog = ProgressDialog.show(parent, "Connecting to device", "Please wait...", true);
+            dialog = ProgressDialog.show(parent, "Reading fiscalization tag", "Please wait...", true);
         }
 
         @Override
@@ -1294,6 +1277,82 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 byte[] tlv = printer.readFiscalizationTag(fiscalizationNumber, tagNumber);
+
+                TLVParser parser = new TLVParser();
+                parser.parse(tlv);
+
+                Vector<String> lines = parser.getPrintText();
+
+                StringBuilder sb = new StringBuilder();
+
+                for (String l : lines) {
+                    sb.append(l);
+                    sb.append("\n");
+                }
+
+                text = sb.toString().trim();
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage(text);
+            else
+                showMessage(result);
+        }
+    }
+
+    public void readFiscalizationTLV(View view) {
+
+        final int fiscalizationNumber = Integer.parseInt(nbFiscalizationNumber.getText().toString());
+
+        new ReadFiscalizationTLVTask(this, fiscalizationNumber).execute();
+    }
+
+    private class ReadFiscalizationTLVTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+        private final int fiscalizationNumber;
+
+        private long startedAt;
+        private long doneAt;
+
+        private String text;
+
+        private ProgressDialog dialog;
+
+        public ReadFiscalizationTLVTask(Activity parent, int fiscalizationNumber) {
+            this.parent = parent;
+            this.fiscalizationNumber = fiscalizationNumber;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Reading fiscalization TLV", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+                byte[] tlv = printer.readFiscalizationTLV(fiscalizationNumber);
 
                 TLVParser parser = new TLVParser();
                 parser.parse(tlv);
