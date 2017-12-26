@@ -27,6 +27,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dip"
                     android:layout_marginRight="5dip"
                     android:text="@string/lblPositions" />
 
@@ -114,25 +115,23 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:stretchColumns="1"
-            >
+            android:stretchColumns="1">
 
             <TableRow android:layout_width="match_parent">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/lblNetworkAddress"
+                    android:layout_marginEnd="5dip"
                     android:layout_marginRight="5dip"
-                    android:layout_marginEnd="5dip"/>
+                    android:text="@string/lblNetworkAddress" />
 
                 <EditText
                     android:id="@+id/tbNetworkAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:text="@string/defaultNetworkAddress"
-                    />
+                    android:text="@string/defaultNetworkAddress" />
 
             </TableRow>
 
@@ -141,16 +140,15 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/lblProtocol"
+                    android:layout_marginEnd="5dip"
                     android:layout_marginRight="5dip"
-                    android:layout_marginEnd="5dip"/>
+                    android:text="@string/lblProtocol" />
 
                 <Spinner
                     android:id="@+id/cbProtocol"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_column="1"
-                    />
+                    android:layout_column="1" />
 
             </TableRow>
 
@@ -176,6 +174,25 @@
             android:layout_height="wrap_content"
             android:onClick="readFSCommStatus"
             android:text="@string/action_read_fs_comm_status" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dip"
+                android:layout_marginRight="5dip"
+                android:text="@string/lblTextStrings" />
+
+            <EditText
+                android:id="@+id/nbTextLinesCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnPrintText"

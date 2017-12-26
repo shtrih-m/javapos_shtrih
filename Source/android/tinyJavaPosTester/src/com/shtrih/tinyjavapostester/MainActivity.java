@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText nbPositionsCount;
     private EditText nbFiscalizationNumber;
     private EditText nbTagNumber;
+    private EditText nbTextLinesCount;
 
     private String selectedProtocol;
 
@@ -112,10 +113,13 @@ public class MainActivity extends AppCompatActivity {
         restoreAndSaveChangesTo(nbTextStringCount, pref, "CheckStringsCount", "5");
 
         nbFiscalizationNumber = (EditText) findViewById(R.id.nbFiscalizationNumber);
-        restoreAndSaveChangesTo(nbFiscalizationNumber, pref, "nbFiscalizationNumber", "1");
+        restoreAndSaveChangesTo(nbFiscalizationNumber, pref, "FiscalizationNumber", "1");
 
         nbTagNumber = (EditText) findViewById(R.id.nbTagNumber);
-        restoreAndSaveChangesTo(nbTagNumber, pref, "nbTagNumber", "1041");
+        restoreAndSaveChangesTo(nbTagNumber, pref, "TagNumber", "1041");
+
+        nbTextLinesCount = (EditText) findViewById(R.id.nbTextLinesCount);
+        restoreAndSaveChangesTo(nbTextLinesCount, pref, "TextLinesCount", "100");
 
         Spinner cbProtocol = (Spinner) findViewById(R.id.cbProtocol);
 
@@ -580,7 +584,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void printText(View v) {
 
-        final int lines = 100;
+        final int lines = Integer.parseInt(nbTextLinesCount.getText().toString());
 
         new PrintTextTask(this, lines).execute();
     }
@@ -818,7 +822,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (result == null)
-                showMessage("Unsent documents " + documentsCount + " in " + (doneAt - startedAt) + " ms");
+                showMessage("Unsent documents " + documentsCount);
             else
                 showMessage(result);
         }
@@ -842,12 +846,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        String barcode = "025.0024.221217.0012";
-        printer.printBarcode(barcode, barcode, SmFptrConst.SMFPTR_BARCODE_CODE39, 100, SmFptrConst.SMFPTR_PRINTTYPE_DRIVER, 1, SmFptrConst.SMFPTR_TEXTPOS_BELOW, 1, 1);
-
         printer.printRecTotal(payment, payment, "1");
 
         printer.directIO(0x39, null, "foo@example.com");
+
+        printer.printBarcode("025.0024.221217.0012", "", SmFptrConst.SMFPTR_BARCODE_CODE39, 100, SmFptrConst.SMFPTR_PRINTTYPE_DRIVER, 1, SmFptrConst.SMFPTR_TEXTPOS_BELOW, 1, 1);
 
         printer.endFiscalReceipt(false);
 
