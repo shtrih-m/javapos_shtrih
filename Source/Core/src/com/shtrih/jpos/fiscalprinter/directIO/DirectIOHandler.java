@@ -450,6 +450,10 @@ public class DirectIOHandler {
             case SmFptrConst.SMFPTR_DIO_FS_DISABLE_DOCEND:
                 new DIODisableDocEnd(service).execute(data, object);
                 break;
+
+            case SmFptrConst.SMFPTR_DIO_FS_READ_FISCALIZATION_TAG:
+                new DIOReadFiscalizationTag(service).execute(data, object);
+                break;
                 
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,

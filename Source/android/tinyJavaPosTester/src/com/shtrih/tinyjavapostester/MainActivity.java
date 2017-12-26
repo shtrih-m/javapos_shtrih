@@ -31,6 +31,7 @@ import com.google.zxing.pdf417.encoder.Compaction;
 import com.google.zxing.pdf417.encoder.Dimensions;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
+import com.shtrih.fiscalprinter.TLVParser;
 import com.shtrih.fiscalprinter.command.FSCommunicationStatus;
 import com.shtrih.fiscalprinter.command.FSDocumentInfo;
 import com.shtrih.fiscalprinter.command.FSStatusInfo;
@@ -51,6 +52,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.Vector;
 
 import jpos.FiscalPrinter;
 import jpos.JposConst;
@@ -332,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (result == null)
-                showMessage("Успех " + (doneAt - startedAt) + " мс");
+                showMessage("Success " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
         }
@@ -443,7 +445,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (result == null)
-                showMessage("Успех " + (doneAt - startedAt) + " мс");
+                showMessage("Success " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
         }
@@ -514,7 +516,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (result == null)
-                showMessage("Успех " + (doneAt - startedAt) + " мс");
+                showMessage("Success " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
         }
@@ -631,7 +633,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (result == null)
-                showMessage("Успех " + (doneAt - startedAt) + " мс");
+                showMessage("Success " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
         }
@@ -687,14 +689,13 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (result == null)
-                showMessage("Успех " + (doneAt - startedAt) + " мс");
+                showMessage("Success " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
         }
     }
 
     public void printReceipt(View v) {
-
 
         final int positions = Integer.parseInt(nbPositionsCount.getText().toString());
         final int strings = Integer.parseInt(nbTextStringCount.getText().toString());
@@ -750,7 +751,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (result == null)
-                showMessage("Успех " + (doneAt - startedAt) + " мс");
+                showMessage("Success " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
         }
@@ -944,7 +945,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (result == null)
-                showMessage("Успех " + (doneAt - startedAt) + " мс");
+                showMessage("Success " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
         }
@@ -1000,7 +1001,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (result == null)
-                showMessage("Успех " + (doneAt - startedAt) + " мс");
+                showMessage("Success " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
         }
@@ -1053,7 +1054,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (result == null)
-                showMessage("Успех " + (doneAt - startedAt) + " мс");
+                showMessage("Success " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
         }
@@ -1106,7 +1107,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (result == null)
-                showMessage("Успех " + (doneAt - startedAt) + " мс");
+                showMessage("Success " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
         }
@@ -1173,7 +1174,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (result == null)
-                showMessage("Успех " + (doneAt - startedAt) + " мс");
+                showMessage("Success " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
         }
@@ -1252,6 +1253,83 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void readFiscalizationTag(View view) {
 
+        final int fiscalizationNumber = Integer.parseInt(nbPositionsCount.getText().toString());
+        final int tagNumber = Integer.parseInt(nbTextStringCount.getText().toString());
+
+        new ReadFiscalizationTagTask(this, fiscalizationNumber, tagNumber).execute();
+    }
+
+    private class ReadFiscalizationTagTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+        private final int fiscalizationNumber;
+        private final int tagNumber;
+
+        private long startedAt;
+        private long doneAt;
+
+        private String text;
+
+        private ProgressDialog dialog;
+
+        public ReadFiscalizationTagTask(Activity parent, int fiscalizationNumber, int tagNumber) {
+            this.parent = parent;
+            this.fiscalizationNumber = fiscalizationNumber;
+            this.tagNumber = tagNumber;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Connecting to device", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+                byte[] tlv = printer.readFiscalizationTag(fiscalizationNumber, tagNumber);
+
+                TLVParser parser = new TLVParser();
+                parser.parse(tlv);
+
+                Vector<String> lines = parser.getPrintText();
+
+                StringBuilder sb = new StringBuilder();
+
+                for (String l : lines) {
+                    sb.append(l);
+                    sb.append("\n");
+                }
+
+                text = sb.toString().trim();
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage(text);
+            else
+                showMessage(result);
+        }
+    }
 }
 

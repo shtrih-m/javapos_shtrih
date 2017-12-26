@@ -460,6 +460,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command.getParameters();
     }
 
+    @Override
+    public FSReadFiscalizationTag fsReadFiscalizationTag(int fiscalizationNumber, int tagNumber) throws Exception {
+        logger.debug("fsReadFiscalizationTag(" + fiscalizationNumber + ", " + tagNumber + ")");
+
+        FSReadFiscalizationTag command = new FSReadFiscalizationTag(getSysPassword(), fiscalizationNumber, tagNumber);
+        execute(command);
+        return command;
+    }
+
     public ShortPrinterStatus getShortStatus() {
         return shortStatus;
     }

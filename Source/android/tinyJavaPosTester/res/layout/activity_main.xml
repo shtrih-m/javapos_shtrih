@@ -189,5 +189,12 @@
             android:layout_height="wrap_content"
             android:onClick="disconnect"
             android:text="@string/action_disconnect" />
+
+        <Button
+            android:id="@+id/btnReadFiscalizationTag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="readFiscalizationTag"
+            android:text="@string/action_read_fiscalization_tag" />
     </LinearLayout>
 </ScrollView>

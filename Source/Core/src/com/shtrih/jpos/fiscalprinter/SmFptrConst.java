@@ -521,6 +521,11 @@ public interface SmFptrConst {
      * Disable document end printing
      */
     public static final int SMFPTR_DIO_FS_DISABLE_DOCEND = 0x54;
+
+    /**
+     * Read fiscalization tag
+     */
+    public static final int SMFPTR_DIO_FS_READ_FISCALIZATION_TAG = 0x55;
     
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:

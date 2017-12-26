@@ -537,4 +537,6 @@ public interface SMFiscalPrinter {
     Vector<String> fsReadDocumentTLVAsText(int docNumber) throws Exception;
 
     PrinterModelParameters readPrinterModelParameters() throws Exception;
+
+    FSReadFiscalizationTag fsReadFiscalizationTag(int fiscalizationNumber, int tagNumber) throws Exception;
 }

@@ -1020,6 +1020,11 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return null;
     }
 
+    @Override
+    public FSReadFiscalizationTag fsReadFiscalizationTag(int fiscalizationNumber, int tagNumber) throws Exception {
+        return null;
+    }
+
     public FSDocument fsFindLastDocument(int docType) throws Exception{
         return null;
     }

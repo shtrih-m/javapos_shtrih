@@ -20,6 +20,7 @@
     <string name="action_read_fs_comm_status">Read FS comm status</string>
     <string name="action_print_text">Print text</string>
     <string name="action_disconnect">Disconnect</string>
+    <string name="action_read_fiscalization_tag">Read fiscalization tag</string>
     <string name="defaultNetworkAddress">127.0.0.1:12345</string>
     <string name="lblNetworkAddress">Network address</string>
     <string name="lblPositions">Positions</string>
