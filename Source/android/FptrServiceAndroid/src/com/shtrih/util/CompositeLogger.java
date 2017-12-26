@@ -13,7 +13,7 @@ public class CompositeLogger {
     private final Logger log4JLogger;
     private final String className;
 
-    private boolean isEnabled;
+    private static boolean isEnabled;
 
     private CompositeLogger(String className) {
         log4JLogger = LoggerFactory.getLogger(className);
