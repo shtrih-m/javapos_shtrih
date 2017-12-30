@@ -167,7 +167,7 @@
 		<!-- Monitoring enabled -->
 		<prop name="MonitoringEnabled" type="String" value="0"/>
 		<!-- Receipt report enabled -->
-		<prop name="receiptReportEnabled" type="String" value="1"/>
+		<prop name="receiptReportEnabled" type="String" value="0"/>
 		<!-- Receipt report file name -->
 		<prop name="receiptReportFileName" type="String" value="ZCheckReport.xml"/>
 		<!-- openReceiptType, 0 - open receipt on item print, 1 - open receipt on beginFiscalReceipt -->

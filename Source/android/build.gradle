@@ -1,23 +1,28 @@
 apply plugin: 'idea'
 
-def getVersionName2() {
-    def text = "git describe --tags".execute().text.trim()
-     
-    return text
-}
-
 buildscript {
     repositories {
         jcenter()
         mavenCentral()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.1'
     }
 }
 
 allprojects {
     version = getVersionName2()
+
+    repositories {
+        google()
+    }
+}
+
+def getVersionName2() {
+    def text = "git describe --tags".execute().text.trim()
+
+    return text
 }
 
 def getVersionName = { ->
@@ -26,7 +31,7 @@ def getVersionName = { ->
         commandLine "git", "rev-parse", "--short", "HEAD"
         standardOutput = hashStdOut
     }
- 
+
     def buildNumberStdOut = new ByteArrayOutputStream()
     exec {
         commandLine 'echo', "$BUILD_NUMBER"

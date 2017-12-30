@@ -850,12 +850,15 @@ public class MainActivity extends AppCompatActivity {
 
         printer.directIO(0x39, null, "foo@example.com");
 
-        printer.printBarcode("025.0024.221217.0012", "", SmFptrConst.SMFPTR_BARCODE_CODE39, 100, SmFptrConst.SMFPTR_PRINTTYPE_DRIVER, 1, SmFptrConst.SMFPTR_TEXTPOS_BELOW, 1, 1);
+        printer.fsWriteTag(1057, 4, 1);
 
         printer.endFiscalReceipt(false);
 
-        FSStatusInfo status = printer.fsReadStatus();
-        FSDocumentInfo document = printer.fsFindDocument(status.getDocNumber());
+//        FSStatusInfo status = printer.fsReadStatus();
+//        FSDocumentInfo document = printer.fsFindDocument(status.getDocNumber());
+//
+//        printer.printBarcode("004ZY3O.0IKN64", "", SmFptrConst.SMFPTR_BARCODE_CODE39, 100, SmFptrConst.SMFPTR_PRINTTYPE_DRIVER, 1, SmFptrConst.SMFPTR_TEXTPOS_NOTPRINTED, 1, 1);
+//        printer.feedPaper(3);
     }
 
     private void printRefundReceipt() throws Exception {

@@ -7,7 +7,7 @@ clean.doFirst {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         minSdkVersion 12
@@ -24,7 +24,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
-    
+
     sourceSets {
         main {
             java {
@@ -42,15 +42,15 @@ android {
         }
         test {
             java {
-              srcDirs = [ "${projectDir}/test/" ]
+                srcDirs = ["${projectDir}/test/"]
             }
             res {
                 srcDirs = ["${projectDir}/test/res"]
             }
-        }    
+        }
         androidTest {
             java {
-              srcDirs = [ "${projectDir}/androidTest/" ]
+                srcDirs = ["${projectDir}/androidTest/"]
             }
             res {
                 srcDirs = ["${projectDir}/androidTest/res"]
@@ -58,7 +58,7 @@ android {
             assets {
                 srcDirs = ["${projectDir}/androidTest/assets"]
             }
-        }     
+        }
     }
 
     lintOptions {
@@ -68,11 +68,61 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+
+    def releasePath = file("${rootDir}/../../dist/zip/android")
+
+    def releaseTask = tasks.create(name: 'release') {
+        group 'Build'
+        description "Assembles and archives all Release builds"
+    }
+
+    libraryVariants.all { variant ->
+        if (variant.buildType.name == 'release') {
+            def build = variant.name.capitalize()
+
+            def releaseBuildTask = tasks.create(name: "release${build}", type: Zip) {
+                group 'Build'
+                description "Assembles and archives apk and its proguard mapping for the $build build"
+                destinationDir releasePath
+                baseName "shtrihjavapos-android"
+
+                def aarPath = "${rootDir}/FptrServiceAndroid/build/outputs/aar/FptrServiceAndroid-release.aar"
+
+                from(aarPath)
+                from "${rootDir}/tinyJavaPosTester/assets/jpos.xml"
+                from "${rootDir}/../../Doc/SHTRIH/JposShtrih.docx"
+                from "${rootDir}/lib/d2xx.jar"
+                from "${rootDir}/lib/jpos113.jar"
+                from "${rootDir}/lib/zxing-3.2.2.jar"
+                from "${rootDir}/lib/slf4j-api-1.7.21.jar"
+            }
+
+            releaseBuildTask.dependsOn variant.assemble
+            
+            releaseTask.dependsOn releaseBuildTask
+
+//            variant.productFlavors.each { flavor ->
+//                def flavorName = flavor.name.capitalize()
+//                def releaseFlavorTaskName = "release${flavorName}"
+//                def releaseFlavorTask
+//                if (tasks.findByName(releaseFlavorTaskName)) {
+//                    releaseFlavorTask = tasks[releaseFlavorTaskName]
+//                } else {
+//                    releaseFlavorTask = tasks.create(name: releaseFlavorTaskName) {
+//                        group 'Build'
+//                        description "Assembles and archives all Release builds for flavor $flavorName"
+//                    }
+//                    releaseTask.dependsOn releaseFlavorTask
+//                }
+//                releaseFlavorTask.dependsOn releaseBuildTask
+//            }
+        }
+    }
 }
 
-task utilVersionClass()  {
+task utilVersionClass() {
     def clazz = new File("${projectDir}/src/com/shtrih/util/ServiceVersion.java")
-    clazz.text = "package com.shtrih.util;\n\npublic class ServiceVersion {\n    public static final String VERSION = \""+version+"\";\n}"
+    clazz.text = "package com.shtrih.util;\n\npublic class ServiceVersion {\n    public static final String VERSION = \"" + version + "\";\n}"
 }
 
 repositories {
@@ -94,18 +144,8 @@ dependencies {
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
 
-
     // Robolectric
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
     testCompile 'org.robolectric:robolectric:3.2.2'
-}
-
-task dist(type: Zip) {
-    destinationDir = new File("${rootDir}/../../dist/zip/android")
-    baseName = 'shtrihjavapos-android'
-    
-    from "${rootDir}/FptrServiceAndroid/build/outputs/aar/FptrServiceAndroid-release.aar"
-    from "${rootDir}/tinyJavaPosTester/assets/jpos.xml"
-    from "${rootDir}/../../Doc/SHTRIH/JposShtrih.docx"
 }

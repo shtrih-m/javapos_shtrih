@@ -1,4 +1,4 @@
 @echo off
 
-cmd /c gradlew clean build dist
+cmd /c gradlew --info clean build
 pause
