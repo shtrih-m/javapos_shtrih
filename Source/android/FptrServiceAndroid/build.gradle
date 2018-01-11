@@ -76,6 +76,7 @@ android {
         description "Assembles and archives all Release builds"
     }
 
+    // https://gist.github.com/lifuzu/9553671
     libraryVariants.all { variant ->
         if (variant.buildType.name == 'release') {
             def build = variant.name.capitalize()

@@ -1,8 +1,12 @@
 package com.shtrih.tinyjavapostester;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -103,25 +107,25 @@ public class MainActivity extends AppCompatActivity {
 
         final SharedPreferences pref = this.getSharedPreferences("MainActivity", Context.MODE_PRIVATE);
 
-        tbNetworkAddress = (EditText) findViewById(R.id.tbNetworkAddress);
+        tbNetworkAddress = findViewById(R.id.tbNetworkAddress);
         restoreAndSaveChangesTo(tbNetworkAddress, pref, "NetworkAddress", "127.0.0.1:12345");
 
-        nbPositionsCount = (EditText) findViewById(R.id.nbPositionsCount);
+        nbPositionsCount = findViewById(R.id.nbPositionsCount);
         restoreAndSaveChangesTo(nbPositionsCount, pref, "CheckPositionsCount", "5");
 
-        nbTextStringCount = (EditText) findViewById(R.id.nbTextStringsCount);
+        nbTextStringCount = findViewById(R.id.nbTextStringsCount);
         restoreAndSaveChangesTo(nbTextStringCount, pref, "CheckStringsCount", "5");
 
-        nbFiscalizationNumber = (EditText) findViewById(R.id.nbFiscalizationNumber);
+        nbFiscalizationNumber = findViewById(R.id.nbFiscalizationNumber);
         restoreAndSaveChangesTo(nbFiscalizationNumber, pref, "FiscalizationNumber", "1");
 
-        nbTagNumber = (EditText) findViewById(R.id.nbTagNumber);
+        nbTagNumber = findViewById(R.id.nbTagNumber);
         restoreAndSaveChangesTo(nbTagNumber, pref, "TagNumber", "1041");
 
-        nbTextLinesCount = (EditText) findViewById(R.id.nbTextLinesCount);
+        nbTextLinesCount = findViewById(R.id.nbTextLinesCount);
         restoreAndSaveChangesTo(nbTextLinesCount, pref, "TextLinesCount", "100");
 
-        Spinner cbProtocol = (Spinner) findViewById(R.id.cbProtocol);
+        Spinner cbProtocol = findViewById(R.id.cbProtocol);
 
         ArrayList<EnumViewModel> protocols = new ArrayList<>();
         protocols.add(new EnumViewModel("0", "1.0"));
@@ -151,9 +155,9 @@ public class MainActivity extends AppCompatActivity {
         int savedProtocolIndex = pref.getInt(PREFERENCES_PROTOCOL_KEY, 0);
         cbProtocol.setSelection(savedProtocolIndex);
 
-        StaticContext.setContext(getApplicationContext());
-        printer = new ShtrihFiscalPrinter(new FiscalPrinter());
+        MainViewModel model = ViewModelProviders.of(this).get(MainViewModel.class);
 
+        printer = model.getPrinter();
     }
 
     private void restoreAndSaveChangesTo(final EditText edit, final SharedPreferences pref, final String key, final String defaultValue) {
