@@ -10,7 +10,6 @@
 package com.shtrih.jpos.fiscalprinter.directIO;
 
 /**
- *
  * @author V.Kravtsov
  */
 
@@ -37,9 +36,7 @@ public class DIOPrintText {
         if (data != null) {
             if (data.length > 0) {
                 int fontNumber = data[0];
-                if (FontNumber.isValidValue(fontNumber)) {
-                    font = new FontNumber(fontNumber);
-                }
+                font = new FontNumber(fontNumber);
             }
             if (data.length > 1) {
                 station = data[1];

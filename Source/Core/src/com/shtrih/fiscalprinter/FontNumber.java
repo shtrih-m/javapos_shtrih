@@ -1,30 +1,28 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.fiscalprinter;
 
-/**
- *
- * @author V.Kravtsov
- */
 import com.shtrih.fiscalprinter.command.PrinterConst;
-import com.shtrih.util.MethodParameter;
 
 public class FontNumber {
 
     private final int value;
 
-    public FontNumber(int value) throws Exception {
+    public FontNumber(int value) {
         this.value = value;
     }
 
-    public boolean isEqual(FontNumber src) {
-        return src.getValue() == getValue();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FontNumber that = (FontNumber) o;
+
+        return value == that.value;
     }
 
-    public static boolean isValidValue(int value) {
-        return true;
+    @Override
+    public int hashCode() {
+        return value;
     }
 
     public int getValue() {
