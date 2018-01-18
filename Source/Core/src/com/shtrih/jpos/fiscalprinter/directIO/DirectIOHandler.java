@@ -458,6 +458,10 @@ public class DirectIOHandler {
             case SmFptrConst.SMFPTR_DIO_FS_READ_FISCALIZATION_TLV:
                 new DIOReadFiscalizationTLV(service).execute(data, object);
                 break;
+
+            case SmFptrConst.SMFPTR_DIO_READ_DEVICE_METRICS:
+                new DIOReadDeviceMetrics(service).execute(data, object);
+                break;
                 
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,

@@ -28,7 +28,7 @@ public class UsbPrinterPort implements PrinterPort {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         try {
             usb.disconnect();
         } finally {

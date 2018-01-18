@@ -39,3 +39,4 @@ public class DIOReadFiscalizationTLV extends DIOItem {
         }
     }
 }
+

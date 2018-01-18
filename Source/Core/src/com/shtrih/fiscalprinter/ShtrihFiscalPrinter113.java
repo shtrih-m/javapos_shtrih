@@ -2122,4 +2122,10 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
 
         return (byte[]) outParams[0];
     }
+
+    public DeviceMetrics readDeviceMetrics() throws JposException {
+        Object[] object = new Object[1];
+        directIO(SmFptrConst.SMFPTR_DIO_READ_DEVICE_METRICS, null, object);
+        return (DeviceMetrics) object[0];
+    }
 }

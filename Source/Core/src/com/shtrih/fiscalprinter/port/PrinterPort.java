@@ -12,7 +12,7 @@ public interface PrinterPort
 {
     void open(int timeout) throws Exception;
 
-    void close() throws Exception;
+    void close();
 
     int readByte() throws Exception;
 

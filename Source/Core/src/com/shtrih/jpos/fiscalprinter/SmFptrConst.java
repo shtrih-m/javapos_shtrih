@@ -531,6 +531,11 @@ public interface SmFptrConst {
      * Read fiscalization TLV by number
      */
     public static final int SMFPTR_DIO_FS_READ_FISCALIZATION_TLV = 0x56;
+
+    /**
+     * Read device metrics
+     */
+    public static final int SMFPTR_DIO_READ_DEVICE_METRICS = 0x57;
     
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:

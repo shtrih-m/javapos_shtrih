@@ -36,7 +36,7 @@ public class CancellablePrinterPort implements PrinterPort
         port.open(timeout);
     }
 
-    public void close() throws Exception {
+    public void close()  {
         port.close();
     }
 

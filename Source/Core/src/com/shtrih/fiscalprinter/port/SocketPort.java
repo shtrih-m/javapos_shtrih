@@ -67,17 +67,27 @@ public class SocketPort implements PrinterPort {
         outputStream = socket.getOutputStream();
     }
 
-    public void close() throws Exception {
+    public void close() {
         if (!isConnected()) {
             return;
         }
 
         SharedObjects.getInstance().release(portName);
-        socket.close();
-        socket = null;
-        inputStream = null;
-        outputStream = null;
-        Thread.sleep(100);
+
+        try {
+
+            socket.close();
+            
+            socket = null;
+            inputStream = null;
+            outputStream = null;
+
+            Thread.sleep(100);
+        } catch (Exception e) {
+            socket = null;
+            inputStream = null;
+            outputStream = null;
+        }
     }
 
     public int readByte() throws Exception {
@@ -95,7 +105,7 @@ public class SocketPort implements PrinterPort {
         InputStream in = inputStream;
         int result;
         long startTime = System.currentTimeMillis();
-        for (;;) {
+        for (; ; ) {
             long currentTime = System.currentTimeMillis();
             if (in.available() > 0) {
                 result = in.read();

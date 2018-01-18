@@ -36,6 +36,7 @@ import com.google.zxing.pdf417.encoder.Dimensions;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
 import com.shtrih.fiscalprinter.TLVParser;
+import com.shtrih.fiscalprinter.command.DeviceMetrics;
 import com.shtrih.fiscalprinter.command.FSCommunicationStatus;
 import com.shtrih.fiscalprinter.command.FSDocumentInfo;
 import com.shtrih.fiscalprinter.command.FSStatusInfo;
@@ -59,6 +60,7 @@ import java.util.Random;
 import java.util.Vector;
 
 import jpos.FiscalPrinter;
+import jpos.FiscalPrinterConst;
 import jpos.JposConst;
 import jpos.JposException;
 
@@ -1140,6 +1142,8 @@ public class MainActivity extends AppCompatActivity {
         private long startedAt;
         private long doneAt;
 
+        private String text;
+
         private ProgressDialog dialog;
 
         public ConnectToWiFiDeviceTask(Activity parent, String address) {
@@ -1171,6 +1175,13 @@ public class MainActivity extends AppCompatActivity {
                 printer.claim(3000);
                 printer.setDeviceEnabled(true);
 
+                String[] lines = new String[1];
+                printer.getData(FiscalPrinterConst.FPTR_GD_PRINTER_ID, null, lines);
+                String serialNumber = lines[0];
+                DeviceMetrics deviceMetrics = printer.readDeviceMetrics();
+
+                text = deviceMetrics.getDeviceName() + " " + serialNumber;
+
                 return null;
 
             } catch (Exception e) {
@@ -1188,7 +1199,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (result == null)
-                showMessage("Success " + (doneAt - startedAt) + " ms");
+                showMessage(text + "\nSuccess " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
         }
