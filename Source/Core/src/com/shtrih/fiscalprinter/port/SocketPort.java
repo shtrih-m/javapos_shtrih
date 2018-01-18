@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.fiscalprinter.port;
 
 import com.shtrih.util.CompositeLogger;
@@ -47,24 +42,34 @@ public class SocketPort implements PrinterPort {
 
         this.openTimeout = timeout;
         socket = (Socket) SharedObjects.getInstance().findObject(portName);
-        if (socket == null) {
-            socket = new Socket();
-            SharedObjects.getInstance().add(socket, portName);
 
-            socket.setReuseAddress(true);
-            socket.setSoTimeout(openTimeout);
-            socket.setTcpNoDelay(true);
+        try {
 
-            StringTokenizer tokenizer = new StringTokenizer(portName, ":");
-            String host = tokenizer.nextToken();
-            int port = Integer.parseInt(tokenizer.nextToken());
-            socket.connect(new InetSocketAddress(host, port), timeout);
+            if (socket == null) {
+
+                socket = new Socket();
+                SharedObjects.getInstance().add(socket, portName);
+
+                socket.setReuseAddress(true);
+                socket.setSoTimeout(openTimeout);
+                socket.setTcpNoDelay(true);
+
+                StringTokenizer tokenizer = new StringTokenizer(portName, ":");
+                String host = tokenizer.nextToken();
+                int port = Integer.parseInt(tokenizer.nextToken());
+                socket.connect(new InetSocketAddress(host, port), timeout);
+
+            }
+
+            SharedObjects.getInstance().addref(portName);
+
+            inputStream = socket.getInputStream();
+            outputStream = socket.getOutputStream();
+        } catch (Exception e) {
+
+            SharedObjects.getInstance().release(portName);
+            throw e;
         }
-
-        SharedObjects.getInstance().addref(portName);
-
-        inputStream = socket.getInputStream();
-        outputStream = socket.getOutputStream();
     }
 
     public void close() {
@@ -77,7 +82,7 @@ public class SocketPort implements PrinterPort {
         try {
 
             socket.close();
-            
+
             socket = null;
             inputStream = null;
             outputStream = null;
