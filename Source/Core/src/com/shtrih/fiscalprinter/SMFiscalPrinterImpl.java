@@ -3066,6 +3066,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public String getErrorText(int code) throws Exception {
+
+        if(modelParameters.isCapCommand6B())
+            return String.valueOf(code) + ", " + readErrorDescription(code);
+
         String key = "PrinterError" + Hex.toHex((byte) code);
         if ((capFiscalStorage) && (code < 0x20)) {
             key = "FSPrinterError" + Hex.toHex((byte) code);
@@ -3075,6 +3079,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             result = Localizer.UnknownPrinterError;
         }
         return String.valueOf(code) + ", " + result;
+    }
+
+    private String readErrorDescription(int code) throws Exception {
+        ReadErrorDescription command = new ReadErrorDescription(code);
+        execute(command);
+        return command.getErrorDescription();
     }
 
     public void openFiscalDay() throws Exception {
