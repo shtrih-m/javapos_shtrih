@@ -14,6 +14,7 @@ package com.shtrih.jpos.fiscalprinter;
  * @author V.Kravtsov
  */
 
+import java.util.TimeZone;
 import java.util.GregorianCalendar;
 
 import jpos.JposConst;
@@ -143,4 +144,5 @@ public class JposFiscalPrinterDate implements JposConst {
     public PrinterTime getPrinterTime() {
         return new PrinterTime(hour, min, 0);
     }
+    
 }

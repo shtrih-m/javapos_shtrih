@@ -960,7 +960,8 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt() {
         // printFiscalReceipt101();
         // printFiscalReceipt101_1();
-        printFiscalReceipt145();
+        //printFiscalReceipt145();
+        printCorrectionReceipt2();
     }
 
     public void disablePrint() {
@@ -1033,7 +1034,7 @@ class PrinterTest implements FiscalPrinterConst {
             // 1177, описание коррекции
             printer.fsWriteTag(1177, "Описание коррекции");
             // 1178, дата документа основания для коррекции UnixTime
-            printer.fsWriteTag(1178, 1507431600, 4);
+            printer.fsWriteTag(1178,  "24122017");
             // 1179, номер документа основания для коррекции
             printer.fsWriteTag(1179, "1203891203");
 

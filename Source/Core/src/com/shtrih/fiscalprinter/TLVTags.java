@@ -36,6 +36,13 @@ public class TLVTags {
         return item;
     }
 
+    public TLVTag add(int id, String name, String printName,
+            TLVTag.TLVType type, int size, boolean fixedSize) {
+        TLVTag item = new TLVTag(id, name, printName, type, size, fixedSize);
+        items.add(item);
+        return item;
+    }
+    
     public void createTags() {
         TLVTag tag;
         add(1000, "наименование документа", "НАИМ. ДОК.", TLVTag.TLVType.itASCII, 0);
@@ -50,9 +57,9 @@ public class TLVTags {
 
         add(1012, "дата, время", "ДАТА, ВРЕМЯ", TLVTag.TLVType.itUnixTime, 4);
         add(1013, "заводской номер ККТ", "ЗАВ. НОМЕР ККТ", TLVTag.TLVType.itASCII, 20);
-        add(1016, "ИНН оператора перевода", "ИНН ОП. ПЕРЕВОДА", TLVTag.TLVType.itASCII, 12);
-        add(1017, "ИНН ОФД", "ИНН ОФД", TLVTag.TLVType.itASCII, 12);
-        add(1018, "ИНН пользователя", "ИНН ПОЛЬЗ.", TLVTag.TLVType.itASCII, 12);
+        add(1016, "ИНН оператора перевода", "ИНН ОП. ПЕРЕВОДА", TLVTag.TLVType.itASCII, 12, true);
+        add(1017, "ИНН ОФД", "ИНН ОФД", TLVTag.TLVType.itASCII, 12, true);
+        add(1018, "ИНН пользователя", "ИНН ПОЛЬЗ.", TLVTag.TLVType.itASCII, 12, true);
         add(1020, "сумма расчета, указанного в чеке (БСО)", "СУММА РАСЧЕТА В ЧЕКЕ(БСО)", TLVTag.TLVType.itVLN, 6);
         add(1021, "кассир", "КАССИР", TLVTag.TLVType.itASCII, 64);
         add(1022, "код ответа ОФД", "КОД ОТВЕРА ОФД", TLVTag.TLVType.itByte, 1);
@@ -61,10 +68,10 @@ public class TLVTags {
         add(1030, "наименование предмета расчета", "НАИМЕН. ПРЕДМ. РАСЧЕТА", TLVTag.TLVType.itASCII, 128);
         add(1031, "сумма по чеку (БСО) наличными", "СУММА ПО ЧЕКУ НАЛ (БСО)", TLVTag.TLVType.itVLN, 6);
         add(1036, "номер автомата", "НОМЕР АВТОМАТА", TLVTag.TLVType.itASCII, 20);
-        add(1037, "регистрационный номер ККТ", "РЕГ. НОМЕР ККТ", TLVTag.TLVType.itASCII, 20);
+        add(1037, "регистрационный номер ККТ", "РЕГ. НОМЕР ККТ", TLVTag.TLVType.itASCII, 20, true);
         add(1038, "номер смены", "НОМЕР СМЕНЫ", TLVTag.TLVType.itUInt32, 4);
         add(1040, "номер ФД", "НОМЕР ФД", TLVTag.TLVType.itUInt32, 4);
-        add(1041, "номер ФН", "НОМЕР ФН", TLVTag.TLVType.itASCII, 16);
+        add(1041, "номер ФН", "НОМЕР ФН", TLVTag.TLVType.itASCII, 16, true);
         add(1042, "номер чека за смену", "НОМЕР ЧЕКА ЗА СМЕНУ", TLVTag.TLVType.itUInt32, 4);
         add(1043, "стоимость предмета расчета", "СТОИМ. ПРЕДМ. РАСЧЕТА", TLVTag.TLVType.itVLN, 6);
         add(1044, "операция платежного агента", "ОП. АГЕНТА", TLVTag.TLVType.itASCII, 24);
@@ -92,7 +99,7 @@ public class TLVTags {
         add(1073, "телефон платежного агента", "ТЛФ. ПЛ. АГЕНТА", TLVTag.TLVType.itASCII, 19);
         add(1074, "телефон оператора по приему платежей", "ТЛФ. ОП. ПР. ПЛАТЕЖА", TLVTag.TLVType.itASCII, 19);
         add(1075, "телефон оператора перевода", "ТЛФ. ОП. ПЕРЕВОДА", TLVTag.TLVType.itASCII, 19);
-        add(1077, "ФП документа", "ФП ДОКУМЕНТА", TLVTag.TLVType.itByteArray, 6);
+        add(1077, "ФП документа", "ФП ДОКУМЕНТА", TLVTag.TLVType.itByteArray, 6, true);
         add(1078, "ФП оператора", "ФП ОПЕРАТОРА", TLVTag.TLVType.itByteArray, 16);
         add(1079, "цена за единицу предмета расчета", "ЦЕНА ЗА ЕД. ПРЕДМ. РАСЧ.", TLVTag.TLVType.itVLN, 6);
         add(1080, "штриховой код EAN 13", "ШК EAN 13", TLVTag.TLVType.itASCII, 16);
@@ -173,7 +180,7 @@ public class TLVTags {
         add(1199, "ставка НДС ", "СТАВКА НДС", TLVTag.TLVType.itByte, 1);
         add(1200, "сумма НДС за предмет расчета", "СУММА НДС ЗА ПРЕДМ. РАСЧ.", TLVTag.TLVType.itVLN, 6);
         add(1201, "общая итоговая сумма в чеках (БСО)", "ОБЩ. ИТОГ. СУММА В ЧЕКАХ БСО", TLVTag.TLVType.itVLN, 8);
-        add(1203, "ИНН кассира", "ИНН КАССИРА", TLVTag.TLVType.itASCII, 12);
+        add(1203, "ИНН кассира", "ИНН КАССИРА", TLVTag.TLVType.itASCII, 12, true);
         tag = add(1205, "коды причин изменения сведений о ККТ", "КОДЫ ПРИЧИНЫ ИЗМ. СВЕД. О ККТ", TLVTag.TLVType.itBitMask, 4);
         addBits1205(tag);
 
@@ -197,7 +204,7 @@ public class TLVTags {
         add(1223, "данные агента", "", TLVTag.TLVType.itSTLV, 512);
         add(1224, "данные поставщика", "", TLVTag.TLVType.itSTLV, 512);
         add(1225, "наименование поставщика", "", TLVTag.TLVType.itASCII, 256);
-        add(1226, "ИНН поставщика", "ИНН ПОСТАВЩИКА", TLVTag.TLVType.itASCII, 12);
+        add(1226, "ИНН поставщика", "ИНН ПОСТАВЩИКА", TLVTag.TLVType.itASCII, 12, true);
     }
 
     public void addBits1055(TLVTag tag) {

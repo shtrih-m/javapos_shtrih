@@ -3108,8 +3108,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 break;
             }
             default:
-                list.add(tagId, tagValue);
-                break;
+                TLVTags tags = new TLVTags();
+                TLVTag tag = tags.find(tagId);
+                if (tag != null) 
+                {
+                    tag.setValue(tagValue);
+                    return tag.getData();
+                } else {
+                    list.add(tagId, tagValue);
+                }
 
         }
         return list.getData();
