@@ -960,8 +960,8 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt() {
         // printFiscalReceipt101();
         // printFiscalReceipt101_1();
-        //printFiscalReceipt145();
-        printCorrectionReceipt2();
+        printFiscalReceipt145();
+        //printCorrectionReceipt2();
     }
 
     public void disablePrint() {
@@ -3534,7 +3534,9 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
             printer.printRecRefund("Item 1", 300, 1);
+            printCode128();
             printer.printRecTotal(300, 300, "description");
+            printCode128();
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();

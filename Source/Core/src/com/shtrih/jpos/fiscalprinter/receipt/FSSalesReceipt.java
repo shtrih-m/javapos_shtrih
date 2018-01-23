@@ -43,7 +43,6 @@ import java.util.Vector;
 
 import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_EFPTR_NOT_SUPPORTED;
 import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_STATION_REC;
-import static jpos.FiscalPrinterConst.FPTR_PS_FISCAL_RECEIPT_ENDING;
 
 public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
@@ -526,7 +525,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     private void addTextItem(String text, FontNumber font) throws Exception {
         FSTextReceiptItem item = new FSTextReceiptItem(text, getPreLine(), getPostLine(), font);
-        if (getContext().getPrinterState().getValue() == FiscalPrinterConst.FPTR_PS_FISCAL_RECEIPT_ENDING) {
+        if (getContext().getPrinterState().isEnding()) {
             endingItems.add(item);
         } else {
             items.add(item);
@@ -1208,8 +1207,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         return StringUtils.alignLines(line1, line2, getPrinter().getTextLength());
     }
 
-    public void printBarcode(PrinterBarcode barcode) throws Exception {
-        items.add(barcode);
+    public void printBarcode(PrinterBarcode barcode) throws Exception 
+    {
+        if (getContext().getPrinterState().isEnding()) {
+            endingItems.add(barcode);
+        } else {
+            items.add(barcode);
+        }
     }
 
     public void printGraphics(PrinterGraphics graphics) throws Exception {

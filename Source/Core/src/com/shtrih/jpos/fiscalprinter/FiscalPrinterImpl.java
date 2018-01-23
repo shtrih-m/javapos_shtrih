@@ -3252,7 +3252,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public boolean isReceiptEnding() {
-        return printerState.getValue() == FiscalPrinterConst.FPTR_PS_FISCAL_RECEIPT_ENDING;
+        return printerState.isEnding();
     }
 
     public void printRecMessageAsync(String message) throws Exception {
@@ -3443,7 +3443,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         description = decodeText(description);
         if ((printerState.getValue() == FPTR_PS_FISCAL_RECEIPT)
                 || (printerState.getValue() == FPTR_PS_FISCAL_RECEIPT_TOTAL)
-                || (printerState.getValue() == FPTR_PS_FISCAL_RECEIPT_ENDING)) {
+                || (printerState.isEnding())) {
             receipt.printRecVoid(description);
             setPrinterState(FPTR_PS_FISCAL_RECEIPT_ENDING);
         } else {

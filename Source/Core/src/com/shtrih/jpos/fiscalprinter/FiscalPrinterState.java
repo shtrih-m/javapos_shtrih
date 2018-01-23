@@ -4,6 +4,8 @@
  */
 package com.shtrih.jpos.fiscalprinter;
 
+import jpos.FiscalPrinterConst;
+
 /**
  * @author V.Kravtsov
  */
@@ -21,5 +23,9 @@ public class FiscalPrinterState {
 
     public void setValue(int value) {
         this.value = value;
+    }
+    
+    public boolean isEnding(){
+        return FiscalPrinterConst.FPTR_PS_FISCAL_RECEIPT_ENDING == value;
     }
 }
