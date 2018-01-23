@@ -958,9 +958,10 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printFiscalReceipt() {
+        VatTest();
         // printFiscalReceipt101();
         // printFiscalReceipt101_1();
-        printFiscalReceipt145();
+        printFiscalReceipt145_1();
         //printCorrectionReceipt2();
     }
 
@@ -1034,7 +1035,7 @@ class PrinterTest implements FiscalPrinterConst {
             // 1177, описание коррекции
             printer.fsWriteTag(1177, "Описание коррекции");
             // 1178, дата документа основания для коррекции UnixTime
-            printer.fsWriteTag(1178,  "24122017");
+            printer.fsWriteTag(1178, "24122017");
             // 1179, номер документа основания для коррекции
             printer.fsWriteTag(1179, "1203891203");
 
@@ -2670,20 +2671,26 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void VatTest() {
         try {
+            System.out.println("CapHasVatTable: " + printer.getCapHasVatTable());
+            System.out.println("CapSetVatTable: " + printer.getCapSetVatTable());
+
             if (printer.getCapHasVatTable()) {
                 int numVatRates = printer.getNumVatRates();
                 System.out.println("NumVatRates: " + String.valueOf(numVatRates));
-                // set vat rates
-                for (int i = 1; i <= numVatRates; i++) {
-                    printer.setVatValue(i, String.valueOf(1234 * i));
-                }
-                printer.setVatTable();
                 // get vat rates
                 for (int i = 1; i <= numVatRates; i++) {
                     int[] vatRate = new int[1];
                     printer.getVatEntry(i, 0, vatRate);
                     System.out.println("VatRate " + String.valueOf(i)
                             + "  : " + String.valueOf(vatRate[0]));
+                }
+                // set vat rates
+                if (printer.getCapSetVatTable()) 
+                {
+                    for (int i = 1; i <= numVatRates; i++) {
+                        printer.setVatValue(i, String.valueOf(1234 * i));
+                    }
+                    printer.setVatTable();
                 }
             }
         } catch (Exception e) {
@@ -3527,7 +3534,7 @@ class PrinterTest implements FiscalPrinterConst {
             System.out.println("Text: " + ticket.getText());
         }
     }
-    
+
     public void printFiscalReceipt145() {
         try {
             printer.resetPrinter();
@@ -3535,6 +3542,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.beginFiscalReceipt(false);
             printer.printRecRefund("Item 1", 300, 1);
             printCode128();
+            printer.printRecSubtotal(0);
             printer.printRecTotal(300, 300, "description");
             printCode128();
             printer.endFiscalReceipt(false);
@@ -3542,20 +3550,19 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
+
     public void printFiscalReceipt145_1() {
         try {
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-            printer.printRecItem("Item 1", 300, 1, 1, 300, "");
-            printer.printRecSubtotalAdjustment(1, "", 0);
+            printer.printRecItem("Item 1", 300, 1000, 1, 300, "");
+            printer.printRecItemAdjustment(FPTR_AT_AMOUNT_DISCOUNT, "СКИДКА", 50, 1);
             printer.printRecTotal(300, 300, "description");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
-    
+
 }

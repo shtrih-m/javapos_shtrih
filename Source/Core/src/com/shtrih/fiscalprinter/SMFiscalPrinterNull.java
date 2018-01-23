@@ -1028,4 +1028,12 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public FSDocument fsFindLastDocument(int docType) throws Exception{
         return null;
     }
+    
+    public boolean getCapSetVatTable(){
+        return true;
+    }
+    
+    public void clearTableText() throws Exception{
+    }
+            
 }

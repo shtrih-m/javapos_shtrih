@@ -12,6 +12,7 @@ import com.shtrih.jpos.fiscalprinter.receipt.template.FormatLineParser;
 import com.shtrih.jpos.fiscalprinter.receipt.template.ParsingException;
 import com.shtrih.jpos.fiscalprinter.receipt.template.TemplateLine;
 import com.shtrih.util.StringUtils;
+import com.shtrih.fiscalprinter.command.AmountItem;
 
 import java.util.Vector;
 
@@ -94,7 +95,7 @@ public class ReceiptTemplate {
         return lines.toArray(new String[0]);
     }
 
-    public String[] getDiscountLines(FSDiscount item) throws Exception {
+    public String[] getDiscountLines(AmountItem item) throws Exception {
         Vector<String> lines = new Vector<String>();
         for (TemplateLine templateLine : discountTemplate) {
             String line = getDiscountItemLine(templateLine, item);
@@ -103,7 +104,7 @@ public class ReceiptTemplate {
         return lines.toArray(new String[0]);
     }
 
-    public String[] getChargeLines(FSDiscount item) throws Exception {
+    public String[] getChargeLines(AmountItem item) throws Exception {
         Vector<String> lines = new Vector<String>();
         for (TemplateLine templateLine : chargeTemplate) {
             String line = getDiscountItemLine(templateLine, item);
@@ -145,7 +146,7 @@ public class ReceiptTemplate {
         return s;
     }
 
-    private String getDiscountItemLine(TemplateLine line, FSDiscount item) throws Exception {
+    private String getDiscountItemLine(TemplateLine line, AmountItem item) throws Exception {
         String[] fmts = new String[line.getTags().size()];
         Vector<Field> tags = line.getTags();
         for (int i = 0; i < tags.size(); i++) {
@@ -171,7 +172,7 @@ public class ReceiptTemplate {
         return s;
     }
 
-    private String getDiscountTagContents(Field f, FSDiscount item) throws Exception {
+    private String getDiscountTagContents(Field f, AmountItem item) throws Exception {
         if (f.tag.equals("TITLE")) {
             return item.getText();
         }
@@ -252,7 +253,7 @@ public class ReceiptTemplate {
      * @param item discount item to print
      * @throws Exception
      */
-    private String[] getDiscountLines2(FSDiscount item) throws Exception {
+    private String[] getDiscountLines2(AmountItem item) throws Exception {
         Vector<String> lines = new Vector<String>();
         long amount = item.getAmount();
         item.setAmount(Math.abs(amount));

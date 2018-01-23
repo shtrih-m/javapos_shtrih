@@ -97,7 +97,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private final FiscalDay fiscalDay = new FiscalDay();
     private final Vector requests = new Vector();
     private PrinterHeader header;
-    private final int[] vatValues = new int[4];
+    private int[] vatValues = new int[4];
     private PrinterPort port;
     private PrinterProtocol device;
     public SMFiscalPrinter printer;
@@ -853,19 +853,17 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 setPowerState(JPOS_PS_ONLINE);
                 setJrnPaperState(true, true);
 
-                header.initDevice();
                 loadProperties();
-
                 updateDeviceMetrics();
+                getPrinter().initialize();
                 cancelReceipt();
                 writeTables();
-                // Init after write tables
-                getPrinter().initialize();
+                header.initDevice();
 
                 isTablesRead = false;
-                //readTables();
-                //readPrinterStatus();
-                //readEJActivation();
+                int numVatRates = getModel().getNumVatRates();
+                vatValues = new int[numVatRates];
+                capSetVatTable = getPrinter().getCapSetVatTable();
 
                 // if polling enabled - create device thread
                 if (params.pollEnabled) {
@@ -1897,7 +1895,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    private void writeTables() throws Exception {
+    private void writeTables() throws Exception 
+    {
         writeFieldsFile();
     }
 
@@ -3746,6 +3745,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void getVatEntry(int vatID, int optArgs, int[] vatRate)
             throws Exception {
         checkEnabled();
+        checkCapHasVatTable();
         // 4 tax rates available in SHTRIH-M fiscal printers
         checkParamValue(vatID, 1, vatValues.length, "vatID");
         String[] vatValue = new String[1];
@@ -3758,6 +3758,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void setVatTable() throws Exception {
         checkEnabled();
+        checkCapHasVatTable();
+        checkCapSetVatTable();
+        
         for (int i = 0; i < vatValues.length; i++) {
             getPrinter().check(
                     printer.writeTable(SMFP_TABLE_TAX, i + 1, 1,
@@ -3765,8 +3768,26 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public void setVatValue(int vatID, String vatValue) throws Exception {
+    public void checkCapHasVatTable() throws Exception{
+         if (!getCapHasVatTable()) {
+            throw new JposException(JPOS_E_ILLEGAL, "CapHasVatTable = false, vat table is not supported");
+        }
+    }
+            
+    public void checkCapSetVatTable() throws Exception
+    {
+        checkCapHasVatTable();
+         if (!capSetVatTable) {
+            throw new JposException(JPOS_E_ILLEGAL, "CapSetVatTable = false, setting vat table is not supported");
+        }
+   }
+        
+    public void setVatValue(int vatID, String vatValue) throws Exception 
+    {
         checkEnabled();
+        checkCapHasVatTable();
+        checkCapSetVatTable();
+                
         vatValue = decodeText(vatValue);
         // 4 tax rates available in SHTRIH-M fiscal printers
         checkParamValue(vatID, 1, vatValues.length, "vatID");
@@ -4526,7 +4547,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         } else if (params.salesReceiptType == SMFPTR_RECEIPT_NORMAL) {
             result = new SalesReceipt(createReceiptContext(), receiptType);
         } else {
-            if(!isTablesRead) {
+            if (!isTablesRead) {
                 readTables();
                 isTablesRead = true;
             }
@@ -4584,7 +4605,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         if ((longStatus.getRegistrationNumber() > 0)
                 && (longStatus.getPrinterFlags().isEJPresent())) {
             String[] lines = printer.readEJActivationText(6);
-           return EJReportParser.parseEJActivation(lines);
+            return EJReportParser.parseEJActivation(lines);
         } else {
             return new EJActivation();
         }

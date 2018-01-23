@@ -6,6 +6,7 @@
 package com.shtrih.jpos.fiscalprinter.receipt;
 
 import java.util.Vector;
+import com.shtrih.fiscalprinter.command.AmountItem;
 
 /**
  *
@@ -22,12 +23,12 @@ public class FSDiscounts {
         items.clear();
     }
     
-    public void add(FSDiscount item) {
+    public void add(AmountItem item) {
         items.add(item);
     }
 
-    public FSDiscount get(int index) {
-        return (FSDiscount) items.get(index);
+    public AmountItem get(int index) {
+        return (AmountItem) items.get(index);
     }
 
     public int size() {

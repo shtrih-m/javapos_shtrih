@@ -539,4 +539,8 @@ public interface SMFiscalPrinter {
     PrinterModelParameters readPrinterModelParameters() throws Exception;
 
     FSReadFiscalizationTag fsReadFiscalizationTag(int fiscalizationNumber, int tagNumber) throws Exception;
+    
+    boolean getCapSetVatTable();
+    
+    void clearTableText() throws Exception;
 }

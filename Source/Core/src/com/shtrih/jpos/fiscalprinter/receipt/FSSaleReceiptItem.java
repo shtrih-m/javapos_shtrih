@@ -120,7 +120,7 @@ public class FSSaleReceiptItem {
         return getAmount();
     }
 
-    public void addDiscount(FSDiscount discount) {
+    public void addDiscount(AmountItem discount) {
         getDiscounts().add(discount);
     }
 

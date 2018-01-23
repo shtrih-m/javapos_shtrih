@@ -79,15 +79,7 @@ public class DriverHeader implements JposConst, PrinterHeader {
 
         setNumHeaderLines(printer.getParams().numHeaderLines);
         setNumTrailerLines(printer.getParams().numTrailerLines);
-
-        ReadTableInfo tableStructure = printer.readTableInfo(PrinterConst.SMFP_TABLE_TEXT);
-        int rowCount = tableStructure.getRowCount();
-        for (int row = 1; row <= rowCount; row++) {
-            int result = printer.writeTable(PrinterConst.SMFP_TABLE_TEXT, row, 1, "");
-            if (printer.failed(result)) {
-                break;
-            }
-        }
+        printer.clearTableText();
     }
 
     @Override

@@ -24,15 +24,14 @@
         <!-- ProtocolType, 0 - protocol 1, 1 - protocol 2 -->
         <prop name="protocolType" type="String" value="0"/>
         <!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass -->
-        <prop name="portType" type="String" value="0"/>
+        <prop name="portType" type="String" value="2"/>
         <!--Port name-->
         <!--For serial ports - COM1, for TCP ports: host:port - "10.11.7.210:12345" -->
         <!--<prop name="portName" type="String" value="10.11.7.210:12345"/> -->
         <!--<prop name="portName" type="String" value="COM2"/> -->
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
-        <!--<prop name="portName" type="String" value="192.168.137.111:7778"/> -->
-        <prop name="portName" type="String" value="COM4"/>
+        <prop name="portName" type="String" value="192.168.137.111:7778"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="1"/>
@@ -299,6 +298,7 @@
 		-->
 		<prop name="FSTagsPlacement" type="String" value="0"/>
 		<prop name="printVoidedReceipt" type="String" value="1"/>
+		<prop name="subtotalTextEnabled" type="String" value="0"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>
