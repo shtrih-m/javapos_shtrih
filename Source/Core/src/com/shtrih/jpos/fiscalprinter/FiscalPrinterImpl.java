@@ -4676,16 +4676,15 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void fsPrintCalcReport() throws Exception {
         printDocStart();
-        FSPrintCalcReport command = new FSPrintCalcReport();
-        command.setSysPassword(printer.getSysPassword());
+        FSPrintCalcReport command = new FSPrintCalcReport(printer.getSysPassword());
         printer.execute(command);
+
         try {
             printer.waitForPrinting();
             printDocEnd();
         } catch (Exception e) {
             logger.error("fsPrintCalcReport: " + e.getMessage());
         }
-
     }
 
     public void setDiscountAmount(int amount) throws Exception {

@@ -1767,14 +1767,17 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_PRINT_CORRECTION2, null, params);
     }
 
-    public void fsStartCalcReport(FSStartCalcReport command) throws JposException {
+    /**
+     * Начать формирование отчёта о состоянии расчётов
+     */
+    public void fsStartCalcReport() throws JposException {
+        FSStartCalcReport command = new FSStartCalcReport(getSysPassword());
         executeCommand(command);
     }
 
-    public void fsPrintCalcReport(FSPrintCalcReport command) throws JposException {
-        executeCommand(command);
-    }
-
+    /**
+     * Сформировать отчёт о состоянии расчётов
+     */
     public void fsPrintCalcReport() throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_FS_PRINT_CALC_REPORT, null, null);
     }

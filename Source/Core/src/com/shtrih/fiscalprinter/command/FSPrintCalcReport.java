@@ -1,18 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.fiscalprinter.command;
-
-import com.shtrih.ej.EJDate;
-import com.shtrih.util.BitUtils;
-
-/**
- *
- * @author V.Kravtsov
- */
-
 
 /**
 Сформировать отчёт о состоянии расчётов FF38H
@@ -31,12 +17,13 @@ public class FSPrintCalcReport extends PrinterCommand {
     // in
     private int sysPassword = 0; // System sdministrator password (4 bytes)
     // out
-    private int documentNumber;
-    private int documentDigest;
-    private int documentCount;
+    private long documentNumber;
+    private long documentDigest;
+    private long documentCount;
     private PrinterDate documentDate;
-    
-    public FSPrintCalcReport() {
+
+    public FSPrintCalcReport(int sysPassword) {
+        this.sysPassword = sysPassword;
     }
 
     public final int getCode() {
@@ -52,9 +39,9 @@ public class FSPrintCalcReport extends PrinterCommand {
     }
 
     public void decode(CommandInputStream in) throws Exception {
-        documentNumber = in.readInt();
-        documentDigest = in.readInt();
-        documentCount = in.readInt();
+        documentNumber = in.readLong(4);
+        documentDigest = in.readLong(4);
+        documentCount = in.readLong(4);
         documentDate = in.readDateYMD();
     }
 
@@ -66,65 +53,29 @@ public class FSPrintCalcReport extends PrinterCommand {
     }
 
     /**
-     * @param sysPassword the sysPassword to set
-     */
-    public void setSysPassword(int sysPassword) {
-        this.sysPassword = sysPassword;
-    }
-
-    /**
      * @return the documentNumber
      */
-    public int getDocumentNumber() {
+    public long getDocumentNumber() {
         return documentNumber;
-    }
-
-    /**
-     * @param documentNumber the documentNumber to set
-     */
-    public void setDocumentNumber(int documentNumber) {
-        this.documentNumber = documentNumber;
     }
 
     /**
      * @return the documentDigest
      */
-    public int getDocumentDigest() {
+    public long getDocumentDigest() {
         return documentDigest;
-    }
-
-    /**
-     * @param documentDigest the documentDigest to set
-     */
-    public void setDocumentDigest(int documentDigest) {
-        this.documentDigest = documentDigest;
     }
 
     /**
      * @return the documentCount
      */
-    public int getDocumentCount() {
+    public long getDocumentCount() {
         return documentCount;
     }
-
-    /**
-     * @param documentCount the documentCount to set
-     */
-    public void setDocumentCount(int documentCount) {
-        this.documentCount = documentCount;
-    }
-
     /**
      * @return the documentDate
      */
     public PrinterDate getDocumentDate() {
         return documentDate;
-    }
-
-    /**
-     * @param documentDate the documentDate to set
-     */
-    public void setDocumentDate(PrinterDate documentDate) {
-        this.documentDate = documentDate;
     }
 }
