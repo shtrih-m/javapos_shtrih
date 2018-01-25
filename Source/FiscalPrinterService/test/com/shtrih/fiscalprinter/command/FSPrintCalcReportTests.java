@@ -39,6 +39,6 @@ public class FSPrintCalcReportTests {
         assertEquals(cmd.getDocumentCount(),2);
         assertEquals(cmd.getDocumentDate().getDay(),25);
         assertEquals(cmd.getDocumentDate().getMonth(),1);
-        assertEquals(cmd.getDocumentDate().getYear(),2017);
+        assertEquals(cmd.getDocumentDate().getYear(),18);
     }
 }
