@@ -1007,7 +1007,7 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return new byte[0];
     }
     
-    public byte[] fsReadDocumentTLV(int docNumber) throws Exception{
+    public DocumentTLV fsReadDocumentTLV(int docNumber) throws Exception{
         return null;
     }
     

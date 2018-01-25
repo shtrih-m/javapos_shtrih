@@ -531,8 +531,8 @@ public interface SMFiscalPrinter {
     byte[] fsReadDocumentTLVBlock() throws Exception;
     
     FSDocument fsFindLastDocument(int docType) throws Exception;
-    
-    byte[] fsReadDocumentTLV(int docNumber) throws Exception;
+
+    DocumentTLV fsReadDocumentTLV(int docNumber) throws Exception;
     
     Vector<String> fsReadDocumentTLVAsText(int docNumber) throws Exception;
 

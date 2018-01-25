@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText nbTextStringCount;
     private EditText nbPositionsCount;
     private EditText nbFiscalizationNumber;
+    private EditText nbDocumentNumber;
     private EditText nbTagNumber;
     private EditText nbTextLinesCount;
 
@@ -120,6 +121,9 @@ public class MainActivity extends AppCompatActivity {
 
         nbFiscalizationNumber = findViewById(R.id.nbFiscalizationNumber);
         restoreAndSaveChangesTo(nbFiscalizationNumber, pref, "FiscalizationNumber", "1");
+
+        nbDocumentNumber = findViewById(R.id.nbDocumentNumber);
+        restoreAndSaveChangesTo(nbDocumentNumber, pref, "DocumentNumber", "1");
 
         nbTagNumber = findViewById(R.id.nbTagNumber);
         restoreAndSaveChangesTo(nbTagNumber, pref, "TagNumber", "1041");
@@ -1374,6 +1378,82 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 byte[] tlv = printer.readFiscalizationTLV(fiscalizationNumber);
+                
+                TLVParser parser = new TLVParser();
+                parser.parse(tlv);
+
+                Vector<String> lines = parser.getPrintText();
+
+                StringBuilder sb = new StringBuilder();
+
+                for (String l : lines) {
+                    sb.append(l);
+                    sb.append("\n");
+                }
+
+                text = sb.toString().trim();
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage(text);
+            else
+                showMessage(result);
+        }
+    }
+
+    public void readDocumentTLV(View view) {
+
+        final int documentNumber = Integer.parseInt(nbDocumentNumber.getText().toString());
+
+        new ReadDocumentTLVTask(this, documentNumber).execute();
+    }
+
+    private class ReadDocumentTLVTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+        private final int fiscalizationNumber;
+
+        private long startedAt;
+        private long doneAt;
+
+        private String text;
+
+        private ProgressDialog dialog;
+
+        public ReadDocumentTLVTask(Activity parent, int fiscalizationNumber) {
+            this.parent = parent;
+            this.fiscalizationNumber = fiscalizationNumber;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Reading fiscalization TLV", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+                byte[] tlv = printer.fsReadDocumentTLV(fiscalizationNumber).getTLV();
 
                 TLVParser parser = new TLVParser();
                 parser.parse(tlv);
