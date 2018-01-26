@@ -417,8 +417,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 logger.error("Receipt ending items printing failed", e);
             }
         }
-        if (disablePrint) {
-            getDevice().enablePrint();
+        try{
+            if (disablePrint) {
+                getDevice().enablePrint();
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
     }
 

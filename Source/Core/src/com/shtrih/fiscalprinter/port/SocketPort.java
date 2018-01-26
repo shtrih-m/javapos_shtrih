@@ -19,6 +19,8 @@ public class SocketPort implements PrinterPort {
     private String portName = "";
     private int readTimeout = 1000;
     private int openTimeout = 1000;
+    private InputStream inputStream;
+    private OutputStream outputStream;
     static CompositeLogger logger = CompositeLogger.getLogger(SocketPort.class);
 
     public SocketPort() throws Exception {
@@ -32,10 +34,8 @@ public class SocketPort implements PrinterPort {
         return socket != null;
     }
 
-    private InputStream inputStream;
-    private OutputStream outputStream;
-
-    public void open(int timeout) throws Exception {
+    public void open(int timeout) throws Exception 
+    {
         if (isConnected()) {
             return;
         }
@@ -44,12 +44,9 @@ public class SocketPort implements PrinterPort {
         socket = (Socket) SharedObjects.getInstance().findObject(portName);
 
         try {
-
             if (socket == null) {
 
                 socket = new Socket();
-                SharedObjects.getInstance().add(socket, portName);
-
                 socket.setReuseAddress(true);
                 socket.setSoTimeout(openTimeout);
                 socket.setTcpNoDelay(true);
@@ -58,41 +55,38 @@ public class SocketPort implements PrinterPort {
                 String host = tokenizer.nextToken();
                 int port = Integer.parseInt(tokenizer.nextToken());
                 socket.connect(new InetSocketAddress(host, port), timeout);
-
+                SharedObjects.getInstance().add(socket, portName);
             }
-
             SharedObjects.getInstance().addref(portName);
-
             inputStream = socket.getInputStream();
+            if (inputStream == null) {
+                throw new Exception("InputStream = null");
+            }
             outputStream = socket.getOutputStream();
+            if (outputStream == null) {
+                throw new Exception("OutputStream = null");
+            }
         } catch (Exception e) {
-
+            logger.error("open: ", e);
             SharedObjects.getInstance().release(portName);
             throw e;
         }
     }
 
-    public void close() {
-        if (!isConnected()) {
-            return;
-        }
-
+    public void close() 
+    {
+        inputStream = null;
+        outputStream = null;
         SharedObjects.getInstance().release(portName);
-
-        try {
-
-            socket.close();
-
-            socket = null;
-            inputStream = null;
-            outputStream = null;
-
-            Thread.sleep(100);
-        } catch (Exception e) {
-            socket = null;
-            inputStream = null;
-            outputStream = null;
+        if (socket != null) {
+            try {
+                socket.close();
+                Thread.sleep(100);
+            } catch (Exception e) {
+                logger.error("close: ", e);
+            }
         }
+        socket = null;
     }
 
     public int readByte() throws Exception {
@@ -110,7 +104,7 @@ public class SocketPort implements PrinterPort {
         InputStream in = inputStream;
         int result;
         long startTime = System.currentTimeMillis();
-        for (; ; ) {
+        for (;;) {
             long currentTime = System.currentTimeMillis();
             if (in.available() > 0) {
                 result = in.read();
@@ -147,27 +141,28 @@ public class SocketPort implements PrinterPort {
     }
 
     public void write(byte[] b) throws Exception {
-
         checkLock();
 
-        OutputStream out = outputStream;
         for (int i = 0; i < 2; i++) {
             try {
                 open();
+
+                OutputStream out = outputStream;
                 out.write(b);
                 out.flush();
                 return;
             } catch (Exception e) {
+                logger.error("write: ", e);
                 close();
                 if (i == 1) {
                     throw e;
                 }
-                logger.error(e);
             }
         }
     }
 
-    public void write(int b) throws Exception {
+    public void write(int b) throws Exception 
+    {
         checkLock();
         open();
         byte[] data = new byte[1];
@@ -203,6 +198,9 @@ public class SocketPort implements PrinterPort {
     }
 
     public void checkLock() throws Exception {
+        if (socket == null) {
+            return;
+        }
         if (!Thread.holdsLock(socket)) {
             throw new Exception("Not locked");
         }
