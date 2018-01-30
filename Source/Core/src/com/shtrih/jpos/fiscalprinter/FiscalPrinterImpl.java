@@ -3069,7 +3069,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void endFiscalReceipt(boolean printHeader) throws Exception {
-        logger.debug("endF");
+        logger.debug("endFiscalReceipt");
 
         synchronized (printer) {
             checkEnabled();

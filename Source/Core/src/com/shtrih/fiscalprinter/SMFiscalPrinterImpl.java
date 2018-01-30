@@ -173,7 +173,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         events.remove(item);
     }
 
-    public void deviceExecute(PrinterCommand command) throws Exception {
+    public void deviceExecute(PrinterCommand command) throws Exception 
+    {
         synchronized (port.getSyncObject()) {
             beforeCommand(command);
             try {
