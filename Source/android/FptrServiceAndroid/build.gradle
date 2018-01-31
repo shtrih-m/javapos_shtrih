@@ -96,6 +96,7 @@ android {
                 from "${rootDir}/lib/jpos113.jar"
                 from "${rootDir}/lib/zxing-3.2.2.jar"
                 from "${rootDir}/lib/slf4j-api-1.7.21.jar"
+                from "${rootDir}/lib/xerces4android.jar"
             }
 
             releaseBuildTask.dependsOn variant.assemble
