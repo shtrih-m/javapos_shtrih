@@ -13,6 +13,7 @@ package com.shtrih.jpos.cashdrawer;
  * @author V.Kravtsov
  */
 // java
+import com.shtrih.fiscalprinter.DeviceException;
 import com.shtrih.fiscalprinter.PrinterProtocol;
 import com.shtrih.util.*;
 import gnu.io.CommPortIdentifier;
@@ -43,6 +44,7 @@ import com.shtrih.fiscalprinter.SMFiscalPrinterImpl;
 import com.shtrih.fiscalprinter.command.LongPrinterStatus;
 import com.shtrih.fiscalprinter.port.PrinterPort;
 import com.shtrih.fiscalprinter.port.PrinterPortFactory;
+import com.shtrih.fiscalprinter.port.SerialPrinterPort;
 import com.shtrih.jpos.DeviceService;
 import com.shtrih.jpos.cashdrawer.directIO.CashDrawerDIOItem;
 import com.shtrih.jpos.cashdrawer.directIO.DIOGetDriverParameter;
@@ -55,10 +57,9 @@ import com.shtrih.jpos.fiscalprinter.JposExceptionHandler;
 import jpos.config.JposRegPopulator;
 import jpos.loader.JposServiceConnection;
 
-
 public class CashDrawerImpl extends DeviceService implements
         CashDrawerService113, CashDrawerConst, JposConst, JposEntryConst {
-	// private data
+    // private data
     // ///////////////////////////////////////////////////////////////////////
     // internal state
 
@@ -229,7 +230,7 @@ public class CashDrawerImpl extends DeviceService implements
                         statistics.serialNumber = status.getSerial();
                         statistics.firmwareRevision = status
                                 .getFirmwareRevision();
-                        
+
                     } catch (Exception e) {
                         logger.error(e);
                         setPowerState(JPOS_PS_OFFLINE);
@@ -245,7 +246,7 @@ public class CashDrawerImpl extends DeviceService implements
         }
     }
 
-	// Properties
+    // Properties
     public String getCheckHealthText() throws JposException {
         logger.debug("getCheckHealthText: " + checkHealthText);
         return checkHealthText;
@@ -341,17 +342,18 @@ public class CashDrawerImpl extends DeviceService implements
         return state;
     }
 
-	// Methods supported by all device services.
+    // Methods supported by all device services.
     public void claim(int timeout) throws JposException {
         logger.debug("claim(" + String.valueOf(timeout) + ")");
         try {
             checkOpened();
-            if (!claimed) 
-            {
-                port.setPortName(fptrParams.portName);
-                port.setBaudRate(fptrParams.getBaudRate());
-                port.open(timeout);
-                claimed = true;
+            if (!claimed) {
+                synchronized (port.getSyncObject()) {
+                    port.setPortName(fptrParams.portName);
+                    port.setBaudRate(fptrParams.getBaudRate());
+                    port.open(timeout);
+                    claimed = true;
+                }
             }
         } catch (Exception e) {
             handleException(e);
@@ -426,7 +428,7 @@ public class CashDrawerImpl extends DeviceService implements
             this.cb = cb;
             params.load(jposEntry);
 
-                        // Loading fiscal printer parameters
+            // Loading fiscal printer parameters
             // jposEntry.getRegPopulator() returns null,
             // so we create new registry populator
             JposServiceManager manager = JposServiceLoader.getManager();
@@ -442,7 +444,7 @@ public class CashDrawerImpl extends DeviceService implements
 
             port = PrinterPortFactory.createInstance(fptrParams);
             device = ProtocolFactory.getProtocol(fptrParams, port);
-            printer = new SMFiscalPrinterImpl(port, device, fptrParams, null);
+            printer = new SMFiscalPrinterImpl(port, device, fptrParams);
 
             statistics.load(fptrParams.statisticFileName);
             state = JPOS_S_IDLE;
@@ -467,7 +469,7 @@ public class CashDrawerImpl extends DeviceService implements
         logger.debug("release: OK");
     }
 
-	// Capabilities
+    // Capabilities
     public boolean getCapStatus() throws JposException {
         logger.debug("getCapStatus: " + String.valueOf(params.capStatus));
         return params.capStatus;
@@ -506,7 +508,7 @@ public class CashDrawerImpl extends DeviceService implements
         return false;
     }
 
-	// Properties
+    // Properties
     public boolean getDrawerOpened() throws JposException {
         logger.debug("getDrawerOpened: " + String.valueOf(drawerOpened));
         checkEnabled();
@@ -533,7 +535,7 @@ public class CashDrawerImpl extends DeviceService implements
         return powerState;
     }
 
-	// Methods
+    // Methods
     public void openDrawer() throws JposException {
         logger.debug("openDrawer()");
         try {
@@ -612,13 +614,13 @@ public class CashDrawerImpl extends DeviceService implements
         throw new JposException(JPOS_E_ILLEGAL);
     }
 
-    public boolean searchByBaudRates(int deviceBaudRate, int deviceByteTimeout,
-            boolean searchByBaudRateEnabled) throws Exception {
-        if (searchByBaudRateEnabled) {
-            int[] baudRates = printer.getSupportedBaudRates();
-            for (int j = 0; j < baudRates.length; j++) {
-                if (printer.connectDevice(baudRates[j], deviceBaudRate,
-                        deviceByteTimeout)) {
+    private boolean searchByBaudRates(String portName, int timeout)
+            throws Exception {
+        int[] deviceBaudRates = {4800, 9600, 19200, 38400, 57600, 115200, 2400};
+        for (int i = 0; i < deviceBaudRates.length; i++) {
+            int baudRate = deviceBaudRates[i];
+            if (baudRate != fptrParams.getBaudRate()) {
+                if (connectDevice(portName, baudRate, timeout)) {
                     return true;
                 }
             }
@@ -636,42 +638,67 @@ public class CashDrawerImpl extends DeviceService implements
     }
 
     public void searchDevice() throws Exception {
-        logger.debug("connect");
-        FptrParameters fptrParams = printer.getParams();
-        if (printer.connectDevice(
-                fptrParams.getBaudRate(),
-                fptrParams.getBaudRate(),
-                fptrParams.getDeviceByteTimeout())) {
-            return;
-        }
+        logger.debug("searchDevice");
+        synchronized (port.getSyncObject()) {
+            FptrParameters fptrParams = printer.getParams();
+            if (printer.connectDevice(
+                    fptrParams.getBaudRate(),
+                    fptrParams.getBaudRate(),
+                    fptrParams.getDeviceByteTimeout())) {
+                return;
+            }
 
-        if (fptrParams.searchByPortEnabled) {
-            Enumeration e = CommPortIdentifier.getPortIdentifiers();
-            while (e.hasMoreElements()) {
-                CommPortIdentifier portIdentifier = (CommPortIdentifier) e
-                        .nextElement();
-                if (portIdentifier.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-                    if (!fptrParams.portName.equalsIgnoreCase(portIdentifier
-                            .getName())) {
-                        port.setPortName(portIdentifier.getName());
-                        port.setBaudRate(fptrParams.getBaudRate());
-                        port.open(0);
-                        if (searchByBaudRates(fptrParams.getBaudRate(),
-                                fptrParams.getDeviceByteTimeout(),
-                                fptrParams.searchByBaudRateEnabled)) {
+            if (fptrParams.searchByPortEnabled) {
+                String[] ports = SerialPrinterPort.getPortNames();
+                for (int i = 0; i < ports.length; i++) {
+                    String portName = ports[i];
+                    if (!fptrParams.portName.equalsIgnoreCase(portName)) {
+                        if (fptrParams.searchByBaudRateEnabled) {
+                            if (searchByBaudRates(portName, fptrParams.getDeviceByteTimeout())) {
+                                return;
+                            }
+                        } else if (connectDevice(portName, fptrParams.getBaudRate(), fptrParams.getDeviceByteTimeout())) {
                             return;
                         }
                     }
+
                 }
-            }
-        } else {
-            if (searchByBaudRates(fptrParams.getBaudRate(),
-                    fptrParams.getDeviceByteTimeout(),
-                    fptrParams.searchByBaudRateEnabled)) {
+            } else if (searchByBaudRates(fptrParams.portName,
+                    fptrParams.getDeviceByteTimeout())) {
                 return;
             }
         }
+
         throw new JposException(JPOS_E_NOHARDWARE);
+    }
+
+    private boolean connectDevice(String searchPortName, int searchBaudRate,
+            int searchTimeout) throws Exception {
+        logger.debug("connectDevice(" + searchPortName + ", " + searchBaudRate + ", "
+                + searchTimeout + ")");
+        try {
+            port.setPortName(searchPortName);
+            port.setBaudRate(searchBaudRate);
+            port.open(searchTimeout);
+            printer.connect();
+
+            // always set port parameters to update byte
+            // receive timeout in fiscal printer
+            int baudRateIndex = printer.getBaudRateIndex(fptrParams.getBaudRate());
+            printer.writePortParams(0, baudRateIndex, fptrParams.getDeviceByteTimeout());
+            fptrParams.setBaudRate(printer.getModel().getSupportedBaudRates()[baudRateIndex]);
+
+            // if baudrate changed - reopen port
+            if (searchBaudRate != fptrParams.getBaudRate()) {
+                port.setPortName(searchPortName);
+                port.setBaudRate(fptrParams.getBaudRate());
+                port.open(searchTimeout);
+            }
+            return true;
+        } catch (DeviceException e) {
+            logger.error(e);
+            return false;
+        }
     }
 
     class DeviceTarget implements Runnable {

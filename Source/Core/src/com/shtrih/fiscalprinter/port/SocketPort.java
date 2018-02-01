@@ -1,14 +1,9 @@
 package com.shtrih.fiscalprinter.port;
 
-import com.shtrih.util.CompositeLogger;
-import com.shtrih.util.Localizer;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import com.shtrih.util.*;
 
 /**
  * @author V.Kravtsov
@@ -16,13 +11,26 @@ import java.util.StringTokenizer;
 public class SocketPort implements PrinterPort {
 
     private Socket socket = null;
-    private String portName = "";
+    private InputStream inputStream = null;
+    private OutputStream outputStream = null;
+    private final String portName;
     private int readTimeout = 1000;
     private int openTimeout = 1000;
     static CompositeLogger logger = CompositeLogger.getLogger(SocketPort.class);
+    private static Map<String, SocketPort> items = new HashMap<String, SocketPort>();
 
-    public SocketPort() throws Exception {
-        socket = new Socket();
+    public static synchronized SocketPort getInstance(String portName) throws Exception {
+        SocketPort item = items.get(portName);
+        if (item == null) {
+            item = new SocketPort(portName);
+            items.put(portName, item);
+        }
+        return item;
+    }
+
+    private SocketPort(String portName) throws Exception {
+        this.portName = portName;
+        logger.debug("SocketPort(" + portName + ")");
     }
 
     public void open() throws Exception {
@@ -30,7 +38,7 @@ public class SocketPort implements PrinterPort {
     }
 
     public boolean isConnected() {
-        return socket.isConnected();
+        return socket != null;
     }
 
     public void checkLocked() throws Exception {
@@ -39,41 +47,43 @@ public class SocketPort implements PrinterPort {
         }
     }
 
-    public void open(int timeout) throws Exception {
+    public void open(int timeout) throws Exception 
+    {
+        checkLocked();
         if (isConnected()) {
             return;
         }
 
         this.openTimeout = timeout;
-        socket = (Socket) SharedObjects.getInstance().findObject(portName);
-        if (socket == null) {
-            try {
-                socket = new Socket();
-                socket.setReuseAddress(true);
-                socket.setSoTimeout(openTimeout);
-                socket.setTcpNoDelay(true);
+        try {
+            socket = new Socket();
+            socket.setReuseAddress(true);
+            socket.setSoTimeout(openTimeout);
+            socket.setTcpNoDelay(true);
 
-                StringTokenizer tokenizer = new StringTokenizer(portName, ":");
-                String host = tokenizer.nextToken();
-                int port = Integer.parseInt(tokenizer.nextToken());
-                socket.connect(new InetSocketAddress(host, port), timeout);
-                SharedObjects.getInstance().add(socket, portName);
-            } catch (Exception e) {
-                SharedObjects.getInstance().release(portName);
-                throw e;
-            }
+            StringTokenizer tokenizer = new StringTokenizer(portName, ":");
+            String host = tokenizer.nextToken();
+            int port = Integer.parseInt(tokenizer.nextToken());
+            socket.connect(new InetSocketAddress(host, port), timeout);
+            inputStream = socket.getInputStream();
+            outputStream = socket.getOutputStream();
+        } catch (Exception e) {
+            throw e;
         }
-        SharedObjects.getInstance().addref(portName);
     }
 
     public void close() {
-        SharedObjects.getInstance().release(portName);
+        if (!isConnected()) {
+            return;
+        }
         try {
+            inputStream.close();
+            outputStream.close();
             socket.close();
             Thread.sleep(100);
         } catch (Exception e) {
         }
-        socket = new Socket();
+        socket = null;
     }
 
     public int readByte() throws Exception {
@@ -89,12 +99,8 @@ public class SocketPort implements PrinterPort {
         long startTime = System.currentTimeMillis();
         for (;;) {
             long currentTime = System.currentTimeMillis();
-            InputStream in = socket.getInputStream();
-            if (in == null){
-                throw new Exception("InputStream = null");
-            }
-            if (in.available() > 0) {
-                result = in.read();
+            if (inputStream.available() > 0) {
+                result = inputStream.read();
                 if (result >= 0) {
                     return result;
                 }
@@ -115,11 +121,7 @@ public class SocketPort implements PrinterPort {
         byte[] data = new byte[len];
         int offset = 0;
         while (len > 0) {
-            InputStream in = socket.getInputStream();
-            if (in == null){
-                throw new Exception("InputStream = null");
-            }
-            int count = in.read(data, offset, len);
+            int count = inputStream.read(data, offset, len);
             if (count == -1) {
                 break;
             }
@@ -134,12 +136,8 @@ public class SocketPort implements PrinterPort {
         for (int i = 0; i < 2; i++) {
             try {
                 open();
-                OutputStream out = socket.getOutputStream();
-                if (out == null){
-                    throw new Exception("OutputStream = null");
-                }
-                out.write(b);
-                out.flush();
+                outputStream.write(b);
+                outputStream.flush();
                 return;
             } catch (Exception e) {
                 close();
@@ -169,15 +167,11 @@ public class SocketPort implements PrinterPort {
     }
 
     public void setPortName(String portName) throws Exception {
-        if (portName.equalsIgnoreCase(this.portName)) {
-            return;
-        }
-        close();
-        this.portName = portName;
+
     }
 
     public Object getSyncObject() throws Exception {
-        return socket;
+        return this;
     }
 
     public boolean isSearchByBaudRateEnabled() {

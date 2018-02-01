@@ -2685,8 +2685,7 @@ class PrinterTest implements FiscalPrinterConst {
                             + "  : " + String.valueOf(vatRate[0]));
                 }
                 // set vat rates
-                if (printer.getCapSetVatTable()) 
-                {
+                if (printer.getCapSetVatTable()) {
                     for (int i = 1; i <= numVatRates; i++) {
                         printer.setVatValue(i, String.valueOf(1234 * i));
                     }
@@ -3559,6 +3558,10 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecItem("Item 1", 300, 1000, 1, 300, "");
             printer.printRecItemAdjustment(FPTR_AT_AMOUNT_DISCOUNT, "СКИДКА", 50, 1);
             printer.printRecTotal(300, 300, "description");
+            for (int i = 1; i < 20; i++) {
+                printer.printRecMessage("Printrecmessage " + i);
+            }
+            printCode128();
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
