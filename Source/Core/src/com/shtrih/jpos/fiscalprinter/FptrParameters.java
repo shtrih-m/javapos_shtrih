@@ -29,7 +29,7 @@ public class FptrParameters {
 
     public static final int defaultGraphicsLineDelay = 200;
 
-    private int byteTimeout = 3000;
+    public int byteTimeout = 3000;
     private int deviceByteTimeout = 3000;
     private int statusCommand = PrinterConst.SMFP_STATUS_COMMAND_DS;
     private int graphicsLineDelay = defaultGraphicsLineDelay;

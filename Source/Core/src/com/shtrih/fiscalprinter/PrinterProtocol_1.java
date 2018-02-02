@@ -265,6 +265,8 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         int repeatCount = 0;
         while (true) {
             try {
+                logger.debug("sendCommand: " + command.getText() + ", " + command.getIsRepeatable());
+
                 if (repeatCount > 0) {
                     logger.debug("retry " + repeatCount + "...");
                 }
@@ -278,20 +280,15 @@ public class PrinterProtocol_1 implements PrinterProtocol {
             } catch (IOException e) {
                 logger.error("IOException: ", e);
 
-                port.close();
-                port.open(100);
-
                 if (!command.getIsRepeatable()) {
                     throw e;
                 }
+
                 if (repeatCount >= maxRepeatCount) {
                     throw e;
                 }
             } catch (DeviceException e) {
                 logger.error("DeviceException: ", e);
-
-                port.close();
-                port.open(100);
 
                 if (!command.getIsRepeatable()) {
                     throw e;
@@ -303,7 +300,6 @@ public class PrinterProtocol_1 implements PrinterProtocol {
                 try {
                     port.readBytes(0xFF);
                     port.close();
-                    port.open(100);
                 } catch (Exception e1) {
                 }
 

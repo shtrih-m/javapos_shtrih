@@ -12,30 +12,37 @@
  */
 package com.shtrih.fiscalprinter.port;
 
-import gnu.io.CommPortIdentifier;
-import gnu.io.SerialPort;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.Vector;
-import com.shtrih.util.Localizer;
-import com.shtrih.util.CompositeLogger;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import gnu.io.*;
+import com.shtrih.util.*;
 
 public class SerialPrinterPort implements PrinterPort {
 
     private int timeout = 1000;
     private int baudRate = 9600;
-    private String portName = "";
+    private final String portName;
     private SerialPort port = null;
     private static CompositeLogger logger = CompositeLogger.getLogger(SerialPrinterPort.class);
+
+    private static Map<String, SerialPrinterPort> items = new HashMap<String, SerialPrinterPort>();
+
+    public static synchronized SerialPrinterPort getInstance(String portName) throws Exception {
+        SerialPrinterPort item = items.get(portName);
+        if (item == null) {
+            item = new SerialPrinterPort(portName);
+            items.put(portName, item);
+        }
+        return item;
+    }
 
     /**
      * Creates a new instance of PrinterPort
      */
-    public SerialPrinterPort() {
+    private SerialPrinterPort(String portName) {
+        this.portName = portName;
     }
 
     public void checkOpened() throws Exception {
@@ -54,10 +61,6 @@ public class SerialPrinterPort implements PrinterPort {
     }
 
     public void setPortName(String portName) throws Exception {
-        if (!this.portName.equalsIgnoreCase(portName)) {
-            close();
-            this.portName = portName;
-        }
     }
 
     public void setBaudRate(int baudRate) throws Exception {
@@ -68,9 +71,16 @@ public class SerialPrinterPort implements PrinterPort {
     }
 
     public synchronized void open(int timeout) throws Exception {
-
         if (isClosed()) {
-            port = SharedSerialPorts.getInstance().openPort(portName, timeout, this);
+            CommPortIdentifier portId = CommPortIdentifier
+                    .getPortIdentifier(portName);
+            if (portId == null) {
+                throw new Exception("Port does not exist, " + portName);
+            }
+            port = (SerialPort) portId.open(getClass().getName(), timeout);
+            if (port == null) {
+                throw new Exception("Failed to open port " + portName);
+            }
             port.setInputBufferSize(1024);
             port.setOutputBufferSize(1024);
             port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
@@ -80,9 +90,8 @@ public class SerialPrinterPort implements PrinterPort {
     }
 
     public synchronized void close() {
-
         if (isOpened()) {
-            SharedSerialPorts.getInstance().closePort(port);
+            port.close();
             port = null;
         }
     }
@@ -183,7 +192,7 @@ public class SerialPrinterPort implements PrinterPort {
     }
 
     public Object getSyncObject() throws Exception {
-        return port;
+        return this;
     }
 
     public boolean isSearchByBaudRateEnabled() {

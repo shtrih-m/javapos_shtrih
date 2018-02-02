@@ -60,8 +60,6 @@ public class PrinterImages implements JposConst {
 
     public void checkIndex(int index) throws Exception 
     {
-        logger.debug("checkIndex(" + index + ")");
-        
         if (!validIndex(index)) {
             throw new JposException(JPOS_E_FAILURE,
                     Localizer.getString(Localizer.InvalidImageIndex));

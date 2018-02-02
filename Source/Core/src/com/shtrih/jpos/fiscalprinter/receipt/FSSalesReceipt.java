@@ -316,100 +316,97 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void endFiscalReceipt(boolean printHeader) throws Exception {
-        if (!isOpened) {
-            return;
-        }
-
-        correctPayments();
-        int discountAmount = 0;
-        if (getDevice().getCapDiscount()) {
-            addItemsDiscounts();
-        } else if (discounts.getTotal() < 100) {
-            discountAmount = (int) discounts.getTotal();
-            discounts.clear();
-        } else {
-            addItemsDiscounts();
-        }
-        updateReceiptItems();
-        printReceiptItems();
-
-        if (disablePrint) {
-            getDevice().disablePrint();
-        }
-
-        if (!cancelled && getDevice().isCapFooterFlag()) {
-            getDevice().setIsFooter(true);
-            try {
-                printEndingItems();
-            } finally {
-                getDevice().setIsFooter(false);
-            }
-        }
-
-        if (cancelled) {
-            getPrinter().waitForPrinting();
-            getDevice().cancelReceipt();
-            try {
-                getPrinter().waitForPrinting();
-                if (getParams().printVoidedReceipt) {
-                    String docName = getDevice().getReceiptName(receiptType);
-                    getDevice().printReceiptHeader(docName);
-                    getPrinter().printText(voidDescription);
-                    getPrinter().printText(getParams().receiptVoidText);
-                }
-            } catch (Exception e) {
-                logger.error("Cancel receipt: " + e.getMessage());
-            }
-            getFiscalDay().cancelFiscalRec();
-            clearReceipt();
-        } else {
-
-            FSCloseReceipt closeReceipt = new FSCloseReceipt();
-            closeReceipt.setSysPassword(getDevice().getUsrPassword());
-            for (int i = 0; i < payments.length; i++) {
-                closeReceipt.setPayment(i, payments[i]);
-            }
-            closeReceipt.setTaxValue(0, getParams().taxValue[0]);
-            closeReceipt.setTaxValue(1, getParams().taxValue[1]);
-            closeReceipt.setTaxValue(2, getParams().taxValue[2]);
-            closeReceipt.setTaxValue(3, getParams().taxValue[3]);
-            closeReceipt.setTaxValue(4, getParams().taxValue[4]);
-            closeReceipt.setTaxValue(5, getParams().taxValue[5]);
-            closeReceipt.setDiscount(discountAmount);
-            closeReceipt.setTaxSystem(getParams().taxSystem);
-            closeReceipt.setText(getParams().closeReceiptText);
-
-            int rc = getDevice().executeCommand(closeReceipt);
-
-            if (rc == SMFP_EFPTR_NOT_SUPPORTED) {
-                CloseRecParams closeParams = new CloseRecParams();
-                closeParams.setSum1(payments[0]);
-                closeParams.setSum2(payments[1]);
-                closeParams.setSum3(payments[2]);
-                closeParams.setSum4(payments[3]);
-                closeParams.setTax1(0);
-                closeParams.setTax2(0);
-                closeParams.setTax3(0);
-                closeParams.setTax4(0);
-                closeParams.setDiscount(discountAmount);
-                closeParams.setText(getParams().closeReceiptText);
-                getDevice().closeReceipt(closeParams);
+        if (isOpened) {
+            correctPayments();
+            int discountAmount = 0;
+            if (getDevice().getCapDiscount()) {
+                addItemsDiscounts();
+            } else if (discounts.getTotal() < 100) {
+                discountAmount = (int) discounts.getTotal();
+                discounts.clear();
             } else {
-                getDevice().check(rc);
+                addItemsDiscounts();
+            }
+            updateReceiptItems();
+            printReceiptItems();
+
+            if (disablePrint) {
+                getDevice().disablePrint();
             }
 
-            try {
-                getFiscalDay().closeFiscalRec();
-                if (!disablePrint) {
-                    for (int i = 0; i < messages.size(); i++) {
-                        getDevice().printText(messages.get(i));
-                    }
+            if (!cancelled && getDevice().isCapFooterFlag()) {
+                getDevice().setIsFooter(true);
+                try {
+                    printEndingItems();
+                } finally {
+                    getDevice().setIsFooter(false);
                 }
-            } catch (Exception e) {
-                logger.error("Receipt messages printing failed", e);
+            }
+
+            if (cancelled) {
+                getPrinter().waitForPrinting();
+                getDevice().cancelReceipt();
+                try {
+                    getPrinter().waitForPrinting();
+                    if (getParams().printVoidedReceipt) {
+                        String docName = getDevice().getReceiptName(receiptType);
+                        getDevice().printReceiptHeader(docName);
+                        getPrinter().printText(voidDescription);
+                        getPrinter().printText(getParams().receiptVoidText);
+                    }
+                } catch (Exception e) {
+                    logger.error("Cancel receipt: " + e.getMessage());
+                }
+                getFiscalDay().cancelFiscalRec();
+                clearReceipt();
+            } else {
+
+                FSCloseReceipt closeReceipt = new FSCloseReceipt();
+                closeReceipt.setSysPassword(getDevice().getUsrPassword());
+                for (int i = 0; i < payments.length; i++) {
+                    closeReceipt.setPayment(i, payments[i]);
+                }
+                closeReceipt.setTaxValue(0, getParams().taxValue[0]);
+                closeReceipt.setTaxValue(1, getParams().taxValue[1]);
+                closeReceipt.setTaxValue(2, getParams().taxValue[2]);
+                closeReceipt.setTaxValue(3, getParams().taxValue[3]);
+                closeReceipt.setTaxValue(4, getParams().taxValue[4]);
+                closeReceipt.setTaxValue(5, getParams().taxValue[5]);
+                closeReceipt.setDiscount(discountAmount);
+                closeReceipt.setTaxSystem(getParams().taxSystem);
+                closeReceipt.setText(getParams().closeReceiptText);
+
+                int rc = getDevice().executeCommand(closeReceipt);
+
+                if (rc == SMFP_EFPTR_NOT_SUPPORTED) {
+                    CloseRecParams closeParams = new CloseRecParams();
+                    closeParams.setSum1(payments[0]);
+                    closeParams.setSum2(payments[1]);
+                    closeParams.setSum3(payments[2]);
+                    closeParams.setSum4(payments[3]);
+                    closeParams.setTax1(0);
+                    closeParams.setTax2(0);
+                    closeParams.setTax3(0);
+                    closeParams.setTax4(0);
+                    closeParams.setDiscount(discountAmount);
+                    closeParams.setText(getParams().closeReceiptText);
+                    getDevice().closeReceipt(closeParams);
+                } else {
+                    getDevice().check(rc);
+                }
+
+                try {
+                    getFiscalDay().closeFiscalRec();
+                    if (!disablePrint) {
+                        for (int i = 0; i < messages.size(); i++) {
+                            getDevice().printText(messages.get(i));
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("Receipt messages printing failed", e);
+                }
             }
         }
-
         if (cancelled || (!getDevice().isCapFooterFlag())) {
             try {
                 printEndingItems();
@@ -417,7 +414,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 logger.error("Receipt ending items printing failed", e);
             }
         }
-        try{
+        try {
             if (disablePrint) {
                 getDevice().enablePrint();
             }

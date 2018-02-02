@@ -83,4 +83,8 @@ public class PrintStringFont extends PrinterCommand {
     public String getLine() {
         return line;
     }
+    
+    public boolean getIsRepeatable(){
+        return true;
+    }
 }

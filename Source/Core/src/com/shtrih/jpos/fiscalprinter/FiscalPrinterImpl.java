@@ -4454,7 +4454,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void saveProperties() throws Exception {
-        logger.debug("saveProperties");
         try {
             String serial = "FiscalPrinter_" + getPrinter().readFullSerial();
             XmlPropWriter writer = new XmlPropWriter("FiscalPrinter",
@@ -4465,7 +4464,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             writer.writeNonFiscalDocNumber(params.nonFiscalDocNumber);
 
             writer.save(getPropsFileName());
-            logger.debug("saveProperties: OK");
         } catch (Exception e) {
             logger.error("saveProperties", e);
         }

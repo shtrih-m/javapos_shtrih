@@ -8,28 +8,29 @@ import com.shtrih.util.*;
 /**
  * @author V.Kravtsov
  */
-public class SocketPort implements PrinterPort {
-
+public class SocketPort implements PrinterPort 
+{
     private Socket socket = null;
-    private InputStream inputStream = null;
-    private OutputStream outputStream = null;
     private final String portName;
     private int readTimeout = 1000;
     private int openTimeout = 1000;
+    private InputStream inputStream = null;
+    private OutputStream outputStream = null;
     static CompositeLogger logger = CompositeLogger.getLogger(SocketPort.class);
     private static Map<String, SocketPort> items = new HashMap<String, SocketPort>();
 
-    public static synchronized SocketPort getInstance(String portName) throws Exception {
+    public static synchronized SocketPort getInstance(String portName, int openTimeout) throws Exception {
         SocketPort item = items.get(portName);
         if (item == null) {
-            item = new SocketPort(portName);
+            item = new SocketPort(portName, openTimeout);
             items.put(portName, item);
         }
         return item;
     }
 
-    private SocketPort(String portName) throws Exception {
+    private SocketPort(String portName, int openTimeout) throws Exception {
         this.portName = portName;
+        this.openTimeout = openTimeout;
         logger.debug("SocketPort(" + portName + ")");
     }
 
@@ -47,29 +48,38 @@ public class SocketPort implements PrinterPort {
         }
     }
 
-    public void open(int timeout) throws Exception 
-    {
+    public void open(int timeout) throws Exception {
         checkLocked();
         if (isConnected()) {
             return;
         }
 
-        this.openTimeout = timeout;
-        try {
-            socket = new Socket();
-            socket.setReuseAddress(true);
-            socket.setSoTimeout(openTimeout);
-            socket.setTcpNoDelay(true);
-
-            StringTokenizer tokenizer = new StringTokenizer(portName, ":");
-            String host = tokenizer.nextToken();
-            int port = Integer.parseInt(tokenizer.nextToken());
-            socket.connect(new InetSocketAddress(host, port), timeout);
-            inputStream = socket.getInputStream();
-            outputStream = socket.getOutputStream();
-        } catch (Exception e) {
-            throw e;
+        long startTime = System.currentTimeMillis();
+        for (;;) {
+            try {
+                doOpen(timeout);
+                return;
+            } catch (Exception e) {
+                long currentTime = System.currentTimeMillis();
+                if ((currentTime - startTime) > timeout) {
+                    throw e;
+                }
+            }
         }
+    }
+
+    private void doOpen(int timeout) throws Exception {
+        socket = new Socket();
+        socket.setReuseAddress(true);
+        socket.setSoTimeout(openTimeout);
+        socket.setTcpNoDelay(true);
+
+        StringTokenizer tokenizer = new StringTokenizer(portName, ":");
+        String host = tokenizer.nextToken();
+        int port = Integer.parseInt(tokenizer.nextToken());
+        socket.connect(new InetSocketAddress(host, port), timeout);
+        inputStream = socket.getInputStream();
+        outputStream = socket.getOutputStream();
     }
 
     public void close() {
@@ -77,13 +87,21 @@ public class SocketPort implements PrinterPort {
             return;
         }
         try {
-            inputStream.close();
-            outputStream.close();
-            socket.close();
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            if (outputStream != null) {
+                outputStream.close();
+            }
+            if (socket != null) {
+                socket.close();
+            }
             Thread.sleep(100);
         } catch (Exception e) {
         }
         socket = null;
+        inputStream = null;
+        outputStream = null;
     }
 
     public int readByte() throws Exception {

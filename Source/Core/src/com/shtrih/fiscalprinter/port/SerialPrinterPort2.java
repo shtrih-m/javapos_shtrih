@@ -80,8 +80,15 @@ public class SerialPrinterPort2 implements PrinterPort {
 
     public void open(int timeout) throws Exception {
         if (isClosed()) {
-            port = SharedSerialPorts.getInstance().openPort(portName, timeout,
-                    this);
+            CommPortIdentifier portId = CommPortIdentifier
+                    .getPortIdentifier(portName);
+            if (portId == null) {
+                throw new Exception("Port does not exist, " + portName);
+            }
+            port = (SerialPort) portId.open(getClass().getName(), timeout);
+            if (port == null) {
+                throw new Exception("Failed to open port " + portName);
+            }
             port.setInputBufferSize(1024);
             port.setOutputBufferSize(1024);
             port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
@@ -92,7 +99,7 @@ public class SerialPrinterPort2 implements PrinterPort {
 
     public void close() {
         if (isOpened()) {
-            SharedSerialPorts.getInstance().closePort(port);
+            port.close();
             port = null;
         }
     }
