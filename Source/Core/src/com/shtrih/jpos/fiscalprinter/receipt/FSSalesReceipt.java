@@ -304,14 +304,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void correctPayments() throws Exception {
-        long paidAmount = payments[0];
-        if (paidAmount < getSubtotal()) {
-            for (int i = 1; i < payments.length; i++) {
-                if (paidAmount + payments[i] > getSubtotal()) {
-                    payments[i] = getSubtotal() - paidAmount;
-                }
-                paidAmount += payments[i];
+        long paidAmount = 0;
+        for (int i = 1; i < payments.length; i++) {
+            if (paidAmount + payments[i] > getSubtotal()) {
+                payments[i] = getSubtotal() - paidAmount;
             }
+            paidAmount += payments[i];
         }
     }
 

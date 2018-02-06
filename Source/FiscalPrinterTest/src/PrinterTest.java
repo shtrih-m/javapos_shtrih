@@ -3557,7 +3557,9 @@ class PrinterTest implements FiscalPrinterConst {
             printer.beginFiscalReceipt(false);
             printer.printRecItem("Item 1", 300, 1000, 1, 300, "");
             printer.printRecItemAdjustment(FPTR_AT_AMOUNT_DISCOUNT, "СКИДКА", 50, 1);
-            printer.printRecTotal(300, 300, "description");
+            printer.printRecTotal(30, 30, "1");
+            printer.printRecTotal(20, 20, "2");
+            printer.printRecTotal(300, 300, "0");
             for (int i = 1; i < 20; i++) {
                 printer.printRecMessage("Printrecmessage " + i);
             }
