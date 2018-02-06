@@ -854,12 +854,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 setPowerState(JPOS_PS_ONLINE);
                 setJrnPaperState(true, true);
 
-                loadProperties();
                 updateDeviceMetrics();
                 getPrinter().initialize();
                 cancelReceipt();
                 writeTables();
                 header.initDevice();
+                loadProperties();
 
                 isTablesRead = false;
                 int numVatRates = getModel().getNumVatRates();

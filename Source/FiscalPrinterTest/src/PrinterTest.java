@@ -498,7 +498,7 @@ class PrinterTest implements FiscalPrinterConst {
             byte b3[] = {0x1D, 0x77, 0x02};
             printer.printNormal(FPTR_S_RECEIPT, new String(b3));
             byte b4[] = {0x1D, 0x6B, 0x43, 0x0C};
-            printer.printNormal(FPTR_S_RECEIPT, new String(b4) + "207045000010");
+            printer.printNormal(FPTR_S_RECEIPT, new String(b4) + "207013000741");
 
             printer.endNonFiscal();
         } catch (Exception e) {
@@ -958,9 +958,10 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printFiscalReceipt() {
-        VatTest();
+        //VatTest();
         // printFiscalReceipt101();
         // printFiscalReceipt101_1();
+        printEscBarcodesNormal();
         printFiscalReceipt145_1();
         //printCorrectionReceipt2();
     }
