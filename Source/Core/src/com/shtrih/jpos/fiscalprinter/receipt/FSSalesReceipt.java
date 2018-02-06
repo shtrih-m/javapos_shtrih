@@ -512,10 +512,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             getDevice().printVoidItem(priceItem);
         }
         if (!getParams().ReceiptTemplateEnabled) {
-            String text = "=" + StringUtils.amountToString(item.getDiscounts().getTotal());
-            getDevice().printLines("СКИДКА", text);
+            long discountTotal = item.getDiscounts().getTotal();
+            if (discountTotal != 0) {
+                String text = "=" + StringUtils.amountToString(discountTotal);
+                getDevice().printLines("СКИДКА", text);
+            }
         }
-
         String postLine = item.getPostLine();
 
         if (postLine.length()
