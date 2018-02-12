@@ -1529,6 +1529,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setPassword(usrPassword);
         int rc = executeCommand(command);
         capOpenFiscalDay = isCommandSupported(rc);
+
+        if(capOpenFiscalDay)
+          check(rc);
+
         return rc;
     }
 
