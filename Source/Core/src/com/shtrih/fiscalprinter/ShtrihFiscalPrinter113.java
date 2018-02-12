@@ -1805,12 +1805,33 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         executeCommand(command);
     }
 
+    @Deprecated
     public void fsStartFiscalClose(FSStartFiscalClose command) throws JposException {
         executeCommand(command);
     }
 
+    /**
+     * Начать закрытие фискального режима
+     */
+    public void fsStartFiscalClose() throws JposException {
+        FSStartFiscalClose cmd = new FSStartFiscalClose();
+        cmd.setSysPassword(getSysPassword());
+        executeCommand(cmd);
+    }
+
+    @Deprecated
     public void fsPrintFiscalClose(FSPrintFiscalClose command) throws JposException {
         executeCommand(command);
+    }
+
+    /**
+     * Закрыть фискальный режим
+     */
+    public void fsPrintFiscalClose() throws JposException {
+
+        FSPrintFiscalClose cmd = new FSPrintFiscalClose();
+        cmd.setSysPassword(getSysPassword());
+        executeCommand(cmd);
     }
 
     public void fsReadDocCount(FSReadDocCount command) throws JposException {

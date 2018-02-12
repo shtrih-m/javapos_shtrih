@@ -693,8 +693,6 @@ class PrinterTest implements FiscalPrinterConst {
         try {
             printer.setDeviceEnabled(true);
 
-            PrintCheckWithPassedPositionSum();
-
             //printCheckWithSmallSum();
             //readFSStatus();
             //findFSDocument();
@@ -837,7 +835,7 @@ class PrinterTest implements FiscalPrinterConst {
         printer.printRecMessage("же не манж пасижур", 2);
 
         // Обычная позиция
-        printer.printRecItem("же не манж пасижур же не манж пасижур же не 123456789", 0, 1234, 0, 1000, "");
+        printer.printRecItem("ITEM 1", 0, 1234, 0, 1000, "");
 
         // Позиция с коррекцией на +-1 копейку
         // Сумма позиции будет сброшена драйвером после вызова printRecItem
