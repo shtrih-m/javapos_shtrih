@@ -2,14 +2,16 @@ package com.shtrih.fiscalprinter.command;
 
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
+import com.shtrih.fiscalprinter.skl.FileSKLStorage;
+import com.shtrih.fiscalprinter.skl.SKLStorage;
+import com.shtrih.fiscalprinter.skl.SKLWriter;
 import com.shtrih.jpos.fiscalprinter.PrinterHeader;
-import com.shtrih.util.*;
+import com.shtrih.util.BitUtils;
+import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.MathUtils;
+import com.shtrih.util.SysUtils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -199,7 +201,7 @@ public class TextDocumentFilter implements IPrinterEvents {
             }
         } catch (IOException e) {
             throw e;
-        }catch (Exception e) {
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -650,22 +652,23 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
 
     public void add(String s1, String s2) throws Exception {
-        int lineLength = getLineLength();
-        if (s2.length() > lineLength) {
-            s2 = s2.substring(0, lineLength);
+        getSKLWriter().add(s1, s2);
+    }
+
+    private SKLWriter sklWriter;
+
+    private SKLWriter getSKLWriter() throws Exception {
+        if (sklWriter == null) {
+            String filePath = SysUtils.getFilesPath() + printer.getParams().textReportFileName;
+            SKLStorage storage = new FileSKLStorage(filePath);
+            sklWriter = new SKLWriter(storage, getLineLength());
         }
-        int len = lineLength - s2.length();
-        if (s1.length() > len) {
-            s1 = s1.substring(0, len);
-        }
-        len = lineLength - s1.length() - s2.length();
-        String line = s1 + StringUtils.stringOfChar(' ', len) + s2;
-        add(line);
+
+        return sklWriter;
     }
 
     @Override
     public void init() {
-
     }
 
     @Override
@@ -673,15 +676,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
 
     public void add(String line) throws Exception {
-        File file = new File(SysUtils.getFilesPath() + printer.getParams().textReportFileName);
-        PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
-        try {
-            writer.println(line);
-            writer.flush();
-        } finally {
-            writer.close();
-        }
-
+        getSKLWriter().add(line);
     }
 
     private void beginDocument() throws Exception {
@@ -795,11 +790,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
 
     public void addCenter(char c, String text) throws Exception {
-        int lineLength = getLineLength();
-        int l = (lineLength - text.length()) / 2;
-        String line = StringUtils.stringOfChar(c, l) + text;
-        line = line + StringUtils.stringOfChar(c, lineLength - line.length());
-        add(line);
+        getSKLWriter().addCenter(c, text);
     }
 
     public void readEJReport(boolean isReceipt) throws Exception {
