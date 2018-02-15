@@ -14,20 +14,14 @@ package com.shtrih.jpos.fiscalprinter;
 
 public class ReceiptImage {
 
-    private int imageIndex = 0;
-    private int position = 0;
+    private final int imageIndex;
+    private final int position;
 
     /**
      * Creates a new instance of ReceiptImage
      */
-    public ReceiptImage() {
-    }
-
-    public void setImageIndex(int imageIndex) {
+    public ReceiptImage(int imageIndex, int position) {
         this.imageIndex = imageIndex;
-    }
-
-    public void setPosition(int position) {
         this.position = position;
     }
 

@@ -24,7 +24,7 @@
         <!-- ProtocolType, 0 - protocol 1, 1 - protocol 2 -->
         <prop name="protocolType" type="String" value="0"/>
         <!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass -->
-        <prop name="portType" type="String" value="2"/>
+        <prop name="portType" type="String" value="0"/>
         <!--Port name-->
         <!--For serial ports - COM1, for TCP ports: host:port - "10.11.7.210:12345" -->
         <!--<prop name="portName" type="String" value="10.11.7.210:12345"/> -->
@@ -32,7 +32,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="192.168.137.111:7778"/>
+        <prop name="portName" type="String" value="COM4"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="1"/>
@@ -61,11 +61,11 @@
         <!-- System administrator password -->
         <prop name="sysAdminPassword" type="String" value="30"/>
         <!-- device state polling enabled -->
-        <prop name="pollEnabled" type="String" value="0"/>
+        <prop name="pollEnabled" type="String" value="1"/>
         <!-- device state polling interval in milliseconds -->
-        <prop name="pollInterval" type="String" value="1000"/>
+        <prop name="pollInterval" type="String" value="5000"/>
         <!-- Amount coefficient -->
-        <prop name="amountFactor" type="String" value="1"/>
+        <prop name="amountFactor" type="String" value="0.01"/>
         <!-- Quantity coefficient -->
         <prop name="quantityFactor" type="String" value="1"/>
         <!-- Strings encoding -->
@@ -90,7 +90,7 @@
         <!-- 0 - command 10h, short status request  -->
         <!-- 1 - command 11h, long status request  -->
         <!-- 2 - status command selected by driver -->
-        <prop name="statusCommand" type="String" value="0"/>
+        <prop name="statusCommand" type="String" value="2"/>
         <!-- Localization file name -->
         <prop name="messagesFileName" type="String" value="shtrihjavapos_ru.properties"/>
         <!-- Wrap text enabled -->
@@ -170,7 +170,7 @@
         <!-- Logo mode, 0 - feed paper, 1 - split image -->
         <prop name="logoMode" type="String" value="1"/>
         <!-- SearchMode, 0 - none, 1 - search on error -->
-        <prop name="searchMode" type="String" value="1"/>
+        <prop name="searchMode" type="String" value="0"/>
         <!-- stringEncoding -->
         <prop name="stringEncoding" type="String" value=""/>
         <!-- Paper cut delay in milliseconds -->
@@ -203,14 +203,14 @@
         <!-- SMFPTR_LOGO_AFTER_TRAILER    = 2  -->
         <!-- SMFPTR_LOGO_AFTER_ADDTRAILER = 3  -->
         <!-- SMFPTR_LOGO_BEFORE_HEADER    = 4  -->
-        <prop name="headerImagePosition" type="String" value="4"/>
+        <prop name="headerImagePosition" type="String" value="0"/>
         <!-- trailerImagePosition,  -->
         <!-- SMFPTR_LOGO_AFTER_HEADER     = 0  -->
         <!-- SMFPTR_LOGO_BEFORE_TRAILER   = 1  -->
         <!-- SMFPTR_LOGO_AFTER_TRAILER    = 2  -->
         <!-- SMFPTR_LOGO_AFTER_ADDTRAILER = 3  -->
         <!-- SMFPTR_LOGO_BEFORE_HEADER    = 4  -->
-        <prop name="trailerImagePosition" type="String" value="1"/>
+        <prop name="trailerImagePosition" type="String" value="2"/>
         <!-- Center header and trailer text automatically  -->
         <prop name="centerHeader" type="String" value="1"/>
         <!-- Log file enabled  -->
@@ -239,7 +239,7 @@
         <!-- Barcode aspect ratio -->
         <prop name="barcodeAspectRatio" type="String" value="3"/>
         <!-- Compatibility level, 0 - NONE, 1 - FULL -->
-        <prop name="compatibilityLevel" type="String" value="0"/>
+        <prop name="compatibilityLevel" type="String" value="1"/>
         <!-- Receipt void text -->
         <prop name="receiptVoidText" type="String" value="ЧЕК ОТМЕНЕН"/>
         <!-- Check total enabled, default 0 (disabled) -->
@@ -273,11 +273,11 @@
 		<!-- Subtotal adjustment order, 0 - correct, 1 - at receipt end -->
 		<prop name="subAdjustmentOrder" type="String" value="0"/>
 		<!-- swapGraphicsLine, 0 - auto, 1 - False, 2 - true -->
-		<prop name="swapGraphicsLine" type="String" value="0"/>
+		<prop name="swapGraphicsLine" type="String" value="1"/>
 		<!-- graphicsLineEnabled -->
-		<prop name="graphicsLineEnabled" type="String" value="1"/>
+		<prop name="graphicsLineEnabled" type="String" value="0"/>
 		<!-- Delay after barcode printed -->
-		<prop name="barcodeDelay" type="String" value="100"/>
+		<prop name="barcodeDelay" type="String" value="0"/>
 		<!-- PreLine prefix -->
 		<prop name="preLinePrefix" type="String" value="   "/>
 		<!-- PostLine prefix -->

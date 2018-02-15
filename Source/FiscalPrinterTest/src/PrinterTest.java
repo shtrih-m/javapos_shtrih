@@ -74,10 +74,10 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void setHeaderLines() {
         try {
-            printer.clearLogo();
-            printer.clearImages();
-            printer.loadImage("Logo.bmp");
-            printer.addLogo(0, SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
+            //printer.clearLogo();
+            //printer.clearImages();
+            //printer.loadImage("Logo.bmp");
+            //printer.addLogo(0, SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
             // 
             printer.setHeaderLine(1, getLoadImageCommand("Logo.bmp"), false);
             printer.setHeaderLine(2, "Header line 2", false);
@@ -266,8 +266,8 @@ class PrinterTest implements FiscalPrinterConst {
             final int BARCODE_HEIGHT = 100;
             final int BARCODE_WIDTH = 2;
             final int TEXT_FONT = 1;
-            final int ASPECT_RATIO = 3;
-            final String text = "5511*106*17*1*1";
+            final int ASPECT_RATIO = 2;
+            final String text = "55111061711";
 
             PrinterBarcode barcode = new PrinterBarcode();
             barcode.setAspectRatio(ASPECT_RATIO);
@@ -957,13 +957,11 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void printFiscalReceipt() {
-        //VatTest();
-        // printFiscalReceipt101();
-        // printFiscalReceipt101_1();
+    public void printFiscalReceipt() 
+    {
+        printFiscalReceipt145_1(false);
+        printNonFiscal(false);
         printEscBarcodesNormal();
-        printFiscalReceipt145_1();
-        //printCorrectionReceipt2();
     }
 
     public void disablePrint() {
@@ -2495,9 +2493,13 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void printNonFiscal() {
+    public void printNonFiscal(boolean docEndEnabled) {
         try {
             printer.beginNonFiscal();
+            if (!docEndEnabled){
+                printer.directIO(84, null, null);
+            }
+            
             printer.printNormal(FPTR_S_RECEIPT, getLine(""));
             printer.printNormal(FPTR_S_RECEIPT, getLine("Nonfiscal receipt"));
             printer.printNormal(FPTR_S_RECEIPT, getLine(""));
@@ -2506,8 +2508,6 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printNormal(FPTR_S_RECEIPT, "#*~*#http://check.egais.ru?id=38d02af6-bfd2-409f-8041-b011d8160700&dt=2311161430&cn=030000290346");
 
             printer.endNonFiscal();
-            //ShortPrinterStatus sStatus = printer.readShortPrinterStatus();
-            System.out.println("PrinterTest.printNonFiscal()");
         } catch (JposException e) {
             System.out.println("JposException");
             System.out.println("ErrorCode: " + String.valueOf(e.getErrorCode()));
@@ -3551,11 +3551,15 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void printFiscalReceipt145_1() {
+    public void printFiscalReceipt145_1(boolean printTrailer) {
         try {
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
+            if (!printTrailer){
+                printer.directIO(84, null, null);
+            }
+            
             printer.printRecItem("Item 1", 300, 1000, 1, 300, "");
             printer.printRecItemAdjustment(FPTR_AT_AMOUNT_DISCOUNT, "СКИДКА", 50, 1);
             printer.printRecTotal(30, 30, "1");
@@ -3564,7 +3568,6 @@ class PrinterTest implements FiscalPrinterConst {
             for (int i = 1; i < 20; i++) {
                 printer.printRecMessage("Printrecmessage " + i);
             }
-            printCode128();
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();

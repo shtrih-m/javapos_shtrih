@@ -19,9 +19,11 @@ import com.shtrih.util.CompositeLogger;
 public class ReceiptImages {
 
     private Vector list = new Vector();
-    private static CompositeLogger logger = CompositeLogger.getLogger(FiscalPrinterImpl.class);
+    private static CompositeLogger logger = CompositeLogger.getLogger(ReceiptImages.class);
 
-    /** Creates a new instance of ReceiptImages */
+    /**
+     * Creates a new instance of ReceiptImages
+     */
     public ReceiptImages() {
     }
 
@@ -38,18 +40,17 @@ public class ReceiptImages {
     }
 
     public ReceiptImage imageByPosition(int position) {
-        ReceiptImage result;
         for (int i = 0; i < size(); i++) {
-            result = get(i);
+            ReceiptImage result = get(i);
             if (result.getPosition() == position) {
                 return result;
             }
         }
+        logger.debug("Image not found, position " + position + ", size: " + size());
         return null;
     }
 
-    public void add(ReceiptImage image) 
-    {
+    public void add(ReceiptImage image) {
         ReceiptImage item = imageByPosition(image.getPosition());
         if (item != null) {
             list.remove(item);

@@ -315,7 +315,7 @@ public class FptrParameters {
         headerMode = reader.readInteger("headerMode",
                 SmFptrConst.SMFPTR_HEADER_MODE_DRIVER);
         headerImagePosition = reader.readInteger("headerImagePosition",
-                SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
+                SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
         trailerImagePosition = reader.readInteger("trailerImagePosition",
                 SmFptrConst.SMFPTR_LOGO_AFTER_TRAILER);
         centerHeader = reader.readBoolean("centerHeader", false);

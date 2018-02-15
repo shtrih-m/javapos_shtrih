@@ -158,9 +158,7 @@ public class DirectIOHandler {
                 int logoImageIndex = data[0];
                 int logoPosition = data[1];
                 service.getPrinterImages().checkIndex(logoImageIndex);
-                ReceiptImage logo = new ReceiptImage();
-                logo.setImageIndex(logoImageIndex);
-                logo.setPosition(logoPosition);
+                ReceiptImage logo = new ReceiptImage(logoImageIndex, logoPosition);
                 service.getReceiptImages().add(logo);
                 service.saveProperties();
                 break;

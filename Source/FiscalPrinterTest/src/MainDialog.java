@@ -1037,7 +1037,7 @@ public class MainDialog extends javax.swing.JDialog
     }//GEN-LAST:event_btnPrintFiscalReceiptActionPerformed
 
     private void btnPrintNonfiscalReceiptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintNonfiscalReceiptActionPerformed
-        controller.printNonFiscal();
+        controller.printNonFiscal(true);
     }//GEN-LAST:event_btnPrintNonfiscalReceiptActionPerformed
 
     private void btnGetDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGetDataActionPerformed

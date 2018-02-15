@@ -100,9 +100,7 @@ public class XmlPropReader {
         for (int i = 0; i < imagesNode.getChildNodes().getLength(); i++) {
             Node imageNode = imagesNode.getChildNodes().item(i);
             if (imageNode.getNodeName().equalsIgnoreCase("ReceiptImage")) {
-                ReceiptImage image = new ReceiptImage();
-                readReceiptImage(imageNode, image);
-                images.add(image);
+                images.add(readReceiptImage(imageNode));
             }
         }
     }
@@ -116,14 +114,13 @@ public class XmlPropReader {
         return result;
     }
 
-    public void readReceiptImage(Node imageNode, ReceiptImage image)
+    public ReceiptImage readReceiptImage(Node imageNode)
             throws Exception {
-        image.setImageIndex(readParameterInt(imageNode, "ImageIndex"));
-        image.setPosition(readParameterInt(imageNode, "Position"));
+        int imageIndex = readParameterInt(imageNode, "ImageIndex");
+        int position = readParameterInt(imageNode, "Position");
+        return new ReceiptImage(imageIndex, position);
     }
 
-    //readPrinterHeader: Array index out of range: 0    
-    
     public void readPrinterHeader(PrinterHeader header) throws Exception {
         try {
             for (int i = 1; i <= header.getNumHeaderLines(); i++) {

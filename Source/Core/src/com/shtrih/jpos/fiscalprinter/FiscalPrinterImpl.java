@@ -2347,8 +2347,15 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         getPrinter().printLine(SMFP_STATION_REC, line, params.font);
     }
 
-    public void printDocEnd() throws Exception {
+    public void printDocEnd() throws Exception 
+    {
+        if (!docEndEnabled){
+            docEndEnabled = true;
+            return;
+        }
+        
         synchronized (printer) {
+            docEndEnabled = true;
             isInReceiptTrailer = true;
             getPrinter().waitForPrinting();
             header.endDocument(additionalHeader, additionalTrailer);
@@ -3060,7 +3067,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     receipt.printRecMessage(line.getStation(), line.getFont(), line.getLine());
                 }
             }
-            docEndEnabled = true;
         } catch (Exception e) {
             receipt = new NullReceipt(createReceiptContext());
             setPrinterState(FPTR_PS_MONITOR);
@@ -3091,17 +3097,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             try {
                 if (!receipt.getDisablePrint()) {
                     sleep(getParams().recCloseSleepTime);
-                    if (docEndEnabled) {
-                        if (!receipt.getCapAutoCut()) {
-                            printDocEnd();
-                        }
+                    if (!receipt.getCapAutoCut()) {
+                        printDocEnd();
                     }
                 }
             } catch (Exception e) {
                 // ignore print errors because cashin is succeeded
                 logger.error("endFiscalReceipt: " + e.getMessage());
             }
-            docEndEnabled = true;
             setPrinterState(FPTR_PS_MONITOR);
             receipt = new NullReceipt(createReceiptContext());
             params.nonFiscalDocNumber++;
@@ -4645,9 +4648,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         if (logoPosition < SMFPTR_LOGO_NONE) {
             printer.loadImage(image, true);
             imageIndex = getPrinterImages().getIndex(image);
-            ReceiptImage receiptImage = new ReceiptImage();
-            receiptImage.setPosition(logoPosition);
-            receiptImage.setImageIndex(imageIndex);
+            ReceiptImage receiptImage = new ReceiptImage(imageIndex, logoPosition);
             getReceiptImages().add(receiptImage);
             saveProperties();
         } else {

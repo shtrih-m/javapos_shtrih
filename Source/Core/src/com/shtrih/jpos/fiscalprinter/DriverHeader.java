@@ -256,6 +256,7 @@ public class DriverHeader implements JposConst, PrinterHeader {
             lineNumber = (headerHeight - imageHeight) / lineHeight;
             printLines(header, lineNumber+1, header.size());
         }
+        printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
         
         if (additionalHeader.length() > 0) {
             printer.printText(PrinterConst.SMFP_STATION_REC, additionalHeader,

@@ -2780,7 +2780,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public PrinterImage getPrinterImage(int position) throws Exception {
+    public PrinterImage getPrinterImage(int position) throws Exception 
+    {
         ReceiptImage image = receiptImages.imageByPosition(position);
         if (image != null) {
             int index = image.getImageIndex();

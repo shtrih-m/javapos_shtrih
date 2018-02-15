@@ -48,9 +48,7 @@ public class XmlPropReaderTest extends TestCase {
         printerImages.add(printerImage);
 
         ReceiptImages receiptImages = new ReceiptImages();
-        ReceiptImage receiptImage = new ReceiptImage();
-        receiptImage.setImageIndex(1);
-        receiptImage.setPosition(2);
+        ReceiptImage receiptImage = new ReceiptImage(1, 2);
         receiptImages.add(receiptImage);
 
         SMFiscalPrinterNull printer = new SMFiscalPrinterNull(null, null, new FptrParameters());

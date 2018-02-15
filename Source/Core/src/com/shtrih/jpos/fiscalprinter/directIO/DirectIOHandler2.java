@@ -458,12 +458,10 @@ public class DirectIOHandler2 {
 
     public void dioAddLogo(int[] data, Object object) throws Exception {
         int[] params = (int[]) object;
-        int logoImageIndex = params[0];
-        int logoPosition = params[1];
-        service.getPrinterImages().checkIndex(logoImageIndex);
-        ReceiptImage logo = new ReceiptImage();
-        logo.setImageIndex(logoImageIndex);
-        logo.setPosition(logoPosition);
+        int imageIndex = params[0];
+        int position = params[1];
+        service.getPrinterImages().checkIndex(imageIndex);
+        ReceiptImage logo = new ReceiptImage(imageIndex, position);
         service.getReceiptImages().add(logo);
         service.saveProperties();
     }
