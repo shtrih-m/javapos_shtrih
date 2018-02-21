@@ -1666,6 +1666,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         executeCommand(command);
     }
 
+    @Deprecated
     public void fsStartCorrectionReceipt(FSStartCorrectionReceipt command) throws JposException {
         executeCommand(command);
     }
@@ -1842,11 +1843,25 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         executeCommand(command);
     }
 
+    @Deprecated
     public void fsStartDayOpen(FSStartDayOpen command) throws JposException {
         executeCommand(command);
     }
 
+    public void fsStartDayOpen() throws JposException {
+        FSStartDayOpen command = new FSStartDayOpen();
+        command.setSysPassword(getSysPassword());
+        executeCommand(command);
+    }
+
+    @Deprecated
     public void fsStartDayClose(FSStartDayClose command) throws JposException {
+        executeCommand(command);
+    }
+
+    public void fsStartDayClose() throws JposException {
+        FSStartDayClose command = new FSStartDayClose();
+        command.setSysPassword(getSysPassword());
         executeCommand(command);
     }
 
