@@ -111,11 +111,6 @@ public class FlexCommandsReader {
         return command;
     }
 
-    public void load(String fileName, FlexCommands commands) throws Exception {
-        InputStream stream = ResourceLoader.load(fileName);
-        load(stream, commands);
-    }
-    
     public void load(FlexCommands commands) throws Exception {
         InputStream stream = ResourceLoader.load("commands.xml");
         load(stream, commands);
