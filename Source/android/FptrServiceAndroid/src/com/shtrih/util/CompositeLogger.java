@@ -34,21 +34,23 @@ public class CompositeLogger {
 
     public synchronized void fatal(String text, Throwable e) {
         if (isEnabled)
-            Log.e(className, text + "" + e);
+            Log.e(className, text, e);
 
         log4JLogger.error(text, e);
     }
 
     public synchronized void error(String text, Throwable e) {
         if (isEnabled)
-            Log.e(className, text + "" + e);
+            Log.e(className, text, e);
 
         log4JLogger.error(text, e);
     }
 
     public synchronized void error(Throwable e) {
+        // TODO: убрать этот метод, нужно всегда передавать сообщение
+
         if (isEnabled)
-            Log.e(className, "" + e);
+            Log.e(className, "", e);
 
         log4JLogger.error("Error", e);
     }
