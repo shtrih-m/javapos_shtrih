@@ -141,6 +141,7 @@ public class MainDialog extends javax.swing.JDialog
         btnEnable1 = new javax.swing.JButton();
         btnDisable1 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        btnUpdateFirmware = new javax.swing.JButton();
         pnlFptr2 = new javax.swing.JPanel();
         btnReadStatus = new javax.swing.JButton();
         Pane2 = new javax.swing.JScrollPane();
@@ -480,6 +481,14 @@ public class MainDialog extends javax.swing.JDialog
             }
         });
         pnlFptr1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 270, 160, -1));
+
+        btnUpdateFirmware.setText("Update firmware");
+        btnUpdateFirmware.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateFirmwareActionPerformed(evt);
+            }
+        });
+        pnlFptr1.add(btnUpdateFirmware, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 320, 160, 26));
 
         tabPane1.addTab("FiscalPrinter", pnlFptr1);
 
@@ -1249,6 +1258,14 @@ public class MainDialog extends javax.swing.JDialog
             e.printStackTrace();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnUpdateFirmwareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateFirmwareActionPerformed
+        try {
+            printer.updateFirmware("upd_app.bin");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnUpdateFirmwareActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -1331,6 +1348,7 @@ public class MainDialog extends javax.swing.JDialog
     private javax.swing.JButton btnResetPrinter;
     private javax.swing.JButton btnSetHeaderLines;
     private javax.swing.JButton btnSetTrailerLines;
+    private javax.swing.JButton btnUpdateFirmware;
     private javax.swing.JButton btnXReport;
     private javax.swing.JButton btnZReport;
     private javax.swing.JButton btnZReport1;

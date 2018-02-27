@@ -18,6 +18,7 @@ import com.shtrih.fiscalprinter.model.PrinterModel;
 import com.shtrih.fiscalprinter.model.PrinterModels;
 import com.shtrih.fiscalprinter.model.XmlModelsWriter;
 import com.shtrih.fiscalprinter.port.PrinterPort;
+import com.shtrih.fiscalprinter.port.SerialPrinterPort;
 import com.shtrih.fiscalprinter.table.PrinterField;
 import com.shtrih.fiscalprinter.table.PrinterFields;
 import com.shtrih.fiscalprinter.table.PrinterTable;
@@ -28,12 +29,19 @@ import com.shtrih.util.*;
 
 import jpos.JposConst;
 
+import java.io.File;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.FileInputStream;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.Calendar;
+import static jpos.FiscalPrinterConst.JPOS_EFPTR_DAY_END_REQUIRED;
+import static jpos.JposConst.JPOS_E_EXTENDED;
+import static jpos.JposConst.JPOS_E_NOHARDWARE;
+import jpos.JposException;
 
 public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
@@ -65,7 +73,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
      */
     public PrinterTables tables = new PrinterTables();
     public PrinterTable table = new PrinterTable(0, "", 0, 0);
-    public FieldInfo fieldInfo = new FieldInfo(0, 0, 0, 0, 0, 0, "");
+    //public FieldInfo fieldInfo = new FieldInfo(0, 0, 0, 0, 0, 0, "");
     public static CompositeLogger logger = CompositeLogger.getLogger(SMFiscalPrinterImpl.class);
     private final List<IPrinterEvents> events = new ArrayList<IPrinterEvents>();
     private final PrinterPort port;
@@ -184,10 +192,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void connect() throws Exception {
+        logger.debug("connect");
         synchronized (port.getSyncObject()) {
             device.connect();
             check(readDeviceMetrics());
             model = selectPrinterModel(getDeviceMetrics());
+            checkEcrMode();
         }
     }
 
@@ -598,22 +608,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return splitText(text, len, wrapText);
     }
 
-    public int updateFieldInfo(int table, int field)
-            throws Exception {
-        int result = 0;
-        if (!fieldInfo.isEqual(table, field)) {
-            ReadFieldInfo command = new ReadFieldInfo();
-            command.setPassword(sysPassword);
-            command.setTable(table);
-            command.setField(field);
-            result = executeCommand(command);
-            if (succeeded(result)) {
-                fieldInfo = command.getFieldInfo();
-            }
-        }
-        return result;
-    }
-
     public int writeTable(int tableNumber, int rowNumber, int fieldNumber,
             String fieldValue) throws Exception {
         int result = 0;
@@ -621,22 +615,22 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 + String.valueOf(rowNumber) + ", "
                 + String.valueOf(fieldNumber) + ", " + "'" + fieldValue + "')");
 
-        // update field info
-        result = updateFieldInfo(tableNumber, fieldNumber);
-        if (failed(result)) {
-            return result;
+        PrinterField field = fields.find(tableNumber, rowNumber, fieldNumber);
+        if (field == null) {
+            ReadFieldInfo command = new ReadFieldInfo();
+            command.setPassword(sysPassword);
+            command.setTable(tableNumber);
+            command.setField(fieldNumber);
+            result = executeCommand(command);
+            if (failed(result)) {
+                return result;
+            }
+            field = new PrinterField(command.getFieldInfo(), rowNumber);
         }
-
-        byte[] fieldData = fieldInfo.fieldToBytes(fieldValue, charsetName);
         PrinterCommand command2 = new WriteTable(sysPassword, tableNumber,
-                rowNumber, fieldNumber, fieldData);
+                rowNumber, fieldNumber, field.getBytes());
         result = executeCommand(command2);
         if (result == 0) {
-            PrinterField field = fields.find(tableNumber, rowNumber, fieldNumber);
-            if (field == null) {
-                field = new PrinterField(fieldInfo, rowNumber);
-                fields.add(field);
-            }
             field.setValue(fieldValue);
         }
         return result;
@@ -662,10 +656,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             tables.add(table);
 
             for (int fieldNumber = 1; fieldNumber <= table.getFieldCount(); fieldNumber++) {
-                updateFieldInfo(tableNumber, fieldNumber);
-                PrinterField field = new PrinterField(fieldInfo, 1);
+                PrinterField field = fields.find(tableNumber, 1, fieldNumber);
+                if (field == null) {
+                    FieldInfo fieldInfo = readFieldInfo(tableNumber, fieldNumber);
+                    field = new PrinterField(fieldInfo, 1);
+                }
                 table.getFields().add(field);
-
             }
             tableNumber++;
         }
@@ -694,13 +690,16 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         PrinterField field = fields.find(tableNumber, rowNumber, fieldNumber);
         if (field == null) {
-            result = updateFieldInfo(tableNumber, fieldNumber);
+            ReadFieldInfo command = new ReadFieldInfo();
+            command.setPassword(sysPassword);
+            command.setTable(tableNumber);
+            command.setField(fieldNumber);
+            result = executeCommand(command);
             if (failed(result)) {
                 return result;
             }
-        } else {
-            fieldValue[0] = field.getValue();
-            return result;
+            field = new PrinterField(command.getFieldInfo(), rowNumber);
+            fields.add(field);
         }
 
         ReadTable commandReadTable = new ReadTable(sysPassword, tableNumber,
@@ -710,15 +709,24 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             return result;
         }
 
-        String value = fieldInfo.bytesToField(commandReadTable.fieldValue,
-                charsetName);
-
-        field = new PrinterField(fieldInfo, rowNumber);
-        field.setValue(value);
-        fields.add(field);
-
-        fieldValue[0] = value;
+        field.setBytes(commandReadTable.fieldValue);
+        fieldValue[0] = field.getValue();
         return result;
+    }
+
+    public PrinterField readField(int tableNumber, int rowNumber, int fieldNumber) throws Exception {
+        logger.debug("readTable(" + String.valueOf(tableNumber) + ", "
+                + String.valueOf(rowNumber) + ", "
+                + String.valueOf(fieldNumber) + ")");
+
+        PrinterField field = fields.find(tableNumber, rowNumber, fieldNumber);
+        if (field == null) {
+            FieldInfo fieldInfo = readFieldInfo(tableNumber, fieldNumber);
+            field = new PrinterField(fieldInfo, rowNumber);
+        }
+        field = field.getCopy();
+        readField(field);
+        return field;
     }
 
     public int readTableInfo(int tableNumber, Object[] out) throws Exception {
@@ -1258,13 +1266,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 
-    public void writeTime(PrinterTime time) throws Exception {
+    public int writeTime(PrinterTime time) throws Exception {
         logger.debug("setTime");
 
         WriteTime command = new WriteTime();
         command.setPassword(sysPassword);
         command.setTime(time);
-        execute(command);
+        return executeCommand(command);
     }
 
     public void writePortParams(int portNumber, int baudRate, int timeout)
@@ -1530,15 +1538,16 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         int rc = executeCommand(command);
         capOpenFiscalDay = isCommandSupported(rc);
 
-        if(capOpenFiscalDay)
-          check(rc);
+        if (capOpenFiscalDay) {
+            check(rc);
+        }
 
         return rc;
     }
 
-    public void resetFM() throws Exception {
-        ResetFM command = new ResetFM();
-        execute(command);
+    public int hardReset() throws Exception {
+        HardReset command = new HardReset();
+        return executeCommand(command);
     }
 
     public void sysAdminCancelReceipt() throws Exception {
@@ -1601,15 +1610,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void writeTables(PrinterTables tables) throws Exception {
+        logger.debug("writeTables");
         for (int i = 0; i < tables.size(); i++) {
             PrinterTable table = tables.get(i);
             PrinterFields fields = table.getFields();
             for (int j = 0; j < fields.size(); j++) {
-                PrinterField field = fields.get(j);
-                check(writeTable(field.getTable(), field.getRow(),
-                        field.getField(), field.getValue()));
+                writeField2(fields.get(j));
             }
         }
+        logger.debug("writeTables: OK");
     }
 
     public void writeFields(PrinterFields fields) throws Exception {
@@ -1633,41 +1642,41 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void readTable(PrinterTable table) throws Exception {
         for (int rowNumber = 1; rowNumber <= table.getRowCount(); rowNumber++) {
             for (int fieldNumber = 1; fieldNumber <= table.getFieldCount(); fieldNumber++) {
-                String[] fieldValue = new String[1];
-                check(readTable(table.getNumber(), rowNumber, fieldNumber,
-                        fieldValue));
-                PrinterField field = new PrinterField(fieldInfo, rowNumber);
-                field.setValue(fieldValue[0]);
+                PrinterField field = readField(table.getNumber(), rowNumber, fieldNumber);
                 table.getFields().add(field);
             }
         }
     }
 
-    public PrinterField readField(PrinterField field) throws Exception {
-        String[] fieldValue = new String[1];
-        check(readTable(field.getTable(), field.getRow(), field.getField(),
-                fieldValue));
-        field.setValue(fieldValue[0]);
+    public PrinterField readField(PrinterField field) throws Exception 
+    {
+        ReadTable command = new ReadTable(sysPassword, field.getTable(),
+                field.getRow(), field.getField());
+        execute(command);
+        field.setBytes(command.fieldValue);
         return field;
     }
 
-    public int writeField(PrinterField field) throws Exception {
-        return writeTable(field.getTable(), field.getRow(), field.getField(),
-                field.getValue());
+    public int writeField(PrinterField field) throws Exception 
+    {
+        logger.debug("writeField(" + field.getTable() + ", " + field.getRow() + 
+                ", " + field.getField() + ", " + field.getValue() + ")");
+        PrinterCommand command = new WriteTable(sysPassword, field.getTable(),
+                field.getRow(), field.getField(), field.getBytes());
+        return executeCommand(command);
     }
 
     // Write field only if field is valid and value differs
     public void writeField2(PrinterField field) throws Exception {
-        if (isValidField(field)) {
-            PrinterField field2 = readField(field.getCopy());
-
-            if (!field.isEqualValue(field2)) {
-                writeField(field);
-            }
+        PrinterField field2 = readField(field.getCopy());
+        if (!field.isEqualValue(field2)) 
+        {
+            writeField(field);
         }
     }
 
     public void readTables(PrinterTables tables) throws Exception {
+        logger.debug("readTables");
         tables.clear();
         int tableNumber = 1;
         while (true) {
@@ -1685,16 +1694,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
             for (int fieldNumber = 1; fieldNumber <= table.getFieldCount(); fieldNumber++) {
                 for (int rowNumber = 1; rowNumber <= table.getRowCount(); rowNumber++) {
-                    String[] fieldValue = new String[1];
-                    check(readTable(tableNumber, rowNumber, fieldNumber,
-                            fieldValue));
-                    PrinterField field = new PrinterField(fieldInfo, rowNumber);
-                    field.setValue(fieldValue[0]);
+                    PrinterField field = readField(tableNumber, rowNumber, fieldNumber);
                     table.getFields().add(field);
                 }
             }
             tableNumber++;
         }
+        logger.debug("readTables: OK");
     }
 
     public PrinterStatus readShortPrinterStatus() throws Exception {
@@ -2780,8 +2786,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public PrinterImage getPrinterImage(int position) throws Exception 
-    {
+    public PrinterImage getPrinterImage(int position) throws Exception {
         ReceiptImage image = receiptImages.imageByPosition(position);
         if (image != null) {
             int index = image.getImageIndex();
@@ -3653,4 +3658,293 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
+    public boolean getCapUpdateFirmware() throws Exception {
+        return (capFiscalStorage && (!isShtrihMobile()));
+    }
+
+    private int firmwareUpdateDelay = 10000;
+
+    public void updateFirmware(String firmwareFileName) throws Exception {
+        checkDayClosed();
+        synchronized (port.getSyncObject()) {
+            PrinterTables tables = new PrinterTables();
+            readTables(tables);
+            if (isSDCardPresent()) {
+                updateFirmwareSDCard(firmwareFileName);
+                reboot();
+                waitFirmwareUpdate();
+                connect();
+                writeTables(tables);
+                return;
+            } 
+            
+            if ((params.getPortType() == 0)&& FirmwareUpdater.capXModemUpdate())
+            {
+                updateFirmwareXModem(firmwareFileName);
+                waitFirmwareUpdate();
+                searchByBaudRates(params.portName, 4800);
+                writeTables(tables);
+                return;
+            }
+            
+            if (FirmwareUpdater.capDFUUpdate())
+            {
+                FirmwareUpdater.updateFirmwareDFU(firmwareFileName);
+                waitFirmwareUpdate();
+                searchByBaudRates(params.portName, 4800);
+                writeTables(tables);
+                return;
+            }
+        }
+    }
+
+    private void waitFirmwareUpdate() throws Exception {
+        logger.debug("waitFirmwareUpdate");
+        SysUtils.sleep(firmwareUpdateDelay);
+        logger.debug("waitFirmwareUpdate: OK");
+    }
+
+    private void checkDayClosed() throws Exception {
+        PrinterStatus status = readPrinterStatus();
+        if (status.getPrinterMode().isDayEndRequired()) {
+            throw new Exception("Day end required");
+        }
+    }
+
+    public boolean isSDCardPresent() throws Exception {
+        if (isShtrihMobile()) {
+            return false;
+        } else {
+            return Integer.parseInt(readTable(14, 1, 1)) == 0;
+        }
+    }
+
+    private static final int LoaderFileSize = 28672;
+    private static final int FirmwareFileSize = 491520;
+
+    public void updateFirmwareSDCard(String firmwareFileName) throws Exception {
+        int fileType = 0;
+        int blockNumber = 0;
+        byte[] block = new byte[128];
+        FileInputStream stream = new FileInputStream(new File(firmwareFileName));
+        // 0- loader, 1 – firmware
+        if (stream.available() >= FirmwareFileSize) {
+            fileType = 1;
+        }
+
+        while (stream.available() > 0) {
+            stream.read(block, 0, 128);
+            WriteSDCardBlock command = new WriteSDCardBlock();
+            command.setPassword(sysPassword);
+            command.setBlockNumber(blockNumber);
+            command.setFileType(fileType);
+            command.setBlock(block);
+            execute(command);
+            blockNumber++;
+        }
+    }
+
+    public void updateFirmwareXModem(String firmwareFileName) throws Exception {
+        logger.debug("updateFirmwareXModem");
+        reboot();
+        port.close();
+
+        FirmwareUpdater.updateFirmwareXModem(params.portName, firmwareFileName);
+        logger.debug("updateFirmwareXModem: OK");
+    }
+
+    public void updateFirmwareDFU(String firmwareFileName) throws Exception {
+        throw new Exception("Not implemented");
+    }
+
+    private static final int MaxStateCount = 3;
+
+    private void checkEcrMode() throws Exception {
+        logger.debug("checkEcrMode");
+        int endDumpCount = 0;
+        int confirmDateCount = 0;
+        int writePointCount = 0;
+        int stopTestCount = 0;
+
+        for (;;) {
+            ReadLongStatus command = new ReadLongStatus();
+            command.setPassword(getUsrPassword());
+            int rc = executeCommand(command);
+            if ((rc == 0x74) || (rc == 0x78)) {
+                rc = 0;
+                deviceReset();
+            }
+            check(rc);
+            PrinterStatus status = waitForPrinting();
+            switch (status.getPrinterMode().getValue()) {
+                case MODE_DUMPMODE:
+                    try {
+                        endDump();
+                    } catch (SmFiscalPrinterException ignored) {
+                        // При чтении докмента из ФН десктопные ФР переходят в режим 1, при этом
+                        // прервать этот режим старым методом нельзя только дочитать документ до
+                        // конца
+                        readDocumentTLVToEnd();
+                    }
+
+                    endDumpCount++;
+                    if (endDumpCount >= MaxStateCount) {
+                        throw new Exception(
+                                Localizer.getString(Localizer.endDumpFailed));
+                    }
+                    break;
+
+                case MODE_LOCKED:
+                    throw new Exception(
+                            Localizer.getString(Localizer.LockedTaxPassword));
+
+                case MODE_WAITDATE:
+                    PrinterDate date = readLongStatus().getDate();
+                    confirmDate(date);
+                    confirmDateCount++;
+                    if (confirmDateCount >= MaxStateCount) {
+                        throw new Exception(
+                                Localizer.getString(Localizer.ConfirmDateFailed));
+                    }
+                    break;
+
+                case MODE_POINTPOS:
+                    writeDecimalPoint(SMFP_POINT_POSITION_2);
+                    writePointCount++;
+                    if (writePointCount >= MaxStateCount) {
+                        throw new Exception(
+                                Localizer
+                                .getString(Localizer.WriteDecimalPointFailed));
+                    }
+                    break;
+
+                case MODE_TECH:
+                    deviceReset();
+                    break;
+
+                case MODE_TEST:
+                    stopTest();
+                    stopTestCount++;
+                    if (stopTestCount >= MaxStateCount) {
+                        throw new Exception(
+                                Localizer.getString(Localizer.StopTestFailed));
+                    }
+                    break;
+
+                case MODE_FULLREPORT:
+                case MODE_EJREPORT:
+                case MODE_SLPPRINT:
+                    sleep(TimeToSleep);
+                    break;
+
+                default:
+                    return;
+            }
+        }
+    }
+
+    private void readDocumentTLVToEnd() throws Exception {
+        FSReadDocumentBlock readDocumentBlock = new FSReadDocumentBlock(getSysPassword());
+        while (true) {
+            int result = executeCommand(readDocumentBlock);
+            if (result != 0) {
+                break;
+            }
+        }
+    }
+
+    private void deviceReset() throws Exception {
+        Calendar now = Calendar.getInstance();
+        PrinterDate date = new PrinterDate();
+        PrinterTime time = new PrinterTime();
+
+        hardReset();
+        check(writeDate(date));
+        check(confirmDate(date));
+        check(writeTime(time));
+    }
+
+    private boolean searchByBaudRates(String portName, int startBaudRate)
+            throws Exception {
+        if (connectDevice(portName, startBaudRate)) {
+            return true;
+        }
+
+        int[] deviceBaudRates = {4800, 9600, 19200, 38400, 57600, 115200, 2400};
+        for (int i = 0; i < deviceBaudRates.length; i++) {
+            int baudRate = deviceBaudRates[i];
+            if (baudRate != startBaudRate) {
+                if (connectDevice(portName, baudRate)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // try to connect to device
+    private boolean connectDevice(String searchPortName, int searchBaudRate
+    ) throws Exception {
+        logger.debug("connectDevice(" + searchPortName + ", " + searchBaudRate + ")");
+        try {
+            port.setPortName(searchPortName);
+            port.setBaudRate(searchBaudRate);
+            port.open(0);
+            connect();
+
+            // always set port parameters to update byte
+            // receive timeout in fiscal printer
+            int baudRateIndex = getBaudRateIndex(params.getBaudRate());
+            writePortParams(0, baudRateIndex, params.getDeviceByteTimeout());
+            params.setBaudRate(getModel().getSupportedBaudRates()[baudRateIndex]);
+
+            // if baudrate changed - reopen port
+            if (searchBaudRate != params.getBaudRate()) {
+                port.setPortName(searchPortName);
+                port.setBaudRate(params.getBaudRate());
+                port.open(0);
+            }
+            return true;
+        } catch (DeviceException e) {
+            logger.error(e);
+            return false;
+        }
+    }
+
+    // search device on ports and baudrates
+    private void searchSerialDevice() throws Exception {
+        if (params.searchByPortEnabled) {
+            String[] ports = SerialPrinterPort.getPortNames();
+            for (int i = 0; i < ports.length; i++) {
+                String portName = ports[i];
+                if (!params.portName.equalsIgnoreCase(portName)) {
+                    if (params.searchByBaudRateEnabled) {
+                        if (searchByBaudRates(portName, params.getBaudRate())) {
+                            return;
+                        }
+                    } else if (connectDevice(portName, params.getBaudRate())) {
+                        return;
+                    }
+                }
+            }
+        } else if (params.searchByBaudRateEnabled) {
+            if (searchByBaudRates(params.portName, params.getBaudRate())) {
+                return;
+            }
+        }
+        throw new JposException(JPOS_E_NOHARDWARE);
+    }
+
+    public void searchDevice() throws Exception {
+        logger.debug("searchDevice");
+        synchronized (port.getSyncObject()) {
+            if (port.isSearchByBaudRateEnabled()) {
+                searchSerialDevice();
+            } else {
+                port.setPortName(params.portName);
+                port.open(0);
+                connect();
+            }
+        }
+    }
 }

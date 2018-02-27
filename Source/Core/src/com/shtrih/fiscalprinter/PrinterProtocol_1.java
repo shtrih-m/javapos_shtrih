@@ -312,7 +312,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
             }
         }
     }
-
+    
     public void setMaxEnqNumber(int value) {
         maxEnqNumber = value;
     }

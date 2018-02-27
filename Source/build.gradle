@@ -10,8 +10,8 @@ allprojects {
 
     version = getVersionName2()
     
-    sourceCompatibility = '1.6'
-    targetCompatibility = '1.6'
+    sourceCompatibility = '1.7'
+    targetCompatibility = '1.7'
     [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
     jar {

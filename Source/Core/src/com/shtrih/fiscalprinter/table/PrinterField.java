@@ -71,6 +71,14 @@ public class PrinterField {
         this.value = value;
     }
 
+    public void setBytes(byte[] value)throws Exception{
+        this.value = fieldInfo.bytesToField(value, "Cp1251");
+    }
+    
+    public byte[] getBytes() throws Exception {
+        return fieldInfo.fieldToBytes(value, "Cp1251");
+    }
+
     public int getSize() {
         return fieldInfo.getSize();
     }
@@ -98,9 +106,9 @@ public class PrinterField {
     public boolean isString() {
         return fieldInfo.isString();
     }
-    
-    public boolean isEqualValue(PrinterField field){
-        return value.compareTo(field.getValue()) == 0;
+
+    public boolean isEqualValue(PrinterField field) {
+        return value.equals(field.getValue());
     }
 
 }

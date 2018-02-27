@@ -203,7 +203,7 @@
         <!-- SMFPTR_LOGO_AFTER_TRAILER    = 2  -->
         <!-- SMFPTR_LOGO_AFTER_ADDTRAILER = 3  -->
         <!-- SMFPTR_LOGO_BEFORE_HEADER    = 4  -->
-        <prop name="headerImagePosition" type="String" value="0"/>
+        <prop name="headerImagePosition" type="String" value="4"/>
         <!-- trailerImagePosition,  -->
         <!-- SMFPTR_LOGO_AFTER_HEADER     = 0  -->
         <!-- SMFPTR_LOGO_BEFORE_TRAILER   = 1  -->

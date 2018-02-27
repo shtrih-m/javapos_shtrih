@@ -393,7 +393,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
-    public void writeTime(PrinterTime time) throws Exception {
+    public int writeTime(PrinterTime time) throws Exception {
+        return 0;
     }
 
     public void writePortParams(int portNumber, int baudRate, int timeout)
@@ -479,7 +480,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void writeDecimalPoint(int position) throws Exception {
     }
 
-    public void resetFM() throws Exception {
+    public int hardReset() throws Exception {
+        return 0;
     }
 
     public void sysAdminCancelReceipt() throws Exception {
@@ -820,9 +822,9 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void disablePrint() throws Exception {
     }
 
-    public void enablePrint() throws Exception{
+    public void enablePrint() throws Exception {
     }
-    
+
     public FSReadFiscalization fsReadFiscalization() throws Exception {
         return null;
     }
@@ -929,7 +931,7 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public int fsPrintCorrectionReceipt(FSPrintCorrectionReceipt command) throws Exception {
         return 0;
     }
-    
+
     public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws Exception {
         return 0;
     }
@@ -989,11 +991,11 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
             throws Exception {
         return 0;
     }
-    
-    public void setIsFooter(boolean value){
+
+    public void setIsFooter(boolean value) {
     }
-    
-    public boolean isCapFooterFlag(){
+
+    public boolean isCapFooterFlag() {
         return false;
     }
 
@@ -1006,12 +1008,12 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public byte[] fsReadDocumentTLVBlock() throws Exception {
         return new byte[0];
     }
-    
-    public DocumentTLV fsReadDocumentTLV(int docNumber) throws Exception{
+
+    public DocumentTLV fsReadDocumentTLV(int docNumber) throws Exception {
         return null;
     }
-    
-    public Vector<String> fsReadDocumentTLVAsText(int docNumber) throws Exception{
+
+    public Vector<String> fsReadDocumentTLVAsText(int docNumber) throws Exception {
         return null;
     }
 
@@ -1025,15 +1027,24 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return null;
     }
 
-    public FSDocument fsFindLastDocument(int docType) throws Exception{
+    public FSDocument fsFindLastDocument(int docType) throws Exception {
         return null;
     }
-    
-    public boolean getCapSetVatTable(){
+
+    public boolean getCapSetVatTable() {
+        return true;
+    }
+
+    public void clearTableText() throws Exception {
+    }
+
+    public void updateFirmware(String firmwareFileName) throws Exception {
+    }
+
+    public boolean getCapUpdateFirmware() throws Exception {
         return true;
     }
     
-    public void clearTableText() throws Exception{
+    public void searchDevice() throws Exception{
     }
-            
 }

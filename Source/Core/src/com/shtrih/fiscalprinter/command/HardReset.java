@@ -19,12 +19,12 @@ package com.shtrih.fiscalprinter.command;
  * Code (1 byte)
  ****************************************************************************/
 
-public class ResetFM extends PrinterCommand {
+public class HardReset extends PrinterCommand {
 
     /**
      * Creates a new instance of ResetFM
      */
-    public ResetFM() {
+    public HardReset() {
     }
 
     public final int getCode() {
@@ -32,7 +32,7 @@ public class ResetFM extends PrinterCommand {
     }
 
     public final String getText() {
-        return "Reset fiscal memory";
+        return "Hard reset";
     }
 
     public void encode(CommandOutputStream out) throws Exception {

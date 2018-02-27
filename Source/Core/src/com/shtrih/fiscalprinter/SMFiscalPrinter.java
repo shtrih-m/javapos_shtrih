@@ -114,9 +114,6 @@ public interface SMFiscalPrinter {
 
     public void printText(String text) throws Exception;
 
-    public int updateFieldInfo(int tableNumber, int fieldNumber)
-            throws Exception;
-
     public int writeTable(int tableNumber, int rowNumber, int fieldNumber,
                           String fieldValue) throws Exception;
 
@@ -210,7 +207,7 @@ public interface SMFiscalPrinter {
 
     public int confirmDate(PrinterDate date) throws Exception;
 
-    public void writeTime(PrinterTime time) throws Exception;
+    public int writeTime(PrinterTime time) throws Exception;
 
     public void writePortParams(int portNumber, int baudRate, int timeout)
             throws Exception;
@@ -258,7 +255,7 @@ public interface SMFiscalPrinter {
 
     public void writeDecimalPoint(int position) throws Exception;
 
-    public void resetFM() throws Exception;
+    public int hardReset() throws Exception;
 
     public void sysAdminCancelReceipt() throws Exception;
 
@@ -543,4 +540,10 @@ public interface SMFiscalPrinter {
     boolean getCapSetVatTable();
     
     void clearTableText() throws Exception;
+    
+    public void updateFirmware(String firmwareFileName) throws Exception; 
+    
+    public boolean getCapUpdateFirmware() throws Exception;
+    
+    public void searchDevice() throws Exception;
 }

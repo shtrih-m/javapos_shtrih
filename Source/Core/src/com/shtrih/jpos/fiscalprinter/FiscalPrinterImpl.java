@@ -83,7 +83,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public int logoPosition = SMFPTR_LOGO_PRINT;
     private final FptrParameters params;
     private boolean freezeEvents;
-    private static final int MaxStateCount = 3;
     private final FiscalPrinterFilters filters = new FiscalPrinterFilters();
     private Thread asyncThread = null;
     private Thread deviceThread = null;
@@ -849,7 +848,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkClaimed();
         if (this.deviceEnabled != deviceEnabled) {
             if (deviceEnabled) {
-                searchDevice(0);
+                getPrinter().searchDevice();
                 connected = true;
                 setPowerState(JPOS_PS_ONLINE);
                 setJrnPaperState(true, true);
@@ -865,6 +864,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 int numVatRates = getModel().getNumVatRates();
                 vatValues = new int[numVatRates];
                 capSetVatTable = getPrinter().getCapSetVatTable();
+                capUpdateFirmware = getPrinter().getCapUpdateFirmware();
+                
+                
 
                 // if polling enabled - create device thread
                 if (params.pollEnabled) {
@@ -2027,95 +2029,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         } else {
             (new DirectIOHandler2(this)).directIO(command, data, object);
         }
-    }
-
-    // try to connect to device
-    private boolean connectDevice(String searchPortName, int searchBaudRate,
-                                  int searchTimeout) throws Exception {
-        logger.debug("connectDevice(" + searchPortName + ", " + searchBaudRate + ", "
-                + searchTimeout + ")");
-        try {
-            port.setPortName(searchPortName);
-            port.setBaudRate(searchBaudRate);
-            port.open(searchTimeout);
-
-            printer.connect();
-            checkEcrMode();
-
-            // always set port parameters to update byte
-            // receive timeout in fiscal printer
-            int baudRateIndex = printer.getBaudRateIndex(params.getBaudRate());
-            printer.writePortParams(0, baudRateIndex, params.getDeviceByteTimeout());
-            params.setBaudRate(getModel().getSupportedBaudRates()[baudRateIndex]);
-
-            // if baudrate changed - reopen port
-            if (searchBaudRate != params.getBaudRate()) {
-                port.setPortName(searchPortName);
-                port.setBaudRate(params.getBaudRate());
-                port.open(searchTimeout);
-            }
-            return true;
-        } catch (DeviceException e) {
-            logger.error(e);
-            return false;
-        }
-    }
-
-    private void searchDevice(int timeout) throws Exception {
-        logger.debug("searchDevice");
-        synchronized (port.getSyncObject()) {
-            if (port.isSearchByBaudRateEnabled()) {
-                searchSerialDevice(timeout);
-            } else {
-                port.setPortName(params.portName);
-                port.open(timeout);
-                printer.connect();
-                checkEcrMode();
-                //getPrinter().initialize();
-            }
-        }
-    }
-
-    // search device on ports and baudrates
-    private void searchSerialDevice(int timeout) throws Exception {
-        if (connectDevice(params.portName, params.getBaudRate(), timeout)) {
-            return;
-        }
-
-        if (params.searchByPortEnabled) {
-            String[] ports = SerialPrinterPort.getPortNames();
-            for (int i = 0; i < ports.length; i++) {
-                String portName = ports[i];
-                if (!params.portName.equalsIgnoreCase(portName)) {
-                    if (params.searchByBaudRateEnabled) {
-                        if (searchByBaudRates(portName, timeout)) {
-                            return;
-                        }
-                    } else if (connectDevice(portName, params.getBaudRate(), timeout)) {
-                        return;
-                    }
-                }
-            }
-        } else if (params.searchByBaudRateEnabled) {
-            if (searchByBaudRates(params.portName, timeout)) {
-                return;
-            }
-        }
-        throw new JposException(JPOS_E_NOHARDWARE);
-    }
-
-    private boolean searchByBaudRates(String portName, int timeout)
-            throws Exception {
-        int[] deviceBaudRates = {4800, 9600, 19200, 38400, 57600, 115200, 2400};
-        for (int i = 0; i < deviceBaudRates.length; i++) {
-            int baudRate = deviceBaudRates[i];
-            if (baudRate != params.getBaudRate()) {
-                if (connectDevice(portName, baudRate, timeout)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     public void setEventCallbacks(EventCallbacks cb) {
@@ -3962,7 +3875,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void updateFirmware(String firmwareFileName) throws Exception {
         checkEnabled();
-        throw new JposException(JPOS_E_ILLEGAL);
+        if (!capUpdateFirmware){
+            throw new JposException(JPOS_E_ILLEGAL);
+        }
+        printer.updateFirmware(firmwareFileName);
     }
 
     // 1.11
@@ -4192,113 +4108,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void loadGraphics(int lineNumber, int lineCount, byte[] data)
             throws Exception {
         getPrinter().loadGraphics(lineNumber, lineCount, data);
-    }
-
-    private static final int TimeToSleep = 100;
-
-    private void checkEcrMode() throws Exception {
-        logger.debug("checkEcrMode");
-        int endDumpCount = 0;
-        int confirmDateCount = 0;
-        int writePointCount = 0;
-        int stopTestCount = 0;
-
-        for (; ; ) {
-            ReadLongStatus command = new ReadLongStatus();
-            command.setPassword(getPrinter().getUsrPassword());
-            int rc = getPrinter().executeCommand(command);
-            if ((rc == 0x74) || (rc == 0x78)) {
-                rc = 0;
-                technoReset();
-            }
-            getPrinter().check(rc);
-            PrinterStatus status = getPrinter().waitForPrinting();
-            switch (status.getPrinterMode().getValue()) {
-                case MODE_DUMPMODE:
-                    try {
-                        getPrinter().endDump();
-                    } catch (SmFiscalPrinterException ignored) {
-                        // При чтении докмента из ФН десктопные ФР переходят в режим 1, при этом
-                        // прервать этот режим старым методом нельзя только дочитать документ до
-                        // конца
-                        readDocumentTLVToEnd();
-                    }
-
-                    endDumpCount++;
-                    if (endDumpCount >= MaxStateCount) {
-                        throw new Exception(
-                                Localizer.getString(Localizer.endDumpFailed));
-                    }
-                    break;
-
-                case MODE_LOCKED:
-                    throw new Exception(
-                            Localizer.getString(Localizer.LockedTaxPassword));
-
-                case MODE_WAITDATE:
-                    PrinterDate date = readLongStatus().getDate();
-                    getPrinter().confirmDate(date);
-                    confirmDateCount++;
-                    if (confirmDateCount >= MaxStateCount) {
-                        throw new Exception(
-                                Localizer.getString(Localizer.ConfirmDateFailed));
-                    }
-                    break;
-
-                case MODE_POINTPOS:
-                    getPrinter().writeDecimalPoint(SMFP_POINT_POSITION_2);
-                    writePointCount++;
-                    if (writePointCount >= MaxStateCount) {
-                        throw new Exception(
-                                Localizer
-                                        .getString(Localizer.WriteDecimalPointFailed));
-                    }
-                    break;
-
-                case MODE_TECH:
-                    technoReset();
-                    break;
-
-                case MODE_TEST:
-                    getPrinter().stopTest();
-                    stopTestCount++;
-                    if (stopTestCount >= MaxStateCount) {
-                        throw new Exception(
-                                Localizer.getString(Localizer.StopTestFailed));
-                    }
-                    break;
-
-                case MODE_FULLREPORT:
-                case MODE_EJREPORT:
-                case MODE_SLPPRINT:
-                    getPrinter().sleep(TimeToSleep);
-                    break;
-
-                default:
-                    return;
-            }
-        }
-    }
-
-    private void readDocumentTLVToEnd() throws Exception {
-        FSReadDocumentBlock readDocumentBlock = new FSReadDocumentBlock(getPrinter().getSysPassword());
-        while (true) {
-            int result = getPrinter().executeCommand(readDocumentBlock);
-            if (result != 0) {
-                break;
-            }
-        }
-    }
-
-    private void technoReset() throws Exception {
-        Calendar now = Calendar.getInstance();
-        PrinterDate date = new PrinterDate();
-        PrinterTime time = new PrinterTime();
-
-        getPrinter().resetFM();
-        getPrinter().writeDate(date);
-        getPrinter().confirmDate(date);
-        getPrinter().writeTime(time);
     }
 
     public void throwTestError() throws Exception {
@@ -4607,7 +4416,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public boolean handleDeviceException(Exception e) throws Exception {
         if (connected
                 && (params.searchMode == SmFptrConst.SMFPTR_SEARCH_ON_ERROR)) {
-            searchDevice(0);
+            getPrinter().searchDevice();
             connected = true;
             return true;
         } else {

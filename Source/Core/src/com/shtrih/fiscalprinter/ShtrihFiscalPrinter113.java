@@ -2033,7 +2033,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
      * Техническое обнуление
      */
     public void technicalReset() throws JposException {
-        ResetFM command = new ResetFM();
+        HardReset command = new HardReset();
         executeCommand(command);
     }
 
