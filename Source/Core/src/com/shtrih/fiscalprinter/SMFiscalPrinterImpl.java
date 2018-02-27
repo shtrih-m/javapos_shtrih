@@ -3770,7 +3770,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             ReadLongStatus command = new ReadLongStatus();
             command.setPassword(getUsrPassword());
             int rc = executeCommand(command);
-            if ((rc == 0x74) || (rc == 0x78)) {
+            if ((rc == 0x74) || (rc == 0x78) || (rc == 0x79)) {
                 rc = 0;
                 deviceReset();
             }
