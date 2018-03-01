@@ -1391,7 +1391,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         if (receipt != null && receipt.isOpened()) {
             return true;
         }
-        return getPrinter().readPrinterStatus().getPrinterMode().getDayOpened();
+        return getPrinter().readPrinterStatus().getPrinterMode().isDayOpened();
     }
 
     public int getDescriptionLength() throws Exception {

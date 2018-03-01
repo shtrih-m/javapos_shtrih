@@ -38,7 +38,7 @@ public class PrinterMode implements PrinterConst {
         return getLoMode() == MODE_REC;
     }
 
-    public boolean getDayOpened() {
+    public boolean isDayOpened() {
         return (getLoMode() == ECRMODE_24OVER)
                 || (getLoMode() == ECRMODE_24NOTOVER);
     }
@@ -52,7 +52,7 @@ public class PrinterMode implements PrinterConst {
     }
 
     public boolean canPrintZReport() {
-        return getDayOpened();
+        return isDayOpened();
     }
 
     public boolean isDayEndRequired() {

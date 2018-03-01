@@ -30,13 +30,21 @@ dependencies {
     compile 'jpos:jpos113:1.13',
             'jpos:jpos113-controls:1.13',
             'log4j:log4j:1.2.12',
-            'RXTXcomm:RXTXcomm:1.0',
+            'nrjavaserial:nrjavaserial:3.12.0',
             'xerces:xerces:1.0',
-            'zxing:zxing:2.2'
+            'zxing:zxing:2.2',
+	        'org.usb4java:usb4java:1.2.0',
+	        'net.sourceforge.argparse4j:argparse4j:0.5.0'
             
+	compile files('../lib/ymodem-1.0.jar')
+	compile files('../lib/commons-lang3-3.2.1.jar')
+	compile files('../lib/flop-programmer-0.1.0.jar')
+	
+	
     testCompile group: 'org.hamcrest', name: 'hamcrest-core', version: '1.3'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
+
 
 jar {
     archiveName = "shtrihjavapos.jar"

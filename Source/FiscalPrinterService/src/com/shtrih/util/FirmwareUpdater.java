@@ -6,34 +6,80 @@
 package com.shtrih.util;
 
 import gnu.io.*;
+import java.io.*;
+import java.nio.*;
+import org.usb4java.*;
 import java.nio.file.*;
+import java.nio.channels.*;
 import ru.sir.ymodem.XModem;
+import com.github.kairyu.flop.programmer.dfu.*;
 
 /**
  *
  * @author V.Kravtsov
  */
-public class FirmwareUpdater 
-{
-    
-    public FirmwareUpdater(){
+public class FirmwareUpdater {
+
+    public FirmwareUpdater() {
     }
-    
-    public static boolean capXModemUpdate(){
+
+    public static boolean capXModemUpdate() {
         return true;
     }
-    
-    public static boolean capDFUUpdate(){
-        return false;
+
+    public static boolean capDFUUpdate() {
+        return true;
     }
-    
-    public static void updateFirmwareDFU(String firmwareFileName) throws Exception
-    {
+
+    public static void updateFirmwareDFU(String firmwareFileName) throws Exception {
+        CompositeLogger logger = CompositeLogger.getLogger(FirmwareUpdater.class);
+        logger.debug("updateFirmwareDFU");
         
+        RandomAccessFile aFile = new RandomAccessFile(firmwareFileName, "r");
+        FileChannel inChannel = aFile.getChannel();
+        long fileSize = inChannel.size();
+        ByteBuffer buffer = ByteBuffer.allocateDirect((int) fileSize);
+        inChannel.read(buffer);
+        buffer.flip();
+
+        DfuDevice dfuDevice = new DfuDevice();
+        dfuDevice.init();
+
+        int bus_number = 0;
+        int device_address = 0;
+        int vendorId = 0x1fc9;
+        int productId = 0x0089;
+
+        Device device = null;
+        int maxTryCount = 10;
+        for (int i = 0; i < maxTryCount; i++) {
+            try {
+                device = dfuDevice.initDevice(vendorId, productId,
+                        bus_number, device_address, false, false);
+                if (device != null) {
+                    break;
+                }
+            } catch (Exception e) {
+                logger.error("initDevice", e);
+            }
+            Thread.sleep(500);
+        }
+        if (device == null) {
+            throw new Exception("Device not found");
+        }
+
+        try {
+            dfuDevice.download(buffer);
+            dfuDevice.reset();
+        } finally {
+            aFile.close();
+            dfuDevice.uninitDevice();
+            dfuDevice.uninit();
+        }
+        logger.debug("updateFirmwareDFU: OK");
     }
-    
-    public static void updateFirmwareXModem(String portName, String firmwareFileName) throws Exception
-    {
+
+    public static void updateFirmwareXModem(String portName, String firmwareFileName) throws Exception {
         CompositeLogger logger = CompositeLogger.getLogger(FirmwareUpdater.class);
         CommPortIdentifier portId = CommPortIdentifier
                 .getPortIdentifier(portName);
@@ -62,5 +108,5 @@ public class FirmwareUpdater
             throw e;
         }
     }
-    
+
 }

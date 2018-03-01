@@ -697,4 +697,12 @@ public interface PrinterConst {
     // subAdjustmentOrder constants
     public static final int ADJUSTMENT_ORDER_CORRECT = 0;
     public static final int ADJUSTMENT_ORDER_RECEND  = 1;
+    
+    // Interface constants
+    public static final int SMFP_IF_PC_RS232         = 0;
+    public static final int SMFP_IF_PC_USB           = 1;
+    public static final int SMFP_IF_PC_TCP_SERVER    = 2;
+    public static final int SMFP_IF_PC_I2C_TUNNEL    = 3;
+   
+    
 }

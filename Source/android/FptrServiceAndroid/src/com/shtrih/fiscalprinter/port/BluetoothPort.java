@@ -59,7 +59,7 @@ public class BluetoothPort implements PrinterPort {
 
     @Override
     public boolean isSearchByBaudRateEnabled() {
-        return true;
+        return false;
     }
 
     @Override
