@@ -1,9 +1,5 @@
 package com.shtrih.fiscalprinter.command;
 
-/**
- * @author P.Zhirkov
- */
-
 import com.shtrih.util.BitUtils;
 
 public class PrinterModelParameters implements PrinterConst {
@@ -150,6 +146,15 @@ public class PrinterModelParameters implements PrinterConst {
     // Номер таблицы параметров ОФД (1 байт) 0 - не поддерживается, 1…255
     private final int ofdTableNumber;
 
+    // Номер таблицы встраиваемой и интернет техники (1 байт) 0 - не поддерживается, 1…255
+    private final int embeddableAndInternetDeviceTableNumber;
+
+    // Номер таблицы версии ФФД (1 байт) 0 - не поддерживается, 1…255
+    private final int ffdTableNumber;
+
+    // Номер поля в таблице версии ФФД (1 байт) 0 - не поддерживается, 1…255
+    private final int ffdColumnNumber;
+
     public PrinterModelParameters(CommandInputStream in) throws Exception {
         flags = in.readLong(8);
         capJrnNearEndSensor = BitUtils.testBit(flags, 0);
@@ -219,6 +224,9 @@ public class PrinterModelParameters implements PrinterConst {
 
         fsTableNumber = readByteIfAvailable(in);
         ofdTableNumber = readByteIfAvailable(in);
+        embeddableAndInternetDeviceTableNumber = readByteIfAvailable(in);
+        ffdTableNumber = readByteIfAvailable(in);
+        ffdColumnNumber = readByteIfAvailable(in);
     }
 
     private int readByteIfAvailable(CommandInputStream in) throws Exception {
@@ -671,5 +679,30 @@ public class PrinterModelParameters implements PrinterConst {
 
     public boolean capFsTableNumber() {
         return fsTableNumber > 0;
+    }
+
+    /**
+     * @return Номер таблицы встраиваемой и интернет техники (1 байт) 0 - не поддерживается, 1…255
+     */
+    public int getEmbeddableAndInternetDeviceTableNumber() {
+        return embeddableAndInternetDeviceTableNumber;
+    }
+
+    /**
+     * @return Номер таблицы версии ФФД (1 байт) 0 - не поддерживается, 1…255
+     */
+    public int getFFDTableNumber() {
+        return ffdTableNumber;
+    }
+
+    /**
+     * @return Номер поля в таблице версии ФФД (1 байт) 0 - не поддерживается, 1…255
+     */
+    public int getFFDColumnNumber() {
+        return ffdColumnNumber;
+    }
+
+    public boolean capFFDTableAndColumnNumber() {
+        return ffdTableNumber > 0 && ffdColumnNumber > 0;
     }
 }

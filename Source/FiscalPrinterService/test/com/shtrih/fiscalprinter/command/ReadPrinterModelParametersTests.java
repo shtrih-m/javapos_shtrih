@@ -61,6 +61,37 @@ public class ReadPrinterModelParametersTests {
         assertEquals(true, status.isGraphics512Supported());
         assertEquals(512, status.getGraphicsWidth());
         assertEquals(512, status.getGraphics512Width());
+        assertEquals(false, status.capFsTableNumber());
+        assertEquals(false, status.capOfdTableNumber());
+        assertEquals(false, status.capFFDTableAndColumnNumber());
+    }
+
+    @Test
+    public void should_deserialize_response_with_table_numbers_and_ffd() throws Exception {
+        ReadPrinterModelParameters cmd = new ReadPrinterModelParameters();
+
+        byte[] responseData = byteArray(
+                0xF7, 0x00, 0x08, 0x00, 0xC0, 0xF7, 0x3F, 0x08, 0x00, 0x00,
+                0x00, 0x00, 0x01, 0x0C, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x1E, 0x00, 0x00, 0x00, 0x00, 0x06, 0xFF, 0x00, 0x28,
+                0x00, 0x00, 0x00, 0x0D, 0x0E, 0x10, 0x0A, 0x1D
+        );
+
+        cmd.decodeData(responseData);
+
+        PrinterModelParameters status = cmd.getParameters();
+
+        assertEquals(true, status.capFsTableNumber());
+        assertEquals(13, status.getFsTableNumber());
+
+        assertEquals(true, status.capOfdTableNumber());
+        assertEquals(14, status.getOfdTableNumber());
+
+        assertEquals(true, status.capFFDTableAndColumnNumber());
+        assertEquals(10, status.getFFDTableNumber());
+        assertEquals(29, status.getFFDColumnNumber());
+
+        assertEquals(16, status.getEmbeddableAndInternetDeviceTableNumber());
     }
 }
 
