@@ -1900,6 +1900,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     private void writeTables() throws Exception {
         writeFieldsFile();
+        writePaymentNames();
     }
 
     public void readTables() {
