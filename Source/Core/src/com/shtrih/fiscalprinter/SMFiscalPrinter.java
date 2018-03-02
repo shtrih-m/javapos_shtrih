@@ -279,7 +279,7 @@ public interface SMFiscalPrinter {
     public boolean isValidField(PrinterField field)
             throws Exception;
 
-    public void readTables(PrinterTables tables) throws Exception;
+    public PrinterTables readTables() throws Exception;
 
     public PrinterStatus readShortPrinterStatus() throws Exception;
 

@@ -520,7 +520,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return true;
     }
 
-    public void readTables(PrinterTables tables) throws Exception {
+    public PrinterTables readTables() throws Exception {
+        return new PrinterTables();
     }
 
     public PrinterStatus readShortPrinterStatus() throws Exception {

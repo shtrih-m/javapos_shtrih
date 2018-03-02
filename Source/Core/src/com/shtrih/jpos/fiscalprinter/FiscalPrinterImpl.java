@@ -2015,10 +2015,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
      * Read tables from CSV file *
      */
     public void readTables(String fileName) throws Exception {
-        PrinterTables tables = new PrinterTables();
+        PrinterTables tables = getPrinter().readTables();
         CsvTablesWriter writer = new CsvTablesWriter();
-
-        getPrinter().readTables(tables);
         writer.save(SysUtils.getFilesPath() + fileName, tables);
     }
 
