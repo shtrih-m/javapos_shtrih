@@ -1063,6 +1063,24 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_GET_DRIVER_PARAMETER, data, object);
         return object[0];
     }
+    
+    public String getParameter2(int paramType) throws JposException {
+        int data[] = new int[1];
+        int object[] = new int[1];
+        data[0] = paramType;
+        directIO(SmFptrConst.SMFPTR_DIO_GET_DRIVER_PARAMETER, data, object);
+        return String.valueOf(object[0]);
+    }
+    
+    public void setParameter2(int paramType, int paramValue)
+            throws JposException {
+        int data[] = new int[1];
+        int object[] = new int[1];
+        data[0] = paramType;
+        object[0] = paramValue;
+        directIO(SmFptrConst.SMFPTR_DIO_SET_DRIVER_PARAMETER, data, object);
+    }
+    
 
     /**
      * Set number of header lines *

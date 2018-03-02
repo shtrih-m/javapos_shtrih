@@ -812,55 +812,59 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    private void PrintCheckWithPassedPositionSum() throws Exception {
-        // Задаем тип чека SMFPTR_RT_SALE, SMFPTR_RT_RETSALE, SMFPTR_RT_BUY, SMFPTR_RT_RETBUY
-        printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
-
-        // Указываем систему налогообложения
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM, 1);
-
-        // Начинаем фискальный документ
-        printer.beginFiscalReceipt(true);
-
-        int oldFontNumber = printer.getFontNumber();
-        printer.setFontNumber(5);
+    private void PrintCheckWithPassedPositionSum() {
         try {
-            // Запись телефона покупателя
-            printer.fsWriteCustomerPhone("+79006009090");
-        } finally {
-            printer.setFontNumber(oldFontNumber);
+            // Задаем тип чека SMFPTR_RT_SALE, SMFPTR_RT_RETSALE, SMFPTR_RT_BUY, SMFPTR_RT_RETBUY
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+
+            // Указываем систему налогообложения
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM, 1);
+
+            // Начинаем фискальный документ
+            printer.beginFiscalReceipt(true);
+
+            int oldFontNumber = printer.getFontNumber();
+            printer.setFontNumber(5);
+            try {
+                // Запись телефона покупателя
+                printer.fsWriteCustomerPhone("+79006009090");
+            } finally {
+                printer.setFontNumber(oldFontNumber);
+            }
+            // Печать строки шрифтом 2
+            // Печатаем текст
+            printer.printRecMessage("же не манж пасижур", 2);
+
+            // Обычная позиция
+            printer.printRecItem("ITEM 1", 0, 1234, 0, 1000, "");
+
+            // Позиция с коррекцией на +-1 копейку
+            // Сумма позиции будет сброшена драйвером после вызова printRecItem
+            //printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 1235);
+            //printer.printRecItem("ITEM 2", 0, 1234, 0, 1000, "");
+
+            // Позиция с признаком способа расчета и признаком предмета расчета
+            // 1214, признак способа расчета, если не указывать будет 0
+            // ВНИМАНИЕ: значение сохраняется после вызова printRecItem
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, 2);
+            // 1212, признак предмета расчета, если не указывать будет 0
+            // ВНИМАНИЕ: значение сохраняется после вызова printRecItem
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 3);
+            printer.printRecItem("ITEM 3", 0, 1234, 0, 1000, "");
+
+            // Оплата типом оплаты который привязан к jpos.xml к метке "0"
+            // <prop name="payType0" type="String" value="0"/>
+            printer.printRecTotal(0, 1235 + 1234, "0");
+
+            // Оплата типом оплаты который привязан к jpos.xml к метке "2"
+            // <prop name="payType2" type="String" value="2"/>
+            //printer.printRecTotal(0, 12350000, "2");
+
+            // Закрыть фискальный документ
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        // Печать строки шрифтом 2
-        // Печатаем текст
-        printer.printRecMessage("же не манж пасижур", 2);
-
-        // Обычная позиция
-        printer.printRecItem("ITEM 1", 0, 1234, 0, 1000, "");
-
-        // Позиция с коррекцией на +-1 копейку
-        // Сумма позиции будет сброшена драйвером после вызова printRecItem
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 1235);
-        printer.printRecItem("ITEM 2", 0, 1234, 0, 1000, "");
-
-        // Позиция с признаком способа расчета и признаком предмета расчета
-        // 1214, признак способа расчета, если не указывать будет 0
-        // ВНИМАНИЕ: значение сохраняется после вызова printRecItem
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, 4);
-        // 1212, признак предмета расчета, если не указывать будет 0
-        // ВНИМАНИЕ: значение сохраняется после вызова printRecItem
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 1);
-        printer.printRecItem("ITEM 3", 0, 1234, 0, 1000, "");
-
-        // Оплата типом оплаты который привязан к jpos.xml к метке "0"
-        // <prop name="payType0" type="String" value="0"/>
-        printer.printRecTotal(0, 1235 + 1234, "0");
-
-        // Оплата типом оплаты который привязан к jpos.xml к метке "2"
-        // <prop name="payType2" type="String" value="2"/>
-        printer.printRecTotal(0, 1235, "2");
-
-        // Закрыть фискальный документ
-        printer.endFiscalReceipt(false);
     }
 
     private void printCheckWithSmallSum() throws Exception {
@@ -957,11 +961,13 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void printFiscalReceipt() 
-    {
+    public void printFiscalReceipt() {
+        PrintCheckWithPassedPositionSum();
+        /*
         printFiscalReceipt145_1(false);
         printNonFiscal(false);
         printEscBarcodesNormal();
+         */
     }
 
     public void disablePrint() {
@@ -2496,10 +2502,10 @@ class PrinterTest implements FiscalPrinterConst {
     public void printNonFiscal(boolean docEndEnabled) {
         try {
             printer.beginNonFiscal();
-            if (!docEndEnabled){
+            if (!docEndEnabled) {
                 printer.directIO(84, null, null);
             }
-            
+
             printer.printNormal(FPTR_S_RECEIPT, getLine(""));
             printer.printNormal(FPTR_S_RECEIPT, getLine("Nonfiscal receipt"));
             printer.printNormal(FPTR_S_RECEIPT, getLine(""));
@@ -3556,10 +3562,10 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-            if (!printTrailer){
+            if (!printTrailer) {
                 printer.directIO(84, null, null);
             }
-            
+
             printer.printRecItem("Item 1", 300, 1000, 1, 300, "");
             printer.printRecItemAdjustment(FPTR_AT_AMOUNT_DISCOUNT, "СКИДКА", 50, 1);
             printer.printRecTotal(30, 30, "1");

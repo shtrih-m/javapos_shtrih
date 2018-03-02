@@ -47,6 +47,34 @@ public class FSSaleReceiptItem {
     public FSSaleReceiptItem() {
     }
 
+    public FSSaleReceiptItem getCopy() 
+    {
+        FSSaleReceiptItem item = new FSSaleReceiptItem();
+        item.pos = pos;
+        item.price = price;
+        item.priceWithDiscount = priceWithDiscount;
+        item.unitPrice = unitPrice;
+        item.quantity = quantity;
+        item.department = department;
+        item.tax1 = tax1;
+        item.tax2 = tax2;
+        item.tax3 = tax3;
+        item.tax4 = tax4;
+        item.text = text;
+        item.preLine = preLine;
+        item.postLine = postLine;
+        item.unitName = unitName;
+        item.voidAmount = voidAmount;
+        item.isStorno = isStorno;
+        item.priceUpdated = priceUpdated;
+        item.splittedItem = null;
+        item.totalAmount = totalAmount;
+        item.paymentType = paymentType;
+        item.subjectType = subjectType;
+        return item;
+    }
+    
+            
     public PriceItem getPriceItem() throws Exception {
         PriceItem item = new PriceItem();
         item.setDepartment(department);
@@ -315,7 +343,7 @@ public class FSSaleReceiptItem {
                         }
                     }
                     if (quantity2 != quantity) {
-                        splittedItem = new FSSaleReceiptItem();
+                        splittedItem = getCopy();
                         splittedItem.price = price;
                         splittedItem.unitPrice = price;
                         splittedItem.priceWithDiscount = price2;
