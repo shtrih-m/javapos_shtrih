@@ -1623,7 +1623,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public PrinterTable getTable(int tableNumber) throws Exception 
     {
-        PrinterTable table = tables.itemByNumber(tableNumber);
+        PrinterTable table = tables.find(tableNumber);
         if (table == null) {
             table = readTableInfo(tableNumber).getTable();
             tables.add(table);

@@ -34,14 +34,22 @@ public class PrinterTables {
         throw new Exception("Table not found");
     }
 
-    public PrinterTable itemByNumber(int number) throws Exception {
+    public PrinterTable find(int number) throws Exception {
         for (int i = 0; i < size(); i++) {
             PrinterTable table = get(i);
             if (table.getNumber() == number) {
                 return table;
             }
         }
-        throw new Exception("Table not found");
+        return null;
+    }
+
+    public PrinterTable itemByNumber(int number) throws Exception {
+        PrinterTable table = find(number);
+        if (table == null) {
+            throw new Exception("Table not found");
+        }
+        return table;
     }
 
     public void clear() {
