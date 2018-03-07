@@ -41,7 +41,7 @@ public class EJDate {
         Calendar calendar = new GregorianCalendar();
         this.day = calendar.get(Calendar.DAY_OF_MONTH);
         this.month = calendar.get(Calendar.MONTH) + 1;
-        this.year = calendar.get(Calendar.YEAR) - 2000;
+        this.year = calendar.get(Calendar.YEAR)-2000;
     }
 
     public int getDay() {

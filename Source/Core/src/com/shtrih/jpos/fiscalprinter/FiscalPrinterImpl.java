@@ -3586,8 +3586,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         LongPrinterStatus fullStatus = readLongStatus();
         if (!printerDate.isEqual(fullStatus.getDate())) {
             logger.error("Failed to set printer date: "
-                    + PrinterDate.toText(printerDate) + " <> "
-                    + PrinterDate.toText(fullStatus.getDate()));
+                    + printerDate.toText() + " <> "
+                    + fullStatus.getDate().toText());
         }
         PrinterTime time = new PrinterTime(fullStatus.getTime().getHour(),
                 fullStatus.getTime().getMin(), 0);

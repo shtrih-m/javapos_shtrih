@@ -224,7 +224,7 @@ public class CommandParam {
                 break;
 
             case PARAM_TYPE_DATE:
-                value = PrinterDate.toText(in.readDate());
+                value = in.readDate().toText();
                 break;
 
             case PARAM_TYPE_TIME:
