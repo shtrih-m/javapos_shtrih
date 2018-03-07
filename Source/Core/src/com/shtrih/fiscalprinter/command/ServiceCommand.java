@@ -49,10 +49,11 @@ public class ServiceCommand extends PrinterCommand {
     public static final int FUNCTION_CODE_GRAPH_OFF = 0xfe;
     public static final int FUNCTION_CODE_GRAPH_ON = 0xff;
 
-
     // in
     private int functionCode = 0;       // Function code
     private int password = 0;   // Admin password (4 bytes)
+    // out
+    private byte[] rawAnswer;
 
     /**
      * Creates a new instance of Beep
@@ -75,6 +76,11 @@ public class ServiceCommand extends PrinterCommand {
     }
 
     public void decode(CommandInputStream in) throws Exception {
+        rawAnswer = in.readBytesToEnd();
+    }
+
+    public byte[] getRawAnswer() {
+        return rawAnswer;
     }
 
     public int getPassword() {

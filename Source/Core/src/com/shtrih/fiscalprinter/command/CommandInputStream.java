@@ -108,7 +108,7 @@ public class CommandInputStream {
         int day = readByte();
         int month = readByte();
         int year = readByte();
-        return new PrinterDate(day, month, year);
+        return new PrinterDate(day, month, year + 2000);
     }
 
     public PrinterDate readDateYMD() throws Exception
@@ -116,7 +116,7 @@ public class CommandInputStream {
         int year = readByte();
         int month = readByte();
         int day = readByte();
-        return new PrinterDate(day, month, year);
+        return new PrinterDate(day, month, year + 2000);
     }
 
     public EJDate readEJDate() throws Exception

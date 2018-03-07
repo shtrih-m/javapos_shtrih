@@ -962,7 +962,8 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printFiscalReceipt() {
-        PrintCheckWithPassedPositionSum();
+        printFiscalReceipt145_2();
+        //PrintCheckWithPassedPositionSum();
         /*
         printFiscalReceipt145_1(false);
         printNonFiscal(false);
@@ -3580,4 +3581,21 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    public void printFiscalReceipt145_2() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, 10);
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 3);
+            printer.printRecItem("Item 1", 300, 1000, 1, 300, "");
+            printer.printRecTotal(300, 300, "0");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    
 }

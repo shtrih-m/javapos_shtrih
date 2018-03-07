@@ -11,16 +11,21 @@ package com.shtrih.jpos.fiscalprinter.directIO;
 import com.shtrih.jpos.DIOUtils;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
+import com.shtrih.util.CompositeLogger;
 
 public class DIOSetDriverParameter extends DIOItem {
 
+    private static CompositeLogger logger = CompositeLogger.getLogger(DIOSetDriverParameter.class);
+    
     public DIOSetDriverParameter(FiscalPrinterImpl service) {
         super(service);
     }
 
-    public void execute(int[] data, Object object) throws Exception {
+    public void execute(int[] data, Object object) throws Exception 
+    {
         DIOUtils.checkDataMinLength(data, 1);
 
+        logger.debug("directIo(SMFPTR_DIO_SET_DRIVER_PARAMETER, " + data[0] + ")");
         switch (data[0]) {
             case SmFptrConst.SMFPTR_DIO_PARAM_REPORT_DEVICE:
                 service.getParams().reportDevice = ((int[]) object)[0];

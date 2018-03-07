@@ -347,7 +347,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         capPostPreLine = true;
         capSetCurrency = false;
         capTotalizerType = true;
-        capCompareFirmwareVersion = false;
+        capCompareFirmwareVersion = true;
         capUpdateFirmware = false;
         // state
         duplicateReceipt = false;
@@ -3058,9 +3058,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         date1 = decodeText(date1);
         date2 = decodeText(date2);
 
-        PrinterDate printerDate1 = JposFiscalPrinterDate.valueOf(date1)
+        PrinterDate printerDate1 = JposFiscalPrinterDate.parseDateTime(date1)
                 .getPrinterDate();
-        PrinterDate printerDate2 = JposFiscalPrinterDate.valueOf(date2)
+        PrinterDate printerDate2 = JposFiscalPrinterDate.parseDateTime(date2)
                 .getPrinterDate();
 
         printDocStart();
@@ -3435,8 +3435,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 PrinterDate date1;
                 PrinterDate date2;
                 // pase dates
-                date1 = JposFiscalPrinterDate.valueOf(startNum).getPrinterDate();
-                date2 = JposFiscalPrinterDate.valueOf(endNum).getPrinterDate();
+                date1 = JposFiscalPrinterDate.parseDateTime(startNum).getPrinterDate();
+                date2 = JposFiscalPrinterDate.parseDateTime(endNum).getPrinterDate();
 
                 // print report
                 printDocStart();
@@ -3566,7 +3566,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             dayEndRequiredError();
         }
 
-        JposFiscalPrinterDate jposDate = JposFiscalPrinterDate.valueOf(date);
+        JposFiscalPrinterDate jposDate = JposFiscalPrinterDate.parseDateTime(date);
         PrinterDate printerDate = jposDate.getPrinterDate();
         PrinterTime printerTime = jposDate.getPrinterTime();
 
@@ -3584,14 +3584,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         getPrinter().writeTime(printerTime);
         // check if date and time was set correctly
         LongPrinterStatus fullStatus = readLongStatus();
-        if (!PrinterDate.compare(printerDate, fullStatus.getDate())) {
+        if (!printerDate.isEqual(fullStatus.getDate())) {
             logger.error("Failed to set printer date: "
                     + PrinterDate.toText(printerDate) + " <> "
                     + PrinterDate.toText(fullStatus.getDate()));
         }
         PrinterTime time = new PrinterTime(fullStatus.getTime().getHour(),
                 fullStatus.getTime().getMin(), 0);
-        if (!PrinterTime.compare(printerTime, time)) {
+        if (!printerTime.isEqual(time)) {
             logger.error("Failed to set printer time: "
                     + PrinterTime.toString(printerTime) + " <> "
                     + PrinterTime.toString(fullStatus.getTime()));
@@ -3868,8 +3868,21 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void compareFirmwareVersion(String firmwareFileName, int[] result)
             throws Exception {
+        if (!getCapCompareFirmwareVersion()){
+            throw new JposException(JPOS_E_ILLEGAL);
+        }
         checkEnabled();
-        throw new JposException(JPOS_E_ILLEGAL);
+        int rc = printer.compareFirmwareVersion(firmwareFileName);
+        if (rc == 0) {
+            result[0] = JposConst.JPOS_CFV_FIRMWARE_SAME;
+        }
+        if (rc == 1) {
+            result[0] = JposConst.JPOS_CFV_FIRMWARE_NEWER;
+        }
+        if (rc == -1) {
+            result[0] = JposConst.JPOS_CFV_FIRMWARE_OLDER;
+        }
+        
     }
 
     public void updateFirmware(String firmwareFileName) throws Exception {

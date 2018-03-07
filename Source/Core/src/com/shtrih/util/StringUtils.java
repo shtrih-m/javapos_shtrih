@@ -27,6 +27,17 @@ public class StringUtils {
     private StringUtils() {
     }
 
+    public static int stringToInt(String value, int index, int len, String text)
+            throws Exception {
+        String substring = "";
+        try {
+            substring = value.substring(index, index + len);
+            return Integer.parseInt(substring);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+    
     public static String[] split(String text, char c) {
         String data = "";
         Vector result = new Vector();

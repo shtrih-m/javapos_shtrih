@@ -12,6 +12,7 @@ package com.shtrih.fiscalprinter.command;
  *
  * @author V.Kravtsov
  */
+import com.shtrih.util.MathUtils;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
@@ -37,8 +38,8 @@ public class PrinterDate {
     public PrinterDate() {
         Calendar calendar = new GregorianCalendar();
         this.day = calendar.get(Calendar.DAY_OF_MONTH);
-        this.month = calendar.get(Calendar.MONTH) + 1;
-        this.year = calendar.get(Calendar.YEAR) - 2000;
+        this.month = calendar.get(Calendar.MONTH);
+        this.year = calendar.get(Calendar.YEAR);
     }
 
     public int getDay() {
@@ -56,26 +57,26 @@ public class PrinterDate {
     public String toJposString() {
         return StringUtils.intToStr(day, 2)
                 + StringUtils.intToStr(month, 2)
-                + StringUtils.intToStr(year + 2000, 4);
+                + StringUtils.intToStr(year, 4);
     }
 
     public String toString() {
         return StringUtils.intToStr(day, 2) + "."
                 + StringUtils.intToStr(month, 2) + "."
-                + StringUtils.intToStr(year + 2000, 4);
+                + StringUtils.intToStr(year, 4);
     }
 
     public String toStringShort() {
         return StringUtils.intToStr(day, 2) + "."
                 + StringUtils.intToStr(month, 2) + "."
-                + StringUtils.intToStr(year, 2);
+                + StringUtils.intToStr(year - 2000, 2);
     }
 
     // 01.02.09
     public static String toText(PrinterDate date) {
         return StringUtils.intToStr(date.getDay(), 2) + "."
                 + StringUtils.intToStr(date.getMonth(), 2) + "."
-                + StringUtils.intToStr(date.getYear() + 2000, 4);
+                + StringUtils.intToStr(date.getYear(), 4);
     }
 
     // 01.02.2009 or 01.02.09
@@ -84,35 +85,31 @@ public class PrinterDate {
         int day = Integer.parseInt(tokenizer.nextToken());
         int month = Integer.parseInt(tokenizer.nextToken());
         int year = Integer.parseInt(tokenizer.nextToken()) % 100;
-        return new PrinterDate(day, month, year);
+        return new PrinterDate(day, month, year + 2000);
     }
 
     public boolean isEqual(PrinterDate date) {
-        return (date.getDay() == getDay())
-                && (date.getMonth() == getMonth())
-                && (date.getYear() == getYear());
+        return compare(date) == 0;
     }
 
     public boolean isEqualOrOlder(PrinterDate date) {
-        return ((year >= date.getYear())
-                && (month >= date.getMonth())
-                && (day >= date.getDay()));
+        return compare(date) <= 0;
     }
 
     public boolean isOlder(PrinterDate date) {
-        if (year < date.getYear()) return false;
-        if (year > date.getYear()) return true;
-        if (month < date.getMonth()) return false;
-        if (month > date.getMonth()) return true;
-        if (day < date.getDay()) return false;
-        if (day > date.getDay()) return true;
-        return false;
-    }
-    
-    public static boolean compare(PrinterDate date1, PrinterDate date2) {
-        return (date1.getDay() == date2.getDay())
-                && (date1.getMonth() == date2.getMonth())
-                && (date1.getYear() == date2.getYear());
+        return compare(date) == -1;
     }
 
+    public int compare(PrinterDate date) {
+        int rc = MathUtils.compare(year, date.getYear());
+        if (rc != 0) {
+            return rc;
+        }
+        rc = MathUtils.compare(month, date.getMonth());
+        if (rc != 0) {
+            return rc;
+        }
+        rc = MathUtils.compare(day, date.getDay());
+        return rc;
+    }
 }

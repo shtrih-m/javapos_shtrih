@@ -1048,4 +1048,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     
     public void searchDevice() throws Exception{
     }
+    
+    public int compareFirmwareVersion(String firmwareFileName) throws Exception{
+        return 0;
+    }
 }

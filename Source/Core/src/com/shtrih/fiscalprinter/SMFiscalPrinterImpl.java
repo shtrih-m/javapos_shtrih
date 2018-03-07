@@ -698,7 +698,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
             fieldInfo = command.getFieldInfo();
         }
-        
+
         ReadTable commandReadTable = new ReadTable(sysPassword, tableNumber,
                 rowNumber, fieldNumber);
         result = executeCommand(commandReadTable);
@@ -1621,8 +1621,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public PrinterTable getTable(int tableNumber) throws Exception 
-    {
+    public PrinterTable getTable(int tableNumber) throws Exception {
         PrinterTable table = tables.find(tableNumber);
         if (table == null) {
             table = readTableInfo(tableNumber).getTable();
@@ -1936,6 +1935,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void initialize() throws Exception {
         logger.debug("initialize()");
 
+        
         fields.clear();
         tables.clear();
         isCapDisableDiscountTextInitialized = false;
@@ -1987,6 +1987,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         } else {
             capDiscount = discountMode == 0;
         }
+        updateFirmware();
     }
 
     private boolean isDesktop() throws Exception {
@@ -2001,7 +2002,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     private boolean readCapDisableDiscountText() throws Exception {
-        PrinterDate date1 = new PrinterDate(10, 4, 17);
+        PrinterDate date1 = new PrinterDate(10, 4, 2017);
         PrinterDate date2 = readLongStatus().getFirmwareDate();
         return date2.isEqualOrOlder(date1);
     }
@@ -3673,11 +3674,106 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
+    public int readLoaderVersion() throws Exception {
+        int result = 0;
+        ServiceCommand command = new ServiceCommand();
+        command.setFunctionCode(ServiceCommand.FUNCTION_CODE_GET_BL_VER);
+        command.setPassword(sysPassword);
+        executeCommand(command);
+        if (command.isSucceeded()) {
+            CommandInputStream stream = new CommandInputStream(charsetName);
+            stream.setData(command.getRawAnswer());
+            result = stream.readInt();
+        }
+        return result;
+    }
+
+    // upd_app_20180220.bin
+    // upd_ldr_145.bin
+    public int compareFirmwareVersion(String firmwareFileName) throws Exception {
+        int index1 = firmwareFileName.lastIndexOf("_");
+        if (index1 == -1) {
+            throw new JposException(JPOS_E_EXTENDED, JposConst.JPOS_EFIRMWARE_BAD_FILE);
+        }
+        int index2 = firmwareFileName.lastIndexOf(".");
+        if (index2 == -1) {
+            throw new JposException(JPOS_E_EXTENDED, JposConst.JPOS_EFIRMWARE_BAD_FILE);
+        }
+        String suffix = firmwareFileName.substring(index1 + 1, index2);
+        int loaderVersion = 0;
+        try {
+            loaderVersion = Integer.parseInt(suffix);
+        } catch (Exception e) {
+        }
+        PrinterDate firmwareDate = null;
+        try {
+            int year = StringUtils.stringToInt(suffix, 0, 4, "year");
+            int month = StringUtils.stringToInt(suffix, 4, 2, "month");
+            int day = StringUtils.stringToInt(suffix, 6, 2, "day");
+            firmwareDate = new PrinterDate(day, month, year);
+        } catch (Exception e) {
+        }
+        if ((loaderVersion == 0) && (firmwareDate == null)) {
+            throw new JposException(JPOS_E_EXTENDED, JposConst.JPOS_EFIRMWARE_BAD_FILE);
+        }
+        if (firmwareDate != null) {
+            PrinterDate deviceFirmwareDate = readLongStatus().getFirmwareDate();
+            return firmwareDate.compare(deviceFirmwareDate);
+        }
+        if (loaderVersion != 0) {
+            int deviceLoaderVersion = readLoaderVersion();
+            return MathUtils.compare(loaderVersion, deviceLoaderVersion);
+        }
+        return 0;
+    }
+
     public boolean getCapUpdateFirmware() throws Exception {
-        return (capFiscalStorage && (!isShtrihMobile()));
+        return (params.capUpdateFirmware && capFiscalStorage && (!isShtrihMobile()));
     }
 
     private int firmwareUpdateDelay = 10000;
+
+    public void updateFirmware() throws Exception {
+        logger.debug("updateFirmware()");
+        try {
+            if ((!capFiscalStorage) || isShtrihMobile()) {
+                logger.debug("Firmware update is not supported");
+                return;
+            }
+            if (!params.capUpdateFirmware) {
+                logger.debug("Firmware update disabled in driver parameters");
+                return;
+            }
+
+            File dir = new File(params.firmwarePath);
+            if (!dir.exists()) {
+                logger.debug("Firmware directory does not exists");
+                return;
+            }
+            File[] files = dir.listFiles();
+            if (files == null) {
+                logger.debug("dir.listFiles() returns null");
+                return;
+            }
+            logger.debug("files.length = " + files.length);
+            for (int i = 0; i < files.length; i++) {
+                File file = files[i];
+                logger.debug("Found file '" + file.getAbsolutePath() + "')");
+                if (FileUtils.getExtention(file.getName()).equals(".bin")) {
+                    if (file.exists()) 
+                    {
+                        if (compareFirmwareVersion(file.getName()) == 1)
+                        {
+                            updateFirmware(file.getName());
+                        }
+                    }
+                }
+            }
+            logger.debug("updateFirmware(): OK");
+        } catch (Exception e) {
+            logger.error("updateFirmware", e);
+        }
+    }
 
     public void updateFirmware(String firmwareFileName) throws Exception {
         if (!getCapUpdateFirmware()) {
@@ -3977,4 +4073,5 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
         }
     }
+
 }

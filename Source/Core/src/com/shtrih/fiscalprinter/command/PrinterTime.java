@@ -12,6 +12,7 @@ package com.shtrih.fiscalprinter.command;
  *
  * @author V.Kravtsov
  */
+import com.shtrih.util.MathUtils;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
@@ -20,7 +21,7 @@ import com.shtrih.util.StringUtils;
 
 public class PrinterTime {
 
-    public static PrinterTime now(){
+    public static PrinterTime now() {
         return new PrinterTime();
     }
 
@@ -54,10 +55,10 @@ public class PrinterTime {
     }
 
     public String toJposString() {
-        return StringUtils.intToStr(getHour(), 2) +
-                StringUtils.intToStr(getMin(), 2);
+        return StringUtils.intToStr(getHour(), 2)
+                + StringUtils.intToStr(getMin(), 2);
     }
-    
+
     // 01:02:09
     public static String toString(PrinterTime time) {
         return StringUtils.intToStr(time.getHour(), 2) + ":"
@@ -69,7 +70,7 @@ public class PrinterTime {
         return StringUtils.intToStr(getHour(), 2) + ":"
                 + StringUtils.intToStr(getMin(), 2);
     }
-    
+
     public String toString() {
         return toString(this);
     }
@@ -83,9 +84,20 @@ public class PrinterTime {
         return new PrinterTime(hour, min, sec);
     }
 
-    public static boolean compare(PrinterTime time1, PrinterTime time2) {
-        return (time1.getHour() == time2.getHour())
-                && (time1.getMin() == time2.getMin())
-                && (time1.getSec() == time2.getSec());
+    public int compare(PrinterTime time) {
+        int rc = MathUtils.compare(hour, time.getHour());
+        if (rc != 0) {
+            return rc;
+        }
+        rc = MathUtils.compare(min, time.getMin());
+        if (rc != 0) {
+            return rc;
+        }
+        rc = MathUtils.compare(sec, time.getSec());
+        return rc;
+    }
+
+    public boolean isEqual(PrinterTime time) {
+        return compare(time) == 0;
     }
 }

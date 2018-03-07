@@ -172,6 +172,7 @@ public class FptrParameters {
     public boolean calcReportEnabled = false;
     public boolean openReceiptOnBegin = false;
     public boolean printVoidedReceipt = false;
+    public boolean capUpdateFirmware = true;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -375,7 +376,6 @@ public class FptrParameters {
         swapGraphicsLine = reader.readInteger("swapGraphicsLine", PrinterConst.SWAP_LINE_AUTO);
         subtotalTextEnabled = reader.readBoolean("subtotalTextEnabled", true);
         weightUnitName = reader.readString("weightUnitName", "г.");
-        firmwarePath = reader.readString("firmwarePath", "firmware");
         graphicsLineEnabled = reader.readBoolean("graphicsLineEnabled", true);
         barcodeDelay = reader.readInteger("barcodeDelay", 0);
         preLinePrefix = reader.readString("preLinePrefix", "");
@@ -387,6 +387,8 @@ public class FptrParameters {
         calcReportEnabled = reader.readBoolean("calcReportEnabled", false);
         openReceiptOnBegin = reader.readBoolean("openReceiptOnBegin", false);
         printVoidedReceipt = reader.readBoolean("printVoidedReceipt", false);
+        firmwarePath = reader.readString("firmwarePath", "firmware");
+        capUpdateFirmware = reader.readBoolean("capUpdateFirmware", true);
 
         // paymentNames
         String paymentName;

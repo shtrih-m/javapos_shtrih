@@ -546,4 +546,6 @@ public interface SMFiscalPrinter {
     public boolean getCapUpdateFirmware() throws Exception;
     
     public void searchDevice() throws Exception;
+    
+    public int compareFirmwareVersion(String firmwareFileName) throws Exception;
 }
