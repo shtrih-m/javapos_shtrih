@@ -41,8 +41,8 @@ public class FSSaleReceiptItem {
     private FSSaleReceiptItem splittedItem;
     private final FSDiscounts discounts = new FSDiscounts();
     private Integer totalAmount = null;
-    private Byte paymentType;
-    private Byte subjectType;
+    private int paymentType = 4;
+    private int subjectType = 1;
 
     public FSSaleReceiptItem() {
     }
@@ -362,11 +362,11 @@ public class FSSaleReceiptItem {
         priceUpdated = true;
     }
 
-    public void setPaymentType(Byte paymentType) {
+    public void setPaymentType(int paymentType) {
         this.paymentType = paymentType;
     }
 
-    public void setSubjectType(Byte subjectType) {
+    public void setSubjectType(int subjectType) {
         this.subjectType = subjectType;
     }
 }

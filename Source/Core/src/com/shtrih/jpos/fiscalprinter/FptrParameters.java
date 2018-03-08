@@ -167,8 +167,8 @@ public class FptrParameters {
     public long taxValue[] = new long[6];
     public int taxSystem = 0;
     public Integer itemTotalAmount = null;
-    public Byte paymentType = null;
-    public Byte subjectType = null;
+    public int paymentType = 4;
+    public int subjectType = 1;
     public boolean calcReportEnabled = false;
     public boolean openReceiptOnBegin = false;
     public boolean printVoidedReceipt = false;
