@@ -537,6 +537,11 @@ public interface SmFptrConst {
      */
     public static final int SMFPTR_DIO_READ_DEVICE_METRICS = 0x57;
     
+    /**
+     * Read totalizer value
+     */
+    public static final int SMFPTR_DIO_READ_TOTALIZER = 0x58;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

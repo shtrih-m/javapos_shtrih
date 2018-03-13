@@ -300,6 +300,9 @@
 		<prop name="FSTagsPlacement" type="String" value="0"/>
 		<prop name="printVoidedReceipt" type="String" value="1"/>
 		<prop name="subtotalTextEnabled" type="String" value="0"/>
+		
+		<prop name="firmwarePath" type="String" value="firmware"/>
+		<prop name="capUpdateFirmware" type="String" value="1"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>

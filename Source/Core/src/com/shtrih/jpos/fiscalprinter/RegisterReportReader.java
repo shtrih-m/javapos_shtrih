@@ -62,7 +62,7 @@ public class RegisterReportReader {
                     - getDayPayments(i, cashRegisters);
             register.setValue(itemsDiscountAmount);
         }
-
+        
         minNumber = printer.getModel().getMinOperationRegister();
         maxNumber = printer.getModel().getMaxOperationRegister();
         Vector operRegisters = report.getOperRegisters();

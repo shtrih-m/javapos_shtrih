@@ -548,4 +548,8 @@ public interface SMFiscalPrinter {
     public void searchDevice() throws Exception;
     
     public int compareFirmwareVersion(String firmwareFileName) throws Exception;
+    
+    public int readTotalizers(int recType, long[] totalizers) throws Exception;
+    
+    public long[] readTotalizers(int recType) throws Exception;
 }

@@ -1045,11 +1045,19 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public boolean getCapUpdateFirmware() throws Exception {
         return true;
     }
-    
-    public void searchDevice() throws Exception{
+
+    public void searchDevice() throws Exception {
     }
-    
-    public int compareFirmwareVersion(String firmwareFileName) throws Exception{
+
+    public int compareFirmwareVersion(String firmwareFileName) throws Exception {
         return 0;
+    }
+
+    public int readTotalizers(int recType, long[] totalizers) throws Exception {
+        return 0;
+    }
+
+    public long[] readTotalizers(int recType) throws Exception {
+        return null;
     }
 }

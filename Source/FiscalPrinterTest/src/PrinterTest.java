@@ -716,8 +716,20 @@ class PrinterTest implements FiscalPrinterConst {
             System.out.println("Unsent documents: " + fsCommunicationStatus.getUnsentDocumentsCount());
             System.out.println("Cash in drawer: " + printer.readCashRegister(241).getValue() / 100.0d);
              */
+            showTotalizers(0, printer.readTotalizers(0));
+            showTotalizers(1, printer.readTotalizers(1));
+            showTotalizers(2, printer.readTotalizers(2));
+            showTotalizers(3, printer.readTotalizers(3));
+            showTotalizers(4, printer.readTotalizers(4));
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void showTotalizers(int recType, long[] totalizers) {
+        logger.debug("showTotalizers: " + recType);
+        for (int i = 0; i < totalizers.length; i++) {
+            logger.debug("Totalizer : " + i + ": " + totalizers[i]);
         }
     }
 
@@ -842,7 +854,6 @@ class PrinterTest implements FiscalPrinterConst {
             // Сумма позиции будет сброшена драйвером после вызова printRecItem
             //printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 1235);
             //printer.printRecItem("ITEM 2", 0, 1234, 0, 1000, "");
-
             // Позиция с признаком способа расчета и признаком предмета расчета
             // 1214, признак способа расчета, если не указывать будет 0
             // ВНИМАНИЕ: значение сохраняется после вызова printRecItem
@@ -859,7 +870,6 @@ class PrinterTest implements FiscalPrinterConst {
             // Оплата типом оплаты который привязан к jpos.xml к метке "2"
             // <prop name="payType2" type="String" value="2"/>
             //printer.printRecTotal(0, 12350000, "2");
-
             // Закрыть фискальный документ
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
@@ -3595,7 +3605,5 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
-    
-    
+
 }

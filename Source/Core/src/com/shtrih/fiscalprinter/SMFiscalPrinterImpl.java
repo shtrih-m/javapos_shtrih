@@ -1935,7 +1935,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void initialize() throws Exception {
         logger.debug("initialize()");
 
-        
         fields.clear();
         tables.clear();
         isCapDisableDiscountTextInitialized = false;
@@ -1977,7 +1976,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     discountMode = Integer.parseInt(fieldValue[0]);
                 }
             }
-
             getModel().addParameter("fdoName", "", fsTableNumber, 1, 10);
         }
         capDiscount = true;
@@ -2679,11 +2677,20 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             return new FMTotals();
         }
 
-        FSReadTotals command = new FSReadTotals();
+        ServiceCommand command = new ServiceCommand();
+        command.setFunctionCode(ServiceCommand.FUNCTION_CODE_GLOBALSUMM_GET);
+        command.setPassword(0);
         int rc = executeCommand(command);
         capFSTotals = isCommandSupported(rc);
         if (succeeded(rc)) {
-            return command.getTotals();
+            CommandInputStream stream = new CommandInputStream(charsetName);
+            stream.setData(command.getRawAnswer());
+            long saleAmount = stream.readLong(8);
+            long retSaleAmount = stream.readLong(8);
+            long buyAmount = stream.readLong(8);
+            long retBuyAmount = stream.readLong(8);
+            FMTotals totals = new FMTotals(saleAmount, buyAmount, retSaleAmount, retBuyAmount);
+            return totals;
         } else {
             return new FMTotals();
         }
@@ -3760,10 +3767,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 File file = files[i];
                 logger.debug("Found file '" + file.getAbsolutePath() + "')");
                 if (FileUtils.getExtention(file.getName()).equals(".bin")) {
-                    if (file.exists()) 
-                    {
-                        if (compareFirmwareVersion(file.getName()) == 1)
-                        {
+                    if (file.exists()) {
+                        if (compareFirmwareVersion(file.getName()) == 1) {
                             updateFirmware(file.getName());
                         }
                     }
@@ -4074,4 +4079,48 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
+    /*
+   Старой командой запрашиваются старые счетчики. Для запроса новых добавлены новые команды:
+   FE F4 01 00 00 00 - возвращает 16 8-ми байтовых счетчиков (по типам оплаты 1-16) для приходов.
+   FE F4 02 00 00 00 - возвращает 16 8-ми байтовых счетчиков (по типам оплаты 1-16) для возвратов приходов.
+   FE F4 03 00 00 00 - возвращает 16 8-ми байтовых счетчиков (по типам оплаты 1-16) для расходов.
+   FE F4 04 00 00 00 - возвращает 16 8-ми байтовых счетчиков (по типам оплаты 1-16) для возвратов расходов.
+   Старые и новые счетчики считаются параллельно и независимо. 
+   Чтобы получить общую сумму для новых счетчиков надо просуммировать все 16 чисел.
+     */
+    public int readTotalizers(int recType, long[] totalizers) throws Exception {
+        logger.debug("readPaymentTotalizers");
+        ServiceCommand command = new ServiceCommand();
+        command.setFunctionCode(ServiceCommand.FUNCTION_CODE_GLOBALSUMM_GET);
+        command.setPassword(recType);
+        executeCommand(command);
+        if (command.isSucceeded()) {
+            CommandInputStream stream = new CommandInputStream(charsetName);
+            stream.setData(command.getRawAnswer());
+            for (int i = 0; i < totalizers.length; i++) {
+                totalizers[i] = stream.readLong(8);
+            }
+        }
+        return command.getResultCode();
+    }
+
+    public long[] readTotalizers(int recType) throws Exception {
+        int count = 0;
+        switch (recType) {
+            case 0:
+                count = 4;
+                break;
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                count = 16;
+                break;
+            default:
+                throw new Exception("Invalid recType value");
+        }
+        long[] totalizers = new long[count];
+        check(readTotalizers(recType, totalizers));
+        return totalizers;
+    }
 }

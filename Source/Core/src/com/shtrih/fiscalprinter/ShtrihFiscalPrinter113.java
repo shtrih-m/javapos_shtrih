@@ -2206,4 +2206,12 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         executeCommand(command);
     }
 
+    public long[] readTotalizers(int recType) throws JposException {
+        int[] data = new int[1];
+        Object[] object = new Object[1];
+        data[0] = recType;
+        directIO(SmFptrConst.SMFPTR_DIO_READ_TOTALIZER, data, object);
+        return (long[]) object[0];
+    }
+
 }
