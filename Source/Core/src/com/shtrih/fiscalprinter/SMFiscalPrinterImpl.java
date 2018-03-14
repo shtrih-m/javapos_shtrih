@@ -1546,7 +1546,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void sysAdminCancelReceipt() throws Exception {
         logger.debug("sysAdminCancelReceipt");
-        String[] passwordString = new String[0];
+        String[] passwordString = new String[1];
         // try use known passwords
         if (tryCancelReceipt(usrPassword)) {
             return;
