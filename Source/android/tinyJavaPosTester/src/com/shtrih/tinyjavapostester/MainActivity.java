@@ -540,6 +540,70 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void printQRBarcode(View v) {
+        new PrintQRBarcodeTask(this).execute();
+    }
+
+    private class PrintQRBarcodeTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+        private long startedAt;
+        private long doneAt;
+        private ProgressDialog dialog;
+
+        public PrintQRBarcodeTask(Activity parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Printing QR code", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... p) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+
+                PrinterBarcode barcode = new PrinterBarcode();
+                barcode.setText("\"4C63A673C86B0976C0B24495848F6EF157792203A0D275\\n\"\n"
+                        + "                            + \"1F525456644096478D256A910EFEABB67\"");
+
+                barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_NOTPRINTED);
+                barcode.setBarWidth(5);
+                barcode.setHeight(100);
+                barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
+
+                barcode.setType(SmFptrConst.SMFPTR_BARCODE_QR_CODE);
+                printer.printBarcode(barcode);
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage("Success " + (doneAt - startedAt) + " ms");
+            else
+                showMessage(result);
+        }
+    }
+
     private byte[] readFile(String filePath) throws Exception {
         FileInputStream is = new FileInputStream(new File(filePath));
         ByteArrayOutputStream os = new ByteArrayOutputStream();

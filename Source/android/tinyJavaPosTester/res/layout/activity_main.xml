@@ -85,6 +85,13 @@
             android:text="@string/action_print_pdf417_bar_code" />
 
         <Button
+            android:id="@+id/btnPrintQRBarcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="printQRBarcode"
+            android:text="@string/action_print_qr_code" />
+
+        <Button
             android:id="@+id/btnOpenFiscalDay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

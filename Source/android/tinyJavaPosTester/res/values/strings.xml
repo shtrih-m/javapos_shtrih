@@ -11,6 +11,7 @@
     <string name="action_print_receipt">Print receipt</string>
     <string name="action_print_ean13_bar_code">Print EAN13 bar code</string>
     <string name="action_print_pdf417_bar_code">Print PDF417 bar code</string>
+    <string name="action_print_qr_code">Print QR code</string>
     <string name="action_open_fiscal_day">Open fiscal day</string>
     <string name="action_print_z_report">Print Z-report</string>
     <string name="action_print_current_day_journal">Print current day journal</string>
