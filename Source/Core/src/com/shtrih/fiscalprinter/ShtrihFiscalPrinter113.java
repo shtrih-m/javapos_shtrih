@@ -2146,6 +2146,15 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         return new DocumentTLV(documentNumber, documentType, tlv);
     }
 
+    public Vector<String> fsReadDocumentTLVText(int documentNumber) throws Exception {
+
+        Object[] outParams = new Object[1];
+        directIO(SmFptrConst.SMFPTR_DIO_FS_READ_DOCUMENT_TLV_TEXT, new int[]{documentNumber}, outParams);
+
+        Vector<String> document = (Vector<String>) outParams[0];
+        return document;
+    }
+    
     public Vector<String> fsReadDayOpen() throws Exception {
         Vector<String> lines = new Vector<String>();
         directIO(SmFptrConst.SMFPTR_DIO_FS_READ_DAY_OPEN, null, lines);

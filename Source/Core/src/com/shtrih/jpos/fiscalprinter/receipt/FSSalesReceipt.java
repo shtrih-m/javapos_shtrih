@@ -903,7 +903,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             for (int i = recItems.size() - 1; i >= 0; i--) {
                 item = (FSSaleReceiptItem) recItems.get(i);
                 if ((item.getText().equalsIgnoreCase(description))
-                        && (item.getPrice() == price)
+                        && (item.getPrice() == unitPrice)
                         && (item.getQuantity() >= quantity)) {
                     break;
                 }

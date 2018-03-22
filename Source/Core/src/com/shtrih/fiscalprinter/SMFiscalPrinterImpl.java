@@ -3234,7 +3234,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         byte[] ba = fsReadDocumentTLV(docNumber).getTLV();
         TLVParser reader = new TLVParser();
         reader.read(ba);
-        Vector<String> lines = reader.getPrintText();
+        Vector<String> lines = reader.getText();
         for (int i = 0; i < lines.size(); i++) {
             logger.debug(lines.get(i));
         }

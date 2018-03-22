@@ -82,6 +82,48 @@ public class TLVParser {
         return lines;
     }
 
+    public Vector<String> getText() throws Exception {
+        Vector<String> lines = new Vector<String>();
+        for (int i = 0; i < items.size(); i++) {
+            TLVItem item = items.get(i);
+            String tagName = item.getTag().getPrintName();
+            String itemText = item.getText();
+
+            // При выводе e-mail в приказе ФНС прописано, что строка должна начинаться с "ЭЛ. АДР. ПОКУПАТЕЛЯ".
+            // При выводе телефона - строка начинается с "ТЕЛ. ПОКУПАТЕЛЯ".
+            if (item.getTag().getId() == 1008) {
+                tagName = itemText.contains("@") ? "ЭЛ. АДР. ПОКУПАТЕЛЯ" : "ТЕЛ. ПОКУПАТЕЛЯ";
+            }
+            String line = item.getTag().getId() + ", " + tagName + ": " + itemText;
+
+            if (item.getTag().getId() == 1057) {
+                line = "";
+                if (BitUtils.testBit(item.toInt(), 0))
+                    line += "БАНК. ПЛ. АГЕНТ";
+                if (BitUtils.testBit(item.toInt(), 1))
+                    line += " БАНК. ПЛ. СУБАГЕНТ";
+                if (BitUtils.testBit(item.toInt(), 2))
+                    line += " ПЛ. АГЕНТ";
+                if (BitUtils.testBit(item.toInt(), 3))
+                    line += " ПЛ. СУБАГЕНТ";
+                if (BitUtils.testBit(item.toInt(), 4))
+                    line += " ПОВЕРЕННЫЙ";
+                if (BitUtils.testBit(item.toInt(), 5))
+                    line += " КОМИССИОНЕР";
+                if (BitUtils.testBit(item.toInt(), 6))
+                    line += " АГЕНТ";
+
+                line = line.trim();
+            }
+
+            if (line.equals(""))
+                continue;
+
+            lines.add(line);
+        }
+        return lines;
+    }
+    
     public void read(byte[] data) throws Exception {
         level = 0;
         parse(data);

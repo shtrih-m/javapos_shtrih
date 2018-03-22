@@ -542,6 +542,12 @@ public interface SmFptrConst {
      */
     public static final int SMFPTR_DIO_READ_TOTALIZER = 0x58;
     
+    /**
+     * Read document TLV text from FS archive
+     */
+    
+    public static final int SMFPTR_DIO_FS_READ_DOCUMENT_TLV_TEXT = 0x59;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,
