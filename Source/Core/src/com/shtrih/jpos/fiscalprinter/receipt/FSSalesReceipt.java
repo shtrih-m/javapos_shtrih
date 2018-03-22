@@ -316,11 +316,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void endFiscalReceipt(boolean printHeader) throws Exception {
         if (isOpened) {
             correctPayments();
-            int discountAmount = 0;
             if (getDevice().getCapDiscount()) {
                 addItemsDiscounts();
             } else if (discounts.getTotal() < 100) {
-                discountAmount = (int) discounts.getTotal();
+                discountAmount += (int) discounts.getTotal();
                 discounts.clear();
             } else {
                 addItemsDiscounts();
@@ -911,7 +910,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             if (item == null) {
                 throw new Exception("Voided receipt item not found");
             }
+            long resultAmount = item.getTotal()-amount;
             item.setQuantity(item.getQuantity() - quantity);
+            if (item.getTotal() > resultAmount){
+                discountAmount += item.getTotal() - resultAmount;
+            }
+                    
             if (item.getQuantity() == 0) {
                 items.remove(item);
                 recItems.remove(item);

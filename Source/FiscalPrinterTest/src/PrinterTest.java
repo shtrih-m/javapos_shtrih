@@ -3598,7 +3598,7 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
     
-    public void printFiscalReceipt145_2() {
+    public void printFiscalReceipt145_3() {
         try {
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
@@ -3615,5 +3615,28 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
+    
+    public void printFiscalReceipt145_2() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+            
+            printer.printRecItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 1169, 123, 1, 9500, "кг");
+            printer.printRecItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 1188, 125, 1, 9500, "кг");
+            printer.printRecItem("8051070320514 КОФЕ FRECKO ARABIKA", 16600, 1000, 1, 16600, "шт");
+            printer.printRecItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 38950, 4100, 1, 9500, "кг");
+            printer.printRecVoidItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 9500, 123, 0, 0, 1);
+            printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 38);
+            printer.printRecTotal(56700, 56700, "1");
+
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+
+    
     
 }
