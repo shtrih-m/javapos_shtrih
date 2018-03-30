@@ -24,6 +24,8 @@
     <string name="action_read_fiscalization_tag">Read fiscalization tag</string>
     <string name="action_read_fiscalization_tlv">Read fiscalization TLV</string>
     <string name="action_read_document_tlv">Read document TLV</string>
+    <string name="action_read_table_cell">Read table cell</string>
+    <string name="action_write_table_cell">Write table cell</string>
     <string name="defaultNetworkAddress">127.0.0.1:12345</string>
     <string name="lblNetworkAddress">Network address</string>
     <string name="lblPositions">Positions</string>
@@ -34,4 +36,8 @@
     <string name="lblFiscalizationNumber">Fiscalization number</string>
     <string name="lblTagNumber">Tag number</string>
     <string name="lblDocumentNumber">Document number</string>
+    <string name="lblTableNumber">Table number</string>
+    <string name="lblTableRow">Table row</string>
+    <string name="lblTableField">Table field</string>
+    <string name="lblTableCellValue">Table value</string>
 </resources>

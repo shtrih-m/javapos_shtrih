@@ -1,17 +1,15 @@
 package com.shtrih.tinyjavapostester;
 
 import android.app.Activity;
-import android.app.Application;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.AsyncTask;
@@ -45,7 +43,6 @@ import com.shtrih.fiscalprinter.port.UsbPrinterPort;
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialProber;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
-import com.shtrih.util.StaticContext;
 import com.shtrih.util.SysUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -59,7 +56,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Vector;
 
-import jpos.FiscalPrinter;
 import jpos.FiscalPrinterConst;
 import jpos.JposConst;
 import jpos.JposException;
@@ -97,6 +93,10 @@ public class MainActivity extends AppCompatActivity {
     private EditText nbDocumentNumber;
     private EditText nbTagNumber;
     private EditText nbTextLinesCount;
+    private EditText nbTableNumber;
+    private EditText nbTableField;
+    private EditText nbTableRow;
+    private EditText tbTableCellValue;
 
     private String selectedProtocol;
 
@@ -130,6 +130,18 @@ public class MainActivity extends AppCompatActivity {
 
         nbTextLinesCount = findViewById(R.id.nbTextLinesCount);
         restoreAndSaveChangesTo(nbTextLinesCount, pref, "TextLinesCount", "100");
+
+        nbTableNumber = findViewById(R.id.nbTableNumber);
+        restoreAndSaveChangesTo(nbTableNumber, pref, "TableNumber", "1");
+
+        nbTableField = findViewById(R.id.nbTableField);
+        restoreAndSaveChangesTo(nbTableField, pref, "TableField", "1");
+
+        nbTableRow = findViewById(R.id.nbTableRow);
+        restoreAndSaveChangesTo(nbTableRow, pref, "TableRow", "1");
+
+        tbTableCellValue = findViewById(R.id.tbTableCellValue);
+        restoreAndSaveChangesTo(tbTableCellValue, pref, "TableCellValue", "");
 
         Spinner cbProtocol = findViewById(R.id.cbProtocol);
 
@@ -1442,7 +1454,7 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 byte[] tlv = printer.readFiscalizationTLV(fiscalizationNumber);
-                
+
                 TLVParser parser = new TLVParser();
                 parser.parse(tlv);
 
@@ -1551,6 +1563,131 @@ public class MainActivity extends AppCompatActivity {
 
             if (result == null)
                 showMessage(text);
+            else
+                showMessage(result);
+        }
+    }
+
+    public void readTableCell(View view) {
+
+        final int tableNumber = Integer.parseInt(nbTableNumber.getText().toString());
+        final int tableRow = Integer.parseInt(nbTableRow.getText().toString());
+        final int tableField = Integer.parseInt(nbTableField.getText().toString());
+
+        new ReadTableCellTask(this, tableNumber, tableRow, tableField, tbTableCellValue).execute();
+    }
+
+    private class ReadTableCellTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+        private final int tableNumber;
+        private final int tableColumn;
+        private final int tableField;
+        private final EditText valueTb;
+
+        private ProgressDialog dialog;
+
+        public ReadTableCellTask(Activity parent, int tableNumber, int tableColumn, int tableField, EditText value) {
+            this.parent = parent;
+            this.tableNumber = tableNumber;
+            this.tableColumn = tableColumn;
+            this.tableField = tableField;
+            this.valueTb = value;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Reading table cell", "Please wait...", true);
+        }
+
+        private String value;
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            try {
+                value = printer.readTable(tableNumber, tableColumn, tableField);
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                valueTb.setText(value);
+            else
+                showMessage(result);
+        }
+    }
+
+    public void writeTableCell(View view) {
+
+        final int tableNumber = Integer.parseInt(nbTableNumber.getText().toString());
+        final int tableRow = Integer.parseInt(nbTableRow.getText().toString());
+        final int tableField = Integer.parseInt(nbTableField.getText().toString());
+        final String value = tbTableCellValue.getText().toString();
+
+        new WriteTableCellTask(this, tableNumber, tableRow, tableField, value).execute();
+    }
+
+    private class WriteTableCellTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+        private final int tableNumber;
+        private final int tableColumn;
+        private final int tableField;
+        private final String value;
+
+        private ProgressDialog dialog;
+
+        public WriteTableCellTask(Activity parent, int tableNumber, int tableColumn, int tableField, String value) {
+            this.parent = parent;
+            this.tableNumber = tableNumber;
+            this.tableColumn = tableColumn;
+            this.tableField = tableField;
+            this.value = value;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Writing table cell", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            try {
+                printer.writeTable(tableNumber, tableColumn, tableField, value);
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage("Успех");
             else
                 showMessage(result);
         }
