@@ -33,12 +33,14 @@ import com.google.zxing.pdf417.encoder.Compaction;
 import com.google.zxing.pdf417.encoder.Dimensions;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
+import com.shtrih.fiscalprinter.SmFiscalPrinterException;
 import com.shtrih.fiscalprinter.TLVParser;
 import com.shtrih.fiscalprinter.command.DeviceMetrics;
 import com.shtrih.fiscalprinter.command.FSCommunicationStatus;
 import com.shtrih.fiscalprinter.command.FSDocumentInfo;
 import com.shtrih.fiscalprinter.command.FSStatusInfo;
 import com.shtrih.fiscalprinter.command.LongPrinterStatus;
+import com.shtrih.fiscalprinter.command.ReadTableInfo;
 import com.shtrih.fiscalprinter.port.UsbPrinterPort;
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialProber;
@@ -59,6 +61,8 @@ import java.util.Vector;
 import jpos.FiscalPrinterConst;
 import jpos.JposConst;
 import jpos.JposException;
+
+import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_EFPTR_INVALID_TABLE;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -1688,6 +1692,85 @@ public class MainActivity extends AppCompatActivity {
 
             if (result == null)
                 showMessage("Успех");
+            else
+                showMessage(result);
+        }
+    }
+
+    public void readTables(View view) {
+        new ReadTablesTask(this).execute();
+    }
+
+    private class ReadTablesTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+
+        private ProgressDialog dialog;
+
+        private String text;
+
+        public ReadTablesTask(Activity parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Writing table cell", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            try {
+
+                StringBuilder sb = new StringBuilder();
+
+                for (int i = 1; i < 255; i++) {
+                    ReadTableInfo command = new ReadTableInfo();
+                    command.setPassword(printer.getSysPassword());
+                    command.setTableNumber(i);
+
+                    try {
+                        printer.executeCommand(command);
+
+                        sb.append("" + i + " " + command.getTable().getName() + "\n"); //+ " " + command.getTable().getRowCount() + " " + command.getTable().getFieldCount() + "\n");
+                        
+                    } catch (JposException e) {
+                        Throwable cause = e.getCause();
+                        if (cause != null && cause instanceof SmFiscalPrinterException) {
+                            if (((SmFiscalPrinterException) cause).getCode() == SMFP_EFPTR_INVALID_TABLE) {
+                                break;
+                            } else {
+                                e.printStackTrace();
+                                return e.getMessage();
+                            }
+                        } else {
+                            e.printStackTrace();
+                            return e.getMessage();
+                        }
+                    }
+                }
+
+                text = sb.toString();
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage(text);
             else
                 showMessage(result);
         }

@@ -26,6 +26,7 @@
     <string name="action_read_document_tlv">Read document TLV</string>
     <string name="action_read_table_cell">Read table cell</string>
     <string name="action_write_table_cell">Write table cell</string>
+    <string name="action_read_tables">Read tables</string>
     <string name="defaultNetworkAddress">127.0.0.1:12345</string>
     <string name="lblNetworkAddress">Network address</string>
     <string name="lblPositions">Positions</string>

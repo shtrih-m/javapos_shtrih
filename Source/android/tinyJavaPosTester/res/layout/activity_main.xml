@@ -15,6 +15,13 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
+        <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
+        <LinearLayout
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="0px"
+            android:layout_height="0px"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -402,5 +409,12 @@
             android:layout_height="wrap_content"
             android:onClick="writeTableCell"
             android:text="@string/action_write_table_cell" />
+
+        <Button
+            android:id="@+id/btnReadTables"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="readTables"
+            android:text="@string/action_read_tables" />
     </LinearLayout>
 </ScrollView>

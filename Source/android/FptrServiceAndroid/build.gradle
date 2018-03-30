@@ -6,12 +6,11 @@ clean.doFirst {
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
 
     defaultConfig {
         minSdkVersion 12
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 1
         versionName "$version"
 
@@ -136,18 +135,19 @@ repositories {
 }
 
 dependencies {
-    compile 'd2xx:d2xx:1.0',
-            'jpos:jpos113:1.13',
+
+    api 'jpos:jpos113:1.13'
+    api 'zxing:zxing:3.2.2'
+
+    implementation 'd2xx:d2xx:1.0',
             'org.slf4j:slf4j-api:1.7.21',
-            'xerces4android:xerces4android:1.0',
-            'zxing:zxing:3.2.2'
-
-    androidTestCompile 'com.android.support:support-annotations:25.1.0'
-    androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile 'com.android.support.test:rules:0.5'
-
+            'xerces4android:xerces4android:1.0'
+    
+    androidTestImplementation 'com.android.support:support-annotations:27.1.0'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test:rules:1.0.1'
     // Robolectric
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.hamcrest:hamcrest-library:1.3'
-    testCompile 'org.robolectric:robolectric:3.2.2'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.hamcrest:hamcrest-library:1.3'
+    testImplementation 'org.robolectric:robolectric:3.2.2'
 }
