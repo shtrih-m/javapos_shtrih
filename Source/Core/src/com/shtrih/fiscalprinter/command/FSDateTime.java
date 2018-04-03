@@ -28,7 +28,7 @@ public class FSDateTime {
     }
 
     public FSDateTime(PrinterDate date, PrinterTime time) {
-        year = date.getYear();
+        year = date.getYear() + 2000;
         month = date.getMonth();
         day = date.getDay();
         hours = time.getHour();
