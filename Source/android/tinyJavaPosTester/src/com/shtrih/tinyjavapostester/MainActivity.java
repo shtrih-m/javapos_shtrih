@@ -1734,6 +1734,9 @@ public class MainActivity extends AppCompatActivity {
 
         private String text;
 
+        private long startedAt;
+        private long doneAt;
+
         public ReadTablesTask(Activity parent) {
             this.parent = parent;
         }
@@ -1747,6 +1750,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
 
             try {
 
@@ -1786,6 +1791,9 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
                 return e.getMessage();
             }
+            finally {
+                doneAt = System.currentTimeMillis();
+            }
         }
 
         @Override
@@ -1795,7 +1803,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (result == null)
-                showMessage(text);
+                showMessage(text + "\nSuccess " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
         }

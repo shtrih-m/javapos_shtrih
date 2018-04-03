@@ -7,7 +7,6 @@
  * and open the template in the editor.
  */
 /**
- *
  * @author V.Kravtsov
  */
 package com.shtrih.fiscalprinter;
@@ -111,7 +110,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
     private byte[] readAnswer(int timeout) throws Exception {
         int enqNumber = 0;
         int nakCount = 0;
-        for (;;) {
+        for (; ; ) {
             port.setTimeout(timeout + byteTimeout);
             // STX
             while (portReadByte() != STX) {
@@ -134,7 +133,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
                 }
                 nakCount++;
                 portWrite(NAK);
-                for (;;) {
+                for (; ; ) {
                     portWrite(ENQ);
                     enqNumber++;
                     int B = readControlByte();
@@ -179,12 +178,28 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         int ackNumber = 0;
         int enqNumber = 0;
 
-        for (;;) {
+        for (; ; ) {
             port.setTimeout(byteTimeout);
             portWrite(ENQ);
             enqNumber++;
 
-            int B = readControlByte();
+            int B;
+            try {
+                B = readControlByte();
+            } catch (IOException e) {
+
+                logger.debug("<- timeout " + enqNumber + "/" + maxEnqNumber);
+
+                if (enqNumber >= maxEnqNumber) {
+                    throw new DeviceException(
+                            PrinterConst.SMFPTR_E_NOCONNECTION,
+                            Localizer.getString(Localizer.NoConnection));
+
+                }
+
+                continue;
+            }
+
             switch (B) {
                 case ACK:
                     readAnswer(timeout);
@@ -197,7 +212,6 @@ public class PrinterProtocol_1 implements PrinterProtocol {
 
                 default:
                     SysUtils.sleep(100);
-                    enqNumber++;
             }
 
             if (ackNumber >= maxAckNumber) {
@@ -226,7 +240,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         int ackNumber = 0;
         int enqNumber = 0;
 
-        for (;;) {
+        for (; ; ) {
             try {
                 port.setTimeout(byteTimeout);
                 portWrite(ENQ);
@@ -312,7 +326,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
             }
         }
     }
-    
+
     public void setMaxEnqNumber(int value) {
         maxEnqNumber = value;
     }
