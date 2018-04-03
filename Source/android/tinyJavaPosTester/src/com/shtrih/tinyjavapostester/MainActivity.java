@@ -34,7 +34,10 @@ import com.google.zxing.pdf417.encoder.Dimensions;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
 import com.shtrih.fiscalprinter.SmFiscalPrinterException;
+import com.shtrih.fiscalprinter.TLVItem;
+import com.shtrih.fiscalprinter.TLVItems;
 import com.shtrih.fiscalprinter.TLVParser;
+import com.shtrih.fiscalprinter.TLVTag;
 import com.shtrih.fiscalprinter.command.DeviceMetrics;
 import com.shtrih.fiscalprinter.command.FSCommunicationStatus;
 import com.shtrih.fiscalprinter.command.FSDocumentInfo;
@@ -45,6 +48,7 @@ import com.shtrih.fiscalprinter.port.UsbPrinterPort;
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialProber;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
+import com.shtrih.util.Hex;
 import com.shtrih.util.SysUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -1383,19 +1387,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 byte[] tlv = printer.readFiscalizationTag(fiscalizationNumber, tagNumber);
 
-                TLVParser parser = new TLVParser();
-                parser.parse(tlv);
-
-                Vector<String> lines = parser.getPrintText();
-
-                StringBuilder sb = new StringBuilder();
-
-                for (String l : lines) {
-                    sb.append(l);
-                    sb.append("\n");
-                }
-
-                text = sb.toString().trim();
+                text = renderTLV(tlv);
 
                 return null;
 
@@ -1459,19 +1451,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 byte[] tlv = printer.readFiscalizationTLV(fiscalizationNumber);
 
-                TLVParser parser = new TLVParser();
-                parser.parse(tlv);
-
-                Vector<String> lines = parser.getPrintText();
-
-                StringBuilder sb = new StringBuilder();
-
-                for (String l : lines) {
-                    sb.append(l);
-                    sb.append("\n");
-                }
-
-                text = sb.toString().trim();
+                text = renderTLV(tlv);
 
                 return null;
 
@@ -1535,19 +1515,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 byte[] tlv = printer.fsReadDocumentTLV(fiscalizationNumber).getTLV();
 
-                TLVParser parser = new TLVParser();
-                parser.parse(tlv);
-
-                Vector<String> lines = parser.getPrintText();
-
-                StringBuilder sb = new StringBuilder();
-
-                for (String l : lines) {
-                    sb.append(l);
-                    sb.append("\n");
-                }
-
-                text = sb.toString().trim();
+                text = renderTLV(tlv);
 
                 return null;
 
@@ -1570,6 +1538,63 @@ public class MainActivity extends AppCompatActivity {
             else
                 showMessage(result);
         }
+    }
+
+    private String renderTLV(byte[] tlv) throws Exception {
+        StringBuilder sb = new StringBuilder();
+
+        renderTLV(sb, "", tlv);
+
+        return sb.toString().trim();
+    }
+
+    private void renderTLV(StringBuilder sb, String indent, byte[] tlv) throws Exception {
+
+        TLVParser parser = new TLVParser();
+        parser.parse(tlv);
+
+        TLVItems items = parser.getItems();
+
+        for (int i = 0; i < items.size(); i++) {
+            TLVItem item = items.get(i);
+            if (item.getTag().getType() == TLVTag.TLVType.itSTLV) {
+                String tagName = item.getTag().getPrintName();
+
+                sb.append(indent);
+                sb.append(item.getTag().getId());
+                sb.append(",");
+                sb.append(tagName);
+                sb.append(":");
+                sb.append("\n");
+                renderTLV(sb, indent + "  ", item.getData());
+            } else {
+
+                String tagName = item.getTag().getPrintName();
+                String itemText = item.getText();
+
+                if (item.getTag().getId() == 1077) {// 1077,ФП
+                    itemText = toFP(item.getData()) + "(" + Hex.toHex2(item.getData()) + ")";
+                }
+
+                sb.append(indent);
+                sb.append(item.getTag().getId());
+                sb.append(",");
+                sb.append(tagName);
+                sb.append(":");
+                sb.append(itemText);
+                sb.append("\n");
+            }
+        }
+    }
+
+    private long toFP(byte[] d) {
+
+        long result = 0;
+        for (int i = 2; i < d.length; i++) {
+            result <<= 8;
+            result |= d[i] & 0xFF;
+        }
+        return result;
     }
 
     public void readTableCell(View view) {
@@ -1736,7 +1761,7 @@ public class MainActivity extends AppCompatActivity {
                         printer.executeCommand(command);
 
                         sb.append("" + i + " " + command.getTable().getName() + "\n"); //+ " " + command.getTable().getRowCount() + " " + command.getTable().getFieldCount() + "\n");
-                        
+
                     } catch (JposException e) {
                         Throwable cause = e.getCause();
                         if (cause != null && cause instanceof SmFiscalPrinterException) {
