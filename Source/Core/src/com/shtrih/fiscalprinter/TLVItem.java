@@ -1,17 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.fiscalprinter;
 
 import com.shtrih.util.BitUtils;
 import com.shtrih.util.Hex;
 import com.shtrih.util.encoding.IBM866;
 
-import java.util.Date;
-import java.util.Locale;
-import java.util.Vector;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * @author V.Kravtsov
@@ -40,30 +39,34 @@ public class TLVItem {
         return level;
     }
 
-    public long toInt(){
+    public long toInt() {
         return toInt(data);
     }
 
-    public long toInt(byte[] d) {
+    private long toInt(byte[] d) {
+        return toInt(d, 0);
+    }
+
+    private long toInt(byte[] d, int offset) {
         long result = 0;
-        for (int i = d.length - 1; i >= 0; i--) {
+        for (int i = d.length - 1; i >= offset; i--) {
             result <<= 8;
             result |= d[i] & 0xFF;
         }
         return result;
     }
 
-    public long toInt(byte[] d, int len) {
-        long result = 0;
-        for (int i = len - 1; i >= 0; i--) {
-            result <<= 8;
-            result |= d[i] & 0xFF;
-        }
-        return result;
-    }
-
-    public Date toDate(byte[] d) {
-        return new Date(toInt(d) / 86400);
+    public Date toDate() {
+        long unixTime = toInt(data);
+        Calendar mydate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        mydate.setTimeInMillis(unixTime * 1000);
+        return new Date(
+                mydate.get(Calendar.YEAR) - 1900,
+                mydate.get(Calendar.MONTH),
+                mydate.get(Calendar.DAY_OF_MONTH),
+                mydate.get(Calendar.HOUR_OF_DAY),
+                mydate.get(Calendar.MINUTE),
+                mydate.get(Calendar.SECOND));
     }
 
     public String calcTypeToStr(int type) {
@@ -117,36 +120,27 @@ public class TLVItem {
         return result;
     }
 
-    public String toASCII(byte[] data) throws Exception {
+    public String toASCII() throws Exception {
         return new String(data, new IBM866());
     }
 
-    public double toFVLN(byte[] data) throws Exception {
-        if (data[0] > 4) {
-            throw new Exception("Неверная длина FVLN");
-        }
+    public BigDecimal toFVLN() throws Exception {
         if (data.length < 2) {
-            throw new Exception("Неверная длина FVLN");
+            throw new Exception("Неверная длина FVLN, ожидается минимум 2, получено " + data.length);
         }
-        byte[] d = new byte[data.length - 1];
-        System.arraycopy(data, 1, d, 0, d.length);
-        double result = toInt(d);
-        int power = data[0];
-        for (int i = 0; i < power; i++) {
-            result = result / 10;
-        }
-        return result;
+        long value = toInt(data, 1);
+        int scale  = data[0];
+        return BigDecimal.valueOf(value, scale);
     }
 
-    public String toFVLNS(byte[] data) throws Exception {
-        double result = toFVLN(data);
-        int power = data[0];
-        return String.format(Locale.US, "%." + power + "f", result);
+    public BigDecimal toVLN() throws Exception {
+        long value = toInt();
+        int scale  = 2;
+        return BigDecimal.valueOf(value, scale);
     }
 
-    public String toBitMask(byte[] data) {
-        int size = tag.getSize();
-        int value = (int) toInt(data, size);
+    public String toBitMask() {
+        int value = (int) toInt(data);
         String text = "";
         Vector<TLVBit> bits = tag.getBits();
         for (int i = 0; i < bits.size(); i++) {
@@ -170,20 +164,37 @@ public class TLVItem {
             case itUInt32:
                 return String.valueOf(toInt(data));
             case itVLN:
-                return String.format(Locale.US, "%.2f", toInt(data) / 100.0);
+                return format(toVLN());
             case itFVLN:
-                return toFVLNS(data);
+                return format(toFVLN());
             case itUnixTime:
-                return toDate(data).toString();
+                return format(toDate());
             case itByteArray:
-                return Hex.toHex(data);
+                return Hex.toHex(data).trim();
             case itASCII:
-                return toASCII(data).trim();
+                return toASCII().trim();
             case itBitMask:
-                return toBitMask(data);
-                
+                return toBitMask();
+
             default:
                 return "";
         }
+    }
+
+    private String format(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        return sdf.format(date);
+    }
+
+    private String format(BigDecimal value) {
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(value.scale());
+        df.setMinimumFractionDigits(value.scale());
+        DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.getDefault());
+        otherSymbols.setDecimalSeparator('.');
+        otherSymbols.setGroupingSeparator(' ');
+        df.setDecimalFormatSymbols(otherSymbols);
+        df.setGroupingUsed(false);
+        return df.format(value);
     }
 }

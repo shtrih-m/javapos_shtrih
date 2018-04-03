@@ -2,12 +2,13 @@ package com.shtrih.fiscalprinter;
 
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
+import static com.shtrih.util.ByteUtils.byteArray;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -30,7 +31,7 @@ public class TLVItemTests {
         byte[] data = fsWriteTag(12345);
 
         TLVItem item = new TLVItem(new TLVTag(666, TLVTag.TLVType.itVLN), data, 12);
-        assertEquals(12345, item.toInt(item.getData()));
+        assertEquals(12345, item.toInt());
         assertEquals("123.45", item.getText());
     }
 
@@ -39,7 +40,8 @@ public class TLVItemTests {
         byte[] data = new byte[]{-124};
 
         TLVItem item = new TLVItem(new TLVTag(666, TLVTag.TLVType.itVLN), data, 12);
-        assertEquals(132, item.toInt(item.getData()));
+        assertEquals(132, item.toInt());
+        assertEquals(BigDecimal.valueOf(132, 2), item.toVLN());
         assertEquals("1.32", item.getText());
     }
 
@@ -48,7 +50,8 @@ public class TLVItemTests {
         byte[] data = new byte[]{-124, 0};
 
         TLVItem item = new TLVItem(new TLVTag(666, TLVTag.TLVType.itVLN), data, 12);
-        assertEquals(132, item.toInt(item.getData()));
+        assertEquals(132, item.toInt());
+        assertEquals(BigDecimal.valueOf(132, 2), item.toVLN());
         assertEquals("1.32", item.getText());
     }
 
@@ -57,8 +60,37 @@ public class TLVItemTests {
         byte[] data = new byte[]{-124, 0, 0, 0};
 
         TLVItem item = new TLVItem(new TLVTag(666, TLVTag.TLVType.itVLN), data, 12);
-        assertEquals(132, item.toInt(item.getData()));
+        assertEquals(132, item.toInt());
+        assertEquals(BigDecimal.valueOf(132, 2), item.toVLN());
         assertEquals("1.32", item.getText());
+    }
+
+    @Test
+    public void Should_decode_date() throws Exception {
+        byte[] data = byteArray(0x60, 0x73, 0xC2, 0x5A);
+
+        TLVItem item = new TLVItem(new TLVTag(666, TLVTag.TLVType.itUnixTime), data, 12);
+        assertEquals(new Date(2018 - 1900, 4 - 1, 2, 18, 16, 0), item.toDate());
+        assertEquals("02.04.2018 18:16:00", item.getText());
+    }
+
+    @Test
+    public void Should_decode_fvln() throws Exception {
+        byte[] data = byteArray(0x06, 0x40, 0x42, 0x0F);
+
+        TLVItem item = new TLVItem(new TLVTag(666, TLVTag.TLVType.itFVLN), data, 12);
+
+        assertEquals(new BigDecimal(1000000).divide(new BigDecimal(1000000), 6, RoundingMode.HALF_UP), item.toFVLN());
+        assertEquals("1.000000", item.getText());
+    }
+
+    @Test
+    public void Should_decode_fvln2() throws Exception {
+        byte[] data = byteArray(0x06, 0x15, 0xCD, 0x5B, 0x07);
+
+        TLVItem item = new TLVItem(new TLVTag(666, TLVTag.TLVType.itFVLN), data, 12);
+        assertEquals(BigDecimal.valueOf(123456789, 6), item.toFVLN());
+        assertEquals("123.456789", item.getText());
     }
 
     private byte[] fsWriteTag(final int data) throws Exception {
