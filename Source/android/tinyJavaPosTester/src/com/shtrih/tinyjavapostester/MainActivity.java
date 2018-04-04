@@ -43,6 +43,8 @@ import com.shtrih.fiscalprinter.command.FSCommunicationStatus;
 import com.shtrih.fiscalprinter.command.FSDocumentInfo;
 import com.shtrih.fiscalprinter.command.FSStatusInfo;
 import com.shtrih.fiscalprinter.command.LongPrinterStatus;
+import com.shtrih.fiscalprinter.command.PrinterDate;
+import com.shtrih.fiscalprinter.command.PrinterTime;
 import com.shtrih.fiscalprinter.command.ReadTableInfo;
 import com.shtrih.fiscalprinter.port.UsbPrinterPort;
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialDriver;
@@ -55,6 +57,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -1804,6 +1807,80 @@ public class MainActivity extends AppCompatActivity {
 
             if (result == null)
                 showMessage(text + "\nSuccess " + (doneAt - startedAt) + " ms");
+            else
+                showMessage(result);
+        }
+    }
+
+    public void syncDateTime(View view) {
+        new SyncDateTimeTask(this).execute();
+    }
+
+    private class SyncDateTimeTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+
+        private ProgressDialog dialog;
+
+        private long startedAt;
+        private long doneAt;
+
+        public SyncDateTimeTask(Activity parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Setting current date and time", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+
+                Calendar c = Calendar.getInstance();
+
+                int day = c.get(Calendar.DAY_OF_MONTH);
+                int month = c.get(Calendar.MONTH) + 1;
+                int year = c.get(Calendar.YEAR) - 2000;
+
+                PrinterDate date = new PrinterDate(day, month, year);
+
+                printer.writeDate(date);
+                printer.confirmDate(date);
+
+                int seconds = c.get(Calendar.SECOND);
+                int minutes = c.get(Calendar.MINUTE);
+                int hour = c.get(Calendar.HOUR);
+
+                PrinterTime time = new PrinterTime(hour, minutes, seconds);
+
+                printer.writeTime(time);
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            }
+            finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage("\nSuccess " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
         }

@@ -416,5 +416,12 @@
             android:layout_height="wrap_content"
             android:onClick="readTables"
             android:text="@string/action_read_tables" />
+
+        <Button
+            android:id="@+id/btnSyncDateTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="syncDateTime"
+            android:text="@string/action_sync_date_time" />
     </LinearLayout>
 </ScrollView>
