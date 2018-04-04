@@ -155,7 +155,7 @@ public class Fiscalizer {
 
         int seconds = c.get(Calendar.SECOND);
         int minutes = c.get(Calendar.MINUTE);
-        int hour = c.get(Calendar.HOUR);
+        int hour = c.get(Calendar.HOUR_OF_DAY);
 
         PrinterTime time = new PrinterTime(hour, minutes, seconds);
 
