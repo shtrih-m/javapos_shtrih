@@ -292,105 +292,23 @@ public class Fiscalizer {
     }
 
     private int getTaxSystem(String taxVariant) {
-        long result = 0;
-
-        for (String part : taxVariant.split(",")) {
-            switch (part.trim()) {
-                case "0":
-                    result = result | BitUtils.setBit(0);
-                case "1":
-                    result = result | BitUtils.setBit(1);
-                case "2":
-                    result = result | BitUtils.setBit(2);
-                case "3":
-                    result = result | BitUtils.setBit(3);
-                case "4":
-                    result = result | BitUtils.setBit(4);
-                case "5":
-                    result = result | BitUtils.setBit(5);
-            }
-        }
-
-        return (int) result;
+        return bitListToInt(taxVariant);
     }
 
-    private int getAgentType(String agentType) {
-        long result = 0;
-
-        for (String part : agentType.split(",")) {
-            switch (part.trim()) {
-                case "0":
-                    result = result | BitUtils.setBit(0);
-                case "1":
-                    result = result | BitUtils.setBit(1);
-                case "2":
-                    result = result | BitUtils.setBit(2);
-                case "3":
-                    result = result | BitUtils.setBit(3);
-                case "4":
-                    result = result | BitUtils.setBit(4);
-                case "5":
-                    result = result | BitUtils.setBit(5);
-                case "6":
-                    result = result | BitUtils.setBit(6);
-            }
-        }
-
-        return (int) result;
+    private int getAgentType(String agentTypes) {
+        return bitListToInt(agentTypes);
     }
 
-    private int getInfoReasonCodes(String agentType) {
+    private int getInfoReasonCodes(String reasonCodes) {
+        return bitListToInt(reasonCodes);
+    }
+
+    private int bitListToInt(String bitList) {
         long result = 0;
 
-        for (String part : agentType.split(",")) {
-            switch (part.trim()) {
-                case "0":
-                    result = result | BitUtils.setBit(0);
-                case "1":
-                    result = result | BitUtils.setBit(1);
-                case "2":
-                    result = result | BitUtils.setBit(2);
-                case "3":
-                    result = result | BitUtils.setBit(3);
-                case "4":
-                    result = result | BitUtils.setBit(4);
-                case "5":
-                    result = result | BitUtils.setBit(5);
-                case "6":
-                    result = result | BitUtils.setBit(6);
-                case "7":
-                    result = result | BitUtils.setBit(7);
-                case "8":
-                    result = result | BitUtils.setBit(8);
-                case "9":
-                    result = result | BitUtils.setBit(9);
-                case "10":
-                    result = result | BitUtils.setBit(10);
-                case "11":
-                    result = result | BitUtils.setBit(11);
-                case "12":
-                    result = result | BitUtils.setBit(12);
-                case "13":
-                    result = result | BitUtils.setBit(13);
-                case "14":
-                    result = result | BitUtils.setBit(14);
-                case "15":
-                    result = result | BitUtils.setBit(15);
-                case "16":
-                    result = result | BitUtils.setBit(16);
-                case "17":
-                    result = result | BitUtils.setBit(17);
-                case "18":
-                    result = result | BitUtils.setBit(18);
-                case "19":
-                    result = result | BitUtils.setBit(19);
-                case "20":
-                    result = result | BitUtils.setBit(20);
-                case "21":
-                    result = result | BitUtils.setBit(21);
-                case "31":
-                    result = result | BitUtils.setBit(31);
-            }
+        for (String part : bitList.split(",")) {
+            int bit = Integer.parseInt(part.trim());
+            result = result | BitUtils.setBit(bit);
         }
 
         return (int) result;
