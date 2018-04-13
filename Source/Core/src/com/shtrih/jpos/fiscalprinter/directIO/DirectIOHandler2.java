@@ -663,7 +663,7 @@ public class DirectIOHandler2 {
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT:
-                service.getParams().itemTotalAmount = (int) value;
+                service.getParams().itemTotalAmount = (long) value;
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE:

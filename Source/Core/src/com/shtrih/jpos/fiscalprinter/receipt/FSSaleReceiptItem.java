@@ -26,6 +26,7 @@ public class FSSaleReceiptItem {
     private long priceWithDiscount;
     private long unitPrice;
     private long quantity;
+    private long itemAmount;
     private int department;
     private int tax1;
     private int tax2;
@@ -40,15 +41,14 @@ public class FSSaleReceiptItem {
     private boolean priceUpdated = false;
     private FSSaleReceiptItem splittedItem;
     private final FSDiscounts discounts = new FSDiscounts();
-    private Integer totalAmount = null;
+    private Long totalAmount = null;
     private int paymentType = 4;
     private int subjectType = 1;
 
     public FSSaleReceiptItem() {
     }
 
-    public FSSaleReceiptItem getCopy() 
-    {
+    public FSSaleReceiptItem getCopy() {
         FSSaleReceiptItem item = new FSSaleReceiptItem();
         item.pos = pos;
         item.price = price;
@@ -73,8 +73,7 @@ public class FSSaleReceiptItem {
         item.subjectType = subjectType;
         return item;
     }
-    
-            
+
     public PriceItem getPriceItem() throws Exception {
         PriceItem item = new PriceItem();
         item.setDepartment(department);
@@ -92,7 +91,7 @@ public class FSSaleReceiptItem {
         return item;
     }
 
-    public void setTotalAmount(Integer value){
+    public void setTotalAmount(Long value) {
         totalAmount = value;
     }
 
@@ -130,6 +129,14 @@ public class FSSaleReceiptItem {
 
     public void setPos(int value) {
         pos = value;
+    }
+
+    public long getItemAmount() {
+        return itemAmount;
+    }
+
+    public void setItemAmount(long value) {
+        itemAmount = value;
     }
 
     public void addVoidAmount(long amount) {
@@ -322,20 +329,17 @@ public class FSSaleReceiptItem {
                         price2 = priceWithDiscount + 1;
                         quantity2 = (quantity / 1000 - (total - total2)) * 1000;
                     } else {
-                        for (int i = 0; i <= quantity; i++) 
-                        {
+                        for (int i = 0; i <= quantity; i++) {
                             long itemTotal = Math.round(i * priceWithDiscount / 1000.0)
-                                + Math.round((priceWithDiscount) * (quantity - i) / 1000.0);
-                            if (itemTotal == total) 
-                            {
+                                    + Math.round((priceWithDiscount) * (quantity - i) / 1000.0);
+                            if (itemTotal == total) {
                                 quantity2 = i;
                                 price2 = priceWithDiscount;
                                 break;
                             }
                             itemTotal = Math.round(i * priceWithDiscount / 1000.0)
-                                + Math.round((priceWithDiscount + 1) * (quantity - i) / 1000.0);
-                            if (itemTotal == total) 
-                            {
+                                    + Math.round((priceWithDiscount + 1) * (quantity - i) / 1000.0);
+                            if (itemTotal == total) {
                                 quantity2 = i;
                                 price2 = priceWithDiscount + 1;
                                 break;
@@ -356,6 +360,15 @@ public class FSSaleReceiptItem {
                         splittedItem.text = text;
                     }
                     quantity = quantity2;
+                }
+            }
+        }
+        if (discounts.getTotal() == 0) {
+            if (totalAmount == null) {
+                if (itemAmount != 0) {
+                    totalAmount = new Long(itemAmount);
+                } else {
+                    totalAmount = new Long(getTotal2());
                 }
             }
         }

@@ -46,7 +46,6 @@ import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_STATION_REC;
 public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     private FSSaleReceiptItem lastItem = null;
-    private long total = 0;
     private int receiptType = 0;
     private int discountAmount = 0;
     private boolean isOpened = false;
@@ -54,7 +53,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private String voidDescription = "";
     private final Vector items = new Vector();
     private final Vector endingItems = new Vector();
-    private final Vector recItems = new Vector();
     private final long[] payments = new long[16]; // payment amounts
     private final FSDiscounts discounts = new FSDiscounts();
     private Vector<String> messages = new Vector<String>();
@@ -90,11 +88,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     private void clearReceipt() throws Exception {
         discountAmount = 0;
-        total = 0;
         isOpened = false;
         lastItem = null;
         items.clear();
-        recItems.clear();
         discounts.clear();
         for (int i = 0; i < payments.length; i++) {
             payments[i] = 0;
@@ -135,7 +131,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     // pack discounts
-    public void addItemsDiscounts() throws Exception {
+    public void addItemsDiscounts() throws Exception 
+    {
+        
         String discountText = "";
         if (discounts.size() == 1) {
             discountText = discounts.get(0).getText();
@@ -154,27 +152,30 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             saleItem.addDiscount(discount);
             return;
         }
+        if (discountTotal < 100) {
+            return;
+        }
 
         long itemsTotal = getSubtotal() + discounts.getTotal();
         if (itemsTotal <= 0) {
             return;
         }
 
-        for (int i = 0; i < recItems.size(); i++) {
-            Object recItem = recItems.get(i);
+        for (int i = 0; i < items.size(); i++) {
+            Object recItem = items.get(i);
             if (recItem instanceof FSSaleReceiptItem) {
                 FSSaleReceiptItem item = (FSSaleReceiptItem) recItem;
                 if (item.getTotal() > 0) {
                     long itemAmount = item.getTotalWithVoids();
                     if (itemAmount > 0) {
-                        long discountAmount = itemAmount;
-                        if (discountAmount > discountTotal) {
-                            discountAmount = discountTotal;
+                        long dscAmount = itemAmount;
+                        if (dscAmount > discountTotal) {
+                            dscAmount = discountTotal;
                         }
 
-                        if (discountAmount > 0) {
+                        if (dscAmount > 0) {
                             AmountItem discount = new AmountItem();
-                            discount.setAmount(discountAmount);
+                            discount.setAmount(dscAmount);
                             discount.setText(discountText);
                             discount.setTax1(0);
                             discount.setTax2(0);
@@ -182,7 +183,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                             discount.setTax4(0);
                             item.addDiscount(discount);
 
-                            discountTotal -= discountAmount;
+                            discountTotal -= dscAmount;
                             if (discountTotal == 0) {
                                 break;
                             }
@@ -210,7 +211,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             }
         }
     }
-
+    
     public void updateReceiptItems() throws Exception {
         for (int i = 0; i < items.size(); i++) {
             Object object = items.get(i);
@@ -313,8 +314,45 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
+    public void removeStornoItems() throws Exception {
+        for (int i = items.size() - 1; i >= 0; i--) {
+            Object object = items.get(i);
+            if (object instanceof FSSaleReceiptItem) {
+                FSSaleReceiptItem stornoItem = (FSSaleReceiptItem) object;
+                if (stornoItem.getIsStorno()) {
+                    FSSaleReceiptItem item = null;
+                    for (int j = i - 1; j >= 0; j--) {
+                        object = items.get(j);
+                        if (object instanceof FSSaleReceiptItem) {
+                            item = (FSSaleReceiptItem) object;
+                            if ((item.getText().equalsIgnoreCase(stornoItem.getText()))
+                                    && (item.getPrice() == stornoItem.getPrice())
+                                    && (item.getQuantity() >= stornoItem.getQuantity())) {
+                                break;
+                            }
+                        }
+                    }
+                    if (item == null) {
+                        throw new Exception("Voided receipt item not found");
+                    }
+                    long resultAmount = item.getTotal() - stornoItem.getTotal();
+                    item.setQuantity(item.getQuantity() - stornoItem.getQuantity());
+                    item.setItemAmount(item.getItemAmount() - stornoItem.getItemAmount());
+                    
+                    if (item.getQuantity() == 0) {
+                        items.remove(item);
+                        i--;
+                    }
+                    items.remove(stornoItem);
+                }
+            }
+        }
+    }
+
     public void endFiscalReceipt(boolean printHeader) throws Exception {
-        if (isOpened) {
+        if (isOpened) 
+        {
+            removeStornoItems();
             correctPayments();
             if (getDevice().getCapDiscount()) {
                 addItemsDiscounts();
@@ -835,11 +873,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         return result;
     }
 
-    public void addTotal(long amount) throws Exception {
-        total += amount;
-        logger.debug("Add amount: " + amount + ", total: " + total);
-    }
-
     public long correctQuantity(long price, long quantity, long unitPrice) {
         if (!getParams().quantityCorrectionEnabled) {
             return quantity;
@@ -898,72 +931,47 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         double d = unitPrice * Math.abs(quantity);
         long amount = getParams().itemTotalAmount == null ? MathUtils.round((d / 1000.0)) : getParams().itemTotalAmount;
         FSSaleReceiptItem item = null;
-        if (isStorno) {
-            for (int i = recItems.size() - 1; i >= 0; i--) {
-                item = (FSSaleReceiptItem) recItems.get(i);
-                if ((item.getText().equalsIgnoreCase(description))
-                        && (item.getPrice() == unitPrice)
-                        && (item.getQuantity() >= quantity)) {
-                    break;
-                }
+        if (getParams().combineReceiptItems) {
+            item = findItem(unitPrice, description);
+            if (item != null) 
+            {
+                item.setQuantity(item.getQuantity() + quantity);
+                item.setItemAmount(item.getItemAmount() + price);
             }
-            if (item == null) {
-                throw new Exception("Voided receipt item not found");
-            }
-            long resultAmount = item.getTotal()-amount;
-            item.setQuantity(item.getQuantity() - quantity);
-            if (item.getTotal() > resultAmount){
-                discountAmount += item.getTotal() - resultAmount;
-            }
-                    
-            if (item.getQuantity() == 0) {
-                items.remove(item);
-                recItems.remove(item);
-            }
-            addTotal(-amount);
-        } else {
-            if (getParams().combineReceiptItems) {
-                item = findItem(unitPrice, description);
-                if (item != null) {
-                    item.setQuantity(item.getQuantity() + quantity);
-                }
-            }
-            if (item == null) {
-                item = new FSSaleReceiptItem();
-                item.setPrice(unitPrice);
-                item.setUnitPrice(unitPrice);
-                item.setQuantity(quantity);
-                item.setDepartment(department);
-                item.setTax1(vatInfo);
-                item.setTax2(0);
-                item.setTax3(0);
-                item.setTax4(0);
-                item.setText(description);
-                item.setPreLine(getPreLine());
-                item.setPostLine(getPostLine());
-                item.setUnitName(unitName);
-                item.setIsStorno(isStorno);
+        }
+        if (item == null) {
+            item = new FSSaleReceiptItem();
+            item.setItemAmount(price);
+            item.setPrice(unitPrice);
+            item.setUnitPrice(unitPrice);
+            item.setQuantity(quantity);
+            item.setDepartment(department);
+            item.setTax1(vatInfo);
+            item.setTax2(0);
+            item.setTax3(0);
+            item.setTax4(0);
+            item.setText(description);
+            item.setPreLine(getPreLine());
+            item.setPostLine(getPostLine());
+            item.setUnitName(unitName);
+            item.setIsStorno(isStorno);
 
+            if (getParams().itemTotalAmount != null) {
                 item.setTotalAmount(getParams().itemTotalAmount);
                 getParams().itemTotalAmount = null;
+            }
 
-                item.setPaymentType(getParams().paymentType);
-                item.setSubjectType(getParams().subjectType);
-                items.add(item);
-                recItems.add(item);
-                
-                getParams().paymentType = 4;
-                getParams().subjectType = 1;
-                
-            }
-            lastItem = item;
-            addTotal(amount);
+            item.setPaymentType(getParams().paymentType);
+            item.setSubjectType(getParams().subjectType);
+            items.add(item);
+
+            getParams().paymentType = 4;
+            getParams().subjectType = 1;
         }
+        lastItem = item;
         clearPrePostLine();
-        if (getParams().FSReceiptItemDiscountEnabled) {
-            if ((price > 0) && (amount - price) > 0) {
-                printDiscount(amount - price, vatInfo, "");
-            }
+        if ((price > 0) && (amount - price) > 1) {
+            printDiscount(amount - price, vatInfo, "");
         }
     }
 
@@ -1048,7 +1056,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 }
             }
         }
-        addTotal(-amount);
     }
 
     public void printTotalDiscount(long amount, int tax1, String text)
@@ -1065,10 +1072,22 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setTax4(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setText(text);
         discounts.add(item);
-        addTotal(-amount);
     }
 
     public long getSubtotal() throws Exception {
+        long total = 0;
+        for (int i = 0; i < items.size(); i++) {
+            Object object = items.get(i);
+            if (object instanceof FSSaleReceiptItem) {
+                FSSaleReceiptItem item = (FSSaleReceiptItem) object;
+                if (item.getIsStorno()) {
+                    total -= item.getTotal();
+                } else {
+                    total += item.getTotal();
+                }
+            }
+        }
+        total -= discounts.getTotal();
         return total;
     }
 

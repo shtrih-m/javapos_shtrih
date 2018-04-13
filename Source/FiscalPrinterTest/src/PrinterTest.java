@@ -980,12 +980,7 @@ class PrinterTest implements FiscalPrinterConst {
     
     public void printFiscalReceipt() {
         printFiscalReceipt145_2();
-        //PrintCheckWithPassedPositionSum();
-        /*
-        printFiscalReceipt145_1(false);
-        printNonFiscal(false);
-        printEscBarcodesNormal();
-         */
+        //printFiscalReceipt145_4();
     }
     
     public void disablePrint() {
@@ -3609,7 +3604,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecVoidItem("4 КАЛЬМАР ХОТ-ТЕЙСТ С", 9500, 2000, 0, 0, 2);
             printer.printRecSubtotal(14250);
             printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 50);
-            printer.printRecTotal(14200, 14200, "1");
+            printer.printRecTotal(14200, 14200, "0");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
@@ -3622,13 +3617,13 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
             
-            printer.printRecItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 1169, 123, 1, 9500, "кг");
+            printer.printRecItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 1170, 123, 1, 9500, "кг");
             printer.printRecItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 1188, 125, 1, 9500, "кг");
             printer.printRecItem("8051070320514 КОФЕ FRECKO ARABIKA", 16600, 1000, 1, 16600, "шт");
             printer.printRecItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 38950, 4100, 1, 9500, "кг");
             printer.printRecVoidItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 9500, 123, 0, 0, 1);
-            printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 38);
-            printer.printRecTotal(56700, 56700, "1");
+            printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 39);
+            printer.printRecTotal(56700, 56700, "0");
 
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
@@ -3636,7 +3631,33 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
     
+    public void printFiscalReceipt145_4() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+            
+            printer.printRecItem("1206 СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
+            printer.printRecItemAdjustment(1, "            1206", 320, 2);
+            printer.printRecItem("1206 СДОБА ЗАМОСКВОРЕЦКАЯ", 6400, 2000, 2, 3200, "шт");
+            printer.printRecItemAdjustment(1, "            1206", 640, 2);
+            printer.printRecItem("4 КАЛЬМАР ХОТ-ТЕЙСТ С", 35964, 360, 2, 99900, "кг");
+            printer.printRecItem("1206 СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
+            printer.printRecItemAdjustment(1, "            1206", 320, 2);
+            printer.printRecItem("8051070320514 КОФЕ FRECKO ARABIKA", 16600, 1000, 1, 16600, "шт");
+            printer.printRecVoidItem("1206 СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 0, 0, 2);
+            printer.printRecItemAdjustment(2, "            1206", 320, 2);
+            printer.printRecItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 2185, 230, 1, 9500, "кг");
+            printer.printRecVoidItem("4 КАЛЬМАР ХОТ-ТЕЙСТ С", 99900, 360, 0, 0, 2);
+            printer.printRecSubtotal(27425);
+            printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 25);
+            printer.printRecTotal(27400, 27400, "1");
 
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     
     
 }
