@@ -499,6 +499,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         station = getPrintStation(station);
         PrintString command = new PrintString(usrPassword, station, line);
         execute(command);
+        SysUtils.sleep(getParams().printStringDelayInMs);
         return command.getOperator();
     }
 
@@ -541,6 +542,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 font, line);
 
         execute(command);
+        SysUtils.sleep(getParams().printStringDelayInMs);
         return command.getOperator();
     }
 

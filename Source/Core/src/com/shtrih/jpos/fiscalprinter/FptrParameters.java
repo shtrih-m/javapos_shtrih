@@ -173,6 +173,7 @@ public class FptrParameters {
     public boolean openReceiptOnBegin = false;
     public boolean printVoidedReceipt = false;
     public boolean capUpdateFirmware = true;
+    public int printStringDelayInMs = 0;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -389,7 +390,7 @@ public class FptrParameters {
         printVoidedReceipt = reader.readBoolean("printVoidedReceipt", false);
         firmwarePath = reader.readString("firmwarePath", "firmware");
         capUpdateFirmware = reader.readBoolean("capUpdateFirmware", true);
-
+        printStringDelayInMs = reader.readInteger("printStringDelayInMs", 0);
         // paymentNames
         String paymentName;
         String propertyName;

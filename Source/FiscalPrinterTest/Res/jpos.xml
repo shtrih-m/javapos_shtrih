@@ -303,6 +303,7 @@
 		
 		<prop name="firmwarePath" type="String" value="firmware"/>
 		<prop name="capUpdateFirmware" type="String" value="1"/>
+		<prop name="printStringDelayInMs" type="String" value="0"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>
