@@ -4467,10 +4467,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         params.setFont(new FontNumber(value));
     }
 
-    public int getCommandTimeout(int code) throws Exception {
-        return printer.getCommandTimeout(code);
-    }
-
     public EJActivation getEJActivation() throws Exception {
         LongPrinterStatus longStatus = readLongStatus();
         if ((longStatus.getRegistrationNumber() > 0)

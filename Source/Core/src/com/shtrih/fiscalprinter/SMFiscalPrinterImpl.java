@@ -2671,15 +2671,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return commands;
     }
 
-    public int getCommandTimeout(int code) throws Exception {
-        int timeout;
-        FlexCommand command = getCommands().itemByCode(code);
-        if (command != null) {
-            timeout = command.getTimeout();
-        } else {
-            timeout = PrinterCommand.getDefaultTimeout(code);
-        }
-        return timeout;
+    private int getCommandTimeout(int code)  {
+        return PrinterCommand.getDefaultTimeout(code);
     }
 
     public ReadEJActivationReport readEJActivationReport() throws Exception {

@@ -1,26 +1,22 @@
-/*
- * FlexCommands.java
- *
- * Created on 19 Ноябрь 2009 г., 16:49
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package com.shtrih.fiscalprinter.command;
+
+
+import java.util.Collection;
+import java.util.HashMap;
 
 /**
  * @author V.Kravtsov
  */
-
-import java.util.HashMap;
-
 public class FlexCommands {
 
     private final HashMap<Integer, FlexCommand> list = new HashMap<Integer, FlexCommand>();
 
     /** Creates a new instance of FlexCommands */
     public FlexCommands() {
+    }
+
+    public Collection<FlexCommand> list(){
+        return list.values();
     }
 
     public int size() {

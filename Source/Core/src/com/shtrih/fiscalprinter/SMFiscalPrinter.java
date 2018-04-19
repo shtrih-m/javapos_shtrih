@@ -415,8 +415,6 @@ public interface SMFiscalPrinter {
 
     public FlexCommands getCommands() throws Exception;
 
-    public int getCommandTimeout(int code) throws Exception;
-
     public int getResultCode();
 
     public String getResultText();

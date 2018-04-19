@@ -124,6 +124,7 @@ public abstract class PrinterCommand {
     public abstract void decode(CommandInputStream in) throws Exception;
 
     public static int getDefaultTimeout(int code) {
+
         switch (code) {
             case 0x16:
                 return 60000;
@@ -146,11 +147,17 @@ public abstract class PrinterCommand {
             case 0x40:
                 return 30000;
             case 0x41:
-                return 30000;
+                return 65000;
             case 0x61:
                 return 20000;
             case 0x62:
                 return 30000;
+            case 0x66:
+                return 35000;
+            case 0x67:
+                return 20000;
+            case 0xE0:
+                return 35000;
             default:
                 return DefaultTimeout;
         }
