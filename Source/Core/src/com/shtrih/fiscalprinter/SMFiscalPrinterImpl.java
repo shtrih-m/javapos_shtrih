@@ -210,8 +210,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             device.connect();
             check(readDeviceMetrics());
             model = selectPrinterModel(getDeviceMetrics());
-            if (!params.fastConnect)
-                checkEcrMode();
+            checkEcrMode();
         }
     }
 
@@ -2671,7 +2670,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return commands;
     }
 
-    private int getCommandTimeout(int code)  {
+    private int getCommandTimeout(int code) {
         return PrinterCommand.getDefaultTimeout(code);
     }
 
@@ -3914,13 +3913,42 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             ReadLongStatus command = new ReadLongStatus();
             command.setPassword(getUsrPassword());
             int rc = executeCommand(command);
+
             if ((rc == 0x74) || (rc == 0x78) || (rc == 0x79)) {
-                rc = 0;
                 deviceReset();
+                continue;
+            } else {
+                check(rc);
             }
-            check(rc);
-            PrinterStatus status = waitForPrinting();
-            switch (status.getPrinterMode().getValue()) {
+
+            LongPrinterStatus status = command.getStatus();
+
+            switch (status.getSubmode()) {
+                case ECR_SUBMODE_IDLE:
+                    break;
+
+                case ECR_SUBMODE_PASSIVE:
+                case ECR_SUBMODE_ACTIVE:
+                    return;
+
+                case ECR_SUBMODE_AFTER: {
+                    continuePrint();
+                    continue;
+                }
+
+                case ECR_SUBMODE_REPORT:
+                case ECR_SUBMODE_PRINT: {
+                    SysUtils.sleep(TimeToSleep);
+                    continue;
+                }
+
+                default: {
+                    logger.debug("Unknown submode " + status.getSubmode());
+                    break;
+                }
+            }
+
+            switch (status.getPrinterMode().getLoMode()) {
                 case MODE_DUMPMODE:
                     try {
                         endDump();
