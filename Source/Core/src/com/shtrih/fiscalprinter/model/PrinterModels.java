@@ -83,9 +83,12 @@ public class PrinterModels implements Serializable {
 	// load from resources
 	public void load() {
 		try {
+			logger.debug("Models loading started");
 			InputStream stream = ResourceLoader.load("models.xml");
 			XmlModelsReader reader = new XmlModelsReader(this);
 			reader.load(stream);
+
+			logger.debug("Models loading done");
 
 		} catch (Exception e) {
 			logger.error(e);

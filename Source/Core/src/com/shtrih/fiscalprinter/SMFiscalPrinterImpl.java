@@ -11,7 +11,10 @@
  */
 package com.shtrih.fiscalprinter;
 
-import com.shtrih.barcode.*;
+import com.shtrih.barcode.PrinterBarcode;
+import com.shtrih.barcode.SmBarcode;
+import com.shtrih.barcode.SmBarcodeEncoder;
+import com.shtrih.barcode.ZXingEncoder;
 import com.shtrih.ej.EJDate;
 import com.shtrih.fiscalprinter.command.*;
 import com.shtrih.fiscalprinter.model.PrinterModel;
@@ -23,27 +26,40 @@ import com.shtrih.fiscalprinter.table.PrinterField;
 import com.shtrih.fiscalprinter.table.PrinterFields;
 import com.shtrih.fiscalprinter.table.PrinterTable;
 import com.shtrih.fiscalprinter.table.PrinterTables;
-import com.shtrih.jpos.fiscalprinter.*;
+import com.shtrih.jpos.fiscalprinter.FptrParameters;
+import com.shtrih.jpos.fiscalprinter.PrintItem;
+import com.shtrih.jpos.fiscalprinter.PrinterImage;
+import com.shtrih.jpos.fiscalprinter.PrinterImages;
+import com.shtrih.jpos.fiscalprinter.ReceiptImage;
+import com.shtrih.jpos.fiscalprinter.ReceiptImages;
+import com.shtrih.jpos.fiscalprinter.SmFptrConst;
 import com.shtrih.printer.ncr7167.NCR7167Printer;
-import com.shtrih.util.*;
+import com.shtrih.util.BitUtils;
+import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.FileUtils;
+import com.shtrih.util.FirmwareUpdater;
+import com.shtrih.util.Hex;
+import com.shtrih.util.Localizer;
+import com.shtrih.util.MathUtils;
+import com.shtrih.util.MethodParameter;
+import com.shtrih.util.StringUtils;
+import com.shtrih.util.SysUtils;
 
-import jpos.JposConst;
-
-import java.io.File;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Vector;
-import java.util.Calendar;
 
-import static jpos.FiscalPrinterConst.JPOS_EFPTR_DAY_END_REQUIRED;
+import jpos.JposConst;
+import jpos.JposException;
+
 import static jpos.JposConst.JPOS_E_EXTENDED;
 import static jpos.JposConst.JPOS_E_NOHARDWARE;
-
-import jpos.JposException;
 
 public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
@@ -107,18 +123,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private boolean saveCommands = false;
     private Vector receiptCommands = new Vector();
     private boolean capOpenReceipt = true;
-    private boolean capFSCloseReceipt = false;
     private boolean capFSTotals = true;
     private boolean capFooterFlag = false;
-    private boolean subtotalInHeader = false;
-    private boolean discountInHeader = false;
     private int headerHeigth = 0;
     private boolean isFooter = false;
     private PrinterModelParameters modelParameters = null;
     private String serial = "";
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
-            FptrParameters params) {
+                               FptrParameters params) {
         this.port = port;
         this.device = device;
         this.params = params;
@@ -197,7 +210,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             device.connect();
             check(readDeviceMetrics());
             model = selectPrinterModel(getDeviceMetrics());
-            checkEcrMode();
+            if (!params.fastConnect)
+                checkEcrMode();
         }
     }
 
@@ -321,9 +335,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     private boolean isReceiptCommand(PrinterCommand command) throws Exception {
         int[] codes = {
-            0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89,
-            0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F,
-            0xFF0C, 0xFF0D, 0x12, 0x17, 0x2F
+                0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89,
+                0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F,
+                0xFF0C, 0xFF0D, 0x12, 0x17, 0x2F
         };
         for (int i = 0; i < codes.length; i++) {
             if (command.getCode() == codes[i]) {
@@ -455,10 +469,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public PrinterModelParameters readPrinterModelParameters() throws Exception {
+        if (modelParameters != null)
+            return modelParameters;
+
         logger.debug("readPrinterModelParameters");
         ReadPrinterModelParameters command = new ReadPrinterModelParameters();
         execute(command);
-        return command.getParameters();
+        modelParameters = command.getParameters();
+
+        return modelParameters;
     }
 
     @Override
@@ -611,7 +630,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public int writeTable(int tableNumber, int rowNumber, int fieldNumber,
-            String fieldValue) throws Exception {
+                          String fieldValue) throws Exception {
         int result = 0;
         logger.debug("writeTable(" + String.valueOf(tableNumber) + ", "
                 + String.valueOf(rowNumber) + ", "
@@ -926,7 +945,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public PrintEJDayReportOnDates printEJDayReportOnDates(EJDate date1,
-            EJDate date2, int reportType) throws Exception {
+                                                           EJDate date2, int reportType) throws Exception {
         logger.debug("printEJDayReportOnDates");
         PrintEJDayReportOnDates command = new PrintEJDayReportOnDates();
         command.setPassword(sysPassword);
@@ -938,7 +957,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public PrintFMReportDates printFMReportDates(PrinterDate date1,
-            PrinterDate date2, int reportType) throws Exception {
+                                                 PrinterDate date2, int reportType) throws Exception {
         logger.debug("printFMReportDates");
         PrintFMReportDates command = new PrintFMReportDates();
         command.setPassword(taxPassword);
@@ -950,7 +969,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public PrintEJDayReportOnDays printEJReportDays(int day1, int day2,
-            int reportType) throws Exception {
+                                                    int reportType) throws Exception {
         logger.debug("printEJReportDays");
         PrintEJDayReportOnDays command = new PrintEJDayReportOnDays();
         command.setPassword(sysPassword);
@@ -962,7 +981,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public PrintFMReportDays printFMReportDays(int day1, int day2,
-            int reportType) throws Exception {
+                                               int reportType) throws Exception {
         logger.debug("printFMReportDays");
         PrintFMReportDays command = new PrintFMReportDays();
         command.setPassword(taxPassword);
@@ -1466,7 +1485,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         logger.debug("waitForPrinting");
         PrinterStatus status = null;
         try {
-            for (;;) {
+            for (; ; ) {
                 status = readPrinterStatus();
                 switch (status.getSubmode()) {
                     case ECR_SUBMODE_IDLE: {
@@ -1582,7 +1601,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public boolean connectDevice(int baudRate, int deviceBaudRate,
-            int deviceByteTimeout) throws Exception {
+                                 int deviceByteTimeout) throws Exception {
         setBaudRate(baudRate);
         LongPrinterStatus status = readLongStatus();
         writePortParams(status.getPortNumber(),
@@ -1929,8 +1948,40 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return capDisableDiscountText;
     }
 
-    public boolean getCapDiscount() {
+    private boolean isCapDiscountInitialized;
+
+    public int getDiscountMode() throws Exception {
+        if (!isCapDiscountInitialized)
+            initializeCapDiscount();
+
+        return discountMode;
+    }
+
+    public boolean getCapDiscount() throws Exception {
+        if (!isCapDiscountInitialized)
+            initializeCapDiscount();
+
         return capDiscount;
+    }
+
+    private void initializeCapDiscount() throws Exception {
+
+        discountMode = 0;
+
+        if (capFiscalStorage) {
+            discountMode = 2;
+            if (isDesktop()) {
+                String[] fieldValue = new String[1];
+                int rc = readTable(17, 1, 3, fieldValue);
+                if (succeeded(rc)) {
+                    discountMode = Integer.parseInt(fieldValue[0]);
+                }
+            }
+        }
+
+        capDiscount = !isShtrihMobile() && discountMode == 0;
+
+        isCapDiscountInitialized = true;
     }
 
     // 17,1,18,1,0,0,3,"Rus компактный заголовок","0"
@@ -1942,9 +1993,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         isCapDisableDiscountTextInitialized = false;
         isHeaderHeightInitialized = false;
         isFsHeaderDataInitialized = false;
+        isCapDiscountInitialized = false;
 
         getModel().setFonts(new PrinterFonts(this));
-        getModel().setNumVatRates(readNumVatRates());
 
         ReadPrinterModelParameters command = new ReadPrinterModelParameters();
         if (executeCommand(command) == 0) {
@@ -1957,36 +2008,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (capFiscalStorage) {
 
             int fsTableNumber = getFsTableNumber();
-
-            boolean isCompactHeader = false;
-            if (isDesktop()) {
-                String[] fieldValue = new String[1];
-                int rc = readTable(17, 1, 18, fieldValue);
-                if (succeeded(rc)) {
-                    isCompactHeader = fieldValue[0].equalsIgnoreCase("3");
-                }
-            }
-
-            subtotalInHeader = isCompactHeader;
-            discountInHeader = isCompactHeader;
-
-            discountMode = 2;
-            if (isDesktop()) {
-                String[] fieldValue = new String[1];
-                int rc = readTable(17, 1, 3, fieldValue);
-                if (succeeded(rc)) {
-                    discountMode = Integer.parseInt(fieldValue[0]);
-                }
-            }
             getModel().addParameter("fdoName", "", fsTableNumber, 1, 10);
         }
-        capDiscount = true;
+
         if (isShtrihMobile()) {
-            capDiscount = false;
             capGraphics3Scale = true;
-        } else {
-            capDiscount = discountMode == 0;
         }
+
         updateFirmware();
     }
 
@@ -1994,11 +2022,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return deviceMetrics.getModel() != 19
                 && // Штрих-МОБАЙЛ
                 deviceMetrics.getModel() != 45;  // КЯ
-    }
-
-    public int readNumVatRates() throws Exception {
-        PrinterTable table = getTable(PrinterConst.SMFP_TABLE_TAX);
-        return table.getRowCount();
     }
 
     private boolean readCapDisableDiscountText() throws Exception {
@@ -2217,7 +2240,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             if (barcode.getType() != SmFptrConst.SMFPTR_BARCODE_EAN13) {
                 throw new Exception(
                         Localizer
-                        .getString(Localizer.PrinterSupportesEAN13Only));
+                                .getString(Localizer.PrinterSupportesEAN13Only));
             }
 
             if (barcode.isTextAbove()) {
@@ -2587,8 +2610,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (imageWidth > maxGraphicsWidth) {
             throw new Exception(
                     Localizer.getString(Localizer.InvalidImageWidth) + ", "
-                    + String.valueOf(imageWidth) + " > "
-                    + String.valueOf(maxGraphicsWidth));
+                            + String.valueOf(imageWidth) + " > "
+                            + String.valueOf(maxGraphicsWidth));
         }
     }
 
@@ -2605,9 +2628,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         byte[] SEPARATOR_PATTERN_BLACK = {(byte) 0xFF};
         byte[] SEPARATOR_PATTERN_WHITE = {0x00};
         byte[] SEPARATOR_PATTERN_DOTTED_1 = {(byte) 0xFF, (byte) 0xFF,
-            (byte) 0xFF, 0x00, 0x00, 0x00};
+                (byte) 0xFF, 0x00, 0x00, 0x00};
         byte[] SEPARATOR_PATTERN_DOTTED_2 = {(byte) 0xFF, (byte) 0xFF,
-            (byte) 0xFF, (byte) 0xFF, 0x00, 0x00, 0x00, 0x00};
+                (byte) 0xFF, (byte) 0xFF, 0x00, 0x00, 0x00, 0x00};
         byte[] pattern;
 
         switch (separatorType) {
@@ -2848,8 +2871,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (image.getWidth() > getMaxGraphicsWidth()) {
             throw new Exception(
                     Localizer.getString(Localizer.InvalidImageWidth) + ", "
-                    + String.valueOf(image.getWidth()) + " > "
-                    + String.valueOf(getMaxGraphicsWidth()));
+                            + String.valueOf(image.getWidth()) + " > "
+                            + String.valueOf(getMaxGraphicsWidth()));
         }
         // write image to device
         if (getCapLoadGraphics3()) {
@@ -3219,10 +3242,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return Integer.parseInt(s);
     }
 
-    public int getDiscountMode() throws Exception {
-        return discountMode;
-    }
-
     public int printDocHeader(String title, int number) throws Exception {
         PrintDocHeader command = new PrintDocHeader();
         command.setPassword(usrPassword);
@@ -3367,11 +3386,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     private static String[] docNames = {
-        "ПРОДАЖА", "ПОКУПКА", "ВОЗВРАТ ПРОДАЖИ", "ВОЗВРАТ ПОКУПКИ"
+            "ПРОДАЖА", "ПОКУПКА", "ВОЗВРАТ ПРОДАЖИ", "ВОЗВРАТ ПОКУПКИ"
     };
 
     private static String[] fsDocNames = {
-        "ПРИХОД", "РАСХОД", "ВОЗВРАТ ПРИХОДА", "ВОЗВРАТ РАСХОДА"
+            "ПРИХОД", "РАСХОД", "ВОЗВРАТ ПРИХОДА", "ВОЗВРАТ РАСХОДА"
     };
 
     public String getReceiptName(int receiptType) {
@@ -3407,7 +3426,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public boolean capReadFSBuffer() throws Exception {
         FSReadBufferStatus command = new FSReadBufferStatus(sysPassword);
-        return isCommandSupported(executeCommand(command));
+        int rc = executeCommand(command);
+        return isCommandSupported(rc) || rc == 53;
     }
 
     public byte[] fsReadBlockData() throws Exception {
@@ -3457,10 +3477,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public boolean getCapFSCloseReceipt() {
-        return capFSCloseReceipt;
-    }
-
     public Vector<FSTicket> fsReadTickets(int[] fsDocumentNumbers) throws Exception {
         Vector<FSTicket> tickets = new Vector<FSTicket>();
         for (int i = 0; i < fsDocumentNumbers.length; i++) {
@@ -3478,7 +3494,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public Vector<FSTicket> fsReadTickets(int firstFSDocumentNumber,
-            int documentCount) throws Exception {
+                                          int documentCount) throws Exception {
         Vector<FSTicket> tickets = new Vector<FSTicket>();
         FSReadStatus status = fsReadStatus();
         long lastFSDocumentNumber = status.getDocNumber();
@@ -3512,12 +3528,19 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 
-    public boolean isSubtotalInHeader() {
-        return subtotalInHeader;
-    }
+    public boolean isDiscountInHeader() throws Exception {
+        // TODO: cache?
 
-    public boolean isDiscountInHeader() {
-        return discountInHeader;
+        boolean isCompactHeader = false;
+        if (getCapFiscalStorage() && isDesktop()) {
+            String[] fieldValue = new String[1];
+            int rc = readTable(17, 1, 18, fieldValue);
+            if (succeeded(rc)) {
+                isCompactHeader = fieldValue[0].equalsIgnoreCase("3");
+            }
+        }
+
+        return isCompactHeader;
     }
 
     public int reboot() throws Exception {
@@ -3565,16 +3588,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     private int getOfdTableNumber() throws Exception {
-        PrinterModelParameters params = readPrinterModelParameters();
-        return params.capOfdTableNumber()
-                ? params.getOfdTableNumber()
+        return modelParameters.capOfdTableNumber()
+                ? modelParameters.getOfdTableNumber()
                 : (isShtrihMobile() ? 15 : 19);
     }
 
     private int getFsTableNumber() throws Exception {
-        PrinterModelParameters params = readPrinterModelParameters();
-        return params.capFsTableNumber()
-                ? params.getFsTableNumber()
+        return modelParameters.capFsTableNumber()
+                ? modelParameters.getFsTableNumber()
                 : (isShtrihMobile() ? 14 : 18);
     }
 
@@ -3896,7 +3917,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         int writePointCount = 0;
         int stopTestCount = 0;
 
-        for (;;) {
+        for (; ; ) {
             ReadLongStatus command = new ReadLongStatus();
             command.setPassword(getUsrPassword());
             int rc = executeCommand(command);
@@ -3944,7 +3965,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     if (writePointCount >= MaxStateCount) {
                         throw new Exception(
                                 Localizer
-                                .getString(Localizer.WriteDecimalPointFailed));
+                                        .getString(Localizer.WriteDecimalPointFailed));
                     }
                     break;
 

@@ -216,5 +216,7 @@
 		<!-- открывать чек при вызове метода beginFiscalReceipt, 
          а не по первому вызову printRecItem -->
 		<prop name="openReceiptOnBegin" type="String" value="1"/>
+
+		<prop name="fastConnect" type="String" value="1"/>
 	</JposEntry>
 </JposEntries>

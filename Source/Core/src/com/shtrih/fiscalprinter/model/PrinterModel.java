@@ -95,8 +95,6 @@ public interface PrinterModel
 
     int getNumTrailerLines();
 
-    int getNumVatRates();
-
     int getProtocolSubVersion();
 
     int getProtocolVersion();
@@ -186,8 +184,6 @@ public interface PrinterModel
     void setNumHeaderLines(int numHeaderLines);
 
     void setNumTrailerLines(int numTrailerLines);
-
-    void setNumVatRates(int numVatRates);
 
     void setProtocolSubVersion(int protocolSubVersion);
 

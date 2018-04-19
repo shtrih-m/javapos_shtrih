@@ -114,7 +114,6 @@ public class XmlModelsWriter {
         saveParameter(node, "CapShortStatus", model.getCapShortStatus());
         saveParameter(node, "CapFontMetrics", model.getCapFontMetrics());
         saveParameter(node, "CapOpenReceipt", model.getCapOpenReceipt());
-        saveParameter(node, "NumVatRates", model.getNumVatRates());
         saveParameter(node, "PrintWidth", model.getPrintWidth());
         saveParameter(node, "AmountDecimalPlace", model.getAmountDecimalPlace());
         saveParameter(node, "NumHeaderLines", model.getNumHeaderLines());

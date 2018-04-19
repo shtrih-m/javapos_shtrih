@@ -112,8 +112,10 @@ public class FlexCommandsReader {
     }
 
     public void load(FlexCommands commands) throws Exception {
+        logger.debug("Flex commands loading started");
         InputStream stream = ResourceLoader.load("commands.xml");
         load(stream, commands);
+        logger.debug("Flex commands loading done");
     }
 
     public void load(InputStream stream, FlexCommands commands)

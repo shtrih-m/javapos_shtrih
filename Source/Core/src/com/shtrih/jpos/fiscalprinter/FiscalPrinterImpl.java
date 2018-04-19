@@ -8,6 +8,8 @@
 /////////////////////////////////////////////////////////////////////
 package com.shtrih.jpos.fiscalprinter;
 
+import android.util.Log;
+
 import java.io.*;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
@@ -15,6 +17,7 @@ import java.util.*;
 
 import com.shtrih.fiscalprinter.*;
 import com.shtrih.fiscalprinter.port.SerialPrinterPort;
+import com.shtrih.fiscalprinter.table.PrinterTable;
 import com.shtrih.jpos.fiscalprinter.receipt.*;
 import com.shtrih.util.*;
 import com.shtrih.fiscalprinter.command.*;
@@ -97,7 +100,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private final FiscalDay fiscalDay = new FiscalDay();
     private final Vector requests = new Vector();
     private PrinterHeader header;
-    private int[] vatValues = new int[4];
+    private int[] vatValues;
     private PrinterPort port;
     private PrinterProtocol device;
     public SMFiscalPrinter printer;
@@ -846,27 +849,38 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void setDeviceEnabled(boolean deviceEnabled) throws Exception {
         checkClaimed();
+
+        vatValues = null;
+
         if (this.deviceEnabled != deviceEnabled) {
             if (deviceEnabled) {
                 getPrinter().searchDevice();
+
+                logger.debug("1***************************************************************");
+
                 connected = true;
                 setPowerState(JPOS_PS_ONLINE);
                 setJrnPaperState(true, true);
 
                 updateDeviceMetrics();
+                logger.debug("3***************************************************************");
                 getPrinter().initialize();
-                cancelReceipt();
+                logger.debug( "4***************************************************************");
+                if(!params.fastConnect)
+                    cancelReceipt();
+                logger.debug( "5***************************************************************");
                 writeTables();
+                logger.debug( "6***************************************************************");
                 header.initDevice();
+                logger.debug( "7***************************************************************");
                 loadProperties();
+                logger.debug( "8***************************************************************");
 
                 isTablesRead = false;
-                int numVatRates = getModel().getNumVatRates();
-                vatValues = new int[numVatRates];
                 capSetVatTable = getPrinter().getCapSetVatTable();
                 capUpdateFirmware = getPrinter().getCapUpdateFirmware();
-                
-                
+
+                logger.debug( "9***************************************************************");
 
                 // if polling enabled - create device thread
                 if (params.pollEnabled) {
@@ -890,6 +904,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             }
 
             this.deviceEnabled = deviceEnabled;
+            logger.debug("10***************************************************************");
         }
     }
 
@@ -949,6 +964,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void updateDeviceMetrics() throws Exception {
+                
         ShortPrinterStatus shortStatus = null;
         try {
             if (getModel().getCapShortStatus()) {
@@ -1472,7 +1488,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public int getNumVatRates() throws Exception {
-        return getModel().getNumVatRates();
+        PrinterTable table = getPrinter().getTable(PrinterConst.SMFP_TABLE_TAX);
+        return table.getRowCount();
     }
 
     public String getPredefinedPaymentLines() throws Exception {
@@ -3672,7 +3689,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkEnabled();
         checkCapHasVatTable();
         // 4 tax rates available in SHTRIH-M fiscal printers
-        checkParamValue(vatID, 1, vatValues.length, "vatID");
+        checkParamValue(vatID, 1, getNumVatRates(), "vatID");
         String[] vatValue = new String[1];
         vatValue[0] = "";
 
@@ -3685,6 +3702,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkEnabled();
         checkCapHasVatTable();
         checkCapSetVatTable();
+
+        if(vatValues == null)
+            return;
 
         for (int i = 0; i < vatValues.length; i++) {
             getPrinter().check(
@@ -3712,7 +3732,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkCapSetVatTable();
 
         vatValue = decodeText(vatValue);
-        // 4 tax rates available in SHTRIH-M fiscal printers
+
+        if(vatValues == null)
+            vatValues = new int[getNumVatRates()];
+
         checkParamValue(vatID, 1, vatValues.length, "vatID");
         int intVatValue = Integer.parseInt(vatValue);
         checkParamValue(intVatValue, 0, 10000, "vatValue");

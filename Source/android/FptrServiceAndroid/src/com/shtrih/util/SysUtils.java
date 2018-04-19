@@ -22,6 +22,9 @@ public class SysUtils {
     }
 
     public static void sleep(long millis) throws InterruptedException {
+        if(millis == 0)
+            return;
+        
         Thread.sleep(millis);
     }
 
