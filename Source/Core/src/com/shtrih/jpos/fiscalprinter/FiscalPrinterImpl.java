@@ -1,43 +1,36 @@
-//
-// BaseJposService.java - Abstract base class for all JavaPOS services.
-//
-// Modification history
-// ------------------------------------------------------------------
-// 2007-07-24 JavaPOS Release 1.0                                  VK
-//
-/////////////////////////////////////////////////////////////////////
 package com.shtrih.jpos.fiscalprinter;
-
-import android.util.Log;
-
-import java.io.*;
-import java.security.MessageDigest;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import com.shtrih.fiscalprinter.*;
-import com.shtrih.fiscalprinter.port.SerialPrinterPort;
-import com.shtrih.fiscalprinter.table.PrinterTable;
-import com.shtrih.jpos.fiscalprinter.receipt.*;
-import com.shtrih.util.*;
-import com.shtrih.fiscalprinter.command.*;
-
-import jpos.FiscalPrinterConst;
-import jpos.JposConst;
-import jpos.JposException;
-import jpos.config.JposEntry;
-import jpos.config.JposEntryConst;
-import jpos.config.simple.SimpleEntry;
-import jpos.events.ErrorEvent;
-import jpos.events.OutputCompleteEvent;
-import jpos.events.StatusUpdateEvent;
-import jpos.services.EventCallbacks;
 
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.ej.EJActivation;
 import com.shtrih.ej.EJDate;
 import com.shtrih.ej.EJReportParser;
 import com.shtrih.ej.EJStatus;
+import com.shtrih.fiscalprinter.FontNumber;
+import com.shtrih.fiscalprinter.PrinterGraphics;
+import com.shtrih.fiscalprinter.PrinterProtocol;
+import com.shtrih.fiscalprinter.ProtocolFactory;
+import com.shtrih.fiscalprinter.SMFiscalPrinter;
+import com.shtrih.fiscalprinter.SMFiscalPrinterImpl;
+import com.shtrih.fiscalprinter.SmFiscalPrinterException;
+import com.shtrih.fiscalprinter.command.DeviceMetrics;
+import com.shtrih.fiscalprinter.command.FDOParameters;
+import com.shtrih.fiscalprinter.command.FMTotals;
+import com.shtrih.fiscalprinter.command.FSPrintCalcReport;
+import com.shtrih.fiscalprinter.command.FlexCommands;
+import com.shtrih.fiscalprinter.command.IPrinterEvents;
+import com.shtrih.fiscalprinter.command.LongPrinterStatus;
+import com.shtrih.fiscalprinter.command.PrinterCommand;
+import com.shtrih.fiscalprinter.command.PrinterConst;
+import com.shtrih.fiscalprinter.command.PrinterDate;
+import com.shtrih.fiscalprinter.command.PrinterFlags;
+import com.shtrih.fiscalprinter.command.PrinterModelParameters;
+import com.shtrih.fiscalprinter.command.PrinterStatus;
+import com.shtrih.fiscalprinter.command.PrinterTime;
+import com.shtrih.fiscalprinter.command.ReadEJStatus;
+import com.shtrih.fiscalprinter.command.ReadFMLastRecordDate;
+import com.shtrih.fiscalprinter.command.ShortPrinterStatus;
+import com.shtrih.fiscalprinter.command.TextDocumentFilter;
+import com.shtrih.fiscalprinter.command.TextLine;
 import com.shtrih.fiscalprinter.model.PrinterModel;
 import com.shtrih.fiscalprinter.port.PrinterPort;
 import com.shtrih.fiscalprinter.port.PrinterPortFactory;
@@ -46,6 +39,7 @@ import com.shtrih.fiscalprinter.table.CsvTablesReader;
 import com.shtrih.fiscalprinter.table.CsvTablesWriter;
 import com.shtrih.fiscalprinter.table.PrinterField;
 import com.shtrih.fiscalprinter.table.PrinterFields;
+import com.shtrih.fiscalprinter.table.PrinterTable;
 import com.shtrih.fiscalprinter.table.PrinterTables;
 import com.shtrih.jpos.DeviceService;
 import com.shtrih.jpos.StatusUpdateEventHelper;
@@ -54,6 +48,17 @@ import com.shtrih.jpos.events.OutputCompleteEventRequest;
 import com.shtrih.jpos.events.StatusUpdateEventRequest;
 import com.shtrih.jpos.fiscalprinter.directIO.DirectIOHandler;
 import com.shtrih.jpos.fiscalprinter.directIO.DirectIOHandler2;
+import com.shtrih.jpos.fiscalprinter.receipt.CashInReceipt;
+import com.shtrih.jpos.fiscalprinter.receipt.CashOutReceipt;
+import com.shtrih.jpos.fiscalprinter.receipt.FSSalesReceipt;
+import com.shtrih.jpos.fiscalprinter.receipt.FiscalReceipt;
+import com.shtrih.jpos.fiscalprinter.receipt.GlobusSalesReceipt;
+import com.shtrih.jpos.fiscalprinter.receipt.NonfiscalReceipt;
+import com.shtrih.jpos.fiscalprinter.receipt.NullReceipt;
+import com.shtrih.jpos.fiscalprinter.receipt.ReceiptContext;
+import com.shtrih.jpos.fiscalprinter.receipt.ReceiptPrinter;
+import com.shtrih.jpos.fiscalprinter.receipt.ReceiptPrinterImpl;
+import com.shtrih.jpos.fiscalprinter.receipt.SalesReceipt;
 import com.shtrih.jpos.fiscalprinter.request.FiscalPrinterRequest;
 import com.shtrih.jpos.fiscalprinter.request.PrintNormalRequest;
 import com.shtrih.jpos.fiscalprinter.request.PrintRecCashRequest;
@@ -74,8 +79,37 @@ import com.shtrih.jpos.fiscalprinter.request.PrintRecSubtotalRequest;
 import com.shtrih.jpos.fiscalprinter.request.PrintRecTaxIDRequest;
 import com.shtrih.jpos.fiscalprinter.request.PrintRecTotalRequest;
 import com.shtrih.jpos.fiscalprinter.request.PrintRecVoidRequest;
-import com.shtrih.printer.ncr7167.NCR7167Printer;
 import com.shtrih.jpos.monitoring.MonitoringServerX5;
+import com.shtrih.printer.ncr7167.NCR7167Printer;
+import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.FileUtils;
+import com.shtrih.util.Localizer;
+import com.shtrih.util.LogWriter;
+import com.shtrih.util.ServiceVersion;
+import com.shtrih.util.ServiceVersionUtil;
+import com.shtrih.util.StringUtils;
+import com.shtrih.util.SysUtils;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Vector;
+
+import jpos.FiscalPrinterConst;
+import jpos.JposConst;
+import jpos.JposException;
+import jpos.config.JposEntry;
+import jpos.config.JposEntryConst;
+import jpos.config.simple.SimpleEntry;
+import jpos.events.ErrorEvent;
+import jpos.events.OutputCompleteEvent;
+import jpos.events.StatusUpdateEvent;
+import jpos.services.EventCallbacks;
 
 public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         JposConst, JposEntryConst, FiscalPrinterConst, SmFptrConst,
@@ -856,31 +890,23 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             if (deviceEnabled) {
                 getPrinter().searchDevice();
 
-                logger.debug("1***************************************************************");
-
                 connected = true;
                 setPowerState(JPOS_PS_ONLINE);
                 setJrnPaperState(true, true);
 
                 updateDeviceMetrics();
-                logger.debug("3***************************************************************");
                 getPrinter().initialize();
-                logger.debug( "4***************************************************************");
+
                 if(!params.fastConnect)
                     cancelReceipt();
-                logger.debug( "5***************************************************************");
+
                 writeTables();
-                logger.debug( "6***************************************************************");
                 header.initDevice();
-                logger.debug( "7***************************************************************");
                 loadProperties();
-                logger.debug( "8***************************************************************");
 
                 isTablesRead = false;
                 capSetVatTable = getPrinter().getCapSetVatTable();
                 capUpdateFirmware = getPrinter().getCapUpdateFirmware();
-
-                logger.debug( "9***************************************************************");
 
                 // if polling enabled - create device thread
                 if (params.pollEnabled) {
@@ -904,7 +930,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             }
 
             this.deviceEnabled = deviceEnabled;
-            logger.debug("10***************************************************************");
         }
     }
 
