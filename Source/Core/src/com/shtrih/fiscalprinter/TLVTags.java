@@ -8,7 +8,6 @@ package com.shtrih.fiscalprinter;
 import java.util.Vector;
 
 /**
- *
  * @author V.Kravtsov
  */
 public class TLVTags {
@@ -29,21 +28,17 @@ public class TLVTags {
         return null;
     }
 
-    public TLVTag add(int id, String name, String printName,
-            TLVTag.TLVType type, int size) {
-        TLVTag item = new TLVTag(id, name, printName, type, size);
-        items.add(item);
-        return item;
+    private TLVTag add(int id, String name, String printName, TLVTag.TLVType type, int size) {
+        return add(id, name, printName, type, size, false);
     }
 
-    public TLVTag add(int id, String name, String printName,
-            TLVTag.TLVType type, int size, boolean fixedSize) {
+    private TLVTag add(int id, String name, String printName, TLVTag.TLVType type, int size, boolean fixedSize) {
         TLVTag item = new TLVTag(id, name, printName, type, size, fixedSize);
         items.add(item);
         return item;
     }
-    
-    public void createTags() {
+
+    private void createTags() {
         TLVTag tag;
         add(1000, "наименование документа", "НАИМ. ДОК.", TLVTag.TLVType.itASCII, 0);
         add(1001, "признак автоматического режима", "ПРИЗН. АВТОМ. РЕЖ.", TLVTag.TLVType.itByte, 1);
@@ -200,14 +195,15 @@ public class TLVTags {
         add(1219, "итоговая сумма в чеках (БСО) постоплатами (кредитами)", "ИТОГ. СУММА В ЧЕКАХ БСО ПОСТОПЛ.", TLVTag.TLVType.itVLN, 8);
         add(1220, "итоговая сумма в чеках (БСО) встречными предоставлениями", "ИТОГ. СУММА В ЧЕКАХ БСО ВСТРЕЧН. ПРЕДОСТ.", TLVTag.TLVType.itVLN, 8);
         add(1221, "признак установки принтера в автомате", "ПРИЗН. УСТАНОВКИ ПРИНТЕРА В АВТОМАТЕ", TLVTag.TLVType.itByte, 1);
-        add(1222, "признак агента по предмету расчета", "", TLVTag.TLVType.itSTLV, 512);
+        tag = add(1222, "признак агента по предмету расчета", "", TLVTag.TLVType.itSTLV, 512);
+        addBits1222(tag);
         add(1223, "данные агента", "", TLVTag.TLVType.itSTLV, 512);
         add(1224, "данные поставщика", "", TLVTag.TLVType.itSTLV, 512);
         add(1225, "наименование поставщика", "", TLVTag.TLVType.itASCII, 256);
         add(1226, "ИНН поставщика", "ИНН ПОСТАВЩИКА", TLVTag.TLVType.itASCII, 12, true);
     }
 
-    public void addBits1055(TLVTag tag) {
+    private void addBits1055(TLVTag tag) {
         tag.addBit(0, "Общая", "ОСН");
         tag.addBit(1, "Упрощенная доход", "УСН доход");
         tag.addBit(2, "Упрощенная доход минус расход", "УСН доход - расход");
@@ -216,7 +212,7 @@ public class TLVTags {
         tag.addBit(5, "Патентная система налогообложения", "Патент");
     }
 
-    public void addBits1057(TLVTag tag) {
+    private void addBits1057(TLVTag tag) {
         tag.addBit(0, "Оказание услуг покупателю (клиенту) пользователем, являющимся банковским платежным агентом", "БАНК. ПЛ. АГЕНТ");
         tag.addBit(1, "Оказание услуг покупателю (клиенту) пользователем, являющимся банковским платежным субагентом", "БАНК. ПЛ. СУБАГЕНТ");
         tag.addBit(2, "Оказание услуг покупателю (клиенту) пользователем, являющимся платежным агентом", "ПЛ. АГЕНТ");
@@ -226,7 +222,7 @@ public class TLVTags {
         tag.addBit(6, "Осуществление расчета с покупателем (клиентом) пользователем, являющимся агентом и не являющимся банковским платежным агентом (субагентом), платежным агентом (субагентом), поверенным, комиссионером", "АГЕНТ");
     }
 
-    public void addBits1205(TLVTag tag) {
+    private void addBits1205(TLVTag tag) {
         tag.addBit(0, "Замена фискального накопителя");
         tag.addBit(1, "Замена оператора фискальных данных");
         tag.addBit(2, "Изменение наименования пользователя контрольно-кассовой техники");
@@ -252,13 +248,13 @@ public class TLVTags {
         tag.addBit(31, "Иные причины");
     }
 
-    public void addBits1206(TLVTag tag) {
+    private void addBits1206(TLVTag tag) {
         tag.addBit(1, "Ошибка форматно-логического контроля документа", "ОШИБКА ФЛК");
         tag.addBit(6, "Требуется связаться с ОФД для изменения настройки параметров связи ККТ и ОФД", "ТРЕБ. НАСТР. ККТ");
         tag.addBit(7, "Оператор уведомляет пользователя ККТ о прекращении деятельности", "ОФД АННУЛИРОВАН");
     }
 
-    public void addBits1222(TLVTag tag) {
+    private void addBits1222(TLVTag tag) {
         tag.addBit(0, "Оказание услуг покупателю (клиенту) пользователем, являющимся банковским платежным агентом банковским платежным агентом", "БАНК. ПЛ. АГЕНТ");
         tag.addBit(1, "Оказание услуг покупателю (клиенту) пользователем, являющимся банковским платежным агентом банковским платежным субагентом", "БАНК. ПЛ. СУБАГЕНТ");
         tag.addBit(2, "Оказание услуг покупателю (клиенту) пользователем, являющимся платежным агентом", "ПЛ. АГЕНТ");

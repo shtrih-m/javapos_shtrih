@@ -119,7 +119,7 @@ public class TLVItem {
         return result;
     }
 
-    public String toASCII() throws Exception {
+    public String toASCII() {
         return new String(data, new IBM866());
     }
 
@@ -132,7 +132,7 @@ public class TLVItem {
         return BigDecimal.valueOf(value, scale);
     }
 
-    public BigDecimal toVLN() throws Exception {
+    public BigDecimal toVLN() {
         long value = toInt();
         int scale  = 2;
         return BigDecimal.valueOf(value, scale);
@@ -146,7 +146,7 @@ public class TLVItem {
             TLVBit bit = bits.get(i);
             if (BitUtils.testBit(value, bit.getBit())) {
                 if (!text.isEmpty()) {
-                    text += "/r/n";
+                    text += "\n";
                 }
                 text += bit.getName();
             }
