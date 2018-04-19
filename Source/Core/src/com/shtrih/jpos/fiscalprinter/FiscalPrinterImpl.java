@@ -139,7 +139,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private PrinterProtocol device;
     public SMFiscalPrinter printer;
     private ReceiptPrinter receiptPrinter;
-    private final FiscalPrinterStatistics statistics = new FiscalPrinterStatistics();
+    private final FiscalPrinterStatistics statistics;
     // --------------------------------------------------------------------------
     // Variables
     // --------------------------------------------------------------------------
@@ -308,6 +308,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public FiscalPrinterImpl() throws Exception {
         params = new FptrParameters();
         doubleWidthFont = FontNumber.getNormalFont();
+        statistics = new FiscalPrinterStatistics();
         statistics.unifiedPOSVersion = "1.13";
         statistics.deviceCategory = "CashDrawer";
         statistics.manufacturerName = "SHTRIH-M";
@@ -897,12 +898,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 updateDeviceMetrics();
                 getPrinter().initialize();
 
-                if(!params.fastConnect)
+                if (!params.fastConnect)
                     cancelReceipt();
 
                 writeTables();
                 header.initDevice();
-                loadProperties();
+                if (!params.fastConnect)
+                    loadProperties();
 
                 isTablesRead = false;
                 capSetVatTable = getPrinter().getCapSetVatTable();
@@ -989,7 +991,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void updateDeviceMetrics() throws Exception {
-                
+
         ShortPrinterStatus shortStatus = null;
         try {
             if (getModel().getCapShortStatus()) {
@@ -2103,7 +2105,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             device = ProtocolFactory.getProtocol(params, port);
             printer = new SMFiscalPrinterImpl(port, device, params);
 
-            printer.setEscPrinter(new NCR7167Printer(this));
+            if (params.escCommandsEnabled)
+                printer.setEscPrinter(new NCR7167Printer(this));
 
             getPrinter().addEvents(this);
             if (params.receiptReportEnabled) {
@@ -2129,8 +2132,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         receipt = new NullReceipt(createReceiptContext());
 
         header = createHeader();
-        filter = new TextDocumentFilter(getPrinter(), header);
-        getPrinter().addEvents(filter);
+        
+        if (params.textReportEnabled) {
+            filter = new TextDocumentFilter(getPrinter(), header);
+            getPrinter().addEvents(filter);
+        }
 
         state = JPOS_S_IDLE;
         setFreezeEvents(false);
@@ -2156,18 +2162,23 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void createFilters() throws Exception {
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-        Date time1 = timeFormat.parse(params.zeroPriceFilterTime1);
-        Date time2 = timeFormat.parse(params.zeroPriceFilterTime2);
 
-        FiscalPrinterFilter113 filter = new ZeroPriceFilter(
-                params.zeroPriceFilterEnabled, time1, time2,
-                params.zeroPriceFilterErrorText);
         filters.clear();
-        filters.add(filter);
+
+        if (params.zeroPriceFilterEnabled) {
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+            Date time1 = timeFormat.parse(params.zeroPriceFilterTime1);
+            Date time2 = timeFormat.parse(params.zeroPriceFilterTime2);
+
+            FiscalPrinterFilter113 filter = new ZeroPriceFilter(
+                    params.zeroPriceFilterEnabled, time1, time2,
+                    params.zeroPriceFilterErrorText);
+
+            filters.add(filter);
+        }
 
         if (params.discountFilterEnabled) {
-            filter = new DiscountFilter(this);
+            FiscalPrinterFilter113 filter = new DiscountFilter(this);
             filters.add(filter);
         }
     }
@@ -2301,13 +2312,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         getPrinter().printLine(SMFP_STATION_REC, line, params.font);
     }
 
-    public void printDocEnd() throws Exception 
-    {
-        if (!docEndEnabled){
+    public void printDocEnd() throws Exception {
+        if (!docEndEnabled) {
             docEndEnabled = true;
             return;
         }
-        
+
         synchronized (printer) {
             docEndEnabled = true;
             isInReceiptTrailer = true;
@@ -3728,7 +3738,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkCapHasVatTable();
         checkCapSetVatTable();
 
-        if(vatValues == null)
+        if (vatValues == null)
             return;
 
         for (int i = 0; i < vatValues.length; i++) {
@@ -3758,7 +3768,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
         vatValue = decodeText(vatValue);
 
-        if(vatValues == null)
+        if (vatValues == null)
             vatValues = new int[getNumVatRates()];
 
         checkParamValue(vatID, 1, vatValues.length, "vatID");
@@ -3916,7 +3926,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void compareFirmwareVersion(String firmwareFileName, int[] result)
             throws Exception {
-        if (!getCapCompareFirmwareVersion()){
+        if (!getCapCompareFirmwareVersion()) {
             throw new JposException(JPOS_E_ILLEGAL);
         }
         checkEnabled();
@@ -3930,12 +3940,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         if (rc == -1) {
             result[0] = JposConst.JPOS_CFV_FIRMWARE_OLDER;
         }
-        
+
     }
 
     public void updateFirmware(String firmwareFileName) throws Exception {
         checkEnabled();
-        if (!capUpdateFirmware){
+        if (!capUpdateFirmware) {
             throw new JposException(JPOS_E_ILLEGAL);
         }
         printer.updateFirmware(firmwareFileName);
