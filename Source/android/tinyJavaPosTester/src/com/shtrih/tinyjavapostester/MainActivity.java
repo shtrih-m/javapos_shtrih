@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.AsyncTask;
@@ -63,7 +62,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
-import java.util.Vector;
 
 import jpos.FiscalPrinterConst;
 import jpos.JposConst;
@@ -187,6 +185,20 @@ public class MainActivity extends AppCompatActivity {
         MainViewModel model = ViewModelProviders.of(this).get(MainViewModel.class);
 
         printer = model.getPrinter();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        
+        try {
+            this.unregisterReceiver(usbReceiver);
+        }
+        catch (final Exception exception) {
+            // The receiver was not registered.
+            // There is nothing to do in that case.
+            // Everything is fine.
+        }
     }
 
     private void restoreAndSaveChangesTo(final EditText edit, final SharedPreferences pref, final String key, final String defaultValue) {
@@ -1266,6 +1278,8 @@ public class MainActivity extends AppCompatActivity {
                 printer.claim(3000);
                 printer.setDeviceEnabled(true);
 
+                doneAt = System.currentTimeMillis();
+
                 String[] lines = new String[1];
                 printer.getData(FiscalPrinterConst.FPTR_GD_PRINTER_ID, null, lines);
                 String serialNumber = lines[0];
@@ -1278,8 +1292,6 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
                 return e.getMessage();
-            } finally {
-                doneAt = System.currentTimeMillis();
             }
         }
 
