@@ -175,6 +175,7 @@ public class FptrParameters {
     public boolean capUpdateFirmware = true;
     public int printStringDelayInMs = 0;
     public boolean fastConnect = false;
+    public boolean statisticEnabled = true;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -393,6 +394,7 @@ public class FptrParameters {
         capUpdateFirmware = reader.readBoolean("capUpdateFirmware", true);
         printStringDelayInMs = reader.readInteger("printStringDelayInMs", 0);
         fastConnect = reader.readBoolean("fastConnect", false);
+        statisticEnabled = reader.readBoolean("statisticEnabled", true);
         // paymentNames
         String paymentName;
         String propertyName;

@@ -249,7 +249,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private final PrinterReceipt printerReceipt = new PrinterReceipt();
     private boolean connected = false;
     private boolean isLicenseValid = false;
-    private EJStatus statusEJ = null;
     private final MonitoringServerX5 monitoringServer = new MonitoringServerX5(this);
     private int receiptType = 0;
     private boolean isRecPresent = true;
@@ -343,8 +342,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             capPackageAdjustment = true;
         }
         deviceServiceDescription = "Fiscal Printer Service , SHTRIH-M, 2016";
-        physicalDeviceDescription = "SHTRIH-M fiscal printer";
-        physicalDeviceName = "SHTRIH-M fiscal printer";
         capAdditionalLines = true;
 
         capAmountNotPaid = false;
@@ -889,20 +886,29 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
         if (this.deviceEnabled != deviceEnabled) {
             if (deviceEnabled) {
-                getPrinter().searchDevice();
+                physicalDeviceDescription = null;
+                physicalDeviceName = null;
+
+                LongPrinterStatus longStatus = getPrinter().searchDevice();
 
                 connected = true;
                 setPowerState(JPOS_PS_ONLINE);
                 setJrnPaperState(true, true);
 
-                updateDeviceMetrics();
+                updateDeviceMetrics(longStatus);
+
+                getPrinterImages().setMaxSize(getMaxGraphicsHeight());
+
                 getPrinter().initialize();
 
                 if (!params.fastConnect)
                     cancelReceipt();
 
-                writeTables();
-                header.initDevice();
+                if (!params.fastConnect)
+                    writeTables();
+
+                header.initDevice(); // TODO: make lazy
+
                 if (!params.fastConnect)
                     loadProperties();
 
@@ -990,29 +996,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return getPrinter().readLongStatus();
     }
 
-    private void updateDeviceMetrics() throws Exception {
+    private void updateDeviceMetrics(LongPrinterStatus longStatus) throws Exception {
 
-        ShortPrinterStatus shortStatus = null;
-        try {
-            if (getModel().getCapShortStatus()) {
-                shortStatus = getPrinter().readShortStatus();
-            }
-        } catch (SmFiscalPrinterException e) {
-            logger.error("readShortStatus error", e);
-        }
-        if (shortStatus != null) {
-            LogWriter.write(shortStatus);
-        }
-        LongPrinterStatus longStatus = readLongStatus();
         LogWriter.write(longStatus);
         LogWriter.write(getDeviceMetrics());
         LogWriter.writeSeparator();
 
         physicalDeviceName = getDeviceMetrics().getDeviceName() + ", № "
                 + longStatus.getSerial();
-
-        String formatString = Localizer
-                .getString(Localizer.PhysicalDeviceDescription);
 
         // iceDescription = "%s,  %s, ПО ФР: %s.%d, %s, ПО ФП: %s.%d, %s"
         physicalDeviceDescription = getDeviceMetrics().getDeviceName() + ", "
@@ -1030,17 +1021,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         // update device parameters
         statistics.serialNumber = longStatus.getSerial();
         statistics.firmwareRevision = longStatus.getFirmwareRevision();
-        getPrinterImages().setMaxSize(getMaxGraphicsHeight());
+
         checkLicense(longStatus.getSerial());
-        // read EJ status if it present
-        if (getModel().getCapEJPresent()
-                && longStatus.getPrinterFlags().isEJPresent()
-                && (longStatus.getRegistrationNumber() != 0)) {
-            ReadEJStatus readEJStatus = getPrinter().readEJStatus();
-            if (readEJStatus.getResultCode() == 0) {
-                statusEJ = readEJStatus.getStatus();
-            }
-        }
     }
 
     private void checkLicense(String serial) throws Exception {
@@ -1159,11 +1141,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public String getPhysicalDeviceDescription() throws Exception {
         checkOpened();
+
         return encodeText(physicalDeviceDescription);
     }
 
     public String getPhysicalDeviceName() throws Exception {
         checkOpened();
+
         return encodeText(physicalDeviceName);
     }
 
@@ -1982,7 +1966,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             release();
         }
         setState(JPOS_S_CLOSED);
-        statistics.save(params.statisticFileName);
+        if (params.statisticEnabled)
+            statistics.save(params.statisticFileName);
         monitoringServer.stop();
     }
 
@@ -2117,7 +2102,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             getPrinter().setUsrPassword(params.usrPassword);
             getPrinter().setSysPassword(params.sysPassword);
 
-            statistics.load(params.statisticFileName);
+            if (params.statisticEnabled)
+                statistics.load(params.statisticFileName);
             Localizer.init(params.messagesFileName);
             getPrinter().setWrapText(params.wrapText);
             createFilters();
@@ -2132,7 +2118,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         receipt = new NullReceipt(createReceiptContext());
 
         header = createHeader();
-        
+
         if (params.textReportEnabled) {
             filter = new TextDocumentFilter(getPrinter(), header);
             getPrinter().addEvents(filter);
@@ -4211,10 +4197,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public EJStatus getEJStatus() {
-        return statusEJ;
-    }
-
     public DeviceMetrics getDeviceMetrics() throws Exception {
         return getPrinter().getDeviceMetrics();
     }
@@ -4343,6 +4325,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void saveProperties() throws Exception {
+        if (params.fastConnect)
+            return;
+
         try {
             String serial = "FiscalPrinter_" + getPrinter().readFullSerial();
             XmlPropWriter writer = new XmlPropWriter("FiscalPrinter",
@@ -4359,6 +4344,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void loadProperties() throws Exception {
+
         logger.debug("loadProperties");
         try {
             String serial = "FiscalPrinter_" + getPrinter().readFullSerial();

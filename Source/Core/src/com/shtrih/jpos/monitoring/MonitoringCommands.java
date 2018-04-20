@@ -6,11 +6,13 @@
 package com.shtrih.jpos.monitoring;
 
 import com.shtrih.ej.EJActivation;
+import com.shtrih.ej.EJStatus;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.FSReadCommStatus;
 import com.shtrih.fiscalprinter.command.FSReadFiscalization;
 import com.shtrih.fiscalprinter.command.FSReadStatus;
 import com.shtrih.fiscalprinter.command.LongPrinterStatus;
+import com.shtrih.fiscalprinter.command.ReadEJStatus;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import com.shtrih.util.StringUtils;
 import java.io.PrintWriter;
@@ -96,8 +98,19 @@ public class MonitoringCommands {
         if (service.getPrinter().getCapFiscalStorage()) {
             text += service.getPrinter().fsReadStatus().getFsSerial();
         } else {
-            text += service.getEJStatus().getSerialNumber();
+            LongPrinterStatus longStatus = service.readLongStatus();
+
+            if (service.getPrinter().getModel().getCapEJPresent()
+                    && longStatus.getPrinterFlags().isEJPresent()
+                    && (longStatus.getRegistrationNumber() != 0)) {
+                ReadEJStatus readEJStatus = service.getPrinter().readEJStatus();
+                if (readEJStatus.getResultCode() == 0) {
+                    EJStatus statusEJ = readEJStatus.getStatus();
+                    text += statusEJ.getSerialNumber();
+                }
+            }
         }
+        
         return text;
     }
 

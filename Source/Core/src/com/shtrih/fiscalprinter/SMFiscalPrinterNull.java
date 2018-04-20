@@ -103,7 +103,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void deviceExecute(PrinterCommand command) throws Exception {
     }
 
-    public void connect() throws Exception {
+    public LongPrinterStatus connect() throws Exception {
+        return null;
     }
 
     public void check(int errorCode) throws Exception {
@@ -1046,7 +1047,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return true;
     }
 
-    public void searchDevice() throws Exception {
+    public LongPrinterStatus searchDevice() throws Exception {
+        return null;
     }
 
     public int compareFirmwareVersion(String firmwareFileName) throws Exception {

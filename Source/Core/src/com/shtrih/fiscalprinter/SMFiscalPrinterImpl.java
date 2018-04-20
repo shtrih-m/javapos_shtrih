@@ -204,13 +204,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public void connect() throws Exception {
+    public LongPrinterStatus connect() throws Exception {
         logger.debug("connect");
         synchronized (port.getSyncObject()) {
             device.connect();
             check(readDeviceMetrics());
             model = selectPrinterModel(getDeviceMetrics());
-            checkEcrMode();
+            return checkEcrMode();
         }
     }
 
@@ -3902,7 +3902,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     private static final int MaxStateCount = 3;
 
-    private void checkEcrMode() throws Exception {
+    private LongPrinterStatus checkEcrMode() throws Exception {
         logger.debug("checkEcrMode");
         int endDumpCount = 0;
         int confirmDateCount = 0;
@@ -3929,7 +3929,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
                 case ECR_SUBMODE_PASSIVE:
                 case ECR_SUBMODE_ACTIVE:
-                    return;
+                    return status;
 
                 case ECR_SUBMODE_AFTER: {
                     continuePrint();
@@ -4010,7 +4010,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     break;
 
                 default:
-                    return;
+                    return status;
             }
         }
     }
@@ -4110,15 +4110,16 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         throw new JposException(JPOS_E_NOHARDWARE);
     }
 
-    public void searchDevice() throws Exception {
+    public LongPrinterStatus searchDevice() throws Exception {
         logger.debug("searchDevice");
         synchronized (port.getSyncObject()) {
             if (port.isSearchByBaudRateEnabled()) {
                 searchSerialDevice();
+                return readLongStatus();
             } else {
                 port.setPortName(params.portName);
                 port.open(0);
-                connect();
+                return connect();
             }
         }
     }

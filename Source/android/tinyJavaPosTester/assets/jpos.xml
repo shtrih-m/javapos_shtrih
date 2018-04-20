@@ -218,5 +218,9 @@
 		<prop name="openReceiptOnBegin" type="String" value="1"/>
 
 		<prop name="fastConnect" type="String" value="1"/>
+        
+		<prop name="capUpdateFirmware" type="String" value="0"/>
+
+		<prop name="statisticEnabled" type="String" value="0"/>
 	</JposEntry>
 </JposEntries>

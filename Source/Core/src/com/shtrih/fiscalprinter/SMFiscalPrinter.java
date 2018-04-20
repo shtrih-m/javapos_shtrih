@@ -96,7 +96,7 @@ public interface SMFiscalPrinter {
 
     public void deviceExecute(PrinterCommand command) throws Exception;
 
-    public void connect() throws Exception;
+    public LongPrinterStatus connect() throws Exception;
 
     public void check(int errorCode) throws Exception;
 
@@ -593,7 +593,7 @@ public interface SMFiscalPrinter {
     
     public boolean getCapUpdateFirmware() throws Exception;
     
-    public void searchDevice() throws Exception;
+    public LongPrinterStatus searchDevice() throws Exception;
     
     public int compareFirmwareVersion(String firmwareFileName) throws Exception;
     
