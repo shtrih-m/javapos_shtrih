@@ -137,11 +137,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         this.params = params;
 
         models.load();
-        try {
-            model = models.itemByID(SMFP_MODELID_DEFAULT);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
+        model = models.itemByID(SMFP_MODELID_DEFAULT);
     }
 
     public boolean getCapFiscalStorage() {

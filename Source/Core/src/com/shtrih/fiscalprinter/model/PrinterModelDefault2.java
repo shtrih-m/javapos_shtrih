@@ -2,28 +2,28 @@ package com.shtrih.fiscalprinter.model;
 
 import com.shtrih.fiscalprinter.command.PrinterConst;
 
-public class PrinterModelASPDElves extends PrinterModelDefault {
-    public PrinterModelASPDElves() throws Exception {
-        setName("ASPD-ELVES");
-        setId(23);
+public class PrinterModelDefault2 extends PrinterModelDefault {
+    public PrinterModelDefault2() throws Exception {
+        setName("Default model");
+        setId(0);
         setModelID(-1);
         setProtocolVersion(1);
         setProtocolSubVersion(0);
         setCapEJPresent(true);
         setCapFMPresent(true);
         setCapRecPresent(true);
-        setCapJrnPresent(true);
+        setCapJrnPresent(false);
         setCapSlpPresent(false);
         setCapSlpEmptySensor(false);
         setCapSlpNearEndSensor(false);
         setCapRecEmptySensor(true);
         setCapRecEmptySensor(true);
         setCapRecNearEndSensor(true);
-        setCapRecLeverSensor(true);
-        setCapJrnEmptySensor(true);
-        setCapJrnNearEndSensor(true);
-        setCapJrnLeverSensor(true);
-        setCapPrintGraphicsLine(true);
+        setCapRecLeverSensor(false);
+        setCapJrnEmptySensor(false);
+        setCapJrnNearEndSensor(false);
+        setCapJrnLeverSensor(false);
+        setCapPrintGraphicsLine(false);
         setCapHasVatTable(true);
         setCapCoverSensor(true);
         setCapDoubleWidth(true);
@@ -35,7 +35,7 @@ public class PrinterModelASPDElves extends PrinterModelDefault {
         setCapPrintStringFont(true);
         setCapShortStatus(false);
         setCapFontMetrics(false);
-        setCapOpenReceipt(false);
+        setCapOpenReceipt(true);
         setNumVatRates(4);
         setAmountDecimalPlace(2);
         setNumHeaderLines(4);
@@ -58,7 +58,7 @@ public class PrinterModelASPDElves extends PrinterModelDefault {
         setDeviceFontNormal(1);
         setDeviceFontDouble(2);
         setDeviceFontSmall(3);
-        setSwapGraphicsLine(true);
+        setSwapGraphicsLine(false);
         setMinCashRegister(0);
         setMaxCashRegister(255);
         setMinCashRegister2(0);
@@ -71,6 +71,5 @@ public class PrinterModelASPDElves extends PrinterModelDefault {
         addParameter("FDOServerHost", 19, 1, 1);
         addParameter("FDOServerPort", 19, 1, 2);
         addParameter("FDOServerTimeout", 19, 1, 3);
-        addParameter("DrawerEnabled", 1, 1, 6);
     }
 }

@@ -2,27 +2,27 @@ package com.shtrih.fiscalprinter.model;
 
 import com.shtrih.fiscalprinter.command.PrinterConst;
 
-public class PrinterModelASPDElves extends PrinterModelDefault {
-    public PrinterModelASPDElves() throws Exception {
-        setName("ASPD-ELVES");
-        setId(23);
-        setModelID(-1);
+public class PrinterModelASPDRR01K extends PrinterModelDefault {
+    public PrinterModelASPDRR01K() throws Exception {
+        setName("ASPD RR-01K");
+        setId(28);
+        setModelID(24);
         setProtocolVersion(1);
-        setProtocolSubVersion(0);
+        setProtocolSubVersion(12);
         setCapEJPresent(true);
         setCapFMPresent(true);
         setCapRecPresent(true);
-        setCapJrnPresent(true);
+        setCapJrnPresent(false);
         setCapSlpPresent(false);
         setCapSlpEmptySensor(false);
         setCapSlpNearEndSensor(false);
         setCapRecEmptySensor(true);
         setCapRecEmptySensor(true);
         setCapRecNearEndSensor(true);
-        setCapRecLeverSensor(true);
-        setCapJrnEmptySensor(true);
-        setCapJrnNearEndSensor(true);
-        setCapJrnLeverSensor(true);
+        setCapRecLeverSensor(false);
+        setCapJrnEmptySensor(false);
+        setCapJrnNearEndSensor(false);
+        setCapJrnLeverSensor(false);
         setCapPrintGraphicsLine(true);
         setCapHasVatTable(true);
         setCapCoverSensor(true);
@@ -35,21 +35,21 @@ public class PrinterModelASPDElves extends PrinterModelDefault {
         setCapPrintStringFont(true);
         setCapShortStatus(false);
         setCapFontMetrics(false);
-        setCapOpenReceipt(false);
+        setCapOpenReceipt(true);
         setNumVatRates(4);
         setAmountDecimalPlace(2);
-        setNumHeaderLines(4);
+        setNumHeaderLines(3);
         setNumTrailerLines(3);
         setTrailerTableNumber(4);
         setHeaderTableNumber(4);
-        setHeaderTableRow(4);
+        setHeaderTableRow(12);
         setTrailerTableRow(1);
-        setMinHeaderLines(4);
+        setMinHeaderLines(3);
         setMinTrailerLines(0);
         setMaxGraphicsWidth(320);
         setMaxGraphicsHeight(255);
-        setPrintWidth(432);
-        setTextLength(new int[] {  36, 18, 36, 36, 36, 36, 36 });
+        setPrintWidth(576);
+        setTextLength(new int[] {  48, 24, 48, 24, 57, 48, 48 });
         setFontHeight(new int[] {  });
         setSupportedBaudRates(new int[] {  2400, 4800, 9600, 19200, 38400, 57600, 115200 });
         setCapCashInAutoCut(false);
@@ -61,10 +61,10 @@ public class PrinterModelASPDElves extends PrinterModelDefault {
         setSwapGraphicsLine(true);
         setMinCashRegister(0);
         setMaxCashRegister(255);
-        setMinCashRegister2(0);
-        setMaxCashRegister2(-1);
+        setMinCashRegister2(4096);
+        setMaxCashRegister2(4191);
         setMinOperationRegister(0);
-        setMaxOperationRegister(255);
+        setMaxOperationRegister(253);
         setCapGraphicsLineMargin(false);
         setCapFSCloseCheck(true);
 
@@ -72,5 +72,9 @@ public class PrinterModelASPDElves extends PrinterModelDefault {
         addParameter("FDOServerPort", 19, 1, 2);
         addParameter("FDOServerTimeout", 19, 1, 3);
         addParameter("DrawerEnabled", 1, 1, 6);
+        addParameter("CutMode", 1, 1, 7);
+        addParameter("ReceiptFormatEnabled", 1, 1, 25);
+        addParameter("ReceiptItemNameLength", 9, 1, 3);
+        addParameter("LineSpacing", 1, 1, 29);
     }
 }
