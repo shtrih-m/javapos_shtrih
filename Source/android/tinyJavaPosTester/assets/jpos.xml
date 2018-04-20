@@ -29,7 +29,7 @@
 		<!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
 		<prop name="baudRate" type="String" value="115200"/>
 		<!--Default department-->
-		<prop name="department" type="String" value="1"/>
+		<prop name="department" type="String" value="0"/>
 		<!-- Default font number -->
 		<prop name="fontNumber" type="String" value="1"/>
 		<!-- Close receipt text -->

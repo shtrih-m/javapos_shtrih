@@ -1601,7 +1601,7 @@
         </model>
         <model>
             <Name>ASPD RR-01K</Name>
-            <Id>19</Id>
+            <Id>28</Id>
             <ModelID>24</ModelID>
             <ProtocolVersion>1</ProtocolVersion>
             <ProtocolSubVersion>12</ProtocolSubVersion>

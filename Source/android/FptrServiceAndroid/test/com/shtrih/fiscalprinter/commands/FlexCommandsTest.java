@@ -7,7 +7,7 @@ import com.shtrih.fiscalprinter.command.FlexCommandsReader;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class XmlTest {
+public class FlexCommandsTest {
 
     @Test
     @Ignore

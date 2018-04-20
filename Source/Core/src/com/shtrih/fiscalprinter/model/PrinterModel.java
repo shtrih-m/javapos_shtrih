@@ -17,6 +17,8 @@ import com.shtrih.fiscalprinter.table.ReceiptFormatTable;
 
 public interface PrinterModel 
 {
+    int getNumVatRates();
+
     int getAmountDecimalPlace();
 
     boolean getCapCoverSensor();

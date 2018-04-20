@@ -1,77 +1,77 @@
-/*
- * PrinterModelYarus02K.java
- *
- * Created on 13 Июль 2010 г., 12:27
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
 package com.shtrih.fiscalprinter.model;
-
-/**
- *
- * @author V.Kravtsov
- */
 
 import com.shtrih.fiscalprinter.command.PrinterConst;
 
-public class PrinterModelYarus02K extends PrinterModelDefault implements
-		PrinterModel {
+public class PrinterModelYarus02K extends PrinterModelDefault {
+    public PrinterModelYarus02K() throws Exception {
+        setName("YARUS-02K");
+        setId(17);
+        setModelID(248);
+        setProtocolVersion(1);
+        setProtocolSubVersion(0);
+        setCapEJPresent(true);
+        setCapFMPresent(true);
+        setCapRecPresent(true);
+        setCapJrnPresent(true);
+        setCapSlpPresent(false);
+        setCapSlpEmptySensor(false);
+        setCapSlpNearEndSensor(false);
+        setCapRecEmptySensor(true);
+        setCapRecEmptySensor(true);
+        setCapRecNearEndSensor(true);
+        setCapRecLeverSensor(true);
+        setCapJrnEmptySensor(true);
+        setCapJrnNearEndSensor(true);
+        setCapJrnLeverSensor(true);
+        setCapPrintGraphicsLine(true);
+        setCapHasVatTable(true);
+        setCapCoverSensor(true);
+        setCapDoubleWidth(true);
+        setCapDuplicateReceipt(true);
+        setCapFullCut(true);
+        setCapPartialCut(true);
+        setCapGraphics(true);
+        setCapGraphicsEx(true);
+        setCapPrintStringFont(true);
+        setCapShortStatus(false);
+        setCapFontMetrics(false);
+        setCapOpenReceipt(false);
+        setNumVatRates(4);
+        setAmountDecimalPlace(2);
+        setNumHeaderLines(4);
+        setNumTrailerLines(3);
+        setTrailerTableNumber(4);
+        setHeaderTableNumber(4);
+        setHeaderTableRow(4);
+        setTrailerTableRow(1);
+        setMinHeaderLines(4);
+        setMinTrailerLines(0);
+        setMaxGraphicsWidth(320);
+        setMaxGraphicsHeight(255);
+        setPrintWidth(432);
+        setTextLength(new int[] {  50, 25, 50, 25, 60, 50, 50 });
+        setFontHeight(new int[] {  });
+        setSupportedBaudRates(new int[] {  2400, 4800, 9600, 19200, 38400, 57600, 115200 });
+        setCapCashInAutoCut(false);
+        setCapCashOutAutoCut(false);
+        setCapPrintBarcode2(false);
+        setDeviceFontNormal(1);
+        setDeviceFontDouble(2);
+        setDeviceFontSmall(3);
+        setSwapGraphicsLine(false);
+        setMinCashRegister(0);
+        setMaxCashRegister(255);
+        setMinCashRegister2(0);
+        setMaxCashRegister2(-1);
+        setMinOperationRegister(0);
+        setMaxOperationRegister(255);
+        setCapGraphicsLineMargin(false);
+        setCapFSCloseCheck(true);
 
-	private static final int[] textLength2 = { 50, 25, 50, 25, 60, 50, 50 };
-	private static final int[] supportedBaudRates2 = { 2400, 4800, 9600, 19200,
-			38400, 57600, 115200 };
-
-	/** Creates a new instance of PrinterModelYarus02K */
-	public PrinterModelYarus02K() throws Exception {
-		id = PrinterConst.SMFP_MODELID_YARUS02K;
-		modelID = PrinterConst.PRINTER_MODEL_YARUS02K;
-		protocolVersion = 1;
-		protocolSubVersion = 0;
-
-		name = "YARUS-02K";
-		capRecPresent = true;
-		capRecEmptySensor = true;
-		capRecNearEndSensor = true;
-		capRecLeverSensor = true;
-		capJrnPresent = false;
-		capJrnEmptySensor = false;
-		capJrnNearEndSensor = false;
-		capJrnLeverSensor = false;
-		capEJPresent = true;
-		capFMPresent = true;
-		capSlpPresent = false;
-		capSlpEmptySensor = false;
-		capSlpNearEndSensor = false;
-		numVatRates = 4;
-		printWidth = 432;
-		capPrintGraphicsLine = false;
-		capHasVatTable = true;
-		capCoverSensor = true;
-		capDoubleWidth = true;
-		capDuplicateReceipt = true;
-		amountDecimalPlace = 2;
-		numHeaderLines = 4;
-		numTrailerLines = 3;
-		trailerTableNumber = 4;
-		headerTableNumber = 4;
-		headerTableRow = 4;
-		trailerTableRow = 1;
-		minHeaderLines = 4;
-		minTrailerLines = 0;
-		capFullCut = true;
-		capPartialCut = true;
-		capGraphics = true;
-		capPrintStringFont = false;
-		capShortStatus = false;
-		capFontMetrics = false;
-		maxGraphicsWidth = 320;
-		maxGraphicsHeight = 255;
-		capOpenReceipt = false;
-
-		textLength = textLength2;
-		supportedBaudRates = supportedBaudRates2;
-		addParameter(PrinterConst.SMFP_PARAMID_DRAWER_ENABLED, 1, 1, 6);
-		addParameter(PrinterConst.SMFP_PARAMID_CUT_MODE, 1, 1, 7);
-	}
+        addParameter("FDOServerHost", 19, 1, 1);
+        addParameter("FDOServerPort", 19, 1, 2);
+        addParameter("FDOServerTimeout", 19, 1, 3);
+        addParameter("DrawerEnabled", 1, 1, 6);
+        addParameter("CutMode", 1, 1, 7);
+    }
 }

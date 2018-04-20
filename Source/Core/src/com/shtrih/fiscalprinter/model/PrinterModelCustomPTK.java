@@ -2,11 +2,11 @@ package com.shtrih.fiscalprinter.model;
 
 import com.shtrih.fiscalprinter.command.PrinterConst;
 
-public class PrinterModelASPDElves extends PrinterModelDefault {
-    public PrinterModelASPDElves() throws Exception {
-        setName("ASPD-ELVES");
-        setId(23);
-        setModelID(-1);
+public class PrinterModelCustomPTK extends PrinterModelDefault {
+    public PrinterModelCustomPTK() throws Exception {
+        setName("CUSTOM-PTK");
+        setId(26);
+        setModelID(31);
         setProtocolVersion(1);
         setProtocolSubVersion(0);
         setCapEJPresent(true);
@@ -49,16 +49,16 @@ public class PrinterModelASPDElves extends PrinterModelDefault {
         setMaxGraphicsWidth(320);
         setMaxGraphicsHeight(255);
         setPrintWidth(432);
-        setTextLength(new int[] {  36, 18, 36, 36, 36, 36, 36 });
+        setTextLength(new int[] {  50, 25, 50, 25, 60, 50, 50 });
         setFontHeight(new int[] {  });
         setSupportedBaudRates(new int[] {  2400, 4800, 9600, 19200, 38400, 57600, 115200 });
-        setCapCashInAutoCut(false);
-        setCapCashOutAutoCut(false);
+        setCapCashInAutoCut(true);
+        setCapCashOutAutoCut(true);
         setCapPrintBarcode2(false);
         setDeviceFontNormal(1);
         setDeviceFontDouble(2);
         setDeviceFontSmall(3);
-        setSwapGraphicsLine(true);
+        setSwapGraphicsLine(false);
         setMinCashRegister(0);
         setMaxCashRegister(255);
         setMinCashRegister2(0);
@@ -71,6 +71,6 @@ public class PrinterModelASPDElves extends PrinterModelDefault {
         addParameter("FDOServerHost", 19, 1, 1);
         addParameter("FDOServerPort", 19, 1, 2);
         addParameter("FDOServerTimeout", 19, 1, 3);
-        addParameter("DrawerEnabled", 1, 1, 6);
+        addParameter("CutMode", 1, 1, 6);
     }
 }

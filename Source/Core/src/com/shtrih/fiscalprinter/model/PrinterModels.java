@@ -54,46 +54,37 @@ public class PrinterModels implements Serializable {
 		try {
 			clear();
 
-			add(new PrinterModelDefault());
-			add(new PrinterModelShtrih950K());
-			add(new PrinterModelShtrih950K2());
-			add(new PrinterModelShtrihComboFRK());
-			add(new PrinterModelShtrihComboFRK2());
-			add(new PrinterModelShtrihFRFv3());
-			add(new PrinterModelShtrihFRFv4());
-			add(new PrinterModelShtrihFRK());
-			add(new PrinterModelShtrihKioskFRK());
-			add(new PrinterModelShtrihLightFRK());
-			add(new PrinterModelShtrihLightFRK2());
-			add(new PrinterModelShtrihMFRK());
-			add(new PrinterModelShtrihMPTK());
-			add(new PrinterModelShtrihMiniFRK());
-			add(new PrinterModelShtrihMiniFRK2());
-			add(new PrinterModelYarus01K());
-			add(new PrinterModelYarus01K2());
-			add(new PrinterModelYarus02K());
-			add(new PrinterModelASPDElves());
-			add(new PrinterModelShtrihFRFBelarus());
-			add(new PrinterModelShtrihMobileF());
+            add(new PrinterModelDefault2());
+            add(new PrinterModelShtrih950K());
+            add(new PrinterModelShtrih950K2());
+            add(new PrinterModelShtrihComboFRK());
+            add(new PrinterModelShtrihComboFRK2());
+            add(new PrinterModelShtrihFRFv3());
+            add(new PrinterModelShtrihFRFv4());
+            add(new PrinterModelShtrihFRK());
+            add(new PrinterModelShtrihKioskFRK());
+            add(new PrinterModelShtrihLightFRK());
+            add(new PrinterModelShtrihLightFRK2());
+            add(new PrinterModelShtrihMFRK());
+            add(new PrinterModelShtrihMPTK());
+            add(new PrinterModelShtrihMiniFRK());
+            add(new PrinterModelShtrihMiniFRK2());
+            add(new PrinterModelASPDElves());
+            add(new PrinterModelShtrihFRFBelarus());
+            add(new PrinterModelNCR001());
+            add(new PrinterModelShtrihMobileF());
+            add(new PrinterModelCustomPTK());
+            add(new PrinterModelYarus01K());
+            add(new PrinterModelYarus02K());
+            add(new PrinterModelRetail01K());
+            add(new PrinterModelASPDRR01K());
 		} catch (Exception e) {
 			logger.error(e);
 		}
 	}
 
-	// load from resources
 	public void load() {
-		try {
-			logger.debug("Models loading started");
-			InputStream stream = ResourceLoader.load("models.xml");
-			XmlModelsReader reader = new XmlModelsReader(this);
-			reader.load(stream);
-
-			logger.debug("Models loading done");
-
-		} catch (Exception e) {
-			logger.error(e);
 			setDefaults();
-		}
 	}
 
 	public void save(String fileName) {

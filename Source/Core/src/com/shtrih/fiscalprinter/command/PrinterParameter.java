@@ -17,7 +17,7 @@ public class PrinterParameter {
     private final ParameterValues values = new ParameterValues();
 
     public PrinterParameter(String name, String text, int tableNumber, int rowNumber,
-            int fieldNumber) {
+                            int fieldNumber) {
         this.name = name;
         this.text = text;
         this.tableNumber = tableNumber;
@@ -44,7 +44,7 @@ public class PrinterParameter {
     public String getText() {
         return text;
     }
-    
+
     public int getTableNumber() {
         return tableNumber;
     }
@@ -55,5 +55,10 @@ public class PrinterParameter {
 
     public int getFieldNumber() {
         return fieldNumber;
+    }
+
+    public PrinterParameter addvalue(int value, int fieldValue) {
+        values.add(new ParameterValue(value, fieldValue));
+        return this;
     }
 }
