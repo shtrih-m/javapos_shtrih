@@ -82,8 +82,7 @@ public class DirectIOHandler {
         switch (command) {
             case SmFptrConst.SMFPTR_DIO_COMMAND_OBJECT:
                 PrinterCommand printerCommand = (PrinterCommand) object;
-                getPrinter().deviceExecute(printerCommand);
-                getPrinter().check(printerCommand.getResultCode());
+                getPrinter().execute(printerCommand);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_COMMAND:
