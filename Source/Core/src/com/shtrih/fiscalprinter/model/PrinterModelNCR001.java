@@ -66,7 +66,6 @@ public class PrinterModelNCR001 extends PrinterModelDefault {
         setMinOperationRegister(0);
         setMaxOperationRegister(252);
         setCapGraphicsLineMargin(true);
-        setCapFSCloseCheck(true);
 
         addParameter("FDOServerHost", 19, 1, 1);
         addParameter("FDOServerPort", 19, 1, 2);

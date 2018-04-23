@@ -142,8 +142,7 @@ public class PrinterModelsTest {
         sb.append("        setMinOperationRegister(").append(model.getMinOperationRegister()).append(");\n");
         sb.append("        setMaxOperationRegister(").append(model.getMaxOperationRegister()).append(");\n");
         sb.append("        setCapGraphicsLineMargin(").append(model.getCapGraphicsLineMargin()).append(");\n");
-        sb.append("        setCapFSCloseCheck(").append(model.getCapFSCloseCheck()).append(");\n");
-
+        
         sb.append("\n");
 
         PrinterParameters parameters = model.getParameters();

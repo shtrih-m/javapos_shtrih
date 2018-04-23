@@ -66,7 +66,6 @@ public class PrinterModelASPDElves extends PrinterModelDefault {
         setMinOperationRegister(0);
         setMaxOperationRegister(255);
         setCapGraphicsLineMargin(false);
-        setCapFSCloseCheck(true);
 
         addParameter("FDOServerHost", 19, 1, 1);
         addParameter("FDOServerPort", 19, 1, 2);

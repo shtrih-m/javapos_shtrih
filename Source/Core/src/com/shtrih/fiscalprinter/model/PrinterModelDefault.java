@@ -91,7 +91,6 @@ public class PrinterModelDefault implements PrinterModel {
     private int maxOperationRegister = 0xFF;
     private boolean capGraphicsLineMargin;
     protected int printWidth;
-    private boolean capFSCloseCheck = true;
 
     /**
      * Creates a new instance of PrinterModelDefault
@@ -725,16 +724,6 @@ public class PrinterModelDefault implements PrinterModel {
 
     public void setPrintWidth(int printWidth) {
         this.printWidth = printWidth;
-    }
-
-    @Override
-    public boolean getCapFSCloseCheck() {
-        return capFSCloseCheck;
-    }
-
-    @Override
-    public void setCapFSCloseCheck(boolean value) {
-        capFSCloseCheck = value;
     }
     
     public void addParameter(String name, String text, 

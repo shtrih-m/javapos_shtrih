@@ -168,7 +168,6 @@ public class XmlModelsReader {
             model.setMinOperationRegister(readParameterInt(node, "MinOperationRegister", 0));
             model.setMaxOperationRegister(readParameterInt(node, "MaxOperationRegister", 0xFF));
             model.setCapGraphicsLineMargin(readParameterBool(node, "CapGraphicsLineMargin"));
-            model.setCapFSCloseCheck(readParameterBool(node, "CapFSCloseCheck", true));
 
             loadParameters(node, model.getParameters());
 

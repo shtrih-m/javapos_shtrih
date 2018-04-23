@@ -66,7 +66,6 @@ public class PrinterModelRetail01K extends PrinterModelDefault {
         setMinOperationRegister(0);
         setMaxOperationRegister(253);
         setCapGraphicsLineMargin(false);
-        setCapFSCloseCheck(true);
 
         addParameter("FDOServerHost", 19, 1, 1);
         addParameter("FDOServerPort", 19, 1, 2);

@@ -8,10 +8,10 @@ package com.shtrih.util;
 import gnu.io.*;
 import java.io.*;
 import java.nio.*;
-import org.usb4java.*;
+//import org.usb4java.*;
 import java.nio.channels.*;
 import ru.sir.ymodem.XModem;
-import com.github.kairyu.flop.programmer.dfu.*;
+//import com.github.kairyu.flop.programmer.dfu.*;
 
 /**
  *
@@ -41,40 +41,40 @@ public class FirmwareUpdater {
         inChannel.read(buffer);
         buffer.flip();
 
-        DfuDevice dfuDevice = new DfuDevice();
-        dfuDevice.init();
+//        DfuDevice dfuDevice = new DfuDevice();
+//        dfuDevice.init();
 
         int bus_number = 0;
         int device_address = 0;
         int vendorId = 0x1fc9;
         int productId = 0x0089;
 
-        Device device = null;
-        int maxTryCount = 10;
-        for (int i = 0; i < maxTryCount; i++) {
-            try {
-                device = dfuDevice.initDevice(vendorId, productId,
-                        bus_number, device_address, false, false);
-                if (device != null) {
-                    break;
-                }
-            } catch (Exception e) {
-                logger.error("initDevice", e);
-            }
-            Thread.sleep(500);
-        }
-        if (device == null) {
-            throw new Exception("Device not found");
-        }
-
-        try {
-            dfuDevice.download(buffer);
-            dfuDevice.reset();
-        } finally {
-            aFile.close();
-            dfuDevice.uninitDevice();
-            dfuDevice.uninit();
-        }
+        //Device device = null;
+//        int maxTryCount = 10;
+//        for (int i = 0; i < maxTryCount; i++) {
+//            try {
+//                device = dfuDevice.initDevice(vendorId, productId,
+//                        bus_number, device_address, false, false);
+//                if (device != null) {
+//                    break;
+//                }
+//            } catch (Exception e) {
+//                logger.error("initDevice", e);
+//            }
+//            Thread.sleep(500);
+//        }
+//        if (device == null) {
+//            throw new Exception("Device not found");
+//        }
+//
+//        try {
+//            dfuDevice.download(buffer);
+//            dfuDevice.reset();
+//        } finally {
+//            aFile.close();
+//            dfuDevice.uninitDevice();
+//            dfuDevice.uninit();
+//        }
         logger.debug("updateFirmwareDFU: OK");
     }
 
