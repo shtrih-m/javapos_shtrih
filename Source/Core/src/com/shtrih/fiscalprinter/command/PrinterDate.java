@@ -38,7 +38,7 @@ public class PrinterDate {
     public PrinterDate() {
         Calendar calendar = new GregorianCalendar();
         this.day = calendar.get(Calendar.DAY_OF_MONTH);
-        this.month = calendar.get(Calendar.MONTH);
+        this.month = calendar.get(Calendar.MONTH) + 1;
         this.year = calendar.get(Calendar.YEAR)-2000;
     }
 
