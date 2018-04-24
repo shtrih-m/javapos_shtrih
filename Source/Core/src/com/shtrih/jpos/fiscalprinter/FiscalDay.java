@@ -1,20 +1,9 @@
-/*
- * FiscalDay.java
- *
- * Created on 18 April 2008, 12:48
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package com.shtrih.jpos.fiscalprinter;
 
 /**
  * @author V.Kravtsov
  */
-
 public class FiscalDay {
-    private boolean isOpened;
     private long fiscalDocNumber; // Get the number of daily fiscal documents.
     private long fiscalDocVoidNumber; // Get the number of daily voided fiscal
                                       // documents.
@@ -35,12 +24,7 @@ public class FiscalDay {
         close();
     }
 
-    public void open() {
-        isOpened = true;
-    }
-
     public void close() {
-        isOpened = false;
         fiscalRecNumber = 0;
         fiscalDocNumber = 0;
         fiscalRecVoidNumber = 0;
@@ -49,10 +33,6 @@ public class FiscalDay {
         nonFiscalDocVoidNumber = 0;
         nonFiscalRecNumber = 0;
         simpInvoiceNumber = 0;
-    }
-
-    public boolean getOpened() {
-        return isOpened;
     }
 
     public long getFiscalRecNumber() {

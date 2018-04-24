@@ -3004,8 +3004,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     receipt.printRecMessage(line.getStation(), line.getFont(), line.getLine());
                 }
             }
-
-            fiscalDay.open();
+            
         } catch (Exception e) {
             receipt = new NullReceipt(createReceiptContext());
             setPrinterState(FPTR_PS_MONITOR);
