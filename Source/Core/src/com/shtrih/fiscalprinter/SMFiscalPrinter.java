@@ -433,8 +433,6 @@ public interface SMFiscalPrinter {
 
     public void setEscPrinter(NCR7167Printer escPrinter);
 
-    public int beginFiscalDay() throws Exception;
-
     public ReceiptImages getReceiptImages();
 
     public void printReceiptImage(int position) throws Exception;
@@ -517,8 +515,6 @@ public interface SMFiscalPrinter {
 
     public PrinterModel getModel() throws Exception;
 
-    public boolean getCapOpenReceipt() throws Exception;
-
     public FSReadSerial fsReadSerial() throws Exception;
 
     public String readFullSerial() throws Exception;
@@ -538,10 +534,6 @@ public interface SMFiscalPrinter {
     public Vector<FSTicket> fsReadTickets(int[] fsDocumentNumbers) throws Exception;
 
     public Vector<FSTicket> fsReadTickets(int firstFSDocumentNumber, int documentCount) throws Exception;
-
-    public int fsPrintCorrectionReceipt(FSPrintCorrectionReceipt command) throws Exception;
-
-    public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws Exception;
 
     public boolean getCapDisableDiscountText() throws Exception;
 

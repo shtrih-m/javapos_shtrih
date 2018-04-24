@@ -722,10 +722,6 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void setEscPrinter(NCR7167Printer escPrinter) {
     }
 
-    public int beginFiscalDay() throws Exception {
-        return 0;
-    }
-
     public ReceiptImages getReceiptImages() {
         return null;
     }
@@ -928,14 +924,6 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
 
     public Vector<FSTicket> fsReadTickets(int firstFSDocumentNumber, int documentCount) throws Exception {
         return null;
-    }
-
-    public int fsPrintCorrectionReceipt(FSPrintCorrectionReceipt command) throws Exception {
-        return 0;
-    }
-
-    public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws Exception {
-        return 0;
     }
 
     public boolean getCapDisableDiscountText() {

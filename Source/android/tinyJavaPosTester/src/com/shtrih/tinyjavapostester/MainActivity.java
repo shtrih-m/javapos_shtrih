@@ -716,7 +716,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            dialog = ProgressDialog.show(parent, "Printing receipt", "Please wait...", true);
+            dialog = ProgressDialog.show(parent, "Printing text", "Please wait...", true);
         }
 
         @Override
@@ -846,9 +846,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
 
-            startedAt = System.currentTimeMillis();
-
             try {
+                printer.resetPrinter();
+
+                startedAt = System.currentTimeMillis();
+
                 printSalesReceipt(positions, strings);
 
                 return null;
@@ -940,7 +942,7 @@ public class MainActivity extends AppCompatActivity {
     private void printSalesReceipt(final int positions, final int strings) throws Exception {
 
         long payment = 0;
-        printer.resetPrinter();
+        
         printer.setFiscalReceiptType(jpos.FiscalPrinterConst.FPTR_RT_SALES);
         printer.beginFiscalReceipt(false);
         for (int i = 0; i < positions; i++) {

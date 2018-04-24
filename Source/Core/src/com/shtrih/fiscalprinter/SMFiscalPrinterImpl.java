@@ -1190,29 +1190,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         PrintZReport command = new PrintZReport();
         command.setPassword(sysPassword);
         execute(command);
-        printCalcReport();
         return command;
-    }
-
-    private void printCalcReport() throws Exception {
-        if (!params.calcReportEnabled) {
-            return;
-        }
-
-        if (!getCapFiscalStorage()) {
-            return;
-        }
-
-        try {
-            waitForPrinting();
-            FSReadCommStatus status = fsReadCommStatus();
-            printLines("КОЛИЧЕСТВО СООБЩЕНИЙ ДЛЯ ОФД:", String.valueOf(status.getQueueSize()));
-            printLines("НОМЕР ПЕРВОГО ДОКУМЕНТА ДЛЯ ОФД:", String.valueOf(status.getDocumentNumber()));
-            String docDate = status.getDocumentDate().toString() + " " + status.getDocumentTime().toString2();
-            printLines("ДАТА ПЕРВОГО ДОКУМЕНТА:", docDate);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
     }
 
     public int printDepartmentReport() throws Exception {
@@ -1321,15 +1299,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void openReceipt(int receiptType) throws Exception {
         logger.debug("openReceipt");
 
-        openFiscalDay();
-        PrinterStatus status = waitForPrinting();
-        if (!status.getPrinterMode().isReceiptOpened()) {
+        if (capOpenReceipt) {
             OpenReceipt command = new OpenReceipt();
             command.setPassword(usrPassword);
             command.setReceiptType(receiptType);
             int rc = executeCommand(command);
             capOpenReceipt = isCommandSupported(rc);
-            check(rc);
+
+            if (capOpenReceipt)
+                check(rc);
         }
     }
 
@@ -1542,7 +1520,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         execute(command);
     }
 
-    public int beginFiscalDay() throws Exception {
+    private int beginFiscalDay() throws Exception {
         BeginFiscalDay command = new BeginFiscalDay();
         command.setPassword(usrPassword);
         int rc = executeCommand(command);
@@ -1985,6 +1963,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         fields.clear();
         tables.clear();
+        capOpenReceipt = true;
         isCapDisableDiscountTextInitialized = false;
         isHeaderHeightInitialized = false;
         isFsHeaderDataInitialized = false;
@@ -3337,10 +3316,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public boolean getCapOpenReceipt() {
-        return capOpenReceipt;
-    }
-
     public void checkDiscountMode(int mode) throws Exception {
         if (getDiscountMode() != mode) {
             throw new Exception("Incorrect fiscal printer discount mode");
@@ -3507,18 +3482,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
         }
         return tickets;
-    }
-
-    public int fsPrintCorrectionReceipt(FSPrintCorrectionReceipt command)
-            throws Exception {
-        openFiscalDay();
-        return executeCommand(command);
-    }
-
-    public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command)
-            throws Exception {
-        openFiscalDay();
-        return executeCommand(command);
     }
 
     public boolean isDiscountInHeader() throws Exception {

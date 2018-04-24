@@ -1,18 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.jpos.fiscalprinter.directIO;
 
-/**
- *
- * @author V.Kravtsov
- */
 
-import com.shtrih.fiscalprinter.SMFiscalPrinter;
-import com.shtrih.jpos.DIOUtils;
-import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import com.shtrih.fiscalprinter.command.FSPrintCorrectionReceipt2;
+import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 
 
 public class DIOPrintCorrectionReceipt2 extends DIOItem {
@@ -42,7 +32,11 @@ public class DIOPrintCorrectionReceipt2 extends DIOItem {
         command.setTaxTotal(5, (Long)params[13]);
         command.setTaxSystem((Integer)params[14]);
 
-        service.getPrinter().check(service.getPrinter().fsPrintCorrectionReceipt2(command));
+        if(getParams().autoOpenShift)
+            getPrinter().openFiscalDay();
+
+        getPrinter().execute(command);
+
         service.printDocEnd();
 
         if (params.length >= 18)

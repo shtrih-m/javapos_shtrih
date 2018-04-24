@@ -16,6 +16,7 @@ import com.shtrih.fiscalprinter.command.DeviceMetrics;
 import com.shtrih.fiscalprinter.command.FDOParameters;
 import com.shtrih.fiscalprinter.command.FMTotals;
 import com.shtrih.fiscalprinter.command.FSPrintCalcReport;
+import com.shtrih.fiscalprinter.command.FSReadCommStatus;
 import com.shtrih.fiscalprinter.command.FlexCommands;
 import com.shtrih.fiscalprinter.command.IPrinterEvents;
 import com.shtrih.fiscalprinter.command.LongPrinterStatus;
@@ -450,15 +451,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public FlexCommands getCommands() throws Exception {
         return printer.getCommands();
-    }
-
-    public void openReceipt(int receiptType) throws Exception {
-        if ((!isReceiptOpened) && getPrinter().getCapOpenReceipt()) {
-            getPrinter().openReceipt(receiptType);
-            getPrinter().waitForPrinting();
-            this.receiptType = receiptType;
-            isReceiptOpened = true;
-        }
     }
 
     public PrinterModel getModel() throws Exception {
@@ -2968,13 +2960,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 "Day end required");
     }
 
-    private void checkDayEnd() throws Exception {
-        PrinterStatus status = readPrinterStatus();
-        if (status.getPrinterMode().isDayEndRequired()) {
-            dayEndRequiredError();
-        }
-    }
-
     // ////////////////////////////////////////////////////////////////////////////
     // Fiscal Receipt
     // ////////////////////////////////////////////////////////////////////////////
@@ -2990,11 +2975,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             }
             receipt = createReceipt(fiscalReceiptType);
 
-            // Cancel receipt if it opened
-            cancelReceipt();
-
             PrinterStatus status = getPrinter().waitForPrinting();
-            if (status.getPrinterMode().isDayClosed()) {
+
+            // Cancel receipt if it opened
+            if(status.getPrinterMode().isReceiptOpened())
+                cancelReceipt();
+
+            if (status.getPrinterMode().isDayClosed() && getParams().autoOpenShift) {
                 printDocStart();
                 getPrinter().openFiscalDay();
                 printDocEnd();
@@ -3002,10 +2989,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
             // check end of day
             if (isSalesReceipt()) {
-                checkDayEnd();
+                if (status.getPrinterMode().isDayEndRequired()) {
+                    dayEndRequiredError();
+                }
             }
-
-            fiscalDay.open();
 
             setPrinterState(FPTR_PS_FISCAL_RECEIPT);
             getPrinter().startSaveCommands();
@@ -3017,6 +3004,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     receipt.printRecMessage(line.getStation(), line.getFont(), line.getLine());
                 }
             }
+
+            fiscalDay.open();
         } catch (Exception e) {
             receipt = new NullReceipt(createReceiptContext());
             setPrinterState(FPTR_PS_MONITOR);
@@ -3182,8 +3171,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkVatInfo(vatInfo);
 
         description = updateDescription(description);
-        receipt.printRecItem(description, price, quantity, vatInfo, unitPrice,
-                unitName);
+        receipt.printRecItem(description, price, quantity, vatInfo, unitPrice, unitName);
     }
 
     public String updateDescription(String description) throws Exception {
@@ -3510,16 +3498,20 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkStateBusy();
         checkPrinterState(FPTR_PS_MONITOR);
 
-        printer.openFiscalDay();
-
-        saveZReportXml();
+        if(getParams().forceOpenShiftOnZReport)
+            printer.openFiscalDay();
 
         PrinterStatus status = readPrinterStatus();
         if (status.getPrinterMode().canPrintZReport()) {
+
+            saveZReportXml();
+
             printDocStart();
             getPrinter().printZReport();
             fiscalDay.close();
             try {
+                printCalcReport();
+
                 printDocEnd();
             } catch (Exception e) {
                 logger.error("printZReport: " + e.getMessage());
@@ -3529,12 +3521,25 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public String getDayNumberText(int dayNumber) {
-        String result = String.valueOf(dayNumber);
-        for (int i = result.length(); i < 4; i++) {
-            result = "0" + result;
+    private void printCalcReport() {
+        if (!params.calcReportEnabled) {
+            return;
         }
-        return result;
+
+        if (!printer.getCapFiscalStorage()) {
+            return;
+        }
+
+        try {
+            printer.waitForPrinting();
+            FSReadCommStatus status = printer.fsReadCommStatus();
+            printer.printLines("КОЛИЧЕСТВО СООБЩЕНИЙ ДЛЯ ОФД:", String.valueOf(status.getQueueSize()));
+            printer.printLines("НОМЕР ПЕРВОГО ДОКУМЕНТА ДЛЯ ОФД:", String.valueOf(status.getDocumentNumber()));
+            String docDate = status.getDocumentDate().toString() + " " + status.getDocumentTime().toString2();
+            printer.printLines("ДАТА ПЕРВОГО ДОКУМЕНТА:", docDate);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
     }
 
     private void saveZReportXml() throws Exception {
@@ -3564,7 +3569,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public String getXmlZReportFileName(int dayNumber) throws Exception {
+    private String getXmlZReportFileName(int dayNumber) throws Exception {
         String fileName = params.xmlZReportFileName;
         if (params.ZReportDayNumber) {
             fileName = FileUtils.removeExtention(fileName) + "_"
@@ -3575,7 +3580,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return fileName;
     }
 
-    public String getCsvZReportFileName(int dayNumber) throws Exception {
+    private String getCsvZReportFileName(int dayNumber) throws Exception {
         String fileName = params.csvZReportFileName;
         if (params.ZReportDayNumber) {
             fileName = FileUtils.removeExtention(fileName) + "_"
@@ -3584,6 +3589,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
         fileName = SysUtils.getFilesPath() + fileName;
         return fileName;
+    }
+
+    private String getDayNumberText(int dayNumber) {
+        String result = String.valueOf(dayNumber);
+        for (int i = result.length(); i < 4; i++) {
+            result = "0" + result;
+        }
+        return result;
     }
 
     public void resetPrinter() throws Exception {

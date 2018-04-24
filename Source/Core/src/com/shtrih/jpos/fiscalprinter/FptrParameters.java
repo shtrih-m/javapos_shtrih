@@ -176,6 +176,8 @@ public class FptrParameters {
     public int printStringDelayInMs = 0;
     public boolean fastConnect = false;
     public boolean statisticEnabled = true;
+    public boolean autoOpenShift = true;
+    public boolean forceOpenShiftOnZReport = true;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -395,6 +397,9 @@ public class FptrParameters {
         printStringDelayInMs = reader.readInteger("printStringDelayInMs", 0);
         fastConnect = reader.readBoolean("fastConnect", false);
         statisticEnabled = reader.readBoolean("statisticEnabled", true);
+        autoOpenShift = reader.readBoolean("autoOpenShift", true);
+        forceOpenShiftOnZReport = reader.readBoolean("forceOpenShiftOnZReport", true);
+
         // paymentNames
         String paymentName;
         String propertyName;

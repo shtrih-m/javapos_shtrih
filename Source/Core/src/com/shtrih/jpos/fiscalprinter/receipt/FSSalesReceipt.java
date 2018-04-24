@@ -1,44 +1,31 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.jpos.fiscalprinter.receipt;
 
-/**
- * @author V.Kravtsov
- */
+
 import com.shtrih.barcode.PrinterBarcode;
-
-import java.util.Vector;
-
-import com.shtrih.fiscalprinter.*;
-import com.shtrih.jpos.fiscalprinter.PrintItem;
-
-import jpos.JposConst;
-import jpos.JposException;
-import jpos.FiscalPrinterConst;
-
-import com.shtrih.util.MathUtils;
-import com.shtrih.util.Localizer;
-import com.shtrih.util.StringUtils;
-import com.shtrih.util.CompositeLogger;
-import com.shtrih.util.MethodParameter;
-import com.shtrih.fiscalprinter.command.FSCloseReceipt;
+import com.shtrih.fiscalprinter.FontNumber;
+import com.shtrih.fiscalprinter.PrinterGraphics;
+import com.shtrih.fiscalprinter.SMFiscalPrinter;
+import com.shtrih.fiscalprinter.TLVParser;
 import com.shtrih.fiscalprinter.command.AmountItem;
 import com.shtrih.fiscalprinter.command.CloseRecParams;
-import com.shtrih.fiscalprinter.command.EndFiscalReceipt;
+import com.shtrih.fiscalprinter.command.FSCloseReceipt;
+import com.shtrih.fiscalprinter.command.FSReceiptDiscount;
 import com.shtrih.fiscalprinter.command.PriceItem;
 import com.shtrih.fiscalprinter.command.PrinterConst;
-import com.shtrih.fiscalprinter.command.PrinterStatus;
 import com.shtrih.jpos.fiscalprinter.PackageAdjustment;
 import com.shtrih.jpos.fiscalprinter.PackageAdjustments;
-import com.shtrih.fiscalprinter.command.FSReceiptDiscount;
-import com.shtrih.fiscalprinter.command.TLVList;
-import com.shtrih.jpos.fiscalprinter.SmFptrConst;
-import com.shtrih.jpos.fiscalprinter.receipt.template.TemplateLine;
-import com.shtrih.fiscalprinter.command.TextLine;
+import com.shtrih.jpos.fiscalprinter.PrintItem;
+import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.Localizer;
+import com.shtrih.util.MathUtils;
+import com.shtrih.util.MethodParameter;
+import com.shtrih.util.StringUtils;
 
 import java.util.Vector;
+
+import jpos.FiscalPrinterConst;
+import jpos.JposConst;
+import jpos.JposException;
 
 import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_EFPTR_NOT_SUPPORTED;
 import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_STATION_REC;
@@ -112,14 +99,14 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void openReceipt(boolean isSale) throws Exception {
         if (!isOpened) {
-            isOpened = true;
             if (!isSale) {
                 if (receiptType == PrinterConst.SMFP_RECTYPE_SALE) {
                     receiptType = PrinterConst.SMFP_RECTYPE_RETSALE;
                 }
             }
             getPrinter().openReceipt(receiptType);
-            getPrinter().waitForPrinting();
+
+            isOpened = true;
         }
     }
 
