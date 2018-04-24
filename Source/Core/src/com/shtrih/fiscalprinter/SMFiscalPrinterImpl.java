@@ -1194,7 +1194,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command;
     }
 
-    public void printCalcReport() throws Exception {
+    private void printCalcReport() throws Exception {
         if (!params.calcReportEnabled) {
             return;
         }
@@ -3113,7 +3113,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         PrinterStatus status = waitForPrinting();
         if (status.getPrinterMode().isDayClosed()) {
             beginFiscalDay();
-            waitForPrinting();
+
+            try {
+                waitForPrinting();
+            } catch (Exception e) {
+                logger.error("openFiscalDay wait for printing failed", e);
+            }
         }
     }
 
