@@ -14,24 +14,50 @@
 		<vendor name="SHTRIH-M" url="http://www.shtrih-m.com"/>
 		<jpos category="FiscalPrinter" version="1.9"/>
 		<product description="Fiscal printer service" name="ShtrihFptr" url="http://www.javapos.com"/>
-		<!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass -->
+		<!-- Тип порта:
+		     0 - последовательный(COM)
+		     2 - TCP-подключение
+		     3 - класс из параметра protClass
+
+		     Значение по умолчанию - 0. -->
 		<prop name="portType" type="String" value="3"/>
-		<!-- portClass  -->
-		<!--<prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.FtdiPrinterPort"/>  -->
+
+		<!-- Класс порта, используется, если portType = 3.  -->
 		<prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.BluetoothPort"/>
-		<!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
-		<!-- ProtocolType, 0 - protocol 1, 1 - protocol 2 -->
+
+		<!-- Протокол обмена.
+		     0 - стандартный.
+		     1 - протокол ККТ 2.0, протокол реализуемый некоторыми устройствами, оптимизирован для
+		     работы по TCP/Bluetooth.
+
+		     Значение по умолчанию - 0. -->
 		<prop name="protocolType" type="String" value="1"/>
-		<!--Port name-->
+
+		<!-- Имя порта. Зависит от значениея portType:
+		     0 - имя последовательного порта, например, COM8, /dev/tty1
+		     2 - IP и порт, например, 192.168.137.111:7778
+		     3 - зависит от класс порта
+		     -->
 		<!--For serial ports - COM1, for TCP ports: host:port - "10.11.7.210:12345" -->
 		<!--<prop name="portName" type="String" value="10.11.7.210:12345"/> -->
 		<prop name="portName" type="String" value=""/>
-		<!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
+
+		<!--Скорость обмена при работе по COM-порту.
+		    Возможные значениея 2400;4800;9600;19200;38400;57600;115200;230400;460800.
+
+		     Значение по умолчанию - 4800.-->
 		<prop name="baudRate" type="String" value="115200"/>
-		<!--Default department-->
+        
+		<!-- Отдел с указанием которого будут осуществляться опеации в чеке.
+		
+		     Значение по умолчанию - 1. -->
 		<prop name="department" type="String" value="0"/>
-		<!-- Default font number -->
+
+		<!-- Номер шрифта используемого для печати строк без указания номера шрифта.
+
+             Значение по умолчанию - 1. -->
 		<prop name="fontNumber" type="String" value="1"/>
+        
 		<!-- Close receipt text -->
 		<prop name="closeReceiptText" type="String" value=""/>
 		<!-- Subtotal text -->
@@ -44,12 +70,22 @@
 		<prop name="searchByPortEnabled" type="String" value="0"/>
 		<!-- Device search enabled for all baud rates -->
 		<prop name="searchByBaudRateEnabled" type="String" value="0"/>
-		<!-- Tax officer password -->
+		<!-- Пароль налогового инспектора.
+
+		     Значение по умолчанию - 0. -->
 		<prop name="taxPassword" type="String" value="0"/>
-		<!-- Operator password -->
-		<prop name="operatorPassword" type="String" value="1"/>
-		<!-- System administrator password -->
+
+		<!-- Пароль оператора. Если нет необходимости использовать встроенный в ФР механизм
+		     с пользователями, то проще всего указать operatorPassword равный sysAdminPassword.
+
+		     Значение по умолчанию - 1. -->
+		<prop name="operatorPassword" type="String" value="30"/>
+
+		<!-- Пароль системного администратора.
+
+		     Значение по умолчанию - 30. -->
 		<prop name="sysAdminPassword" type="String" value="30"/>
+        
 		<!-- device state polling enabled -->
 		<prop name="pollEnabled" type="String" value="0"/>
 		<!-- device state polling interval in milliseconds -->
@@ -186,41 +222,88 @@
 		<!-- Text report empty lines enabled -->
 		<prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		
-		<!-- Печать описани переданных в принтер тэгов средствами драйвера -->
+		<!-- Печать описания переданных в принтер тэгов средствами драйвера.
+		     Не все принтеры имеют встроенный механизм печати тэгов, в виду этого необходима данная
+		     настройка.
+		     
+		     Значение по умолчанию - 1. -->
 		<prop name="FSPrintTags" type="String" value="1"/>
 		
 		<!-- Место печати тэгов в документе, если включена опция FSPrintTags:
 		     0 - после закрытия
 		     1 - в месте отправки, например, если тэг был отправлен до печати любой позиции
 		         он будет напечатан сразу после заголовка чека.
+
+		     Рекомендуется использовать значение 1. Значение 0 осталвено для обратной совместимости.
+
+		     Значение по умолчанию - 0.
 		-->
 		<prop name="FSTagsPlacement" type="String" value="1"/>
-		
+
+        <!-- В драйвере по какой-то не вполне очевидной исторической причине существуе 2 реализации
+             DIO-команд, они различаются порядком параметров. Обертка ShtrihFiscalPrinter работает
+             с compatibilityLevel = 0, в виду этого его и рекомендуется выставлять.
+
+             Значение по умолчанию -1. -->
 		<prop name="compatibilityLevel" type="String" value="0"/>
 
         <!-- Отправка данных в ОФД средствами драйвера, если данная возможность 
              поддержана/включена в ФР:
              0 - выкл.
-             1 - вкл. -->
+             1 - вкл.
+
+             Значение по умолчанию - 0. -->
 		<prop name="FSServiceEnabled" type="String" value="1"/>
 		
-		<!-- Таймаут ожидания ответа от ОФД в мс. Используется при включенной отпции FSServiceEnabled. -->
+		<!-- Таймаут ожидания ответа от ОФД в мс. Используется при включенной отпции
+		     FSServiceEnabled.
+
+		     Значение по умолчанию - 3000 мс. -->
 		<prop name="FSConnectTimeout" type="String" value="30000"/>
 		
-        <!-- Писать лог, на десктопе управляет записью лога в файл, на Андроиде - выводом лога в logcat  -->
+        <!-- Писать лог, на десктопе управляет записью лога в файл, на Андроиде - выводом лога в
+             logcat в дополнение к настраиваемому приложением логированию. Т.к. в примере настройки
+             логирования вывод идет в logcat, то что б не дублировался вывод отключаем.
+
+             Значение по умолчанию - 1. -->
         <prop name="logEnabled" type="String" value="0"/>
 
-		<!-- Hide internal exception details  -->
+		<!-- Прямтать детали исключений. Зачем комуто может быть нужно такое поведение остается только
+		     догадываться. Настоятельно рекомендуемое значение 0, значение 1 оставлено для обратной
+		     совместимости.
+
+		     Значнеие по умолчанию - 1. -->
 		<prop name="stripExceptionDetails" type="String" value="0"/>
 		
-		<!-- открывать чек при вызове метода beginFiscalReceipt, 
-         а не по первому вызову printRecItem -->
+		<!-- Открывать чек при вызове метода beginFiscalReceipt, а не по первому вызову
+		     printRecItem.
+
+		     Значение по умолчанию - 0. -->
 		<prop name="openReceiptOnBegin" type="String" value="1"/>
 
+        <!-- Быстрое подключение, данная настройка заставляет драйвер при подключении выполнять лишь
+             самые необходимые действия. На текущий момент работает только в сочетании с
+             headerMode = 3.
+
+             Значение по умолчанию - 0. -->
 		<prop name="fastConnect" type="String" value="1"/>
-        
+
+        <!-- Включить механизм обновления прошивки. Выключение этой настройки позволяет избежать
+             лишних действий при подключении.
+
+             Значение по умолчанию - 1. -->
 		<prop name="capUpdateFirmware" type="String" value="0"/>
 
+        <!-- Параметр определяет будет ли сохраняться статистика JPOS, для многих приложений она
+             не нужна, а ее отключение даст прирость скорости печати чеков/подключения.
+
+             Значение по умолчанию - 1. -->
 		<prop name="statisticEnabled" type="String" value="0"/>
+
+        <!-- Автооткрытие смены перед печатью чека. Может быть нежелательно, т.к. в ФФД 1.05 нужно
+             передавать ИНН кассира, чего в случае с автооткрытием сделано не будет.
+             
+             Значение по умолчанию - 1. -->
+		<prop name="autoOpenShift" type="String" value="0"/>
 	</JposEntry>
 </JposEntries>
