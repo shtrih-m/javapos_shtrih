@@ -91,6 +91,8 @@ public class PrinterModelParameters implements PrinterConst {
     private final boolean capScaleGraphics;
     // 42 – Загрузка и печать графики-512 (команды 4DH, 4EH)
     private final boolean capGraphics512;
+    // 43 - Поддержка ФН
+    private final boolean capFiscalStorage;
     // 44 - Поддержка EoD ("Ethernet" over Driver)
     private final boolean capEoD;
 
@@ -199,6 +201,7 @@ public class PrinterModelParameters implements PrinterConst {
         capEJ5 = BitUtils.testBit(flags, 40);
         capScaleGraphics = BitUtils.testBit(flags, 41);
         capGraphics512 = BitUtils.testBit(flags, 42);
+        capFiscalStorage = BitUtils.testBit(flags, 43);
         capEoD = BitUtils.testBit(flags, 44);
 
         font1Width = in.readByte();
@@ -704,5 +707,12 @@ public class PrinterModelParameters implements PrinterConst {
 
     public boolean capFFDTableAndColumnNumber() {
         return ffdTableNumber > 0 && ffdColumnNumber > 0;
+    }
+
+    /**
+     * 43 - Поддержка ФН
+     */
+    public boolean getCapFiscalStorage() {
+        return capFiscalStorage;
     }
 }

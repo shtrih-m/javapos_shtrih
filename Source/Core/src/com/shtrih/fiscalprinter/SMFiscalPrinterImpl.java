@@ -1974,9 +1974,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         ReadPrinterModelParameters command = new ReadPrinterModelParameters();
         if (executeCommand(command) == 0) {
             modelParameters = command.getParameters();
+            capFiscalStorage = modelParameters.getCapFiscalStorage();
         }
 
-        capFiscalStorage = readCapFiscalStorage();
+        if (!capFiscalStorage)
+            capFiscalStorage = readCapFiscalStorage();
+        
         capFooterFlag = capModelParameters() && modelParameters.isCapGraphicsFlags();
 
         if (capFiscalStorage) {
@@ -3393,6 +3396,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public boolean capReadFSBuffer() throws Exception {
+        if(params.fastConnect)
+            return capModelParameters() && modelParameters.isCapEoD();
+
         FSReadBufferStatus command = new FSReadBufferStatus(sysPassword);
         int rc = executeCommand(command);
         return isCommandSupported(rc) || rc == 53;
