@@ -168,6 +168,15 @@
 
             </TableRow>
 
+            <TableRow>
+
+                <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/chbFastConnect"
+                    android:text="@string/chbFastConnect"
+                    android:layout_span="2"/>
+                
+            </TableRow>
+
         </TableLayout>
 
         <Button

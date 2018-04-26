@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -106,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText nbTableField;
     private EditText nbTableRow;
     private EditText tbTableCellValue;
+    private AppCompatCheckBox chbFastConnect;
 
     private String selectedProtocol;
 
@@ -152,6 +155,9 @@ public class MainActivity extends AppCompatActivity {
         tbTableCellValue = findViewById(R.id.tbTableCellValue);
         restoreAndSaveChangesTo(tbTableCellValue, pref, "TableCellValue", "");
 
+        chbFastConnect = findViewById(R.id.chbFastConnect);
+        restoreAndSaveChangesTo(chbFastConnect, pref, "FastConnect", true);
+
         Spinner cbProtocol = findViewById(R.id.cbProtocol);
 
         ArrayList<EnumViewModel> protocols = new ArrayList<>();
@@ -188,13 +194,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
-        
+
         try {
             this.unregisterReceiver(usbReceiver);
-        }
-        catch (final Exception exception) {
+        } catch (final Exception exception) {
             // The receiver was not registered.
             // There is nothing to do in that case.
             // Everything is fine.
@@ -222,6 +227,21 @@ public class MainActivity extends AppCompatActivity {
 
         String savedAddress = pref.getString(key, defaultValue);
         edit.setText(savedAddress);
+    }
+
+    private void restoreAndSaveChangesTo(final CompoundButton edit, final SharedPreferences pref, final String key, final boolean defaultValue) {
+        edit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putBoolean(key, compoundButton.isChecked());
+                editor.apply();
+            }
+        });
+
+        boolean savedValue = pref.getBoolean(key, defaultValue);
+        edit.setChecked(savedValue);
     }
 
     public static final String ACTION_USB_DISCONNECTED = "com.felhr.usbservice.USB_DISCONNECTED";
@@ -942,7 +962,7 @@ public class MainActivity extends AppCompatActivity {
     private void printSalesReceipt(final int positions, final int strings) throws Exception {
 
         long payment = 0;
-        
+
         printer.setFiscalReceiptType(jpos.FiscalPrinterConst.FPTR_RT_SALES);
         printer.beginFiscalReceipt(false);
         for (int i = 0; i < positions; i++) {
@@ -1267,18 +1287,38 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
 
-            startedAt = System.currentTimeMillis();
-
             try {
-                SysUtils.setFilesPath(getApplicationContext().getFilesDir().getAbsolutePath());
-                JposConfig.configure("ShtrihFptr", address, getApplicationContext(), "2", selectedProtocol);
-
                 if (printer.getState() != JposConst.JPOS_S_CLOSED) {
                     printer.close();
                 }
+
+                startedAt = System.currentTimeMillis();
+
+                Log.d("MainActivity", "Generating jpos.xml...");
+
+                SysUtils.setFilesPath(getApplicationContext().getFilesDir().getAbsolutePath());
+
+                Map<String, String> props = new HashMap<>();
+                props.put("portName", address);
+                props.put("portType", "2");
+                props.put("protocolType", selectedProtocol);
+                props.put("fastConnect", chbFastConnect.isChecked() ? "1" : "0");
+
+                JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
+
+                Log.d("MainActivity", "Opening...");
+
                 printer.open("ShtrihFptr");
+
+                Log.d("MainActivity", "Claiming...");
+
                 printer.claim(3000);
+
+                Log.d("MainActivity", "Setting device enabled...");
+
                 printer.setDeviceEnabled(true);
+
+                Log.d("MainActivity", "Connected!");
 
                 doneAt = System.currentTimeMillis();
 
@@ -1807,8 +1847,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
                 return e.getMessage();
-            }
-            finally {
+            } finally {
                 doneAt = System.currentTimeMillis();
             }
         }
@@ -1881,8 +1920,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
                 return e.getMessage();
-            }
-            finally {
+            } finally {
                 doneAt = System.currentTimeMillis();
             }
         }
