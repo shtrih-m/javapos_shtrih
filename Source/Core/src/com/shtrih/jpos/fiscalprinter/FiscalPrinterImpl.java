@@ -636,8 +636,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
                 case SMFP_EFPTR_EJ_CONNECT_ERROR:
                 case SMFP_EFPTR_EJ_MISSING:
-                    printer.waitForElectronicJournal();
-                    command.setRepeatNeeded(true);
+                    if (!printer.getCapFiscalStorage()) {
+                        printer.waitForElectronicJournal();
+                        command.setRepeatNeeded(true);
+                    }
                     break;
 
                 case SMFP_EFPTR_RECBUF_OVERFLOW:
@@ -646,6 +648,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                         printer.sleep(1000);
                         command.setRepeatNeeded(true);
                     }
+                    break;
 
             }
         } catch (Exception e) {
@@ -2978,7 +2981,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             PrinterStatus status = getPrinter().waitForPrinting();
 
             // Cancel receipt if it opened
-            if(status.getPrinterMode().isReceiptOpened())
+            if (status.getPrinterMode().isReceiptOpened())
                 cancelReceipt();
 
             if (status.getPrinterMode().isDayClosed() && getParams().autoOpenShift) {
@@ -3004,7 +3007,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     receipt.printRecMessage(line.getStation(), line.getFont(), line.getLine());
                 }
             }
-            
+
         } catch (Exception e) {
             receipt = new NullReceipt(createReceiptContext());
             setPrinterState(FPTR_PS_MONITOR);
@@ -3497,7 +3500,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkStateBusy();
         checkPrinterState(FPTR_PS_MONITOR);
 
-        if(getParams().forceOpenShiftOnZReport)
+        if (getParams().forceOpenShiftOnZReport)
             printer.openFiscalDay();
 
         PrinterStatus status = readPrinterStatus();
