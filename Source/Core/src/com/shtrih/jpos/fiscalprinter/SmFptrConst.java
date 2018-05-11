@@ -545,8 +545,12 @@ public interface SmFptrConst {
     /**
      * Read document TLV text from FS archive
      */
-    
     public static final int SMFPTR_DIO_FS_READ_DOCUMENT_TLV_TEXT = 0x59;
+
+    /**
+     * Write TLV data bound to operation
+     */
+    public static final int SMFPTR_DIO_FS_WRITE_OPERATION_TLV = 0x5A;
     
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:

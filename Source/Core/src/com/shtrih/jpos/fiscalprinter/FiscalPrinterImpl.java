@@ -4544,6 +4544,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         receipt.fsWriteTLV(data);
     }
 
+    public void fsWriteOperationTLV(byte[] data) throws Exception {
+        receipt.fsWriteOperationTLV(data);
+    }
+
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
         receipt.fsWriteTag(tagId, tagValue);
     }

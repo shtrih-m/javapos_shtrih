@@ -3044,12 +3044,18 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command;
     }
 
-    public int fsWriteTLV(byte[] tlv) throws Exception {
+    public void fsWriteTLV(byte[] tlv) throws Exception {
         FSWriteTLV command = new FSWriteTLV();
         command.setSysPassword(sysPassword);
         command.setTlv(tlv);
         execute(command);
-        return command.getResultCode();
+    }
+
+    public void fsWriteOperationTLV(byte[] tlv) throws Exception {
+        FSWriteOperationTLV command = new FSWriteOperationTLV();
+        command.setSysPassword(sysPassword);
+        command.setTlv(tlv);
+        execute(command);
     }
 
     public FSReadBufferStatus fsReadBufferStatus() throws Exception {
@@ -3126,8 +3132,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return list.getData();
     }
 
-    public int fsWriteTag(int tagId, String tagValue) throws Exception {
-        return fsWriteTLV(getTLVData(tagId, tagValue));
+    public void fsWriteTag(int tagId, String tagValue) throws Exception {
+        fsWriteTLV(getTLVData(tagId, tagValue));
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -3136,7 +3142,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     // последующие 8 байт – код группы товаров
     // последние 20 байт – код идентификации товара
     ///////////////////////////////////////////////////////////////////////////
-    public int fsWriteTag1162(int catId, long groupId, String itemId)
+    public void fsWriteTag1162(int catId, long groupId, String itemId)
             throws Exception {
         TLVWriter writer = new TLVWriter();
         writer.add(catId, 4);
@@ -3146,7 +3152,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         writer.clear();
         writer.add(1162, data);
-        return fsWriteTLV(writer.getBytes());
+        fsWriteTLV(writer.getBytes());
     }
 
     public LongPrinterStatus getLongStatus() throws Exception {

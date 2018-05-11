@@ -456,12 +456,14 @@ public interface SMFiscalPrinter {
 
     public void openFiscalDay() throws Exception;
 
-    public int fsWriteTag(int tagId, String tagValue) throws Exception;
+    public void fsWriteTag(int tagId, String tagValue) throws Exception;
 
-    public int fsWriteTag1162(int catId, long groupId, String itemId)
+    public void fsWriteTag1162(int catId, long groupId, String itemId)
             throws Exception;
 
-    public int fsWriteTLV(byte[] tlv) throws Exception;
+    public void fsWriteTLV(byte[] tlv) throws Exception;
+    
+    public void fsWriteOperationTLV(byte[] tlv) throws Exception;
 
     public byte[] getTLVData(int tagId, String tagValue) throws Exception;
 

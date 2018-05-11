@@ -2,14 +2,13 @@ package com.shtrih.jpos.fiscalprinter.directIO;
 
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 
-public class DIOFSWriteTLV extends DIOItem {
+public class DIOFSWriteOperationTLV extends DIOItem {
 
-    public DIOFSWriteTLV(FiscalPrinterImpl service) {
+    public DIOFSWriteOperationTLV(FiscalPrinterImpl service) {
         super(service);
     }
 
     public void execute(int[] data, Object object) throws Exception {
-        service.fsWriteTLV((byte[]) object);
+        service.fsWriteOperationTLV((byte[]) object);
     }
 }
-

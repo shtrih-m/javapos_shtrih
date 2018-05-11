@@ -246,6 +246,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 printTotalDiscount((AmountItem) item);
             }
 
+            if (item instanceof FSOperationTLVItem) {
+                FSOperationTLVItem tlvItem = (FSOperationTLVItem) item;
+                getDevice().fsWriteOperationTLV(tlvItem.getData());
+
+                // TODO: print tag?
+            }
+            
             if (item instanceof FSTLVItem) {
                 FSTLVItem tlvItem = (FSTLVItem) item;
                 getDevice().fsWriteTLV(tlvItem.getData());
@@ -1133,6 +1140,25 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
+    public class FSOperationTLVItem {
+
+        private final byte[] data;
+        private FontNumber font;
+
+        public FSOperationTLVItem(byte[] data, FontNumber font) {
+            this.data = data;
+            this.font = font;
+        }
+
+        public byte[] getData() {
+            return data;
+        }
+
+        public FontNumber getFont() {
+            return font;
+        }
+    }
+
     public void disablePrint() throws Exception {
         disablePrint = true;
     }
@@ -1143,6 +1169,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void fsWriteTLV(byte[] data) throws Exception {
         items.add(new FSTLVItem(data, getParams().getFont()));
+    }
+
+    public void fsWriteOperationTLV(byte[] data) throws Exception {
+        items.add(new FSOperationTLVItem(data, getParams().getFont()));
     }
 
     private void fsWriteTag2(int tagId, String tagValue) throws Exception {

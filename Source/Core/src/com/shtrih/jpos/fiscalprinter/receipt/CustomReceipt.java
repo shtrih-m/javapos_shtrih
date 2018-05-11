@@ -243,6 +243,9 @@ public abstract class CustomReceipt implements FiscalReceipt {
     public void fsWriteTLV(byte[] data) throws Exception {
     }
 
+    public void fsWriteOperationTLV(byte[] data) throws Exception {
+    }
+
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
     }
 

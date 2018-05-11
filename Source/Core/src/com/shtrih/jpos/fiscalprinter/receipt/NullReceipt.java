@@ -202,6 +202,10 @@ public class NullReceipt implements FiscalReceipt {
         getPrinter().getPrinter().fsWriteTLV(data);
     }
 
+    public void fsWriteOperationTLV(byte[] data) throws Exception {
+        getPrinter().getPrinter().fsWriteOperationTLV(data);
+    }
+
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
         getPrinter().getPrinter().fsWriteTag(tagId, tagValue);
     }

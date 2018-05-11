@@ -320,6 +320,10 @@ public class DirectIOHandler2 {
                 new DIOFSWriteTLV(service).execute(data, object);
                 break;
 
+            case SmFptrConst.SMFPTR_DIO_FS_WRITE_OPERATION_TLV:
+                new DIOFSWriteOperationTLV(service).execute(data, object);
+                break;
+
             case SmFptrConst.SMFPTR_DIO_PRINT_DOC_END:
                 new DIOPrintDocEnd(service).execute(data, object);
                 break;

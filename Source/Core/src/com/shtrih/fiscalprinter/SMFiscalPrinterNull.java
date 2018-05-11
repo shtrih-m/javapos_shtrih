@@ -779,12 +779,16 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void openFiscalDay() throws Exception {
     }
 
-    public int fsWriteTag(int tagId, String tagValue) throws Exception {
-        return 0;
+    public void fsWriteTag(int tagId, String tagValue) throws Exception {
+        
     }
 
-    public int fsWriteTLV(byte[] tlv) throws Exception {
-        return 0;
+    public void fsWriteTLV(byte[] tlv) throws Exception {
+        
+    }
+
+    public void fsWriteOperationTLV(byte[] tlv) throws Exception {
+        
     }
 
     public byte[] getTLVData(int tagId, String tagValue) throws Exception {
@@ -977,9 +981,9 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
-    public int fsWriteTag1162(int catId, long groupId, String itemId)
+    public void fsWriteTag1162(int catId, long groupId, String itemId)
             throws Exception {
-        return 0;
+        
     }
 
     public void setIsFooter(boolean value) {

@@ -96,6 +96,8 @@ public interface FiscalReceipt {
     public void printNormal(int station, String data) throws Exception;
 
     public void fsWriteTLV(byte[] data) throws Exception;
+    
+    public void fsWriteOperationTLV(byte[] data) throws Exception;
 
     public void fsWriteTag(int tagId, String tagValue) throws Exception;
 

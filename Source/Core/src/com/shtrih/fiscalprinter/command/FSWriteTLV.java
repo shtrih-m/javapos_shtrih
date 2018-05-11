@@ -1,25 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.shtrih.fiscalprinter.command;
 
-import com.shtrih.ej.EJDate;
-import com.shtrih.util.BitUtils;
-
-/**
- *
- * @author V.Kravtsov
- */
 /**
  * Передать произвольную TLV структуру
  * Код команды FF0Ch . Длина сообщения: 6+N байт.
- * Пароль системного администратора: 4 байта
- * TLV Структура N байт (мах 250 байт)
+ *   Пароль системного администратора: 4 байта
+ *   TLV Структура N байт (мах 250 байт)
  * Ответ: FF0Сh Длина сообщения 1 байт.
- * Код ошибки (1 байт)
- *
+ *   Код ошибки (1 байт)
  */
 public class FSWriteTLV extends PrinterCommand {
 
@@ -73,6 +61,5 @@ public class FSWriteTLV extends PrinterCommand {
     public void setTlv(byte[] tlv) {
         this.tlv = tlv;
     }
-
-
 }
+
