@@ -3,15 +3,18 @@ package com.shtrih.tinyjavapostester;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
 import com.shtrih.fiscalprinter.SmFiscalPrinterException;
+import com.shtrih.fiscalprinter.TLVWriter;
 import com.shtrih.fiscalprinter.command.DeviceMetrics;
 import com.shtrih.fiscalprinter.command.FSDocType;
 import com.shtrih.fiscalprinter.command.FSStatusInfo;
 import com.shtrih.fiscalprinter.command.LongPrinterStatus;
 import com.shtrih.jpos.fiscalprinter.JposExceptionHandler;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
+import com.shtrih.jpos1c.xml.check.AgentData;
 import com.shtrih.jpos1c.xml.check.Barcode;
 import com.shtrih.jpos1c.xml.check.CheckPackage;
 import com.shtrih.jpos1c.xml.check.FiscalString;
+import com.shtrih.jpos1c.xml.check.PurveyorData;
 import com.shtrih.jpos1c.xml.check.TextString;
 import com.shtrih.jpos1c.xml.correctioncheck.CheckCorrectionPackage;
 import com.shtrih.jpos1c.xml.inputparameters.InputParameters;
@@ -102,8 +105,8 @@ public class FFD105Documents {
     /**
      * Формирование чека коррекции
      *
-     * @param printer        драйвер
-     * @param params         данные чека
+     * @param printer драйвер
+     * @param params  данные чека
      */
     public void processCorrectionCheck(ShtrihFiscalPrinter printer, CheckCorrectionPackage params) throws Exception {
         prepare(printer);
@@ -236,7 +239,37 @@ public class FFD105Documents {
                 printer.setDepartment(item.Department);
                 printer.printRecItem(item.Name, 0, (int) item.getQuantity(), item.getTax(), item.getPrice(), "");
 
-                // TODO: Agent and Purveyor tags?
+                if (item.SignSubjectCalculationAgent > 0) {
+                    printer.fsWriteOperationTag(1222, item.SignSubjectCalculationAgent, 1);
+                }
+
+                if (item.MeasurementUnit != null) {
+                    printer.fsWriteOperationTag(1197, item.MeasurementUnit);
+                }
+
+                if (item.AgentData != null) {
+
+                    byte[] agentData = buildAgentDataTLV(item.AgentData);
+
+                    if (agentData.length > 0)
+                        printer.fsWriteOperationTag(1223, agentData);
+                }
+
+                if (item.PurveyorData != null) {
+                    
+                    if (item.PurveyorData.PurveyorVATIN != null)
+                        printer.fsWriteOperationTag(1226, item.PurveyorData.PurveyorVATIN);
+
+                    byte[] purveyorData = buildPurveyorDataTLV(item.PurveyorData);
+
+                    if (purveyorData.length > 0)
+                        printer.fsWriteOperationTag(1224, purveyorData);
+                }
+
+                if(item.GoodCodeData != null){
+                    printer.fsWriteTag1162();
+                }
+
 
             } else if (element instanceof TextString) {
                 TextString item = (TextString) element;
@@ -301,6 +334,45 @@ public class FFD105Documents {
             printer.printRecTotal(0, params.Payments.getCashProvision(), "15");
 
         printer.endFiscalReceipt(false);
+    }
+
+    private byte[] buildAgentDataTLV(AgentData agentData) throws Exception {
+        TLVWriter tlv = new TLVWriter();
+
+        if (agentData.PayingAgentOperation != null)
+            tlv.add(1044, agentData.PayingAgentOperation);
+
+        if (agentData.PayingAgentPhone != null)
+            tlv.add(1073, agentData.PayingAgentPhone);
+
+        if (agentData.ReceivePaymentsOperatorPhone != null)
+            tlv.add(1074, agentData.ReceivePaymentsOperatorPhone);
+
+        if (agentData.MoneyTransferOperatorPhone != null)
+            tlv.add(1075, agentData.MoneyTransferOperatorPhone);
+
+        if (agentData.MoneyTransferOperatorName != null)
+            tlv.add(1026, agentData.MoneyTransferOperatorName);
+
+        if (agentData.MoneyTransferOperatorAddress != null)
+            tlv.add(1005, agentData.MoneyTransferOperatorAddress);
+
+        if (agentData.MoneyTransferOperatorVATIN != null)
+            tlv.add(1016, agentData.MoneyTransferOperatorVATIN);
+
+        return tlv.getBytes();
+    }
+
+    private byte[] buildPurveyorDataTLV(PurveyorData purveyorData) throws Exception  {
+        TLVWriter tlv = new TLVWriter();
+
+        if (purveyorData.PurveyorName != null)
+            tlv.add(1225, purveyorData.PurveyorName);
+
+        if (purveyorData.PurveyorPhone != null)
+            tlv.add(1171, purveyorData.PurveyorPhone);
+
+        return tlv.getBytes();
     }
 
     private void printBarCode(ShtrihFiscalPrinter printer, Barcode item) throws JposException {
