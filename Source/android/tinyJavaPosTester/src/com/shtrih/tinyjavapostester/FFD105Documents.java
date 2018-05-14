@@ -267,7 +267,7 @@ public class FFD105Documents {
                 }
 
                 if(item.GoodCodeData != null){
-                    printer.fsWriteTag1162();
+                    // TODO: printer.fsWriteTag1162();
                 }
 
 
