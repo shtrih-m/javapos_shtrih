@@ -981,11 +981,6 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
-    public void fsWriteTag1162(int catId, long groupId, String itemId)
-            throws Exception {
-        
-    }
-
     public void setIsFooter(boolean value) {
     }
 

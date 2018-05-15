@@ -467,8 +467,6 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_PRINT_CORRECTION2 = 0x43;
     
     public static final int SMFPTR_DIO_READ_TOTALS = 0x44;
-    
-    public static final int SMFPTR_DIO_FS_WRITE_TAG_1162 = 0x45;
 
     public static final int SMFPTR_DIO_PRINT_RAW_GRAPHICS = 0x46;
 

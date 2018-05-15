@@ -458,9 +458,6 @@ public interface SMFiscalPrinter {
 
     public void fsWriteTag(int tagId, String tagValue) throws Exception;
 
-    public void fsWriteTag1162(int catId, long groupId, String itemId)
-            throws Exception;
-
     public void fsWriteTLV(byte[] tlv) throws Exception;
     
     public void fsWriteOperationTLV(byte[] tlv) throws Exception;

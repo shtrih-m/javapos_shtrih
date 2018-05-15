@@ -3136,25 +3136,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         fsWriteTLV(getTLVData(tagId, tagValue));
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Данные в массиве представлены в виде строки, в которой:
-    // первые 4 байта – код справочника
-    // последующие 8 байт – код группы товаров
-    // последние 20 байт – код идентификации товара
-    ///////////////////////////////////////////////////////////////////////////
-    public void fsWriteTag1162(int catId, long groupId, String itemId)
-            throws Exception {
-        TLVWriter writer = new TLVWriter();
-        writer.add(catId, 4);
-        writer.add(groupId, 8);
-        writer.add(itemId, 20);
-        byte[] data = writer.getBytes();
-
-        writer.clear();
-        writer.add(1162, data);
-        fsWriteTLV(writer.getBytes());
-    }
-
     public LongPrinterStatus getLongStatus() throws Exception {
         if (longStatus == null) {
             longStatus = readLongStatus();

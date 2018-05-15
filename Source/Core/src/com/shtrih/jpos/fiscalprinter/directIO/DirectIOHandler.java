@@ -328,10 +328,6 @@ public class DirectIOHandler {
                 new DIOFSWriteTag(service).execute(data, object);
                 break;
 
-            case SmFptrConst.SMFPTR_DIO_FS_WRITE_TAG_1162:
-                new DIOFSWriteTag(service).execute(data, object);
-                break;
-                
             case SmFptrConst.SMFPTR_DIO_FS_WRITE_TLV:
                 new DIOFSWriteTLV(service).execute(data, object);
                 break;
