@@ -14,18 +14,18 @@ public class GoodCodeData {
      *  "02" – изделия из меха
      *  "03" – лекарственные препараты
      */
-    @Attribute(required = false)
+    @Attribute
     public String StampType;
 
     /**
      * Контрольный идентификационный знак (КиЗ)
      */
-    @Attribute(required = false)
+    @Attribute
     public String Stamp;
 
     /**
      * Глобальный идентификатор торговой единицы (GTIN)
      */
-    @Attribute(required = false)
-    public String GTIN;
+    @Attribute
+    public long GTIN;
 }

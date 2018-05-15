@@ -14,6 +14,7 @@ import com.shtrih.jpos1c.xml.check.AgentData;
 import com.shtrih.jpos1c.xml.check.Barcode;
 import com.shtrih.jpos1c.xml.check.CheckPackage;
 import com.shtrih.jpos1c.xml.check.FiscalString;
+import com.shtrih.jpos1c.xml.check.GoodCodeData;
 import com.shtrih.jpos1c.xml.check.PurveyorData;
 import com.shtrih.jpos1c.xml.check.TextString;
 import com.shtrih.jpos1c.xml.correctioncheck.CheckCorrectionPackage;
@@ -239,14 +240,17 @@ public class FFD105Documents {
                 printer.setDepartment(item.Department);
                 printer.printRecItem(item.Name, 0, (int) item.getQuantity(), item.getTax(), item.getPrice(), "");
 
-                if (item.SignSubjectCalculationAgent > 0) {
-                    printer.fsWriteOperationTag(1222, item.SignSubjectCalculationAgent, 1);
-                }
-
+                // единица измерения предмета расчета
                 if (item.MeasurementUnit != null) {
                     printer.fsWriteOperationTag(1197, item.MeasurementUnit);
                 }
 
+                // признак агента по предмету расчета
+                if (item.SignSubjectCalculationAgent > 0) {
+                    printer.fsWriteOperationTag(1222, item.SignSubjectCalculationAgent, 1);
+                }
+
+                // данные агента
                 if (item.AgentData != null) {
 
                     byte[] agentData = buildAgentDataTLV(item.AgentData);
@@ -255,8 +259,9 @@ public class FFD105Documents {
                         printer.fsWriteOperationTag(1223, agentData);
                 }
 
+                // данные поставщика
                 if (item.PurveyorData != null) {
-                    
+
                     if (item.PurveyorData.PurveyorVATIN != null)
                         printer.fsWriteOperationTag(1226, item.PurveyorData.PurveyorVATIN);
 
@@ -266,11 +271,11 @@ public class FFD105Documents {
                         printer.fsWriteOperationTag(1224, purveyorData);
                 }
 
-                if(item.GoodCodeData != null){
-                    // TODO: printer.fsWriteTag1162();
+                // код товарной номенклатуры(КТН)
+                if (item.GoodCodeData != null) {
+                    byte[] data = generateKTN(item.GoodCodeData);
+                    printer.fsWriteOperationTag(1162, data);
                 }
-
-
             } else if (element instanceof TextString) {
                 TextString item = (TextString) element;
                 printer.printRecMessage(item.Text, item.FontNumber);
@@ -336,6 +341,33 @@ public class FFD105Documents {
         printer.endFiscalReceipt(false);
     }
 
+    private byte[] generateKTN(GoodCodeData data) throws Exception {
+        if (data.StampType.equals("02")) {
+            return generateKTN02(data.GTIN, data.Stamp);
+        } else if (data.StampType.equals("03")) {
+            return generateKTN03(data.GTIN, data.Stamp);
+        } else {
+            throw new UnsupportedOperationException("Unknown GoodCodeData.StampType " + data.StampType);
+        }
+    }
+
+    private byte[] generateKTN02(long gtin, String stamp) throws Exception {
+        TLVWriter writer = new TLVWriter();
+        writer.add(new byte[]{0x00, 0x02}); // два байта код (2)
+        writer.addBE(gtin, 6); // GTIN 6 байт Big Endian
+        writer.add(extendWithSpacesToFixedLength(stamp, 20)); // КИЗ 20 байт
+        return writer.getBytes();
+    }
+
+    private byte[] generateKTN03(long gtin, String stamp) throws Exception {
+        TLVWriter writer = new TLVWriter();
+        writer.add(new byte[]{0x00, 0x03}); // два байта код (3)
+        writer.add(extendWithSpacesToFixedLength(stamp, 13)); // 13 байт зав. номера
+        writer.addBE(gtin, 6); // GTIN 6 байт Big Endian
+
+        return writer.getBytes();
+    }
+
     private byte[] buildAgentDataTLV(AgentData agentData) throws Exception {
         TLVWriter tlv = new TLVWriter();
 
@@ -363,7 +395,7 @@ public class FFD105Documents {
         return tlv.getBytes();
     }
 
-    private byte[] buildPurveyorDataTLV(PurveyorData purveyorData) throws Exception  {
+    private byte[] buildPurveyorDataTLV(PurveyorData purveyorData) throws Exception {
         TLVWriter tlv = new TLVWriter();
 
         if (purveyorData.PurveyorName != null)

@@ -972,16 +972,18 @@ public class MainActivity extends AppCompatActivity {
             String itemName = items[rand.nextInt(items.length)];
             printer.printRecItem(itemName, price, 0, 0, 0, "");
 
+            // printer.fsWriteOperationTag(1226, "1234567890  ");
+
             for (int j = 0; j < strings; j++) {
                 printer.printRecMessage("Продажа № " + (i + 1) + ", строка " + (j + 1));
             }
         }
 
+        printer.fsWriteTag(1008, "foo@example.com");
+
+        // printer.fsWriteTag(1057, 4, 1);
+
         printer.printRecTotal(payment, payment, "1");
-
-        printer.directIO(0x39, null, "foo@example.com");
-
-        printer.fsWriteTag(1057, 4, 1);
 
         printer.endFiscalReceipt(false);
 

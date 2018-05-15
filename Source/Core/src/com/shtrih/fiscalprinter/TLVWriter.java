@@ -36,6 +36,15 @@ public class TLVWriter {
         stream.write(buffer, 0, len);
     }
 
+    public void addBE(long v, int len) throws Exception {
+        byte buffer[] = new byte[len];
+        for (int i = 0; i < len; i++) {
+            buffer[len - i - 1] = (byte) ((v >>> (8 * i)) & 0xFF);
+        }
+
+        stream.write(buffer, 0, len);
+    }
+
     public void add(byte[] data) throws Exception {
         stream.write(data);
     }
