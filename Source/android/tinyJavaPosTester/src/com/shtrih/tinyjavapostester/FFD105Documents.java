@@ -1,6 +1,7 @@
 package com.shtrih.tinyjavapostester;
 
 import com.shtrih.barcode.PrinterBarcode;
+import com.shtrih.fiscalprinter.GCNGenerator;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
 import com.shtrih.fiscalprinter.SmFiscalPrinterException;
 import com.shtrih.fiscalprinter.TLVWriter;
@@ -343,29 +344,12 @@ public class FFD105Documents {
 
     private byte[] generateKTN(GoodCodeData data) throws Exception {
         if (data.StampType.equals("02")) {
-            return generateKTN02(data.GTIN, data.Stamp);
+            return GCNGenerator.generate02(data.GTIN, data.Stamp);
         } else if (data.StampType.equals("03")) {
-            return generateKTN03(data.GTIN, data.Stamp);
+            return GCNGenerator.generate03(data.GTIN, data.Stamp);
         } else {
             throw new UnsupportedOperationException("Unknown GoodCodeData.StampType " + data.StampType);
         }
-    }
-
-    private byte[] generateKTN02(long gtin, String stamp) throws Exception {
-        TLVWriter writer = new TLVWriter();
-        writer.add(new byte[]{0x00, 0x02}); // два байта код (2)
-        writer.addBE(gtin, 6); // GTIN 6 байт Big Endian
-        writer.add(extendWithSpacesToFixedLength(stamp, 20)); // КИЗ 20 байт
-        return writer.getBytes();
-    }
-
-    private byte[] generateKTN03(long gtin, String stamp) throws Exception {
-        TLVWriter writer = new TLVWriter();
-        writer.add(new byte[]{0x00, 0x03}); // два байта код (3)
-        writer.add(extendWithSpacesToFixedLength(stamp, 13)); // 13 байт зав. номера
-        writer.addBE(gtin, 6); // GTIN 6 байт Big Endian
-
-        return writer.getBytes();
     }
 
     private byte[] buildAgentDataTLV(AgentData agentData) throws Exception {
@@ -504,3 +488,4 @@ public class FFD105Documents {
         return metrics.getModel() == 45; // КЯ
     }
 }
+
