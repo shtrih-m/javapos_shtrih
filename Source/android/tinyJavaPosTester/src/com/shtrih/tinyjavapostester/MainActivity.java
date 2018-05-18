@@ -33,12 +33,15 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.pdf417.encoder.Compaction;
 import com.google.zxing.pdf417.encoder.Dimensions;
 import com.shtrih.barcode.PrinterBarcode;
+import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
 import com.shtrih.fiscalprinter.SmFiscalPrinterException;
 import com.shtrih.fiscalprinter.TLVItem;
 import com.shtrih.fiscalprinter.TLVItems;
 import com.shtrih.fiscalprinter.TLVParser;
 import com.shtrih.fiscalprinter.TLVTag;
+import com.shtrih.fiscalprinter.command.BeginNonFiscalDocument;
+import com.shtrih.fiscalprinter.command.CloseNonFiscal;
 import com.shtrih.fiscalprinter.command.DeviceMetrics;
 import com.shtrih.fiscalprinter.command.FSCommunicationStatus;
 import com.shtrih.fiscalprinter.command.FSDocumentInfo;
@@ -742,15 +745,32 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
 
-            startedAt = System.currentTimeMillis();
 
             try {
                 printer.resetPrinter();
 
-                String text = "«Мой дядя самых честных правил";
+                boolean isCashCore = isCashCore(printer);
+
+                startedAt = System.currentTimeMillis();
+
+                if (isCashCore) {
+                    BeginNonFiscalDocument cmd = new BeginNonFiscalDocument();
+                    cmd.setPassword(printer.getUsrPassword());
+                    printer.executeCommand(cmd);
+                }
+
+                String text = "Мой дядя самых честных правил";
+
+                FontNumber font = new FontNumber(1);
 
                 for (int i = 0; i < lines; i++) {
-                    printer.printText(text);
+                    printer.printText(text, font);
+                }
+
+                if (isCashCore) {
+                    CloseNonFiscal cmd = new CloseNonFiscal();
+                    cmd.setPassword(printer.getUsrPassword());
+                    printer.executeCommand(cmd);
                 }
 
                 return null;
@@ -761,6 +781,11 @@ public class MainActivity extends AppCompatActivity {
             } finally {
                 doneAt = System.currentTimeMillis();
             }
+        }
+
+        private boolean isCashCore(ShtrihFiscalPrinter printer) throws JposException {
+            DeviceMetrics metrics = printer.readDeviceMetrics();
+            return metrics.getModel() == 45; // КЯ
         }
 
         @Override
