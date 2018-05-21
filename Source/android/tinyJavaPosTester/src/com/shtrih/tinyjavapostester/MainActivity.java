@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.EncodeHintType;
@@ -194,6 +196,11 @@ public class MainActivity extends AppCompatActivity {
         MainViewModel model = ViewModelProviders.of(this).get(MainViewModel.class);
 
         printer = model.getPrinter();
+
+        String logPath = "Log path: " + SysUtils.getFilesPath() + LogbackConfig.MainFileName;
+
+        TextView lblLogPath = findViewById(R.id.lblLogPathValue);
+        lblLogPath.setText(logPath);
     }
 
     @Override
@@ -463,7 +470,45 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(i, DeviceListActivity.REQUEST_CONNECT_BT_DEVICE);
             return true;
         }
+        if (id == R.id.action_share_log) {
+
+            shareLogFile();
+
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void shareLogFile() {
+        try {
+            String logPath = SysUtils.getFilesPath() + LogbackConfig.MainFileName;
+
+            Intent intentShareFile = new Intent(Intent.ACTION_SEND);
+
+            intentShareFile.setType("text/plain");
+
+            boolean logExists = fileExists(logPath);
+
+            if (!logExists) {
+                Toast.makeText(this, "Log file was not found", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            intentShareFile.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + logPath));
+
+            startActivity(Intent.createChooser(intentShareFile, "Share log"));
+        } catch (Exception e) {
+            Log.d(TAG, "Log sharing failed", e);
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private boolean fileExists(String path) {
+        File f = new File(path);
+        if (f.exists() && !f.isDirectory()) {
+            return true;
+        }
+        return false;
     }
 
     public void printEAN13Barcode(View v) {
@@ -1323,8 +1368,6 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d("MainActivity", "Generating jpos.xml...");
 
-                SysUtils.setFilesPath(getApplicationContext().getFilesDir().getAbsolutePath());
-
                 Map<String, String> props = new HashMap<>();
                 props.put("portName", address);
                 props.put("portType", "2");
@@ -1389,7 +1432,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             int deviceId = usbs.get(0).getDevice().getDeviceId();
-            SysUtils.setFilesPath(this.getFilesDir().getAbsolutePath());
 
             HashMap<String, String> props = new HashMap<>();
             props.put("portName", String.format(Locale.ENGLISH, "%d", deviceId));

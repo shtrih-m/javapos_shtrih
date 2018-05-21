@@ -432,5 +432,15 @@
             android:layout_height="wrap_content"
             android:onClick="syncDateTime"
             android:text="@string/action_sync_date_time" />
+
+        <TextView
+            android:id="@+id/lblLogPathValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dip"
+            android:layout_marginRight="5dip"
+            android:text="" />
     </LinearLayout>
+
+
 </ScrollView>

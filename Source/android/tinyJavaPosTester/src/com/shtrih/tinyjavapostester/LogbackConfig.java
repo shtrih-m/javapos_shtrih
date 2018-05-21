@@ -12,6 +12,7 @@ import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy;
 
 public class LogbackConfig {
+	public static final String MainFileName = "tinyJavaPosTester.txt";
 
 	public static void configure(String logDir) {
 		// reset the default context (which may already have been initialized)
@@ -27,7 +28,7 @@ public class LogbackConfig {
 
 		RollingFileAppender<ILoggingEvent> fileAppender = new RollingFileAppender<>();
 		fileAppender.setContext(lc);
-		fileAppender.setFile(logDir + "tinyJavaPosTester.log");
+		fileAppender.setFile(logDir + MainFileName);
 
 		SizeBasedTriggeringPolicy<ILoggingEvent> trigPolicy = new SizeBasedTriggeringPolicy<>();
 		trigPolicy.setMaxFileSize("10MB"); // задаем максимальный размер фрагмента
@@ -37,7 +38,7 @@ public class LogbackConfig {
 		FixedWindowRollingPolicy rollingPolicy = new FixedWindowRollingPolicy();
 		rollingPolicy.setContext(lc);
 		rollingPolicy.setParent(fileAppender);
-		rollingPolicy.setFileNamePattern(logDir + "tinyJavaPosTester.%i.log");
+		rollingPolicy.setFileNamePattern(logDir + "tinyJavaPosTester.%i.txt");
 		rollingPolicy.setMinIndex(1); // храним 9 файлов предыдущих логов
 		rollingPolicy.setMaxIndex(9);
 		rollingPolicy.start();
