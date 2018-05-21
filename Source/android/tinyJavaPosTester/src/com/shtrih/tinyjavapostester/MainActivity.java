@@ -389,8 +389,9 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String, String> props = new HashMap<>();
                 props.put("portName", address);
                 props.put("portType", "3");
-                props.put("protocolType", "1");
                 props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothPort");
+                props.put("protocolType", selectedProtocol);
+                props.put("fastConnect", chbFastConnect.isChecked() ? "1" : "0");
 
                 JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
                 if (printer.getState() != JposConst.JPOS_S_CLOSED) {
