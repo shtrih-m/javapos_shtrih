@@ -979,8 +979,7 @@ class PrinterTest implements FiscalPrinterConst {
     }
     
     public void printFiscalReceipt() {
-        printFiscalReceipt145_2();
-        //printFiscalReceipt145_4();
+        printFiscalReceipt145_5();
     }
     
     public void disablePrint() {
@@ -3659,5 +3658,24 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
     
+    public void printFiscalReceipt145_5() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(false);
+            
+            printer.setPostLine("PostLine1");
+            printer.printRecItem("АИ-92-К5        N  2", 50008, 13300, 1, 3760, "");
+            printer.printRecSubtotal(50008);
+            printer.printRecSubtotalAdjustment(1, "скидка округления 0.08", 8);
+            printer.printRecTotal(50008, 50000, "0");    
+          
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+  
     
 }

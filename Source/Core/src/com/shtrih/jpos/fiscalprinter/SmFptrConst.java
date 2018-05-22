@@ -549,6 +549,11 @@ public interface SmFptrConst {
      * Write TLV data bound to operation
      */
     public static final int SMFPTR_DIO_FS_WRITE_OPERATION_TLV = 0x5A;
+
+    /**
+     * Read EJ document *
+     */
+    public static final int SMFPTR_DIO_READ_EJ_DOCUMENT = 0x5B;
     
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:

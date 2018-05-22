@@ -47,8 +47,8 @@ public class MainDialog extends javax.swing.JDialog
         printer.addErrorListener(this);
         lbEvents.setModel(eventList);
         System.out.println(System.getProperty("os.name"));
-    System.out.println(System.getProperty("os.arch"));
-    System.out.println(System.getProperty("os.version"));
+        System.out.println(System.getProperty("os.arch"));
+        System.out.println(System.getProperty("os.version"));
     }
 
     public String getEventTimeStamp() {
@@ -152,6 +152,7 @@ public class MainDialog extends javax.swing.JDialog
         btnReadMaxGraphics = new javax.swing.JButton();
         btnGetGrandTotal = new javax.swing.JButton();
         btnPrintSpeedTest = new javax.swing.JButton();
+        btnReadLastEJDocument = new javax.swing.JButton();
         pnlImage = new javax.swing.JPanel();
         pnlReceiptImage = new javax.swing.JPanel();
         edtImageFile = new javax.swing.JTextField();
@@ -501,13 +502,13 @@ public class MainDialog extends javax.swing.JDialog
                 btnReadStatusActionPerformed(evt);
             }
         });
-        pnlFptr2.add(btnReadStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(507, 10, 130, -1));
+        pnlFptr2.add(btnReadStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 10, 170, -1));
 
         Memo1.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
         Memo1.setPreferredSize(new java.awt.Dimension(10, 23));
         Pane2.setViewportView(Memo1);
 
-        pnlFptr2.add(Pane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 490, 460));
+        pnlFptr2.add(Pane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 450, 460));
 
         btnReadCashReg.setText("read cash registers");
         btnReadCashReg.addActionListener(new java.awt.event.ActionListener() {
@@ -515,7 +516,7 @@ public class MainDialog extends javax.swing.JDialog
                 btnReadCashRegActionPerformed(evt);
             }
         });
-        pnlFptr2.add(btnReadCashReg, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 70, -1, -1));
+        pnlFptr2.add(btnReadCashReg, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 70, 170, -1));
 
         btnReadOperReg.setText("operation registers");
         btnReadOperReg.addActionListener(new java.awt.event.ActionListener() {
@@ -523,7 +524,7 @@ public class MainDialog extends javax.swing.JDialog
                 btnReadOperRegActionPerformed(evt);
             }
         });
-        pnlFptr2.add(btnReadOperReg, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 40, 130, -1));
+        pnlFptr2.add(btnReadOperReg, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 40, 170, -1));
 
         btnGetData.setText("getDailyTotal");
         btnGetData.addActionListener(new java.awt.event.ActionListener() {
@@ -531,7 +532,7 @@ public class MainDialog extends javax.swing.JDialog
                 btnGetDataActionPerformed(evt);
             }
         });
-        pnlFptr2.add(btnGetData, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 130, 130, -1));
+        pnlFptr2.add(btnGetData, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 130, 170, -1));
 
         btnReadMaxGraphics.setText("read max graphics");
         btnReadMaxGraphics.addActionListener(new java.awt.event.ActionListener() {
@@ -539,7 +540,7 @@ public class MainDialog extends javax.swing.JDialog
                 btnReadMaxGraphicsActionPerformed(evt);
             }
         });
-        pnlFptr2.add(btnReadMaxGraphics, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 100, 130, -1));
+        pnlFptr2.add(btnReadMaxGraphics, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 100, 170, -1));
 
         btnGetGrandTotal.setText("getGrandTotal");
         btnGetGrandTotal.addActionListener(new java.awt.event.ActionListener() {
@@ -547,7 +548,7 @@ public class MainDialog extends javax.swing.JDialog
                 btnGetGrandTotalActionPerformed(evt);
             }
         });
-        pnlFptr2.add(btnGetGrandTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 160, 130, -1));
+        pnlFptr2.add(btnGetGrandTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 160, 170, -1));
 
         btnPrintSpeedTest.setText("Print speed test");
         btnPrintSpeedTest.addActionListener(new java.awt.event.ActionListener() {
@@ -555,7 +556,15 @@ public class MainDialog extends javax.swing.JDialog
                 btnPrintSpeedTestActionPerformed(evt);
             }
         });
-        pnlFptr2.add(btnPrintSpeedTest, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 200, 130, -1));
+        pnlFptr2.add(btnPrintSpeedTest, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 190, 170, -1));
+
+        btnReadLastEJDocument.setText("Read last EJ document");
+        btnReadLastEJDocument.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReadLastEJDocumentActionPerformed(evt);
+            }
+        });
+        pnlFptr2.add(btnReadLastEJDocument, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 240, 170, -1));
 
         tabPane1.addTab("Printer status", pnlFptr2);
 
@@ -1214,13 +1223,13 @@ public class MainDialog extends javax.swing.JDialog
         controller.printFiscalReceipt3();
     }//GEN-LAST:event_btnPrintFiscalReceipt3ActionPerformed
 
-    private void btnPrintBarcodesActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+    private void btnPrintBarcodesActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             controller.printBarcodes();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }                                                
+    }
 
     private void btnPrintEJournalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintBarcodesActionPerformed
         try {
@@ -1266,6 +1275,14 @@ public class MainDialog extends javax.swing.JDialog
             e.printStackTrace();
         }
     }//GEN-LAST:event_btnUpdateFirmwareActionPerformed
+
+    private void btnReadLastEJDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReadLastEJDocumentActionPerformed
+        try {
+            Memo1.setText(printer.toString(printer.readLastEJDocument()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnReadLastEJDocumentActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -1341,6 +1358,7 @@ public class MainDialog extends javax.swing.JDialog
     private javax.swing.JButton btnPrintRefundReceipt;
     private javax.swing.JButton btnPrintSpeedTest;
     private javax.swing.JButton btnReadCashReg;
+    private javax.swing.JButton btnReadLastEJDocument;
     private javax.swing.JButton btnReadMaxGraphics;
     private javax.swing.JButton btnReadOperReg;
     private javax.swing.JButton btnReadStatus;

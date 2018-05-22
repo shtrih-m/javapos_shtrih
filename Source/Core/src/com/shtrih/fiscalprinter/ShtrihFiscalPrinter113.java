@@ -11,7 +11,6 @@ package com.shtrih.fiscalprinter;
 /**
  * @author V.Kravtsov
  */
-
 import jpos.*;
 
 import java.util.Vector;
@@ -40,7 +39,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
      * Creates a new instance of ShtrihFiscalPrinter
      */
     public ShtrihFiscalPrinter113(FiscalPrinterControl113 printer,
-                                  String encoding) {
+            String encoding) {
         this.printer = printer;
         this.encoding = encoding;
     }
@@ -277,27 +276,27 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public void printRecItemFuel(String description, long price, int quantity,
-                                 int vatInfo, long unitPrice, String unitName, long specialTax,
-                                 String specialTaxName) throws JposException {
+            int vatInfo, long unitPrice, String unitName, long specialTax,
+            String specialTaxName) throws JposException {
         printer.printRecItemFuel(encodeString(description), price, quantity,
                 vatInfo, unitPrice, encodeString(unitName), specialTax,
                 encodeString(specialTaxName));
     }
 
     public void printRecItemFuelVoid(String description, long price,
-                                     int vatInfo, long specialTax) throws JposException {
+            int vatInfo, long specialTax) throws JposException {
         printer.printRecItemFuelVoid(encodeString(description), price, vatInfo,
                 specialTax);
     }
 
     public void printRecPackageAdjustment(int adjustmentType,
-                                          String description, String vatAdjustment) throws JposException {
+            String description, String vatAdjustment) throws JposException {
         printer.printRecPackageAdjustment(adjustmentType,
                 encodeString(description), encodeString(vatAdjustment));
     }
 
     public void printRecPackageAdjustVoid(int adjustmentType,
-                                          String vatAdjustment) throws JposException {
+            String vatAdjustment) throws JposException {
         printer.printRecPackageAdjustVoid(adjustmentType,
                 encodeString(vatAdjustment));
     }
@@ -780,13 +779,13 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public void printRecItem(String description, long price, int quantity,
-                             int vatInfo, long unitPrice, String unitName) throws JposException {
+            int vatInfo, long unitPrice, String unitName) throws JposException {
         printer.printRecItem(encodeString(description), price, quantity,
                 vatInfo, unitPrice, encodeString(unitName));
     }
 
     public void printRecItemAdjustment(int adjustmentType, String description,
-                                       long amount, int vatInfo) throws JposException {
+            long amount, int vatInfo) throws JposException {
         printer.printRecItemAdjustment(adjustmentType,
                 encodeString(description), amount, vatInfo);
     }
@@ -821,7 +820,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public void printRecSubtotalAdjustment(int adjustmentType,
-                                           String description, long amount) throws JposException {
+            String description, long amount) throws JposException {
         printer.printRecSubtotalAdjustment(adjustmentType,
                 encodeString(description), amount);
     }
@@ -836,7 +835,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public void printRecVoidItem(String description, long amount, int quantity,
-                                 int adjustmentType, long adjustment, int vatInfo)
+            int adjustmentType, long adjustment, int vatInfo)
             throws JposException {
         printer.printRecVoidItem(encodeString(description), amount, quantity,
                 adjustmentType, adjustment, vatInfo);
@@ -1178,7 +1177,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
      * Write table value *
      */
     public void writeTable(int tableNumber, int rowNumber, int fieldNumber,
-                           String fieldValue) throws JposException {
+            String fieldValue) throws JposException {
         String[] params = new String[4];
         params[0] = String.valueOf(tableNumber);
         params[1] = String.valueOf(rowNumber);
@@ -1222,8 +1221,8 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
      * Print barcode *
      */
     public void printBarcode(String barcode, String label, int barcodeType,
-                             int barcodeHeight, int printType, int barWidth, int textPosition,
-                             int textFont, int aspectRatio) throws JposException {
+            int barcodeHeight, int printType, int barWidth, int textPosition,
+            int textFont, int aspectRatio) throws JposException {
         Object[] params = new Object[9];
         params[0] = barcode; // barcode data
         params[1] = label; // barcode label
@@ -1505,26 +1504,26 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public void printRecItemVoid(String description, long price, int quantity,
-                                 int vatInfo, long unitPrice, String unitName) throws JposException {
+            int vatInfo, long unitPrice, String unitName) throws JposException {
         printer.printRecItemVoid(description, price, quantity, vatInfo,
                 unitPrice, unitName);
     }
 
     public void printRecItemAdjustmentVoid(int adjustmentType,
-                                           String description, long amount, int vatInfo) throws JposException {
+            String description, long amount, int vatInfo) throws JposException {
         printer.printRecItemAdjustmentVoid(adjustmentType, description, amount,
                 vatInfo);
     }
 
     public void printRecItemRefund(String description, long amount,
-                                   int quantity, int vatInfo, long unitAmount, String unitName)
+            int quantity, int vatInfo, long unitAmount, String unitName)
             throws JposException {
         printer.printRecItemRefund(description, amount, quantity, vatInfo,
                 unitAmount, unitName);
     }
 
     public void printRecItemRefundVoid(String description, long amount,
-                                       int quantity, int vatInfo, long unitAmount, String unitName)
+            int quantity, int vatInfo, long unitAmount, String unitName)
             throws JposException {
         printer.printRecItemRefundVoid(description, amount, quantity, vatInfo,
                 unitAmount, unitName);
@@ -1590,9 +1589,9 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
      * Начать отчет о регистрации
      *
      * @param reportType Тип отчета:
-     *                   00 – Отчет о регистрации КТТ
-     *                   01 – Отчет об изменении параметров регистрации ККТ, в связи с заменой ФН
-     *                   02 – Отчет об изменении параметров регистрации ККТ без замены ФН
+     * 00 – Отчет о регистрации КТТ
+     * 01 – Отчет об изменении параметров регистрации ККТ, в связи с заменой ФН
+     * 02 – Отчет об изменении параметров регистрации ККТ без замены ФН
      */
     public void fsStartFiscalization(int reportType) throws Exception {
         FSStartFiscalization command = new FSStartFiscalization(getSysPassword(), reportType);
@@ -1602,24 +1601,24 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     /**
      * Сформировать отчёт о регистрации
      *
-     * @param inn           ИНН 1018
-     * @param rnm           Регистрационный номер ККТ 1037
+     * @param inn ИНН 1018
+     * @param rnm Регистрационный номер ККТ 1037
      * @param taxSystemCode Код системы налогообложения 1062, битовое поле:
-     *                      0 Общая
-     *                      1 Упрощенная доход
-     *                      2 Упрощенная доход минус расход
-     *                      3 Единый налог на вмененный доход
-     *                      4 Единый сельскохозяйственный налог
-     *                      5 Патентная система налогообложения
+     * 0 Общая
+     * 1 Упрощенная доход
+     * 2 Упрощенная доход минус расход
+     * 3 Единый налог на вмененный доход
+     * 4 Единый сельскохозяйственный налог
+     * 5 Патентная система налогообложения
      * @param operationMode Режим работы, битовое поле,
-     *                      определяет какие тэги признаков режимов работы будут переданы в документ
-     *                      регистрации:
-     *                      0 признак шифрования 1056
-     *                      1 признак автономного режима 1002
-     *                      2 признак автоматического режима 1001
-     *                      3 признак расчетов за услуги 1109
-     *                      4 признак АС БСО 1110
-     *                      5 признак ККТ для расчетов только в Интернет 1108
+     * определяет какие тэги признаков режимов работы будут переданы в документ
+     * регистрации:
+     * 0 признак шифрования 1056
+     * 1 признак автономного режима 1002
+     * 2 признак автоматического режима 1001
+     * 3 признак расчетов за услуги 1109
+     * 4 признак АС БСО 1110
+     * 5 признак ККТ для расчетов только в Интернет 1108
      */
     public void fsFiscalization(String inn, String rnm, int taxSystemCode, int operationMode) throws JposException {
         FSFiscalization command = new FSFiscalization(getSysPassword(), inn, rnm, taxSystemCode, operationMode);
@@ -1629,29 +1628,29 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     /**
      * Сформировать отчёт о перерегистрации
      *
-     * @param inn           ИНН 1018
-     * @param rnm           Регистрационный номер ККТ 1037
+     * @param inn ИНН 1018
+     * @param rnm Регистрационный номер ККТ 1037
      * @param taxSystemCode Код системы налогообложения 1062, битовое поле:
-     *                      0 Общая
-     *                      1 Упрощенная доход
-     *                      2 Упрощенная доход минус расход
-     *                      3 Единый налог на вмененный доход
-     *                      4 Единый сельскохозяйственный налог
-     *                      5 Патентная система налогообложения
+     * 0 Общая
+     * 1 Упрощенная доход
+     * 2 Упрощенная доход минус расход
+     * 3 Единый налог на вмененный доход
+     * 4 Единый сельскохозяйственный налог
+     * 5 Патентная система налогообложения
      * @param operationMode Режим работы, битовое поле,
-     *                      определяет какие тэги признаков режимов работы будут переданы в документ
-     *                      перерегистрации:
-     *                      0 признак шифрования 1056
-     *                      1 признак автономного режима 1002
-     *                      2 признак автоматического режима 1001
-     *                      3 признак расчетов за услуги 1109
-     *                      4 признак АС БСО 1110
-     *                      5 признак ККТ для расчетов только в Интернет 1108
-     * @param reasonCode    Код причины перерегистрации 1101:
-     *                      1 Замена ФН
-     *                      2 Замена ОФД
-     *                      3 Изменение реквизитов
-     *                      4 Изменение настроек ККТ
+     * определяет какие тэги признаков режимов работы будут переданы в документ
+     * перерегистрации:
+     * 0 признак шифрования 1056
+     * 1 признак автономного режима 1002
+     * 2 признак автоматического режима 1001
+     * 3 признак расчетов за услуги 1109
+     * 4 признак АС БСО 1110
+     * 5 признак ККТ для расчетов только в Интернет 1108
+     * @param reasonCode Код причины перерегистрации 1101:
+     * 1 Замена ФН
+     * 2 Замена ОФД
+     * 3 Изменение реквизитов
+     * 4 Изменение настроек ККТ
      */
     public void fsReFiscalization(String inn, String rnm, int taxSystemCode, int operationMode, int reasonCode) throws JposException {
         FSReFiscalization command = new FSReFiscalization(getSysPassword(), inn, rnm, taxSystemCode, operationMode, reasonCode);
@@ -2246,4 +2245,25 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         return (long[]) object[0];
     }
 
+    public String toString(String[] lines) {
+        String separator = System.getProperty("line.separator");
+        StringBuffer result = new StringBuffer();
+        for (int i = 0; i < lines.length; i++) {
+            result.append(lines[i]);
+            result.append(separator);
+        }
+        return result.toString();
+    }
+
+    public String[] readEJDocument(int documentNumber) throws JposException {
+        int[] data = new int[1];
+        Object[] object = new Object[1];
+        data[0] = documentNumber;
+        directIO(SmFptrConst.SMFPTR_DIO_READ_EJ_DOCUMENT, data, object);
+        return (String[]) object[0];
+    }
+
+    public String[] readLastEJDocument() throws JposException {
+        return readEJDocument(0);
+    }
 }

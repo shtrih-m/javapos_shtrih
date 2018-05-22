@@ -25,16 +25,16 @@ package com.shtrih.fiscalprinter.command;
 public final class ReadEJDocument extends PrinterCommand {
     // in
     private final int password;
-    private final int docCRC;
+    private final int documentNumber;
     // out
-    private String ecrModel = "";
+    private String line = "";
 
     /**
      * Creates a new instance of ReadEJDocument
      */
-    public ReadEJDocument(int password, int docCRC) {
+    public ReadEJDocument(int password, int documentNumber) {
         this.password = password;
-        this.docCRC = docCRC;
+        this.documentNumber = documentNumber;
     }
 
     public final int getCode() {
@@ -47,14 +47,14 @@ public final class ReadEJDocument extends PrinterCommand {
 
     public final void encode(CommandOutputStream out) throws Exception {
         out.writeInt(password);
-        out.writeInt(docCRC);
+        out.writeInt(documentNumber);
     }
 
     public final void decode(CommandInputStream in) throws Exception {
-        ecrModel = in.readString(in.getSize());
+        line = in.readString(in.getSize());
     }
 
-    public String getEcrModel() {
-        return ecrModel;
+    public String getLine() {
+        return line;
     }
 }

@@ -456,6 +456,10 @@ public class DirectIOHandler2 {
                 new DIOReadDocumentTLVText(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_READ_EJ_DOCUMENT:
+                new DIOReadEJDocument(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)

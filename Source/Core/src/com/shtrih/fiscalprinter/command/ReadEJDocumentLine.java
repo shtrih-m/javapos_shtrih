@@ -22,7 +22,7 @@ public final class ReadEJDocumentLine extends PrinterCommand {
     // in
     private int password;
     // out
-    private String data;
+    private String line;
 
     /**
      * Creates a new instance of ReadEJReport
@@ -43,11 +43,11 @@ public final class ReadEJDocumentLine extends PrinterCommand {
     }
 
     public final void decode(CommandInputStream in) throws Exception {
-        setData(in.readString());
+        line = in.readString();
     }
 
-    public String getData() {
-        return data;
+    public String getLine() {
+        return line;
     }
 
     public int getPassword() {
@@ -58,7 +58,7 @@ public final class ReadEJDocumentLine extends PrinterCommand {
         this.password = password;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setLine(String line) {
+        this.line = line;
     }
 }

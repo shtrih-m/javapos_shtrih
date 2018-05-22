@@ -1049,4 +1049,9 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public long[] readTotalizers(int recType) throws Exception {
         return null;
     }
+    
+    public String[] readEJDocument(int documentNumber) throws Exception{
+        return null;
+    }
+    
 }

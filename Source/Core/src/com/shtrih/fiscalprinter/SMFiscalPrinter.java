@@ -591,4 +591,6 @@ public interface SMFiscalPrinter {
     public int readTotalizers(int recType, long[] totalizers) throws Exception;
     
     public long[] readTotalizers(int recType) throws Exception;
+    
+    public String[] readEJDocument(int documentNumber) throws Exception;
 }

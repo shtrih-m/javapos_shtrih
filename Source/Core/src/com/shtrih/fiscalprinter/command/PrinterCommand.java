@@ -12,7 +12,7 @@ public abstract class PrinterCommand {
 
     public final static int DefaultTimeout = 10000;
     private int timeout = DefaultTimeout;
-    private int resultCode = 0;
+    protected int resultCode = 0;
     private final String charsetName = "Cp1251";
     private boolean repeatEnabled = false;
     private boolean repeatNeeded;
