@@ -209,6 +209,7 @@
 		<!-- openReceiptType, 0 - open receipt on item print, 1 - open receipt on beginFiscalReceipt -->
 		<prop name="openReceiptType" type="String" value="1"/>
 		<prop name="licFilePath" type="String" value="mptks"/>
+		<prop name="barcodePrefix" type="String" value=""/>
 		<!-- headerMode, the way how to print header and trailer lines -->
 		<!-- 0 - header stored and printed with driver -->
 		<!-- 1 - header stored and printed by printer, numHeaderLine and numTrailerLines are fixed -->

@@ -15,10 +15,9 @@ public class Logger2 {
             return i2;
         }
     }
+
     public static void logTx(CompositeLogger logger, byte b) {
-        byte[] data = new byte[1];
-        data[0] = b;
-        logTx(logger, data);
+        logger.debug("-> " + Hex.toHex(b));
     }
 
     public static void logTx(CompositeLogger logger, byte[] data) {
@@ -26,9 +25,11 @@ public class Logger2 {
     }
 
     public static void logRx(CompositeLogger logger, byte b) {
-        byte[] data = new byte[1];
-        data[0] = b;
-        logRx(logger, data);
+        logger.debug("<- " + Hex.toHex(b));
+    }
+
+    public static void logRx(CompositeLogger logger, byte b1, byte b2) {
+        logger.debug("<- " + Hex.toHex(b1) + " " + Hex.toHex(b2));
     }
 
     public static void logRx(CompositeLogger logger, byte[] data) {
@@ -46,8 +47,8 @@ public class Logger2 {
             sb.append(prefix);
 
             for (int j = 0; j < len; j++) {
-
-                sb.append(String.format(" %02X", data[j + i * lineLen]));
+                sb.append(" ");
+                sb.append(Hex.toHex(data[j + i * lineLen]));
             }
 
             logger.debug(sb.toString());

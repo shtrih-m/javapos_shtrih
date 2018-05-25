@@ -1,21 +1,15 @@
-/*
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.fiscalprinter;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
-import com.shtrih.jpos.fiscalprinter.directIO.DIOExecuteCommand;
-import com.shtrih.util.CompositeLogger;
 
 import com.shtrih.fiscalprinter.command.CommandOutputStream;
 import com.shtrih.fiscalprinter.command.PrinterCommand;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.fiscalprinter.port.PrinterPort;
+import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.Logger2;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * @author V.Kravtsov
@@ -33,18 +27,6 @@ public class PrinterProtocol_2 implements PrinterProtocol {
 
     public PrinterProtocol_2(PrinterPort port) {
         this.port = port;
-    }
-
-    public PrinterProtocol_2() {
-        this.port = null;
-    }
-
-    public int getByteTimeout() {
-        return byteTimeout;
-    }
-
-    public int getMaxRepeatCount() {
-        return maxRepeatCount;
     }
 
     public void setByteTimeout(int value) {
@@ -139,24 +121,30 @@ public class PrinterProtocol_2 implements PrinterProtocol {
     }
 
     private int readAnswer() throws Exception {
-        while (readByte() != Frame.STX) {
+        int b = readByte();
+        while (b != Frame.STX) {
+            Logger2.logRx(logger, (byte) b);
         }
+
         int len = readWord();
         int num = readWord();
         if (len > 0) {
             rx = readBytes(len - 2);
+
+            Logger2.logRx(logger, rx);
         }
+
         int crc = readWord();
 
         CommandOutputStream stream = new CommandOutputStream("");
-        stream.writeByte(Frame.STX);
-        stream.writeShort(len);
-        stream.writeShort(num);
-        stream.writeBytes(rx);
-        stream.writeShort(crc);
-        Logger2.logRx(logger, stream.getData());
+//        stream.writeByte(Frame.STX);
+//        stream.writeShort(len);
+//        stream.writeShort(num);
+//        stream.writeBytes(rx);
+//        stream.writeShort(crc);
+//        Logger2.logRx(logger, stream.getData());
 
-        stream = new CommandOutputStream("");
+//        stream = new CommandOutputStream("");
         stream.writeShort(len);
         stream.writeShort(num);
         stream.writeBytes(rx);
@@ -174,8 +162,8 @@ public class PrinterProtocol_2 implements PrinterProtocol {
 
         byte[] result = new byte[count];
 
-        for (int i = 0;i<count;i++){
-            result[i] = (byte)readByte();
+        for (int i = 0; i < count; i++) {
+            result[i] = (byte) readByte();
         }
 
         return result;
@@ -184,6 +172,9 @@ public class PrinterProtocol_2 implements PrinterProtocol {
     private int readWord() throws Exception {
         int b1 = readByte();
         int b2 = readByte();
+
+        Logger2.logRx(logger, (byte) b1, (byte) b2);
+
         return b1 + (b2 << 8);
     }
 
