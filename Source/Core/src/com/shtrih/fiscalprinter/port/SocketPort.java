@@ -10,16 +10,17 @@ import com.shtrih.util.*;
  */
 public class SocketPort implements PrinterPort 
 {
-    private Socket socket = null;
-    private final String portName;
-    private int readTimeout = 1000;
-    private int openTimeout = 1000;
-    private InputStream inputStream = null;
-    private OutputStream outputStream = null;
-    static CompositeLogger logger = CompositeLogger.getLogger(SocketPort.class);
+    private static CompositeLogger logger = CompositeLogger.getLogger(SocketPort.class);
     private static Map<String, SocketPort> items = new HashMap<String, SocketPort>();
 
-    public static synchronized SocketPort getInstance(String portName, int openTimeout) throws Exception {
+    private Socket socket = null;
+    private final String portName;
+    private int readTimeout;
+    private int openTimeout;
+    private InputStream inputStream = null;
+    private OutputStream outputStream = null;
+
+    public static synchronized SocketPort getInstance(String portName, int openTimeout) {
         SocketPort item = items.get(portName);
         if (item == null) {
             item = new SocketPort(portName, openTimeout);
@@ -28,9 +29,10 @@ public class SocketPort implements PrinterPort
         return item;
     }
 
-    private SocketPort(String portName, int openTimeout) throws Exception {
+    private SocketPort(String portName, int openTimeout) {
         this.portName = portName;
         this.openTimeout = openTimeout;
+        this.readTimeout = openTimeout;
         logger.debug("SocketPort(" + portName + ")");
     }
 
@@ -38,46 +40,24 @@ public class SocketPort implements PrinterPort
         open(openTimeout);
     }
 
-    public boolean isConnected() {
+    private boolean isConnected() {
         return socket != null;
     }
 
-    public void checkLocked() throws Exception {
-        if (!Thread.holdsLock(getSyncObject())) {
-            throw new Exception("Not locked");
-        }
-    }
-
     public void open(int timeout) throws Exception {
-        checkLocked();
         if (isConnected()) {
             return;
         }
 
-        long startTime = System.currentTimeMillis();
-        for (;;) {
-            try {
-                doOpen(timeout);
-                return;
-            } catch (Exception e) {
-                long currentTime = System.currentTimeMillis();
-                if ((currentTime - startTime) > timeout) {
-                    throw e;
-                }
-            }
-        }
-    }
-
-    private void doOpen(int timeout) throws Exception {
         socket = new Socket();
         socket.setReuseAddress(true);
-        socket.setSoTimeout(openTimeout);
+        socket.setSoTimeout(readTimeout);
         socket.setTcpNoDelay(true);
 
         StringTokenizer tokenizer = new StringTokenizer(portName, ":");
         String host = tokenizer.nextToken();
         int port = Integer.parseInt(tokenizer.nextToken());
-        socket.connect(new InetSocketAddress(host, port), timeout);
+        socket.connect(new InetSocketAddress(host, port), openTimeout);
         inputStream = socket.getInputStream();
         outputStream = socket.getOutputStream();
     }
@@ -106,27 +86,13 @@ public class SocketPort implements PrinterPort
 
     public int readByte() throws Exception {
         open();
-        int b = doReadByte();
-        return b;
-    }
 
-    public int doReadByte() throws Exception {
-        open();
-
-        int result;
-        long startTime = System.currentTimeMillis();
-        for (;;) {
-            long currentTime = System.currentTimeMillis();
-            if (inputStream.available() > 0) {
-                result = inputStream.read();
-                if (result >= 0) {
-                    return result;
-                }
-            }
-            if ((currentTime - startTime) > readTimeout) {
-                noConnectionError();
-            }
+        int b = inputStream.read();
+        if (b == -1) {
+            noConnectionError();
         }
+        
+        return b;
     }
 
     private void noConnectionError() throws Exception {
@@ -141,7 +107,7 @@ public class SocketPort implements PrinterPort
         while (len > 0) {
             int count = inputStream.read(data, offset, len);
             if (count == -1) {
-                break;
+                noConnectionError();
             }
             len -= count;
             offset += count;
@@ -150,7 +116,6 @@ public class SocketPort implements PrinterPort
     }
 
     public void write(byte[] b) throws Exception {
-        open();
         for (int i = 0; i < 2; i++) {
             try {
                 open();
@@ -177,7 +142,11 @@ public class SocketPort implements PrinterPort
     }
 
     public void setTimeout(int timeout) throws Exception {
+
         this.readTimeout = timeout;
+
+        if(socket != null)
+            socket.setSoTimeout(readTimeout);
     }
 
     public String getPortName() {
