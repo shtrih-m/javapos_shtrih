@@ -268,6 +268,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private static final int maxCmdRepeatCount = 5;
 
     public int executeCommand(PrinterCommand command) throws Exception {
+        long startedAt = System.currentTimeMillis();
+
         String text = Hex.toHex((byte) command.getCode()) + "h, " + command.getText();
         logger.debug(text);
 
@@ -294,7 +296,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     command.getText(), command.getTxData());
             receiptCommands.add(cmd);
         }
-        logger.debug(text + " = " + resultCode);
+
+        long doneAt = System.currentTimeMillis();
+
+        logger.debug(text + " = " + resultCode + ", " + (doneAt - startedAt) + " ms");
         return resultCode;
     }
 
@@ -547,10 +552,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return station;
     }
 
-    public int printStringFont(int station, FontNumber font, String line)
-            throws Exception {
-        logger.debug("printStringFont(" + String.valueOf(station) + ", '"
-                + String.valueOf(font.getValue()) + ", '" + line + "')");
+    public int printStringFont(int station, FontNumber font, String line) throws Exception {
+        logger.debug("printStringFont(" + station + ", " + font.getValue() + ", '" + line + "')");
 
         station = getPrintStation(station);
         PrintStringFont command = new PrintStringFont(usrPassword, station,
@@ -564,14 +567,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     // line is truncated to maximum print width
     public int printLine(int station, String line, FontNumber font)
             throws Exception {
-        logger.debug("printLine(" + String.valueOf(station) + ", " + "'" + line
-                + "', " + String.valueOf(font.getValue()) + ")");
 
         if (line.length() == 0) {
             line = " ";
         }
+        
         int len = Math.min(line.length(), getMessageLength(font));
-        line = line.substring(0, len);
+        if(line.length() != len)
+            line = line.substring(0, len);
+        
         if (getModel().getCapPrintStringFont()) {
             return printStringFont(station, font, line);
         } else if (font.getValue() == PrinterConst.FONT_NUMBER_DOUBLE) {
@@ -2256,7 +2260,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void printText(int station, String text, FontNumber font)
             throws Exception {
-        logger.debug("printText(" + station + ", " + text + ")");
+
         if (text.length() == 0) {
             text = " ";
         }
@@ -2266,7 +2270,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public void doPrintText(int station, String text, FontNumber font)
+    private void doPrintText(int station, String text, FontNumber font)
             throws Exception {
         if ((!params.barcodePrefix.isEmpty()) && text.startsWith(params.barcodePrefix)) {
             int prefixLength = params.barcodePrefix.length();
