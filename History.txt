@@ -4,6 +4,13 @@
   Project : SHTRIH-M JavaPOS fiscal printer driver
   Company : SHTRIH-M www.shtrih-m.ru (495) 787-6090
   Url     : https://github.com/shtrih-m/javapos_shtrih
+    
+********************************************************************************
+
+  28.05.2018
+  deviceServiceVersion = 1013522
+  
+  [*] Исправлено обновление прошивки DFU
   
 ********************************************************************************
 
