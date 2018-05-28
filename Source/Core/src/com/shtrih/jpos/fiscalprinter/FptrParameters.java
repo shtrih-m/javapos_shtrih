@@ -1,29 +1,19 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.jpos.fiscalprinter;
 
-/**
- *
- * @author V.Kravtsov
- */
+import com.shtrih.fiscalprinter.FontNumber;
+import com.shtrih.fiscalprinter.command.PrinterConst;
+import com.shtrih.jpos.JposPropertyReader;
+import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.StringUtils;
+
 import java.util.Enumeration;
 import java.util.Vector;
 
 import jpos.config.JposEntry;
 import jpos.config.RS232Const;
 
-import com.shtrih.util.StringUtils;
-import com.shtrih.fiscalprinter.FontNumber;
-import com.shtrih.fiscalprinter.command.PrinterConst;
-import com.shtrih.jpos.JposPropertyReader;
 import static com.shtrih.jpos.fiscalprinter.SmFptrConst.SMFPTR_HEADER_MODE_DRIVER;
 import static com.shtrih.jpos.fiscalprinter.SmFptrConst.SMFPTR_HEADER_MODE_DRIVER2;
-import com.shtrih.util.CompositeLogger;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
 
 public class FptrParameters {
 
@@ -219,7 +209,7 @@ public class FptrParameters {
         font = new FontNumber(reader.readInteger("fontNumber", 1));
         closeReceiptText = reader.readString("closeReceiptText", "");
         subtotalText = reader.readString("subtotalText", "SUBTOTAL");
-        //setByteTimeout(reader.readInteger("byteTimeout", 1000));
+        setByteTimeout(reader.readInteger("byteTimeout", 3000));
         taxPassword = reader.readInteger("taxPassword", 0);
         usrPassword = reader.readInteger("operatorPassword", 1);
         sysPassword = reader.readInteger("sysAdminPassword", 30);

@@ -38,8 +38,6 @@
 		     2 - IP и порт, например, 192.168.137.111:7778
 		     3 - зависит от класс порта
 		     -->
-		<!--For serial ports - COM1, for TCP ports: host:port - "10.11.7.210:12345" -->
-		<!--<prop name="portName" type="String" value="10.11.7.210:12345"/> -->
 		<prop name="portName" type="String" value=""/>
 
 		<!--Скорость обмена при работе по COM-порту.
@@ -62,14 +60,17 @@
 		<prop name="closeReceiptText" type="String" value=""/>
 		<!-- Subtotal text -->
 		<prop name="subtotalText" type="String" value="ПОДИТОГ:"/>
-		<!-- Driver byte receive timeout -->
+		
+		<!-- Таймаут чтения данных, мс -->
 		<prop name="byteTimeout" type="String" value="3000"/>
+
 		<!-- Device byte receive timeout -->
 		<prop name="deviceByteTimeout" type="String" value="5000"/>
 		<!-- Device search enabled for all serial ports -->
 		<prop name="searchByPortEnabled" type="String" value="0"/>
 		<!-- Device search enabled for all baud rates -->
 		<prop name="searchByBaudRateEnabled" type="String" value="0"/>
+
 		<!-- Пароль налогового инспектора.
 
 		     Значение по умолчанию - 0. -->
