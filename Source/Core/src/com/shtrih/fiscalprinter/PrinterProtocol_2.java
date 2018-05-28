@@ -107,7 +107,7 @@ public class PrinterProtocol_2 implements PrinterProtocol {
     }
 
     private void sendCommand(byte[] data) throws Exception {
-        byte[] tx = frame.encode(data);
+        byte[] tx = frame.encode(data, frameNumber);
         Logger2.logTx(logger, tx);
         port.write(tx);
     }
@@ -195,7 +195,7 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         return frame;
     }
 
-    public class Frame {
+    public static class Frame {
 
         public static final int STX = 0x8F;
         public static final int ESC = 0x9F;
@@ -230,7 +230,7 @@ public class PrinterProtocol_2 implements PrinterProtocol {
             return result;
         }
 
-        private byte[] encode(byte[] data) throws Exception {
+        private byte[] encode(byte[] data, int frameNumber) throws Exception {
             CommandOutputStream stream = new CommandOutputStream("");
             if (data == null) {
                 stream.writeShort(0);
