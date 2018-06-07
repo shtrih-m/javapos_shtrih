@@ -49,6 +49,7 @@ import com.shtrih.fiscalprinter.command.DeviceMetrics;
 import com.shtrih.fiscalprinter.command.FSCommunicationStatus;
 import com.shtrih.fiscalprinter.command.FSDocumentInfo;
 import com.shtrih.fiscalprinter.command.FSStatusInfo;
+import com.shtrih.fiscalprinter.command.GenerateMonoTokenCommand;
 import com.shtrih.fiscalprinter.command.LongPrinterStatus;
 import com.shtrih.fiscalprinter.command.PrinterDate;
 import com.shtrih.fiscalprinter.command.PrinterTime;
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
     private final String[] items = {"Кружка", "Ложка", "Миска", "Нож"};
 
     private EditText tbNetworkAddress;
+    private EditText tbMonoToken;
     private EditText nbTextStringCount;
     private EditText nbPositionsCount;
     private EditText nbFiscalizationNumber;
@@ -160,6 +162,9 @@ public class MainActivity extends AppCompatActivity {
 
         tbTableCellValue = findViewById(R.id.tbTableCellValue);
         restoreAndSaveChangesTo(tbTableCellValue, pref, "TableCellValue", "");
+
+        tbMonoToken = findViewById(R.id.tbMonoToken);
+        restoreAndSaveChangesTo(tbMonoToken, pref, "MonoToken", "");
 
         chbFastConnect = findViewById(R.id.chbFastConnect);
         restoreAndSaveChangesTo(chbFastConnect, pref, "FastConnect", true);
@@ -2065,6 +2070,74 @@ public class MainActivity extends AppCompatActivity {
 
             if (result == null)
                 showMessage("\nSuccess " + (doneAt - startedAt) + " ms");
+            else
+                showMessage(result);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        }
+    }
+
+    public void generateMonoToken(View view) {
+        new GenerateMonoTokenTask(this).execute();
+    }
+
+    private class GenerateMonoTokenTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+
+        private ProgressDialog dialog;
+
+        private long startedAt;
+        private long doneAt;
+        private String token;
+
+        public GenerateMonoTokenTask(Activity parent) {
+            this.parent = parent;
+        }
+
+        private int oldOrientation;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            oldOrientation = getRequestedOrientation();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
+            dialog = ProgressDialog.show(parent, "Generating mono token", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+
+                GenerateMonoTokenCommand cmd = new GenerateMonoTokenCommand();
+
+                printer.executeCommand(cmd);
+
+                token = cmd.getToken();
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                tbMonoToken.setText(token);
             else
                 showMessage(result);
 

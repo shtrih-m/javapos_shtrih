@@ -433,6 +433,33 @@
             android:onClick="syncDateTime"
             android:text="@string/action_sync_date_time" />
 
+        <Button
+            android:id="@+id/btnGenerateMonoToken"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="generateMonoToken"
+            android:text="@string/action_generate_mono_token" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dip"
+                android:layout_marginRight="5dip"
+                android:text="@string/lblGenerateMonoToken" />
+
+            <EditText
+                android:id="@+id/tbMonoToken"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/lblLogPathValue"
             android:layout_width="wrap_content"
@@ -440,6 +467,7 @@
             android:layout_marginEnd="5dip"
             android:layout_marginRight="5dip"
             android:text="" />
+
     </LinearLayout>
 
 

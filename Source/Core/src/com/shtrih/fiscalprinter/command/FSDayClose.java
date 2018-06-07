@@ -1,17 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.fiscalprinter.command;
 
-import com.shtrih.ej.EJDate;
-import com.shtrih.util.BitUtils;
-
-/**
- *
- * @author V.Kravtsov
- */
 /**
 Закрыть смену в ФН FF43H
 Код команды FF43h . Длина сообщения: 6 байт.
@@ -108,4 +96,5 @@ public class FSDayClose extends PrinterCommand {
         this.documentDigest = documentDigest;
     }
 
-} 
+}
+
