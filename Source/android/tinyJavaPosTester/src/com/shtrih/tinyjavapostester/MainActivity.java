@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
@@ -373,9 +374,14 @@ public class MainActivity extends AppCompatActivity {
             this.address = address;
         }
 
+        private int oldOrientation;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            oldOrientation = getRequestedOrientation();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
             dialog = ProgressDialog.show(parent, "Connecting to device", "Please wait...", true);
         }
@@ -421,6 +427,8 @@ public class MainActivity extends AppCompatActivity {
                 showMessage("Success " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
     }
 
@@ -1350,9 +1358,14 @@ public class MainActivity extends AppCompatActivity {
             this.address = address;
         }
 
+        private int oldOrientation;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            oldOrientation = getRequestedOrientation();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
             dialog = ProgressDialog.show(parent, "Connecting to device", "Please wait...", true);
         }
@@ -1418,6 +1431,8 @@ public class MainActivity extends AppCompatActivity {
                 showMessage(text + "\nSuccess " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
     }
 
@@ -1499,9 +1514,14 @@ public class MainActivity extends AppCompatActivity {
             this.tagNumber = tagNumber;
         }
 
+        private int oldOrientation;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            oldOrientation = getRequestedOrientation();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
             dialog = ProgressDialog.show(parent, "Reading fiscalization tag", "Please wait...", true);
         }
@@ -1536,6 +1556,8 @@ public class MainActivity extends AppCompatActivity {
                 showMessage(text);
             else
                 showMessage(result);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
     }
 
@@ -1563,9 +1585,14 @@ public class MainActivity extends AppCompatActivity {
             this.fiscalizationNumber = fiscalizationNumber;
         }
 
+        private int oldOrientation;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            oldOrientation = getRequestedOrientation();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
             dialog = ProgressDialog.show(parent, "Reading fiscalization TLV", "Please wait...", true);
         }
@@ -1600,6 +1627,8 @@ public class MainActivity extends AppCompatActivity {
                 showMessage(text);
             else
                 showMessage(result);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
     }
 
@@ -1627,9 +1656,14 @@ public class MainActivity extends AppCompatActivity {
             this.fiscalizationNumber = fiscalizationNumber;
         }
 
+        private int oldOrientation;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            oldOrientation = getRequestedOrientation();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
             dialog = ProgressDialog.show(parent, "Reading fiscalization TLV", "Please wait...", true);
         }
@@ -1664,6 +1698,8 @@ public class MainActivity extends AppCompatActivity {
                 showMessage(text);
             else
                 showMessage(result);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
     }
 
@@ -1751,9 +1787,14 @@ public class MainActivity extends AppCompatActivity {
             this.valueTb = value;
         }
 
+        private int oldOrientation;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            oldOrientation = getRequestedOrientation();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
             dialog = ProgressDialog.show(parent, "Reading table cell", "Please wait...", true);
         }
@@ -1784,6 +1825,8 @@ public class MainActivity extends AppCompatActivity {
                 valueTb.setText(value);
             else
                 showMessage(result);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
     }
 
@@ -1815,9 +1858,14 @@ public class MainActivity extends AppCompatActivity {
             this.value = value;
         }
 
+        private int oldOrientation;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            oldOrientation = getRequestedOrientation();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
             dialog = ProgressDialog.show(parent, "Writing table cell", "Please wait...", true);
         }
@@ -1846,6 +1894,8 @@ public class MainActivity extends AppCompatActivity {
                 showMessage("Успех");
             else
                 showMessage(result);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
     }
 
@@ -1868,9 +1918,14 @@ public class MainActivity extends AppCompatActivity {
             this.parent = parent;
         }
 
+        private int oldOrientation;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            oldOrientation = getRequestedOrientation();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
             dialog = ProgressDialog.show(parent, "Writing table cell", "Please wait...", true);
         }
@@ -1932,6 +1987,8 @@ public class MainActivity extends AppCompatActivity {
                 showMessage(text + "\nSuccess " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
     }
 
@@ -1952,9 +2009,14 @@ public class MainActivity extends AppCompatActivity {
             this.parent = parent;
         }
 
+        private int oldOrientation;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            oldOrientation = getRequestedOrientation();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
             dialog = ProgressDialog.show(parent, "Setting current date and time", "Please wait...", true);
         }
@@ -2005,6 +2067,8 @@ public class MainActivity extends AppCompatActivity {
                 showMessage("\nSuccess " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
     }
 }
