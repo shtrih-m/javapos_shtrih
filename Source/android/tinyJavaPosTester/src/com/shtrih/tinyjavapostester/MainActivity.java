@@ -59,6 +59,7 @@ import com.shtrih.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialProber;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
 import com.shtrih.util.Hex;
+import com.shtrih.util.ImageReader;
 import com.shtrih.util.SysUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -2070,6 +2071,75 @@ public class MainActivity extends AppCompatActivity {
 
             if (result == null)
                 showMessage("\nSuccess " + (doneAt - startedAt) + " ms");
+            else
+                showMessage(result);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        }
+    }
+
+    public void printImage(View view) {
+        new PrintImageTask(this).execute();
+    }
+
+    private class PrintImageTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+
+        private ProgressDialog dialog;
+
+        private long startedAt;
+        private long doneAt;
+
+        public PrintImageTask(Activity parent) {
+            this.parent = parent;
+        }
+
+        private int oldOrientation;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            oldOrientation = getRequestedOrientation();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
+            dialog = ProgressDialog.show(parent, "Printing image", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+
+
+            try {
+                String path = SysUtils.getFilesPath() + "/ic_launcher-web.png";
+
+                JposConfig.copyAsset("ic_launcher-web.png", path, getApplicationContext());
+                
+                startedAt = System.currentTimeMillis();
+
+                byte[][] data = new ImageReader(path).getData();
+                printer.printRawGraphics(data);
+
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage("Success " + (doneAt - startedAt) + " ms");
             else
                 showMessage(result);
 

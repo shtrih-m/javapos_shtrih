@@ -434,6 +434,13 @@
             android:text="@string/action_sync_date_time" />
 
         <Button
+            android:id="@+id/btnPrintImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="printImage"
+            android:text="Print image" />
+
+        <Button
             android:id="@+id/btnGenerateMonoToken"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
