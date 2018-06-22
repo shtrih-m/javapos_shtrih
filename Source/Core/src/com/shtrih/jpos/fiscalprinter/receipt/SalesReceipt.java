@@ -8,10 +8,9 @@ package com.shtrih.jpos.fiscalprinter.receipt;
  *
  * @author V.Kravtsov
  */
-import jpos.FiscalPrinterConst;
 import jpos.JposConst;
 import jpos.JposException;
-
+import jpos.FiscalPrinterConst;
 import com.shtrih.util.CompositeLogger;
 
 import com.shtrih.fiscalprinter.command.AmountItem;
@@ -39,7 +38,6 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     private int receiptType = 0;
     private boolean isOpened = false;
-    private boolean hasItems = false;
     private final long[] vatAmounts = new long[5];
     private final ReceiptItems items = new ReceiptItems();
     private static CompositeLogger logger = CompositeLogger.getLogger(SalesReceipt.class);
@@ -63,31 +61,35 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void openReceipt(int receiptType) throws Exception {
+    public void openReceipt(boolean isSale) throws Exception {
         if (!isOpened) {
+            if (!isSale) {
+                if (receiptType == PrinterConst.SMFP_RECTYPE_SALE) {
+                    receiptType = PrinterConst.SMFP_RECTYPE_RETSALE;
+                }
+            }
             getPrinter().openReceipt(receiptType);
-            this.receiptType = receiptType;
+
             isOpened = true;
         }
     }
 
     public void beginFiscalReceipt(boolean printHeader) throws Exception {
         isOpened = false;
-        hasItems = false;
         getReceipt().reset();
         items.clear();
         for (int i = 0; i < 5; i++) {
             vatAmounts[i] = 0;
         }
         if (getParams().openReceiptType == SmFptrConst.SMFPTR_OPEN_RECEIPT_BEGIN) {
-            openReceipt(receiptType);
+            openReceipt(true);
         }
     }
 
     public void printRecItem(String description, long price, int quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
 
-        openReceipt(PrinterConst.SMFP_RECTYPE_SALE);
+        openReceipt(true);
         getPrinter().printPreLine();
         // if unitPrice is zero then we use price and quantity = 1000
         long itemPrice = price;
@@ -100,40 +102,47 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
             itemPrice = unitPrice;
         }
         description = getPrinter().printDescription(description);
+        printReceiptItem(description, itemPrice, quantity, vatInfo);
 
-        // receipt was just opened
-        if (!hasItems) {
-            printSale(itemPrice, quantity, getParams().department, vatInfo,
-                    description);
-            hasItems = true;
-        } else {
-            switch (receiptType) {
-                case PrinterConst.SMFP_RECTYPE_SALE:
-                    printSale(itemPrice, quantity, getParams().department, vatInfo,
-                            description);
-                    break;
-
-                case PrinterConst.SMFP_RECTYPE_RETSALE:
-                    printStorno(itemPrice, quantity, getParams().department,
-                            vatInfo, description);
-                    break;
-                default:
-                    throw new Exception("Invalid receipt type");
-            }
-        }
         double d = unitPrice * Math.abs(quantity);
         long amount = MathUtils.round((d / 1000.0));
-        if (amount > price)
-        {
-            printDiscount(amount-price, vatInfo, "");
+        if (amount > price) {
+            printDiscount(amount - price, vatInfo, "");
         }
         getPrinter().printPostLine();
     }
 
+    public void printReceiptItem(String description, long price, int quantity,
+            int vatInfo) throws Exception {
+        switch (receiptType) {
+            case PrinterConst.SMFP_RECTYPE_SALE:
+                printSale(price, quantity, getParams().department, vatInfo,
+                        description);
+                break;
+
+            case PrinterConst.SMFP_RECTYPE_BUY:
+                printRefund(price, quantity, getParams().department, vatInfo,
+                        description);
+                break;
+
+            case PrinterConst.SMFP_RECTYPE_RETSALE:
+                printVoidSale(price, quantity, getParams().department,
+                        vatInfo, description);
+                break;
+
+            case PrinterConst.SMFP_RECTYPE_RETBUY:
+                printVoidRefund(price, quantity, getParams().department,
+                        vatInfo, description);
+                break;
+
+            default:
+                throw new Exception("Invalid receipt type");
+        }
+    }
+
     public void endFiscalReceipt(boolean printHeader) throws Exception {
         PrinterStatus status = getPrinter().getPrinter().waitForPrinting();
-        if (status.getPrinterMode().isReceiptOpened()) 
-        {
+        if (status.getPrinterMode().isReceiptOpened()) {
             if (getReceipt().isCancelled()) {
                 getPrinter().getPrinter().cancelReceipt();
                 getFiscalDay().cancelFiscalRec();
@@ -163,28 +172,10 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecRefund(String description, long amount, int vatInfo)
             throws Exception {
-        openReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
+        openReceipt(false);
         getPrinter().printPreLine();
         description = getPrinter().printDescription(description);
-
-        // receipt was just opened
-        if (!hasItems) {
-            printSaleRefund(amount, 1000, getParams().department, vatInfo,
-                    description);
-            hasItems = true;
-        } else {
-            switch (receiptType) {
-                case PrinterConst.SMFP_RECTYPE_SALE:
-                    printStorno(amount, 1000, getParams().department, vatInfo,
-                            description);
-                    break;
-
-                case PrinterConst.SMFP_RECTYPE_RETSALE:
-                    printSaleRefund(amount, 1000, getParams().department,
-                            vatInfo, description);
-                    break;
-            }
-        }
+        printReceiptItem(description, amount, 1000, vatInfo);
     }
 
     public void printRecTotal(long total, long payment, long payType,
@@ -198,7 +189,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecItemVoid(String description, long price, int quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
-        openReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
+        openReceipt(false);
         getPrinter().printPreLine();
         // if unitPrice is zero - use price and quantity = 1000
         if (unitPrice == 0) {
@@ -210,28 +201,12 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
             price = unitPrice;
         }
         description = getPrinter().printDescription(description);
-        if (!hasItems) {
-            printSaleRefund(price, quantity, getParams().department, vatInfo,
-                    description);
-            hasItems = true;
-        } else {
-            switch (receiptType) {
-                case PrinterConst.SMFP_RECTYPE_SALE:
-                    printStorno(price, quantity, getParams().department,
-                            vatInfo, description);
-                    break;
-
-                case PrinterConst.SMFP_RECTYPE_RETSALE:
-                    printSaleRefund(price, quantity, getParams().department,
-                            vatInfo, description);
-                    break;
-            }
-        }
+        printReceiptItem(description, price, quantity, vatInfo);
         getPrinter().printPostLine();
     }
 
     public void printRecSubtotal(long amount) throws Exception {
-        
+
         long receiptSubtotal = getPrinter().getSubtotal();
         checkTotal(receiptSubtotal, amount);
         getPrinter().printPreLine();
@@ -311,49 +286,18 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecVoidItem(String description, long amount, int quantity,
             int adjustmentType, long adjustment, int vatInfo) throws Exception {
-        openReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
+        openReceipt(false);
         description = getPrinter().printDescription(description);
-        if (!hasItems) {
-            printSaleRefund(amount, quantity, getParams().department, vatInfo,
-                    description);
-            hasItems = true;
-        } else {
-            switch (receiptType) {
-                case PrinterConst.SMFP_RECTYPE_SALE:
-                    printStorno(amount, quantity, getParams().department,
-                            vatInfo, description);
-                    break;
-
-                case PrinterConst.SMFP_RECTYPE_RETSALE:
-                    printSaleRefund(amount, quantity, getParams().department,
-                            vatInfo, description);
-                    break;
-            }
-        }
+        printStorno(amount, quantity, getParams().department,
+                vatInfo, description);
     }
 
     public void printRecRefundVoid(String description, long amount, int vatInfo)
             throws Exception {
-        openReceipt(PrinterConst.SMFP_RECTYPE_SALE);
+        openReceipt(true);
         description = getPrinter().printDescription(description);
-
-        if (!hasItems) {
-            printSale(amount, 1000, getParams().department, vatInfo,
-                    description);
-            hasItems = true;
-        } else {
-            switch (receiptType) {
-                case PrinterConst.SMFP_RECTYPE_SALE:
-                    printStorno(amount, 1000, getParams().department, vatInfo,
-                            description);
-                    break;
-
-                case PrinterConst.SMFP_RECTYPE_RETSALE:
-                    printSale(amount, 1000, getParams().department, vatInfo,
-                            description);
-                    break;
-            }
-        }
+        printStorno(amount, 1000, getParams().department, vatInfo,
+                description);
     }
 
     public void printRecPackageAdjustment(int adjustmentType,
@@ -505,7 +449,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printRecItemRefund(String description, long amount,
             int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
-        openReceipt(PrinterConst.SMFP_RECTYPE_RETSALE);
+        openReceipt(false);
         getPrinter().printPreLine();
         // if unitPrice is zero then we use price and quantity = 1000
         if (unitAmount == 0) {
@@ -517,32 +461,14 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
             amount = unitAmount;
         }
         description = getPrinter().printDescription(description);
-
-        // receipt was just opened
-        if (!hasItems) {
-            printSaleRefund(amount, quantity, getParams().department, vatInfo,
-                    description);
-            hasItems = true;
-        } else {
-            switch (receiptType) {
-                case PrinterConst.SMFP_RECTYPE_SALE:
-                    printStorno(amount, quantity, getParams().department,
-                            vatInfo, description);
-                    break;
-
-                case PrinterConst.SMFP_RECTYPE_RETSALE:
-                    printSaleRefund(amount, quantity, getParams().department,
-                            vatInfo, description);
-                    break;
-            }
-        }
+        printReceiptItem(description, amount, quantity, vatInfo);
         getPrinter().printPostLine();
     }
 
     public void printRecItemRefundVoid(String description, long amount,
             int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
-        openReceipt(PrinterConst.SMFP_RECTYPE_SALE);
+        openReceipt(true);
         getPrinter().printPreLine();
         // if unitPrice is zero - use price and quantity = 1000
         if (unitAmount == 0) {
@@ -554,23 +480,8 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
             amount = unitAmount;
         }
         description = getPrinter().printDescription(description);
-        if (!hasItems) {
-            printSale(amount, quantity, getParams().department, vatInfo,
-                    description);
-            hasItems = true;
-        } else {
-            switch (receiptType) {
-                case PrinterConst.SMFP_RECTYPE_RETSALE:
-                    printStorno(amount, quantity, getParams().department,
-                            vatInfo, description);
-                    break;
-
-                case PrinterConst.SMFP_RECTYPE_SALE:
-                    printSale(amount, quantity, getParams().department,
-                            vatInfo, description);
-                    break;
-            }
-        }
+        printStorno(amount, quantity, getParams().department,
+                vatInfo, description);
         getPrinter().printPostLine();
     }
 
@@ -599,7 +510,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         getReceipt().printSale(item);
     }
 
-    public void printSaleRefund(long price, long quantity, int department,
+    public void printVoidSale(long price, long quantity, int department,
             int vatInfo, String description) throws Exception {
         PriceItem item = new PriceItem();
         item.setPrice(price);
@@ -612,6 +523,36 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setText(description);
         getPrinter().getPrinter().printVoidSale(item);
         getReceipt().printSaleRefund(item);
+    }
+
+    public void printRefund(long price, long quantity, int department,
+            int vatInfo, String description) throws Exception {
+        PriceItem item = new PriceItem();
+        item.setPrice(price);
+        item.setQuantity(quantity);
+        item.setDepartment(department);
+        item.setTax1(vatInfo);
+        item.setTax2(0);
+        item.setTax3(0);
+        item.setTax4(0);
+        item.setText(description);
+        getPrinter().getPrinter().printRefund(item);
+        getReceipt().printSaleRefund(item);
+    }
+
+    public void printVoidRefund(long price, long quantity, int department,
+            int vatInfo, String description) throws Exception {
+        PriceItem item = new PriceItem();
+        item.setPrice(price);
+        item.setQuantity(quantity);
+        item.setDepartment(department);
+        item.setTax1(vatInfo);
+        item.setTax2(0);
+        item.setTax3(0);
+        item.setTax4(0);
+        item.setText(description);
+        getPrinter().getPrinter().printVoidRefund(item);
+        getReceipt().printSale(item);
     }
 
     public void printStorno(long price, int quantity, int department,

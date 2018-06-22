@@ -978,8 +978,10 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
     
-    public void printFiscalReceipt() {
-        printFiscalReceipt145_5();
+    public void printFiscalReceipt() 
+    {
+        //printFiscalReceipt145_5();
+        printCorrectionReceipt3();
     }
     
     public void disablePrint() {
@@ -1109,6 +1111,35 @@ class PrinterTest implements FiscalPrinterConst {
             int receiptNumber = (Integer) outParams[0];
             int documentNumber = (Integer) outParams[1];
             long documentDigest = (Long) outParams[2];
+            
+            System.out.println("Номер чека за смену: " + receiptNumber);
+            System.out.println("Номер ФД: " + documentNumber);
+            System.out.println("Фискальный признак: " + documentDigest);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void printCorrectionReceipt3() {
+        try 
+        {
+            printer.resetPrinter();
+            // тип коррекции: «0» – самостоятельная операция, «1» – операция по предписанию.
+            int correctionType = 1;
+            // признак расчета: «1» - коррекция прихода, «3» - коррекция расхода.
+            int paymentType = 1;
+            // сумма расчета, указанного в чеке
+            long total = 500;
+            
+            Object[] params = new Object[3];
+            params[0] = correctionType;
+            params[1] = paymentType;
+            params[2] = total;
+            printer.directIO(SmFptrConst.SMFPTR_DIO_PRINT_CORRECTION2, null, params);
+            int receiptNumber = (Integer) params[0];
+            int documentNumber = (Integer) params[1];
+            long documentDigest = (Long) params[2];
             
             System.out.println("Номер чека за смену: " + receiptNumber);
             System.out.println("Номер ФД: " + documentNumber);
@@ -3661,15 +3692,29 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt145_5() {
         try {
             printer.resetPrinter();
-            printer.setFiscalReceiptType(4);
-            printer.beginFiscalReceipt(false);
             
-            printer.setPostLine("PostLine1");
-            printer.printRecItem("АИ-92-К5        N  2", 50008, 13300, 1, 3760, "");
-            printer.printRecSubtotal(50008);
-            printer.printRecSubtotalAdjustment(1, "скидка округления 0.08", 8);
-            printer.printRecTotal(50008, 50000, "0");    
-          
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("Item1", 1, 1000, 1, 1, "");
+            printer.printRecTotal(1, 1, "0");    
+            printer.endFiscalReceipt(false);
+            
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETSALE);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("Item1", 1, 1000, 1, 1, "");
+            printer.printRecTotal(1, 1, "0");    
+            printer.endFiscalReceipt(false);
+
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_BUY);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("Item1", 1, 1000, 1, 1, "");
+            printer.printRecTotal(1, 1, "0");    
+            printer.endFiscalReceipt(false);
+            
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETBUY);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("Item1", 1, 1000, 1, 1, "");
+            printer.printRecTotal(1, 1, "0");    
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();

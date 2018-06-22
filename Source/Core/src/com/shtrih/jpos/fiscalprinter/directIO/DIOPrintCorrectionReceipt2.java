@@ -19,18 +19,42 @@ public class DIOPrintCorrectionReceipt2 extends DIOItem {
         command.setCorrectionType((Integer)params[0]);
         command.setPaymentType((Integer)params[1]);
         command.setTotal((Long)params[2]);
-        command.setPayment(0, (Long)params[3]);
-        command.setPayment(1, (Long)params[4]);
-        command.setPayment(2, (Long)params[5]);
-        command.setPayment(3, (Long)params[6]);
-        command.setPayment(4, (Long)params[7]);
-        command.setTaxTotal(0, (Long)params[8]);
-        command.setTaxTotal(1, (Long)params[9]);
-        command.setTaxTotal(2, (Long)params[10]);
-        command.setTaxTotal(3, (Long)params[11]);
-        command.setTaxTotal(4, (Long)params[12]);
-        command.setTaxTotal(5, (Long)params[13]);
-        command.setTaxSystem((Integer)params[14]);
+        if (params.length > 3){
+            command.setPayment(0, (Long)params[3]);
+        }
+        if (params.length > 4){
+            command.setPayment(1, (Long)params[4]);
+        }
+        if (params.length > 5){
+            command.setPayment(2, (Long)params[5]);
+        }
+        if (params.length > 6){
+            command.setPayment(3, (Long)params[6]);
+        }
+        if (params.length > 7){
+            command.setPayment(4, (Long)params[7]);
+        }
+        if (params.length > 8){
+            command.setTaxTotal(0, (Long)params[8]);
+        }
+        if (params.length > 9){
+            command.setTaxTotal(1, (Long)params[9]);
+        }
+        if (params.length > 10){
+            command.setTaxTotal(2, (Long)params[10]);
+        }
+        if (params.length > 11){
+            command.setTaxTotal(3, (Long)params[11]);
+        }
+        if (params.length > 12){
+            command.setTaxTotal(4, (Long)params[12]);
+        }
+        if (params.length > 13){
+            command.setTaxTotal(5, (Long)params[13]);
+        }
+        if (params.length > 14){
+            command.setTaxSystem((Integer)params[14]);
+        }
 
         if(getParams().autoOpenShift)
             getPrinter().openFiscalDay();

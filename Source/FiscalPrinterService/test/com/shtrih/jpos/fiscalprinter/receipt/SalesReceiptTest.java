@@ -57,18 +57,6 @@ public class SalesReceiptTest extends TestCase {
     }
 
     /**
-     * Test of openReceipt method, of class SalesReceipt.
-     */
-    public void testOpenReceipt() throws Exception {
-        System.out.println("openReceipt");
-        int receiptType = 0;
-        SalesReceipt instance = null;
-        instance.openReceipt(receiptType);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
      * Test of printRecItem method, of class SalesReceipt.
      */
     public void testPrintRecItem() throws Exception {
@@ -179,22 +167,6 @@ public class SalesReceiptTest extends TestCase {
         String unitName = "";
         SalesReceipt instance = null;
         instance.printRecItemVoid(description, price, quantity, vatInfo, unitPrice, unitName);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of printSaleRefund method, of class SalesReceipt.
-     */
-    public void testPrintSaleRefund() throws Exception {
-        System.out.println("printSaleRefund");
-        long price = 0L;
-        long quantity = 0L;
-        int department = 0;
-        int vatInfo = 0;
-        String description = "";
-        SalesReceipt instance = null;
-        instance.printSaleRefund(price, quantity, department, vatInfo, description);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

@@ -48,18 +48,25 @@ public class FSPrintCorrectionReceipt2 extends PrinterCommand {
     // in
     private int sysPassword = 0; // System sdministrator password (4 bytes)
     private int correctionType = 0;
-    private int paymentType = 0;
+    private int paymentType = 1;
     private long total = 0; 
     private long payments[] = new long[5]; 
     private long taxTotals[] = new long[6]; 
-    private int taxSystem = 0;
+    private int taxSystem = 1;
     // out
     private int receiptNumber;
     private int documentNumber;
     private long documentDigest;
      
 
-    public FSPrintCorrectionReceipt2() {
+    public FSPrintCorrectionReceipt2() 
+    {
+        for (int i=0;i<payments.length;i++){
+            payments[i] = 0;
+        }
+        for (int i=0;i<taxTotals.length;i++){
+            taxTotals[i] = 0;
+        }
     }
 
     public final int getCode() {
