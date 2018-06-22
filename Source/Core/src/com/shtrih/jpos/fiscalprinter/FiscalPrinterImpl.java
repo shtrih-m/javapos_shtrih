@@ -24,6 +24,7 @@ import com.shtrih.fiscalprinter.command.PrinterCommand;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.fiscalprinter.command.PrinterDate;
 import com.shtrih.fiscalprinter.command.PrinterFlags;
+import com.shtrih.fiscalprinter.command.PrinterMode;
 import com.shtrih.fiscalprinter.command.PrinterModelParameters;
 import com.shtrih.fiscalprinter.command.PrinterStatus;
 import com.shtrih.fiscalprinter.command.PrinterTime;
@@ -1416,7 +1417,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         if (receipt != null && receipt.isOpened()) {
             return true;
         }
-        return getPrinter().readPrinterStatus().getPrinterMode().isDayOpened();
+
+        PrinterMode mode = getPrinter().readPrinterStatus().getPrinterMode();
+
+        return mode.isDayOpened() || mode.isReceiptOpened();
     }
 
     public int getDescriptionLength() throws Exception {
