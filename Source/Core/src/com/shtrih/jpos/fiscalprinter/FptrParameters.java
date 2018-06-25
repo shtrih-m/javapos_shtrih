@@ -168,6 +168,7 @@ public class FptrParameters {
     public boolean statisticEnabled = true;
     public boolean autoOpenShift = true;
     public boolean forceOpenShiftOnZReport = true;
+    public boolean footerFlagEnabled = true;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -389,6 +390,7 @@ public class FptrParameters {
         statisticEnabled = reader.readBoolean("statisticEnabled", true);
         autoOpenShift = reader.readBoolean("autoOpenShift", true);
         forceOpenShiftOnZReport = reader.readBoolean("forceOpenShiftOnZReport", true);
+        footerFlagEnabled = reader.readBoolean("footerFlagEnabled", true);
 
         // paymentNames
         String paymentName;

@@ -1989,7 +1989,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             capFiscalStorage = readCapFiscalStorage();
         }
 
-        capFooterFlag = capModelParameters() && modelParameters.isCapGraphicsFlags();
+        capFooterFlag = capModelParameters() && 
+                modelParameters.isCapGraphicsFlags() && params.footerFlagEnabled;
 
         if (capFiscalStorage) {
 
