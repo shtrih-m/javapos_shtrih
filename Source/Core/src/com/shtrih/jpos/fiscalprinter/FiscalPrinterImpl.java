@@ -1414,11 +1414,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public boolean getDayOpened() throws Exception {
         checkEnabled();
+
+        PrinterMode mode = getPrinter().readPrinterStatus().getPrinterMode();
+
         if (receipt != null && receipt.isOpened()) {
             return true;
         }
-
-        PrinterMode mode = getPrinter().readPrinterStatus().getPrinterMode();
 
         return mode.isDayOpened() || mode.isReceiptOpened();
     }
