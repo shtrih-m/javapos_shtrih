@@ -59,7 +59,7 @@ public class CommandOutputStream {
         writeByte(time.getMin());
     }
 
-    public void writeShort(int v) throws Exception {
+    public void writeShort(int v) throws Exception {   
         stream.write((v >>> 0) & 0xFF);
         stream.write((v >>> 8) & 0xFF);
     }
@@ -112,6 +112,11 @@ public class CommandOutputStream {
             result[i] = data[i];
         }
         writeBytes(result);
+    }
+
+    public void writeString(String line) throws Exception {
+        byte[] data = line.getBytes(charsetName);
+        writeBytes(data);
     }
 
     public void writeByte(int v) throws Exception {

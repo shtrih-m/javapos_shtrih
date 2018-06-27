@@ -1,9 +1,10 @@
 package com.shtrih.fiscalprinter;
 
 
-import java.util.*;
-import com.shtrih.util.BitUtils;
 import com.shtrih.fiscalprinter.command.CommandInputStream;
+import com.shtrih.util.BitUtils;
+
+import java.util.Vector;
 
 public class TLVParser {
 
@@ -123,7 +124,7 @@ public class TLVParser {
         }
         return lines;
     }
-    
+
     public void read(byte[] data) throws Exception {
         level = 0;
         parse(data);

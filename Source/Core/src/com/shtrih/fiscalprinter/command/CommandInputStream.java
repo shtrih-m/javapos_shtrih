@@ -1,18 +1,8 @@
-/*
- * CommandInputStream.java
- *
- * Created on 2 April 2008, 17:06
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
 package com.shtrih.fiscalprinter.command;
 
-/**
- * @author V.Kravtsov
- */
-
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import com.shtrih.ej.EJDate;
 import com.shtrih.ej.EJTime;
@@ -21,10 +11,25 @@ import com.shtrih.util.Localizer;
 public class CommandInputStream {
 
     private final String charsetName;
-    private ByteArrayInputStream stream;
+    private InputStream stream;
 
     public CommandInputStream(String charsetName) {
         this.charsetName = charsetName;
+    }
+
+    public CommandInputStream(String charsetName, byte[] data) {
+        this.charsetName = charsetName;
+        this.stream = new ByteArrayInputStream(data);
+    }
+
+    public CommandInputStream(byte[] data) {
+        this.charsetName = "";
+        this.stream = new ByteArrayInputStream(data);
+    }
+
+    public CommandInputStream(String charsetName, InputStream in) {
+        this.charsetName = charsetName;
+        this.stream = in;
     }
 
     public String getCharsetName() {
@@ -35,33 +40,33 @@ public class CommandInputStream {
         stream = new ByteArrayInputStream(data);
     }
 
-    public int available() {
+    public int getSize() throws IOException {
         return stream.available();
     }
     
-    public int getSize() {
-        return stream.available();
-    }
-    
-    public void checkAvailable(int len) throws Exception
-    {
-        if (stream.available() < len){
-            throw new Exception("No data available");
-        }
-    }
+//    public void checkAvailable(int len) throws Exception
+//    {
+//        if (stream.available() < len){
+//            throw new Exception("No data available");
+//        }
+//    }
         
     public int readByte() throws Exception
     {
-        checkAvailable(1);
-        int B = (byte) stream.read();
-        return byteToInt(B);
+        // checkAvailable(1);
+        int b = stream.read();
+
+        if(b == -1)
+            throw new Exception("No data available");
+
+        return byteToInt(b);
     }
 
-    public void mark(){
+    public void mark() throws IOException {
         stream.mark(stream.available());
     }
             
-    public void reset(){
+    public void reset() throws IOException {
         stream.reset();
     }
     
@@ -186,10 +191,17 @@ public class CommandInputStream {
 
     public byte[] readBytes(int len) throws Exception
     {
-        byte[] b = new byte[len];
-        checkAvailable(len);
-        stream.read(b, 0, len);
-        return b;
+        byte[] data = new byte[len];
+        int offset = 0;
+        while (len > 0) {
+            int count = stream.read(data, offset, len);
+            if (count == 0 || count == -1) {
+                throw new Exception("No data available");
+            }
+            len -= count;
+            offset += count;
+        }
+        return data;
     }
 
     public String readString(int len) throws Exception {
