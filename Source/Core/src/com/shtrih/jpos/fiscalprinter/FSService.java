@@ -103,6 +103,7 @@ public class FSService implements Runnable {
     private byte[] sendData(byte[] data) throws Exception {
         Socket socket = new Socket();
         try {
+            socket.setTcpNoDelay(true);
             socket.setSoTimeout(connectTimeout);
             socket.connect(new InetSocketAddress(parameters.getHost(), parameters.getPort()));
             socket.getOutputStream().write(data);
