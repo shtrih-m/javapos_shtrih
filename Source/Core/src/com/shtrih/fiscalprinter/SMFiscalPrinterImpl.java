@@ -1752,7 +1752,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return result;
     }
 
-    public PrinterModel getModel() throws Exception {
+    public PrinterModel getModel() {
         return model;
     }
 
@@ -2005,10 +2005,21 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         updateFirmware();
     }
 
-    private boolean isDesktop() throws Exception {
-        return deviceMetrics.getModel() != 19
-                && // Штрих-МОБАЙЛ
+    public boolean isDesktop() {
+        return deviceMetrics.getModel() != 19 && // Штрих-МОБАЙЛ
                 deviceMetrics.getModel() != 45;  // КЯ
+    }
+
+    public boolean isCashCore() {
+        return deviceMetrics.getModel() == 45; // КЯ
+    }
+
+    public boolean isShtrihMobile() {
+        return deviceMetrics.getModel() == 19;
+    }
+
+    public boolean isShtrihNano() {
+        return deviceMetrics.getModel() == 152;
     }
 
     private boolean readCapDisableDiscountText() throws Exception {
@@ -3001,10 +3012,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return readTable(getFsTableNumber(), 1, 3).trim();
     }
 
-    private boolean isShtrihMobile() throws Exception {
-        return getModel().getModelID() == 19;
-    }
-
     public FSReadExpDate fsReadExpDate() throws Exception {
         FSReadExpDate command = new FSReadExpDate();
         command.setSysPassword(sysPassword);
@@ -3726,7 +3733,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void updateFirmware() throws Exception {
         logger.debug("updateFirmware()");
         try {
-            if ((!capFiscalStorage) || isShtrihMobile()) {
+            if ((!capFiscalStorage) || isShtrihMobile() || isCashCore()) {
                 logger.debug("Firmware update is not supported");
                 return;
             }
@@ -3843,14 +3850,18 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         while (stream.available() > 0) {
             stream.read(block, 0, 128);
-            WriteSDCardBlock command = new WriteSDCardBlock();
-            command.setPassword(sysPassword);
-            command.setBlockNumber(blockNumber);
-            command.setFileType(fileType);
-            command.setBlock(block);
-            execute(command);
+            writeFirmwareBlockToSDCard(fileType, blockNumber, block);
             blockNumber++;
         }
+    }
+
+    public void writeFirmwareBlockToSDCard(int fileType, int blockNumber, byte[] block) throws Exception {
+        WriteSDCardBlock command = new WriteSDCardBlock();
+        command.setPassword(sysPassword);
+        command.setBlockNumber(blockNumber);
+        command.setFileType(fileType);
+        command.setBlock(block);
+        execute(command);
     }
 
     public void updateFirmwareXModem(String firmwareFileName) throws Exception {

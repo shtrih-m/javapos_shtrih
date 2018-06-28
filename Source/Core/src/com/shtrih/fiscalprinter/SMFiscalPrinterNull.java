@@ -1053,5 +1053,30 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public String[] readEJDocument(int documentNumber) throws Exception{
         return null;
     }
-    
+
+    @Override
+    public void writeFirmwareBlockToSDCard(int fileType, int blockNumber, byte[] block) throws Exception {
+        
+    }
+
+    @Override
+    public boolean isDesktop() {
+        return false;
+    }
+
+    @Override
+    public boolean isCashCore() {
+        return false;
+    }
+
+    @Override
+    public boolean isShtrihMobile() {
+        return false;
+    }
+
+    @Override
+    public boolean isShtrihNano() {
+        return false;
+    }
+
 }

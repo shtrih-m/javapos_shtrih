@@ -593,4 +593,14 @@ public interface SMFiscalPrinter {
     public long[] readTotalizers(int recType) throws Exception;
     
     public String[] readEJDocument(int documentNumber) throws Exception;
+
+    void writeFirmwareBlockToSDCard(int fileType, int blockNumber, byte[] block) throws Exception;
+
+    boolean isDesktop();
+
+    boolean isCashCore();
+    
+    boolean isShtrihMobile();
+
+    boolean isShtrihNano();
 }

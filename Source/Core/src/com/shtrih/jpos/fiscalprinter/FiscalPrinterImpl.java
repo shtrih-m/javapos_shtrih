@@ -85,6 +85,7 @@ import com.shtrih.jpos.monitoring.MonitoringServerX5;
 import com.shtrih.printer.ncr7167.NCR7167Printer;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.FileUtils;
+import com.shtrih.util.FirmwareUpdater;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.LogWriter;
 import com.shtrih.util.ServiceVersion;
@@ -258,6 +259,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private boolean isInReceiptTrailer = false;
     private TextDocumentFilter filter = null;
     private FSService fsSenderService;
+    private FirmwareUpdaterService firmwareUpdaterService;
     private boolean docEndEnabled = true;
 
     public void setTextDocumentFilterEnablinessTo(boolean value) {
@@ -925,12 +927,19 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     logger.error("Failed to start FSService", e);
                     return;
                 }
+                try {
+                    startFirmwareUpdaterService();
+                } catch (Exception e) {
+                    logger.error("Failed to start FirmwareUpdaterService", e);
+                    return;
+                }
             } else {
                 stopPoll();
                 connected = false;
                 setPowerState(JPOS_PS_UNKNOWN);
                 try {
                     stopFSService();
+                    stopFirmwareUpdaterService();
                 } catch (Exception e) {
                     logger.error("Failed to stop FSService", e);
                 }
@@ -970,6 +979,29 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         fsSenderService.start();
     }
 
+    public void startFirmwareUpdaterService() throws Exception {
+        if (firmwareUpdaterService != null) {
+            return;
+        }
+
+        if (!params.capScocUpdateFirmware) {
+            return;
+        }
+
+        if (!printer.getCapFiscalStorage()) {
+            return;
+        }
+
+        if(!printer.isDesktop() && !printer.isCashCore()){
+            logger.debug("FirmwareUpdaterService stopped, unsupported device");
+            return;
+        }
+
+        firmwareUpdaterService = new FirmwareUpdaterService(printer);
+        printer.addEvents(firmwareUpdaterService);
+        firmwareUpdaterService.start();
+    }
+
     public void stopFSService() throws Exception {
         if (fsSenderService == null) {
             return;
@@ -979,8 +1011,23 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         fsSenderService = null;
     }
 
+    public void stopFirmwareUpdaterService() throws Exception {
+        if (firmwareUpdaterService == null) {
+            return;
+        }
+
+        printer.removeEvents(firmwareUpdaterService);
+
+        firmwareUpdaterService.stop();
+        firmwareUpdaterService = null;
+    }
+
     public boolean isFSServiceRunning() {
         return fsSenderService != null;
+    }
+
+    public boolean isFirmwareUpdaterServiceRunning() {
+        return firmwareUpdaterService != null;
     }
 
     public void setNumHeaderLines(int numHeaderLines) throws Exception {

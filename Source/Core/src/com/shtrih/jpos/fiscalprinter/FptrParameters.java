@@ -163,6 +163,7 @@ public class FptrParameters {
     public boolean openReceiptOnBegin = false;
     public boolean printVoidedReceipt = false;
     public boolean capUpdateFirmware = true;
+    public boolean capScocUpdateFirmware = false;
     public int printStringDelayInMs = 0;
     public boolean fastConnect = false;
     public boolean statisticEnabled = true;
@@ -385,6 +386,7 @@ public class FptrParameters {
         printVoidedReceipt = reader.readBoolean("printVoidedReceipt", false);
         firmwarePath = reader.readString("firmwarePath", "firmware");
         capUpdateFirmware = reader.readBoolean("capUpdateFirmware", true);
+        capScocUpdateFirmware = reader.readBoolean("capScocUpdateFirmware", false);
         printStringDelayInMs = reader.readInteger("printStringDelayInMs", 0);
         fastConnect = reader.readBoolean("fastConnect", false);
         statisticEnabled = reader.readBoolean("statisticEnabled", true);

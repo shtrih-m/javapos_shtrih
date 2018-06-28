@@ -6,16 +6,13 @@ import com.shtrih.fiscalprinter.scoc.commands.DeviceStatusCommand;
 import com.shtrih.fiscalprinter.scoc.commands.DeviceStatusResponse;
 import com.shtrih.fiscalprinter.scoc.commands.ScocCommand;
 import com.shtrih.util.CompositeLogger;
-import com.shtrih.util.Hex;
 import com.shtrih.util.Logger2;
 
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.time.ZoneId;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class ScocClient {
 
@@ -41,7 +38,7 @@ public class ScocClient {
             socket.setSoTimeout(ConnectionTimeout);
             socket.connect(new InetSocketAddress(Host, Port));
 
-            long now = new Date().getTime() / 1000L;
+            long now = getDateTime();
             byte[] payload = new DeviceStatusCommand(1, now, firmwareVersion).toBytes();
 
             ScocCommand request = new ScocCommand(serialNumber, uin, payload);
@@ -51,8 +48,6 @@ public class ScocClient {
             InputStream in = socket.getInputStream();
 
             ScocCommand response = ScocCommand.read(in);
-
-            Logger2.logTx(logger, response.getData());
 
             return DeviceStatusResponse.read(response.getData());
         } finally {
@@ -71,7 +66,7 @@ public class ScocClient {
             socket.setSoTimeout(ConnectionTimeout);
             socket.connect(new InetSocketAddress(Host, Port));
 
-            long now = new Date().getTime() / 1000L;
+            long now = getDateTime();
             byte[] payload = new DeviceFirmwareCommand(now, firmwareVersion, partNumber).toBytes();
 
             ScocCommand request = new ScocCommand(serialNumber, uin, payload);
@@ -83,7 +78,7 @@ public class ScocClient {
 
             DeviceStatusResponse status = DeviceStatusResponse.read(response.getData());
 
-            if(status.getResultCode() != 0)
+            if (status.getResultCode() != 0)
                 throw new Exception("Server response contains error " + status.getResultCode() + ", flags " + status.getFlags());
 
             return DeviceFirmwareResponse.read(response.getData());
@@ -95,5 +90,12 @@ public class ScocClient {
                 logger.error("Socket close failed", e);
             }
         }
+    }
+
+    private long getDateTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        return calendar.getTimeInMillis() / 1000L;
     }
 }
