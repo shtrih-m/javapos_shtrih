@@ -1079,4 +1079,9 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return false;
     }
 
+    @Override
+    public boolean isSDCardPresent() throws Exception {
+        return false;
+    }
+
 }

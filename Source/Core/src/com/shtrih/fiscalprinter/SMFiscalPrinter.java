@@ -603,4 +603,6 @@ public interface SMFiscalPrinter {
     boolean isShtrihMobile();
 
     boolean isShtrihNano();
+
+    boolean isSDCardPresent() throws Exception;
 }

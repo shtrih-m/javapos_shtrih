@@ -9,6 +9,7 @@ import com.shtrih.fiscalprinter.command.ReadLongStatus;
 import com.shtrih.fiscalprinter.scoc.ScocClient;
 import com.shtrih.fiscalprinter.scoc.commands.DeviceFirmwareResponse;
 import com.shtrih.fiscalprinter.scoc.commands.DeviceStatusResponse;
+import com.shtrih.fiscalprinter.table.PrinterTables;
 import com.shtrih.util.BitUtils;
 import com.shtrih.util.CompositeLogger;
 
@@ -193,23 +194,22 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
         if (firmware == null)
             return;
 
+        if (printer.isDesktop() && !printer.isShtrihNano() && !printer.isSDCardPresent()) {
+            logger.debug("Firmware update skipped, no SD card");
+            return;
+        }
+
+        logger.debug("Firmware update started");
+
         long startedAt = System.currentTimeMillis();
 
-        String useScocBefore = null;
+        PrinterTables tables = printer.readTables();
 
         if (printer.isDesktop()) {
-            useScocBefore = printer.readTable(23, 1, 1);
-
             printer.writeTable(23, 1, 1, "0");
         }
 
-        // TODO: save tables
-
         writeFirmware();
-
-        if (printer.isDesktop()) {
-            printer.writeTable(23, 1, 1, useScocBefore);
-        }
 
         long doneAt = System.currentTimeMillis();
 
@@ -217,7 +217,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
         rebootAndWait();
 
-        // TODO: restore tables
+        printer.writeTables(tables);
 
         firmware = null;
 
