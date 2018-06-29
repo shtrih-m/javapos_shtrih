@@ -187,6 +187,13 @@
             android:text="@string/action_connect_to_device_direct" />
 
         <Button
+            android:id="@+id/btnSearchTcpDevice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="searchDeviceDirect"
+            android:text="@string/action_search_tcp_device" />
+
+        <Button
             android:id="@+id/btnConnectToUSBDevice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

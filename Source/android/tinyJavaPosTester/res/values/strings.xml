@@ -18,6 +18,7 @@
     <string name="action_print_current_day_journal">Print current day journal</string>
     <string name="action_print_duplicate_receipt">Print duplicate receipt</string>
     <string name="action_connect_to_device_direct">Connect to network device</string>
+    <string name="action_search_tcp_device">Search network device</string>
     <string name="action_connect_to_usb_device">Connect to USB device</string>
     <string name="action_read_fs_comm_status">Read FS comm status</string>
     <string name="action_print_text">Print text</string>

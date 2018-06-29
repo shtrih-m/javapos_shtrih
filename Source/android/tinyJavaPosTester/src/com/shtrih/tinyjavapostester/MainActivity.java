@@ -357,6 +357,27 @@ public class MainActivity extends AppCompatActivity {
 
                     new ConnectToBluetoothDeviceTask(this, address).execute();
                 }
+            case TcpDeviceSearchActivity.REQUEST_SEARCH_TCP_DEVICE:
+                if (resultCode == Activity.RESULT_OK) {
+
+                    String address = data.getExtras().getString("Address");
+                    tbNetworkAddress.setText(address);
+//                    long startedAt = System.currentTimeMillis();
+//                    try {
+//                        connectToDevice(address);
+//                        long doneAt = System.currentTimeMillis();
+//                        String message = "Blutooth connected in " + (doneAt - startedAt) + " ms";
+//                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+//                        Log.d(TAG, message);
+//                    } catch (Exception e) {
+//                        long doneAt = System.currentTimeMillis();
+//                        e.printStackTrace();
+//                        String message = e.getMessage() + ". In " + (doneAt - startedAt) + " ms";
+//                        Log.d(TAG, message);
+//                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+//                    }
+
+                }
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
@@ -1442,6 +1463,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void searchDeviceDirect(View view) {
+
+        Intent intent = new Intent(this, TcpDeviceSearchActivity.class);
+        startActivityForResult(intent, TcpDeviceSearchActivity.REQUEST_SEARCH_TCP_DEVICE);
+    }
+
     public void connectToUSBDevice(View view) {
 
         try {
@@ -2111,12 +2138,11 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(Void... params) {
 
 
-
             try {
                 String path = SysUtils.getFilesPath() + "/ic_launcher-web.png";
 
                 JposConfig.copyAsset("ic_launcher-web.png", path, getApplicationContext());
-                
+
                 startedAt = System.currentTimeMillis();
 
                 byte[][] data = new ImageReader(path).getData();

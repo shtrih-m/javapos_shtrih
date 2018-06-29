@@ -14,6 +14,8 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+    dataBinding.enabled = true
+
     signingConfigs {
         release {
             storeFile file("${projectDir}/tinyJavaPOSTester-release-key.keystore")
@@ -139,6 +141,7 @@ dependencies {
     })
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
 }
 
