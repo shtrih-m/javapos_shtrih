@@ -61,7 +61,7 @@ public class FSService implements Runnable {
 
             logger.error("FSService stopped");
         } catch (InterruptedException e) {
-            logger.error("FSService stopped");
+            logger.debug("FSService stopped");
         } catch (Exception e) {
             logger.error("FSService unexpected exception", e);
         }

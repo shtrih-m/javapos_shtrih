@@ -998,7 +998,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
 
         firmwareUpdaterService = new FirmwareUpdaterService(printer);
-        printer.addEvents(firmwareUpdaterService);
+        //printer.addEvents(firmwareUpdaterService);
         firmwareUpdaterService.start();
     }
 
@@ -1016,7 +1016,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             return;
         }
 
-        printer.removeEvents(firmwareUpdaterService);
+        //printer.removeEvents(firmwareUpdaterService);
 
         firmwareUpdaterService.stop();
         firmwareUpdaterService = null;

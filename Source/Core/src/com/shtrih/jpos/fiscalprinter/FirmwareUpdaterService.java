@@ -5,7 +5,6 @@ import com.shtrih.fiscalprinter.command.IPrinterEvents;
 import com.shtrih.fiscalprinter.command.PrinterCommand;
 import com.shtrih.fiscalprinter.command.PrinterDate;
 import com.shtrih.fiscalprinter.command.PrinterStatus;
-import com.shtrih.fiscalprinter.command.ReadLongStatus;
 import com.shtrih.fiscalprinter.scoc.ScocClient;
 import com.shtrih.fiscalprinter.scoc.commands.DeviceFirmwareResponse;
 import com.shtrih.fiscalprinter.scoc.commands.DeviceStatusResponse;
@@ -15,7 +14,6 @@ import com.shtrih.util.CompositeLogger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.Calendar;
@@ -53,6 +51,8 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
                 if (stopFlag)
                     break;
+
+                updateFirmware();
 
                 Thread.sleep(pollPeriodSeconds * 1000);
             }
@@ -93,6 +93,9 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
                 firmwareVersion = printer.getDeviceMetrics().getModel() * 1000000 + printer.readLongStatus().getFirmwareBuild();
             }
 
+            if (stopFlag)
+                return;
+
             ScocClient client = new ScocClient(serialNumber, uin.longValue());
 
             DeviceStatusResponse response = client.sendStatus(firmwareVersion);
@@ -112,11 +115,17 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
             out.write(firstResponse.getData());
 
+            if (stopFlag)
+                return;
+
             long newVersion = firstResponse.getFirmwareVersion();
 
             logger.debug("Downloading new firmware version " + newVersion + ", current version is " + firmwareVersion);
 
             for (int i = 2; i <= firstResponse.getPartsCount(); i++) {
+
+                if (stopFlag)
+                    return;
 
                 DeviceFirmwareResponse nextPart = client.readFirmware(newVersion, i);
 
@@ -182,46 +191,56 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
                     updateFirmware();
                     break;
             }
-        } catch (IOException e) {
-            throw e;
         } catch (Exception e) {
             logger.error(e);
         }
     }
 
-    private void updateFirmware() throws Exception {
+    private void updateFirmware() {
 
-        if (firmware == null)
-            return;
+        try {
+            if (firmware == null)
+                return;
 
-        if (printer.isDesktop() && !printer.isShtrihNano() && !printer.isSDCardPresent()) {
-            logger.debug("Firmware update skipped, no SD card");
-            return;
+            if (printer.isDesktop() && !printer.isShtrihNano() && !printer.isSDCardPresent()) {
+                logger.debug("Firmware update skipped, no SD card");
+                return;
+            }
+
+            logger.debug("Firmware update started");
+
+            long startedAt = System.currentTimeMillis();
+
+            PrinterTables tables = null;
+            if (!printer.isShtrihNano()) {
+                tables = printer.readTables();
+            }
+
+            if (printer.isDesktop()) {
+                printer.writeTable(23, 1, 1, "0");
+            }
+
+            writeFirmware();
+
+            if (stopFlag)
+                return;
+
+            long doneAt = System.currentTimeMillis();
+
+            logger.debug("Firmware written in " + (doneAt - startedAt) + " ms");
+
+            if (!printer.isShtrihNano())
+                rebootAndWait();
+
+            if (tables != null)
+                printer.writeTables(tables);
+
+            firmware = null;
+
+            logger.debug("Firmware update done");
+        } catch (Exception e) {
+            logger.error("Firmware update failed", e);
         }
-
-        logger.debug("Firmware update started");
-
-        long startedAt = System.currentTimeMillis();
-
-        PrinterTables tables = printer.readTables();
-
-        if (printer.isDesktop()) {
-            printer.writeTable(23, 1, 1, "0");
-        }
-
-        writeFirmware();
-
-        long doneAt = System.currentTimeMillis();
-
-        logger.debug("Firmware written in " + (doneAt - startedAt) + " ms");
-
-        rebootAndWait();
-
-        printer.writeTables(tables);
-
-        firmware = null;
-
-        logger.debug("Firmware update done");
     }
 
     private void writeFirmware() throws Exception {
@@ -232,6 +251,10 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
         byte[] block = new byte[128];
 
         while (stream.available() > 0) {
+
+            if (stopFlag)
+                return;
+
             stream.read(block, 0, 128);
             printer.writeFirmwareBlockToSDCard(fileType, blockNumber, block);
             blockNumber++;
@@ -241,11 +264,13 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
     private void rebootAndWait() throws Exception {
         printer.reboot();
 
-        // Рандомизация нужна, т.к. этот процесс начинается на множестве устройств одновременно
         Thread.sleep(10 * 1000);
 
         for (int i = 0; i < 10; i++) {
             try {
+                if (stopFlag)
+                    return;
+
                 printer.connect();
                 break;
             } catch (Exception e) {
