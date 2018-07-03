@@ -992,7 +992,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             return;
         }
 
-        if(!printer.isDesktop() && !printer.isCashCore()){
+        if (!printer.isDesktop() && !printer.isCashCore()) {
             logger.debug("FirmwareUpdaterService stopped, unsupported device");
             return;
         }
@@ -1017,7 +1017,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
 
         //printer.removeEvents(firmwareUpdaterService);
-
         firmwareUpdaterService.stop();
         firmwareUpdaterService = null;
     }
@@ -3231,7 +3230,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkPrice(unitPrice);
         checkVatInfo(vatInfo);
 
-        description = updateDescription(description);
+        if (params.postLineAsItemTextEnabled) {
+            description = updateDescription(description);
+        }
         receipt.printRecItem(description, price, quantity, vatInfo, unitPrice, unitName);
     }
 
@@ -4525,7 +4526,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
         return result;
     }
-    
+
     private ReceiptContext createReceiptContext() {
         return new ReceiptContext(receiptPrinter, params, fiscalDay,
                 printerReceipt, printerState, this);
