@@ -1,6 +1,7 @@
 package com.shtrih.tinyjavapostester;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
@@ -10,12 +11,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.text.Editable;
@@ -80,6 +84,8 @@ import jpos.JposException;
 import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_EFPTR_INVALID_TABLE;
 
 public class MainActivity extends AppCompatActivity {
+
+    final int REQUEST_CODE_WES = 100888;
 
     private class EnumViewModel {
         private final String value;
@@ -496,22 +502,122 @@ public class MainActivity extends AppCompatActivity {
 
     private void shareLogFile() {
         try {
-            String logPath = SysUtils.getFilesPath() + LogbackConfig.MainFileName;
+//            String logPath = SysUtils.getFilesPath() + LogbackConfig.MainFileName;
+//
+//            Intent intentShareFile = new Intent(Intent.ACTION_SEND);
+//
+//            intentShareFile.setType("text/plain");
+//
+//            boolean logExists = fileExists(logPath);
+//
+//            if (!logExists) {
+//                Toast.makeText(this, "Log file was not found", Toast.LENGTH_LONG).show();
+//                return;
+//            }
+//
+//            intentShareFile.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + logPath));
+//
+//            startActivity(Intent.createChooser(intentShareFile, "Share log"));
 
-            Intent intentShareFile = new Intent(Intent.ACTION_SEND);
+//            //get destination to update file and set Uri
+//            //TODO: First I wanted to store my update .apk file on internal storage for my app but apparently android does not allow you to open and install
+//            //aplication with existing package from there. So for me, alternative solution is Download directory in external storage. If there is better
+//            //solution, please inform us in comment
 
-            intentShareFile.setType("text/plain");
 
-            boolean logExists = fileExists(logPath);
-
-            if (!logExists) {
-                Toast.makeText(this, "Log file was not found", Toast.LENGTH_LONG).show();
-                return;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WES);
+                    return;
+                }
             }
 
-            intentShareFile.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + logPath));
+            installApk();
+        } catch (Exception e) {
+            Log.d(TAG, "Log sharing failed", e);
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
 
-            startActivity(Intent.createChooser(intentShareFile, "Share log"));
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_WES:
+                if (grantResults.length > 0) {
+                    for (int gr : grantResults) {
+                        // Check if request is granted or not
+                        if (gr != PackageManager.PERMISSION_GRANTED) {
+                            Toast.makeText(getApplicationContext(), "Permissions was not granted", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                    }
+
+                    installApk();
+                }
+                break;
+            default:
+                return;
+        }
+    }
+
+    private void installApk() {
+
+        try {
+            final String destination = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/cashcore.apk";
+
+            final Uri uri = Uri.parse("file://" + destination);
+
+            //Delete update file if exists
+            File file = new File(destination);
+            if (file.exists())
+                //file.delete() - test this, I think sometimes it doesnt work
+                file.delete();
+
+            //get url of app on server
+            String url = "https://yadi.sk/d/V_T6ZckM3YiJWB";
+
+            //set downloadmanager
+            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+            request.setDescription("Notification description");
+            request.setTitle("Notification title");
+
+            //set destination
+            request.setDestinationUri(uri);
+
+            //set BroadcastReceiver to install app when .apk is downloaded
+            BroadcastReceiver onComplete = new BroadcastReceiver() {
+                public void onReceive(Context ctxt, Intent intent) {
+                    try {
+                        File filePath = new File(destination);
+
+                        Uri uri = Uri.fromFile(filePath);
+
+                        Context context = getApplicationContext();
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".files.provider", filePath);
+                        }
+
+                        Intent install = new Intent(Intent.ACTION_VIEW);
+                        install.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                        install.setDataAndType(uri, "application/vnd.android.package-archive");
+                        startActivity(install);
+
+                        unregisterReceiver(this);
+                    } catch (Exception e) {
+                        Log.d(TAG, "Log sharing failed", e);
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            };
+
+            //register receiver for when .apk download is compete
+            registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+            // get download service and enqueue file
+            final DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+            final long downloadId = manager.enqueue(request);
         } catch (Exception e) {
             Log.d(TAG, "Log sharing failed", e);
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -2111,12 +2217,11 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(Void... params) {
 
 
-
             try {
                 String path = SysUtils.getFilesPath() + "/ic_launcher-web.png";
 
                 JposConfig.copyAsset("ic_launcher-web.png", path, getApplicationContext());
-                
+
                 startedAt = System.currentTimeMillis();
 
                 byte[][] data = new ImageReader(path).getData();
