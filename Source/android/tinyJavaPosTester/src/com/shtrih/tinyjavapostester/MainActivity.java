@@ -62,6 +62,7 @@ import com.shtrih.fiscalprinter.port.UsbPrinterPort;
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialProber;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
+import com.shtrih.util.ApkInstaller;
 import com.shtrih.util.Hex;
 import com.shtrih.util.ImageReader;
 import com.shtrih.util.SysUtils;

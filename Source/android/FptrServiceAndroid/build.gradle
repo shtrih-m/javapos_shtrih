@@ -142,7 +142,9 @@ dependencies {
     implementation 'd2xx:d2xx:1.0',
             'org.slf4j:slf4j-api:1.7.21',
             'xerces4android:xerces4android:1.0'
-    
+
+    implementation 'com.android.support:support-v4:27.1.0'
+
     androidTestImplementation 'com.android.support:support-annotations:27.1.0'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test:rules:1.0.1'

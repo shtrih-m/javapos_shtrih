@@ -1,4 +1,4 @@
-package com.shtrih.tinyjavapostester;
+package com.shtrih.util;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +19,7 @@ public class ApkInstaller {
         Uri uri = Uri.fromFile(apkFile);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            uri = FileProvider.getUriForFile(context, "com.shtrih.files.provider", apkFile);
+            uri = FileProvider.getUriForFile(context, "com.shtrih.jpos.files.provider", apkFile);
         }
 
         Intent install = new Intent(Intent.ACTION_VIEW);
