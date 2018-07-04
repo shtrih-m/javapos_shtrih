@@ -13,5 +13,10 @@
         android:orderInCategory="100"
         android:title="@string/action_share_log"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_test_apk_install"
+        android:orderInCategory="100"
+        android:title="@string/action_test_apk_install"
+        app:showAsAction="never"/>
 
 </menu>

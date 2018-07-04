@@ -4,6 +4,7 @@
     <string name="app_name">tinyJavaPosTester</string>
     <string name="action_connect_ptk">Connect KKM</string>
     <string name="action_share_log">Share log</string>
+    <string name="action_test_apk_install">Test APK installation</string>
     <string name="none_paired">no paired</string>
     <string name="none_found">nothing found</string>
     <string name="scanning">scanning…</string>
