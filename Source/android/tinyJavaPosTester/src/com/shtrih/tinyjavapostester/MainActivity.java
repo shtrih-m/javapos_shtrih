@@ -599,7 +599,13 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         Intent install = new Intent(Intent.ACTION_VIEW);
-                        install.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            install.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        }
+                        else{
+                            install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        }
 
                         install.setDataAndType(uri, "application/vnd.android.package-archive");
                         startActivity(install);
