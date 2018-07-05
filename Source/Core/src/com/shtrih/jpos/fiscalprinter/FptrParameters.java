@@ -170,6 +170,7 @@ public class FptrParameters {
     public boolean autoOpenShift = true;
     public boolean forceOpenShiftOnZReport = true;
     public boolean footerFlagEnabled = true;
+    private Object appContext;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -546,10 +547,9 @@ public class FptrParameters {
         postLine = "";
     }
 
-    public String quantityToStr(long value, String unitName) throws Exception 
-    {
+    public String quantityToStr(long value, String unitName) throws Exception {
         value = Math.abs(value);
-        
+
         String result;
         if (((value % 1000) == 0) && (!unitName.equalsIgnoreCase(weightUnitName))) {
             result = String.valueOf(value / 1000);
@@ -559,8 +559,16 @@ public class FptrParameters {
         return result;
     }
 
-    public boolean isDriverHeader(){
-        return (headerMode == SMFPTR_HEADER_MODE_DRIVER)||
+    public boolean isDriverHeader() {
+        return (headerMode == SMFPTR_HEADER_MODE_DRIVER) ||
                 (headerMode == SMFPTR_HEADER_MODE_DRIVER2);
+    }
+
+    public Object getAppContext() {
+        return appContext;
+    }
+
+    public void setAppContext(Object value) {
+        appContext = value;
     }
 }

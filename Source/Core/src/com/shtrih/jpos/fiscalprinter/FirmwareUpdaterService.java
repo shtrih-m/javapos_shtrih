@@ -1,5 +1,6 @@
 package com.shtrih.jpos.fiscalprinter;
 
+import com.shtrih.fiscalprinter.CashCoreInstaller;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.IPrinterEvents;
 import com.shtrih.fiscalprinter.command.PrinterCommand;
@@ -14,6 +15,7 @@ import com.shtrih.util.CompositeLogger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.Calendar;
@@ -88,6 +90,9 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
                     calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
                     firmwareVersion = calendar.getTimeInMillis() / 1000L;
                 }
+            } else if (printer.isCashCore()) {
+                uin = new BigInteger(serialNumber);
+                firmwareVersion = 70000000 + printer.readLongStatus().getFirmwareBuild();
             } else {
                 uin = new BigInteger(serialNumber);
                 firmwareVersion = printer.getDeviceMetrics().getModel() * 1000000 + printer.readLongStatus().getFirmwareBuild();
@@ -120,7 +125,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
             long newVersion = firstResponse.getFirmwareVersion();
 
-            logger.debug("Downloading new firmware version " + newVersion + ", current version is " + firmwareVersion);
+            logger.debug("Downloading new firmware version " + newVersion + ", current version is " + firmwareVersion + " in " + firstResponse.getPartsCount() + " parts");
 
             for (int i = 2; i <= firstResponse.getPartsCount(); i++) {
 
@@ -216,24 +221,29 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
                 tables = printer.readTables();
             }
 
-            if (printer.isDesktop()) {
-                printer.writeTable(23, 1, 1, "0");
+            if (printer.isCashCore()) {
+                installCashCore();
+            } else {
+
+                if (printer.isDesktop()) {
+                    printer.writeTable(23, 1, 1, "0");
+                }
+
+                writeFirmware();
+
+                if (stopFlag)
+                    return;
+
+                long doneAt = System.currentTimeMillis();
+
+                logger.debug("Firmware written in " + (doneAt - startedAt) + " ms");
+
+                if (!printer.isShtrihNano())
+                    rebootAndWait();
+
+                if (tables != null)
+                    printer.writeTables(tables);
             }
-
-            writeFirmware();
-
-            if (stopFlag)
-                return;
-
-            long doneAt = System.currentTimeMillis();
-
-            logger.debug("Firmware written in " + (doneAt - startedAt) + " ms");
-
-            if (!printer.isShtrihNano())
-                rebootAndWait();
-
-            if (tables != null)
-                printer.writeTables(tables);
 
             firmware = null;
 
@@ -241,6 +251,15 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
         } catch (Exception e) {
             logger.error("Firmware update failed", e);
         }
+    }
+
+    private void installCashCore() throws IOException {
+        Object appContext = printer.getParams().getAppContext();
+
+        if(appContext == null)
+            throw new IllegalArgumentException("AppContext was not set");
+
+        new CashCoreInstaller(appContext).install(firmware);
     }
 
     private void writeFirmware() throws Exception {

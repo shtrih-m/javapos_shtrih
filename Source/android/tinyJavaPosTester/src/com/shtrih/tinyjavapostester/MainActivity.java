@@ -422,6 +422,7 @@ public class MainActivity extends AppCompatActivity {
                 printer.open("ShtrihFptr");
                 printer.claim(3000);
                 printer.setDeviceEnabled(true);
+                printer.setAppContext(getApplicationContext());
 
                 return null;
 
@@ -471,6 +472,7 @@ public class MainActivity extends AppCompatActivity {
         printer.open("ShtrihFptr");
         printer.claim(3000);
         printer.setDeviceEnabled(true);
+        printer.setAppContext(getApplicationContext());
 
         LongPrinterStatus status = printer.readLongPrinterStatus();
         Log.d(TAG, "" + status.getFiscalID());
@@ -551,7 +553,7 @@ public class MainActivity extends AppCompatActivity {
                 destination.delete();
 
             //get url of app on server
-            String url = "https://www.dropbox.com/s/wz5ghxzv6h472x0/tinyJavaPosTester_v525-7-ga694ac9.apk?dl=1";
+            String url = "https://www.dropbox.com/s/03ckweynsqcnljw/cashcore.32681.apk?dl=1";//"https://www.dropbox.com/s/wz5ghxzv6h472x0/tinyJavaPosTester_v525-7-ga694ac9.apk?dl=1";
 
             //set downloadmanager
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
@@ -576,7 +578,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             };
-
+                     
             //register receiver for when .apk download is compete
             registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
@@ -1478,6 +1480,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("MainActivity", "Setting device enabled...");
 
                 printer.setDeviceEnabled(true);
+                printer.setAppContext(getApplicationContext());
 
                 Log.d("MainActivity", "Connected!");
 
@@ -1550,6 +1553,7 @@ public class MainActivity extends AppCompatActivity {
 
             printer.claim(3000);
             printer.setDeviceEnabled(true);
+            printer.setAppContext(getApplicationContext());
 
 
         } catch (Exception e) {

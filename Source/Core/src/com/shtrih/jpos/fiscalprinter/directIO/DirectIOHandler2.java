@@ -451,15 +451,15 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_READ_TOTALIZER:
                 new DIOReadTotalizers(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_READ_DOCUMENT_TLV_TEXT:
                 new DIOReadDocumentTLVText(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_READ_EJ_DOCUMENT:
                 new DIOReadEJDocument(service).execute(data, object);
                 break;
-                
+
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
@@ -595,6 +595,12 @@ public class DirectIOHandler2 {
     public void dioSetDriverParameter(int[] data, Object object) throws Exception {
         DIOUtils.checkDataMinLength(data, 1);
         int paramID = data[0];
+
+        if (paramID == SmFptrConst.SMFPTR_DIO_PARAM_APP_CONTEXT) {
+            getParams().setAppContext(object);
+            return;
+        }
+
         long value = Long.parseLong(((String[]) object)[0]);
         switch (paramID) {
             case SmFptrConst.SMFPTR_DIO_PARAM_REPORT_DEVICE:

@@ -22,7 +22,7 @@ public class ApkInstaller {
             uri = FileProvider.getUriForFile(context, "com.shtrih.jpos.files.provider", apkFile);
         }
 
-        Intent install = new Intent(Intent.ACTION_VIEW);
+        final Intent install = new Intent(Intent.ACTION_VIEW);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             install.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
