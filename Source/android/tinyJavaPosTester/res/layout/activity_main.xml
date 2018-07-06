@@ -1,59 +1,246 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.shtrih.tinyjavapostester.MainActivity"
-    android:screenOrientation="portrait"
-    android:configChanges="keyboardHidden|orientation|screenSize">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <data>
+
+        <variable
+            name="vm"
+            type="com.shtrih.tinyjavapostester.MainViewModel" />
+
+        <variable
+            name="activity"
+            type="com.shtrih.tinyjavapostester.MainActivity" />
+    </data>
+
+    <ScrollView 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
-
-        <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
-        <LinearLayout
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:layout_width="0px"
-            android:layout_height="0px"/>
+        android:layout_height="match_parent"
+        android:configChanges="keyboardHidden|orientation|screenSize"
+        android:screenOrientation="portrait"
+        tools:context="com.shtrih.tinyjavapostester.MainActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:baselineAligned="false">
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
+            <LinearLayout
+                android:layout_width="0px"
+                android:layout_height="0px"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="1">
+
+                <TableRow>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dip"
+                        android:layout_marginRight="5dip"
+                        android:text="@string/lblProtocol" />
+
+                    <Spinner
+                        android:id="@+id/cbProtocol"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1" />
+
+                </TableRow>
+
+                <TableRow>
+
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/chbFastConnect"
+                        android:layout_span="2"
+                        android:text="@string/chbFastConnect" />
+
+                </TableRow>
+
+                <TableRow>
+
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/chbScocFirmwareUpdate"
+                        android:layout_span="2"
+                        android:text="@string/chbScocFirmwareUpdate" />
+
+                </TableRow>
+
+                <TableRow android:layout_width="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dip"
+                        android:layout_marginRight="5dip"
+                        android:text="@string/lblNetworkAddress" />
+
+                    <EditText
+                        android:id="@+id/tbNetworkAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:text="@string/defaultNetworkAddress" />
+
+                </TableRow>
+            </TableLayout>
+
+            <TextView
+                android:id="@+id/lblScocStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dip"
+                android:layout_marginRight="5dip"
+                android:text="@{vm.ScocUpdaterStatus}" />
+
+            <Button
+                android:id="@+id/btnConnectToDeviceDirect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="connectToDeviceDirect"
+                android:text="@string/action_connect_to_device_direct" />
+
+            <Button
+                android:id="@+id/btnConnectToUSBDevice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="connectToUSBDevice"
+                android:text="@string/action_connect_to_usb_device" />
+
+            <Button
+                android:id="@+id/btnDisconnect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="disconnect"
+                android:text="@string/action_disconnect" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                android:baselineAligned="false">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dip"
-                    android:layout_marginRight="5dip"
-                    android:text="@string/lblPositions" />
-
-                <EditText
-                    android:id="@+id/nbPositionsCount"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dip"
-                    android:layout_marginRight="5dip"
-                    android:inputType="number"
-                    android:text="@string/defaultPositionsCount" />
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dip"
+                        android:layout_marginRight="5dip"
+                        android:text="@string/lblPositions" />
+
+                    <EditText
+                        android:id="@+id/nbPositionsCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dip"
+                        android:layout_marginRight="5dip"
+                        android:inputType="number"
+                        android:text="@string/defaultPositionsCount" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dip"
+                        android:layout_marginRight="5dip"
+                        android:text="@string/lblTextStrings" />
+
+                    <EditText
+                        android:id="@+id/nbTextStringsCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:text="@string/defaultTextStringsCount" />
+                </LinearLayout>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btnPrintReceipt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="printReceipt"
+                android:text="@string/action_print_receipt" />
+
+            <Button
+                android:id="@+id/btnPrintEAN13Barcode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="printEAN13Barcode"
+                android:text="@string/action_print_ean13_bar_code" />
+
+            <Button
+                android:id="@+id/btnPrintPDF417Barcode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="printPDF417Barcode"
+                android:text="@string/action_print_pdf417_bar_code" />
+
+            <Button
+                android:id="@+id/btnPrintQRBarcode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="printQRBarcode"
+                android:text="@string/action_print_qr_code" />
+
+            <Button
+                android:id="@+id/btnOpenFiscalDay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="openFiscalDay"
+                android:text="@string/action_open_fiscal_day" />
+
+            <Button
+                android:id="@+id/btnPrintZReport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="printZReport"
+                android:text="@string/action_print_z_report" />
+
+            <Button
+                android:id="@+id/btnPrintDayJournal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="printJournalCurrentDay"
+                android:text="@string/action_print_current_day_journal" />
+
+            <Button
+                android:id="@+id/btnPrintDuplicateReceipt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="printDuplicateReceipt"
+                android:text="@string/action_print_duplicate_receipt" />
+
+
+            <Button
+                android:id="@+id/btnReadFSCommStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="readFSCommStatus"
+                android:text="@string/action_read_fs_comm_status" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <TextView
@@ -64,179 +251,106 @@
                     android:text="@string/lblTextStrings" />
 
                 <EditText
-                    android:id="@+id/nbTextStringsCount"
+                    android:id="@+id/nbTextLinesCount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:text="@string/defaultTextStringsCount" />
+                    android:inputType="number" />
             </LinearLayout>
-        </LinearLayout>
 
-        <Button
-            android:id="@+id/btnPrintReceipt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="printReceipt"
-            android:text="@string/action_print_receipt" />
+            <Button
+                android:id="@+id/btnPrintText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="printText"
+                android:text="@string/action_print_text" />
 
-        <Button
-            android:id="@+id/btnPrintEAN13Barcode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="printEAN13Barcode"
-            android:text="@string/action_print_ean13_bar_code" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false">
 
-        <Button
-            android:id="@+id/btnPrintPDF417Barcode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="printPDF417Barcode"
-            android:text="@string/action_print_pdf417_bar_code" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btnPrintQRBarcode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="printQRBarcode"
-            android:text="@string/action_print_qr_code" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dip"
+                        android:layout_marginRight="5dip"
+                        android:text="@string/lblFiscalizationNumber" />
 
-        <Button
-            android:id="@+id/btnOpenFiscalDay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="openFiscalDay"
-            android:text="@string/action_open_fiscal_day" />
+                    <EditText
+                        android:id="@+id/nbFiscalizationNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dip"
+                        android:layout_marginRight="5dip"
+                        android:inputType="number" />
+                </LinearLayout>
 
-        <Button
-            android:id="@+id/btnPrintZReport"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="printZReport"
-            android:text="@string/action_print_z_report" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btnPrintDayJournal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="printJournalCurrentDay"
-            android:text="@string/action_print_current_day_journal" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dip"
+                        android:layout_marginRight="5dip"
+                        android:text="@string/lblTagNumber" />
 
-        <Button
-            android:id="@+id/btnPrintDuplicateReceipt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="printDuplicateReceipt"
-            android:text="@string/action_print_duplicate_receipt" />
+                    <EditText
+                        android:id="@+id/nbTagNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number" />
+                </LinearLayout>
+            </LinearLayout>
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:stretchColumns="1">
+            <Button
+                android:id="@+id/btnReadFiscalizationTag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="readFiscalizationTag"
+                android:text="@string/action_read_fiscalization_tag" />
 
-            <TableRow android:layout_width="match_parent">
+            <Button
+                android:id="@+id/btnReadFiscalizationTLV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="readFiscalizationTLV"
+                android:text="@string/action_read_fiscalization_tlv" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dip"
                     android:layout_marginRight="5dip"
-                    android:text="@string/lblNetworkAddress" />
+                    android:text="@string/lblDocumentNumber" />
 
                 <EditText
-                    android:id="@+id/tbNetworkAddress"
+                    android:id="@+id/nbDocumentNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:text="@string/defaultNetworkAddress" />
+                    android:inputType="number" />
+            </LinearLayout>
 
-            </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dip"
-                    android:layout_marginRight="5dip"
-                    android:text="@string/lblProtocol" />
-
-                <Spinner
-                    android:id="@+id/cbProtocol"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_column="1" />
-
-            </TableRow>
-
-            <TableRow>
-
-                <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/chbFastConnect"
-                    android:text="@string/chbFastConnect"
-                    android:layout_span="2"/>
-                
-            </TableRow>
-
-        </TableLayout>
-
-        <Button
-            android:id="@+id/btnConnectToDeviceDirect"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="connectToDeviceDirect"
-            android:text="@string/action_connect_to_device_direct" />
-
-        <Button
-            android:id="@+id/btnConnectToUSBDevice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="connectToUSBDevice"
-            android:text="@string/action_connect_to_usb_device" />
-
-        <Button
-            android:id="@+id/btnReadFSCommStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="readFSCommStatus"
-            android:text="@string/action_read_fs_comm_status" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dip"
-                android:layout_marginRight="5dip"
-                android:text="@string/lblTextStrings" />
-
-            <EditText
-                android:id="@+id/nbTextLinesCount"
+            <Button
+                android:id="@+id/btnReadDocumentTLV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btnPrintText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="printText"
-            android:text="@string/action_print_text" />
-
-        <Button
-            android:id="@+id/btnDisconnect"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="disconnect"
-            android:text="@string/action_disconnect" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false">
+                android:onClick="readDocumentTLV"
+                android:text="@string/action_read_document_tlv" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -249,10 +363,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dip"
                     android:layout_marginRight="5dip"
-                    android:text="@string/lblFiscalizationNumber" />
+                    android:text="@string/lblTableNumber" />
 
                 <EditText
-                    android:id="@+id/nbFiscalizationNumber"
+                    android:id="@+id/nbTableNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dip"
@@ -271,211 +385,129 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dip"
                     android:layout_marginRight="5dip"
-                    android:text="@string/lblTagNumber" />
+                    android:text="@string/lblTableField" />
 
                 <EditText
-                    android:id="@+id/nbTagNumber"
+                    android:id="@+id/nbTableField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dip"
+                    android:layout_marginRight="5dip"
+                    android:inputType="number" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dip"
+                    android:layout_marginRight="5dip"
+                    android:text="@string/lblTableRow" />
+
+                <EditText
+                    android:id="@+id/nbTableRow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number" />
             </LinearLayout>
-        </LinearLayout>
 
-        <Button
-            android:id="@+id/btnReadFiscalizationTag"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="readFiscalizationTag"
-            android:text="@string/action_read_fiscalization_tag" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btnReadFiscalizationTLV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="readFiscalizationTLV"
-            android:text="@string/action_read_fiscalization_tlv" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dip"
+                    android:layout_marginRight="5dip"
+                    android:text="@string/lblTableCellValue" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/tbTableCellValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnReadTableCell"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="readTableCell"
+                android:text="@string/action_read_table_cell" />
+
+            <Button
+                android:id="@+id/btnWriteTableCell"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="writeTableCell"
+                android:text="@string/action_write_table_cell" />
+
+            <Button
+                android:id="@+id/btnReadTables"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="readTables"
+                android:text="@string/action_read_tables" />
+
+            <Button
+                android:id="@+id/btnSyncDateTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="syncDateTime"
+                android:text="@string/action_sync_date_time" />
+
+            <Button
+                android:id="@+id/btnPrintImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="printImage"
+                android:text="Print image" />
+
+            <Button
+                android:id="@+id/btnGenerateMonoToken"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="generateMonoToken"
+                android:text="@string/action_generate_mono_token" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dip"
+                    android:layout_marginRight="5dip"
+                    android:text="@string/lblGenerateMonoToken" />
+
+                <EditText
+                    android:id="@+id/tbMonoToken"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </LinearLayout>
 
             <TextView
+                android:id="@+id/lblLogPathValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dip"
                 android:layout_marginRight="5dip"
-                android:text="@string/lblDocumentNumber" />
+                android:text="" />
 
-            <EditText
-                android:id="@+id/nbDocumentNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnReadDocumentTLV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="readDocumentTLV"
-            android:text="@string/action_read_document_tlv" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dip"
-                android:layout_marginRight="5dip"
-                android:text="@string/lblTableNumber" />
-
-            <EditText
-                android:id="@+id/nbTableNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dip"
-                android:layout_marginRight="5dip"
-                android:inputType="number" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dip"
-                android:layout_marginRight="5dip"
-                android:text="@string/lblTableField" />
-
-            <EditText
-                android:id="@+id/nbTableField"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dip"
-                android:layout_marginRight="5dip"
-                android:inputType="number" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dip"
-                android:layout_marginRight="5dip"
-                android:text="@string/lblTableRow" />
-
-            <EditText
-                android:id="@+id/nbTableRow"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dip"
-                android:layout_marginRight="5dip"
-                android:text="@string/lblTableCellValue" />
-
-            <EditText
-                android:id="@+id/tbTableCellValue"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btnReadTableCell"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="readTableCell"
-            android:text="@string/action_read_table_cell" />
-
-        <Button
-            android:id="@+id/btnWriteTableCell"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="writeTableCell"
-            android:text="@string/action_write_table_cell" />
-
-        <Button
-            android:id="@+id/btnReadTables"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="readTables"
-            android:text="@string/action_read_tables" />
-
-        <Button
-            android:id="@+id/btnSyncDateTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="syncDateTime"
-            android:text="@string/action_sync_date_time" />
-
-        <Button
-            android:id="@+id/btnPrintImage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="printImage"
-            android:text="Print image" />
-
-        <Button
-            android:id="@+id/btnGenerateMonoToken"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="generateMonoToken"
-            android:text="@string/action_generate_mono_token" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dip"
-                android:layout_marginRight="5dip"
-                android:text="@string/lblGenerateMonoToken" />
-
-            <EditText
-                android:id="@+id/tbMonoToken"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/lblLogPathValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dip"
-            android:layout_marginRight="5dip"
-            android:text="" />
-
-    </LinearLayout>
-
-
-</ScrollView>
+    </ScrollView>
+</layout>

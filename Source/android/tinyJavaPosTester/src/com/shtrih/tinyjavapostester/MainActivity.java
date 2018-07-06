@@ -10,12 +10,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.databinding.DataBindingUtil;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.text.Editable;
@@ -50,14 +52,15 @@ import com.shtrih.fiscalprinter.command.FSCommunicationStatus;
 import com.shtrih.fiscalprinter.command.FSDocumentInfo;
 import com.shtrih.fiscalprinter.command.FSStatusInfo;
 import com.shtrih.fiscalprinter.command.GenerateMonoTokenCommand;
-import com.shtrih.fiscalprinter.command.LongPrinterStatus;
 import com.shtrih.fiscalprinter.command.PrinterDate;
 import com.shtrih.fiscalprinter.command.PrinterTime;
 import com.shtrih.fiscalprinter.command.ReadTableInfo;
 import com.shtrih.fiscalprinter.port.UsbPrinterPort;
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialProber;
+import com.shtrih.jpos.fiscalprinter.FirmwareUpdateObserver;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
+import com.shtrih.tinyjavapostester.databinding.ActivityMainBinding;
 import com.shtrih.util.Hex;
 import com.shtrih.util.ImageReader;
 import com.shtrih.util.SysUtils;
@@ -118,13 +121,25 @@ public class MainActivity extends AppCompatActivity {
     private EditText nbTableRow;
     private EditText tbTableCellValue;
     private AppCompatCheckBox chbFastConnect;
+    private AppCompatCheckBox chbScocFirmwareUpdate;
 
     private String selectedProtocol;
+
+    private MainViewModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        model = ViewModelProviders.of(this).get(MainViewModel.class);
+
+        printer = model.getPrinter();
+
+        binding.setVm(model);
+        binding.setActivity(this);
+
 
         setFilter();
         findSerialPortDevice();
@@ -170,6 +185,9 @@ public class MainActivity extends AppCompatActivity {
         chbFastConnect = findViewById(R.id.chbFastConnect);
         restoreAndSaveChangesTo(chbFastConnect, pref, "FastConnect", true);
 
+        chbScocFirmwareUpdate = findViewById(R.id.chbScocFirmwareUpdate);
+        restoreAndSaveChangesTo(chbScocFirmwareUpdate, pref, "ScocFirmwareUpdate", true);
+
         Spinner cbProtocol = findViewById(R.id.cbProtocol);
 
         ArrayList<EnumViewModel> protocols = new ArrayList<>();
@@ -199,10 +217,6 @@ public class MainActivity extends AppCompatActivity {
 
         int savedProtocolIndex = pref.getInt(PREFERENCES_PROTOCOL_KEY, 0);
         cbProtocol.setSelection(savedProtocolIndex);
-
-        MainViewModel model = ViewModelProviders.of(this).get(MainViewModel.class);
-
-        printer = model.getPrinter();
 
         String logPath = "Log path: " + SysUtils.getFilesPath() + LogbackConfig.MainFileName;
 
@@ -355,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
 //                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 //                    }
 
-                    new ConnectToBluetoothDeviceTask(this, address).execute();
+                    new ConnectToBluetoothDeviceTask(this, address, createFirmwareUpdateObserver()).execute();
                 }
                 break;
             default:
@@ -364,20 +378,27 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private FirmwareUpdateObserver createFirmwareUpdateObserver() {
+        TextView txt = findViewById(R.id.lblScocStatus);
+        return new FirmwareUpdaterObserverImpl(model);
+    }
+
     private class ConnectToBluetoothDeviceTask extends AsyncTask<Void, Void, String> {
 
         private final Activity parent;
         private final String address;
+        private final FirmwareUpdateObserver observer;
 
         private long startedAt;
         private long doneAt;
 
         private ProgressDialog dialog;
 
-        public ConnectToBluetoothDeviceTask(Activity parent, String address) {
+        public ConnectToBluetoothDeviceTask(Activity parent, String address, FirmwareUpdateObserver observer) {
             this.parent = parent;
 
             this.address = address;
+            this.observer = observer;
         }
 
         private int oldOrientation;
@@ -404,6 +425,7 @@ public class MainActivity extends AppCompatActivity {
                 props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothPort");
                 props.put("protocolType", selectedProtocol);
                 props.put("fastConnect", chbFastConnect.isChecked() ? "1" : "0");
+                props.put("capScocUpdateFirmware", chbScocFirmwareUpdate.isChecked() ? "1" : "0");
 
                 JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
                 if (printer.getState() != JposConst.JPOS_S_CLOSED) {
@@ -412,6 +434,7 @@ public class MainActivity extends AppCompatActivity {
                 printer.open("ShtrihFptr");
                 printer.claim(3000);
                 printer.setDeviceEnabled(true);
+                printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, observer);
 
                 return null;
 
@@ -436,35 +459,6 @@ public class MainActivity extends AppCompatActivity {
 
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
-    }
-
-    public void connectToDevice(final String address) throws Exception {
-        Log.d("", "connectToDevice");
-        /*
-        UsbManager usbManager = (UsbManager) getApplicationContext().getSystemService(Context.USB_SERVICE);
-        for (final UsbDevice usbDevice : usbManager.getDeviceList().values()) {
-            Log.d("usbDevice", "vendorId: " + usbDevice.getVendorId());
-            Log.d("usbDevice", "productId: " + usbDevice.getProductId());
-        }
-        */
-
-        HashMap<String, String> props = new HashMap<>();
-        props.put("portName", address);
-        props.put("portType", "3");
-        props.put("protocolType", "1");
-        props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothPort");
-
-        JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
-        if (printer.getState() != JposConst.JPOS_S_CLOSED) {
-            printer.close();
-        }
-        printer.open("ShtrihFptr");
-        printer.claim(3000);
-        printer.setDeviceEnabled(true);
-
-        LongPrinterStatus status = printer.readLongPrinterStatus();
-        Log.d(TAG, "" + status.getFiscalID());
-        Log.d(TAG, status.getFiscalIDText());
     }
 
     @Override
@@ -1343,13 +1337,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void connectToDeviceDirect(View view) {
 
-        new ConnectToWiFiDeviceTask(this, tbNetworkAddress.getText().toString()).execute();
+        new ConnectToWiFiDeviceTask(this, tbNetworkAddress.getText().toString(), createFirmwareUpdateObserver()).execute();
     }
 
     private class ConnectToWiFiDeviceTask extends AsyncTask<Void, Void, String> {
 
         private final Activity parent;
         private final String address;
+        private final FirmwareUpdateObserver observer;
 
         private long startedAt;
         private long doneAt;
@@ -1358,10 +1353,11 @@ public class MainActivity extends AppCompatActivity {
 
         private ProgressDialog dialog;
 
-        public ConnectToWiFiDeviceTask(Activity parent, String address) {
+        public ConnectToWiFiDeviceTask(Activity parent, String address, FirmwareUpdateObserver observer) {
             this.parent = parent;
 
             this.address = address;
+            this.observer = observer;
         }
 
         private int oldOrientation;
@@ -1393,6 +1389,7 @@ public class MainActivity extends AppCompatActivity {
                 props.put("portType", "2");
                 props.put("protocolType", selectedProtocol);
                 props.put("fastConnect", chbFastConnect.isChecked() ? "1" : "0");
+                props.put("capScocUpdateFirmware", chbScocFirmwareUpdate.isChecked() ? "1" : "0");
 
                 JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
 
@@ -1409,6 +1406,8 @@ public class MainActivity extends AppCompatActivity {
                 printer.setDeviceEnabled(true);
 
                 Log.d("MainActivity", "Connected!");
+
+                printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, observer);
 
                 doneAt = System.currentTimeMillis();
 
@@ -1460,6 +1459,8 @@ public class MainActivity extends AppCompatActivity {
             props.put("protocolType", "0");
             props.put("portType", "3");
             props.put("portClass", "com.shtrih.fiscalprinter.port.UsbPrinterPort");
+            props.put("fastConnect", chbFastConnect.isChecked() ? "1" : "0");
+            props.put("capScocUpdateFirmware", chbScocFirmwareUpdate.isChecked() ? "1" : "0");
 
             JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
         } catch (Exception e) {
@@ -1479,6 +1480,7 @@ public class MainActivity extends AppCompatActivity {
 
             printer.claim(3000);
             printer.setDeviceEnabled(true);
+            printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, createFirmwareUpdateObserver());
 
 
         } catch (Exception e) {
@@ -2111,12 +2113,11 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(Void... params) {
 
 
-
             try {
                 String path = SysUtils.getFilesPath() + "/ic_launcher-web.png";
 
                 JposConfig.copyAsset("ic_launcher-web.png", path, getApplicationContext());
-                
+
                 startedAt = System.currentTimeMillis();
 
                 byte[][] data = new ImageReader(path).getData();
@@ -2216,3 +2217,67 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 
+class FirmwareUpdaterObserverImpl extends FirmwareUpdateObserver {
+
+    private Handler handler = new Handler();
+
+    private MainViewModel vm;
+
+    public FirmwareUpdaterObserverImpl(MainViewModel vm) {
+
+        this.vm = vm;
+    }
+
+    @Override
+    public void OnCheckingForUpdate() {
+        setText("Checking for update");
+    }
+
+    @Override
+    public void OnDownloading(int percent, long oldVersion, long newVersion) {
+        setText("Downloading firmware" + percent + "% of " + newVersion + " firmware");
+    }
+
+    @Override
+    public void OnUploadingError(Exception exc) {
+        setText("Uploading failed");
+    }
+
+    @Override
+    public void OnUploading(int percent) {
+        setText("Uploading firmware" + percent + "%");
+    }
+
+    @Override
+    public void OnWritingTables() {
+        setText("Writing tables");
+    }
+
+    @Override
+    public void OnReadingTables() {
+        setText("Saving tables");
+    }
+
+    @Override
+    public void OnUpdateSkippedNoSDCard() {
+        setText("Update skipped no SD card");
+    }
+
+    @Override
+    public void OnFirmwareDownloadingError(Exception e) {
+        setText("Firmware downloading error");
+    }
+
+    @Override
+    public void OnNoNewFirmware() {
+        setText("No new firmware");
+    }
+
+    private void setText(final String msg) {
+        handler.post(new Runnable() {
+            public void run() {
+                vm.ScocUpdaterStatus.set(msg);
+            }
+        });
+    }
+}

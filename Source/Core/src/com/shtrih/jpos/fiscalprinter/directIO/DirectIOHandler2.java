@@ -11,6 +11,7 @@ import java.util.Arrays;
 
 import jpos.JposException;
 
+import com.shtrih.jpos.fiscalprinter.FirmwareUpdateObserver;
 import com.shtrih.util.Localizer;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.FontNumber;
@@ -595,6 +596,12 @@ public class DirectIOHandler2 {
     public void dioSetDriverParameter(int[] data, Object object) throws Exception {
         DIOUtils.checkDataMinLength(data, 1);
         int paramID = data[0];
+
+        if(paramID == SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER){
+            service.setFirmwareUpdateObserver((FirmwareUpdateObserver)object);
+            return;
+        }
+
         long value = Long.parseLong(((String[]) object)[0]);
         switch (paramID) {
             case SmFptrConst.SMFPTR_DIO_PARAM_REPORT_DEVICE:

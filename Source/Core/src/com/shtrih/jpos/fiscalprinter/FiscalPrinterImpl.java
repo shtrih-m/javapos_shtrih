@@ -266,6 +266,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         filter.setEnabled(value);
     }
 
+    public void setFirmwareUpdateObserver(FirmwareUpdateObserver observer) {
+        if (firmwareUpdaterService != null)
+            firmwareUpdaterService.setListener(observer);
+    }
+
     class DeviceTarget implements Runnable {
 
         private final FiscalPrinterImpl fiscalPrinter;
@@ -1237,7 +1242,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             throw new JposException(
                     JPOS_E_ILLEGAL,
                     Localizer
-                    .getString(Localizer.receiptDuplicationNotSupported));
+                            .getString(Localizer.receiptDuplicationNotSupported));
         }
         duplicateReceipt = aduplicateReceipt;
     }
@@ -1619,7 +1624,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         } else {
             throw new JposException(JPOS_E_ILLEGAL,
                     Localizer.getString(Localizer.invalidParameterValue)
-                    + "SlipSelection");
+                            + "SlipSelection");
         }
     }
 
@@ -1655,7 +1660,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             default:
                 throw new JposException(JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidPropertyValue)
-                        + "fiscalReceiptStation");
+                                + "fiscalReceiptStation");
         }
     }
 
@@ -1716,7 +1721,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         if (!getCapAdditionalTrailer()) {
             throw new JposException(JPOS_E_ILLEGAL,
                     Localizer
-                    .getString(Localizer.additionalTrailerNotSupported));
+                            .getString(Localizer.additionalTrailerNotSupported));
         }
         return encodeText(additionalTrailer);
     }
@@ -1726,7 +1731,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         if (!getCapAdditionalTrailer()) {
             throw new JposException(JPOS_E_ILLEGAL,
                     Localizer
-                    .getString(Localizer.additionalTrailerNotSupported));
+                            .getString(Localizer.additionalTrailerNotSupported));
         }
         additionalTrailer = decodeText(value);
     }
@@ -1758,7 +1763,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             throw new JposException(
                     JPOS_E_ILLEGAL,
                     Localizer
-                    .getString(Localizer.multipleContractorsNotSupported));
+                            .getString(Localizer.multipleContractorsNotSupported));
         }
         contractorId = value;
     }
@@ -1779,7 +1784,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             default:
                 throw new JposException(JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
-                        + "DateType");
+                                + "DateType");
         }
     }
 
@@ -2035,7 +2040,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             default:
                 throw new JposException(JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
-                        + ", level");
+                                + ", level");
         }
     }
 
@@ -2505,51 +2510,51 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         switch (optArg) {
             // Cash
             case FPTR_PDL_CASH:
-            // Cheque.
+                // Cheque.
             case FPTR_PDL_CHEQUE:
-            // Chitty.
+                // Chitty.
             case FPTR_PDL_CHITTY:
-            // Coupon.
+                // Coupon.
             case FPTR_PDL_COUPON:
-            // Currency.
+                // Currency.
             case FPTR_PDL_CURRENCY:
             case FPTR_PDL_DRIVEN_OFF:
-            // Printer EFT.
+                // Printer EFT.
             case FPTR_PDL_EFT_IMPRINTER:
-            // Terminal EFT.
+                // Terminal EFT.
             case FPTR_PDL_EFT_TERMINAL:
             case FPTR_PDL_TERMINAL_IMPRINTER:
-            // Gift.
+                // Gift.
             case FPTR_PDL_FREE_GIFT:
-            // Giro.
+                // Giro.
             case FPTR_PDL_GIRO:
-            // Home.
+                // Home.
             case FPTR_PDL_HOME:
             case FPTR_PDL_IMPRINTER_WITH_ISSUER:
-            // Local account.
+                // Local account.
             case FPTR_PDL_LOCAL_ACCOUNT:
-            // Local card account.
+                // Local card account.
             case FPTR_PDL_LOCAL_ACCOUNT_CARD:
-            // Pay card.
+                // Pay card.
             case FPTR_PDL_PAY_CARD:
-            // Manual pay card.
+                // Manual pay card.
             case FPTR_PDL_PAY_CARD_MANUAL:
-            // Prepay.
+                // Prepay.
             case FPTR_PDL_PREPAY:
-            // Pump test.
+                // Pump test.
             case FPTR_PDL_PUMP_TEST:
-            // Credit.
+                // Credit.
             case FPTR_PDL_SHORT_CREDIT:
-            // Staff.
+                // Staff.
             case FPTR_PDL_STAFF:
-            // Voucher.
+                // Voucher.
             case FPTR_PDL_VOUCHER:
                 return "0";
 
             default:
                 throw new JposException(JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
-                        + ", OptArgs");
+                                + ", OptArgs");
         }
     }
 
@@ -2604,7 +2609,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             default:
                 throw new JposException(JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
-                        + ", OptArgs");
+                                + ", OptArgs");
         }
     }
 
@@ -2612,34 +2617,34 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         switch (optArg) {
             // printRecItem method
             case FPTR_DL_ITEM:
-            // printRecItemAdjustment method.
+                // printRecItemAdjustment method.
             case FPTR_DL_ITEM_ADJUSTMENT:
-            // printRecItemFuel method.
+                // printRecItemFuel method.
             case FPTR_DL_ITEM_FUEL:
-            // printRecItemFuelVoid method.
+                // printRecItemFuelVoid method.
             case FPTR_DL_ITEM_FUEL_VOID:
-            // printRecNotPaid method.
+                // printRecNotPaid method.
             case FPTR_DL_NOT_PAID:
-            // printRecPackageAdjustment method.
+                // printRecPackageAdjustment method.
             case FPTR_DL_PACKAGE_ADJUSTMENT:
-            // printRecRefund method.
+                // printRecRefund method.
             case FPTR_DL_REFUND:
-            // printRecRefundVoid method.
+                // printRecRefundVoid method.
             case FPTR_DL_REFUND_VOID:
-            // printRecSubtotalAdjustment method.
+                // printRecSubtotalAdjustment method.
             case FPTR_DL_SUBTOTAL_ADJUSTMENT:
-            // printRecTotal method.
+                // printRecTotal method.
             case FPTR_DL_TOTAL:
-            // printRecVoid method.
+                // printRecVoid method.
             case FPTR_DL_VOID:
-            // printRecItemVoid and printRecItemAdjustmentVoid methods.
+                // printRecItemVoid and printRecItemAdjustmentVoid methods.
             case FPTR_DL_VOID_ITEM:
                 return getPrinter().getMessageLength();
 
             default:
                 throw new JposException(JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
-                        + ", OptArgs");
+                                + ", OptArgs");
         }
     }
 
@@ -2780,9 +2785,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             case FPTR_GD_REFUND_VOID:
                 throw new JposException(JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
-                        + "dataItem");
+                                + "dataItem");
 
-            // Get the number of daily fiscal documents.
+                // Get the number of daily fiscal documents.
             case FPTR_GD_FISCAL_DOC:
                 result = Long.toString(fiscalDay.getFiscalDocNumber());
                 break;
@@ -2846,7 +2851,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             default:
                 throw new JposException(JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
-                        + "dataItem");
+                                + "dataItem");
         }
         data[0] = encodeText(result);
         logger.debug("getTLV(" + getDataItemText(dataItem) + ")=" + result);
@@ -2947,7 +2952,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         if (Date.length < 1) {
             throw new JposException(JPOS_E_ILLEGAL,
                     Localizer.getString(Localizer.invalidParameterValue)
-                    + "Date");
+                            + "Date");
         }
 
         switch (dateType) {
@@ -2980,7 +2985,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             default:
                 throw new JposException(JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
-                        + "DateType");
+                                + "DateType");
         }
         Date[0] = encodeText(result);
     }
@@ -3182,16 +3187,16 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void checkLongParam(long Value, long minValue, long maxValue,
-            String propName) throws Exception {
+                                String propName) throws Exception {
         if (Value < minValue) {
             throw new JposException(JPOS_E_ILLEGAL,
                     Localizer.getString(Localizer.invalidParameterValue)
-                    + propName);
+                            + propName);
         }
         if (Value > maxValue) {
             throw new JposException(JPOS_E_ILLEGAL,
                     Localizer.getString(Localizer.invalidParameterValue)
-                    + propName);
+                            + propName);
         }
     }
 
@@ -3203,7 +3208,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         if (fiscalReceiptStation != FPTR_RS_RECEIPT) {
             throw new JposException(JPOS_E_ILLEGAL,
                     Localizer.getString(Localizer.invalidParameterValue)
-                    + "fiscalReceiptStation");
+                            + "fiscalReceiptStation");
         }
     }
 
@@ -3216,7 +3221,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecItemAsync(String description, long price, int quantity,
-            int vatInfo, long unitPrice, String unitName) throws Exception {
+                                  int vatInfo, long unitPrice, String unitName) throws Exception {
         unitName = decodeText(unitName);
         description = decodeText(description);
         price = convertAmount(price);
@@ -3247,7 +3252,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecItem(String description, long price, int quantity,
-            int vatInfo, long unitPrice, String unitName) throws Exception {
+                             int vatInfo, long unitPrice, String unitName) throws Exception {
         filters.printRecItem(description, price, quantity, vatInfo, unitPrice,
                 unitName);
 
@@ -3258,7 +3263,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecMessageAsync(int station, FontNumber font,
-            String message) throws Exception {
+                                     String message) throws Exception {
         message = decodeText(message);
         receipt.printRecMessage(station, font, message);
     }
@@ -3298,12 +3303,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             default:
                 throw new JposException(JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
-                        + "adjustmentType");
+                                + "adjustmentType");
         }
     }
 
     public void printRecItemAdjustmentAsync(int adjustmentType,
-            String description, long amount, int vatInfo) throws Exception {
+                                            String description, long amount, int vatInfo) throws Exception {
         description = decodeText(description);
         amount = convertAmount(amount);
 
@@ -3326,7 +3331,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecItemAdjustment(int adjustmentType, String description,
-            long amount, int vatInfo) throws Exception {
+                                       long amount, int vatInfo) throws Exception {
         checkEnabled();
         execute(new PrintRecItemAdjustmentRequest(adjustmentType, description,
                 amount, vatInfo));
@@ -3354,12 +3359,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecItemFuelAsync(String description, long price,
-            int quantity, int vatInfo, long unitPrice, String unitName,
-            long specialTax, String specialTaxName) throws Exception {
+                                      int quantity, int vatInfo, long unitPrice, String unitName,
+                                      long specialTax, String specialTaxName) throws Exception {
     }
 
     public void printRecItemFuelVoidAsync(String description, long price,
-            int vatInfo, long specialTax) throws Exception {
+                                          int vatInfo, long specialTax) throws Exception {
     }
 
     public void printRecNotPaidAsync(String description, long amount)
@@ -3405,14 +3410,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecSubtotalAdjustment(int adjustmentType,
-            String description, long amount) throws Exception {
+                                           String description, long amount) throws Exception {
         checkEnabled();
         execute(new PrintRecSubtotalAdjustmentRequest(adjustmentType,
                 description, amount));
     }
 
     public void printRecSubtotalAdjustmentAsync(int adjustmentType,
-            String description, long amount) throws Exception {
+                                                String description, long amount) throws Exception {
         description = decodeText(description);
         amount = convertAmount(amount);
 
@@ -3469,7 +3474,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecVoidItem(String description, long amount, int quantity,
-            int adjustmentType, long adjustment, int vatInfo) throws Exception {
+                                 int adjustmentType, long adjustment, int vatInfo) throws Exception {
         checkEnabled();
         description = decodeText(description);
         amount = convertAmount(amount);
@@ -3542,7 +3547,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             default:
                 throw new JposException(JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
-                        + "reportType");
+                                + "reportType");
         }
     }
 
@@ -3693,7 +3698,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
             throw new Exception(
                     Localizer.getString(Localizer.failedConfirmDate)
-                    + printer.getErrorText(resultCode));
+                            + printer.getErrorText(resultCode));
         }
         getPrinter().writeTime(printerTime);
         // check if date and time was set correctly
@@ -3864,27 +3869,27 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecItemFuel(String description, long price, int quantity,
-            int vatInfo, long unitPrice, String unitName, long specialTax,
-            String specialTaxName) throws Exception {
+                                 int vatInfo, long unitPrice, String unitName, long specialTax,
+                                 String specialTaxName) throws Exception {
         checkEnabled();
         throw new JposException(JPOS_E_ILLEGAL);
     }
 
     public void printRecItemFuelVoid(String description, long price,
-            int vatInfo, long specialTax) throws Exception {
+                                     int vatInfo, long specialTax) throws Exception {
         checkEnabled();
         throw new JposException(JPOS_E_ILLEGAL);
     }
 
     public void printRecPackageAdjustment(int adjustmentType,
-            String description, String vatAdjustment) throws Exception {
+                                          String description, String vatAdjustment) throws Exception {
         checkEnabled();
         execute(new PrintRecPackageAdjustmentRequest(adjustmentType,
                 description, vatAdjustment));
     }
 
     public void printRecPackageAdjustmentAsync(int adjustmentType,
-            String description, String vatAdjustment) throws Exception {
+                                               String description, String vatAdjustment) throws Exception {
         description = decodeText(description);
         vatAdjustment = decodeText(vatAdjustment);
 
@@ -3895,13 +3900,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecPackageAdjustVoid(int adjustmentType,
-            String vatAdjustment) throws Exception {
+                                          String vatAdjustment) throws Exception {
         execute(new PrintRecPackageAdjustVoidRequest(adjustmentType,
                 vatAdjustment));
     }
 
     public void printRecPackageAdjustVoidAsync(int adjustmentType,
-            String vatAdjustment) throws Exception {
+                                               String vatAdjustment) throws Exception {
         vatAdjustment = decodeText(vatAdjustment);
         checkEnabled();
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
@@ -3914,7 +3919,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecRefundVoidAsync(String description, long amount,
-            int vatInfo) throws Exception {
+                                        int vatInfo) throws Exception {
         description = decodeText(description);
         amount = convertAmount(amount);
 
@@ -4023,7 +4028,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     // Methods
     public void printRecItemVoidAsync(String description, long price,
-            int quantity, int vatInfo, long unitPrice, String unitName)
+                                      int quantity, int vatInfo, long unitPrice, String unitName)
             throws Exception {
         price = convertAmount(price);
         quantity = convertQuantity(quantity);
@@ -4041,7 +4046,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecItemVoid(String description, long price, int quantity,
-            int vatInfo, long unitPrice, String unitName) throws Exception {
+                                 int vatInfo, long unitPrice, String unitName) throws Exception {
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
         PrintRecItemVoidRequest request = new PrintRecItemVoidRequest(
                 description, price, quantity, vatInfo, unitPrice, unitName);
@@ -4050,7 +4055,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecItemAdjustmentVoidAsync(int adjustmentType,
-            String description, long amount, int vatInfo) throws Exception {
+                                                String description, long amount, int vatInfo) throws Exception {
         description = decodeText(description);
         amount = convertAmount(amount);
 
@@ -4061,7 +4066,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecItemAdjustmentVoid(int adjustmentType,
-            String description, long amount, int vatInfo) throws Exception {
+                                           String description, long amount, int vatInfo) throws Exception {
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
         execute(new PrintRecItemAdjustmentVoidRequest(adjustmentType,
                 description, amount, vatInfo));
@@ -4079,11 +4084,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void checkParamValue(int value, int minValue, int maxValue,
-            String paramText) throws Exception {
+                                 String paramText) throws Exception {
         if ((value < minValue) || (value > maxValue)) {
             throw new JposException(JPOS_E_ILLEGAL,
                     Localizer.getString(Localizer.invalidParameterValue)
-                    + paramText);
+                            + paramText);
         }
     }
 
@@ -4094,7 +4099,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         } catch (Exception e) {
             throw new JposException(JPOS_E_ILLEGAL,
                     Localizer.getString(Localizer.invalidParameterValue)
-                    + paramName);
+                            + paramName);
         }
     }
 
@@ -4230,7 +4235,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printFixedOutputAsync(int documentType, int lineNumber,
-            String data) throws Exception {
+                                      String data) throws Exception {
         checkEnabled();
         throw new JposException(JPOS_E_ILLEGAL);
     }
@@ -4289,7 +4294,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecItemRefund(String description, long amount,
-            int quantity, int vatInfo, long unitAmount, String unitName)
+                                   int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
         checkEnabled();
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
@@ -4302,7 +4307,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecItemRefundAsync(String description, long amount,
-            int quantity, int vatInfo, long unitAmount, String unitName)
+                                        int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
         unitName = decodeText(unitName);
         description = decodeText(description);
@@ -4323,7 +4328,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecItemRefundVoid(String description, long amount,
-            int quantity, int vatInfo, long unitAmount, String unitName)
+                                       int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
         checkEnabled();
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
@@ -4336,7 +4341,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printRecItemRefundVoidAsync(String description, long amount,
-            int quantity, int vatInfo, long unitAmount, String unitName)
+                                            int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
         amount = convertAmount(amount);
         quantity = convertQuantity(quantity);
@@ -4380,9 +4385,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     protected JposEntry createJposEntry(String logicalName,
-            String factoryClass, String serviceClass, String vendorName,
-            String vendorURL, String deviceCategory, String jposVersion,
-            String productName, String productDescription, String productURL) {
+                                        String factoryClass, String serviceClass, String vendorName,
+                                        String vendorURL, String deviceCategory, String jposVersion,
+                                        String productName, String productDescription, String productURL) {
         JposEntry jposEntry = new SimpleEntry();
 
         jposEntry.addProperty(JposEntry.LOGICAL_NAME_PROP_NAME, logicalName);
@@ -4448,8 +4453,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private void throwWrongStateError() throws Exception {
         throw new JposException(JPOS_E_EXTENDED, JPOS_EFPTR_WRONG_STATE,
                 Localizer.getString(Localizer.wrongPrinterState) + "("
-                + String.valueOf(printerState) + ", " + "\""
-                + PrinterState.getText(printerState.getValue()) + "\"");
+                        + String.valueOf(printerState) + ", " + "\""
+                        + PrinterState.getText(printerState.getValue()) + "\"");
     }
 
     public void writeParameter(String paramName, int value) throws Exception {

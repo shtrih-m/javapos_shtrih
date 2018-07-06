@@ -610,6 +610,8 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE = 18;
     public static final int SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE = 19;
 
+    public static final int SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER = 20;
+
     // ///////////////////////////////////////////////////////////////////
     // TableMode
     public static final int SMFPTR_TABLE_MODE_AUTO = 0;

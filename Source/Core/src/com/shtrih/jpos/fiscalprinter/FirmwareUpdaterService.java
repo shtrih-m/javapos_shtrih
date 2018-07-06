@@ -33,6 +33,15 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
     private byte[] firmware;
 
+    private FirmwareUpdateObserver listener = new FirmwareUpdateObserver();
+
+    public void setListener(FirmwareUpdateObserver value) {
+        listener = value;
+
+        if(listener == null)
+            listener = new FirmwareUpdateObserver();
+    }
+
     public FirmwareUpdaterService(SMFiscalPrinter printer) {
         if (printer == null)
             throw new IllegalArgumentException("printer is null");
@@ -42,6 +51,8 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
     public void run() {
         try {
+            Thread.sleep(10 * 1000);
+
             logger.debug("Starting FirmwareUpdaterService");
 
             while (!stopFlag) {
@@ -71,6 +82,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
                 return;
 
             logger.debug("Checking for firmware update");
+            listener.OnCheckingForUpdate();
 
             String serialNumber = printer.readFullSerial();
 
@@ -104,6 +116,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
             if (!isUpdateRequired) {
                 logger.debug("Firmware update is not required");
+                listener.OnNoNewFirmware();
                 return;
             }
 
@@ -120,7 +133,9 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
             long newVersion = firstResponse.getFirmwareVersion();
 
-            logger.debug("Downloading new firmware version " + newVersion + ", current version is " + firmwareVersion);
+            logger.debug("Downloading new firmware version " + newVersion + ", current version is " + firmwareVersion + " in " + firstResponse.getPartsCount() + " parts");
+
+            listener.OnDownloading(firstResponse.getPartNumber() / firstResponse.getPartsCount(), firmwareVersion, newVersion);
 
             for (int i = 2; i <= firstResponse.getPartsCount(); i++) {
 
@@ -130,6 +145,8 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
                 DeviceFirmwareResponse nextPart = client.readFirmware(newVersion, i);
 
                 out.write(nextPart.getData());
+
+                listener.OnDownloading(nextPart.getPartNumber() / nextPart.getPartsCount(), firmwareVersion, newVersion);
             }
 
             out.flush();
@@ -139,9 +156,9 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
             long doneAt = System.currentTimeMillis();
 
             logger.debug("Firmware " + newVersion + " downloading done in " + (doneAt - startedAt) + " ms");
-
         } catch (Exception e) {
             logger.error("Firmware downloading failed", e);
+            listener.OnFirmwareDownloadingError(e);
         }
     }
 
@@ -204,10 +221,13 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
             if (printer.isDesktop() && !printer.isShtrihNano() && !printer.isSDCardPresent()) {
                 logger.debug("Firmware update skipped, no SD card");
+                listener.OnUpdateSkippedNoSDCard();
                 return;
             }
 
             logger.debug("Firmware update started");
+
+            listener.OnReadingTables();
 
             long startedAt = System.currentTimeMillis();
 
@@ -229,6 +249,8 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
             logger.debug("Firmware written in " + (doneAt - startedAt) + " ms");
 
+            listener.OnWritingTables();
+
             if (!printer.isShtrihNano())
                 rebootAndWait();
 
@@ -240,6 +262,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
             logger.debug("Firmware update done");
         } catch (Exception e) {
             logger.error("Firmware update failed", e);
+            listener.OnUploadingError(e);
         }
     }
 
@@ -258,6 +281,9 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
             stream.read(block, 0, 128);
             printer.writeFirmwareBlockToSDCard(fileType, blockNumber, block);
             blockNumber++;
+
+            int percent = block.length * (blockNumber + 1) / firmware.length;
+            listener.OnUploading(percent);
         }
     }
 
