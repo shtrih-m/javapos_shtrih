@@ -34,10 +34,12 @@
     <string name="lblNetworkAddress">Network address</string>
     <string name="lblPositions">Positions</string>
     <string name="lblProtocol">Protocol</string>
+    <string name="lblTimeout">Timeout, ms</string>
     <string name="chbFastConnect">Fast connection</string>
     <string name="chbScocFirmwareUpdate">SCoC firmware autoupdate</string>
     <string name="lblTextStrings">Text lines</string>
     <string name="defaultPositionsCount">5</string>
+    <string name="defaultTimeout">3000</string>
     <string name="defaultTextStringsCount">5</string>
     <string name="lblFiscalizationNumber">Fiscalization number</string>
     <string name="lblTagNumber">Tag number</string>

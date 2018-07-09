@@ -31,6 +31,8 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
     private Thread thread = null;
     private volatile boolean stopFlag = true;
 
+    private long oldFirmwareVersion;
+    private long newFirmwareVersion;
     private byte[] firmware;
 
     private FirmwareUpdateObserver listener = new FirmwareUpdateObserver();
@@ -38,7 +40,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
     public void setListener(FirmwareUpdateObserver value) {
         listener = value;
 
-        if(listener == null)
+        if (listener == null)
             listener = new FirmwareUpdateObserver();
     }
 
@@ -51,7 +53,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
     public void run() {
         try {
-            Thread.sleep(10 * 1000);
+            Thread.sleep(5 * 1000);
 
             logger.debug("Starting FirmwareUpdaterService");
 
@@ -135,6 +137,9 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
             logger.debug("Downloading new firmware version " + newVersion + ", current version is " + firmwareVersion + " in " + firstResponse.getPartsCount() + " parts");
 
+            oldFirmwareVersion = firmwareVersion;
+            newFirmwareVersion = newVersion;
+
             listener.OnDownloading(firstResponse.getPartNumber() / firstResponse.getPartsCount(), firmwareVersion, newVersion);
 
             for (int i = 2; i <= firstResponse.getPartsCount(); i++) {
@@ -146,7 +151,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
                 out.write(nextPart.getData());
 
-                listener.OnDownloading(nextPart.getPartNumber() / nextPart.getPartsCount(), firmwareVersion, newVersion);
+                listener.OnDownloading(nextPart.getPartNumber() * 100 / nextPart.getPartsCount(), firmwareVersion, newVersion);
             }
 
             out.flush();
@@ -249,17 +254,19 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
             logger.debug("Firmware written in " + (doneAt - startedAt) + " ms");
 
-            listener.OnWritingTables();
-
             if (!printer.isShtrihNano())
                 rebootAndWait();
 
-            if (tables != null)
+            if (tables != null) {
+                listener.OnWritingTables();
                 printer.writeTables(tables);
+            }
 
             firmware = null;
 
             logger.debug("Firmware update done");
+
+            listener.OnUploadingDone(oldFirmwareVersion, newFirmwareVersion);
         } catch (Exception e) {
             logger.error("Firmware update failed", e);
             listener.OnUploadingError(e);
@@ -267,6 +274,9 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
     }
 
     private void writeFirmware() throws Exception {
+
+        listener.OnUploading(0);
+
         InputStream stream = new ByteArrayInputStream(firmware);
 
         int fileType = 1; // 0 - загрузчик; 1 - прошивка;
@@ -282,8 +292,16 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
             printer.writeFirmwareBlockToSDCard(fileType, blockNumber, block);
             blockNumber++;
 
-            int percent = block.length * (blockNumber + 1) / firmware.length;
+            int percent = block.length * (blockNumber + 1) * 100 / firmware.length;
             listener.OnUploading(percent);
+        }
+
+        if (printer.isShtrihNano()) {
+            try {
+                printer.writeFirmwareBlockToSDCard(fileType, blockNumber, new byte[0]);
+            } catch (Exception e) {
+
+            }
         }
     }
 

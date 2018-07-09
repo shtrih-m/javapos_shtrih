@@ -26,7 +26,7 @@ public class FirmwareUpdateObserver {
 
     }
 
-    public void OnFirmwareDownloadingError(Exception e) {
+    public void OnFirmwareDownloadingError(Exception exc) {
 
     }
 
@@ -35,6 +35,10 @@ public class FirmwareUpdateObserver {
     }
 
     public void OnCheckingForUpdate() {
+
+    }
+
+    public void OnUploadingDone(long oldFirmwareVersion, long newFirmwareVersion) {
 
     }
 }

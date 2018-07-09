@@ -17,7 +17,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.text.Editable;
@@ -120,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText nbTableField;
     private EditText nbTableRow;
     private EditText tbTableCellValue;
+    private EditText nbTimeout;
+
     private AppCompatCheckBox chbFastConnect;
     private AppCompatCheckBox chbScocFirmwareUpdate;
 
@@ -182,6 +183,9 @@ public class MainActivity extends AppCompatActivity {
         tbMonoToken = findViewById(R.id.tbMonoToken);
         restoreAndSaveChangesTo(tbMonoToken, pref, "MonoToken", "");
 
+        nbTimeout = findViewById(R.id.nbTimeout);
+        restoreAndSaveChangesTo(nbTimeout, pref, "ByteTimeout", "3000");
+
         chbFastConnect = findViewById(R.id.chbFastConnect);
         restoreAndSaveChangesTo(chbFastConnect, pref, "FastConnect", true);
 
@@ -191,8 +195,8 @@ public class MainActivity extends AppCompatActivity {
         Spinner cbProtocol = findViewById(R.id.cbProtocol);
 
         ArrayList<EnumViewModel> protocols = new ArrayList<>();
-        protocols.add(new EnumViewModel("0", "1.0"));
-        protocols.add(new EnumViewModel("1", "2.0"));
+        protocols.add(new EnumViewModel("0", "Standard"));
+        protocols.add(new EnumViewModel("1", "KKT 2.0"));
 
         ArrayAdapter<EnumViewModel> protocolsAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, protocols);
 
@@ -369,7 +373,13 @@ public class MainActivity extends AppCompatActivity {
 //                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 //                    }
 
-                    new ConnectToBluetoothDeviceTask(this, address, createFirmwareUpdateObserver()).execute();
+                    new ConnectToBluetoothDeviceTask(
+                            this,
+                            address,
+                            createFirmwareUpdateObserver(),
+                            nbTimeout.getText().toString(),
+                            chbFastConnect.isChecked(),
+                            chbScocFirmwareUpdate.isChecked()).execute();
                 }
                 break;
             default:
@@ -388,17 +398,23 @@ public class MainActivity extends AppCompatActivity {
         private final Activity parent;
         private final String address;
         private final FirmwareUpdateObserver observer;
+        private final String timeout;
+        private final boolean fastConnect;
+        private final boolean scocFirmwareAutoupdate;
 
         private long startedAt;
         private long doneAt;
 
         private ProgressDialog dialog;
 
-        public ConnectToBluetoothDeviceTask(Activity parent, String address, FirmwareUpdateObserver observer) {
+        public ConnectToBluetoothDeviceTask(Activity parent, String address, FirmwareUpdateObserver observer, String timeout, boolean fastConnect, boolean scocFirmwareAutoupdate) {
             this.parent = parent;
 
             this.address = address;
             this.observer = observer;
+            this.timeout = timeout;
+            this.fastConnect = fastConnect;
+            this.scocFirmwareAutoupdate = scocFirmwareAutoupdate;
         }
 
         private int oldOrientation;
@@ -424,8 +440,9 @@ public class MainActivity extends AppCompatActivity {
                 props.put("portType", "3");
                 props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothPort");
                 props.put("protocolType", selectedProtocol);
-                props.put("fastConnect", chbFastConnect.isChecked() ? "1" : "0");
-                props.put("capScocUpdateFirmware", chbScocFirmwareUpdate.isChecked() ? "1" : "0");
+                props.put("fastConnect", fastConnect ? "1" : "0");
+                props.put("capScocUpdateFirmware", scocFirmwareAutoupdate ? "1" : "0");
+                props.put("byteTimeout", timeout);
 
                 JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
                 if (printer.getState() != JposConst.JPOS_S_CLOSED) {
@@ -434,6 +451,7 @@ public class MainActivity extends AppCompatActivity {
                 printer.open("ShtrihFptr");
                 printer.claim(3000);
                 printer.setDeviceEnabled(true);
+                model.ScocUpdaterStatus.set("");
                 printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, observer);
 
                 return null;
@@ -1337,7 +1355,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void connectToDeviceDirect(View view) {
 
-        new ConnectToWiFiDeviceTask(this, tbNetworkAddress.getText().toString(), createFirmwareUpdateObserver()).execute();
+        new ConnectToWiFiDeviceTask(
+                this,
+                tbNetworkAddress.getText().toString(),
+                createFirmwareUpdateObserver(),
+                nbTimeout.getText().toString(),
+                chbFastConnect.isChecked(),
+                chbScocFirmwareUpdate.isChecked()).execute();
     }
 
     private class ConnectToWiFiDeviceTask extends AsyncTask<Void, Void, String> {
@@ -1345,6 +1369,9 @@ public class MainActivity extends AppCompatActivity {
         private final Activity parent;
         private final String address;
         private final FirmwareUpdateObserver observer;
+        private final String timeout;
+        private final boolean fastConnect;
+        private final boolean scocFirmwareAutoupdate;
 
         private long startedAt;
         private long doneAt;
@@ -1353,11 +1380,14 @@ public class MainActivity extends AppCompatActivity {
 
         private ProgressDialog dialog;
 
-        public ConnectToWiFiDeviceTask(Activity parent, String address, FirmwareUpdateObserver observer) {
+        public ConnectToWiFiDeviceTask(Activity parent, String address, FirmwareUpdateObserver observer, String timeout, boolean fastConnect, boolean scocFirmwareAutoupdate) {
             this.parent = parent;
 
             this.address = address;
             this.observer = observer;
+            this.timeout = timeout;
+            this.fastConnect = fastConnect;
+            this.scocFirmwareAutoupdate = scocFirmwareAutoupdate;
         }
 
         private int oldOrientation;
@@ -1388,8 +1418,9 @@ public class MainActivity extends AppCompatActivity {
                 props.put("portName", address);
                 props.put("portType", "2");
                 props.put("protocolType", selectedProtocol);
-                props.put("fastConnect", chbFastConnect.isChecked() ? "1" : "0");
-                props.put("capScocUpdateFirmware", chbScocFirmwareUpdate.isChecked() ? "1" : "0");
+                props.put("fastConnect", fastConnect ? "1" : "0");
+                props.put("capScocUpdateFirmware", scocFirmwareAutoupdate ? "1" : "0");
+                props.put("byteTimeout", timeout);
 
                 JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
 
@@ -1404,6 +1435,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("MainActivity", "Setting device enabled...");
 
                 printer.setDeviceEnabled(true);
+                model.ScocUpdaterStatus.set("");
 
                 Log.d("MainActivity", "Connected!");
 
@@ -1456,11 +1488,12 @@ public class MainActivity extends AppCompatActivity {
 
             HashMap<String, String> props = new HashMap<>();
             props.put("portName", String.format(Locale.ENGLISH, "%d", deviceId));
-            props.put("protocolType", "0");
             props.put("portType", "3");
             props.put("portClass", "com.shtrih.fiscalprinter.port.UsbPrinterPort");
+            props.put("protocolType", selectedProtocol);
             props.put("fastConnect", chbFastConnect.isChecked() ? "1" : "0");
             props.put("capScocUpdateFirmware", chbScocFirmwareUpdate.isChecked() ? "1" : "0");
+            props.put("byteTimeout", nbTimeout.getText().toString());
 
             JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
         } catch (Exception e) {
@@ -1480,6 +1513,7 @@ public class MainActivity extends AppCompatActivity {
 
             printer.claim(3000);
             printer.setDeviceEnabled(true);
+            model.ScocUpdaterStatus.set("");
             printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, createFirmwareUpdateObserver());
 
 
@@ -2219,8 +2253,6 @@ public class MainActivity extends AppCompatActivity {
 
 class FirmwareUpdaterObserverImpl extends FirmwareUpdateObserver {
 
-    private Handler handler = new Handler();
-
     private MainViewModel vm;
 
     public FirmwareUpdaterObserverImpl(MainViewModel vm) {
@@ -2230,54 +2262,55 @@ class FirmwareUpdaterObserverImpl extends FirmwareUpdateObserver {
 
     @Override
     public void OnCheckingForUpdate() {
-        setText("Checking for update");
+        setText("SCoC: checking for firmware update");
     }
 
     @Override
     public void OnDownloading(int percent, long oldVersion, long newVersion) {
-        setText("Downloading firmware" + percent + "% of " + newVersion + " firmware");
+        setText("SCoC: downloading firmware v" + newVersion + " " + percent + "%");
     }
 
     @Override
     public void OnUploadingError(Exception exc) {
-        setText("Uploading failed");
+        setText("SCoC: firmware uploading failed \"" + exc.getMessage() + "\"");
     }
 
     @Override
     public void OnUploading(int percent) {
-        setText("Uploading firmware" + percent + "%");
+        setText("SCoC: uploading firmware " + percent + "%");
     }
 
     @Override
     public void OnWritingTables() {
-        setText("Writing tables");
+        setText("SCoC: restoring tables");
     }
 
     @Override
     public void OnReadingTables() {
-        setText("Saving tables");
+        setText("SCoC: saving tables");
     }
 
     @Override
     public void OnUpdateSkippedNoSDCard() {
-        setText("Update skipped no SD card");
+        setText("SCoC: firmware update skipped no SD card");
     }
 
     @Override
-    public void OnFirmwareDownloadingError(Exception e) {
-        setText("Firmware downloading error");
+    public void OnFirmwareDownloadingError(Exception exc) {
+        setText("SCoC: firmware downloading error \"" + exc.getMessage() + "\"");
     }
 
     @Override
     public void OnNoNewFirmware() {
-        setText("No new firmware");
+        setText("SCoC: no new firmware");
+    }
+
+    @Override
+    public void OnUploadingDone(long oldFirmwareVersion, long newFirmwareVersion) {
+        setText("SCoC: firmware updated from v" + oldFirmwareVersion + " to " + newFirmwareVersion);
     }
 
     private void setText(final String msg) {
-        handler.post(new Runnable() {
-            public void run() {
-                vm.ScocUpdaterStatus.set(msg);
-            }
-        });
+        vm.ScocUpdaterStatus.set(msg);
     }
 }

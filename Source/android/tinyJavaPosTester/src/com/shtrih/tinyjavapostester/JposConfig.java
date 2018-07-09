@@ -18,26 +18,6 @@ import jpos.util.JposPropertiesConst;
 
 public class JposConfig {
 
-    public static void configure(String deviceName, String portName, Context context)
-            throws Exception {
-
-        Map<String, String> props = new HashMap<>();
-        props.put("portName", portName);
-
-        configure(deviceName, context, props);
-    }
-
-    public static void configure(String deviceName, String portName, Context context, String portType, String protocol)
-            throws Exception {
-
-        Map<String, String> props = new HashMap<>();
-        props.put("portName", portName);
-        props.put("portType", portType);
-        props.put("protocolType", protocol);
-
-        configure(deviceName, context, props);
-    }
-
     public static void configure(String deviceName, Context context, Map<String, String> props)
             throws Exception {
         LogbackConfig.configure(SysUtils.getFilesPath());
