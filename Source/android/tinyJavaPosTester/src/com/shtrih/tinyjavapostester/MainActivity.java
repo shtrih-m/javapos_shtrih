@@ -384,7 +384,12 @@ public class MainActivity extends AppCompatActivity {
             case TcpDeviceSearchActivity.REQUEST_SEARCH_TCP_DEVICE:
                 if (resultCode == Activity.RESULT_OK) {
 
-                    String address = data.getExtras().getString("Address");
+                    Bundle extras = data.getExtras();
+
+                    if (extras == null)
+                        return;
+
+                    String address = extras.getString("Address");
                     tbNetworkAddress.setText(address);
 //                    long startedAt = System.currentTimeMillis();
 //                    try {
@@ -926,6 +931,8 @@ public class MainActivity extends AppCompatActivity {
                 if (printer.getState() != JposConst.JPOS_S_CLOSED) {
                     printer.close();
                 }
+
+                model.ScocUpdaterStatus.set("");
 
                 return null;
 
@@ -2275,69 +2282,5 @@ public class MainActivity extends AppCompatActivity {
 
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
-    }
-}
-
-class FirmwareUpdaterObserverImpl extends FirmwareUpdateObserver {
-
-    private MainViewModel vm;
-
-    public FirmwareUpdaterObserverImpl(MainViewModel vm) {
-
-        this.vm = vm;
-    }
-
-    @Override
-    public void OnCheckingForUpdate() {
-        setText("SCoC: checking for firmware update");
-    }
-
-    @Override
-    public void OnDownloading(int percent, long oldVersion, long newVersion) {
-        setText("SCoC: downloading firmware v" + newVersion + " " + percent + "%");
-    }
-
-    @Override
-    public void OnUploadingError(Exception exc) {
-        setText("SCoC: firmware uploading failed \"" + exc.getMessage() + "\"");
-    }
-
-    @Override
-    public void OnUploading(int percent) {
-        setText("SCoC: uploading firmware " + percent + "%");
-    }
-
-    @Override
-    public void OnWritingTables() {
-        setText("SCoC: restoring tables");
-    }
-
-    @Override
-    public void OnReadingTables() {
-        setText("SCoC: saving tables");
-    }
-
-    @Override
-    public void OnUpdateSkippedNoSDCard() {
-        setText("SCoC: firmware update skipped no SD card");
-    }
-
-    @Override
-    public void OnFirmwareDownloadingError(Exception exc) {
-        setText("SCoC: firmware downloading error \"" + exc.getMessage() + "\"");
-    }
-
-    @Override
-    public void OnNoNewFirmware() {
-        setText("SCoC: no new firmware");
-    }
-
-    @Override
-    public void OnUploadingDone(long oldFirmwareVersion, long newFirmwareVersion) {
-        setText("SCoC: firmware updated from v" + oldFirmwareVersion + " to " + newFirmwareVersion);
-    }
-
-    private void setText(final String msg) {
-        vm.ScocUpdaterStatus.set(msg);
     }
 }

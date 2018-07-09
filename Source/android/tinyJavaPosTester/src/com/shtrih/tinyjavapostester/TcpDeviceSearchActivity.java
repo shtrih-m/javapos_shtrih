@@ -12,16 +12,33 @@ public class TcpDeviceSearchActivity extends AppCompatActivity {
 
     public static final int REQUEST_SEARCH_TCP_DEVICE = 666;
 
+    private TcpDeviceSearchViewModel vm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_tcp_device_search);
 
         ActivityTcpDeviceSearchBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_tcp_device_search);
 
-        TcpDeviceSearchViewModel vm = ViewModelProviders.of(this).get(TcpDeviceSearchViewModel.class);
+        vm = ViewModelProviders.of(this).get(TcpDeviceSearchViewModel.class);
 
         binding.setVm(vm);
         binding.setActivity(this);
+    }
+
+    @Override
+    protected void onResume() {
+        if(vm != null)
+            vm.onStarted();
+        
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        if(vm != null)
+            vm.onStopped();
+
+        super.onPause();
     }
 }

@@ -4,36 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="vm"
             type="com.shtrih.tinyjavapostester.TcpDeviceSearchViewModel" />
+
         <variable
             name="activity"
             type="com.shtrih.tinyjavapostester.TcpDeviceSearchActivity" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context="com.shtrih.tinyjavapostester.TcpDeviceSearchActivity">
 
-        <ScrollView
-            android:layout_width="368dp"
-            android:layout_height="495dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:items="@{vm.devices}"
+            app:onItemClicked="@{(i)->vm.onItemSelected(activity, i)}"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <Button android:onClick="@{(v)->vm.onClick(activity)}"
-                    android:text="Proceed"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"/>
-            </LinearLayout>
-        </ScrollView>
-    </android.support.constraint.ConstraintLayout>
+
+    </LinearLayout>
 </layout>
