@@ -1,4 +1,4 @@
-package com.shtrih.tinyjavapostester;
+package com.shtrih.tinyjavapostester.search.tcp;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -8,13 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.shtrih.tinyjavapostester.R;
 import com.shtrih.tinyjavapostester.databinding.TcpDeviceItemLayoutBinding;
 
-public class ListAdapter extends BaseAdapter {
+public class TcpDeviceListAdapter extends BaseAdapter {
     private ObservableArrayList<TcpDevice> list;
     private LayoutInflater inflater;
 
-    public ListAdapter(ObservableArrayList<TcpDevice> l) {
+    public TcpDeviceListAdapter(ObservableArrayList<TcpDevice> l) {
         list = l;
     }
 

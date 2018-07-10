@@ -60,6 +60,8 @@ import com.shtrih.hoho.android.usbserial.driver.UsbSerialProber;
 import com.shtrih.jpos.fiscalprinter.FirmwareUpdateObserver;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
 import com.shtrih.tinyjavapostester.databinding.ActivityMainBinding;
+import com.shtrih.tinyjavapostester.search.bluetooth.DeviceListActivity;
+import com.shtrih.tinyjavapostester.search.tcp.TcpDeviceSearchActivity;
 import com.shtrih.util.Hex;
 import com.shtrih.util.ImageReader;
 import com.shtrih.util.SysUtils;
@@ -141,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
         binding.setVm(model);
         binding.setActivity(this);
 
-
         setFilter();
         findSerialPortDevice();
 
@@ -221,6 +222,8 @@ public class MainActivity extends AppCompatActivity {
 
         int savedProtocolIndex = pref.getInt(PREFERENCES_PROTOCOL_KEY, 0);
         cbProtocol.setSelection(savedProtocolIndex);
+
+        selectedProtocol = ((EnumViewModel) protocolsAdapter.getItem(savedProtocolIndex)).getValue();
 
         String logPath = "Log path: " + SysUtils.getFilesPath() + LogbackConfig.MainFileName;
 
@@ -357,21 +360,15 @@ public class MainActivity extends AppCompatActivity {
             case DeviceListActivity.REQUEST_CONNECT_BT_DEVICE:
                 if (resultCode == Activity.RESULT_OK) {
 
-                    String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-//                    long startedAt = System.currentTimeMillis();
-//                    try {
-//                        connectToDevice(address);
-//                        long doneAt = System.currentTimeMillis();
-//                        String message = "Blutooth connected in " + (doneAt - startedAt) + " ms";
-//                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-//                        Log.d(TAG, message);
-//                    } catch (Exception e) {
-//                        long doneAt = System.currentTimeMillis();
-//                        e.printStackTrace();
-//                        String message = e.getMessage() + ". In " + (doneAt - startedAt) + " ms";
-//                        Log.d(TAG, message);
-//                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-//                    }
+                    Bundle extras = data.getExtras();
+
+                    if (extras == null)
+                        return;
+
+                    String address = extras.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+
+                    if (address == null)
+                        return;
 
                     new ConnectToBluetoothDeviceTask(
                             this,
@@ -390,22 +387,11 @@ public class MainActivity extends AppCompatActivity {
                         return;
 
                     String address = extras.getString("Address");
-                    tbNetworkAddress.setText(address);
-//                    long startedAt = System.currentTimeMillis();
-//                    try {
-//                        connectToDevice(address);
-//                        long doneAt = System.currentTimeMillis();
-//                        String message = "Blutooth connected in " + (doneAt - startedAt) + " ms";
-//                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-//                        Log.d(TAG, message);
-//                    } catch (Exception e) {
-//                        long doneAt = System.currentTimeMillis();
-//                        e.printStackTrace();
-//                        String message = e.getMessage() + ". In " + (doneAt - startedAt) + " ms";
-//                        Log.d(TAG, message);
-//                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-//                    }
 
+                    if (address == null)
+                        return;
+
+                    tbNetworkAddress.setText(address);
                 }
                 break;
             default:
@@ -415,7 +401,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private FirmwareUpdateObserver createFirmwareUpdateObserver() {
-        TextView txt = findViewById(R.id.lblScocStatus);
         return new FirmwareUpdaterObserverImpl(model);
     }
 

@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.shtrih.tinyjavapostester.TcpDevice" />
+            type="com.shtrih.tinyjavapostester.search.tcp.TcpDevice" />
     </data>
 
     <LinearLayout

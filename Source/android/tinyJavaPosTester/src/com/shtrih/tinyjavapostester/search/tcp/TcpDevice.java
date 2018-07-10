@@ -1,4 +1,4 @@
-package com.shtrih.tinyjavapostester;
+package com.shtrih.tinyjavapostester.search.tcp;
 
 public class TcpDevice {
     public final String serialNumber;

@@ -1,4 +1,4 @@
-package com.shtrih.tinyjavapostester;
+package com.shtrih.tinyjavapostester.search.tcp;
 
 import android.app.Activity;
 import android.app.Application;

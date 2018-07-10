@@ -7,18 +7,18 @@
 
         <variable
             name="vm"
-            type="com.shtrih.tinyjavapostester.TcpDeviceSearchViewModel" />
+            type="com.shtrih.tinyjavapostester.search.tcp.TcpDeviceSearchViewModel" />
 
         <variable
             name="activity"
-            type="com.shtrih.tinyjavapostester.TcpDeviceSearchActivity" />
+            type="com.shtrih.tinyjavapostester.search.tcp.TcpDeviceSearchActivity" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.shtrih.tinyjavapostester.TcpDeviceSearchActivity">
+        tools:context="com.shtrih.tinyjavapostester.search.tcp.TcpDeviceSearchActivity">
 
         <ListView
             android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package com.shtrih.tinyjavapostester;
+package com.shtrih.tinyjavapostester.search.tcp;
 
 import android.databinding.BindingAdapter;
 import android.databinding.ObservableArrayList;
@@ -10,7 +10,7 @@ public class TcpDeviceListBinder {
 
     @BindingAdapter("items")
     public static void bindList(ListView view, ObservableArrayList<TcpDevice> list) {
-        ListAdapter adapter = new ListAdapter(list);
+        TcpDeviceListAdapter adapter = new TcpDeviceListAdapter(list);
         view.setAdapter(adapter);
     }
 
