@@ -18,9 +18,9 @@ import jpos.JposException;
 /**
  * Пример регистрации/перерегистрации и закрытия ФН.
  * Поддерживаемое оборудование:
- *  - ШТРИХ-МОБАЙЛ-Ф прошивка 20024+
- *  - Кассовое ядро
- *  - Десктопные ФРы
+ * - ШТРИХ-МОБАЙЛ-Ф прошивка 20024+
+ * - Кассовое ядро
+ * - Десктопные ФРы
  */
 public class Fiscalizer {
     /**
@@ -305,6 +305,9 @@ public class Fiscalizer {
     }
 
     private int bitListToInt(String bitList) {
+        if (isNullOrEmpty(bitList))
+            return 0;
+
         long result = 0;
 
         for (String part : bitList.split(",")) {
@@ -344,7 +347,7 @@ public class Fiscalizer {
     }
 
     private void writeVATINTagIfNotNullAndNotEmpty(ShtrihFiscalPrinter printer, int tagId, String value) throws Exception {
-        if (value != null && !value.isEmpty())
+        if (isNotNullNorEmpty(value))
             printer.fsWriteTag(tagId, formatInn(value));
     }
 
@@ -353,5 +356,13 @@ public class Fiscalizer {
         printer.executeCommand(cmd);
 
         return cmd.getParameters();
+    }
+
+    private boolean isNullOrEmpty(String value) {
+        return value == null || value.isEmpty();
+    }
+
+    private boolean isNotNullNorEmpty(String value) {
+        return value != null && !value.isEmpty();
     }
 }
