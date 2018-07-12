@@ -20,7 +20,7 @@ public class DIOPrintDocEnd extends DIOItem {
     }
 
     public void execute(int[] data, Object object) throws Exception {
-        service.printDocEnd();
+        service.printEndNonFiscal();
     }
 
 }

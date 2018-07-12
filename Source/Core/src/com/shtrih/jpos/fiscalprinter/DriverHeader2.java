@@ -8,11 +8,16 @@ public class DriverHeader2 extends DriverHeader {
 	}
 
 	@Override
-	public void endDocument(String additionalHeader, String additionalTrailer)
+	public void endFiscal(String additionalHeader, String additionalTrailer)
 			throws Exception {
 		printTrailer(additionalTrailer);
-		printSpaceLines(getModel().getNumHeaderLines());
+		printSpaceLines(getNumHeaderLines());
 		getPrinter().cutPaper();
+	}
+        
+	public void endNonFiscal(String additionalHeader, String additionalTrailer)
+			throws Exception {
+		endFiscal(additionalHeader, additionalTrailer);
 	}
 
 		@Override

@@ -74,15 +74,16 @@ class PrinterTest implements FiscalPrinterConst {
     
     public void setHeaderLines() {
         try {
-            //printer.clearLogo();
-            //printer.clearImages();
-            //printer.loadImage("Logo.bmp");
-            //printer.addLogo(0, SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
-            // 
-            printer.setHeaderLine(1, getLoadImageCommand("Logo.bmp"), false);
-            printer.setHeaderLine(2, "Header line 2", false);
-            printer.setHeaderLine(3, "Header line 3", false);
-            printer.setHeaderLine(4, "Header line 4", false);
+            int numHeaderLines = printer.getNumHeaderLines();
+            System.out.println("getNumHeaderLines(): " + numHeaderLines);
+            for (int i=1;i<= numHeaderLines;i++){
+                printer.setHeaderLine(i, "Header line " + i, false);
+            }
+            printer.clearLogo();
+            printer.clearImages();
+            printer.loadImage("Logo.bmp");
+            printer.addLogo(0, SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,10 +91,12 @@ class PrinterTest implements FiscalPrinterConst {
     
     public void setTrailerLines() {
         try {
-            printer.setTrailerLine(1, "Trailer line 1", false);
-            printer.setTrailerLine(2, "Trailer line 2", false);
-            printer.setTrailerLine(3, "Trailer line 3", false);
-        } catch (Exception e) {
+            int numTrailerLines = printer.getNumTrailerLines();
+            System.out.println("getNumTrailerLines(): " + numTrailerLines);
+            for (int i=1;i<= numTrailerLines;i++){
+                printer.setTrailerLine(i, "Trailer line " + i, false);
+            }
+       } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -980,8 +983,8 @@ class PrinterTest implements FiscalPrinterConst {
     
     public void printFiscalReceipt() 
     {
-        //printFiscalReceipt145_5();
-        printCorrectionReceipt3();
+        printEscBarcodesNormal();
+        printFiscalReceipt145_4();
     }
     
     public void disablePrint() {

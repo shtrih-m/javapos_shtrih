@@ -61,7 +61,7 @@ public class DIOPrintCorrectionReceipt2 extends DIOItem {
 
         getPrinter().execute(command);
 
-        service.printDocEnd();
+        service.printEndFiscal();
 
         if (params.length >= 18)
         {

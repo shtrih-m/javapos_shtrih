@@ -1083,5 +1083,19 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public boolean isSDCardPresent() throws Exception {
         return false;
     }
+    public int getNumHeaderLines() throws Exception{
+        return 3;
+    }
+    
+    public int getNumTrailerLines() throws Exception{
+        return 3;
+    }
 
+    public int getHeaderTableRow() throws Exception {
+        return 12;
+    }
+    
+    public int printDocEnd() throws Exception{
+        return 0;
+    }
 }

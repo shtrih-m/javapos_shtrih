@@ -571,11 +571,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (line.length() == 0) {
             line = " ";
         }
-        
+
         int len = Math.min(line.length(), getMessageLength(font));
-        if(line.length() != len)
+        if (line.length() != len) {
             line = line.substring(0, len);
-        
+        }
+
         if (getModel().getCapPrintStringFont()) {
             return printStringFont(station, font, line);
         } else if (font.getValue() == PrinterConst.FONT_NUMBER_DOUBLE) {
@@ -1989,13 +1990,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             capFiscalStorage = readCapFiscalStorage();
         }
 
-        capFooterFlag = capModelParameters() && 
-                modelParameters.isCapGraphicsFlags() && params.footerFlagEnabled;
+        capFooterFlag = capModelParameters()
+                && modelParameters.isCapGraphicsFlags() && params.footerFlagEnabled;
 
         if (capFiscalStorage) {
 
             int fsTableNumber = getFsTableNumber();
             getModel().addParameter("fdoName", "", fsTableNumber, 1, 10);
+            getModel().addParameter("CompressedFontEnabled", "", 1, 1, 31);
         }
 
         if (isShtrihMobile()) {
@@ -2006,7 +2008,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public boolean isDesktop() {
-        return deviceMetrics.getModel() != 19 && // Штрих-МОБАЙЛ
+        return deviceMetrics.getModel() != 19
+                && // Штрих-МОБАЙЛ
                 deviceMetrics.getModel() != 45;  // КЯ
     }
 
@@ -2177,17 +2180,19 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public String readParameter(String paramName) throws Exception {
-
         PrinterParameter parameter = getModel().findParameter(paramName);
         if (parameter == null) {
             logger.debug("Parameter not found, NAME=" + paramName);
             return "";
         }
 
-        String[] fieldValue = new String[1];
-        check(readTable(parameter.getTableNumber(), parameter.getRowNumber(),
-                parameter.getFieldNumber(), fieldValue));
-        return fieldValue[0];
+        if (parameter.isValueEmpty()) {
+            String[] fieldValue = new String[1];
+            check(readTable(parameter.getTableNumber(), parameter.getRowNumber(),
+                    parameter.getFieldNumber(), fieldValue));
+            parameter.setValue(fieldValue[0]);
+        }
+        return parameter.getValue();
     }
 
     public boolean readBoolParameter(String paramName) throws Exception {
@@ -4168,6 +4173,32 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
             lines.add(command.getLine());
         }
-        return (String[])lines.toArray(new String[0]);
+        return (String[]) lines.toArray(new String[0]);
+    }
+
+    public int getHeaderTableRow() throws Exception {
+        int row = getModel().getHeaderTableRow();
+        if (readBoolParameter("CompressedFontEnabled")) {
+            row = row - (getNumHeaderLines() - getModel().getNumHeaderLines());
+        }
+        return row;
+    }
+
+    public int getNumHeaderLines() throws Exception {
+        int numHeaderLines = getModel().getNumHeaderLines();
+        if (readBoolParameter("CompressedFontEnabled")) {
+            numHeaderLines = (int) (numHeaderLines * 1.5);
+        }
+        return numHeaderLines;
+    }
+
+    public int getNumTrailerLines() throws Exception {
+        return getModel().getNumTrailerLines();
+    }
+
+    public int printDocEnd() throws Exception{
+        PrintDocEnd command = new PrintDocEnd();
+        command.setPassword(usrPassword);
+        return executeCommand(command);
     }
 }

@@ -11,7 +11,6 @@ package com.shtrih.fiscalprinter;
 /**
  * @author V.Kravtsov
  */
-
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.ej.EJDate;
 import com.shtrih.fiscalprinter.command.AmountItem;
@@ -167,7 +166,7 @@ public interface SMFiscalPrinter {
     public void printText(String text) throws Exception;
 
     public int writeTable(int tableNumber, int rowNumber, int fieldNumber,
-                          String fieldValue) throws Exception;
+            String fieldValue) throws Exception;
 
     public String readTable(int tableNumber, int rowNumber, int fieldNumber)
             throws Exception;
@@ -176,7 +175,7 @@ public interface SMFiscalPrinter {
             throws Exception;
 
     public int readTable(int tableNumber, int rowNumber, int fieldNumber,
-                         String[] fieldValue) throws Exception;
+            String[] fieldValue) throws Exception;
 
     public int readTableInfo(int tableNumber, Object[] out) throws Exception;
 
@@ -213,16 +212,16 @@ public interface SMFiscalPrinter {
     public long readCashRegisterCorrection(int number) throws Exception;
 
     public PrintEJDayReportOnDates printEJDayReportOnDates(EJDate date1,
-                                                           EJDate date2, int reportType) throws Exception;
+            EJDate date2, int reportType) throws Exception;
 
     public PrintFMReportDates printFMReportDates(PrinterDate date1,
-                                                 PrinterDate date2, int reportType) throws Exception;
+            PrinterDate date2, int reportType) throws Exception;
 
     public PrintEJDayReportOnDays printEJReportDays(int day1, int day2,
-                                                    int reportType) throws Exception;
+            int reportType) throws Exception;
 
     public PrintFMReportDays printFMReportDays(int day1, int day2,
-                                               int reportType) throws Exception;
+            int reportType) throws Exception;
 
     public void printSale(PriceItem item) throws Exception;
 
@@ -316,7 +315,7 @@ public interface SMFiscalPrinter {
     public void setBaudRate(int baudRate) throws Exception;
 
     public boolean connectDevice(int baudRate, int deviceBaudRate,
-                                 int deviceByteTimeout) throws Exception;
+            int deviceByteTimeout) throws Exception;
 
     public void checkBaudRate(int value) throws Exception;
 
@@ -459,7 +458,7 @@ public interface SMFiscalPrinter {
     public void fsWriteTag(int tagId, String tagValue) throws Exception;
 
     public void fsWriteTLV(byte[] tlv) throws Exception;
-    
+
     public void fsWriteOperationTLV(byte[] tlv) throws Exception;
 
     public byte[] getTLVData(int tagId, String tagValue) throws Exception;
@@ -481,7 +480,7 @@ public interface SMFiscalPrinter {
     public void disablePrint() throws Exception;
 
     public void enablePrint() throws Exception;
-    
+
     public FSReadFiscalization fsReadFiscalization() throws Exception;
 
     public FSReadCommStatus fsReadCommStatus() throws Exception;
@@ -565,33 +564,33 @@ public interface SMFiscalPrinter {
     FSReadDocument fsRequestDocumentTLV(int documentNumber) throws Exception;
 
     byte[] fsReadDocumentTLVBlock() throws Exception;
-    
+
     FSDocument fsFindLastDocument(int docType) throws Exception;
 
     DocumentTLV fsReadDocumentTLV(int docNumber) throws Exception;
-    
+
     Vector<String> fsReadDocumentTLVAsText(int docNumber) throws Exception;
 
     PrinterModelParameters readPrinterModelParameters() throws Exception;
 
     FSReadFiscalizationTag fsReadFiscalizationTag(int fiscalizationNumber, int tagNumber) throws Exception;
-    
+
     boolean getCapSetVatTable();
-    
+
     void clearTableText() throws Exception;
-    
-    public void updateFirmware(String firmwareFileName) throws Exception; 
-    
+
+    public void updateFirmware(String firmwareFileName) throws Exception;
+
     public boolean getCapUpdateFirmware() throws Exception;
-    
+
     public LongPrinterStatus searchDevice() throws Exception;
-    
+
     public int compareFirmwareVersion(String firmwareFileName) throws Exception;
-    
+
     public int readTotalizers(int recType, long[] totalizers) throws Exception;
-    
+
     public long[] readTotalizers(int recType) throws Exception;
-    
+
     public String[] readEJDocument(int documentNumber) throws Exception;
 
     void writeFirmwareBlockToSDCard(int fileType, int blockNumber, byte[] block) throws Exception;
@@ -599,10 +598,18 @@ public interface SMFiscalPrinter {
     boolean isDesktop();
 
     boolean isCashCore();
-    
+
     boolean isShtrihMobile();
 
     boolean isShtrihNano();
 
     boolean isSDCardPresent() throws Exception;
+
+    public int getNumHeaderLines() throws Exception;
+
+    public int getNumTrailerLines() throws Exception;
+    
+    public int getHeaderTableRow() throws Exception;
+    
+    public int printDocEnd() throws Exception;
 }

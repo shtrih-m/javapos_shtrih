@@ -32,7 +32,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="COM4"/>
+        <prop name="portName" type="String" value="COM3"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="1"/>
@@ -81,7 +81,7 @@
         <!-- Number of header lines -->
         <prop name="numHeaderLines" type="String" value="5"/>
         <!-- Number of trailer lines -->
-        <prop name="numTrailerLines" type="String" value="0"/>
+        <prop name="numTrailerLines" type="String" value="3"/>
         <!-- Device to print report, 0 - fiscal memory (FM), 1 - electronic journal (EJ)  -->
         <prop name="reportDevice" type="String" value="0"/>
         <!-- Report type, 0 - short, 1 - full -->
@@ -196,7 +196,7 @@
         <!-- 1 - header stored and printed by printer, numHeaderLine and numTrailerLines are fixed -->
         <!-- 2 - header stored and printed with driver, header printed on receipt begin -->
         <!-- 3 - header will be printed when printer configured to do so -->
-        <prop name="headerMode" type="String" value="0"/>
+        <prop name="headerMode" type="String" value="2"/>
         <!-- headerImagePosition,  -->
         <!-- SMFPTR_LOGO_AFTER_HEADER     = 0  -->
         <!-- SMFPTR_LOGO_BEFORE_TRAILER   = 1  -->

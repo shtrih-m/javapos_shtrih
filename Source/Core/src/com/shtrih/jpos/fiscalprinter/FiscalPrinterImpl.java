@@ -563,7 +563,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             }
 
             if (isInReceiptTrailer) {
-                printDocEnd();
+                printEndNonFiscal();
                 isInReceiptTrailer = false;
                 isRecPresent = true;
             }
@@ -2355,7 +2355,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         getPrinter().printLine(SMFP_STATION_REC, line, params.font);
     }
 
-    public void printDocEnd() throws Exception {
+    public void printEndFiscal() throws Exception {
         if (!docEndEnabled) {
             docEndEnabled = true;
             return;
@@ -2365,25 +2365,31 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             docEndEnabled = true;
             isInReceiptTrailer = true;
             getPrinter().waitForPrinting();
-            header.endDocument(additionalHeader, additionalTrailer);
+            header.endFiscal(additionalHeader, additionalTrailer);
             isInReceiptTrailer = false;
         }
     }
 
+    public void printEndNonFiscal() throws Exception {
+        if (!docEndEnabled) {
+            docEndEnabled = true;
+            return;
+        }
+
+        synchronized (printer) {
+            docEndEnabled = true;
+            isInReceiptTrailer = true;
+            getPrinter().waitForPrinting();
+            header.endNonFiscal(additionalHeader, additionalTrailer);
+            isInReceiptTrailer = false;
+        }
+    }
+    
     public void printDocStart() throws Exception {
         synchronized (printer) {
             isInReceiptTrailer = true;
             header.beginDocument(additionalHeader, additionalTrailer);
             isInReceiptTrailer = false;
-        }
-    }
-
-    private void printReportEnd() throws Exception {
-        try {
-            header.endDocument("", "");
-        } catch (Exception e) {
-            // ignore print errors
-            logger.error("printReportEnd: " + e.getMessage());
         }
     }
 
@@ -2399,7 +2405,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         getPrinter().waitForPrinting();
         printDocStart();
         getPrinter().printText(text);
-        printDocEnd();
+        printEndNonFiscal();
 
         // open receipt again
         if (isReceiptOpened) {
@@ -2413,7 +2419,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             checkEnabled();
             checkPrinterState(FPTR_PS_NONFISCAL);
             setPrinterState(FPTR_PS_MONITOR);
-            printDocEnd();
+            printEndNonFiscal();
             receipt = new NullReceipt(createReceiptContext());
         }
     }
@@ -3050,7 +3056,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             if (status.getPrinterMode().isDayClosed() && getParams().autoOpenShift) {
                 printDocStart();
                 getPrinter().openFiscalDay();
-                printDocEnd();
+                printEndFiscal();
             }
 
             // check end of day
@@ -3102,7 +3108,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 if (!receipt.getDisablePrint()) {
                     sleep(getParams().recCloseSleepTime);
                     if (!receipt.getCapAutoCut()) {
-                        printDocEnd();
+                        printEndFiscal();
                     }
                 }
             } catch (Exception e) {
@@ -3126,7 +3132,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             }
             printDocStart();
             getPrinter().duplicateReceipt();
-            printDocEnd();
+            printEndFiscal();
             duplicateReceipt = false;
         } finally {
             printer.getParams().textReportEnabled = filterEnabled;
@@ -3165,7 +3171,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             getPrinter().printFMReportDates(printerDate1, printerDate2,
                     params.reportType);
         }
-        printDocEnd();
+        printEndFiscal();
     }
 
     public void printPowerLossReport() throws Exception {
@@ -3521,7 +3527,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 } else {
                     getPrinter().printFMReportDays(day1, day2, params.reportType);
                 }
-                printDocEnd();
+                printEndFiscal();
                 break;
 
             case FPTR_RT_DATE:
@@ -3541,7 +3547,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     getPrinter()
                             .printFMReportDates(date1, date2, params.reportType);
                 }
-                printDocEnd();
+                printEndFiscal();
                 break;
 
             default:
@@ -3557,7 +3563,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkPrinterState(FPTR_PS_MONITOR);
         printDocStart();
         getPrinter().printXReport();
-        printDocEnd();
+        printEndFiscal();
     }
 
     public void printZReport() throws Exception {
@@ -3580,7 +3586,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             try {
                 printCalcReport();
 
-                printDocEnd();
+                printEndFiscal();
             } catch (Exception e) {
                 logger.error("printZReport: " + e.getMessage());
             }
@@ -4127,7 +4133,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         if (status.getPrinterMode().isReceiptOpened()) {
             getPrinter().sysAdminCancelReceipt();
             if (!getPrinter().getCapFiscalStorage()) {
-                printDocEnd();
+                printEndFiscal();
             }
         }
     }
@@ -4640,7 +4646,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
         try {
             printer.waitForPrinting();
-            printDocEnd();
+            printEndFiscal();
         } catch (Exception e) {
             logger.error("fsPrintCalcReport: " + e.getMessage());
         }

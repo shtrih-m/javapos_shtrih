@@ -25,7 +25,9 @@ public interface PrinterHeader {
 	public void beginDocument(String additionalHeader, String additionalTrailer)
 			throws Exception;
 
-	public void endDocument(String additionalHeader, String additionalTrailer)
+	public void endFiscal(String additionalHeader, String additionalTrailer)
 			throws Exception;
 
+	public void endNonFiscal(String additionalHeader, String additionalTrailer)
+			throws Exception;
 }

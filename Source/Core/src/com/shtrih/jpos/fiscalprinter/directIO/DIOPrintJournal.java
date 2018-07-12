@@ -48,7 +48,7 @@ public class DIOPrintJournal extends DIOItem {
                 default:
                     throw new Exception("Invalid ReportType value");
             }
-            service.printDocEnd();
+            service.printEndFiscal();
         } finally {
             reportPrinter.stop();
         }

@@ -575,6 +575,9 @@ public interface PrinterConst {
     public static final String SMFP_PARAMID_LINE_SPACING = "LineSpacing";
     // Receipt format enabled
     public static final String SMFP_PARAMID_RECFORMAT_ENABLED = "ReceiptFormatEnabled";
+    // Compressed font enabled
+    public static final String SMFP_PARAMID_COMPRESSED_FONT_ENABLED = "CompressedFontEnabled";
+    
     // НАИМЕНОВАНИЕ В ОПЕРАЦИИ
     public static final String SMFP_PARAMID_ITM_NAME_LEN = "ReceiptItemNameLength";
     // ТЕКСТ В СКИДКЕ

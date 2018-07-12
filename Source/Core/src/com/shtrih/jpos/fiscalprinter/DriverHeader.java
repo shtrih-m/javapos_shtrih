@@ -85,7 +85,7 @@ public class DriverHeader implements JposConst, PrinterHeader {
     @Override
     public int getNumHeaderLines() throws Exception {
         if (numHeaderLines == 0) {
-            numHeaderLines = printer.getModel().getNumHeaderLines();
+            numHeaderLines = printer.getNumHeaderLines();
             numHeaderLines = Math.max(getParams().numHeaderLines, numHeaderLines);
         }
         return numHeaderLines;
@@ -176,18 +176,12 @@ public class DriverHeader implements JposConst, PrinterHeader {
         return getModel().getFontHeight(font);
     }
 
-    @Override
     public void endDocument(String additionalHeader, String additionalTrailer)
             throws Exception {
         printTrailer(additionalTrailer);
         printHeaderBeforeCutter();
         printer.cutPaper();
         printHeaderAfterCutter(additionalHeader);
-    }
-
-    @Override
-    public void beginDocument(String additionalHeader, String additionalTrailer) throws Exception {
-
     }
 
     void printTrailer(String additionalTrailer) throws Exception {
@@ -254,10 +248,10 @@ public class DriverHeader implements JposConst, PrinterHeader {
             printLines(header);
         } else {
             lineNumber = (headerHeight - imageHeight) / lineHeight;
-            printLines(header, lineNumber+1, header.size());
+            printLines(header, lineNumber + 1, header.size());
         }
         printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
-        
+
         if (additionalHeader.length() > 0) {
             printer.printText(PrinterConst.SMFP_STATION_REC, additionalHeader,
                     printer.getParams().getFont());
@@ -297,8 +291,9 @@ public class DriverHeader implements JposConst, PrinterHeader {
     }
 
     void printSpaceLines(int count) throws Exception {
-        if(getNumTrailerLines() < 0)
+        if (getNumTrailerLines() < 0) {
             return;
+        }
 
         for (int i = 0; i < count; i++) {
             printRecLine(" ");
@@ -314,6 +309,26 @@ public class DriverHeader implements JposConst, PrinterHeader {
 
     private void printRecLine(String line) throws Exception {
         printer.printLine(PrinterConst.SMFP_STATION_REC, line, FontNumber.getNormalFont());
+    }
+
+    @Override
+    public void endFiscal(String additionalHeader, String additionalTrailer)
+            throws Exception {
+        logger.debug("endFiscal");
+        endDocument(additionalHeader, additionalTrailer);
+    }
+
+    @Override
+    public void endNonFiscal(String additionalHeader, String additionalTrailer)
+            throws Exception {
+        logger.debug("endNonFiscal");
+        endDocument(additionalHeader, additionalTrailer);
+    }
+
+    @Override
+    public void beginDocument(String additionalHeader, String additionalTrailer) throws Exception 
+    {
+        logger.debug("beginDocument");
     }
 
 }

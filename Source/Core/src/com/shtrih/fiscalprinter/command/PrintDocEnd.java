@@ -22,7 +22,7 @@ public final class PrintDocEnd extends PrinterCommand {
 
     // in params
     private int password;
-    private byte mode;
+    private byte mode = 0;
     // out params
     private int operator;
 

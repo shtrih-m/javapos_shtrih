@@ -14,15 +14,28 @@ public class PrinterParameter {
     private final int tableNumber;
     private final int rowNumber;
     private final int fieldNumber;
+    private String value = null;
     private final ParameterValues values = new ParameterValues();
 
     public PrinterParameter(String name, String text, int tableNumber, int rowNumber,
-                            int fieldNumber) {
+            int fieldNumber) {
         this.name = name;
         this.text = text;
         this.tableNumber = tableNumber;
         this.rowNumber = rowNumber;
         this.fieldNumber = fieldNumber;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public boolean isValueEmpty() {
+        return (value == null);
     }
 
     public ParameterValues getValues() {
