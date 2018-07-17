@@ -3351,12 +3351,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             line2 = String.format("ИНН %010d", status.getFiscalID());
             printLines(line1, line2);
             // 4
-            line1 = "РН ККТ " + readTable(18, 1, 3).trim();
+            line1 = "РН ККТ " + readRnm().trim();
             line2 = "ФН " + fsReadSerial().getSerial();
             printLines2(line1, line2);
             // 5
             line1 = "Сайт ФНС:";
-            line2 = readTable(18, 1, 13).trim();
+            line2 = readTable(getFsTableNumber(), 1, 13).trim();
             printLines2(line1, line2);
             waitForPrinting();
         } else {

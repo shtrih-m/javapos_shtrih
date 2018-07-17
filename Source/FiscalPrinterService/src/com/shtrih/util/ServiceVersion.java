@@ -1,5 +1,5 @@
 package com.shtrih.util;
 
 public class ServiceVersion {
-    public static final String VERSION = "527-5-gfc13d9a";
+    public static final String VERSION = "528-1-g3da9ae5";
 }

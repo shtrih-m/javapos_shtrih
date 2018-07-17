@@ -20,7 +20,7 @@ public class DriverHeader2 extends DriverHeader {
 		endFiscal(additionalHeader, additionalTrailer);
 	}
 
-		@Override
+        @Override
 	public void beginDocument(String additionalHeader, String additionalTrailer)
 			throws Exception {
 		printHeaderBeforeCutter();

@@ -2552,7 +2552,8 @@ class PrinterTest implements FiscalPrinterConst {
                 printer.directIO(84, null, null);
             }
             
-            printer.printNormal(FPTR_S_RECEIPT, getLine(""));
+            byte b[] = {0x1F};
+            printer.printNormal(FPTR_S_RECEIPT, new String(b, "Cp1251"));
             printer.printNormal(FPTR_S_RECEIPT, getLine("Nonfiscal receipt"));
             printer.printNormal(FPTR_S_RECEIPT, getLine(""));
             
