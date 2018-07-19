@@ -19,7 +19,7 @@ import com.shtrih.util.CompositeLogger;
 
 public class PrinterField {
 
-    private String value = "";
+    private String value = null;
     private final int row;
     private final FieldInfo fieldInfo;
     public static CompositeLogger logger = CompositeLogger.getLogger(PrinterField.class);
@@ -60,6 +60,10 @@ public class PrinterField {
         return value;
     }
 
+    public boolean hasValue() {
+        return (value != null);
+    }
+
     private static String SInvalidFieldValue = "Invalid field value '%s' (%d).\r\n Valid values: %d..%d";
 
     public void checkValue(String value) throws Exception {
@@ -71,10 +75,10 @@ public class PrinterField {
         this.value = value;
     }
 
-    public void setBytes(byte[] value)throws Exception{
+    public void setBytes(byte[] value) throws Exception {
         this.value = fieldInfo.bytesToField(value, "Cp1251");
     }
-    
+
     public byte[] getBytes() throws Exception {
         return fieldInfo.fieldToBytes(value, "Cp1251");
     }

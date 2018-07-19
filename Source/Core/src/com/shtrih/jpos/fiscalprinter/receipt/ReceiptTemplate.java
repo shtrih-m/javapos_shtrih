@@ -230,6 +230,9 @@ public class ReceiptTemplate {
         if (f.tag.equals("TAX_LETTER")) {
             return getTaxLetter(item.getTax1());
         }
+        if (f.tag.equals("TAX_NAME")) {
+            return getTaxName(item.getTax1());
+        }
         if (f.tag.equals("MULT_NE_ONE")) {
             return item.getQuantity() == 1000 ? " " : "*";
         }
@@ -237,6 +240,10 @@ public class ReceiptTemplate {
     }
 
     static String taxLetters = "АБВГДЕ";
+
+    private String getTaxName(int tax) throws Exception {
+        return context.getPrinter().getPrinter().getTaxName(tax);
+    }
 
     private String getTaxLetter(int tax) {
 

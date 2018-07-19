@@ -702,7 +702,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return result[0];
     }
 
-    public int readTable(int tableNumber, int rowNumber, int fieldNumber, String[] fieldValue) throws Exception {
+    public int readTable(int tableNumber, int rowNumber, int fieldNumber,
+            String[] fieldValue) throws Exception {
         int result = 0;
         logger.debug("readTable(" + String.valueOf(tableNumber) + ", "
                 + String.valueOf(rowNumber) + ", "
@@ -729,6 +730,40 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
         fieldValue[0] = fieldInfo.bytesToField(commandReadTable.fieldValue, charsetName);
         return result;
+    }
+
+    public String readTable2(int tableNumber, int rowNumber, int fieldNumber) throws Exception {
+        int result = 0;
+        logger.debug("readTable2(" + String.valueOf(tableNumber) + ", "
+                + String.valueOf(rowNumber) + ", "
+                + String.valueOf(fieldNumber) + ")");
+
+        PrinterField field = getPrinterField(tableNumber, rowNumber, fieldNumber);
+        if (!field.hasValue()) {
+            readField(field);
+        }
+        return field.getValue();
+    }
+
+    private PrinterField getPrinterField(int tableNumber, int rowNumber,
+            int fieldNumber) throws Exception {
+        PrinterTable table = getTable(tableNumber);
+        PrinterField field = table.getFields().find(tableNumber, rowNumber, fieldNumber);
+        if (field == null) {
+            FieldInfo fieldInfo = readFieldInfo2(tableNumber, fieldNumber);
+            field = new PrinterField(fieldInfo, rowNumber);
+            table.getFields().add(field);
+        }
+        return field;
+    }
+
+    private FieldInfo readFieldInfo2(int tableNumber, int fieldNumber) throws Exception {
+        FieldInfo fieldInfo = fields.find(tableNumber, fieldNumber);
+        if (fieldInfo == null) {
+            fieldInfo = readFieldInfo(tableNumber, fieldNumber);
+            fields.add(fieldInfo);
+        }
+        return fieldInfo;
     }
 
     public PrinterField readField(int tableNumber, int rowNumber, int fieldNumber) throws Exception {
@@ -3218,7 +3253,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public String getTaxName(int number) throws Exception {
-        return readTable(PrinterConst.SMFP_TABLE_TAX, number, 2);
+        return readTable2(PrinterConst.SMFP_TABLE_TAX, number, 2);
     }
 
     public int getTaxRate(int number) throws Exception {
@@ -4196,7 +4231,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return getModel().getNumTrailerLines();
     }
 
-    public int printDocEnd() throws Exception{
+    public int printDocEnd() throws Exception {
         PrintDocEnd command = new PrintDocEnd();
         command.setPassword(usrPassword);
         return executeCommand(command);
