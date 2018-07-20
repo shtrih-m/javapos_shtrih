@@ -39,6 +39,14 @@ public class ReceiptTemplate {
         return context.getParams();
     }
 
+    public boolean hasPreLine() {
+        return getParams().ItemRowFormat.contains("%PRELINE%");
+    }
+
+    public boolean hasPostLine() {
+        return getParams().ItemRowFormat.contains("%POSTLINE%");
+    }
+
     /**
      * Parsing format lines, create format string and determine fields
      *
@@ -232,6 +240,16 @@ public class ReceiptTemplate {
         }
         if (f.tag.equals("TAX_NAME")) {
             return getTaxName(item.getTax1());
+        }
+        if (f.tag.equals("PRELINE")) {
+            String text = item.getPreLine();
+            item.setPreLine("");
+            return text;
+        }
+        if (f.tag.equals("POSTLINE")) {
+            String text = item.getPostLine();
+            item.setPostLine("");
+            return text;
         }
         if (f.tag.equals("MULT_NE_ONE")) {
             return item.getQuantity() == 1000 ? " " : "*";

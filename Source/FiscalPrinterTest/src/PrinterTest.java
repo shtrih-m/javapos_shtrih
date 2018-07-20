@@ -3671,18 +3671,13 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
             
-            printer.printRecItem("1206 СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
+            printer.setPreLine("1206 PreLine");
+            printer.setPostLine("1206 PostLine");
+            printer.printRecItem("1. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
             printer.printRecItemAdjustment(1, "            1206", 320, 2);
-            printer.printRecItem("1206 СДОБА ЗАМОСКВОРЕЦКАЯ", 6400, 2000, 2, 3200, "шт");
-            printer.printRecItemAdjustment(1, "            1206", 640, 2);
-            printer.printRecItem("4 КАЛЬМАР ХОТ-ТЕЙСТ С", 35964, 360, 2, 99900, "кг");
-            printer.printRecItem("1206 СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
-            printer.printRecItemAdjustment(1, "            1206", 320, 2);
-            printer.printRecItem("8051070320514 КОФЕ FRECKO ARABIKA", 16600, 1000, 1, 16600, "шт");
-            printer.printRecVoidItem("1206 СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 0, 0, 2);
-            printer.printRecItemAdjustment(2, "            1206", 320, 2);
-            printer.printRecItem("1 ВИНОГРАД КИШ-МИШ ЗЕЛ", 2185, 230, 1, 9500, "кг");
-            printer.printRecVoidItem("4 КАЛЬМАР ХОТ-ТЕЙСТ С", 99900, 360, 0, 0, 2);
+            
+            printer.printRecItem("2. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
+            
             printer.printRecSubtotal(27425);
             printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 25);
             printer.printRecTotal(27400, 27400, "1");

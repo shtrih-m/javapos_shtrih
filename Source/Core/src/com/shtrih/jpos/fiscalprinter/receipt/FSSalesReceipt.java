@@ -1,6 +1,5 @@
 package com.shtrih.jpos.fiscalprinter.receipt;
 
-
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.PrinterGraphics;
@@ -118,9 +117,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     // pack discounts
-    public void addItemsDiscounts() throws Exception 
-    {
-        
+    public void addItemsDiscounts() throws Exception {
+
         String discountText = "";
         if (discounts.size() == 1) {
             discountText = discounts.get(0).getText();
@@ -198,7 +196,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             }
         }
     }
-    
+
     public void updateReceiptItems() throws Exception {
         for (int i = 0; i < items.size(); i++) {
             Object object = items.get(i);
@@ -252,7 +250,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
                 // TODO: print tag?
             }
-            
+
             if (item instanceof FSTLVItem) {
                 FSTLVItem tlvItem = (FSTLVItem) item;
                 getDevice().fsWriteTLV(tlvItem.getData());
@@ -332,7 +330,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     long resultAmount = item.getTotal() - stornoItem.getTotal();
                     item.setQuantity(item.getQuantity() - stornoItem.getQuantity());
                     item.setItemAmount(item.getItemAmount() - stornoItem.getItemAmount());
-                    
+
                     if (item.getQuantity() == 0) {
                         items.remove(item);
                         i--;
@@ -344,8 +342,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void endFiscalReceipt(boolean printHeader) throws Exception {
-        if (isOpened) 
-        {
+        if (isOpened) {
             removeStornoItems();
             correctPayments();
             if (getDevice().getCapDiscount()) {
@@ -492,16 +489,21 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printFSSale(FSSaleReceiptItem item) throws Exception {
-
-        String preLine = item.getPreLine();
-        if (preLine.length() > 0) {
-            getDevice().printText(preLine);
+        if ((!getParams().ReceiptTemplateEnabled) || (!receiptTemplate.hasPreLine())) {
+            String preLine = item.getPreLine();
+            if (preLine.length() > 0) {
+                getDevice().printText(preLine);
+                item.setPreLine("");
+            }
         }
 
         if (getParams().ReceiptTemplateEnabled) {
             String[] lines = receiptTemplate.getReceiptItemLines(item);
             for (int i = 0; i < lines.length; i++) {
-                getDevice().printText(lines[i]);
+                String line = lines[i];
+                if (!line.isEmpty()) {
+                    getDevice().printText(lines[i]);
+                }
             }
             /*
              lines = receiptTemplate.getAdjustmentLines(item);
@@ -547,11 +549,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 getDevice().printLines("СКИДКА", text);
             }
         }
-        String postLine = item.getPostLine();
 
-        if (postLine.length()
-                > 0) {
-            getDevice().printText(postLine);
+        if ((!getParams().ReceiptTemplateEnabled) || (!receiptTemplate.hasPostLine())) {
+            String postLine = item.getPostLine();
+            if (postLine.length() > 0) {
+                getDevice().printText(postLine);
+                item.setPostLine("");
+            }
         }
     }
 
@@ -927,8 +931,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         FSSaleReceiptItem item = null;
         if (getParams().combineReceiptItems) {
             item = findItem(unitPrice, description);
-            if (item != null) 
-            {
+            if (item != null) {
                 item.setQuantity(item.getQuantity() + quantity);
                 item.setItemAmount(item.getItemAmount() + price);
             }
