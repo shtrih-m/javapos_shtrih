@@ -1,27 +1,27 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.fiscalprinter.command;
 
-/**
- * @author V.Kravtsov
- */
 public class RawCommand extends PrinterCommand {
 
     private int code = 0;
-    private byte[] txData;
+    private final byte[] txData;
 
-    public RawCommand() {
-    }
+    public RawCommand(byte[] txData) {
+        
+        if (txData == null)
+            throw new IllegalArgumentException("txData is null");
 
-    public void setTxData(byte[] txData) {
-        if (txData.length > 0) {
-            code = txData[0];
+        if (txData.length == 0)
+            throw new IllegalArgumentException("txData length should be greater then 1");
+
+        int offset = 1;
+        code = txData[0] & 0xFF;
+        if (code == 0xFF && txData.length >= 2) {
+            offset = 2;
+            code = (code << 8) + (txData[1] & 0xFF);
         }
-        byte[] buffer = new byte[txData.length - 1];
-        System.arraycopy(txData, 1, buffer, 0, buffer.length);
+
+        byte[] buffer = new byte[txData.length - offset];
+        System.arraycopy(txData, offset, buffer, 0, buffer.length);
         this.txData = buffer;
     }
 
