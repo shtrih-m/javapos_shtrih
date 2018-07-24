@@ -51,6 +51,14 @@ public class FSDocType {
         return docType;
     }
 
+    public boolean isDocClosed() {
+        return docType == FS_DOCTYPE_NONE;
+    }
+    
+    public boolean isDocOpen() {
+        return docType != FS_DOCTYPE_NONE;
+    }
+    
     public boolean isDayOpen() {
         return docType == FS_DOCTYPE_DAYOPEN;
     }

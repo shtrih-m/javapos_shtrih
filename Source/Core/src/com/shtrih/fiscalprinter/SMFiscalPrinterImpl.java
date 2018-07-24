@@ -92,6 +92,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public PrinterTables tables = new PrinterTables();
     public static CompositeLogger logger = CompositeLogger.getLogger(SMFiscalPrinterImpl.class);
     private final List<IPrinterEvents> events = new ArrayList<IPrinterEvents>();
+    private final List<byte[]> tlvItems = new ArrayList<byte[]>();
     private final PrinterPort port;
     private final FptrParameters params;
     private final PrinterImages printerImages = new PrinterImages();
@@ -1225,9 +1226,31 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command;
     }
 
-    public PrintZReport printZReport() throws Exception {
-        logger.debug("printZReport");
+    public void fsStartDayClose() throws Exception {
+        FSStartDayClose command = new FSStartDayClose();
+        command.setSysPassword(sysPassword);
+        execute(command);
+    }
 
+    public void writeTLVItems() throws Exception {
+        for (int i = 0; i < tlvItems.size(); i++) {
+            FSWriteTLV command = new FSWriteTLV();
+            command.setSysPassword(sysPassword);
+            command.setTlv(tlvItems.get(i));
+            execute(command);
+        }
+        tlvItems.clear();
+    }
+
+    public PrintZReport printZReport() throws Exception {
+        if (!tlvItems.isEmpty()) {
+            if (fsReadStatus().getDocType().isDocClosed()) {
+                fsStartDayClose();
+            }
+            writeTLVItems();
+        }
+
+        logger.debug("printZReport");
         PrintZReport command = new PrintZReport();
         command.setPassword(sysPassword);
         execute(command);
@@ -3101,11 +3124,20 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command;
     }
 
+    public boolean isFSDocumentOpened() throws Exception {
+        return (getCapFiscalStorage()
+                && (fsReadStatus().getDocType().isDocOpen()));
+    }
+
     public void fsWriteTLV(byte[] tlv) throws Exception {
-        FSWriteTLV command = new FSWriteTLV();
-        command.setSysPassword(sysPassword);
-        command.setTlv(tlv);
-        execute(command);
+        if (isFSDocumentOpened()) {
+            FSWriteTLV command = new FSWriteTLV();
+            command.setSysPassword(sysPassword);
+            command.setTlv(tlv);
+            execute(command);
+        } else {
+            tlvItems.add(tlv);
+        }
     }
 
     public void fsWriteOperationTLV(byte[] tlv) throws Exception {
@@ -4144,13 +4176,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     /*
-   Старой командой запрашиваются старые счетчики. Для запроса новых добавлены новые команды:
-   FE F4 01 00 00 00 - возвращает 16 8-ми байтовых счетчиков (по типам оплаты 1-16) для приходов.
-   FE F4 02 00 00 00 - возвращает 16 8-ми байтовых счетчиков (по типам оплаты 1-16) для возвратов приходов.
-   FE F4 03 00 00 00 - возвращает 16 8-ми байтовых счетчиков (по типам оплаты 1-16) для расходов.
-   FE F4 04 00 00 00 - возвращает 16 8-ми байтовых счетчиков (по типам оплаты 1-16) для возвратов расходов.
-   Старые и новые счетчики считаются параллельно и независимо. 
-   Чтобы получить общую сумму для новых счетчиков надо просуммировать все 16 чисел.
+     Старой командой запрашиваются старые счетчики. Для запроса новых добавлены новые команды:
+     FE F4 01 00 00 00 - возвращает 16 8-ми байтовых счетчиков (по типам оплаты 1-16) для приходов.
+     FE F4 02 00 00 00 - возвращает 16 8-ми байтовых счетчиков (по типам оплаты 1-16) для возвратов приходов.
+     FE F4 03 00 00 00 - возвращает 16 8-ми байтовых счетчиков (по типам оплаты 1-16) для расходов.
+     FE F4 04 00 00 00 - возвращает 16 8-ми байтовых счетчиков (по типам оплаты 1-16) для возвратов расходов.
+     Старые и новые счетчики считаются параллельно и независимо. 
+     Чтобы получить общую сумму для новых счетчиков надо просуммировать все 16 чисел.
      */
     public int readTotalizers(int recType, long[] totalizers) throws Exception {
         logger.debug("readPaymentTotalizers");
