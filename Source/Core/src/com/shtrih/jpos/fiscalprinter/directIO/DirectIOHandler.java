@@ -472,6 +472,26 @@ public class DirectIOHandler {
                 new DIOReadEJDocument(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_START_DAY_CLOSE: 
+                new DIOStartDayClose(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_START_DAY_OPEN: 
+                new DIOStartDayOpen(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_START_FISCALIZATION: 
+                new DIOStartFiscalization(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_START_CALC_REPORT: 
+                new DIOStartCalcReport(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_START_FISCAL_CLOSE: 
+                new DIOStartFiscalClose(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)

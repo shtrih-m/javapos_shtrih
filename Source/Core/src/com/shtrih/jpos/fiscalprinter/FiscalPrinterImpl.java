@@ -2370,12 +2370,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public void printEndNonFiscal() throws Exception {
-        if (!docEndEnabled) {
+    public void printEndNonFiscal() throws Exception 
+    {
+        if (!docEndEnabled && params.canDisableNonFiscalEnding) {
             docEndEnabled = true;
             return;
         }
-
+        
         synchronized (printer) {
             docEndEnabled = true;
             isInReceiptTrailer = true;

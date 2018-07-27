@@ -82,6 +82,7 @@ import com.shtrih.jpos.fiscalprinter.ReceiptImages;
 import com.shtrih.printer.ncr7167.NCR7167Printer;
 
 import java.util.Vector;
+import jpos.JposException;
 
 public interface SMFiscalPrinter {
 
@@ -612,4 +613,21 @@ public interface SMFiscalPrinter {
     public int getHeaderTableRow() throws Exception;
     
     public int printDocEnd() throws Exception;
+    
+    public int fsStartDayClose() throws Exception;
+    
+    public int fsStartDayOpen() throws Exception;
+    
+    public int fsStartFiscalization(int reportType) throws Exception;
+    
+    public int fsStartCorrectionReceipt() throws Exception;
+    
+    public int fsStartCalcReport() throws Exception;
+    
+    public int fsStartFiscalClose() throws Exception;
+    
+    public int fsPrintCorrectionReceipt(FSPrintCorrectionReceipt command) throws Exception;
+
+    public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws Exception;
+   
 }

@@ -1867,11 +1867,6 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         executeCommand(command);
     }
 
-    @Deprecated
-    public void fsStartDayOpen(FSStartDayOpen command) throws JposException {
-        executeCommand(command);
-    }
-
     public void fsStartDayOpen() throws JposException {
         FSStartDayOpen command = new FSStartDayOpen();
         command.setSysPassword(getSysPassword());

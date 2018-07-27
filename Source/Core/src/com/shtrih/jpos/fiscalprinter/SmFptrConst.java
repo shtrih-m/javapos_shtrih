@@ -555,6 +555,31 @@ public interface SmFptrConst {
      */
     public static final int SMFPTR_DIO_READ_EJ_DOCUMENT = 0x5B;
     
+    /**
+     * Start close day command
+     */
+    public static final int SMFPTR_DIO_START_DAY_CLOSE = 0x5C;
+    
+    /**
+     * Start day open command
+     */
+    public static final int SMFPTR_DIO_START_DAY_OPEN = 0x5D;
+    
+    /**
+     * Start fiscalization
+     */
+    public static final int SMFPTR_DIO_START_FISCALIZATION = 0x5E;
+    
+    /**
+     * Start calc report
+     */
+    public static final int SMFPTR_DIO_START_CALC_REPORT = 0x5F;
+    
+    /**
+     * Start fiscal close
+     */
+    public static final int SMFPTR_DIO_START_FISCAL_CLOSE = 0x60;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

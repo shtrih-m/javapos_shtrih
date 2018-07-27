@@ -1098,4 +1098,36 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public int printDocEnd() throws Exception{
         return 0;
     }
+    
+    public int fsStartDayClose() throws Exception{
+        return 0;
+    }
+    
+    public int fsStartDayOpen() throws Exception{
+        return 0;
+    }
+    
+    public int fsStartFiscalization(int reportType) throws Exception{
+        return 0;
+    }
+    
+    public int fsStartCorrectionReceipt() throws Exception{
+        return 0;
+    }
+    
+    public int fsStartCalcReport() throws Exception{
+        return 0;
+    }
+    
+    public int fsStartFiscalClose() throws Exception {
+        return 0;
+    }
+    
+    public int fsPrintCorrectionReceipt(FSPrintCorrectionReceipt command) throws Exception{
+        return 0;
+    }
+
+    public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws Exception{
+        return 0;
+    }
 }

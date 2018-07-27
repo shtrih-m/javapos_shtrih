@@ -171,6 +171,7 @@ public class FptrParameters {
     public boolean forceOpenShiftOnZReport = true;
     public boolean footerFlagEnabled = true;
     public boolean postLineAsItemTextEnabled = false;
+    public boolean canDisableNonFiscalEnding = true;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -395,6 +396,7 @@ public class FptrParameters {
         forceOpenShiftOnZReport = reader.readBoolean("forceOpenShiftOnZReport", true);
         footerFlagEnabled = reader.readBoolean("footerFlagEnabled", true);
         postLineAsItemTextEnabled = reader.readBoolean("postLineAsItemTextEnabled", false);
+        canDisableNonFiscalEnding = reader.readBoolean("canDisableNonFiscalEnding", true);
 
         // paymentNames
         String paymentName;
