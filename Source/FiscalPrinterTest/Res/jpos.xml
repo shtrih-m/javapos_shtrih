@@ -32,7 +32,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="COM56"/>
+        <prop name="portName" type="String" value="COM3"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="1"/>
@@ -75,9 +75,9 @@
         <!-- Barcode print time -->
         <prop name="graphicsLineDelay" type="String" value="1000"/>
         <!-- fieldsFileName to initialize printer tables -->
-        <prop name="fieldsFileName" type="String" value=""/>
+        <prop name="fieldsFileName" type="String" value="jpos_cfg.csv"/>
         <!-- fieldsFilesPath to initialize printer tables -->
-        <prop name="fieldsFilesPath" type="String" value="tables\"/>
+        <prop name="fieldsFilesPath" type="String" value=""/>
         <!-- Number of header lines -->
         <prop name="numHeaderLines" type="String" value="5"/>
         <!-- Number of trailer lines -->

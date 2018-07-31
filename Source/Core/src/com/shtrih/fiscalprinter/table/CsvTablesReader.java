@@ -52,17 +52,8 @@ public class CsvTablesReader {
                 result = token;
             }
         }
-
-        if (result.startsWith("\"")) {
-            result = result.substring(1);
-        }
-        if (result.endsWith("\"")) {
-            if (result.length() > 1) {
-                result = result.substring(0, result.length() - 1);
-            } else {
-                result = "";
-            }
-        }
+        result = result.replaceAll("\'", "");
+        result = result.replaceAll("\"", "");
         return result;
     }
 
@@ -74,8 +65,16 @@ public class CsvTablesReader {
         logger.debug("load(" + fileName + ")");
 
         fields.clear();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(
-                new FileInputStream(fileName), "UTF8"));
+
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new FileInputStream(fileName), "UTF8"));
+        if (reader.ready()) {
+            String line = reader.readLine();
+            if (!line.startsWith("///")) {
+                reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-16LE"));
+            }
+        }
+
         try {
             while (reader.ready()) {
                 String line = reader.readLine();
