@@ -1499,7 +1499,7 @@ public class MainActivity extends AppCompatActivity {
             List<UsbSerialDriver> usbs = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager);
 
             if (usbs.size() == 0) {
-                Log.e(TAG, "Не найдено ни одного устройства");
+                showMessage("No USB device found");
                 return;
             }
 
@@ -1507,20 +1507,24 @@ public class MainActivity extends AppCompatActivity {
 
             HashMap<String, String> props = new HashMap<>();
             props.put("portName", String.format(Locale.ENGLISH, "%d", deviceId));
+            props.put("protocolType", "0");
             props.put("portType", "3");
             props.put("portClass", "com.shtrih.fiscalprinter.port.UsbPrinterPort");
-            props.put("protocolType", selectedProtocol);
             props.put("fastConnect", chbFastConnect.isChecked() ? "1" : "0");
             props.put("capScocUpdateFirmware", chbScocFirmwareUpdate.isChecked() ? "1" : "0");
-            props.put("byteTimeout", nbTimeout.getText().toString());
 
             JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "failed", e);
+            showMessage("Configuration error: " + e.getMessage());
             return;
         }
 
         try {
+
+            if (printer.getState() != JposConst.JPOS_S_CLOSED) {
+                printer.close();
+            }
 
             UsbPrinterPort.Context = getApplicationContext();
 
@@ -1532,19 +1536,18 @@ public class MainActivity extends AppCompatActivity {
 
             printer.claim(3000);
             printer.setDeviceEnabled(true);
-            model.ScocUpdaterStatus.set("");
             printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, createFirmwareUpdateObserver());
 
+            String[] lines = new String[1];
+            printer.getData(FiscalPrinterConst.FPTR_GD_PRINTER_ID, null, lines);
+            String serialNumber = lines[0];
+            DeviceMetrics deviceMetrics = printer.readDeviceMetrics();
+
+            showMessage(deviceMetrics.getDeviceName() + " " + serialNumber);
 
         } catch (Exception e) {
             Log.e(TAG, "failed", e);
-        } finally {
-//            try {
-//                printer.close();
-//            } catch (JposException e) {
-//                Log.e(TAG, "failed", e);
-//            }
-
+            showMessage(e.getMessage());
         }
     }
 
