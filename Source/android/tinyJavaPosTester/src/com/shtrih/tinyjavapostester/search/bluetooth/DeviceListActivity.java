@@ -11,7 +11,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -38,6 +38,8 @@ public class DeviceListActivity extends AppCompatActivity {
     public static String EXTRA_DEVICE_ADDRESS = "device_address";
     // public static String DEFAULT_ADDRESS = "";
     // Member fields
+    private org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DeviceListActivity.class);
+
     private BluetoothAdapter mBtAdapter;
     private ArrayAdapter<String> mPairedDevicesArrayAdapter;
     private ArrayAdapter<String> mNewDevicesArrayAdapter;
@@ -94,7 +96,7 @@ public class DeviceListActivity extends AppCompatActivity {
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (mBtAdapter == null) {
-            Log.e(getClass().getName(), "BT adapter missing");
+            log.error("BT adapter missing");
             Toast.makeText(getApplicationContext(), "BT adapter was not found", Toast.LENGTH_LONG).show();
             finish();
             return;
@@ -196,7 +198,7 @@ public class DeviceListActivity extends AppCompatActivity {
 
     private void startDiscovery() {
         if (!mBtAdapter.isEnabled()) {
-            Log.e(getClass().getName(), "BT adapter disabled");
+            log.error("BT adapter disabled");
             Toast.makeText(getApplicationContext(), "BT adapter disabled", Toast.LENGTH_LONG).show();
             return;
         }
@@ -244,7 +246,7 @@ public class DeviceListActivity extends AppCompatActivity {
                 // Get the BluetoothDevice object from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
-                Log.d(TAG, "BT Device: " + device.getName() + ": " + device.getAddress());
+                log.debug("BT Device: " + device.getName() + ": " + device.getAddress());
                 mNewDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
 
                 // When discovery is finished, change the Activity title

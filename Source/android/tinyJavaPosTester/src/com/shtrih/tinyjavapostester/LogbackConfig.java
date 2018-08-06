@@ -53,7 +53,7 @@ public class LogbackConfig {
 		// Настраиваем логирование в logcat
 		PatternLayoutEncoder encoder2 = new PatternLayoutEncoder();
 		encoder2.setContext(lc);
-		encoder2.setPattern("%logger{12} [%thread] %msg%n");
+		encoder2.setPattern("[%thread] %msg%n");
 		encoder2.start();
 
 		LogcatAppender logcatAppender = new LogcatAppender();

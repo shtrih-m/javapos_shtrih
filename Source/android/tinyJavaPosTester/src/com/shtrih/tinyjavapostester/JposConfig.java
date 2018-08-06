@@ -20,8 +20,7 @@ public class JposConfig {
 
     public static void configure(String deviceName, Context context, Map<String, String> props)
             throws Exception {
-        LogbackConfig.configure(SysUtils.getFilesPath());
-
+        
         copyAsset("jpos.xml", SysUtils.getFilesPath() + "jpos.xml", context);
         String fileURL = "file://" + SysUtils.getFilesPath() + "jpos.xml";
         System.setProperty(JposPropertiesConst.JPOS_POPULATOR_FILE_URL_PROP_NAME, fileURL);

@@ -6,7 +6,6 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.content.Intent;
 import android.databinding.ObservableArrayList;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -14,9 +13,10 @@ import java.net.DatagramSocket;
 import java.util.HashSet;
 
 public class TcpDeviceSearchViewModel extends AndroidViewModel implements Runnable {
-    private static final String TAG = "TcpDeviceSearch";
-
+    
     public final ObservableArrayList<TcpDevice> devices = new ObservableArrayList<>();
+
+    private org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TcpDeviceSearchViewModel.class);
 
     private DatagramSocket socket;
     private Thread thread;
@@ -55,22 +55,22 @@ public class TcpDeviceSearchViewModel extends AndroidViewModel implements Runnab
 
                     String message = new String(packet.getData(), 0, packet.getLength());
 
-                    Log.d(TAG, message);
-
                     if (alreadySeen.contains(message))
                         continue;
+
+                    log.debug(message);
 
                     alreadySeen.add(message);
 
                     onDeviceFround(message);
 
                 } catch (IOException e) {
-                    Log.e(TAG, "Packet receive failed", e);
+                    log.error("Packet receive failed", e);
                 }
             }
             socket.close();
         } catch (Exception exc) {
-            Log.e(TAG, "UDP listener failed", exc);
+            log.error("UDP listener failed", exc);
         }
     }
 
@@ -88,7 +88,7 @@ public class TcpDeviceSearchViewModel extends AndroidViewModel implements Runnab
 
             devices.add(new TcpDevice(serialNumber, ip + ":" + port));
         } catch (Exception e) {
-            Log.e(TAG, "Failed to parse " + msg);
+            log.error("Failed to parse " + msg);
         }
     }
 

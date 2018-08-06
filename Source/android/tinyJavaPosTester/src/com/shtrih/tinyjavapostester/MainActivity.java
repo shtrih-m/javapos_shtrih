@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
@@ -21,7 +22,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,6 +66,8 @@ import com.shtrih.util.Hex;
 import com.shtrih.util.ImageReader;
 import com.shtrih.util.SysUtils;
 
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -105,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private org.slf4j.Logger log = LoggerFactory.getLogger(MainActivity.class);
+
     private ShtrihFiscalPrinter printer = null;
     private final Random rand = new Random();
     private final String[] items = {"Кружка", "Ложка", "Миска", "Нож"};
@@ -138,13 +142,12 @@ public class MainActivity extends AppCompatActivity {
 
         model = ViewModelProviders.of(this).get(MainViewModel.class);
 
+        LogbackConfig.configure(SysUtils.getFilesPath());
+
         printer = model.getPrinter();
 
         binding.setVm(model);
         binding.setActivity(this);
-
-        setFilter();
-        findSerialPortDevice();
 
         final SharedPreferences pref = this.getSharedPreferences("MainActivity", Context.MODE_PRIVATE);
 
@@ -232,16 +235,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onResume() {
+        super.onResume();
 
-        try {
-            this.unregisterReceiver(usbReceiver);
-        } catch (final Exception exception) {
-            // The receiver was not registered.
-            // There is nothing to do in that case.
-            // Everything is fine.
-        }
+        registerUsbReceiver();
+        findSerialPortDevice();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        unregisterUsbReceiver();
     }
 
     private void restoreAndSaveChangesTo(final EditText edit, final SharedPreferences pref, final String key, final String defaultValue) {
@@ -289,28 +294,41 @@ public class MainActivity extends AppCompatActivity {
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
     public static final String ACTION_USB_PERMISSION_GRANTED = "com.felhr.usbservice.USB_PERMISSION_GRANTED";
     public static final String ACTION_USB_PERMISSION_NOT_GRANTED = "com.felhr.usbservice.USB_PERMISSION_NOT_GRANTED";
-    private static final String TAG = "USBList";
 
     private void findSerialPortDevice() {
         UsbManager usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
+
+        if (usbManager == null) {
+            log.debug("UsbManager is not available");
+            return;
+        }
+
         // This snippet will try to open the first encountered usb device connected, excluding usb root hubs
         HashMap<String, UsbDevice> usbDevices = usbManager.getDeviceList();
-        if (!usbDevices.isEmpty()) {
-            for (Map.Entry<String, UsbDevice> entry : usbDevices.entrySet()) {
-                UsbDevice device = entry.getValue();
-                int deviceVID = device.getVendorId();
-                int devicePID = device.getProductId();
+        if (usbDevices.isEmpty())
+            return;
 
-                Log.d(TAG, "opening device VID: " + deviceVID + ", PID " + devicePID);
-                PendingIntent mPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
-                usbManager.requestPermission(device, mPendingIntent);
-            }
-        } else {
-            Log.d(TAG, "no usb devices");
+        for (Map.Entry<String, UsbDevice> entry : usbDevices.entrySet()) {
+
+            UsbDevice device = entry.getValue();
+
+            int deviceVID = device.getVendorId();
+            int devicePID = device.getProductId();
+
+            log.debug("Opening device '" + entry.getKey() + "' VID: " + deviceVID + ", PID " + devicePID);
+
+            if (usbManager.hasPermission(device))
+                return;
+
+            PendingIntent mPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
+            usbManager.requestPermission(device, mPendingIntent);
         }
     }
 
-    private void setFilter() {
+    private void registerUsbReceiver() {
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_USB_HOST))
+            return;
+
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_USB_PERMISSION);
         filter.addAction(ACTION_USB_DETACHED);
@@ -319,33 +337,48 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(usbReceiver, filter);
     }
 
+    private void unregisterUsbReceiver() {
+        try {
+            this.unregisterReceiver(usbReceiver);
+        } catch (final Exception exception) {
+            // The receiver was not registered.
+            // There is nothing to do in that case.
+            // Everything is fine.
+        }
+    }
+
     private final BroadcastReceiver usbReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context arg0, Intent arg1) {
-            Log.d("onReceive", arg1.getAction());
-            if (arg1.getAction().equals(ACTION_USB_PERMISSION)) {
+
+            String action = arg1.getAction();
+            if (action == null)
+                return;
+
+            log.debug("Usb broadcast action received: " + arg1.getAction());
+            if (action.equals(ACTION_USB_PERMISSION)) {
                 boolean granted = arg1.getExtras().getBoolean(UsbManager.EXTRA_PERMISSION_GRANTED);
                 if (granted) // User accepted our USB connection. Try to open the device as a serial port
                 {
                     Intent intent = new Intent(ACTION_USB_PERMISSION_GRANTED);
                     arg0.sendBroadcast(intent);
-                    Log.d(TAG, "permission granted for USB ");
+                    log.debug("Permission granted for USB ");
                 } else // User not accepted our USB connection. Send an Intent to the Main Activity
                 {
                     Intent intent = new Intent(ACTION_USB_PERMISSION_NOT_GRANTED);
                     arg0.sendBroadcast(intent);
-                    Log.d(TAG, "permission not granted for USB");
+                    log.debug("Permission not granted for USB");
                 }
             }
 
-            if (arg1.getAction().equals(ACTION_USB_STATE)) {
+            if (action.equals(ACTION_USB_STATE)) {
                 findSerialPortDevice(); // A USB device has been attached. Try to open it as a Serial port
             }
 
-            if (arg1.getAction().equals(ACTION_USB_ATTACHED)) {
+            if (action.equals(ACTION_USB_ATTACHED)) {
                 findSerialPortDevice(); // A USB device has been attached. Try to open it as a Serial port
             }
-            if (arg1.getAction().equals(ACTION_USB_DETACHED)) {
+            if (action.equals(ACTION_USB_DETACHED)) {
                 // Usb device was disconnected. send an intent to the Main Activity
                 Intent intent = new Intent(ACTION_USB_DISCONNECTED);
                 arg0.sendBroadcast(intent);
@@ -468,7 +501,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Bluetooth device " + address + " connection using protocol " + selectedProtocol + " failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -536,7 +569,7 @@ public class MainActivity extends AppCompatActivity {
 
             startActivity(Intent.createChooser(intentShareFile, "Share log"));
         } catch (Exception e) {
-            Log.d(TAG, "Log sharing failed", e);
+            log.error("Log sharing failed", e);
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
@@ -590,7 +623,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("EAN13 printing failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -661,7 +694,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("PDF417 printing failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -725,7 +758,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("QR-code printing failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -859,7 +892,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Text printing failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -922,7 +955,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Disconnect failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -986,7 +1019,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Receipt printing failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -1008,7 +1041,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showMessage(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-        Log.d(TAG, message);
+        log.debug(message);
     }
 
     public void readFSCommStatus(View v) {
@@ -1049,7 +1082,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("FS communication status reading failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -1184,7 +1217,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Z-report printing failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -1240,7 +1273,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Shift opening failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -1293,7 +1326,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Current day journal printing failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -1346,7 +1379,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Duplicate receipt printing failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -1425,7 +1458,7 @@ public class MainActivity extends AppCompatActivity {
 
                 startedAt = System.currentTimeMillis();
 
-                Log.d("MainActivity", "Generating jpos.xml...");
+                log.debug("Generating jpos.xml...");
 
                 Map<String, String> props = new HashMap<>();
                 props.put("portName", address);
@@ -1437,20 +1470,20 @@ public class MainActivity extends AppCompatActivity {
 
                 JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
 
-                Log.d("MainActivity", "Opening...");
+                log.debug("Opening...");
 
                 printer.open("ShtrihFptr");
 
-                Log.d("MainActivity", "Claiming...");
+                log.debug("Claiming...");
 
                 printer.claim(3000);
 
-                Log.d("MainActivity", "Setting device enabled...");
+                log.debug("Setting device enabled...");
 
                 printer.setDeviceEnabled(true);
                 model.ScocUpdaterStatus.set("");
 
-                Log.d("MainActivity", "Connected!");
+                log.debug("Connected!");
 
                 printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, observer);
 
@@ -1466,7 +1499,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Connection to Wi-Fi device " + address + " using protocol " + selectedProtocol + " failed", e);
                 return e.getMessage();
             }
         }
@@ -1503,6 +1536,8 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
+            log.debug("Found " + usbs.size() + " USB devices");
+
             int deviceId = usbs.get(0).getDevice().getDeviceId();
 
             HashMap<String, String> props = new HashMap<>();
@@ -1515,7 +1550,7 @@ public class MainActivity extends AppCompatActivity {
 
             JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
         } catch (Exception e) {
-            Log.e(TAG, "failed", e);
+            log.error("USB device connection failed", e);
             showMessage("Configuration error: " + e.getMessage());
             return;
         }
@@ -1546,7 +1581,7 @@ public class MainActivity extends AppCompatActivity {
             showMessage(deviceMetrics.getDeviceName() + " " + serialNumber);
 
         } catch (Exception e) {
-            Log.e(TAG, "failed", e);
+            log.debug("USB device connection failed", e);
             showMessage(e.getMessage());
         }
     }
@@ -1603,7 +1638,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Fiscalization tag reading failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -1674,7 +1709,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Fiscalization TLV reading failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -1745,7 +1780,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Document TLV reading failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -1874,7 +1909,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Table " + tableNumber + " cell " + tableColumn + ", " + tableField + " reading failed", e);
                 return e.getMessage();
             }
         }
@@ -1943,7 +1978,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Table " + tableNumber + " cell " + tableColumn + ", " + tableField + " writing failed", e);
                 return e.getMessage();
             }
         }
@@ -2019,11 +2054,11 @@ public class MainActivity extends AppCompatActivity {
                             if (((SmFiscalPrinterException) cause).getCode() == SMFP_EFPTR_INVALID_TABLE) {
                                 break;
                             } else {
-                                e.printStackTrace();
+                                log.error("Table " + i + " info reading failed", e);
                                 return e.getMessage();
                             }
                         } else {
-                            e.printStackTrace();
+                            log.error("Table " + i + " info reading failed", e);
                             return e.getMessage();
                         }
                     }
@@ -2034,7 +2069,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Tables list reading failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -2114,7 +2149,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Date/time sync failed failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -2182,7 +2217,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Image printing failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -2250,7 +2285,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Mono token generation failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();

@@ -1,6 +1,6 @@
 package com.shtrih.tinyjavapostester;
 
-import android.util.Log;
+
 
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
 import com.shtrih.fiscalprinter.command.DeviceMetrics;
@@ -97,8 +97,6 @@ public class Fiscalizer {
         int agentType = getAgentType(params.SignOfAgent);
         long infoReasonCodes = getInfoReasonCodes(params.InfoChangesReasonsCodes);
 
-        Log.d("ShtrihJpos1CDriver", String.format("'%s' '%s' '%d' '%d'", inn, rnm, taxSystemCode, operationMode));
-
         printer.fsStartFiscalization(2);
 
         if (agentType != 0)
@@ -149,8 +147,6 @@ public class Fiscalizer {
 
         PrinterDate date = new PrinterDate(day, month, year);
 
-        Log.d("ShtrihJpos1CDriverTests", date.toString());
-
         printer.writeDate(date);
         printer.confirmDate(date);
 
@@ -159,8 +155,6 @@ public class Fiscalizer {
         int hour = c.get(Calendar.HOUR_OF_DAY);
 
         PrinterTime time = new PrinterTime(hour, minutes, seconds);
-
-        Log.d("ShtrihJpos1CDriverTest", time.toString());
 
         printer.writeTime(time);
     }
