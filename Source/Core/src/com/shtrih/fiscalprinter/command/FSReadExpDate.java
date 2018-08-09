@@ -1,36 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.fiscalprinter.command;
 
-import com.shtrih.ej.EJDate;
-import com.shtrih.util.BitUtils;
-
-/**
- *
- * @author V.Kravtsov
- */
 /**
  * Запрос срока действия ФН
- * Код команды FF03h . Длина сообщения: 6 байт.
- * Пароль системного администратора: 4 байт
+ *  Код команды FF03h . Длина сообщения: 6 байт.
+ *  Пароль системного администратора: 4 байт
  * Ответ:	FF03h Длина сообщения: 4 байт.
- * Код ошибки (1 байт)
- * Срок действия (3 байт) BCD Год, Месяц, День
+ *  Код ошибки (1 байт)
+ *  Срок действия ФН (3 байт) BCD Год, Месяц, День
+ *  Кол-во оставшихся отчетов о перерегистрации (1 байт)
+ *  Выполнено отчетов о перерегистрации (1 байт)
  */
 public class FSReadExpDate extends PrinterCommand {
 
     /**
-     * @return the sysPassword
+     * Пароль системного администратора
      */
     public int getSysPassword() {
         return sysPassword;
     }
 
     /**
-     * @param sysPassword the sysPassword to set
+     * @param sysPassword Пароль системного администратора
      */
     public void setSysPassword(int sysPassword) {
         this.sysPassword = sysPassword;
@@ -40,6 +30,8 @@ public class FSReadExpDate extends PrinterCommand {
     private int sysPassword = 0; // System sdministrator password (4 bytes)
     // out
     private PrinterDate date; // Serial number
+    private int remainingRegistrationsCount;
+    private int registrationsCount;
 
     public FSReadExpDate() {
     }
@@ -57,21 +49,29 @@ public class FSReadExpDate extends PrinterCommand {
     }
 
     public void decode(CommandInputStream in) throws Exception {
-        setDate(in.readDateYMD());
+        date = in.readDateYMD();
+        remainingRegistrationsCount  = in.readByte();
+        registrationsCount  = in.readByte();
     }
 
     /**
-     * @return the date
+     * Срок действия ФН
      */
     public PrinterDate getDate() {
         return date;
     }
 
     /**
-     * @param date the date to set
+     * Кол-во оставшихся отчетов о перерегистрации
      */
-    public void setDate(PrinterDate date) {
-        this.date = date;
+    public int getRemainingRegistrationsCount(){
+        return remainingRegistrationsCount;
     }
 
+    /**
+     * Выполнено отчетов о перерегистрации
+     */
+    public int getRegistrationsCount(){
+        return registrationsCount;
+    }
 }
