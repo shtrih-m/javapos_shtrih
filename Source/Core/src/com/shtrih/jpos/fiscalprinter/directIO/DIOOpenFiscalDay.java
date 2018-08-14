@@ -9,6 +9,6 @@ public class DIOOpenFiscalDay extends DIOItem {
 	}
 
 	public void execute(int[] data, Object object) throws Exception {
-		service.printer.openFiscalDay();
+		service.openFiscalDay();
 	}
 }

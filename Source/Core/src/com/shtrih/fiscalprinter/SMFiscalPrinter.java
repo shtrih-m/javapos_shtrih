@@ -630,4 +630,7 @@ public interface SMFiscalPrinter {
 
     public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws Exception;
    
+    public boolean isDayClosed() throws Exception;
+    
+    public boolean getCapOpenFiscalDay();
 }

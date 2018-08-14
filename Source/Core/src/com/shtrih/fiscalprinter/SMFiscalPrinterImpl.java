@@ -4314,10 +4314,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setSysPassword(getSysPassword());
         return executeCommand(command);
     }
-    
-    public int fsPrintCorrectionReceipt(FSPrintCorrectionReceipt command) 
-            throws Exception 
-    {
+
+    public int fsPrintCorrectionReceipt(FSPrintCorrectionReceipt command)
+            throws Exception {
         if (!tlvItems.isEmpty()) {
             if (fsReadStatus().getDocType().isDocClosed()) {
                 check(fsStartCorrectionReceipt());
@@ -4335,5 +4334,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             writeTLVItems();
         }
         return executeCommand(command);
+    }
+
+    public boolean getCapOpenFiscalDay() {
+        return capOpenFiscalDay;
+    }
+    
+    public boolean isDayClosed() throws Exception {
+        PrinterStatus status = waitForPrinting();
+        return status.getPrinterMode().isDayClosed();
     }
 }

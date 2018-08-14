@@ -1130,4 +1130,12 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws Exception{
         return 0;
     }
+    
+    public boolean isDayClosed() throws Exception{
+        return false;
+    }
+    
+    public boolean getCapOpenFiscalDay(){
+        return false;
+    }
 }
