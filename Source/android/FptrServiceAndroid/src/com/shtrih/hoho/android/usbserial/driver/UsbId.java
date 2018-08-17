@@ -75,6 +75,9 @@ public final class UsbId {
     public static final int VENDOR_NXP = 0x1FC9;
     public static final int SHTRIHM_0083 = 0x0083;
 
+    public static final int VENDOR_SHTRIH_NANO = 1241;
+    public static final int SHTRIH_NANO = 46388;
+
     private UsbId() {
         throw new IllegalAccessError("Non-instantiable class.");
     }

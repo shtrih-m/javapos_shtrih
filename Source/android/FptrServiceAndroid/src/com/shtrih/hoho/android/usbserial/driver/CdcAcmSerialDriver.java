@@ -436,6 +436,10 @@ public class CdcAcmSerialDriver implements UsbSerialDriver {
                 new int[]{
                         UsbId.SHTRIHM_0083,
                 });
+        supportedDevices.put(Integer.valueOf(UsbId.VENDOR_SHTRIH_NANO),
+                new int[]{
+                        UsbId.SHTRIH_NANO,
+                });
 
         return supportedDevices;
     }
