@@ -248,7 +248,6 @@ class PrinterTest implements FiscalPrinterConst {
             barcode.setPrintType(SmFptrConst.SMFPTR_PRINTTYPE_DRIVER);
             barcode.setTextFont(1);
             barcode.setTextPosition(SmFptrConst.SMFPTR_TEXTPOS_ABOVE);
-
             barcode.setBarWidth(4);
             barcode.setText(
                     "https://checkl.fsrar.ru?id=fa07210-0041-4dc6-"
@@ -983,9 +982,15 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
-            printer.openFiscalDay();
+            //printer.openFiscalDay();
             //printEscBarcodesNormal();
             //printFiscalReceipt145_4();
+            //checkItemBarcode();
+            
+            String[] date = new String[1];
+            printer.getDate(date);
+            printer.setDate(date[0]);
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3668,19 +3673,33 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    public void checkItemBarcode(){
+        try {
+            printer.resetPrinter();
+            char GS = 0x1D;
+            //String barcode = "018123456789123421000000000005L"+ GS +"2401234"+ GS +"100123456789ABCDEF1234"+ GS +"17170911911129"+ GS +"92E+NEWqvUuQ8CKBk4Rbk0JxKoFeGDo1Ay+9yyVf839Qt++pjSbsMLJbF2ZlFyzf+B8a+JcszhFHpuGpEu1gAlfA==";
+            String barcode = "018123456789123421000000000005M" + GS + "2401234"+ GS +"100123456789ABCDEF1234"+ GS +"17170911911129"+ GS +"92uZoDVpzZRuXoSs79Q54WhebeXNJa1oZ9kTyi09N4vW5E31B7vM3uwo17FIx9fd2T5g9tbVxhR1Wlmt9r3ivSvg==";
+            printer.checkItemCode(barcode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void printFiscalReceipt145_4() {
         try {
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
 
-            printer.setPreLine("1206 PreLine");
-            printer.setPostLine("1206 PostLine");
+            char GS = 0x1D;
+            String barcode = "018123456789123421000000000005M" + GS + "2401234"+ GS +"100123456789ABCDEF1234"+ GS +"17170911911129"+ GS +"92uZoDVpzZRuXoSs79Q54WhebeXNJa1oZ9kTyi09N4vW5E31B7vM3uwo17FIx9fd2T5g9tbVxhR1Wlmt9r3ivSvg==";
+            printer.setItemCode(barcode, "");
             printer.printRecItem("1. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
             printer.printRecItemAdjustment(1, "            1206", 320, 2);
-
+            
+            printer.directIO(120, null, new String[]{"00000046200068", "5gk=IYQ"});            
             printer.printRecItem("2. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
-
+            
             printer.printRecSubtotal(27425);
             printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 25);
             printer.printRecTotal(27400, 27400, "1");

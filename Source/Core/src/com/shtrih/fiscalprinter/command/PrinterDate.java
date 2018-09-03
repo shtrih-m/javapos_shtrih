@@ -40,7 +40,7 @@ public class PrinterDate {
         Calendar calendar = new GregorianCalendar();
         this.day = calendar.get(Calendar.DAY_OF_MONTH);
         this.month = calendar.get(Calendar.MONTH) + 1;
-        this.year = calendar.get(Calendar.YEAR)-2000;
+        this.year = calendar.get(Calendar.YEAR);
     }
 
     public int getDay() {
@@ -64,20 +64,20 @@ public class PrinterDate {
     public String toString() {
         return StringUtils.intToStr(day, 2) + "."
                 + StringUtils.intToStr(month, 2) + "."
-                + StringUtils.intToStr(year + 2000, 4);
+                + StringUtils.intToStr(year, 4);
     }
 
     public String toStringShort() {
         return StringUtils.intToStr(day, 2) + "."
                 + StringUtils.intToStr(month, 2) + "."
-                + StringUtils.intToStr(year, 2);
+                + StringUtils.intToStr(year %100, 2);
     }
 
     // 01.02.09
     public String toText() {
         return StringUtils.intToStr(getDay(), 2) + "."
                 + StringUtils.intToStr(getMonth(), 2) + "."
-                + StringUtils.intToStr(getYear() + 2000, 4);
+                + StringUtils.intToStr(getYear(), 4);
     }
 
     // 01.02.2009 or 01.02.09
@@ -85,7 +85,7 @@ public class PrinterDate {
         StringTokenizer tokenizer = new StringTokenizer(text, ".");
         int day = Integer.parseInt(tokenizer.nextToken());
         int month = Integer.parseInt(tokenizer.nextToken());
-        int year = Integer.parseInt(tokenizer.nextToken()) % 100;
+        int year = Integer.parseInt(tokenizer.nextToken());
         return new PrinterDate(day, month, year);
     }
 

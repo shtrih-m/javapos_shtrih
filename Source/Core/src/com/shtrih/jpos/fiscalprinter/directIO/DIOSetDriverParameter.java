@@ -110,6 +110,18 @@ public class DIOSetDriverParameter extends DIOItem {
             case SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER:
                 service.setFirmwareUpdateObserver((FirmwareUpdateObserver) object);
                 break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_NEW_ITEM_STATUS:
+                service.getParams().newItemStatus = ((int[]) object)[0];
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_CHECK_MODE:
+                service.getParams().itemCheckMode = ((int[]) object)[0];
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE:
+                service.getParams().itemMarkType = ((int[]) object)[0];
+                break;
         }
     }
 }

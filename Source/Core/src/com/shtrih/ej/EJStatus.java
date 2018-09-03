@@ -4,14 +4,17 @@
  */
 package com.shtrih.ej;
 
+import com.shtrih.fiscalprinter.command.PrinterDate;
+import com.shtrih.fiscalprinter.command.PrinterTime;
+
 /**
  * @author V.Kravtsov
  */
 public class EJStatus {
 
     private long docMAC;
-    private EJDate docDate;
-    private EJTime docTime;
+    private PrinterDate docDate;
+    private PrinterTime docTime;
     private long docMACNumber;
     private long serialNumber;
     private EJFlags flags;
@@ -23,11 +26,11 @@ public class EJStatus {
         return docMAC;
     }
 
-    public EJDate getDocDate() {
+    public PrinterDate getDocDate() {
         return docDate;
     }
 
-    public EJTime getDocTime() {
+    public PrinterTime getDocTime() {
         return docTime;
     }
 
@@ -47,11 +50,11 @@ public class EJStatus {
         this.docMAC = docMAC;
     }
 
-    public void setDocDate(EJDate docDate) {
+    public void setDocDate(PrinterDate docDate) {
         this.docDate = docDate;
     }
 
-    public void setDocTime(EJTime docTime) {
+    public void setDocTime(PrinterTime docTime) {
         this.docTime = docTime;
     }
 

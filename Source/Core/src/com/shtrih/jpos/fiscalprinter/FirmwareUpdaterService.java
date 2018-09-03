@@ -98,7 +98,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
                 } else {
                     PrinterDate data = printer.readLongStatus().getFirmwareDate();
                     Calendar calendar = new GregorianCalendar();
-                    calendar.set(data.getYear() + 2000, data.getMonth() - 1, data.getDay(), 23, 59, 59);
+                    calendar.set(data.getYear(), data.getMonth() - 1, data.getDay(), 23, 59, 59);
                     calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
                     firmwareVersion = calendar.getTimeInMillis() / 1000L;
                 }

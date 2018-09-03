@@ -12,7 +12,6 @@ package com.shtrih.fiscalprinter;
  * @author V.Kravtsov
  */
 import com.shtrih.barcode.PrinterBarcode;
-import com.shtrih.ej.EJDate;
 import com.shtrih.fiscalprinter.command.AmountItem;
 import com.shtrih.fiscalprinter.command.Beep;
 import com.shtrih.fiscalprinter.command.BeginTest;
@@ -24,6 +23,8 @@ import com.shtrih.fiscalprinter.command.EndFiscalReceipt;
 import com.shtrih.fiscalprinter.command.EndTest;
 import com.shtrih.fiscalprinter.command.FDOParameters;
 import com.shtrih.fiscalprinter.command.FMTotals;
+import com.shtrih.fiscalprinter.command.FSAcceptItemCode;
+import com.shtrih.fiscalprinter.command.FSBindItemCode;
 import com.shtrih.fiscalprinter.command.FSDocument;
 import com.shtrih.fiscalprinter.command.FSFindDocument;
 import com.shtrih.fiscalprinter.command.FSPrintCorrectionReceipt;
@@ -34,6 +35,7 @@ import com.shtrih.fiscalprinter.command.FSReadDocument;
 import com.shtrih.fiscalprinter.command.FSReadExpDate;
 import com.shtrih.fiscalprinter.command.FSReadFiscalization;
 import com.shtrih.fiscalprinter.command.FSReadFiscalizationTag;
+import com.shtrih.fiscalprinter.command.FSReadKMServerStatus;
 import com.shtrih.fiscalprinter.command.FSReadSerial;
 import com.shtrih.fiscalprinter.command.FSReadStatus;
 import com.shtrih.fiscalprinter.command.FSReceiptDiscount;
@@ -212,8 +214,8 @@ public interface SMFiscalPrinter {
 
     public long readCashRegisterCorrection(int number) throws Exception;
 
-    public PrintEJDayReportOnDates printEJDayReportOnDates(EJDate date1,
-            EJDate date2, int reportType) throws Exception;
+    public PrintEJDayReportOnDates printEJDayReportOnDates(PrinterDate date1,
+            PrinterDate date2, int reportType) throws Exception;
 
     public PrintFMReportDates printFMReportDates(PrinterDate date1,
             PrinterDate date2, int reportType) throws Exception;
@@ -460,7 +462,7 @@ public interface SMFiscalPrinter {
 
     public void fsWriteTLV(byte[] tlv) throws Exception;
 
-    public void fsWriteOperationTLV(byte[] tlv) throws Exception;
+    public int fsWriteOperationTLV(byte[] tlv) throws Exception;
 
     public byte[] getTLVData(int tagId, String tagValue) throws Exception;
 
@@ -609,28 +611,42 @@ public interface SMFiscalPrinter {
     public int getNumHeaderLines() throws Exception;
 
     public int getNumTrailerLines() throws Exception;
-    
+
     public int getHeaderTableRow() throws Exception;
-    
+
     public int printDocEnd() throws Exception;
-    
+
     public int fsStartDayClose() throws Exception;
-    
+
     public int fsStartDayOpen() throws Exception;
-    
+
     public int fsStartFiscalization(int reportType) throws Exception;
-    
+
     public int fsStartCorrectionReceipt() throws Exception;
-    
+
     public int fsStartCalcReport() throws Exception;
-    
+
     public int fsStartFiscalClose() throws Exception;
-    
+
     public int fsPrintCorrectionReceipt(FSPrintCorrectionReceipt command) throws Exception;
 
     public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws Exception;
-   
+
     public boolean isDayClosed() throws Exception;
-    
+
     public boolean getCapOpenFiscalDay();
+
+    public int sendItemCode(GS1Barcode barcode) throws Exception;
+    
+    public int sendItemCode2(String barcode) throws Exception;
+
+    public int checkItemCode(String barcode) throws Exception;
+
+    public FSBindItemCode bindItemCode(String barcode) throws Exception;
+            
+    public FSBindItemCode fsBindItemCode(int codeLength) throws Exception;
+
+    public FSAcceptItemCode fsAcceptItemCode(int action) throws Exception;
+
+    public FSReadKMServerStatus fsReadKMServerStatus() throws Exception;
 }

@@ -492,6 +492,30 @@ public class DirectIOHandler {
                 new DIOStartFiscalClose(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_SET_ITEM_CODE: 
+                new DIOSetItemCode(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_SEND_ITEM_CODE: 
+                new DIOSendItemCode(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_CHECK_ITEM_CODE: 
+                new DIOCheckItemCode(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_ACCEPT_ITEM_CODE: 
+                new DIOAcceptItemCode(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_BIND_ITEM_CODE: 
+                new DIOBindItemCode(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_READ_KM_SERVER_STATUS:
+                new DIOReadKMServerStatus(service).execute(data, object);
+                break;
+
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)

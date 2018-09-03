@@ -4,17 +4,18 @@
  */
 package com.shtrih.jpos.fiscalprinter.receipt;
 
-import com.shtrih.fiscalprinter.receipt.*;
 import java.util.Vector;
 
+import com.shtrih.util.MathUtils;
+import com.shtrih.util.StringUtils;
+import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.MethodParameter;
+import com.shtrih.fiscalprinter.receipt.*;
+import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.PriceItem;
 import com.shtrih.fiscalprinter.command.AmountItem;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
-import com.shtrih.util.CompositeLogger;
-import com.shtrih.util.MathUtils;
-import com.shtrih.util.MethodParameter;
-import com.shtrih.util.StringUtils;
 
 /**
  * @author V.Kravtsov
@@ -44,6 +45,7 @@ public class FSSaleReceiptItem {
     private Long totalAmount = null;
     private int paymentType = 4;
     private int subjectType = 1;
+    private GS1Barcode barcode = null;
 
     public FSSaleReceiptItem() {
     }
@@ -71,6 +73,7 @@ public class FSSaleReceiptItem {
         item.totalAmount = totalAmount;
         item.paymentType = paymentType;
         item.subjectType = subjectType;
+        item.barcode = barcode;
         return item;
     }
 
@@ -381,5 +384,19 @@ public class FSSaleReceiptItem {
 
     public void setSubjectType(int subjectType) {
         this.subjectType = subjectType;
+    }
+
+    /**
+     * @return the barcode
+     */
+    public GS1Barcode getBarcode() {
+        return barcode;
+    }
+
+    /**
+     * @param barcode the barcode to set
+     */
+    public void setBarcode(GS1Barcode barcode) {
+        this.barcode = barcode;
     }
 }

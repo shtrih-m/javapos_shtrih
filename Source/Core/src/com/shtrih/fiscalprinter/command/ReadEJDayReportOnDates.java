@@ -31,22 +31,22 @@ package com.shtrih.fiscalprinter.command;
 
  ****************************************************************************/
 
-import com.shtrih.ej.EJDate;
+import com.shtrih.fiscalprinter.command.PrinterDate;
 
 public final class ReadEJDayReportOnDates extends PrinterCommand {
     // in
     private final int password;
     private final int reportType;
-    private final EJDate date1;
-    private final EJDate date2;
+    private final PrinterDate date1;
+    private final PrinterDate date2;
     // out
     private String ecrModel = "";
 
     /**
      * Creates a new instance of ReadEJReportDates
      */
-    public ReadEJDayReportOnDates(int password, int reportType, EJDate date1,
-            EJDate date2) {
+    public ReadEJDayReportOnDates(int password, int reportType, PrinterDate date1,
+            PrinterDate date2) {
         this.password = password;
         this.reportType = reportType;
         this.date1 = date1;

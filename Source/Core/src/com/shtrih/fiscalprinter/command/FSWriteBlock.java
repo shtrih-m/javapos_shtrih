@@ -5,7 +5,6 @@
  */
 package com.shtrih.fiscalprinter.command;
 
-import com.shtrih.ej.EJDate;
 import com.shtrih.util.BitUtils;
 
 /**

@@ -2,6 +2,7 @@ package com.shtrih.jpos.fiscalprinter.receipt;
 
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.FontNumber;
+import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.PrinterGraphics;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.TLVParser;
@@ -44,6 +45,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private Vector<String> messages = new Vector<String>();
     private final ReceiptTemplate receiptTemplate;
     private static CompositeLogger logger = CompositeLogger.getLogger(FSSalesReceipt.class);
+    private GS1Barcode barcode = null;
 
     public FSSalesReceipt(ReceiptContext context, int receiptType) throws Exception {
         super(context);
@@ -542,6 +544,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         } else {
             getDevice().printVoidItem(priceItem);
         }
+        if (item.getBarcode() != null) {
+            getDevice().sendItemCode(item.getBarcode());
+        }
+
         if (!getParams().ReceiptTemplateEnabled) {
             long discountTotal = item.getDiscounts().getTotal();
             if (discountTotal != 0) {
@@ -952,6 +958,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             item.setPostLine(getPostLine());
             item.setUnitName(unitName);
             item.setIsStorno(isStorno);
+            item.setBarcode(barcode);
+            barcode = null;
 
             if (getParams().itemTotalAmount != null) {
                 item.setTotalAmount(getParams().itemTotalAmount);
@@ -1273,4 +1281,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         items.add(graphics);
     }
 
+    public void setItemBarcode(GS1Barcode barcode) throws Exception {
+        this.barcode = barcode;
+    }
 }

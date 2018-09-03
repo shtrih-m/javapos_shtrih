@@ -5,7 +5,6 @@
 package com.shtrih.fiscalprinter;
 
 import com.shtrih.barcode.PrinterBarcode;
-import com.shtrih.ej.EJDate;
 import com.shtrih.fiscalprinter.command.*;
 import com.shtrih.fiscalprinter.model.PrinterModel;
 import com.shtrih.fiscalprinter.model.PrinterModels;
@@ -309,8 +308,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
-    public PrintEJDayReportOnDates printEJDayReportOnDates(EJDate date1,
-            EJDate date2, int reportType) throws Exception {
+    public PrintEJDayReportOnDates printEJDayReportOnDates(PrinterDate date1,
+            PrinterDate date2, int reportType) throws Exception {
         return new PrintEJDayReportOnDates();
     }
 
@@ -787,8 +786,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         
     }
 
-    public void fsWriteOperationTLV(byte[] tlv) throws Exception {
-        
+    public int fsWriteOperationTLV(byte[] tlv) throws Exception {
+        return 0;
     }
 
     public byte[] getTLVData(int tagId, String tagValue) throws Exception {
@@ -1137,5 +1136,33 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     
     public boolean getCapOpenFiscalDay(){
         return false;
+    }
+    
+    public int sendItemCode(GS1Barcode barcode) throws Exception{
+        return 0;
+    }
+    
+    public int sendItemCode2(String barcode) throws Exception{
+        return 0;
+    }
+    
+    public int checkItemCode(String barcodeText) throws Exception{
+        return 0;
+    }
+    
+    public FSBindItemCode fsBindItemCode(int codeLength) throws Exception{
+        return null;
+    }
+
+    public FSAcceptItemCode fsAcceptItemCode(int action) throws Exception{
+        return null;
+    }
+
+    public FSReadKMServerStatus fsReadKMServerStatus() throws Exception{
+        return null;
+    }
+    
+    public FSBindItemCode bindItemCode(String barcode) throws Exception{
+        return null;
     }
 }

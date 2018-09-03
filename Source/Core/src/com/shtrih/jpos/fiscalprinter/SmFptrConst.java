@@ -8,6 +8,7 @@
  */
 package com.shtrih.jpos.fiscalprinter;
 
+import com.shtrih.fiscalprinter.command.FSCheckBarcode;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 import static jpos.FiscalPrinterConst.FPTR_RT_SERVICE;
 import static jpos.FiscalPrinterConst.FPTR_RT_SIMPLE_INVOICE;
@@ -580,6 +581,37 @@ public interface SmFptrConst {
      */
     public static final int SMFPTR_DIO_START_FISCAL_CLOSE = 0x60;
     
+    /**
+     * Send item barcode GTIN and serial
+     */
+    public static final int SMFPTR_DIO_SEND_ITEM_CODE = 0x61;
+    
+    /**
+     * Check item barcode GTIN and serial
+     */
+    public static final int SMFPTR_DIO_CHECK_ITEM_CODE = 0x62;
+    
+    /**
+     * Accept or reject item barcode
+     */
+    public static final int SMFPTR_DIO_ACCEPT_ITEM_CODE = 0x63;
+ 
+    /**
+     * Bind item barcode
+     */
+    public static final int SMFPTR_DIO_BIND_ITEM_CODE = 0x64;
+    
+    /**
+     * Read KM server status
+     */
+    public static final int SMFPTR_DIO_READ_KM_SERVER_STATUS = 0x65;
+    
+    /**
+     * Set item barcode GTIN and serial
+     */
+    public static final int SMFPTR_DIO_SET_ITEM_CODE = 0x78;
+    
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,
@@ -636,6 +668,11 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE = 19;
 
     public static final int SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER = 20;
+   
+    public static final int SMFPTR_DIO_PARAM_NEW_ITEM_STATUS    = 21;
+    public static final int SMFPTR_DIO_PARAM_ITEM_CHECK_MODE    = 22;
+    public static final int SMFPTR_DIO_PARAM_ITEM_MARK_TYPE     = 23;
+    
 
     // ///////////////////////////////////////////////////////////////////
     // TableMode

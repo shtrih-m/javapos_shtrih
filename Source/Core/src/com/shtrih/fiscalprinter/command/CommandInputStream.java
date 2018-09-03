@@ -4,8 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.shtrih.ej.EJDate;
-import com.shtrih.ej.EJTime;
 import com.shtrih.util.Localizer;
 
 public class CommandInputStream {
@@ -112,31 +110,16 @@ public class CommandInputStream {
     {
         int day = readByte();
         int month = readByte();
-        int year = readByte();
+        int year = readByte() + 2000;
         return new PrinterDate(day, month, year);
     }
 
     public PrinterDate readDateYMD() throws Exception
     {
-        int year = readByte();
+        int year = readByte() + 2000;
         int month = readByte();
         int day = readByte();
         return new PrinterDate(day, month, year);
-    }
-
-    public EJDate readEJDate() throws Exception
-    {
-        int year = readByte();
-        int month = readByte();
-        int day = readByte();
-        return new EJDate(day, month, year);
-    }
-
-    public EJTime readEJTime() throws Exception
-    {
-        int hour = readByte();
-        int min = readByte();
-        return new EJTime(hour, min);
     }
 
     public int readInt() throws Exception {

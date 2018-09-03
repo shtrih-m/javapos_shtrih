@@ -14,6 +14,7 @@ import jpos.JposConst;
 import jpos.JposException;
 
 import com.shtrih.fiscalprinter.FontNumber;
+import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.model.PrinterModel;
 import com.shtrih.fiscalprinter.receipt.PrinterReceipt;
@@ -98,7 +99,6 @@ public abstract class CustomReceipt implements FiscalReceipt {
     public void endFiscalReceipt(boolean printHeader) throws Exception {
     }
 
-    
     public void printRecItem(String description, long price, int quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
         notSupported();
@@ -208,7 +208,7 @@ public abstract class CustomReceipt implements FiscalReceipt {
         getPrinter().printText(station, message, font);
     }
 
-    public void printNormal(int station, String data) throws Exception{
+    public void printNormal(int station, String data) throws Exception {
         getPrinter().printText(getPrinter().getStation(station), data,
                 getParams().font);
     }
@@ -255,15 +255,20 @@ public abstract class CustomReceipt implements FiscalReceipt {
     public void fsWriteCustomerPhone(String text) throws Exception {
     }
 
-    public void setDiscountAmount(int amount) throws Exception{
+    public void setDiscountAmount(int amount) throws Exception {
     }
-    
-    public void printBarcode(PrinterBarcode barcode) throws Exception{
+
+    public void printBarcode(PrinterBarcode barcode) throws Exception {
         getPrinter().getPrinter().printBarcode(barcode);
     }
 
-    public void printGraphics(PrinterGraphics graphics) throws Exception{
+    public void printGraphics(PrinterGraphics graphics) throws Exception {
         graphics.print(getPrinter().getPrinter());
     }
 
+    public void setItemBarcode(GS1Barcode barcode) throws Exception {
+    }
+
+    public void setItemBarcode2(String barcode) throws Exception {
+    }
 }

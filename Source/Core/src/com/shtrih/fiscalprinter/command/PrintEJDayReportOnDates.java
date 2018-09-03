@@ -29,15 +29,15 @@ package com.shtrih.fiscalprinter.command;
 
  ****************************************************************************/
 
-import com.shtrih.ej.EJDate;
+import com.shtrih.fiscalprinter.command.PrinterDate;
 
 public final class PrintEJDayReportOnDates extends PrinterCommand {
     // in
 
     private int password;
     private int reportType;
-    private EJDate date1;
-    private EJDate date2;
+    private PrinterDate date1;
+    private PrinterDate date2;
 
     /**
      * Creates a new instance of PrintEJReportDates
@@ -98,28 +98,28 @@ public final class PrintEJDayReportOnDates extends PrinterCommand {
     /**
      * @return the date1
      */
-    public EJDate getDate1() {
+    public PrinterDate getDate1() {
         return date1;
     }
 
     /**
      * @param date1 the date1 to set
      */
-    public void setDate1(EJDate date1) {
+    public void setDate1(PrinterDate date1) {
         this.date1 = date1;
     }
 
     /**
      * @return the date2
      */
-    public EJDate getDate2() {
+    public PrinterDate getDate2() {
         return date2;
     }
 
     /**
      * @param date2 the date2 to set
      */
-    public void setDate2(EJDate date2) {
+    public void setDate2(PrinterDate date2) {
         this.date2 = date2;
     }
 }

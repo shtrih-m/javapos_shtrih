@@ -1,8 +1,8 @@
 package com.shtrih.jpos.fiscalprinter;
 
+import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.ej.EJActivation;
-import com.shtrih.ej.EJDate;
 import com.shtrih.ej.EJReportParser;
 import com.shtrih.ej.EJStatus;
 import com.shtrih.fiscalprinter.FontNumber;
@@ -2970,7 +2970,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 if (lastFmRecordDate.getRecordType() == 1) {
                     PrinterDate date = lastFmRecordDate.getRecordDate();
                     JposFiscalPrinterDate jposDate = new JposFiscalPrinterDate(
-                            date.getDay(), date.getMonth(), date.getYear() + 2000,
+                            date.getDay(), date.getMonth(), date.getYear(),
                             0, 0);
                     result = jposDate.toString();
                 }
@@ -2984,7 +2984,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
                 JposFiscalPrinterDate jposDate = new JposFiscalPrinterDate(
                         printerDate.getDay(), printerDate.getMonth(),
-                        printerDate.getYear() + 2000, printerTime.getHour(),
+                        printerDate.getYear(), printerTime.getHour(),
                         printerTime.getMin());
                 result = jposDate.toString();
                 break;
@@ -3171,9 +3171,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         printDocStart();
 
         if (params.reportDevice == SMFPTR_REPORT_DEVICE_EJ) {
-            EJDate d1 = new EJDate(printerDate1);
-            EJDate d2 = new EJDate(printerDate2);
-            getPrinter().printEJDayReportOnDates(d1, d2, params.reportType);
+            getPrinter().printEJDayReportOnDates(printerDate1, printerDate2, params.reportType);
         } else {
             getPrinter().printFMReportDates(printerDate1, printerDate2,
                     params.reportType);
@@ -3548,11 +3546,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 printDocStart();
 
                 if (params.reportDevice == SMFPTR_REPORT_DEVICE_EJ) {
-                    getPrinter().printEJDayReportOnDates(new EJDate(date1),
-                            new EJDate(date2), params.reportType);
+                    getPrinter().printEJDayReportOnDates(date1, date2, params.reportType);
                 } else {
-                    getPrinter()
-                            .printFMReportDates(date1, date2, params.reportType);
+                    getPrinter().printFMReportDates(date1, date2, params.reportType);
                 }
                 printEndFiscal();
                 break;
@@ -4678,4 +4674,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return "";
     }
 
+    public void setItemBarcode(GS1Barcode barcode) throws Exception
+    {
+        receipt.setItemBarcode(barcode);
+    }
 }

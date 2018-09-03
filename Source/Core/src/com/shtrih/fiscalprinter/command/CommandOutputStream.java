@@ -15,9 +15,6 @@ package com.shtrih.fiscalprinter.command;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
-import com.shtrih.ej.EJDate;
-import com.shtrih.ej.EJTime;
-
 public class CommandOutputStream {
 
     private final String charsetName;
@@ -39,13 +36,7 @@ public class CommandOutputStream {
     public void writeDate(PrinterDate date) throws Exception {
         writeByte(date.getDay());
         writeByte(date.getMonth());
-        writeByte(date.getYear());
-    }
-
-    public void writeDate(EJDate date) throws Exception {
-        writeByte(date.getDay());
-        writeByte(date.getMonth());
-        writeByte(date.getYear());
+        writeByte(date.getYear() % 100);
     }
 
     public void writeTime(PrinterTime time) throws Exception {
@@ -54,7 +45,7 @@ public class CommandOutputStream {
         writeByte(time.getSec());
     }
 
-    public void writeTime(EJTime time) throws Exception {
+    public void writeTime2(PrinterTime time) throws Exception {
         writeByte(time.getHour());
         writeByte(time.getMin());
     }

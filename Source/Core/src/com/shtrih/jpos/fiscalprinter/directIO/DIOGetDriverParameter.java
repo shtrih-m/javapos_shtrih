@@ -89,7 +89,30 @@ public class DIOGetDriverParameter extends DIOItem {
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM:
                 ((int[]) object)[0] = service.getParams().taxSystem;
                 break;
-               
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT:
+                ((long[]) object)[0] = service.getParams().itemTotalAmount;
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE:
+                ((int[]) object)[0] = service.getParams().paymentType;
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE:
+                ((int[]) object)[0] = service.getParams().subjectType;
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_NEW_ITEM_STATUS:
+                ((int[]) object)[0] = service.getParams().newItemStatus;
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_CHECK_MODE:
+                ((int[]) object)[0] = service.getParams().itemCheckMode;
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE:
+                ((int[]) object)[0] = service.getParams().itemMarkType;
+                break;
         }
     }
 }

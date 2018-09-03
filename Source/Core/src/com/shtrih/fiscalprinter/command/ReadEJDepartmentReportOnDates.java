@@ -33,15 +33,15 @@ package com.shtrih.fiscalprinter.command;
 
  ****************************************************************************/
 
-import com.shtrih.ej.EJDate;
+import com.shtrih.fiscalprinter.command.PrinterDate;
 
 public final class ReadEJDepartmentReportOnDates extends PrinterCommand {
     // in
     private final int password;
     private final int reportType;
     private final int department;
-    private final EJDate date1;
-    private final EJDate date2;
+    private final PrinterDate date1;
+    private final PrinterDate date2;
     // out
     private String ecrModel = "";
 
@@ -49,7 +49,7 @@ public final class ReadEJDepartmentReportOnDates extends PrinterCommand {
      * Creates a new instance of ReadEJReportDepartmentDates
      */
     public ReadEJDepartmentReportOnDates(int password, int reportType,
-            int department, EJDate date1, EJDate date2) {
+            int department, PrinterDate date1, PrinterDate date2) {
         this.password = password;
         this.reportType = reportType;
         this.department = department;

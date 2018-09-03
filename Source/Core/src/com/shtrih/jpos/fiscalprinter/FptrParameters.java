@@ -1,5 +1,6 @@
 package com.shtrih.jpos.fiscalprinter;
 
+import com.shtrih.fiscalprinter.command.FSCheckBarcode;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.jpos.JposPropertyReader;
@@ -17,6 +18,12 @@ import static com.shtrih.jpos.fiscalprinter.SmFptrConst.SMFPTR_HEADER_MODE_DRIVE
 
 public class FptrParameters {
 
+    ///////////////////////////////////////////////////////////////////////////
+    // itemMarkType constants
+    public static final int MARK_TYPE_FUR       = 2;
+    public static final int MARK_TYPE_DRUGS     = 3;
+    public static final int MARK_TYPE_TOBACCO   = 5;
+    
     public static final int defaultGraphicsLineDelay = 200;
 
     public int byteTimeout = 3000;
@@ -172,7 +179,12 @@ public class FptrParameters {
     public boolean footerFlagEnabled = true;
     public boolean postLineAsItemTextEnabled = false;
     public boolean canDisableNonFiscalEnding = true;
-
+    public boolean fsMarkCheckEnabled = false;
+    public int newItemStatus = FSCheckBarcode.FS_ITEM_STATUS_RETAIL;
+    public int itemCheckMode = FSCheckBarcode.FS_CHECK_MODE_FULL;
+    public int itemMarkType = FptrParameters.MARK_TYPE_TOBACCO;
+    
+    
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
         subtotalFont = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -397,7 +409,11 @@ public class FptrParameters {
         footerFlagEnabled = reader.readBoolean("footerFlagEnabled", true);
         postLineAsItemTextEnabled = reader.readBoolean("postLineAsItemTextEnabled", false);
         canDisableNonFiscalEnding = reader.readBoolean("canDisableNonFiscalEnding", true);
-
+        fsMarkCheckEnabled = reader.readBoolean("fsMarkCheckEnabled", false);
+        newItemStatus = reader.readInteger("newItemStatus", FSCheckBarcode.FS_ITEM_STATUS_RETAIL);
+        itemCheckMode = reader.readInteger("itemCheckMode", FSCheckBarcode.FS_CHECK_MODE_FULL);
+        itemMarkType = reader.readInteger("itemMarkType", FptrParameters.MARK_TYPE_TOBACCO);
+        
         // paymentNames
         String paymentName;
         String propertyName;

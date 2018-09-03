@@ -73,8 +73,8 @@ public final class ReadEJStatus extends PrinterCommand {
 
     public final void decode(CommandInputStream in) throws Exception {
         status.setDocMAC(in.readLong(5));
-        status.setDocDate(in.readEJDate());
-        status.setDocTime(in.readEJTime());
+        status.setDocDate(in.readDateYMD());
+        status.setDocTime(in.readTime2());
         status.setDocMACNumber(in.readInt());
         status.setSerialNumber(in.readLong(5));
         status.setFlags(new EJFlags(in.readByte()));

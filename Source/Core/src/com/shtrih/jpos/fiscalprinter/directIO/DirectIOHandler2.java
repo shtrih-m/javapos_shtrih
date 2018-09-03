@@ -481,6 +481,30 @@ public class DirectIOHandler2 {
                 new DIOStartFiscalClose(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_SET_ITEM_CODE: 
+                new DIOSetItemCode(service).execute(data, object);
+                break;
+                        
+            case SmFptrConst.SMFPTR_DIO_SEND_ITEM_CODE: 
+                new DIOSendItemCode(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_CHECK_ITEM_CODE: 
+                new DIOCheckItemCode(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_ACCEPT_ITEM_CODE: 
+                new DIOAcceptItemCode(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_BIND_ITEM_CODE: 
+                new DIOBindItemCode(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_READ_KM_SERVER_STATUS:
+                new DIOReadKMServerStatus(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue)
@@ -609,6 +633,30 @@ public class DirectIOHandler2 {
                 paramValue = String.valueOf(service.getParams().taxSystem);
                 break;
 
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT:
+                paramValue = String.valueOf(service.getParams().itemTotalAmount);
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE:
+                paramValue = String.valueOf(service.getParams().paymentType);
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE:
+                paramValue = String.valueOf(service.getParams().subjectType);
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_NEW_ITEM_STATUS:
+                paramValue = String.valueOf(service.getParams().newItemStatus);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_CHECK_MODE:
+                paramValue = String.valueOf(service.getParams().itemCheckMode);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE:
+                paramValue = String.valueOf(service.getParams().itemMarkType);
+                break;
+                
         }
         ((String[]) object)[0] = paramValue;
     }

@@ -11,11 +11,14 @@
  */
 package com.shtrih.fiscalprinter;
 
+import java.nio.ByteOrder;
+import java.nio.ByteBuffer;
+import com.shtrih.fiscalprinter.GS1Barcode;
+import com.shtrih.fiscalprinter.GS1BarcodeParser;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.barcode.SmBarcode;
 import com.shtrih.barcode.SmBarcodeEncoder;
 import com.shtrih.barcode.ZXingEncoder;
-import com.shtrih.ej.EJDate;
 import com.shtrih.fiscalprinter.command.*;
 import com.shtrih.fiscalprinter.model.PrinterModel;
 import com.shtrih.fiscalprinter.model.PrinterModels;
@@ -988,8 +991,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return result;
     }
 
-    public PrintEJDayReportOnDates printEJDayReportOnDates(EJDate date1,
-            EJDate date2, int reportType) throws Exception {
+    public PrintEJDayReportOnDates printEJDayReportOnDates(PrinterDate date1,
+            PrinterDate date2, int reportType) throws Exception {
         logger.debug("printEJDayReportOnDates");
         PrintEJDayReportOnDates command = new PrintEJDayReportOnDates();
         command.setPassword(sysPassword);
@@ -1088,7 +1091,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (capFSPrintItem) {
             int rc = fsPrintRecItem2(1, item);
             if (isCommandSupported(rc)) {
-                check(rc);
                 return;
             }
         }
@@ -2511,10 +2513,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public int printBarcode3(PrinterBarcode barcode) throws Exception {
-        logger.debug("printBarcode3");
+    public int loadBarcode3(int blockType, String text) throws Exception {
+        logger.debug("loadBarcode3");
         // Load barcode data
-        String text = barcode.getText();
+        int result = 0;
         int blockSize = LoadBarcode3.MAX_BLOCK_SIZE;
         int blockCount = (text.length() + blockSize - 1) / blockSize;
         for (int i = 0; i < blockCount; i++) {
@@ -2527,19 +2529,26 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
             LoadBarcode3 command = new LoadBarcode3();
             command.setPassword(usrPassword);
-            command.setBlockType(0);
+            command.setBlockType(blockType);
             command.setBlockNumber(i);
             command.setBlockData(blockData.getBytes());
-            int result = executeCommand(command);
+            result = executeCommand(command);
             if (result != 0) {
-                return result;
+                break;
             }
         }
+        return result;
+    }
+
+    public int printBarcode3(PrinterBarcode barcode) throws Exception {
+        logger.debug("printBarcode3");
+
+        loadBarcode3(0, barcode.getText());
         // Print barcode
         PrintBarcode3 command = new PrintBarcode3();
         command.setPassword(usrPassword);
         command.setBarcodeType(PrintBarcode3.QRCODE);
-        command.setDataLength(text.length());
+        command.setDataLength(barcode.getText().length());
         command.setBlockNumber(0);
         command.setInParameter1(0);
         command.setInParameter2(0);
@@ -3164,11 +3173,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public void fsWriteOperationTLV(byte[] tlv) throws Exception {
+    public int fsWriteOperationTLV(byte[] tlv) throws Exception {
         FSWriteOperationTLV command = new FSWriteOperationTLV();
         command.setSysPassword(sysPassword);
         command.setTlv(tlv);
-        execute(command);
+        return executeCommand(command);
     }
 
     public FSReadBufferStatus fsReadBufferStatus() throws Exception {
@@ -4339,9 +4348,123 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public boolean getCapOpenFiscalDay() {
         return capOpenFiscalDay;
     }
-    
+
     public boolean isDayClosed() throws Exception {
         PrinterStatus status = waitForPrinting();
         return status.getPrinterMode().isDayClosed();
+    }
+
+    public FSCheckBarcode fsCheckBarcode(String barcode) throws Exception {
+        FSCheckBarcode command = new FSCheckBarcode();
+        command.password = sysPassword;
+        command.itemStatus = params.newItemStatus;
+        command.barcodeLength = barcode.length();
+        command.checkMode = params.itemCheckMode;
+        executeCommand(command);
+        return command;
+    }
+
+    public int checkItemCode(String barcode) throws Exception {
+        int rc = 0;
+        rc = loadBarcode3(1, barcode);
+        if (rc == 0) {
+            FSCheckBarcode command = fsCheckBarcode(barcode);
+            rc = command.getResultCode();
+            if (command.isSucceeded()) {
+                command.checkResultIsCorrect();
+            }
+        }
+        return rc;
+    }
+
+    public int sendItemCode(GS1Barcode barcode) throws Exception {
+        if (!barcode.serial.isEmpty()) {
+            return sendItemCode1(barcode);
+        } else {
+            return sendItemCode2(barcode.GTIN);
+        }
+    }
+
+    public int sendItemCode1(GS1Barcode barcode) throws Exception {
+        String serial = barcode.serial;
+        if (serial.length() > 24) {
+            serial = barcode.serial.substring(0, 24);
+        }
+        if (serial.length() < 24) {
+            serial = serial + StringUtils.stringOfChar(' ', 24 - serial.length());
+        }
+
+        TLVWriter writer = new TLVWriter();
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        switch (params.itemMarkType) {
+            case FptrParameters.MARK_TYPE_FUR:
+            case FptrParameters.MARK_TYPE_DRUGS:
+            case FptrParameters.MARK_TYPE_TOBACCO:
+
+                ByteBuffer buf = ByteBuffer.allocate(32);
+                buf.order(ByteOrder.BIG_ENDIAN);
+                buf.putLong(Long.parseLong(barcode.GTIN));
+                buf.putShort(0, (short) params.itemMarkType);
+                buf.put(serial.getBytes());
+                writer.add(1162, buf.array());
+                return fsWriteOperationTLV(writer.getBytes());
+
+            default: {
+                throw new Exception("Invalid itemMarkType value");
+            }
+        }
+    }
+
+    public int sendItemCode2(String barcode) throws Exception {
+        int rc = 0;
+        rc = loadBarcode3(1, barcode);
+        if (rc == 0) {
+            FSCheckBarcode checkCommand = fsCheckBarcode(barcode);
+            rc = checkCommand.getResultCode();
+            if (checkCommand.isSucceeded()) {
+                checkCommand.checkResultIsCorrect();
+                FSBindItemCode bindCommand = fsBindItemCode(barcode.length());
+                rc = bindCommand.getResultCode();
+                if (bindCommand.isSucceeded()) {
+                    FSAcceptItemCode acceptCommand = fsAcceptItemCode(1);
+                    rc = acceptCommand.getResultCode();
+                    /*
+                    if (acceptCommand.isSucceeded()) {
+                        GS1BarcodeParser parser = new GS1BarcodeParser();
+                        GS1Barcode barcodeGS1 = parser.decode(barcode);
+                        sendItemCode1(barcodeGS1);
+                    }
+                    */
+                }
+            }
+        }
+        return rc;
+    }
+
+    public FSBindItemCode bindItemCode(String barcode) throws Exception {
+        return fsBindItemCode(barcode.length());
+    }
+
+    public FSBindItemCode fsBindItemCode(int codeLength) throws Exception {
+        FSBindItemCode command = new FSBindItemCode();
+        command.setPassword(usrPassword);
+        command.setCodeLength(codeLength);
+        executeCommand(command);
+        return command;
+    }
+
+    public FSAcceptItemCode fsAcceptItemCode(int action) throws Exception {
+        FSAcceptItemCode command = new FSAcceptItemCode();
+        command.setPassword(usrPassword);
+        command.setAction(action);
+        executeCommand(command);
+        return command;
+    }
+
+    public FSReadKMServerStatus fsReadKMServerStatus() throws Exception {
+        FSReadKMServerStatus command = new FSReadKMServerStatus();
+        command.setPassword(sysPassword);
+        executeCommand(command);
+        return command;
     }
 }

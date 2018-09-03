@@ -135,7 +135,7 @@ public class MonitoringCommands {
     private static String getFNUnixTimeText(FiscalPrinterImpl service) throws Exception {
         FSReadFiscalization param = service.getPrinter().fsReadFiscalization();
         Calendar calendar = Calendar.getInstance();
-        calendar.set(param.getDate().getYear() + 2000, param.getDate().getMonth() - 1,
+        calendar.set(param.getDate().getYear(), param.getDate().getMonth() - 1,
                 param.getDate().getDay(), param.getTime().getHour(),
                 param.getTime().getMin(), param.getTime().getSec());
         calendar.set(Calendar.MILLISECOND, 0);

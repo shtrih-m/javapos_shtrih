@@ -14,6 +14,7 @@ import jpos.JposConst;
 import jpos.JposException;
 
 import com.shtrih.fiscalprinter.FontNumber;
+import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.TextLine;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
@@ -29,10 +30,10 @@ public class NullReceipt implements FiscalReceipt {
     public NullReceipt() {
     }
 
-    public Vector<TextLine> getMessages(){
+    public Vector<TextLine> getMessages() {
         return messages;
     }
-    
+
     public NullReceipt(ReceiptContext context) {
         this.context = context;
     }
@@ -178,8 +179,7 @@ public class NullReceipt implements FiscalReceipt {
     }
 
     public void printRecMessage(int station, FontNumber font, String message)
-            throws Exception 
-    {
+            throws Exception {
         messages.add(new TextLine(station, font, message));
     }
 
@@ -217,18 +217,24 @@ public class NullReceipt implements FiscalReceipt {
     public void fsWriteCustomerPhone(String text) throws Exception {
         notOpenedException();
     }
-    
-    public void setDiscountAmount(int amount) throws Exception{
+
+    public void setDiscountAmount(int amount) throws Exception {
     }
-    
-    public void printBarcode(PrinterBarcode barcode) throws Exception{
+
+    public void printBarcode(PrinterBarcode barcode) throws Exception {
         getPrinter().getPrinter().printBarcode(barcode);
     }
 
-    public void printGraphics(PrinterGraphics graphics) throws Exception{
+    public void printGraphics(PrinterGraphics graphics) throws Exception {
         graphics.print(getPrinter().getPrinter());
     }
+
+    public void setMessages(Vector<TextLine> messages) {
+    }
+
+    public void setItemBarcode(GS1Barcode barcode) throws Exception {
+    }
     
-    public void setMessages(Vector<TextLine> messages){
+    public void setItemBarcode2(String barcode) throws Exception {
     }
 }

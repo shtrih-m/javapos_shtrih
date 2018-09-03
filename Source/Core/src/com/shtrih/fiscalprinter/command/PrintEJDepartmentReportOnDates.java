@@ -29,21 +29,21 @@ package com.shtrih.fiscalprinter.command;
  NOTE: Command execution may take up to 150 seconds.
 
  ****************************************************************************/
-import com.shtrih.ej.EJDate;
+import com.shtrih.fiscalprinter.command.PrinterDate;
 
 public final class PrintEJDepartmentReportOnDates extends PrinterCommand {
     // in
     private final int password;
     private final int reportType;
     private final int department;
-    private final EJDate date1;
-    private final EJDate date2;
+    private final PrinterDate date1;
+    private final PrinterDate date2;
 
     /**
      * Creates a new instance of PrintEJReportDepartmentDates
      */
     public PrintEJDepartmentReportOnDates(int password, int reportType,
-            int department, EJDate date1, EJDate date2) {
+            int department, PrinterDate date1, PrinterDate date2) {
         this.password = password;
         this.reportType = reportType;
         this.department = department;
