@@ -38,7 +38,7 @@ public class FSReadExpDateTests {
 
         assertEquals(2, cmd.getDate().getDay());
         assertEquals(9, cmd.getDate().getMonth());
-        assertEquals(19, cmd.getDate().getYear());
+        assertEquals(2019, cmd.getDate().getYear());
         assertEquals(29, cmd.getRemainingRegistrationsCount());
         assertEquals(1, cmd.getRegistrationsCount());
     }
