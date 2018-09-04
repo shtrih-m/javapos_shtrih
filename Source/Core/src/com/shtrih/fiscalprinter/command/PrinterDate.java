@@ -33,7 +33,7 @@ public class PrinterDate {
     public PrinterDate(int day, int month, int year) {
         this.day = day;
         this.month = month;
-        this.year = year;
+        this.year = 2000 + (year % 100);
     }
 
     public PrinterDate() {

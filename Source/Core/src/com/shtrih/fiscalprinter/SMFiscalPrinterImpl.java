@@ -4364,20 +4364,37 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command;
     }
 
-    public int checkItemCode(String barcode) throws Exception {
+    public int checkItemCode(GS1Barcode barcode) throws Exception {
+        if (barcode == null) {
+            return 0;
+        }
+        int rc = 0;
+        if (barcode.serial.isEmpty()) {
+            rc = checkItemCode2(barcode.GTIN);
+        }
+        return rc;
+    }
+
+    public int checkItemCode2(String barcode) throws Exception {
         int rc = 0;
         rc = loadBarcode3(1, barcode);
         if (rc == 0) {
-            FSCheckBarcode command = fsCheckBarcode(barcode);
-            rc = command.getResultCode();
-            if (command.isSucceeded()) {
-                command.checkResultIsCorrect();
+            FSCheckBarcode checkCommand = fsCheckBarcode(barcode);
+            rc = checkCommand.getResultCode();
+            if (checkCommand.isSucceeded()) {
+                checkCommand.checkResultIsCorrect();
+                FSAcceptItemCode acceptCommand = fsAcceptItemCode(1);
+                rc = acceptCommand.getResultCode();
             }
         }
         return rc;
     }
 
     public int sendItemCode(GS1Barcode barcode) throws Exception {
+        if (barcode == null) {
+            return 0;
+        }
+
         if (!barcode.serial.isEmpty()) {
             return sendItemCode1(barcode);
         } else {
@@ -4415,29 +4432,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public int sendItemCode2(String barcode) throws Exception {
-        int rc = 0;
-        rc = loadBarcode3(1, barcode);
-        if (rc == 0) {
-            FSCheckBarcode checkCommand = fsCheckBarcode(barcode);
-            rc = checkCommand.getResultCode();
-            if (checkCommand.isSucceeded()) {
-                checkCommand.checkResultIsCorrect();
-                FSBindItemCode bindCommand = fsBindItemCode(barcode.length());
-                rc = bindCommand.getResultCode();
-                if (bindCommand.isSucceeded()) {
-                    FSAcceptItemCode acceptCommand = fsAcceptItemCode(1);
-                    rc = acceptCommand.getResultCode();
-                    /*
-                    if (acceptCommand.isSucceeded()) {
-                        GS1BarcodeParser parser = new GS1BarcodeParser();
-                        GS1Barcode barcodeGS1 = parser.decode(barcode);
-                        sendItemCode1(barcodeGS1);
-                    }
-                    */
-                }
-            }
-        }
+    public int sendItemCode2(String barcode) throws Exception 
+    {
+        GS1BarcodeParser parser = new GS1BarcodeParser();
+        GS1Barcode barcodeGS1 = parser.decode(barcode);
+        sendItemCode1(barcodeGS1);
+            
+        FSBindItemCode bindCommand = fsBindItemCode(barcode.length());
+        int rc = bindCommand.getResultCode();
         return rc;
     }
 

@@ -640,8 +640,10 @@ public interface SMFiscalPrinter {
     
     public int sendItemCode2(String barcode) throws Exception;
 
-    public int checkItemCode(String barcode) throws Exception;
+    public int checkItemCode(GS1Barcode barcode) throws Exception;
 
+    public int checkItemCode2(String barcode) throws Exception;
+    
     public FSBindItemCode bindItemCode(String barcode) throws Exception;
             
     public FSBindItemCode fsBindItemCode(int codeLength) throws Exception;

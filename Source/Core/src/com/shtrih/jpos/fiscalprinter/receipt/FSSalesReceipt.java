@@ -520,6 +520,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             item.setText("//" + item.getText());
         }
 
+        getDevice().checkItemCode(item.getBarcode());
+        
         PriceItem priceItem = item.getPriceItem();
         if (!item.getIsStorno()) {
             switch (receiptType) {
@@ -544,9 +546,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         } else {
             getDevice().printVoidItem(priceItem);
         }
-        if (item.getBarcode() != null) {
-            getDevice().sendItemCode(item.getBarcode());
-        }
+        getDevice().sendItemCode(item.getBarcode());
 
         if (!getParams().ReceiptTemplateEnabled) {
             long discountTotal = item.getDiscounts().getTotal();

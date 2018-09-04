@@ -24,7 +24,7 @@ public class DIOCheckItemCode extends DIOItem {
 
         String[] lines = (String[])object;
         String barcode = lines[0];
-        getPrinter().checkItemCode(barcode);
+        getPrinter().checkItemCode2(barcode);
     }
 
 }

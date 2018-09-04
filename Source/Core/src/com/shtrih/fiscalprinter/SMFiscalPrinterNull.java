@@ -1146,7 +1146,11 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
     
-    public int checkItemCode(String barcodeText) throws Exception{
+    public int checkItemCode(GS1Barcode barcode) throws Exception{
+        return 0;
+    }
+    
+    public int checkItemCode2(String barcode) throws Exception {
         return 0;
     }
     
