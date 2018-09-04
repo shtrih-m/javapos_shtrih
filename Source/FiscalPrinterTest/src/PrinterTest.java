@@ -3692,9 +3692,12 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecItem("1. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
             printer.printRecItemAdjustment(1, "            1206", 320, 2);
             
-            printer.directIO(120, null, new String[]{"00000046200068", "5gk=IYQ"});            
+            printer.setItemCode("00000046200068", "5gk=IYQ");            
             printer.printRecItem("2. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
             
+            printer.setItemCode("000000462000685gk=IYQAQC5pN/f", "");            
+            printer.printRecItem("3. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
+                    
             printer.printRecSubtotal(27425);
             printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 25);
             printer.printRecTotal(27400, 27400, "1");

@@ -179,7 +179,7 @@ public class FptrParameters {
     public boolean footerFlagEnabled = true;
     public boolean postLineAsItemTextEnabled = false;
     public boolean canDisableNonFiscalEnding = true;
-    public boolean fsMarkCheckEnabled = false;
+    public boolean checkItemCodeEnabled = false;
     public int newItemStatus = FSCheckBarcode.FS_ITEM_STATUS_RETAIL;
     public int itemCheckMode = FSCheckBarcode.FS_CHECK_MODE_FULL;
     public int itemMarkType = FptrParameters.MARK_TYPE_TOBACCO;
@@ -409,7 +409,7 @@ public class FptrParameters {
         footerFlagEnabled = reader.readBoolean("footerFlagEnabled", true);
         postLineAsItemTextEnabled = reader.readBoolean("postLineAsItemTextEnabled", false);
         canDisableNonFiscalEnding = reader.readBoolean("canDisableNonFiscalEnding", true);
-        fsMarkCheckEnabled = reader.readBoolean("fsMarkCheckEnabled", false);
+        checkItemCodeEnabled = reader.readBoolean("checkItemCodeEnabled", false);
         newItemStatus = reader.readInteger("newItemStatus", FSCheckBarcode.FS_ITEM_STATUS_RETAIL);
         itemCheckMode = reader.readInteger("itemCheckMode", FSCheckBarcode.FS_CHECK_MODE_FULL);
         itemMarkType = reader.readInteger("itemMarkType", FptrParameters.MARK_TYPE_TOBACCO);

@@ -306,6 +306,7 @@
 		<prop name="printStringDelayInMs" type="String" value="0"/>
 		<prop name="footerFlagEnabled" type="String" value="0"/>
 		<prop name="itemCheckMode" type="String" value="0"/>
+		<prop name="checkItemCodeEnabled" type="String" value="1"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>

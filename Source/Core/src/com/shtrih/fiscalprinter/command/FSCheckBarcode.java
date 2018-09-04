@@ -236,7 +236,25 @@ public class FSCheckBarcode extends PrinterCommand {
         }
     }
 
-    public void checkResultIsCorrect() throws Exception {
+    public boolean isCorrect() throws Exception {
+        if (localResultCode == FSCheckBarcode.FS_LOCAL_RESULT_CODE_INVALID) {
+            return false;
+        }
+        if (processingCode == 0) {
+            if (salePermission != FSCheckBarcode.FS_SALE_PERMISSION_OK) {
+                return false;
+            }
+            if (serverResultCode != FSCheckBarcode.FS_SERVER_OK) {
+                return false;
+            }
+            if (serverResultCode != FSCheckBarcode.FS_SERVER_OK) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void checkCorrect() throws Exception {
         if (localResultCode == FSCheckBarcode.FS_LOCAL_RESULT_CODE_INVALID) {
             throw new Exception("Barcode is not valid");
         }

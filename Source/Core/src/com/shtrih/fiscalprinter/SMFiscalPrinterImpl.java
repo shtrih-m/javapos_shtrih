@@ -4365,6 +4365,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public int checkItemCode(GS1Barcode barcode) throws Exception {
+        if (!params.checkItemCodeEnabled) {
+            return 0;
+        }
+
         if (barcode == null) {
             return 0;
         }
@@ -4382,9 +4386,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             FSCheckBarcode checkCommand = fsCheckBarcode(barcode);
             rc = checkCommand.getResultCode();
             if (checkCommand.isSucceeded()) {
-                checkCommand.checkResultIsCorrect();
-                FSAcceptItemCode acceptCommand = fsAcceptItemCode(1);
+                int action = 0;
+                if (checkCommand.isCorrect()) {
+                    action = 1;
+                }
+                FSAcceptItemCode acceptCommand = fsAcceptItemCode(action);
                 rc = acceptCommand.getResultCode();
+
+                checkCommand.checkCorrect();
             }
         }
         return rc;
@@ -4432,14 +4441,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public int sendItemCode2(String barcode) throws Exception 
-    {
+    public int sendItemCode2(String barcode) throws Exception {
+        int rc = 0;
         GS1BarcodeParser parser = new GS1BarcodeParser();
         GS1Barcode barcodeGS1 = parser.decode(barcode);
-        sendItemCode1(barcodeGS1);
-            
-        FSBindItemCode bindCommand = fsBindItemCode(barcode.length());
-        int rc = bindCommand.getResultCode();
+        rc = sendItemCode1(barcodeGS1);
+        if (params.checkItemCodeEnabled) {
+            FSBindItemCode bindCommand = fsBindItemCode(barcode.length());
+            rc = bindCommand.getResultCode();
+        }
         return rc;
     }
 
