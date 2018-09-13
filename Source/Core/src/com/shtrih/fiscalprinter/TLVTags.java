@@ -201,6 +201,13 @@ public class TLVTags {
         add(1224, "данные поставщика", "", TLVTag.TLVType.itSTLV, 512);
         add(1225, "наименование поставщика", "", TLVTag.TLVType.itASCII, 256);
         add(1226, "ИНН поставщика", "ИНН ПОСТАВЩИКА", TLVTag.TLVType.itASCII, 12, true);
+        add(1227, "Покупатель (клиент)", "ПОКУПАТЕЛЬ", TLVTag.TLVType.itASCII, 256, false);
+        add(1228, "ИНН покупателя (клиента)", "ИНН ПОКУПАТЕЛЯ", TLVTag.TLVType.itASCII, 12, true);
+        add(1229, "Акциз", "АКЦИЗ", TLVTag.TLVType.itVLN, 8);
+        add(1230, "Код страны происхождения товара", "КОД СТРАНЫ", TLVTag.TLVType.itASCII, 3, true);
+        add(1231, "Номер таможенной декларации", "ДЕКЛАРАЦИЯ", TLVTag.TLVType.itASCII, 32, false);
+        add(1232, "Счетчики по признаку \"возврат прихода\"", "", TLVTag.TLVType.itSTLV, 32);
+        add(1233, "Счетчики по признаку \"возврат расхода\"", "", TLVTag.TLVType.itSTLV, 32);
     }
 
     private void addBits1055(TLVTag tag) {
@@ -208,7 +215,7 @@ public class TLVTags {
         tag.addBit(1, "Упрощенная доход", "УСН доход");
         tag.addBit(2, "Упрощенная доход минус расход", "УСН доход - расход");
         tag.addBit(3, "Единый налог на вмененный доход", "ЕНВД");
-        tag.addBit(4, "Единый сельскохозяйственный налог", "ЕСН");
+        tag.addBit(4, "Единый сельскохозяйственный налог", "ЕСХН");
         tag.addBit(5, "Патентная система налогообложения", "Патент");
     }
 

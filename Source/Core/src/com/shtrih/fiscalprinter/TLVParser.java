@@ -53,9 +53,10 @@ public class TLVParser {
                 tagName = itemText.contains("@") ? "ЭЛ. АДР. ПОКУПАТЕЛЯ" : "ТЕЛ. ПОКУПАТЕЛЯ";
             }
 
-            String line = tagName + ": " + itemText;
+            // Если печатное название тэга пустое, то не печатаем его
+            String line = tagName.isEmpty() ? itemText : tagName + ": " + itemText;
 
-            if (item.getTag().getId() == 1057) {
+            if (item.getTag().getId() == 1057 || item.getTag().getId() == 1222) {
                 line = "";
                 if (BitUtils.testBit(item.toInt(), 0))
                     line += "БАНК. ПЛ. АГЕНТ";
