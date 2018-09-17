@@ -1469,8 +1469,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
         PrinterMode mode = getPrinter().readPrinterStatus().getPrinterMode();
 
-        if (receipt != null && receipt.isOpened()) {
-            return true;
+        if (!params.openReceiptOnBegin) {
+            // Эта логика должна выполняться, только если beginFiscalReceipt не открывает чек,
+            // во всех остальных случаях нужно обращаться к устройству
+            if (receipt != null && receipt.isOpened()) {
+                return true;
+            }
         }
 
         return mode.isDayOpened() || mode.isReceiptOpened();
