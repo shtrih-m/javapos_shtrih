@@ -247,9 +247,6 @@ public class FSCheckBarcode extends PrinterCommand {
             if (serverResultCode != FSCheckBarcode.FS_SERVER_OK) {
                 return false;
             }
-            if (serverResultCode != FSCheckBarcode.FS_SERVER_OK) {
-                return false;
-            }
         }
         return true;
     }
@@ -261,9 +258,6 @@ public class FSCheckBarcode extends PrinterCommand {
         if (processingCode == 0) {
             if (salePermission != FSCheckBarcode.FS_SALE_PERMISSION_OK) {
                 throw new Exception("Item is forbidden to sold");
-            }
-            if (serverResultCode != FSCheckBarcode.FS_SERVER_OK) {
-                throw new Exception(getServerResultCodeText());
             }
             if (serverResultCode != FSCheckBarcode.FS_SERVER_OK) {
                 throw new Exception(getServerResultCodeText());

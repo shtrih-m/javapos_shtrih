@@ -982,9 +982,14 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
+            String[] date = new String[1];
+            date[0] = "21092018133545";
+            printer.setDate(date[0]);
+            printer.getDate(date);
+            
             //printer.openFiscalDay();
             //printEscBarcodesNormal();
-            printFiscalReceipt145_4();
+            //printFiscalReceipt145_4();
             //checkItemBarcode();
         } catch (Exception e) {
             e.printStackTrace();

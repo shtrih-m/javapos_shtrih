@@ -30,6 +30,7 @@ public class JposFiscalPrinterDate implements JposConst {
     private final int year;
     private final int hour;
     private final int min;
+    private final int sec;
 
     public JposFiscalPrinterDate(int day, int month, int year, int hour, int min) throws Exception {
         checkInt(day, 1, 31, "day");
@@ -43,6 +44,23 @@ public class JposFiscalPrinterDate implements JposConst {
         this.year = year;
         this.hour = hour;
         this.min = min;
+        this.sec = 0;
+    }
+
+    public JposFiscalPrinterDate(int day, int month, int year, int hour, int min, int sec) throws Exception {
+        checkInt(day, 1, 31, "day");
+        checkInt(month, 1, 12, "month");
+        checkInt(year, 0, 9999, "year");
+        checkInt(hour, 0, 23, "hour");
+        checkInt(min, 0, 59, "minute");
+        checkInt(sec, 0, 59, "seconds");
+
+        this.day = day;
+        this.month = month;
+        this.year = year;
+        this.hour = hour;
+        this.min = min;
+        this.sec = sec;
     }
 
     public JposFiscalPrinterDate(PrinterDate date, PrinterTime time) {
@@ -51,6 +69,7 @@ public class JposFiscalPrinterDate implements JposConst {
         this.year = date.getYear();
         this.hour = time.getHour();
         this.min = time.getMin();
+        this.sec = time.getSec();
     }
 
     public int getDay() {
@@ -71,6 +90,10 @@ public class JposFiscalPrinterDate implements JposConst {
 
     public int getMin() {
         return min;
+    }
+
+    public int getSec() {
+        return sec;
     }
 
     private String intToString(int value, int len) {
@@ -107,7 +130,8 @@ public class JposFiscalPrinterDate implements JposConst {
                 calendar.get(GregorianCalendar.MONTH),
                 calendar.get(GregorianCalendar.YEAR),
                 calendar.get(GregorianCalendar.HOUR_OF_DAY),
-                calendar.get(GregorianCalendar.MINUTE));
+                calendar.get(GregorianCalendar.MINUTE),
+                calendar.get(GregorianCalendar.SECOND));
     }
 
     public static JposFiscalPrinterDate parseDateTime(String date) throws Exception {
@@ -116,20 +140,24 @@ public class JposFiscalPrinterDate implements JposConst {
         int year = StringUtils.stringToInt(date, 4, 4, "year");
         int hour = StringUtils.stringToInt(date, 8, 2, "hour");
         int min = StringUtils.stringToInt(date, 10, 2, "minute");
-        return new JposFiscalPrinterDate(day, month, year, hour, min);
+        int sec = 0;
+        if (date.length() >= 14) {
+            sec = StringUtils.stringToInt(date, 12, 2, "seconds");
+        }
+        return new JposFiscalPrinterDate(day, month, year, hour, min, sec);
     }
 
     public static JposFiscalPrinterDate parseDate(String date) throws Exception {
         int day = StringUtils.stringToInt(date, 0, 2, "day");
         int month = StringUtils.stringToInt(date, 2, 2, "month");
         int year = StringUtils.stringToInt(date, 4, 4, "year");
-        return new JposFiscalPrinterDate(day, month, year, 0, 0);
+        return new JposFiscalPrinterDate(day, month, year, 0, 0, 0);
     }
 
     public String toString() {
         return intToString(day, 2) + intToString(month, 2)
                 + intToString(year, 4) + intToString(hour, 2)
-                + intToString(min, 2);
+                + intToString(min, 2) + intToString(sec, 2);
     }
 
     public PrinterDate getPrinterDate() {
@@ -137,7 +165,7 @@ public class JposFiscalPrinterDate implements JposConst {
     }
 
     public PrinterTime getPrinterTime() {
-        return new PrinterTime(hour, min, 0);
+        return new PrinterTime(hour, min, sec);
     }
 
 }

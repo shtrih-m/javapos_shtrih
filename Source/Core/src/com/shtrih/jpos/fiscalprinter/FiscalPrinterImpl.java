@@ -102,6 +102,8 @@ import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import jpos.FiscalPrinterConst;
 import jpos.JposConst;
@@ -2989,7 +2991,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 JposFiscalPrinterDate jposDate = new JposFiscalPrinterDate(
                         printerDate.getDay(), printerDate.getMonth(),
                         printerDate.getYear(), printerTime.getHour(),
-                        printerTime.getMin());
+                        printerTime.getMin(), printerTime.getSec());
                 result = jposDate.toString();
                 break;
 
@@ -2999,6 +3001,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                         + "DateType");
         }
         Date[0] = encodeText(result);
+        logger.debug("getDate: " + Date[0]);
     }
 
     public void getTotalizer(int vatID, int optArgs, String[] data)
@@ -3693,7 +3696,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         date = decodeText(date);
 
         checkEnabled();
-        PrinterStatus status = readPrinterStatus();
+        LongPrinterStatus status = getPrinter().readLongStatus();
         if (!status.getPrinterMode().isDayClosed()) {
             dayEndRequiredError();
         }
@@ -3702,31 +3705,31 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         PrinterDate printerDate = jposDate.getPrinterDate();
         PrinterTime printerTime = jposDate.getPrinterTime();
 
-        getPrinter().check(printer.writeDate(printerDate));
-        int resultCode = getPrinter().confirmDate(printerDate);
-        if (resultCode != 0) {
-            // try to set date back
-            printerDate = readLongStatus().getDate();
-            getPrinter().check(printer.confirmDate(printerDate));
+        if (!printerDate.isEqual(status.getDate())) {
+            getPrinter().check(printer.writeDate(printerDate));
+            int resultCode = getPrinter().confirmDate(printerDate);
+            if (resultCode != 0) {
+                // try to set date back
+                printerDate = readLongStatus().getDate();
+                getPrinter().check(printer.confirmDate(printerDate));
 
-            throw new Exception(
-                    Localizer.getString(Localizer.failedConfirmDate)
-                    + printer.getErrorText(resultCode));
+                throw new Exception(
+                        Localizer.getString(Localizer.failedConfirmDate)
+                        + printer.getErrorText(resultCode));
+            }
         }
         getPrinter().writeTime(printerTime);
         // check if date and time was set correctly
-        LongPrinterStatus fullStatus = readLongStatus();
-        if (!printerDate.isEqual(fullStatus.getDate())) {
+        status = getPrinter().readLongStatus();
+        if (!printerDate.isEqual(status.getDate())) {
             logger.error("Failed to set printer date: "
                     + printerDate.toText() + " <> "
-                    + fullStatus.getDate().toText());
+                    + status.getDate().toText());
         }
-        PrinterTime time = new PrinterTime(fullStatus.getTime().getHour(),
-                fullStatus.getTime().getMin(), 0);
-        if (!printerTime.isEqual(time)) {
+        if (!printerTime.isEqual(status.getTime())) {
             logger.error("Failed to set printer time: "
                     + PrinterTime.toString(printerTime) + " <> "
-                    + PrinterTime.toString(fullStatus.getTime()));
+                    + PrinterTime.toString(status.getTime()));
         }
     }
 
@@ -4678,8 +4681,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return "";
     }
 
-    public void setItemBarcode(GS1Barcode barcode) throws Exception
-    {
+    public void setItemBarcode(GS1Barcode barcode) throws Exception {
         receipt.setItemBarcode(barcode);
     }
 }
