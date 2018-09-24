@@ -3,13 +3,13 @@ package com.shtrih.fiscalprinter.port;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+
 import com.shtrih.util.*;
 
 /**
  * @author V.Kravtsov
  */
-public class SocketPort implements PrinterPort 
-{
+public class SocketPort implements PrinterPort {
     private static CompositeLogger logger = CompositeLogger.getLogger(SocketPort.class);
     private static Map<String, SocketPort> items = new HashMap<String, SocketPort>();
 
@@ -41,7 +41,7 @@ public class SocketPort implements PrinterPort
     }
 
     private boolean isConnected() {
-        return socket != null;
+        return socket != null && socket.isConnected();
     }
 
     public void open(int timeout) throws Exception {
@@ -58,6 +58,8 @@ public class SocketPort implements PrinterPort
         String host = tokenizer.nextToken();
         int port = Integer.parseInt(tokenizer.nextToken());
         socket.connect(new InetSocketAddress(host, port), openTimeout);
+
+
         inputStream = socket.getInputStream();
         outputStream = socket.getOutputStream();
     }
@@ -91,7 +93,7 @@ public class SocketPort implements PrinterPort
         if (b == -1) {
             noConnectionError();
         }
-        
+
         return b;
     }
 
@@ -145,7 +147,7 @@ public class SocketPort implements PrinterPort
 
         this.readTimeout = timeout;
 
-        if(socket != null)
+        if (isConnected())
             socket.setSoTimeout(readTimeout);
     }
 
