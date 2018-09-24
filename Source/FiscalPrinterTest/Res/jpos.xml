@@ -75,7 +75,7 @@
         <!-- Barcode print time -->
         <prop name="graphicsLineDelay" type="String" value="1000"/>
         <!-- fieldsFileName to initialize printer tables -->
-        <prop name="fieldsFileName" type="String" value=""/>
+        <prop name="fieldsFileName" type="String" value="test.csv"/>
         <!-- fieldsFilesPath to initialize printer tables -->
         <prop name="fieldsFilesPath" type="String" value=""/>
         <!-- Number of header lines -->

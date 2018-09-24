@@ -93,20 +93,26 @@ public class CsvTablesReader {
         }
     }
 
+    public String getModelName(String prefix, String line) throws Exception {
+        String result = "";
+        int beginIndex = line.toLowerCase().lastIndexOf(prefix.toLowerCase());
+        int endIndex = line.lastIndexOf(";");
+        if ((beginIndex != -1) && (endIndex != -1)) {
+            result = line.substring(beginIndex + prefix.length(), endIndex);
+            result = result.trim();
+        }
+        return result;
+    }
+
     public void loadLine(String line, PrinterFields fields) throws Exception {
         if (isComment(line)) {
             line = line.toUpperCase();
             /// Модель: ЯРУС-01К; №00001000
-            String modelNameTag = "МОДЕЛЬ: ";
-            int beginIndex = line.lastIndexOf(modelNameTag);
-            int endIndex = line.lastIndexOf(";");
-            if ((beginIndex != -1) && (endIndex != -1)) {
-
-                String modelName = line.substring(
-                        beginIndex + modelNameTag.length(), endIndex);
-                modelName = modelName.trim();
-                fields.setModelName(modelName);
+            String modelName = getModelName("МОДЕЛЬ:", line);
+            if (modelName.isEmpty()) {
+                modelName = getModelName("model:", line);
             }
+            fields.setModelName(modelName);
         } else {
             int table = getParamInt(line, 0);
             int row = getParamInt(line, 1);
