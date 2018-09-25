@@ -9,7 +9,6 @@ import com.shtrih.util.Localizer;
 import com.shtrih.util.Logger2;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 /**
  * @author V.Kravtsov
@@ -37,11 +36,11 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         this.maxRepeatCount = value;
     }
 
-    public synchronized void connect() throws Exception {
-        synchronizeFrames(3000);
+    public void connect() throws Exception {
+        //synchronizeFrames(3000);
     }
 
-    public synchronized void doSend(PrinterCommand command) throws Exception {
+    private void doSend(PrinterCommand command) throws Exception {
         for (int i = 0; i < maxRepeatCount; i++) {
             if (sendCmd(command, i + 1)) {
                 return;
@@ -51,18 +50,20 @@ public class PrinterProtocol_2 implements PrinterProtocol {
                 Localizer.getString(Localizer.NoConnection));
     }
 
-    public synchronized void send(PrinterCommand command) throws Exception {
+    public void send(PrinterCommand command) throws Exception {
         synchronized (port.getSyncObject()) {
             doSend(command);
         }
     }
 
-    public synchronized boolean sendCmd(PrinterCommand command, int retryNum)
-            throws Exception {
-        port.open(0);
-        int timeout = command.getTimeout();
-        port.setTimeout(timeout + byteTimeout);
+    private boolean sendCmd(PrinterCommand command, int retryNum) {
+
         try {
+            synchronizeFrames(byteTimeout);
+
+            int timeout = command.getTimeout();
+            port.setTimeout(timeout + byteTimeout);
+
             sendCommand(command.encodeData());
             int frameNum = readAnswer();
             if (frameNum != frameNumber) {
@@ -82,28 +83,31 @@ public class PrinterProtocol_2 implements PrinterProtocol {
             return true;
         } catch (Exception e) {
             logger.error(e);
+            port.close();
+            isSynchronized = false;
             return false;
         }
     }
 
-    public void synchronizeFrames(int timeout) throws Exception {
+    private void synchronizeFrames(int timeout) throws Exception {
         if (isSynchronized) {
             return;
         }
-        port.setTimeout(timeout);
-        for (int i = 0; i < maxRepeatCount; i++) {
-            try {
-                sendCommand(null);
-                frameNumber = readAnswer();
-                isSynchronized = true;
-                stepFrameNumber();
-                return;
-            } catch (Exception e) {
-                logger.error(e);
-            }
-        }
 
-        throw new IOException("Frames sync failed");
+        port.setTimeout(timeout);
+
+        try {
+            sendCommand(null);
+            frameNumber = readAnswer();
+            isSynchronized = true;
+            stepFrameNumber();
+
+        } catch (Exception e) {
+            logger.error(e);
+            port.close();
+
+            throw e;
+        }
     }
 
     private void sendCommand(byte[] data) throws Exception {

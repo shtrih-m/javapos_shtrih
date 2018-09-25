@@ -32,7 +32,7 @@ public class PrinterPortFactory {
                 break;
 
             case SmFptrConst.PORT_TYPE_SOCKET:
-                result = SocketPort.getInstance(params.portName, params.byteTimeout);
+                result = SocketPort.getInstance(params.portName, params.getByteTimeout());
                 break;
 
             case SmFptrConst.PORT_TYPE_FROMCLASS:

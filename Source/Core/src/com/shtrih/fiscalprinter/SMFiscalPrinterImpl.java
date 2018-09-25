@@ -269,7 +269,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return errorCode == 0;
     }
 
-    private static final int maxCmdRepeatCount = 5;
+    private static final int maxCmdRepeatCount = 3;
 
     public int executeCommand(PrinterCommand command) throws Exception {
         long startedAt = System.currentTimeMillis();
