@@ -50,7 +50,7 @@ public class Fiscalizer {
 
         writeVATINTagIfNotNullAndNotEmpty(printer, 1203, params.CashierVATIN);
 
-        if ((isDesktop(printer) && printer.readLongPrinterStatus().getFirmwareBuild() > 46150) || isCashCore(printer)) {
+        if ((isDesktop(printer) && printer.readLongPrinterStatus().getFirmwareBuild() > 46150)) {
 
             int extendedModes = getExtOperationMode(params);
 
@@ -104,7 +104,7 @@ public class Fiscalizer {
 
         writeVATINTagIfNotNullAndNotEmpty(printer, 1203, params.CashierVATIN);
 
-        if ((isDesktop(printer) && printer.readLongPrinterStatus().getFirmwareBuild() > 46150) || isCashCore(printer)) {
+        if ((isDesktop(printer) && printer.readLongPrinterStatus().getFirmwareBuild() > 46150)) {
 
             int extendedModes = getExtOperationMode(params);
 
