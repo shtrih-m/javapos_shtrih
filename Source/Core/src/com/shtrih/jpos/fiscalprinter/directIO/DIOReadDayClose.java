@@ -1,28 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.jpos.fiscalprinter.directIO;
 
-import com.shtrih.fiscalprinter.TLVParser;
-import com.shtrih.fiscalprinter.command.FSDocType;
-import com.shtrih.fiscalprinter.command.FSFindDocument;
-import com.shtrih.fiscalprinter.command.FSReadDocument;
-import com.shtrih.fiscalprinter.command.FSReadStatus;
-import com.shtrih.jpos.DIOUtils;
-import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
-import java.io.ByteArrayOutputStream;
-import com.shtrih.fiscalprinter.TLVItems;
-import java.util.Vector;
 import com.shtrih.fiscalprinter.command.FSCloseDayReport;
+import com.shtrih.fiscalprinter.command.FSDocType;
+import com.shtrih.fiscalprinter.command.FSDocument;
+import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
+
+import java.util.Vector;
 
 /**
- *
- * @author V.Kravtsov
- */
-
-/*
 Необходимо реализовать метод DirectIO для получение значений отчета 
 о закрытии смены содержащий следующую информацию: 
 •         Номер смены
@@ -46,17 +31,21 @@ import com.shtrih.fiscalprinter.command.FSCloseDayReport;
 1021,КАССИР:КАССИР 1
 1048,НАИМЕН. ПОЛЬЗ.:ЗАО ТОРГОВЫЙ ОБЪЕКТ N1                
 */
-
 public class DIOReadDayClose extends DIOItem {
 
     public DIOReadDayClose(FiscalPrinterImpl service) {
         super(service);
     }
 
-    public void execute(int[] data, Object object) throws Exception 
-    {
-        Vector<String> lines = (Vector<String>)object;
-        FSCloseDayReport doc = (FSCloseDayReport)getPrinter().fsFindLastDocument(FSDocType.FS_DOCTYPE_DAYCLOSE);
+    public void execute(int[] data, Object object) throws Exception {
+        Vector<String> lines = (Vector<String>) object;
+
+        FSDocument searchResult = getPrinter().fsFindLastDocument(FSDocType.FS_DOCTYPE_DAYCLOSE);
+        if (searchResult == null)
+            return;
+
+        FSCloseDayReport doc = (FSCloseDayReport) searchResult;
+
         // Номер смены
         lines.add(String.valueOf(doc.getDayNumber()));
         // Тип документа (отчет об открытии)
@@ -66,7 +55,7 @@ public class DIOReadDayClose extends DIOItem {
         // РН ККТ
         lines.add(getPrinter().readRnm());
         // ЗН ККТ
-        lines.add(getPrinter().readFullSerial()); 
+        lines.add(getPrinter().readFullSerial());
         // ФН serial
         lines.add(getPrinter().fsReadSerial().getSerial());
         // ФД №
@@ -76,5 +65,5 @@ public class DIOReadDayClose extends DIOItem {
         // Наименование ОФД
         lines.add(getPrinter().readParameter("fdoName"));
     }
-    
+
 }

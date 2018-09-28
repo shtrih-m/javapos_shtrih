@@ -1,5 +1,6 @@
 package com.shtrih.fiscalprinter.commands;
 
+import com.shtrih.fiscalprinter.command.FSFindDocument;
 import com.shtrih.fiscalprinter.command.FSReadExpDate;
 
 import org.junit.Test;
