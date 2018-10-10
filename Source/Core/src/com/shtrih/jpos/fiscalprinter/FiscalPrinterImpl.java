@@ -1000,7 +1000,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             return;
         }
 
-        if (!printer.isDesktop() && !printer.isCashCore()) {
+        if (!printer.isDesktop() && !printer.isShtrihNano() && !printer.isCashCore()) {
             logger.debug("FirmwareUpdaterService stopped, unsupported device");
             return;
         }

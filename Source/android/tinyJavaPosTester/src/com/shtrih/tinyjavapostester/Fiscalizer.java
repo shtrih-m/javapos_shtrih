@@ -1,7 +1,6 @@
 package com.shtrih.tinyjavapostester;
 
 
-
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
 import com.shtrih.fiscalprinter.command.DeviceMetrics;
 import com.shtrih.fiscalprinter.command.PrinterDate;
@@ -50,7 +49,7 @@ public class Fiscalizer {
 
         writeVATINTagIfNotNullAndNotEmpty(printer, 1203, params.CashierVATIN);
 
-        if ((isDesktop(printer) && printer.readLongPrinterStatus().getFirmwareBuild() > 46150)) {
+        if ((isDesktop(printer) && printer.readLongPrinterStatus().getFirmwareBuild() > 46150) || isShtrihNano(printer)) {
 
             int extendedModes = getExtOperationMode(params);
 
@@ -104,7 +103,7 @@ public class Fiscalizer {
 
         writeVATINTagIfNotNullAndNotEmpty(printer, 1203, params.CashierVATIN);
 
-        if ((isDesktop(printer) && printer.readLongPrinterStatus().getFirmwareBuild() > 46150)) {
+        if ((isDesktop(printer) && printer.readLongPrinterStatus().getFirmwareBuild() > 46150) || isShtrihNano(printer)) {
 
             int extendedModes = getExtOperationMode(params);
 
@@ -169,14 +168,14 @@ public class Fiscalizer {
         if (model.capFFDTableAndColumnNumber()) {
             printer.writeTable(model.getFFDTableNumber(), 1, model.getFFDColumnNumber(), targetFFDVersion);
         } else {
-            if (isDesktop(printer)) {
+            if (isDesktop(printer) || isShtrihNano(printer)) {
                 printer.writeTable(17, 1, 17, targetFFDVersion);
             } else {
                 printer.writeTable(10, 1, 4, targetFFDVersion);
             }
         }
 
-        if (isDesktop(printer)) {
+        if (isDesktop(printer) || isShtrihNano(printer)) {
             printer.writeTable(fsTable, 1, 7, firstPart(params.OrganizationName));
             printer.writeTable(fsTable, 1, 17, secondPart(params.OrganizationName));
             printer.writeTable(fsTable, 1, 9, firstPart(params.AddressSettle));
@@ -326,18 +325,22 @@ public class Fiscalizer {
 
     private boolean isDesktop(ShtrihFiscalPrinter printer) throws JposException {
         DeviceMetrics metrics = printer.readDeviceMetrics();
-        return metrics.getModel() != 19 && // Штрих-МОБАЙЛ
-                metrics.getModel() != 45;  // КЯ
+        return metrics.isDesktop();
+    }
+
+    private boolean isShtrihNano(ShtrihFiscalPrinter printer) throws JposException {
+        DeviceMetrics metrics = printer.readDeviceMetrics();
+        return metrics.isShtrihNano();
     }
 
     private boolean isMobile(ShtrihFiscalPrinter printer) throws JposException {
         DeviceMetrics metrics = printer.readDeviceMetrics();
-        return metrics.getModel() == 19; // Штрих-МОБАЙЛ
+        return metrics.isShtrihMobile();
     }
 
     private boolean isCashCore(ShtrihFiscalPrinter printer) throws JposException {
         DeviceMetrics metrics = printer.readDeviceMetrics();
-        return metrics.getModel() == 45; // КЯ
+        return metrics.isCashCore();
     }
 
     private void writeVATINTagIfNotNullAndNotEmpty(ShtrihFiscalPrinter printer, int tagId, String value) throws Exception {

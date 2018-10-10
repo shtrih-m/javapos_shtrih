@@ -216,7 +216,7 @@ public class FFD105Documents {
         int shiftNumber = printer.readLongPrinterStatus().getCurrentShiftNumber(); // Номер смены
 
         if (electronically) {
-            if (isDesktop(printer)) {
+            if (isDesktop(printer) || isShtrihNano(printer)) {
                 printer.writeTable(17, 1, 7, "1");
             }
         }
@@ -474,18 +474,22 @@ public class FFD105Documents {
 
     private boolean isDesktop(ShtrihFiscalPrinter printer) throws JposException {
         DeviceMetrics metrics = printer.readDeviceMetrics();
-        return metrics.getModel() != 19 && // Штрих-МОБАЙЛ
-                metrics.getModel() != 45;  // КЯ
+        return metrics.isDesktop();
+    }
+
+    private boolean isShtrihNano(ShtrihFiscalPrinter printer) throws JposException {
+        DeviceMetrics metrics = printer.readDeviceMetrics();
+        return metrics.isShtrihNano();
     }
 
     private boolean isMobile(ShtrihFiscalPrinter printer) throws JposException {
         DeviceMetrics metrics = printer.readDeviceMetrics();
-        return metrics.getModel() == 19; // Штрих-МОБАЙЛ
+        return metrics.isShtrihMobile();
     }
 
     private boolean isCashCore(ShtrihFiscalPrinter printer) throws JposException {
         DeviceMetrics metrics = printer.readDeviceMetrics();
-        return metrics.getModel() == 45; // КЯ
+        return metrics.isCashCore();
     }
 }
 

@@ -91,4 +91,38 @@ public class DeviceMetrics {
         this.deviceName = deviceName;
     }
 
+    /**
+     * Устройство все прочие Штрих-устройства выпускаемые как стационарные, например Retail-01Ф
+     */
+    public boolean isDesktop() {
+        return !isShtrihNano() &&
+                !isShtrihMobile() && // Штрих-МОБАЙЛ
+                !isCashCore();  // КЯ
+    }
+
+    /**
+     * Устройство на основе Кассовое ядро
+     */
+    public boolean isCashCore() {
+        return getModel() == 16 ||
+                getModel() == 20 ||
+                getModel() == 21 ||
+                getModel() == 45 ||
+                getModel() == 46; // КЯ
+    }
+
+    /**
+     * Устройство Штрих-MOBILE-Ф
+     */
+    public boolean isShtrihMobile() {
+        return getModel() == 19;
+    }
+
+    /**
+     * Устройство Штрих-NANO-Ф
+     */
+    public boolean isShtrihNano() {
+        return getModel() == 152;
+    }
+
 }

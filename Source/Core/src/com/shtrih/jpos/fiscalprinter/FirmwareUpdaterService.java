@@ -91,7 +91,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
             BigInteger uin;
             long firmwareVersion;
 
-            if (printer.isDesktop()) {
+            if (printer.isDesktop() || printer.isShtrihNano()) {
                 uin = new BigInteger(printer.readTable(23, 1, 11));
                 if (printer.isShtrihNano()) {
                     firmwareVersion = 100000 + printer.readLongStatus().getFirmwareBuild();
@@ -224,7 +224,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
             if (firmware == null)
                 return;
 
-            if (printer.isDesktop() && !printer.isShtrihNano() && !printer.isSDCardPresent()) {
+            if (printer.isDesktop() && !printer.isSDCardPresent()) {
                 logger.debug("Firmware update skipped, no SD card");
                 listener.OnUpdateSkippedNoSDCard();
                 return;
@@ -241,7 +241,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
                 tables = printer.readTables();
             }
 
-            if (printer.isDesktop()) {
+            if (printer.isDesktop() || printer.isShtrihNano()) {
                 printer.writeTable(23, 1, 1, "0");
             }
 
