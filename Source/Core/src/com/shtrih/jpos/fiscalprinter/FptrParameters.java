@@ -161,6 +161,7 @@ public class FptrParameters {
     public boolean printRecVoidItemAmount = false;
     public boolean FSReceiptItemDiscountEnabled = false;
     public boolean quantityCorrectionEnabled = false;
+    public boolean paymentSumCorrectionEnabled = false;
     public long taxValue[] = new long[6];
     public int taxSystem = 0;
     public Long itemTotalAmount = null;
@@ -183,7 +184,6 @@ public class FptrParameters {
     public int newItemStatus = FSCheckBarcode.FS_ITEM_STATUS_RETAIL;
     public int itemCheckMode = FSCheckBarcode.FS_CHECK_MODE_FULL;
     public int itemMarkType = FptrParameters.MARK_TYPE_TOBACCO;
-    
     
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -394,7 +394,7 @@ public class FptrParameters {
         combineReceiptItems = reader.readBoolean("combineReceiptItems", false);
         printRecVoidItemAmount = reader.readBoolean("printRecVoidItemAmount", false);
         FSReceiptItemDiscountEnabled = reader.readBoolean("FSReceiptItemDiscountEnabled", false);
-        quantityCorrectionEnabled = reader.readBoolean("quantityCorrectionEnabled", true);
+        quantityCorrectionEnabled = reader.readBoolean("quantityCorrectionEnabled", false);
         calcReportEnabled = reader.readBoolean("calcReportEnabled", false);
         openReceiptOnBegin = reader.readBoolean("openReceiptOnBegin", false);
         printVoidedReceipt = reader.readBoolean("printVoidedReceipt", false);
@@ -413,7 +413,8 @@ public class FptrParameters {
         newItemStatus = reader.readInteger("newItemStatus", FSCheckBarcode.FS_ITEM_STATUS_RETAIL);
         itemCheckMode = reader.readInteger("itemCheckMode", FSCheckBarcode.FS_CHECK_MODE_FULL);
         itemMarkType = reader.readInteger("itemMarkType", FptrParameters.MARK_TYPE_TOBACCO);
-        
+        paymentSumCorrectionEnabled = reader.readBoolean("paymentSumCorrectionEnabled", false);
+
         // paymentNames
         String paymentName;
         String propertyName;

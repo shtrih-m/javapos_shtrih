@@ -298,7 +298,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         endingItems.clear();
     }
 
-    public void correctPayments() throws Exception {
+    private void correctPayments() throws Exception {
+        if (!getParams().paymentSumCorrectionEnabled)
+            return;
+
         long paidAmount = 0;
         for (int i = 1; i < payments.length; i++) {
             if (paidAmount + payments[i] > getSubtotal()) {
@@ -346,7 +349,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void endFiscalReceipt(boolean printHeader) throws Exception {
         if (isOpened) {
             removeStornoItems();
+            
             correctPayments();
+
             if (getDevice().getCapDiscount()) {
                 addItemsDiscounts();
             } else if (discounts.getTotal() < 100) {
@@ -521,7 +526,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
 
         getDevice().checkItemCode(item.getBarcode());
-        
+
         PriceItem priceItem = item.getPriceItem();
         if (!item.getIsStorno()) {
             switch (receiptType) {
@@ -877,7 +882,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         return result;
     }
 
-    public long correctQuantity(long price, long quantity, long unitPrice) {
+    private long correctQuantity(long price, long quantity, long unitPrice) {
         if (!getParams().quantityCorrectionEnabled) {
             return quantity;
         }
@@ -919,9 +924,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         } else if (quantity == 0) {
             quantity = 1000;
         }
+        
         quantity = correctQuantity(price, quantity, unitPrice);
-        doPrintSale(price, quantity, unitPrice, department, vatInfo,
-                description, unitName, false);
+
+        doPrintSale(price, quantity, unitPrice, department, vatInfo, description, unitName, false);
     }
 
     public void doPrintSale(long price, long quantity, long unitPrice,
