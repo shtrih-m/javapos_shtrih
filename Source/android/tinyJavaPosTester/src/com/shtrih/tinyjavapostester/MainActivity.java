@@ -1104,57 +1104,29 @@ public class MainActivity extends AppCompatActivity {
 
     private void printSalesReceipt(final int positions, final int strings) throws Exception {
 
-        long payment = 40386;
+        long payment = 0;
 
         printer.setFiscalReceiptType(jpos.FiscalPrinterConst.FPTR_RT_SALES);
         printer.beginFiscalReceipt(false);
+        for (int i = 0; i < positions; i++) {
+            long price = Math.abs(rand.nextLong() % 1000);
+            payment += price;
 
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 350);
-        printer.printRecItem("Пакет потребительский Евророс*", 0, 1000, 1, 350, "");
+            String itemName = items[rand.nextInt(items.length)];
+            printer.printRecItem(itemName, price, 0, 0, 0, "");
 
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 2557);
-        printer.printRecItem("Морковь 1кг соцкарта", 0, 1066, 1, 2399, "");
+            // printer.fsWriteOperationTag(1226, "1234567890  ");
 
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 989);
-        printer.printRecItem("Свекла 1кг соцкарта*", 0, 430, 1, 2299, "");
+            for (int j = 0; j < strings; j++) {
+                printer.printRecMessage("Продажа № " + (i + 1) + ", строка " + (j + 1));
+            }
+        }
 
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 4043);
-        printer.printRecItem("Огурцы Миринда 1кг  соцкарта", 0, 624, 1, 6479, "");
-
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 6116);
-        printer.printRecItem("Картофель белый 1кг соцкарта", 0, 3090, 1, 1979, "");
-
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 19092);
-        printer.printRecItem("Говяжий фарш охл.вес. 1кг /ТекилаДжаз", 0, 434, 1, 43990, "");
-
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 1960);
-        printer.printRecItem("Укроп свежий 1кг ", 0, 56, 1, 34999, "");
-
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 1914);
-        printer.printRecItem("Петрушка свежая 1кг ", 0, 66, 1, 28999, "");
-
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 3365);
-        printer.printRecItem("Помидоры грунтовые 1кг ", 0, 426, 1, 7899, "");
-
-//        for (int i = 0; i < positions; i++) {
-//            long price = Math.abs(rand.nextLong() % 1000);
-//            payment += price;
-//
-//            String itemName = items[rand.nextInt(items.length)];
-//            printer.printRecItem(itemName, price, 0, 0, 0, "");
-//
-//            // printer.fsWriteOperationTag(1226, "1234567890  ");
-//
-//            for (int j = 0; j < strings; j++) {
-//                printer.printRecMessage("Продажа № " + (i + 1) + ", строка " + (j + 1));
-//            }
-//        }
-//
-//        printer.fsWriteTag(1008, "foo@example.com");
+        printer.fsWriteTag(1008, "foo@example.com");
 
         // printer.fsWriteTag(1057, 4, 1);
 
-        printer.printRecTotal(0, payment, "1");
+        printer.printRecTotal(payment, payment, "1");
 
         printer.endFiscalReceipt(false);
 
