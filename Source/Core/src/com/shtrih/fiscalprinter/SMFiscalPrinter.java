@@ -25,6 +25,7 @@ import com.shtrih.fiscalprinter.command.FDOParameters;
 import com.shtrih.fiscalprinter.command.FMTotals;
 import com.shtrih.fiscalprinter.command.FSAcceptItemCode;
 import com.shtrih.fiscalprinter.command.FSBindItemCode;
+import com.shtrih.fiscalprinter.command.FSCloseReceipt;
 import com.shtrih.fiscalprinter.command.FSDocument;
 import com.shtrih.fiscalprinter.command.FSFindDocument;
 import com.shtrih.fiscalprinter.command.FSPrintCorrectionReceipt;
@@ -651,4 +652,8 @@ public interface SMFiscalPrinter {
     public FSAcceptItemCode fsAcceptItemCode(int action) throws Exception;
 
     public FSReadKMServerStatus fsReadKMServerStatus() throws Exception;
+    
+    public int fsCloseReceipt(FSCloseReceipt command) throws Exception;
+    
+    public byte[] processTLVBeforeReceipt(byte[] tlv) throws Exception;
 }

@@ -779,11 +779,11 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     }
 
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
-        
+
     }
 
     public void fsWriteTLV(byte[] tlv) throws Exception {
-        
+
     }
 
     public int fsWriteOperationTLV(byte[] tlv) throws Exception {
@@ -1048,14 +1048,14 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public long[] readTotalizers(int recType) throws Exception {
         return null;
     }
-    
-    public String[] readEJDocument(int documentNumber) throws Exception{
+
+    public String[] readEJDocument(int documentNumber) throws Exception {
         return null;
     }
 
     @Override
     public void writeFirmwareBlockToSDCard(int fileType, int blockNumber, byte[] block) throws Exception {
-        
+
     }
 
     @Override
@@ -1082,91 +1082,101 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public boolean isSDCardPresent() throws Exception {
         return false;
     }
-    public int getNumHeaderLines() throws Exception{
+
+    public int getNumHeaderLines() throws Exception {
         return 3;
     }
-    
-    public int getNumTrailerLines() throws Exception{
+
+    public int getNumTrailerLines() throws Exception {
         return 3;
     }
 
     public int getHeaderTableRow() throws Exception {
         return 12;
     }
-    
-    public int printDocEnd() throws Exception{
+
+    public int printDocEnd() throws Exception {
         return 0;
     }
-    
-    public int fsStartDayClose() throws Exception{
+
+    public int fsStartDayClose() throws Exception {
         return 0;
     }
-    
-    public int fsStartDayOpen() throws Exception{
+
+    public int fsStartDayOpen() throws Exception {
         return 0;
     }
-    
-    public int fsStartFiscalization(int reportType) throws Exception{
+
+    public int fsStartFiscalization(int reportType) throws Exception {
         return 0;
     }
-    
-    public int fsStartCorrectionReceipt() throws Exception{
+
+    public int fsStartCorrectionReceipt() throws Exception {
         return 0;
     }
-    
-    public int fsStartCalcReport() throws Exception{
+
+    public int fsStartCalcReport() throws Exception {
         return 0;
     }
-    
+
     public int fsStartFiscalClose() throws Exception {
         return 0;
     }
-    
-    public int fsPrintCorrectionReceipt(FSPrintCorrectionReceipt command) throws Exception{
+
+    public int fsPrintCorrectionReceipt(FSPrintCorrectionReceipt command) throws Exception {
         return 0;
     }
 
-    public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws Exception{
+    public int fsPrintCorrectionReceipt2(FSPrintCorrectionReceipt2 command) throws Exception {
         return 0;
     }
-    
-    public boolean isDayClosed() throws Exception{
+
+    public boolean isDayClosed() throws Exception {
         return false;
     }
-    
-    public boolean getCapOpenFiscalDay(){
+
+    public boolean getCapOpenFiscalDay() {
         return false;
     }
-    
-    public int sendItemCode(GS1Barcode barcode) throws Exception{
+
+    public int sendItemCode(GS1Barcode barcode) throws Exception {
         return 0;
     }
-    
-    public int sendItemCode2(String barcode) throws Exception{
+
+    public int sendItemCode2(String barcode) throws Exception {
         return 0;
     }
-    
-    public int checkItemCode(GS1Barcode barcode) throws Exception{
+
+    public int checkItemCode(GS1Barcode barcode) throws Exception {
         return 0;
     }
-    
+
     public int checkItemCode2(String barcode) throws Exception {
         return 0;
     }
-    
-    public FSBindItemCode fsBindItemCode(int codeLength) throws Exception{
+
+    public FSBindItemCode fsBindItemCode(int codeLength) throws Exception {
         return null;
     }
 
-    public FSAcceptItemCode fsAcceptItemCode(int action) throws Exception{
+    public FSAcceptItemCode fsAcceptItemCode(int action) throws Exception {
         return null;
     }
 
-    public FSReadKMServerStatus fsReadKMServerStatus() throws Exception{
+    public FSReadKMServerStatus fsReadKMServerStatus() throws Exception {
         return null;
+    }
+
+    public FSBindItemCode bindItemCode(String barcode) throws Exception {
+        return null;
+    }
+
+    public int fsCloseReceipt(FSCloseReceipt command) throws Exception {
+        return 0;
+    }
+
+    public byte[] processTLVBeforeReceipt(byte[] tlv) throws Exception {
+        return tlv;
     }
     
-    public FSBindItemCode bindItemCode(String barcode) throws Exception{
-        return null;
-    }
 }

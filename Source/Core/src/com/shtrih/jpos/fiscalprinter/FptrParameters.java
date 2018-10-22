@@ -24,6 +24,14 @@ public class FptrParameters {
     public static final int MARK_TYPE_DRUGS     = 3;
     public static final int MARK_TYPE_TOBACCO   = 5;
     
+    ///////////////////////////////////////////////////////////////////////////
+    // userExtendedTagPrintMode constants
+    
+    public static final int USER_EXTENDED_TAG_PRINT_MODE_DRIVER     = 0;
+    public static final int USER_EXTENDED_TAG_PRINT_MODE_PRINTER    = 1;
+    
+    
+    
     public static final int defaultGraphicsLineDelay = 200;
 
     public int byteTimeout = 3000;
@@ -184,6 +192,7 @@ public class FptrParameters {
     public int newItemStatus = FSCheckBarcode.FS_ITEM_STATUS_RETAIL;
     public int itemCheckMode = FSCheckBarcode.FS_CHECK_MODE_FULL;
     public int itemMarkType = FptrParameters.MARK_TYPE_TOBACCO;
+    public int userExtendedTagPrintMode = USER_EXTENDED_TAG_PRINT_MODE_DRIVER;
     
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -202,6 +211,7 @@ public class FptrParameters {
         setPortType(SmFptrConst.PORT_TYPE_FROMCLASS);
         setBaudRate(4800);
         FSPrintTags = true;
+        userExtendedTagPrintMode = USER_EXTENDED_TAG_PRINT_MODE_DRIVER;
     }
 
     public void load(JposEntry entry) throws Exception {
@@ -414,6 +424,7 @@ public class FptrParameters {
         itemCheckMode = reader.readInteger("itemCheckMode", FSCheckBarcode.FS_CHECK_MODE_FULL);
         itemMarkType = reader.readInteger("itemMarkType", FptrParameters.MARK_TYPE_TOBACCO);
         paymentSumCorrectionEnabled = reader.readBoolean("paymentSumCorrectionEnabled", false);
+        userExtendedTagPrintMode = reader.readInteger("userExtendedTagPrintMode", USER_EXTENDED_TAG_PRINT_MODE_DRIVER);
 
         // paymentNames
         String paymentName;

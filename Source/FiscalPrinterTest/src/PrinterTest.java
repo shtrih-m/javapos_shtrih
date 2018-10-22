@@ -982,15 +982,15 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
-            String[] date = new String[1];
-            date[0] = "21092018133545";
-            printer.setDate(date[0]);
-            printer.getDate(date);
-            
+            //String[] date = new String[1];
+            //date[0] = "21092018133545";
+            //printer.setDate(date[0]);
+            //printer.getDate(date);
             //printer.openFiscalDay();
             //printEscBarcodesNormal();
-            //printFiscalReceipt145_4();
             //checkItemBarcode();
+            
+            printFiscalReceipt145_6();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3721,6 +3721,8 @@ class PrinterTest implements FiscalPrinterConst {
             printer.beginFiscalReceipt(false);
             printer.printRecItem("Item1", 1, 1000, 1, 1, "");
             printer.printRecTotal(1, 1, "0");
+            printer.fsWriteTag(1085, "1085, 012345678900123456789001234567890012345678900123456789001234567890");
+            printer.fsWriteTag(1086, "1086, 012345678900123456789001234567890012345678900123456789001234567890");
             printer.endFiscalReceipt(false);
 
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETSALE);
@@ -3745,4 +3747,27 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    public void printFiscalReceipt145_6() {
+        try {
+            printer.resetPrinter();
+
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("Item1", 1, 1000, 1, 1, "");
+            printer.printRecTotal(1, 1, "0");
+            printer.fsWriteTag(1085, "1085"
+                    + "01234567890123456789\r\n01234567890123456789\r\n01234567890123456789");
+            printer.fsWriteTag(1086, "1086"
+                    + "01234567890123456789012345678901234567890123456789"
+                    + "01234567890123456789012345678901234567890123456789"
+                    + "0123456789\r\n0123456789012345678901234567890123456789"
+                    + "01234567890123456789012345678901234567890123456789"
+                    + "01234567890123456789012345678901234567890123456789"
+                    + "01234567890123456789012345678901234567890123456789");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
 }

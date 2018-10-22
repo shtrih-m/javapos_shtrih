@@ -104,6 +104,10 @@ public class TLVTag {
     }
 
     public byte[] getBinValue() throws Exception {
+        return valueToBin(value);
+    }
+    
+    public byte[] valueToBin(String value) throws Exception {
         switch (type) {
             case itByte:
                 return intToTLV(Integer.parseInt(value), 1);

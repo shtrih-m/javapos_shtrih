@@ -95,6 +95,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
         if (getParams().openReceiptOnBegin) {
             openReceipt(true);
+            getPrinter().openReceipt(receiptType);
         }
     }
 
@@ -105,8 +106,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     receiptType = PrinterConst.SMFP_RECTYPE_RETSALE;
                 }
             }
-            getPrinter().openReceipt(receiptType);
-
             isOpened = true;
         }
     }
@@ -249,8 +248,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             if (item instanceof FSOperationTLVItem) {
                 FSOperationTLVItem tlvItem = (FSOperationTLVItem) item;
                 getDevice().fsWriteOperationTLV(tlvItem.getData());
-
-                // TODO: print tag?
             }
 
             if (item instanceof FSTLVItem) {
@@ -299,8 +296,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     private void correctPayments() throws Exception {
-        if (!getParams().paymentSumCorrectionEnabled)
+        if (!getParams().paymentSumCorrectionEnabled) {
             return;
+        }
 
         long paidAmount = 0;
         for (int i = 1; i < payments.length; i++) {
@@ -346,10 +344,20 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
+    public void processTLVItems() throws Exception {
+        for (int i = 0; i < items.size(); i++) {
+            Object item = items.get(i);
+            if (item instanceof FSTLVItem) {
+                FSTLVItem tlvItem = (FSTLVItem) item;
+                tlvItem.setData(getDevice().processTLVBeforeReceipt(tlvItem.getData()));
+            }
+        }
+    }
+
     public void endFiscalReceipt(boolean printHeader) throws Exception {
         if (isOpened) {
+            processTLVItems();
             removeStornoItems();
-            
             correctPayments();
 
             if (getDevice().getCapDiscount()) {
@@ -409,7 +417,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 closeReceipt.setTaxSystem(getParams().taxSystem);
                 closeReceipt.setText(getParams().closeReceiptText);
 
-                int rc = getDevice().executeCommand(closeReceipt);
+                int rc = getDevice().fsCloseReceipt(closeReceipt);
 
                 if (rc == SMFP_EFPTR_NOT_SUPPORTED) {
                     CloseRecParams closeParams = new CloseRecParams();
@@ -924,7 +932,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         } else if (quantity == 0) {
             quantity = 1000;
         }
-        
+
         quantity = correctQuantity(price, quantity, unitPrice);
 
         doPrintSale(price, quantity, unitPrice, department, vatInfo, description, unitName, false);
@@ -1140,7 +1148,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public class FSTLVItem {
 
-        private final byte[] data;
+        private byte[] data;
         private FontNumber font;
 
         public FSTLVItem(byte[] data, FontNumber font) {
@@ -1148,6 +1156,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             this.font = font;
         }
 
+        public void setData(byte[] data) {
+            this.data = data;
+        }
+        
         public byte[] getData() {
             return data;
         }

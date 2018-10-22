@@ -26,6 +26,10 @@ public class TLVItems {
         items.add(item);
     }
 
+    public void remove(TLVItem item) {
+        items.remove(item);
+    }
+    
     public TLVItem get(int index) {
         return items.get(index);
     }
