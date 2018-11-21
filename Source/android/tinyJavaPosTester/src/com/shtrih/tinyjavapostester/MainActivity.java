@@ -53,6 +53,8 @@ import com.shtrih.fiscalprinter.command.FSStatusInfo;
 import com.shtrih.fiscalprinter.command.GenerateMonoTokenCommand;
 import com.shtrih.fiscalprinter.command.PrinterDate;
 import com.shtrih.fiscalprinter.command.PrinterTime;
+import com.shtrih.fiscalprinter.command.ReadFieldInfo;
+import com.shtrih.fiscalprinter.command.ReadTable;
 import com.shtrih.fiscalprinter.command.ReadTableInfo;
 import com.shtrih.fiscalprinter.port.UsbPrinterPort;
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialDriver;
@@ -1104,37 +1106,41 @@ public class MainActivity extends AppCompatActivity {
 
     private void printSalesReceipt(final int positions, final int strings) throws Exception {
 
-        long payment = 0;
+        final int fiscalReceiptType = FiscalPrinterConst.FPTR_RT_SALES;
 
-        printer.setFiscalReceiptType(jpos.FiscalPrinterConst.FPTR_RT_SALES);
-        printer.beginFiscalReceipt(false);
-        for (int i = 0; i < positions; i++) {
-            long price = Math.abs(rand.nextLong() % 1000);
-            payment += price;
+        printer.setFiscalReceiptType(fiscalReceiptType);
 
-            String itemName = items[rand.nextInt(items.length)];
-            printer.printRecItem(itemName, price, 0, 0, 0, "");
+        printer.beginFiscalReceipt(true);
 
-            // printer.fsWriteOperationTag(1226, "1234567890  ");
 
-            for (int j = 0; j < strings; j++) {
-                printer.printRecMessage("Продажа № " + (i + 1) + ", строка " + (j + 1));
-            }
-        }
+        //writePaymentTags(receipt.getTags());
+        //Развернул сожержимое метода, чтобы было понятно, какие теги передаём
+        printer.fsWriteTag(1016, "2225031594  ");
+        printer.fsWriteTag(1073, "+78001000000");
+        printer.fsWriteTag(1057, "1");
+        printer.fsWriteTag(1005, "НОВОСИБИРСК,КИРОВА,86");
+        printer.fsWriteTag(1075, "+73833358088");
+        printer.fsWriteTag(1171, "+73833399242");
+        printer.fsWriteTag(1044, "Прием денежных средств");
+        printer.fsWriteTag(1026, "РНКО \"ПЛАТЕЖНЫЙ ЦЕНТР\"");
 
-        printer.fsWriteTag(1008, "foo@example.com");
+        //receipt.getReceipt() - текст чека типа String
+        printer.printNormal(FiscalPrinterConst.FPTR_S_RECEIPT, "receipt.getReceipt()");
 
-        // printer.fsWriteTag(1057, 4, 1);
+        final String unitName = "Оплата";
 
-        printer.printRecTotal(payment, payment, "1");
+        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, 4);
+        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 4);
 
+        printer.printRecItem("Приём платежа", 12300, 0, 0, 0, unitName);
+
+        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, 4);
+        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 4);
+
+        printer.printRecItem("Размер вознаграждения", 123, 0, 3, 0, unitName);
+
+        printer.printRecTotal(12423, 12423, "0");
         printer.endFiscalReceipt(false);
-
-//        FSStatusInfo status = printer.fsReadStatus();
-//        FSDocumentInfo document = printer.fsFindDocument(status.getDocNumber());
-//
-//        printer.printBarcode("004ZY3O.0IKN64", "", SmFptrConst.SMFPTR_BARCODE_CODE39, 100, SmFptrConst.SMFPTR_PRINTTYPE_DRIVER, 1, SmFptrConst.SMFPTR_TEXTPOS_NOTPRINTED, 1, 1);
-//        printer.feedPaper(3);
     }
 
     private void printRefundReceipt() throws Exception {
@@ -2026,7 +2032,7 @@ public class MainActivity extends AppCompatActivity {
             oldOrientation = getRequestedOrientation();
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
-            dialog = ProgressDialog.show(parent, "Writing table cell", "Please wait...", true);
+            dialog = ProgressDialog.show(parent, "Reading tables", "Please wait...", true);
         }
 
         @Override
@@ -2050,7 +2056,7 @@ public class MainActivity extends AppCompatActivity {
 
                     } catch (JposException e) {
                         Throwable cause = e.getCause();
-                        if (cause != null && cause instanceof SmFiscalPrinterException) {
+                        if (cause instanceof SmFiscalPrinterException) {
                             if (((SmFiscalPrinterException) cause).getCode() == SMFP_EFPTR_INVALID_TABLE) {
                                 break;
                             } else {
@@ -2070,6 +2076,110 @@ public class MainActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 log.error("Tables list reading failed", e);
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage(text + "\nSuccess " + (doneAt - startedAt) + " ms");
+            else
+                showMessage(result);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        }
+    }
+
+
+    public void readTable(View view) {
+        final int tableNumber = Integer.parseInt(nbTableNumber.getText().toString());
+        new ReadTableTask(this, tableNumber).execute();
+    }
+
+    private class ReadTableTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+        private final int tableNumber;
+
+        private ProgressDialog dialog;
+
+        private String text;
+
+        private long startedAt;
+        private long doneAt;
+
+        public ReadTableTask(Activity parent, int tableNumber) {
+            this.parent = parent;
+            this.tableNumber = tableNumber;
+        }
+
+        private int oldOrientation;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            oldOrientation = getRequestedOrientation();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
+            dialog = ProgressDialog.show(parent, "Reading table " + tableNumber, "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+
+                ReadTableInfo command = new ReadTableInfo();
+                command.setPassword(printer.getSysPassword());
+                command.setTableNumber(tableNumber);
+
+                printer.executeCommand(command);
+
+                StringBuilder sb = new StringBuilder();
+
+                sb.append("" + tableNumber + ". " + command.getTable().getName() + "\n");
+
+                for (int i = 0; i < command.getTable().getFieldCount(); i++) {
+
+                    ReadFieldInfo fieldInfo = new ReadFieldInfo();
+                    fieldInfo.setPassword(printer.getSysPassword());
+                    fieldInfo.setTable(tableNumber);
+                    fieldInfo.setField(i + 1);
+
+                    printer.executeCommand(fieldInfo);
+
+                    sb.append("  " + i + ". " + fieldInfo.getFieldInfo().getName() + ": ");
+
+                    for (int j = 0; j < command.getTable().getRowCount(); j++) {
+
+                        ReadTable readCell = new ReadTable(printer.getSysPassword(), tableNumber, j + 1, i + 1);
+                        printer.executeCommand(readCell);
+
+
+                        String cell = readCell.fieldValue.toString();
+
+                        sb.append(cell + "; ");
+                    }
+
+                    sb.append("\n");
+                }
+
+                text = sb.toString();
+
+                return null;
+
+            } catch (Exception e) {
+                log.error("Table " + tableNumber + " reading failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();

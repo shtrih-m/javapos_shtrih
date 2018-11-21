@@ -3,6 +3,7 @@ package com.shtrih.tinyjavapostester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.qos.logback.classic.AsyncAppender;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.android.LogcatAppender;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
@@ -61,10 +62,25 @@ public class LogbackConfig {
 		logcatAppender.setEncoder(encoder2);
 		logcatAppender.start();
 
+		AsyncAppender asyncAppender = new AsyncAppender();
+		asyncAppender.setContext(lc);
+		asyncAppender.setName("ASYNC");
+
+		// UNCOMMENT TO TWEAK OPTIONAL SETTINGS
+//    // excluding caller data (used for stack traces) improves appender's performance
+//    asyncAppender.setIncludeCallerData(false);
+//    // set threshold to 0 to disable discarding and keep all events
+//    asyncAppender.setDiscardingThreshold(0);
+//    asyncAppender.setQueueSize(256);
+
+		// NOTE: asyncAppender takes only one child appender
+		asyncAppender.addAppender(fileAppender);
+		asyncAppender.start();
+
 		// add the newly created appenders to the root logger;
 		// qualify Logger to disambiguate from org.slf4j.Logger
 		ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-		root.addAppender(fileAppender);
+		root.addAppender(asyncAppender);
 		root.addAppender(logcatAppender);
 	}
 }

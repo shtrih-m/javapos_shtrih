@@ -27,6 +27,7 @@
     <string name="action_read_table_cell">Read table cell</string>
     <string name="action_write_table_cell">Write table cell</string>
     <string name="action_read_tables">Read tables</string>
+    <string name="action_read_table">Read table</string>
     <string name="action_sync_date_time">Set current date and time</string>
     <string name="action_generate_mono_token">Generate mono token</string>
     <string name="defaultNetworkAddress">127.0.0.1:12345</string>
