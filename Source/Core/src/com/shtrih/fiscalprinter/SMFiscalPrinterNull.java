@@ -1179,4 +1179,6 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return tlv;
     }
     
+    public void resetPrinter() throws Exception {
+    }
 }

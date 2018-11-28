@@ -263,6 +263,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private FSService fsSenderService;
     private FirmwareUpdaterService firmwareUpdaterService;
     private boolean docEndEnabled = true;
+    private JsonUpdateService jsonUpdateService = null;
 
     public void setTextDocumentFilterEnablinessTo(boolean value) {
         filter.setEnabled(value);
@@ -941,6 +942,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     logger.error("Failed to start FirmwareUpdaterService", e);
                     return;
                 }
+                // JSON update service
+                try {
+                    startJsonUpdateService();
+                } catch (Exception e) {
+                    logger.error("Failed to start JsonUpdateService", e);
+                    return;
+                }
             } else {
                 stopPoll();
                 connected = false;
@@ -948,6 +956,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 try {
                     stopFSService();
                     stopFirmwareUpdaterService();
+                    stopJsonUpdateService();
                 } catch (Exception e) {
                     logger.error("Failed to stop FSService", e);
                 }
@@ -1010,6 +1019,32 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         firmwareUpdaterService.start();
     }
 
+    public void startJsonUpdateService() throws Exception {
+        if (jsonUpdateService != null) {
+            return;
+        }
+
+        if (!params.jsonUpdateEnabled) {
+            return;
+        }
+
+        if (!printer.getCapFiscalStorage()) {
+            return;
+        }
+
+        jsonUpdateService = new JsonUpdateService(printer);
+        jsonUpdateService.start();
+    }
+    
+    public void stopJsonUpdateService() throws Exception {
+        if (jsonUpdateService == null) {
+            return;
+        }
+
+        jsonUpdateService.stop();
+        jsonUpdateService = null;
+    }
+    
     public void stopFSService() throws Exception {
         if (fsSenderService == null) {
             return;
@@ -1916,7 +1951,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             logger.debug("dir.listFiles() returns null");
             return;
         }
-        logger.debug("files.length = " + files.length);
         for (int i = 0; i < files.length; i++) {
             File file = files[i];
             logger.debug("Found file '" + file.getAbsolutePath() + "')");
@@ -3687,6 +3721,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         params.cancelIO = false;
         checkEnabled();
         cancelReceipt();
+        printer.resetPrinter();
         receiptType = 0;
         isReceiptOpened = false;
     }

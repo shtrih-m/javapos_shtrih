@@ -693,7 +693,9 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void enableDevice() {
         try {
+            //PrinterTest.class.getResourceAsStream("C:\\projects\\JavaPOS\\Source\\FiscalPrinterTest\\Res\\logging.properties");
             printer.setDeviceEnabled(true);
+            //printer.updateFirmware("C:\\projects\\JavaPOS\\Source\\FiscalPrinterTest\\Res\\firmware\\20181024\\upd_app.bin");
 
             //printCheckWithSmallSum();
             //readFSStatus();
@@ -719,9 +721,8 @@ class PrinterTest implements FiscalPrinterConst {
             System.out.println("Cash in drawer: " + printer.readCashRegister(241).getValue() / 100.0d);
              */
             //testTotalizers();
-            printer.fsReadDocumentTLVText(1);
-            printer.fsReadDocumentTLVText(2);
-
+            //printer.fsReadDocumentTLVText(1);
+            //printer.fsReadDocumentTLVText(2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -989,7 +990,7 @@ class PrinterTest implements FiscalPrinterConst {
             //printer.openFiscalDay();
             //printEscBarcodesNormal();
             //checkItemBarcode();
-            
+
             printFiscalReceipt145_6();
         } catch (Exception e) {
             e.printStackTrace();
@@ -3673,18 +3674,18 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void checkItemBarcode(){
+    public void checkItemBarcode() {
         try {
             printer.resetPrinter();
             char GS = 0x1D;
             //String barcode = "018123456789123421000000000005L"+ GS +"2401234"+ GS +"100123456789ABCDEF1234"+ GS +"17170911911129"+ GS +"92E+NEWqvUuQ8CKBk4Rbk0JxKoFeGDo1Ay+9yyVf839Qt++pjSbsMLJbF2ZlFyzf+B8a+JcszhFHpuGpEu1gAlfA==";
-            String barcode = "018123456789123421000000000005M" + GS + "2401234"+ GS +"100123456789ABCDEF1234"+ GS +"17170911911129"+ GS +"92uZoDVpzZRuXoSs79Q54WhebeXNJa1oZ9kTyi09N4vW5E31B7vM3uwo17FIx9fd2T5g9tbVxhR1Wlmt9r3ivSvg==";
+            String barcode = "018123456789123421000000000005M" + GS + "2401234" + GS + "100123456789ABCDEF1234" + GS + "17170911911129" + GS + "92uZoDVpzZRuXoSs79Q54WhebeXNJa1oZ9kTyi09N4vW5E31B7vM3uwo17FIx9fd2T5g9tbVxhR1Wlmt9r3ivSvg==";
             printer.checkItemCode(barcode);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     public void printFiscalReceipt145_4() {
         try {
             printer.resetPrinter();
@@ -3692,17 +3693,17 @@ class PrinterTest implements FiscalPrinterConst {
             printer.beginFiscalReceipt(false);
 
             char GS = 0x1D;
-            String barcode = "018123456789123421000000000005M" + GS + "2401234"+ GS +"100123456789ABCDEF1234"+ GS +"17170911911129"+ GS +"92uZoDVpzZRuXoSs79Q54WhebeXNJa1oZ9kTyi09N4vW5E31B7vM3uwo17FIx9fd2T5g9tbVxhR1Wlmt9r3ivSvg==";
+            String barcode = "018123456789123421000000000005M" + GS + "2401234" + GS + "100123456789ABCDEF1234" + GS + "17170911911129" + GS + "92uZoDVpzZRuXoSs79Q54WhebeXNJa1oZ9kTyi09N4vW5E31B7vM3uwo17FIx9fd2T5g9tbVxhR1Wlmt9r3ivSvg==";
             printer.setItemCode(barcode, "");
             printer.printRecItem("1. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
             printer.printRecItemAdjustment(1, "            1206", 320, 2);
-            
-            printer.setItemCode("00000046200068", "5gk=IYQ");            
+
+            printer.setItemCode("00000046200068", "5gk=IYQ");
             printer.printRecItem("2. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
-            
-            printer.setItemCode("000000462000685gk=IYQAQC5pN/f", "");            
+
+            printer.setItemCode("000000462000685gk=IYQAQC5pN/f", "");
             printer.printRecItem("3. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
-                    
+
             printer.printRecSubtotal(27425);
             printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 25);
             printer.printRecTotal(27400, 27400, "1");
@@ -3750,24 +3751,61 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt145_6() {
         try {
             printer.resetPrinter();
-
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(false);
-            printer.printRecItem("Item1", 1, 1000, 1, 1, "");
-            printer.printRecTotal(1, 1, "0");
-            printer.fsWriteTag(1085, "1085"
-                    + "01234567890123456789\r\n01234567890123456789\r\n01234567890123456789");
-            printer.fsWriteTag(1086, "1086"
-                    + "01234567890123456789012345678901234567890123456789"
-                    + "01234567890123456789012345678901234567890123456789"
-                    + "0123456789\r\n0123456789012345678901234567890123456789"
-                    + "01234567890123456789012345678901234567890123456789"
-                    + "01234567890123456789012345678901234567890123456789"
-                    + "01234567890123456789012345678901234567890123456789");
+            printer.fsWriteTag(1117, "info@russianpost.ru");
+            printer.fsWriteTag(1057, "4");
+            printer.fsWriteTag(1016, "7724261610");
+            printer.fsWriteTag(1026, "ФГУП \"ПОЧТА РОССИИ\"");
+            printer.fsWriteTag(1044, "Приём платежа");
+            printer.fsWriteTag(1073, "+78001000000");
+            printer.fsWriteTag(1074, "+78001000000");
+            printer.fsWriteTag(1075, "+78001000000");
+            printer.fsWriteTag(1171, "+78007000688");
+            printer.setParameter(18, 4);
+            printer.setParameter(19, 10);
+            printer.printRecItem("Прием платежа", 147032, 12, 0, 0, "");
+            printer.setParameter(18, 4);
+            printer.setParameter(19, 10);
+            printer.printRecItem("Доп. услуга населению", 500, 12, 1, 0, "");
+            printer.printRecTotal(147532, 147532, "");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    
+    public void printFiscalReceipt145_7() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("1. Ложка", 124, 0, 0, 0, "");
+            printer.printRecItem("2. Ложка", 124, 0, 0, 0, "");
+            printer.fsWriteTag(1008, "foo@example.com");
+            printer.printRecItem("3. Ложка", 124, 0, 0, 0, "");
+            
+            printer.printRecTotal(10000, 10000, "");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printFiscalReceipt145_8() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("1123 ХЛЕБ С ОТРУБЯМИ 1/20", 190000, 1000, 2, 190000, "");
+            printer.printRecTotal(190000, 100000, "1");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
     
 }

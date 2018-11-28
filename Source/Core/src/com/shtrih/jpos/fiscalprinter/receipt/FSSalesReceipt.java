@@ -29,6 +29,7 @@ import jpos.JposException;
 
 import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_EFPTR_NOT_SUPPORTED;
 import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_STATION_REC;
+import com.shtrih.jpos.fiscalprinter.FptrParameters;
 
 public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
@@ -222,6 +223,40 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
+    public void printTLVItems() throws Exception {
+        for (int i = 0; i < items.size(); i++) {
+            printTLVItem(items.get(i));
+        }
+    }
+
+    public void printTLVItem(Object item) throws Exception {
+        if (item instanceof FSOperationTLVItem) {
+            FSOperationTLVItem tlvItem = (FSOperationTLVItem) item;
+            getDevice().fsWriteOperationTLV(tlvItem.getData());
+        }
+
+        if (item instanceof FSTLVItem) {
+            FSTLVItem tlvItem = (FSTLVItem) item;
+            getDevice().fsWriteTLV(tlvItem.getData());
+
+            if (getParams().FSPrintTags) {
+
+                TLVParser reader = new TLVParser();
+                reader.read(tlvItem.getData());
+                Vector<String> lines = reader.getPrintText();
+
+                if (getParams().FSTagsPlacement == 1) {
+                    for (String line : lines) {
+                        getDevice().printText(SMFP_STATION_REC, line, tlvItem.getFont());
+                    }
+                } else {
+                    messages.addAll(lines);
+                }
+            }
+        }
+
+    }
+
     public void printReceiptItems() throws Exception {
         boolean isHeaderPrinted = false;
         for (int i = 0; i < items.size(); i++) {
@@ -245,34 +280,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 printTotalDiscount((AmountItem) item);
             }
 
-            if (item instanceof FSOperationTLVItem) {
-                FSOperationTLVItem tlvItem = (FSOperationTLVItem) item;
-                getDevice().fsWriteOperationTLV(tlvItem.getData());
-            }
-
-            if (item instanceof FSTLVItem) {
-                FSTLVItem tlvItem = (FSTLVItem) item;
-                getDevice().fsWriteTLV(tlvItem.getData());
-
-                if (getParams().FSPrintTags) {
-
-                    TLVParser reader = new TLVParser();
-                    reader.read(tlvItem.getData());
-                    Vector<String> lines = reader.getPrintText();
-
-                    if (getParams().FSTagsPlacement == 1) {
-                        for (String line : lines) {
-                            getDevice().printText(SMFP_STATION_REC, line, tlvItem.getFont());
-                        }
-                    } else {
-                        messages.addAll(lines);
-                    }
-                }
-            }
-
             if (item instanceof PrintItem) {
                 PrintItem printItem = (PrintItem) item;
                 printItem.print(getPrinter().getPrinter());
+            }
+            if (getParams().writeTagMode == FptrParameters.WRITE_TAG_MODE_IN_PLACE) {
+                printTLVItem(item);
             }
         }
         printTemplateTrailer();
@@ -369,7 +382,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 addItemsDiscounts();
             }
             updateReceiptItems();
+            if (getParams().writeTagMode == FptrParameters.WRITE_TAG_MODE_BEFORE_ITEMS) {
+                printTLVItems();
+            }
             printReceiptItems();
+            if (getParams().writeTagMode == FptrParameters.WRITE_TAG_MODE_AFTER_ITEMS) {
+                printTLVItems();
+            }
 
             if (disablePrint) {
                 getDevice().disablePrint();
@@ -401,7 +420,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 getFiscalDay().cancelFiscalRec();
                 clearReceipt();
             } else {
-
                 FSCloseReceipt closeReceipt = new FSCloseReceipt();
                 closeReceipt.setSysPassword(getDevice().getUsrPassword());
                 for (int i = 0; i < payments.length; i++) {
@@ -1159,7 +1177,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         public void setData(byte[] data) {
             this.data = data;
         }
-        
+
         public byte[] getData() {
             return data;
         }

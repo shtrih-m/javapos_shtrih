@@ -1254,6 +1254,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 
+    public void resetPrinter() throws Exception {
+        tlvItems.clear();
+    }
+    
     public void writeTLVItems() throws Exception {
         for (int i = 0; i < tlvItems.size(); i++) {
             FSWriteTLV command = new FSWriteTLV();
@@ -3220,16 +3224,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 }
             }
             return reader.write();
-        } else if (params.userExtendedTagPrintMode == FptrParameters.USER_EXTENDED_TAG_PRINT_MODE_PRINTER) 
-        {
+        } else if (params.userExtendedTagPrintMode == FptrParameters.USER_EXTENDED_TAG_PRINT_MODE_PRINTER) {
             TLVParser reader = new TLVParser();
             reader.read(tlv);
             TLVItems items = reader.getItems();
             for (int i = items.size() - 1; i >= 0; i--) {
                 TLVItem item = items.get(i);
                 int tagId = item.getTag().getId();
-                if ((tagId == 1085)||(tagId == 1086)) 
-                {
+                if ((tagId == 1085) || (tagId == 1086)) {
                     String text = item.getText().replace("\r\n", "  ");
                     item.setText(text);
                 }
@@ -3959,6 +3961,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void updateFirmware(String firmwareFileName) throws Exception {
+        logger.debug("updateFirmware(" + firmwareFileName + ")");
         if (!getCapUpdateFirmware()) {
             throw new Exception("Firmware update not supported");
         }

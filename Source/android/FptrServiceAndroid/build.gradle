@@ -94,13 +94,16 @@ android {
                 from "${rootDir}/lib/d2xx.jar"
                 from "${rootDir}/lib/jpos113.jar"
                 from "${rootDir}/lib/zxing-3.2.2.jar"
-                from "${rootDir}/lib/slf4j-api-1.7.21.jar"
-                from "${rootDir}/lib/xerces4android.jar"
-            }
+                from "${rootDir}/lib/slf4j-api-1.7.25.jar"
+                from "${rootDir}/lib/slf4j-log4j12-1.7.25.jar"
+                from "${rootDir}/lib/log4j-1.2.16.jar"
+                from "${rootDir}/lib/android-logging-log4j-1.0.3"
+            from "${rootDir}/lib/xerces4android.jar"
+        }
 
-            releaseBuildTask.dependsOn variant.assemble
-            
-            releaseTask.dependsOn releaseBuildTask
+        releaseBuildTask.dependsOn variant.assemble
+
+        releaseTask.dependsOn releaseBuildTask
 
 //            variant.productFlavors.each { flavor ->
 //                def flavorName = flavor.name.capitalize()
@@ -140,7 +143,7 @@ dependencies {
     api 'zxing:zxing:3.2.2'
 
     implementation 'd2xx:d2xx:1.0',
-            'org.slf4j:slf4j-api:1.7.21',
+            'org.slf4j:slf4j-api:1.7.25',
             'xerces4android:xerces4android:1.0'
     
     androidTestImplementation 'com.android.support:support-annotations:27.1.0'

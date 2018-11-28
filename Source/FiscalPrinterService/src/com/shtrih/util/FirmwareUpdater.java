@@ -30,9 +30,10 @@ public class FirmwareUpdater {
         return true;
     }
 
-    public static void updateFirmwareDFU(String firmwareFileName) throws Exception {
+    public static void updateFirmwareDFU(String firmwareFileName) throws Exception 
+    {
         CompositeLogger logger = CompositeLogger.getLogger(FirmwareUpdater.class);
-        logger.debug("updateFirmwareDFU");
+        logger.debug("updateFirmwareDFU(" + firmwareFileName + ")");
 
         RandomAccessFile aFile = new RandomAccessFile(firmwareFileName, "r");
         FileChannel inChannel = aFile.getChannel();
@@ -66,7 +67,7 @@ public class FirmwareUpdater {
         if (device == null) {
             throw new Exception("Device not found");
         }
-
+              
         try {
             dfuDevice.download(buffer);
             dfuDevice.reset();

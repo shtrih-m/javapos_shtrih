@@ -32,7 +32,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="COM3"/>
+        <prop name="portName" type="String" value="COM1"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="1"/>
@@ -131,7 +131,7 @@
         <prop name="payType13" type="String" value="13"/>
         <prop name="payType14" type="String" value="14"/>
         <prop name="payType15" type="String" value="15"/>
-        <prop name="payType16" type="String" value="16"/>
+        <prop name="payType20" type="String" value="15"/>
 		<!-- Payment names -->
         <prop name="paymentName1" type="String" value="CASH"/>
         <prop name="paymentName2" type="String" value="CREDIT"/>
@@ -290,7 +290,7 @@
 		<prop name="quantityCorrectionEnabled" type="String" value="0"/>
 		
 		<!-- Печать описани тэгов средствами драйвера -->
-		<prop name="FSPrintTags" type="String" value="1"/>
+		<prop name="FSPrintTags" type="String" value="0"/>
 		
 		<!-- Место печати тэгов в документе, если включена опция FSPrintTags:
 		     0 - после закрытия
@@ -308,6 +308,10 @@
 		<prop name="itemCheckMode" type="String" value="0"/>
 		<prop name="checkItemCodeEnabled" type="String" value="1"/>
 		<prop name="userExtendedTagPrintMode" type="String" value="0"/>
+		<prop name="jsonUpdateEnabled" type="String" value="0"/>
+		<!-- Режим записи тегов. 0 - в том месте, где был вызван, 1 - до позиций чека, 2 - после всех позиций чека -->
+		<prop name="writeTagMode" type="String" value="1"/>
+		<prop name="openReceiptOnBegin" type="String" value="1"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>

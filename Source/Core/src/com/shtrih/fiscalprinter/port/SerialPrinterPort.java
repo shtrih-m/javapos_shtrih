@@ -12,7 +12,6 @@
  */
 package com.shtrih.fiscalprinter.port;
 
-
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -72,6 +71,8 @@ public class SerialPrinterPort implements PrinterPort {
 
     public synchronized void open(int timeout) throws Exception {
         if (isClosed()) {
+            logger.debug("open(" + portName + "," + baudRate + ")"); // !!!
+            
             CommPortIdentifier portId = CommPortIdentifier
                     .getPortIdentifier(portName);
             if (portId == null) {
@@ -91,6 +92,7 @@ public class SerialPrinterPort implements PrinterPort {
 
     public synchronized void close() {
         if (isOpened()) {
+            logger.debug("close"); // !!!
             port.close();
             port = null;
         }

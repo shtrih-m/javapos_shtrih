@@ -19,6 +19,12 @@ import static com.shtrih.jpos.fiscalprinter.SmFptrConst.SMFPTR_HEADER_MODE_DRIVE
 public class FptrParameters {
 
     ///////////////////////////////////////////////////////////////////////////
+    // writeTagMode constants
+    public static final int WRITE_TAG_MODE_IN_PLACE         = 0;
+    public static final int WRITE_TAG_MODE_BEFORE_ITEMS     = 1;
+    public static final int WRITE_TAG_MODE_AFTER_ITEMS      = 2;
+            
+    ///////////////////////////////////////////////////////////////////////////
     // itemMarkType constants
     public static final int MARK_TYPE_FUR       = 2;
     public static final int MARK_TYPE_DRUGS     = 3;
@@ -193,6 +199,11 @@ public class FptrParameters {
     public int itemCheckMode = FSCheckBarcode.FS_CHECK_MODE_FULL;
     public int itemMarkType = FptrParameters.MARK_TYPE_TOBACCO;
     public int userExtendedTagPrintMode = USER_EXTENDED_TAG_PRINT_MODE_DRIVER;
+    public boolean jsonUpdateEnabled = false;
+    public int jsonUpdatePeriodInMinutes = 5;
+    public String jsonUpdateServerURL = "http://127.0.0.1:8888/check_firmware";
+    public int writeTagMode = FptrParameters.WRITE_TAG_MODE_IN_PLACE;
+    
     
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -425,6 +436,10 @@ public class FptrParameters {
         itemMarkType = reader.readInteger("itemMarkType", FptrParameters.MARK_TYPE_TOBACCO);
         paymentSumCorrectionEnabled = reader.readBoolean("paymentSumCorrectionEnabled", false);
         userExtendedTagPrintMode = reader.readInteger("userExtendedTagPrintMode", USER_EXTENDED_TAG_PRINT_MODE_DRIVER);
+        jsonUpdateEnabled = reader.readBoolean("jsonUpdateEnabled", false);
+        jsonUpdatePeriodInMinutes = reader.readInteger("jsonUpdatePeriodInMinutes", 10);
+        jsonUpdateServerURL = reader.readString("jsonUpdateServerURL", "http://127.0.0.1:8888/check_firmware");
+        writeTagMode = reader.readInteger("writeTagMode", FptrParameters.WRITE_TAG_MODE_IN_PLACE);
 
         // paymentNames
         String paymentName;

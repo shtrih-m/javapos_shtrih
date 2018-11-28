@@ -656,4 +656,6 @@ public interface SMFiscalPrinter {
     public int fsCloseReceipt(FSCloseReceipt command) throws Exception;
     
     public byte[] processTLVBeforeReceipt(byte[] tlv) throws Exception;
+    
+    public void resetPrinter() throws Exception;
 }
