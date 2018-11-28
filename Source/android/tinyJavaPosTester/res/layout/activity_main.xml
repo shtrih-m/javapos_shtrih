@@ -486,6 +486,13 @@
                 android:text="@string/action_read_tables" />
 
             <Button
+                android:id="@+id/btnReadTable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="readTable"
+                android:text="@string/action_read_table" />
+
+            <Button
                 android:id="@+id/btnSyncDateTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

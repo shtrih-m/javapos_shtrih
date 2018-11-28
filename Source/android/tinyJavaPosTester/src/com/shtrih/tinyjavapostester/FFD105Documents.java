@@ -221,25 +221,25 @@ public class FFD105Documents {
             }
         }
 
+        if (isCashCore(printer)) {
+            printer.writeTable(1, 1, 48, electronically ? "1" : "0");
+        }
+
+        boolean isNewMobile = isMobile(printer) && printerStatus.getFirmwareBuild() >= 20041;
+        if (isNewMobile) {
+            printer.writeTable(1, 1, 43, electronically ? "1" : "0");
+        }
+
+        boolean sendOperationTagsFirst = isCashCore(printer) || isMobile(printer);
+
         for (Object element : params.Positions.FiscalStrings) {
 
             if (element instanceof FiscalString) {
 
                 FiscalString item = (FiscalString) element;
 
-                // Позиция с признаком способа расчета и признаком предмета расчета
-                // 1214, признак способа расчета, если не указывать будет 0
-                // ВНИМАНИЕ: значение сохраняется после вызова printRecItem
-                printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, item.SignMethodCalculation);
-                // 1212, признак предмета расчета, если не указывать будет 0
-                // ВНИМАНИЕ: значение сохраняется после вызова printRecItem
-                printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, item.SignCalculationObject);
-
-                // Позиция с коррекцией на +-1 копейку
-                // Сумма позиции будет сброшена драйвером после вызова printRecItem
-                printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, (int) item.getAmount());
-                printer.setDepartment(item.Department);
-                printer.printRecItem(item.Name, 0, (int) item.getQuantity(), item.getTax(), item.getPrice(), "");
+                if(!sendOperationTagsFirst)
+                    fsOperationV2(printer, item);
 
                 // единица измерения предмета расчета
                 if (item.MeasurementUnit != null) {
@@ -277,6 +277,11 @@ public class FFD105Documents {
                     byte[] data = generateKTN(item.GoodCodeData);
                     printer.fsWriteOperationTag(1162, data);
                 }
+
+                // В мобайле и КЯ сперва нужно отправить тэги затем отправлять Операцию V2
+                if (sendOperationTagsFirst)
+                    fsOperationV2(printer, item);
+
             } else if (element instanceof TextString) {
                 TextString item = (TextString) element;
                 printer.printRecMessage(item.Text, item.FontNumber);
@@ -326,7 +331,7 @@ public class FFD105Documents {
         writeVATINTagIfNotNullAndNotEmpty(printer, 1016, params.Parameters.AgentData.MoneyTransferOperatorVATIN);
 
         // телефон поставщика
-        writeVATINTagIfNotNullAndNotEmpty(printer, 1171, params.Parameters.PurveyorData.PurveyorPhone);
+        writeTagIfNotNullAndNotEmpty(printer, 1171, params.Parameters.PurveyorData.PurveyorPhone);
 
         if (params.Payments.getCash() > 0)
             printer.printRecTotal(0, params.Payments.getCash(), "0");
@@ -340,6 +345,22 @@ public class FFD105Documents {
             printer.printRecTotal(0, params.Payments.getCashProvision(), "15");
 
         printer.endFiscalReceipt(false);
+    }
+
+    private void fsOperationV2(ShtrihFiscalPrinter printer, FiscalString item) throws JposException {
+        // Позиция с признаком способа расчета и признаком предмета расчета
+        // 1214, признак способа расчета, если не указывать будет 0
+        // ВНИМАНИЕ: значение сохраняется после вызова printRecItem
+        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, item.SignMethodCalculation);
+        // 1212, признак предмета расчета, если не указывать будет 0
+        // ВНИМАНИЕ: значение сохраняется после вызова printRecItem
+        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, item.SignCalculationObject);
+
+        // Позиция с коррекцией на +-1 копейку
+        // Сумма позиции будет сброшена драйвером после вызова printRecItem
+        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, (int) item.getAmount());
+        printer.setDepartment(item.Department);
+        printer.printRecItem(item.Name, 0, (int) item.getQuantity(), item.getTax(), item.getPrice(), "");
     }
 
     private byte[] generateKTN(GoodCodeData data) throws Exception {
