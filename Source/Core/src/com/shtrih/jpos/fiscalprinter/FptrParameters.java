@@ -19,7 +19,7 @@ import static com.shtrih.jpos.fiscalprinter.SmFptrConst.SMFPTR_HEADER_MODE_DRIVE
 public class FptrParameters {
 
     ///////////////////////////////////////////////////////////////////////////
-    // writeTagMode constants
+    // gf constants
     public static final int WRITE_TAG_MODE_IN_PLACE         = 0;
     public static final int WRITE_TAG_MODE_BEFORE_ITEMS     = 1;
     public static final int WRITE_TAG_MODE_AFTER_ITEMS      = 2;

@@ -32,7 +32,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="COM1"/>
+        <prop name="portName" type="String" value="COM37"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="1"/>
@@ -310,8 +310,8 @@
 		<prop name="userExtendedTagPrintMode" type="String" value="0"/>
 		<prop name="jsonUpdateEnabled" type="String" value="0"/>
 		<!-- Режим записи тегов. 0 - в том месте, где был вызван, 1 - до позиций чека, 2 - после всех позиций чека -->
-		<prop name="writeTagMode" type="String" value="1"/>
-		<prop name="openReceiptOnBegin" type="String" value="1"/>
+		<prop name="writeTagMode" type="String" value="2"/>
+		<prop name="openReceiptOnBegin" type="String" value="0"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>

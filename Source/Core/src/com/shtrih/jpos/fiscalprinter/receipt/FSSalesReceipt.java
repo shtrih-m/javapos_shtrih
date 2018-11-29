@@ -94,7 +94,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         clearReceipt();
         getDevice().printFSHeader();
 
-        if (getParams().openReceiptOnBegin) {
+        if (getParams().openReceiptOnBegin || (getParams().writeTagMode == FptrParameters.WRITE_TAG_MODE_BEFORE_ITEMS)) {
             openReceipt(true);
             getPrinter().openReceipt(receiptType);
         }
