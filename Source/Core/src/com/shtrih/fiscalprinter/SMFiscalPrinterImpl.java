@@ -2098,7 +2098,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (isShtrihMobile()) {
             capGraphics3Scale = true;
         }
-
+        capCutPaper = !isShtrihMobile();
         updateFirmware();
     }
 

@@ -11,7 +11,6 @@
 
         <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
     </JposEntry> 
-    
     <JposEntry logicalName="ShtrihFptr">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.fiscalprinter.FiscalPrinterService"/>
         <vendor name="SHTRIH-M" url="http://www.shtrih-m.com"/>
@@ -259,11 +258,11 @@
         <!-- Text report empty lines enabled -->
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- Receipt template -->
-		<prop name="ReceiptTemplateEnabled" type="String" value="0"/>
+		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
 		<prop name="FieldSeparator" type="String" value=":"/>
-		<prop name="ItemTableHeader" type="String" value="                 Цена со:№пп Цена  Скидка скидкой Кол-во   ИТОГО: "/>
+		<prop name="ItemTableHeader" type="String" value=""/>
 		<prop name="ItemTableTrailer" type="String" value=""/>
-		<prop name="ItemRowFormat" type="String" value="%3cPOS% %6lPRICE% %8lSUM%*%3QUAN%%=$8TOTAL% %TAX_NAME%:%POSTLINE%:%PRELINE%"/>
+		<prop name="ItemRowFormat" type="String" value="%48lTITLE%%28SUM% X %5lQUAN%%=$10TOTAL_TAX%"/>
 		<!-- <prop name="DiscountFormat" type="String" value="    СКИДКА  %29lTITLE%%=$10TOTAL%"/> -->
 		<prop name="DiscountFormat" type="String" value=""/>
 		<!-- <prop name="ChargeFormat" type="String"   value="    НАДБАВКА  %29lTITLE%%=$10TOTAL%"/> -->
@@ -310,7 +309,7 @@
 		<prop name="userExtendedTagPrintMode" type="String" value="0"/>
 		<prop name="jsonUpdateEnabled" type="String" value="0"/>
 		<!-- Режим записи тегов. 0 - в том месте, где был вызван, 1 - до позиций чека, 2 - после всех позиций чека -->
-		<prop name="writeTagMode" type="String" value="2"/>
+		<prop name="writeTagMode" type="String" value="1"/>
 		<prop name="openReceiptOnBegin" type="String" value="0"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">

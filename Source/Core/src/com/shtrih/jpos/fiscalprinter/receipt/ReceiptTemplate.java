@@ -23,8 +23,8 @@ import java.util.Vector;
 public class ReceiptTemplate {
 
     private final ReceiptContext context;
-    private String[] headerLines = null;
-    private String[] trailerLines = null;
+    private String[] headerLines = new String[0];
+    private String[] trailerLines = new String[0];
     private TemplateLine[] itemTemplate = null;
     private TemplateLine[] discountTemplate = null;
     private TemplateLine[] chargeTemplate = null;
@@ -54,8 +54,12 @@ public class ReceiptTemplate {
      */
     private void parseFormatLines() throws Exception {
         String fieldSeparator = getParams().fieldSeparator;
-        headerLines = getParams().ItemTableHeader.split(fieldSeparator);
-        trailerLines = getParams().ItemTableTrailer.split(fieldSeparator);
+        if (!getParams().ItemTableHeader.isEmpty()) {
+            headerLines = getParams().ItemTableHeader.split(fieldSeparator);
+        }
+        if (!getParams().ItemTableTrailer.isEmpty()) {
+            trailerLines = getParams().ItemTableTrailer.split(fieldSeparator);
+        }
         // item
         String[] lines = getParams().ItemRowFormat.split(fieldSeparator);
         itemTemplate = new TemplateLine[lines.length];

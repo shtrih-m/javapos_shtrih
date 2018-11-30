@@ -149,7 +149,7 @@ public class FptrParameters {
     public boolean textReportEnabled = false;
     public boolean readDiscountMode = true;
     public String textReportFileName = "documents.txt";
-    public boolean FSPrintTags = true;
+    public boolean FSPrintTags = false;
     public int FSTagsPlacement = 0;
     public boolean textReportEmptyLinesEnabled = true;
     public boolean ReceiptTemplateEnabled = false;
@@ -221,7 +221,7 @@ public class FptrParameters {
     public void setDefaults() throws Exception {
         setPortType(SmFptrConst.PORT_TYPE_FROMCLASS);
         setBaudRate(4800);
-        FSPrintTags = true;
+        FSPrintTags = false;
         userExtendedTagPrintMode = USER_EXTENDED_TAG_PRINT_MODE_DRIVER;
     }
 
@@ -380,7 +380,7 @@ public class FptrParameters {
         FSDiscountEnabled = reader.readBoolean("FSDiscountEnabled", true);
         FSCombineItemAdjustments = reader.readBoolean("FSCombineItemAdjustments", true);
         readDiscountMode = reader.readBoolean("readDiscountMode", true);
-        FSPrintTags = reader.readBoolean("FSPrintTags", true);
+        FSPrintTags = reader.readBoolean("FSPrintTags", false);
         FSTagsPlacement = reader.readInteger("FSTagsPlacement", 0);
 
         textReportEnabled = reader.readBoolean("textReportEnabled", false);

@@ -94,7 +94,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         clearReceipt();
         getDevice().printFSHeader();
 
-        if (getParams().openReceiptOnBegin || (getParams().writeTagMode == FptrParameters.WRITE_TAG_MODE_BEFORE_ITEMS)) {
+        if (getParams().openReceiptOnBegin
+                || (getParams().writeTagMode == FptrParameters.WRITE_TAG_MODE_BEFORE_ITEMS)
+                || (getParams().ReceiptTemplateEnabled)) {
             openReceipt(true);
             getPrinter().openReceipt(receiptType);
         }
@@ -266,7 +268,45 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     isHeaderPrinted = true;
                     printTemplateHeader();
                 }
-                printFSSale((FSSaleReceiptItem) item);
+                if (getParams().ReceiptTemplateEnabled) {
+                    printFSSaleTemplate((FSSaleReceiptItem) item);
+                } else {
+                    printFSSaleNoTemplate((FSSaleReceiptItem) item);
+                }
+            }
+            if (item instanceof FSTextReceiptItem) {
+                printFSText((FSTextReceiptItem) item);
+            }
+            if (item instanceof PrinterBarcode) {
+                getDevice().printBarcode((PrinterBarcode) item);
+                continue;
+            }
+
+            if (item instanceof AmountItem) {
+                printTotalDiscount((AmountItem) item);
+            }
+
+            if (item instanceof PrintItem) {
+                PrintItem printItem = (PrintItem) item;
+                printItem.print(getPrinter().getPrinter());
+            }
+            if (getParams().writeTagMode == FptrParameters.WRITE_TAG_MODE_IN_PLACE) {
+                printTLVItem(item);
+            }
+        }
+        printTemplateTrailer();
+    }
+
+    public void templatePrintTextItems() throws Exception {
+        boolean isHeaderPrinted = false;
+        for (int i = 0; i < items.size(); i++) {
+            Object item = items.get(i);
+            if (item instanceof FSSaleReceiptItem) {
+                if (!isHeaderPrinted) {
+                    isHeaderPrinted = true;
+                    printTemplateHeader();
+                }
+                templatePrintTextItem((FSSaleReceiptItem) item);
             }
             if (item instanceof FSTextReceiptItem) {
                 printFSText((FSTextReceiptItem) item);
@@ -386,6 +426,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 printTLVItems();
             }
             printReceiptItems();
+            if (getParams().ReceiptTemplateEnabled) {
+                templatePrintTextItems();
+            }
+
             if (getParams().writeTagMode == FptrParameters.WRITE_TAG_MODE_AFTER_ITEMS) {
                 printTLVItems();
             }
@@ -521,7 +565,65 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void printFSSale(FSSaleReceiptItem item) throws Exception {
+    public void printFSSaleTemplate(FSSaleReceiptItem item) throws Exception {
+        String itemText = item.getText();
+        item.setText("//" + item.getText());
+        getDevice().checkItemCode(item.getBarcode());
+        PriceItem priceItem = item.getPriceItem();
+        if (!item.getIsStorno()) {
+            switch (receiptType) {
+                case PrinterConst.SMFP_RECTYPE_SALE:
+                    getDevice().printSale(priceItem);
+                    break;
+
+                case PrinterConst.SMFP_RECTYPE_RETSALE:
+                    getDevice().printVoidSale(priceItem);
+                    break;
+
+                case PrinterConst.SMFP_RECTYPE_BUY:
+                    getDevice().printRefund(priceItem);
+                    break;
+
+                case PrinterConst.SMFP_RECTYPE_RETBUY:
+                    getDevice().printVoidRefund(priceItem);
+                    break;
+                default:
+                    getDevice().printSale(priceItem);
+            }
+        } else {
+            getDevice().printVoidItem(priceItem);
+        }
+        getDevice().sendItemCode(item.getBarcode());
+        item.setText(itemText);
+    }
+
+    public void printTextTemplate(FSSaleReceiptItem item) throws Exception {
+        if (!receiptTemplate.hasPreLine()) {
+            String preLine = item.getPreLine();
+            if (preLine.length() > 0) {
+                getDevice().printText(preLine);
+                item.setPreLine("");
+            }
+        }
+
+        String[] lines = receiptTemplate.getReceiptItemLines(item);
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            if (!line.isEmpty()) {
+                getDevice().printText(lines[i]);
+            }
+        }
+
+        if (!receiptTemplate.hasPostLine()) {
+            String postLine = item.getPostLine();
+            if (postLine.length() > 0) {
+                getDevice().printText(postLine);
+                item.setPostLine("");
+            }
+        }
+    }
+
+    public void printFSSaleNoTemplate(FSSaleReceiptItem item) throws Exception {
         if ((!getParams().ReceiptTemplateEnabled) || (!receiptTemplate.hasPreLine())) {
             String preLine = item.getPreLine();
             if (preLine.length() > 0) {
@@ -588,6 +690,35 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
 
         if ((!getParams().ReceiptTemplateEnabled) || (!receiptTemplate.hasPostLine())) {
+            String postLine = item.getPostLine();
+            if (postLine.length() > 0) {
+                getDevice().printText(postLine);
+                item.setPostLine("");
+            }
+        }
+    }
+
+    public void templatePrintTextItem(FSSaleReceiptItem item) throws Exception {
+        if (!receiptTemplate.hasPreLine()) {
+            String preLine = item.getPreLine();
+            if (preLine.length() > 0) {
+                getDevice().printText(preLine);
+                item.setPreLine("");
+            }
+        }
+
+        String[] lines = receiptTemplate.getReceiptItemLines(item);
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            if (!line.isEmpty()) {
+                getDevice().printText(lines[i]);
+            }
+        }
+
+        getDevice().checkItemCode(item.getBarcode());
+        getDevice().sendItemCode(item.getBarcode());
+
+        if (!receiptTemplate.hasPostLine()) {
             String postLine = item.getPostLine();
             if (postLine.length() > 0) {
                 getDevice().printText(postLine);
