@@ -260,19 +260,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printReceiptItems() throws Exception {
-        boolean isHeaderPrinted = false;
         for (int i = 0; i < items.size(); i++) {
             Object item = items.get(i);
             if (item instanceof FSSaleReceiptItem) {
-                if (!isHeaderPrinted) {
-                    isHeaderPrinted = true;
-                    printTemplateHeader();
-                }
-                if (getParams().ReceiptTemplateEnabled) {
-                    printFSSaleTemplate((FSSaleReceiptItem) item);
-                } else {
-                    printFSSaleNoTemplate((FSSaleReceiptItem) item);
-                }
+                printFSSaleNoTemplate((FSSaleReceiptItem) item);
             }
             if (item instanceof FSTextReceiptItem) {
                 printFSText((FSTextReceiptItem) item);
@@ -294,18 +285,19 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 printTLVItem(item);
             }
         }
-        printTemplateTrailer();
     }
 
-    public void templatePrintTextItems() throws Exception {
-        boolean isHeaderPrinted = false;
+    public void templatePrintReceiptItems() throws Exception {
         for (int i = 0; i < items.size(); i++) {
             Object item = items.get(i);
             if (item instanceof FSSaleReceiptItem) {
-                if (!isHeaderPrinted) {
-                    isHeaderPrinted = true;
-                    printTemplateHeader();
-                }
+                printFSSaleTemplate((FSSaleReceiptItem) item);
+            }
+        }
+        printTemplateHeader();
+        for (int i = 0; i < items.size(); i++) {
+            Object item = items.get(i);
+            if (item instanceof FSSaleReceiptItem) {
                 templatePrintTextItem((FSSaleReceiptItem) item);
             }
             if (item instanceof FSTextReceiptItem) {
@@ -425,9 +417,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             if (getParams().writeTagMode == FptrParameters.WRITE_TAG_MODE_BEFORE_ITEMS) {
                 printTLVItems();
             }
-            printReceiptItems();
+
             if (getParams().ReceiptTemplateEnabled) {
-                templatePrintTextItems();
+                templatePrintReceiptItems();
+            } else {
+                printReceiptItems();
             }
 
             if (getParams().writeTagMode == FptrParameters.WRITE_TAG_MODE_AFTER_ITEMS) {
@@ -624,7 +618,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printFSSaleNoTemplate(FSSaleReceiptItem item) throws Exception {
-        if ((!getParams().ReceiptTemplateEnabled) || (!receiptTemplate.hasPreLine())) {
+        if (!receiptTemplate.hasPreLine()) {
             String preLine = item.getPreLine();
             if (preLine.length() > 0) {
                 getDevice().printText(preLine);
@@ -632,23 +626,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             }
         }
 
-        if (getParams().ReceiptTemplateEnabled) {
-            String[] lines = receiptTemplate.getReceiptItemLines(item);
-            for (int i = 0; i < lines.length; i++) {
-                String line = lines[i];
-                if (!line.isEmpty()) {
-                    getDevice().printText(lines[i]);
-                }
-            }
-            /*
-             lines = receiptTemplate.getAdjustmentLines(item);
-             for (int i = 0; i < lines.length; i++) {
-             getDevice().printLine(PrinterConst.SMFP_STATION_REC,
-             lines[i], getParams().discountFont);
-             }
-             */
-            item.setText("//" + item.getText());
-        } else if (!getParams().FSCombineItemAdjustments) {
+        if (!getParams().FSCombineItemAdjustments) {
             printRecItemAsText(item);
             item.setText("//" + item.getText());
         }
@@ -681,15 +659,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
         getDevice().sendItemCode(item.getBarcode());
 
-        if (!getParams().ReceiptTemplateEnabled) {
-            long discountTotal = item.getDiscounts().getTotal();
-            if (discountTotal != 0) {
-                String text = "=" + StringUtils.amountToString(discountTotal);
-                getDevice().printLines("СКИДКА", text);
-            }
+        long discountTotal = item.getDiscounts().getTotal();
+        if (discountTotal != 0) {
+            String text = "=" + StringUtils.amountToString(discountTotal);
+            getDevice().printLines("СКИДКА", text);
         }
 
-        if ((!getParams().ReceiptTemplateEnabled) || (!receiptTemplate.hasPostLine())) {
+        if (!receiptTemplate.hasPostLine()) {
             String postLine = item.getPostLine();
             if (postLine.length() > 0) {
                 getDevice().printText(postLine);

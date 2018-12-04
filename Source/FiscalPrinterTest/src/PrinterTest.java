@@ -3769,6 +3769,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.fsWriteTag(1074, "+78001000000");
             printer.fsWriteTag(1075, "+78001000000");
             printer.fsWriteTag(1171, "+78007000688");
+            printer.printRecMessage(getLoadImageCommand("Logo.bmp"));
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
@@ -3807,5 +3808,5 @@ class PrinterTest implements FiscalPrinterConst {
     }
     
     
-    
+// printRecMessage(          bc:\gd90\reclame.bmp)    
 }

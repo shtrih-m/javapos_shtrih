@@ -260,8 +260,8 @@
 		<!-- Receipt template -->
 		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
 		<prop name="FieldSeparator" type="String" value=":"/>
-		<prop name="ItemTableHeader" type="String" value=""/>
-		<prop name="ItemTableTrailer" type="String" value=""/>
+		<prop name="ItemTableHeader" type="String" value="-------------------HEADER--------------------"/>
+		<prop name="ItemTableTrailer" type="String" value="-------------------TRAILER--------------------"/>
 		<prop name="ItemRowFormat" type="String" value="%48lTITLE%%28SUM% X %5lQUAN%%=$10TOTAL_TAX%"/>
 		<!-- <prop name="DiscountFormat" type="String" value="    СКИДКА  %29lTITLE%%=$10TOTAL%"/> -->
 		<prop name="DiscountFormat" type="String" value=""/>
