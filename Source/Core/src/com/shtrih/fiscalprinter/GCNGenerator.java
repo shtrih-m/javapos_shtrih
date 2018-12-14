@@ -5,6 +5,7 @@ package com.shtrih.fiscalprinter;
  */
 public class GCNGenerator {
 
+    private static final int codeLength = 2;
     private static final int gtinLength = 6;
 
     /**
@@ -25,11 +26,7 @@ public class GCNGenerator {
         if (kiz.length() != kizLength)
             throw new IllegalArgumentException("Incorrect stamp length, expected " + kizLength + ", but was " + kiz.length());
 
-        return new TLVWriter()
-                .add(new byte[]{0x00, 0x02}) // два байта код (2)
-                .addBE(gtin, gtinLength) // GTIN 6 байт Big Endian
-                .add(kiz, kizLength) // КиЗ 20 байт
-                .getBytes();
+        return generate(2, gtin, kiz);
     }
 
     /**
@@ -50,10 +47,50 @@ public class GCNGenerator {
         if (serialNumber.length() != serialNumberLength)
             throw new IllegalArgumentException("Incorrect stamp length, expected " + serialNumberLength + ", but was " + serialNumber.length());
 
+        return generate(3, gtin, serialNumber);
+    }
+
+    /**
+     * Табачная продукция, 05
+     *
+     * @param gtin Идентификатор продукта GTIN.
+     *             Используется 14 разрядный GTIN, при записи в ККТ, GTIN представляется как
+     *             десятичное 14 знаковое число и преобразуется в BIN (big endian), размером 6 байт.
+     * @param id   Код идентификации экземпляра товара, строка до 24 символов..
+     * @return Код товарной номенклатуры
+     */
+    public static byte[] generate5408(long gtin, String id) {
+        return generate(5408, gtin, id);
+    }
+
+    /**
+     * Обувные твары, 5408
+     *
+     * @param gtin Идентификатор продукта GTIN.
+     *             Используется 14 разрядный GTIN, при записи в ККТ, GTIN представляется как
+     *             десятичное 14 знаковое число и преобразуется в BIN (big endian), размером 6 байт.
+     * @param id   Код идентификации экземпляра товара, строка до 24 символов..
+     * @return Код товарной номенклатуры
+     */
+    public static byte[] generate05(long gtin, String id) {
+        return generate(5, gtin, id);
+    }
+
+    /**
+     * Универсальный метод генерации КТН
+     *
+     * @param code  Код маркировки, число 2 байта.
+     * @param gtin  Идентификатор продукта GTIN.
+     *              Используется 14 разрядный GTIN, при записи в ККТ, GTIN представляется как
+     *              десятичное 14 знаковое число и преобразуется в BIN (big endian), размером 6 байт.
+     * @param value Строка до 24 символов.
+     * @return Код товарной номенклатуры
+     */
+    public static byte[] generate(int code, long gtin, String value) {
         return new TLVWriter()
-                .add(new byte[]{0x00, 0x03}) // два байта код (3)
-                .add(serialNumber, serialNumberLength) // 13 байт зав. номера
+                .addBE(code, codeLength) // Код 2 байта Big Endian
                 .addBE(gtin, gtinLength) // GTIN 6 байт Big Endian
+                .add(value) // Значение до 24 байт
                 .getBytes();
     }
 }
