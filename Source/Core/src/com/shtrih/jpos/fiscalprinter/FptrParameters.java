@@ -175,7 +175,7 @@ public class FptrParameters {
     public boolean printRecVoidItemAmount = false;
     public boolean FSReceiptItemDiscountEnabled = false;
     public boolean quantityCorrectionEnabled = false;
-    public boolean paymentSumCorrectionEnabled = false;
+    public boolean paymentSumCorrectionEnabled = true;
     public long taxValue[] = new long[6];
     public int taxSystem = 0;
     public Long itemTotalAmount = null;
@@ -434,7 +434,7 @@ public class FptrParameters {
         newItemStatus = reader.readInteger("newItemStatus", FSCheckBarcode.FS_ITEM_STATUS_RETAIL);
         itemCheckMode = reader.readInteger("itemCheckMode", FSCheckBarcode.FS_CHECK_MODE_FULL);
         itemMarkType = reader.readInteger("itemMarkType", FptrParameters.MARK_TYPE_TOBACCO);
-        paymentSumCorrectionEnabled = reader.readBoolean("paymentSumCorrectionEnabled", false);
+        paymentSumCorrectionEnabled = reader.readBoolean("paymentSumCorrectionEnabled", true);
         userExtendedTagPrintMode = reader.readInteger("userExtendedTagPrintMode", USER_EXTENDED_TAG_PRINT_MODE_DRIVER);
         jsonUpdateEnabled = reader.readBoolean("jsonUpdateEnabled", false);
         jsonUpdatePeriodInMinutes = reader.readInteger("jsonUpdatePeriodInMinutes", 10);
