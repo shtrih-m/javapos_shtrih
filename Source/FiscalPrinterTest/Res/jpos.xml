@@ -31,7 +31,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="COM37"/>
+        <prop name="portName" type="String" value="COM5"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="1"/>
@@ -64,7 +64,7 @@
         <!-- device state polling interval in milliseconds -->
         <prop name="pollInterval" type="String" value="5000"/>
         <!-- Amount coefficient -->
-        <prop name="amountFactor" type="String" value="1"/>
+        <prop name="amountFactor" type="String" value="0.01"/>
         <!-- Quantity coefficient -->
         <prop name="quantityFactor" type="String" value="1"/>
         <!-- Strings encoding -->
@@ -175,7 +175,7 @@
         <!-- Paper cut delay in milliseconds -->
         <prop name="cutPaperDelay" type="String" value="0"/>
         <!-- Sales Receipt type, 0 - normal, 1 - GLOBUS -->
-        <prop name="salesReceiptType" type="String" value="1"/>
+        <prop name="salesReceiptType" type="String" value="0"/>
         <!-- Amount field length -->
         <prop name="RFAmountLength" type="String" value="8"/>
         <!-- Quantity field length -->
@@ -258,7 +258,7 @@
         <!-- Text report empty lines enabled -->
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- Receipt template -->
-		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
+		<prop name="ReceiptTemplateEnabled" type="String" value="0"/>
 		<prop name="FieldSeparator" type="String" value=":"/>
 		<prop name="ItemTableHeader" type="String" value="-------------------HEADER--------------------"/>
 		<prop name="ItemTableTrailer" type="String" value="-------------------TRAILER--------------------"/>
@@ -287,30 +287,26 @@
 		<prop name="printRecVoidItemAmount" type="String" value="0"/>
 		<!-- quantityCorrectionEnabled -->
 		<prop name="quantityCorrectionEnabled" type="String" value="0"/>
-		
-		<!-- Печать описани тэгов средствами драйвера -->
-		<prop name="FSPrintTags" type="String" value="0"/>
-		
-		<!-- Место печати тэгов в документе, если включена опция FSPrintTags:
-		     0 - после закрытия
-		     1 - в месте отправки, например, если тэг был отправлен до печати любой позиции
-		         он будет напечатан сразу после заголовка чека.
-		-->
-		<prop name="FSTagsPlacement" type="String" value="0"/>
 		<prop name="printVoidedReceipt" type="String" value="1"/>
 		<prop name="subtotalTextEnabled" type="String" value="0"/>
-		
 		<prop name="firmwarePath" type="String" value="firmware"/>
 		<prop name="capUpdateFirmware" type="String" value="1"/>
 		<prop name="printStringDelayInMs" type="String" value="0"/>
-		<prop name="footerFlagEnabled" type="String" value="0"/>
+		<prop name="footerFlagEnabled" type="String" value="1"/>
 		<prop name="itemCheckMode" type="String" value="0"/>
 		<prop name="checkItemCodeEnabled" type="String" value="1"/>
 		<prop name="userExtendedTagPrintMode" type="String" value="0"/>
 		<prop name="jsonUpdateEnabled" type="String" value="0"/>
+		<prop name="openReceiptOnBegin" type="String" value="0"/>
 		<!-- Режим записи тегов. 0 - в том месте, где был вызван, 1 - до позиций чека, 2 - после всех позиций чека -->
 		<prop name="writeTagMode" type="String" value="1"/>
-		<prop name="openReceiptOnBegin" type="String" value="0"/>
+		<!-- Печать описани тэгов средствами драйвера -->
+		<prop name="FSPrintTags" type="String" value="1"/>
+		<!-- Место печати тэгов в документе, если включена опция FSPrintTags:
+		     0 - после закрытия, 1 - в месте отправки, например, 
+			 если тэг был отправлен до печати любой позиции он 
+			 будет напечатан сразу после заголовка чека. -->
+		<prop name="FSTagsPlacement" type="String" value="1"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>

@@ -405,8 +405,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             removeStornoItems();
             correctPayments();
 
-            if (getDevice().getCapDiscount()) {
-                addItemsDiscounts();
+            if (getDevice().getCapDiscount()) 
+            {
+                for (int i=0;i<discounts.size();i++){
+                    items.add(discounts.get(i));
+                }
+                discounts.clear();
             } else if (discounts.getTotal() < 100) {
                 discountAmount += (int) discounts.getTotal();
                 discounts.clear();

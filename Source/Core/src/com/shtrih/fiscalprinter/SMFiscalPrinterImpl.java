@@ -1454,7 +1454,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setLine2(line2);
         command.setVscale(1);
         command.setHscale(1);
-        command.setFlags(2);
+        command.setFlags(getPrintStation(SMFP_STATION_REC));
         return executeCommand(command);
     }
 
