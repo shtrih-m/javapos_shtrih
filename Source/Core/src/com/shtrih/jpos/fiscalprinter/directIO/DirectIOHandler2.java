@@ -452,63 +452,69 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_READ_TOTALIZER:
                 new DIOReadTotalizers(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_READ_DOCUMENT_TLV_TEXT:
                 new DIOReadDocumentTLVText(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_READ_EJ_DOCUMENT:
                 new DIOReadEJDocument(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_START_DAY_CLOSE: 
+
+            case SmFptrConst.SMFPTR_DIO_START_DAY_CLOSE:
                 new DIOStartDayClose(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_START_DAY_OPEN: 
+
+            case SmFptrConst.SMFPTR_DIO_START_DAY_OPEN:
                 new DIOStartDayOpen(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_START_FISCALIZATION: 
+
+            case SmFptrConst.SMFPTR_DIO_START_FISCALIZATION:
                 new DIOStartFiscalization(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_START_CALC_REPORT: 
+
+            case SmFptrConst.SMFPTR_DIO_START_CALC_REPORT:
                 new DIOStartCalcReport(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_START_FISCAL_CLOSE: 
+
+            case SmFptrConst.SMFPTR_DIO_START_FISCAL_CLOSE:
                 new DIOStartFiscalClose(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_SET_ITEM_CODE: 
+
+            case SmFptrConst.SMFPTR_DIO_SET_ITEM_CODE:
                 new DIOSetItemCode(service).execute(data, object);
                 break;
-                        
-            case SmFptrConst.SMFPTR_DIO_SEND_ITEM_CODE: 
+
+            case SmFptrConst.SMFPTR_DIO_SEND_ITEM_CODE:
                 new DIOSendItemCode(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_CHECK_ITEM_CODE: 
+
+            case SmFptrConst.SMFPTR_DIO_CHECK_ITEM_CODE:
                 new DIOCheckItemCode(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_ACCEPT_ITEM_CODE: 
+
+            case SmFptrConst.SMFPTR_DIO_ACCEPT_ITEM_CODE:
                 new DIOAcceptItemCode(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_BIND_ITEM_CODE: 
+
+            case SmFptrConst.SMFPTR_DIO_BIND_ITEM_CODE:
                 new DIOBindItemCode(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_READ_KM_SERVER_STATUS:
                 new DIOReadKMServerStatus(service).execute(data, object);
                 break;
-                
+
+            case SmFptrConst.SMFPTR_DIO_READ_FFD_VERSION:
+                new DIOGetFFDVersion(service).execute(data, object);
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_WRITE_FFD_VERSION:
+                new DIOSetFFDVersion(service).execute(data, object);
+                break;
+
             default:
-                throw new JposException(JposConst.JPOS_E_ILLEGAL,
-                        Localizer.getString(Localizer.invalidParameterValue)
-                                + ", command");
+                throw new JposException(JposConst.JPOS_E_ILLEGAL, Localizer.getString(Localizer.invalidParameterValue) + ", command");
         }
     }
 
@@ -648,15 +654,15 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_PARAM_NEW_ITEM_STATUS:
                 paramValue = String.valueOf(service.getParams().newItemStatus);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_CHECK_MODE:
                 paramValue = String.valueOf(service.getParams().itemCheckMode);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE:
                 paramValue = String.valueOf(service.getParams().itemMarkType);
                 break;
-                
+
         }
         ((String[]) object)[0] = paramValue;
     }
@@ -665,8 +671,8 @@ public class DirectIOHandler2 {
         DIOUtils.checkDataMinLength(data, 1);
         int paramID = data[0];
 
-        if(paramID == SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER){
-            service.setFirmwareUpdateObserver((FirmwareUpdateObserver)object);
+        if (paramID == SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER) {
+            service.setFirmwareUpdateObserver((FirmwareUpdateObserver) object);
             return;
         }
 

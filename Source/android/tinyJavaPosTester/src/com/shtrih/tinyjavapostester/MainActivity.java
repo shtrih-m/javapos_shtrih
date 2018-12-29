@@ -117,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText tbNetworkAddress;
     private EditText tbMonoToken;
+    private EditText tbFFDVersion;
     private EditText nbTextStringCount;
     private EditText nbPositionsCount;
     private EditText nbFiscalizationNumber;
@@ -188,6 +189,8 @@ public class MainActivity extends AppCompatActivity {
 
         tbMonoToken = findViewById(R.id.tbMonoToken);
         restoreAndSaveChangesTo(tbMonoToken, pref, "MonoToken", "");
+
+        tbFFDVersion = findViewById(R.id.tbFFDVersion);
 
         nbTimeout = findViewById(R.id.nbTimeout);
         restoreAndSaveChangesTo(nbTimeout, pref, "ByteTimeout", "3000");
@@ -2410,6 +2413,80 @@ public class MainActivity extends AppCompatActivity {
 
             if (result == null)
                 tbMonoToken.setText(token);
+            else
+                showMessage(result);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        }
+    }
+
+    public void readFFDVersion(View view) {
+        new ReadFFDVersionTask(this).execute();
+    }
+
+    private class ReadFFDVersionTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+
+        private ProgressDialog dialog;
+
+        private long startedAt;
+        private long doneAt;
+        private String token;
+
+        public ReadFFDVersionTask(Activity parent) {
+            this.parent = parent;
+        }
+
+        private int oldOrientation;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            oldOrientation = getRequestedOrientation();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
+            dialog = ProgressDialog.show(parent, "Reading FFD version", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+                int ffdVersion = printer.readFFDVersion();
+
+                if (ffdVersion == 0)
+                    token = "1.0";
+                else if (ffdVersion == 1)
+                    token = "1.0 NEW";
+                else if (ffdVersion == 2)
+                    token = "1.05";
+                else if (ffdVersion == 3)
+                    token = "1.1";
+                else
+                    token = String.valueOf(ffdVersion);
+
+                return null;
+
+            } catch (Exception e) {
+                log.error("Mono token generation failed", e);
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                tbFFDVersion.setText(token);
             else
                 showMessage(result);
 

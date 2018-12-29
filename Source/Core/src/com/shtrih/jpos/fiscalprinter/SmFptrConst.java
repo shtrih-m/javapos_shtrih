@@ -605,6 +605,16 @@ public interface SmFptrConst {
      * Read KM server status
      */
     public static final int SMFPTR_DIO_READ_KM_SERVER_STATUS = 0x65;
+
+    /**
+     * Read FFD version
+     */
+    public static final int SMFPTR_DIO_READ_FFD_VERSION = 0x66;
+
+    /**
+     * Write FFD version
+     */
+    public static final int SMFPTR_DIO_WRITE_FFD_VERSION = 0x67;
     
     /**
      * Set item barcode GTIN and serial
