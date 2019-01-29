@@ -1353,12 +1353,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 
-    public void writePortParams(int portNumber, int baudRate, int timeout)
+    public int writePortParams(int portNumber, int baudRate, int timeout)
             throws Exception {
         logger.debug("writePortParams(" + String.valueOf(portNumber) + ", "
                 + String.valueOf(baudRate) + ", " + String.valueOf(timeout)
                 + ")");
 
+        // For ports >= 3, fiscal printer return error
+        if (portNumber >= 3) return 0;
         MethodParameter.checkByte(portNumber, "portNumber");
         MethodParameter.checkByte(baudRate, "baudRate");
         WritePortParams command = new WritePortParams();
@@ -1366,8 +1368,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setPortNumber(portNumber);
         command.setBaudRate(baudRate);
         command.setTimeout(timeout);
-        execute(command);
+        int rc = executeCommand(command);
         SysUtils.sleep(300);
+        return rc;
     }
 
     public void printBarcode(String barcode) throws Exception {
@@ -4234,10 +4237,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             port.open(0);
             connect();
 
+            LongPrinterStatus status = readLongStatus();
             // always set port parameters to update byte
             // receive timeout in fiscal printer
             int baudRateIndex = getBaudRateIndex(params.getBaudRate());
-            writePortParams(0, baudRateIndex, params.getDeviceByteTimeout());
+            writePortParams(status.getPortNumber(), baudRateIndex, params.getDeviceByteTimeout());
             params.setBaudRate(getModel().getSupportedBaudRates()[baudRateIndex]);
 
             // if baudrate changed - reopen port

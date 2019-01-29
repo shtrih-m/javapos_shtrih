@@ -397,8 +397,9 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
-    public void writePortParams(int portNumber, int baudRate, int timeout)
+    public int writePortParams(int portNumber, int baudRate, int timeout)
             throws Exception {
+        return 0;
     }
 
     public void printBarcode(String barcode) throws Exception {

@@ -264,7 +264,7 @@ public interface SMFiscalPrinter {
 
     public int writeTime(PrinterTime time) throws Exception;
 
-    public void writePortParams(int portNumber, int baudRate, int timeout)
+    public int writePortParams(int portNumber, int baudRate, int timeout)
             throws Exception;
 
     public void printBarcode(String barcode) throws Exception;
