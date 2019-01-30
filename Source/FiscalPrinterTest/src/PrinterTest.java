@@ -984,8 +984,13 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
-            testSetDate();
+            //printer.clearLogo();
+            //printer.clearImages();
+            int index = printer.loadImage("reclame.bmp");
+            //printer.addLogo(0, SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
+            printer.printImage(index);
 
+            //testSetDate();
             //printFiscalReceipt145_6();
         } catch (Exception e) {
             e.printStackTrace();

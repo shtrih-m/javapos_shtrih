@@ -307,6 +307,8 @@
 			 если тэг был отправлен до печати любой позиции он 
 			 будет напечатан сразу после заголовка чека. -->
 		<prop name="FSTagsPlacement" type="String" value="1"/>
+		<!-- Command delay in milliseconds -->
+		<prop name="commandDelayInMs" type="String" value="10"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>

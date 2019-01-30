@@ -203,6 +203,7 @@ public class FptrParameters {
     public int jsonUpdatePeriodInMinutes = 5;
     public String jsonUpdateServerURL = "http://127.0.0.1:8888/check_firmware";
     public int writeTagMode = FptrParameters.WRITE_TAG_MODE_IN_PLACE;
+    public int commandDelayInMs = 0;
     
     
     public FptrParameters() throws Exception {
@@ -223,6 +224,7 @@ public class FptrParameters {
         setBaudRate(4800);
         FSPrintTags = false;
         userExtendedTagPrintMode = USER_EXTENDED_TAG_PRINT_MODE_DRIVER;
+        commandDelayInMs = 0;
     }
 
     public void load(JposEntry entry) throws Exception {
@@ -440,6 +442,7 @@ public class FptrParameters {
         jsonUpdatePeriodInMinutes = reader.readInteger("jsonUpdatePeriodInMinutes", 10);
         jsonUpdateServerURL = reader.readString("jsonUpdateServerURL", "http://127.0.0.1:8888/check_firmware");
         writeTagMode = reader.readInteger("writeTagMode", FptrParameters.WRITE_TAG_MODE_IN_PLACE);
+        commandDelayInMs = reader.readInteger("commandDelayInMs", 0);
 
         // paymentNames
         String paymentName;
