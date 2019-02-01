@@ -2388,7 +2388,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 
-    private void printBarcodeLabel(PrinterBarcode barcode) throws Exception {
+    private void printBarcodeLabel(PrinterBarcode barcode) throws Exception 
+    {
+        if (barcode.getLabel().isEmpty()) return;
         String data = centerLine(barcode.getLabel());
         doPrintText(SMFP_STATION_REC, data, params.font);
     }
@@ -2588,7 +2590,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         // Print barcode
         PrintBarcode3 command = new PrintBarcode3();
         command.setPassword(usrPassword);
-        command.setBarcodeType(PrintBarcode3.QRCODE);
+        int barcodeType = PrintBarcode3.QRCODE;
+        if (capFooterFlag && isFooter) {
+            barcodeType += 0x40;
+        }
+        command.setBarcodeType(barcodeType);
         command.setDataLength(barcode.getText().length());
         command.setBlockNumber(0);
         command.setInParameter1(0);
@@ -4515,15 +4521,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
+    public byte[] longToBytes(long x) 
+    {
+        ByteBuffer buffer = ByteBuffer.allocate(8);
+        buffer.order(ByteOrder.BIG_ENDIAN);
+        buffer.putLong(x);
+    return buffer.array();
+}    
     public int sendItemCode1(GS1Barcode barcode) throws Exception {
+        byte[] ba;
         String serial = barcode.serial;
-        if (serial.length() > 24) {
-            serial = barcode.serial.substring(0, 24);
-        }
-        if (serial.length() < 24) {
-            serial = serial + StringUtils.stringOfChar(' ', 24 - serial.length());
-        }
-
+        ByteBuffer buf;
         TLVWriter writer = new TLVWriter();
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         switch (params.itemMarkType) {
@@ -4531,13 +4539,40 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             case FptrParameters.MARK_TYPE_DRUGS:
             case FptrParameters.MARK_TYPE_TOBACCO:
 
-                ByteBuffer buf = ByteBuffer.allocate(32);
+                if (serial.length() > 24) {
+                    serial = barcode.serial.substring(0, 24);
+                }
+                if (serial.length() < 24) {
+                    serial = serial + StringUtils.stringOfChar(' ', 24 - serial.length());
+                }
+        
+                buf = ByteBuffer.allocate(32);
                 buf.order(ByteOrder.BIG_ENDIAN);
-                buf.putLong(Long.parseLong(barcode.GTIN));
-                buf.putShort(0, (short) params.itemMarkType);
+                buf.putShort((short) params.itemMarkType);
+                ba = longToBytes(Long.parseLong(barcode.GTIN));
+                buf.put(ba, 0, 6);
                 buf.put(serial.getBytes());
                 writer.add(1162, buf.array());
                 return fsWriteOperationTLV(writer.getBytes());
+                
+            case FptrParameters.MARK_TYPE_SHOES:
+
+                if (serial.length() > 13) {
+                    serial = barcode.serial.substring(0, 13);
+                }
+                if (serial.length() < 13) {
+                    serial = serial + StringUtils.stringOfChar(' ', 13 - serial.length());
+                }
+                
+                buf = ByteBuffer.allocate(21);
+                buf.order(ByteOrder.BIG_ENDIAN);
+                buf.putShort((short) params.itemMarkType);
+                ba = longToBytes(Long.parseLong(barcode.GTIN));
+                buf.put(ba, 0, 6);
+                buf.put(serial.getBytes());
+                writer.add(1162, buf.array());
+                return fsWriteOperationTLV(writer.getBytes());
+                
 
             default: {
                 throw new Exception("Invalid itemMarkType value");

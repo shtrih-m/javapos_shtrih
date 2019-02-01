@@ -757,6 +757,11 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE:
                 service.getParams().subjectType = (byte) ((int) value);
                 break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE:
+                service.getParams().itemMarkType = (int) value;
+                break;
+                
         }
     }
 

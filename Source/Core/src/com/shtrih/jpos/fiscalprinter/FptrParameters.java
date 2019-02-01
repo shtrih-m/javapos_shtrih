@@ -29,6 +29,7 @@ public class FptrParameters {
     public static final int MARK_TYPE_FUR       = 2;
     public static final int MARK_TYPE_DRUGS     = 3;
     public static final int MARK_TYPE_TOBACCO   = 5;
+    public static final int MARK_TYPE_SHOES     = 0x1520;
     
     ///////////////////////////////////////////////////////////////////////////
     // userExtendedTagPrintMode constants

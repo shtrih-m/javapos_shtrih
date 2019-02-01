@@ -986,12 +986,12 @@ class PrinterTest implements FiscalPrinterConst {
         try {
             //printer.clearLogo();
             //printer.clearImages();
-            int index = printer.loadImage("reclame.bmp");
+            //int index = printer.loadImage("reclame.bmp");
             //printer.addLogo(0, SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
-            printer.printImage(index);
-
+            //printer.printImage(index);
             //testSetDate();
-            //printFiscalReceipt145_6();
+            
+            printFiscalReceipt145_6();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3806,27 +3806,10 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(false);
-            printer.fsWriteTag(1044, "Приём платежа");
-            printer.fsWriteTag(1073, "+78001000000");
-            printer.setParameter(18, 4);
-            printer.setParameter(19, 10);
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE, 0x1520);
+            printer.setItemCode("04606203084623+A13gPh-4Hi7uGl");
             printer.printRecItem("Прием платежа", 147032, 12, 0, 0, "");
-            printer.fsWriteTag(1117, "info@russianpost.ru");
-            printer.fsWriteTag(1057, "4");
-            printer.fsWriteTag(1016, "7724261610");
-            printer.fsWriteTag(1026, "ФГУП \"ПОЧТА РОССИИ\"");
-            printer.setParameter(18, 4);
-            printer.setParameter(19, 10);
-            printer.printRecItem("Доп. услуга населению", 500, 12, 1, 0, "");
             printer.printRecTotal(147532, 147532, "");
-            printer.fsWriteTag(1074, "+78001000000");
-            printer.fsWriteTag(1075, "+78001000000");
-            printer.fsWriteTag(1171, "+78007000688");
-            printer.printRecMessage("1. printRecMessage");
-            printer.printRecMessage("2. printRecMessage");
-            printer.printRecMessage(getLoadImageCommand("Logo.bmp"));
-            printer.printRecMessage("3. printRecMessage");
-            printer.printRecMessage("4. printRecMessage");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();

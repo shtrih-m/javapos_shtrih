@@ -294,7 +294,7 @@
 		<prop name="printStringDelayInMs" type="String" value="0"/>
 		<prop name="footerFlagEnabled" type="String" value="1"/>
 		<prop name="itemCheckMode" type="String" value="0"/>
-		<prop name="checkItemCodeEnabled" type="String" value="1"/>
+		<prop name="checkItemCodeEnabled" type="String" value="0"/>
 		<prop name="userExtendedTagPrintMode" type="String" value="0"/>
 		<prop name="jsonUpdateEnabled" type="String" value="0"/>
 		<prop name="openReceiptOnBegin" type="String" value="0"/>

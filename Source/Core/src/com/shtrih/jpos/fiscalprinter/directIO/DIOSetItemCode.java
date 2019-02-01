@@ -24,7 +24,10 @@ public class DIOSetItemCode extends DIOItem {
 
         String[] lines = (String[])object;
         String GTIN = lines[0];
-        String serial = lines[1];
+        String serial = "";
+        if (lines.length > 1) {
+            serial = lines[1];
+        }
         GS1Barcode barcode = new GS1Barcode(GTIN, serial);
         service.setItemBarcode(barcode);
     }

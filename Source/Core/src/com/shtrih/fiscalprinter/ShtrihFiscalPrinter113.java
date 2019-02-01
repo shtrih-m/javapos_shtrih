@@ -2273,6 +2273,10 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_SET_ITEM_CODE, null, new String[]{GTIN, serial});
     }
 
+    public void setItemCode(String barcode) throws JposException {
+        setItemCode(barcode, "");
+    }
+    
     public void sendItemCode(String barcode) throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_SEND_ITEM_CODE, null, new String[]{barcode});
     }
