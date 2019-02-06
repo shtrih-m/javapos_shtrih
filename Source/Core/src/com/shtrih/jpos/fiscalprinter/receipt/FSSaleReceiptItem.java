@@ -46,6 +46,7 @@ public class FSSaleReceiptItem {
     private int paymentType = 4;
     private int subjectType = 1;
     private GS1Barcode barcode = null;
+    private final Vector tags = new Vector();
 
     public FSSaleReceiptItem() {
     }
@@ -75,6 +76,10 @@ public class FSSaleReceiptItem {
         item.subjectType = subjectType;
         item.barcode = barcode;
         return item;
+    }
+
+    public Vector getTags() {
+        return tags;
     }
 
     public PriceItem getPriceItem() throws Exception {
