@@ -4630,4 +4630,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setSysPassword(sysPassword);
         return executeCommand(command);
     }
+    
+    public boolean getCapOperationTagsFirst(){
+        return deviceMetrics.isCashCore() || deviceMetrics.isShtrihMobile();
+    }
 }

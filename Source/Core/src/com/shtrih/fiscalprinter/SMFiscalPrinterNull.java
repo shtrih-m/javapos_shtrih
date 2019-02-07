@@ -1182,4 +1182,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     
     public void resetPrinter() throws Exception {
     }
+    
+    public boolean getCapOperationTagsFirst(){
+        return false;
+    }
 }

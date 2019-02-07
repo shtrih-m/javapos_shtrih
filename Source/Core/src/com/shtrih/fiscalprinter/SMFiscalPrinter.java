@@ -658,4 +658,6 @@ public interface SMFiscalPrinter {
     public byte[] processTLVBeforeReceipt(byte[] tlv) throws Exception;
     
     public void resetPrinter() throws Exception;
+    
+    public boolean getCapOperationTagsFirst();
 }

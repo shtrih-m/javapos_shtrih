@@ -206,7 +206,6 @@ public class FptrParameters {
     public int writeTagMode = FptrParameters.WRITE_TAG_MODE_IN_PLACE;
     public int commandDelayInMs = 0;
     
-    
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
         subtotalFont = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);

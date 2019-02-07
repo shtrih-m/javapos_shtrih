@@ -1336,7 +1336,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void fsWriteOperationTLV(byte[] data) throws Exception {
         FSOperationTLVItem item = new FSOperationTLVItem(data, getParams().getFont());
-        getLastItem().getTags().add(item);
+        if (getDevice().getCapOperationTagsFirst()){
+            items.add(item);
+        } else{
+            getLastItem().getTags().add(item);
+        }
     }
 
     private void fsWriteTag2(int tagId, String tagValue) throws Exception {
