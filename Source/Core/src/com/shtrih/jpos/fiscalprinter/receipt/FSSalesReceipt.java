@@ -566,6 +566,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         String itemText = item.getText();
         item.setText("//" + item.getText());
         getDevice().checkItemCode(item.getBarcode());
+        if (getDevice().getCapOperationTagsFirst()) {
+            getDevice().sendItemCode(item.getBarcode());
+        }
         PriceItem priceItem = item.getPriceItem();
         if (!item.getIsStorno()) {
             switch (receiptType) {
@@ -591,7 +594,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             getDevice().printVoidItem(priceItem);
         }
         printOperationTLV(item);
-        getDevice().sendItemCode(item.getBarcode());
+        if (!getDevice().getCapOperationTagsFirst()) {
+            getDevice().sendItemCode(item.getBarcode());
+        }
         item.setText(itemText);
     }
 
@@ -636,6 +641,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
 
         getDevice().checkItemCode(item.getBarcode());
+        if (getDevice().getCapOperationTagsFirst()) {
+            getDevice().sendItemCode(item.getBarcode());
+        }
 
         PriceItem priceItem = item.getPriceItem();
         if (!item.getIsStorno()) {
@@ -662,7 +670,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             getDevice().printVoidItem(priceItem);
         }
         printOperationTLV(item);
-        getDevice().sendItemCode(item.getBarcode());
+        if (!getDevice().getCapOperationTagsFirst()) {
+            getDevice().sendItemCode(item.getBarcode());
+        }
 
         long discountTotal = item.getDiscounts().getTotal();
         if (discountTotal != 0) {
@@ -680,9 +690,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printOperationTLV(FSSaleReceiptItem item) throws Exception {
-        for (int i = 0; i < item.getTags().size(); i++) {
-            FSOperationTLVItem tag = (FSOperationTLVItem) item.getTags().get(i);
-            getDevice().fsWriteOperationTLV(tag.getData());
+        if (!getDevice().getCapOperationTagsFirst()) {
+            for (int i = 0; i < item.getTags().size(); i++) {
+                FSOperationTLVItem tag = (FSOperationTLVItem) item.getTags().get(i);
+                getDevice().fsWriteOperationTLV(tag.getData());
+            }
         }
     }
 
@@ -1336,9 +1348,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void fsWriteOperationTLV(byte[] data) throws Exception {
         FSOperationTLVItem item = new FSOperationTLVItem(data, getParams().getFont());
-        if (getDevice().getCapOperationTagsFirst()){
+        if (getDevice().getCapOperationTagsFirst()) {
             items.add(item);
-        } else{
+        } else {
             getLastItem().getTags().add(item);
         }
     }
