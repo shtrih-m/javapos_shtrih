@@ -31,7 +31,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="COM37"/>
+        <prop name="portName" type="String" value="COM26"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="1"/>
@@ -258,11 +258,11 @@
         <!-- Text report empty lines enabled -->
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- Receipt template -->
-		<prop name="ReceiptTemplateEnabled" type="String" value="0"/>
+		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
 		<prop name="FieldSeparator" type="String" value=":"/>
-		<prop name="ItemTableHeader" type="String" value="-------------------HEADER--------------------"/>
-		<prop name="ItemTableTrailer" type="String" value="-------------------TRAILER--------------------"/>
-		<prop name="ItemRowFormat" type="String" value="%48lTITLE%%28SUM% X %5lQUAN%%=$10TOTAL_TAX%"/>
+		<prop name="ItemTableHeader" type="String"  value="-------------------HEADER-----------------"/>
+		<prop name="ItemTableTrailer" type="String" value="-------------------TRAILER----------------"/>
+		<prop name="ItemRowFormat" type="String" value="%42lTITLE%%22SUM% X %5lQUAN%%=$10TOTAL_TAX%"/>
 		<!-- <prop name="DiscountFormat" type="String" value="    СКИДКА  %29lTITLE%%=$10TOTAL%"/> -->
 		<prop name="DiscountFormat" type="String" value=""/>
 		<!-- <prop name="ChargeFormat" type="String"   value="    НАДБАВКА  %29lTITLE%%=$10TOTAL%"/> -->

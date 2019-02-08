@@ -1035,7 +1035,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         jsonUpdateService = new JsonUpdateService(printer);
         jsonUpdateService.start();
     }
-    
+
     public void stopJsonUpdateService() throws Exception {
         if (jsonUpdateService == null) {
             return;
@@ -1044,7 +1044,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         jsonUpdateService.stop();
         jsonUpdateService = null;
     }
-    
+
     public void stopFSService() throws Exception {
         if (fsSenderService == null) {
             return;
@@ -3286,19 +3286,18 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkPrice(price);
         checkPrice(unitPrice);
         checkVatInfo(vatInfo);
-
-        if (params.postLineAsItemTextEnabled) {
-            description = updateDescription(description);
-        }
+        description = updateDescription(description);
         receipt.printRecItem(description, price, quantity, vatInfo, unitPrice, unitName);
     }
 
     public String updateDescription(String description) throws Exception {
-        String postLine = getPostLine();
-        if (!postLine.isEmpty()) {
-            params.clearPostLine();
-            printRecMessage(description);
-            description = postLine;
+        if (params.postLineAsItemTextEnabled) {
+            String postLine = getPostLine();
+            if (!postLine.isEmpty()) {
+                params.clearPostLine();
+                printRecMessage(description);
+                description = postLine;
+            }
         }
         return description;
     }
