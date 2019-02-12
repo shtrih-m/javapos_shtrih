@@ -8,7 +8,8 @@ public class DIOFSWriteOperationTLV extends DIOItem {
         super(service);
     }
 
-    public void execute(int[] data, Object object) throws Exception {
+    public void execute(int[] data, Object object) throws Exception 
+    {
         service.fsWriteOperationTLV((byte[]) object);
     }
 }

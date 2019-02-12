@@ -234,7 +234,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printTLVItem(Object item) throws Exception {
         if (item instanceof FSOperationTLVItem) {
             FSOperationTLVItem tlvItem = (FSOperationTLVItem) item;
-            getDevice().fsWriteOperationTLV(tlvItem.getData());
+            getDevice().check(getDevice().fsWriteOperationTLV(tlvItem.getData()));
         }
 
         if (item instanceof FSTLVItem) {
@@ -693,7 +693,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         if (!getDevice().getCapOperationTagsFirst()) {
             for (int i = 0; i < item.getTags().size(); i++) {
                 FSOperationTLVItem tag = (FSOperationTLVItem) item.getTags().get(i);
-                getDevice().fsWriteOperationTLV(tag.getData());
+                getDevice().check(getDevice().fsWriteOperationTLV(tag.getData()));
             }
         }
     }

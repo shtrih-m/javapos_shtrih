@@ -1276,7 +1276,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             FSWriteTLV command = new FSWriteTLV();
             command.setSysPassword(sysPassword);
             command.setTlv(tlvItems.get(i));
-            executeCommand(command);
+            execute(command);
         }
         tlvItems.clear();
     }
@@ -3275,7 +3275,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             FSWriteTLV command = new FSWriteTLV();
             command.setSysPassword(sysPassword);
             command.setTlv(tlv);
-            executeCommand(command);
+            execute(command);
         } else {
             tlvItems.add(tlv);
         }
