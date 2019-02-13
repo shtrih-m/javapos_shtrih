@@ -66,7 +66,8 @@
 
 		<!-- Device byte receive timeout -->
 		<prop name="deviceByteTimeout" type="String" value="5000"/>
-		<!-- Device search enabled for all serial ports -->
+		<!-- Флаг включает поиск устройств в случае с последовательным портом по списку COM`ов,
+		     в случае с Bluetooth - по списку спаренных устройств чье название начинается со строки указанной в portName -->
 		<prop name="searchByPortEnabled" type="String" value="0"/>
 		<!-- Device search enabled for all baud rates -->
 		<prop name="searchByBaudRateEnabled" type="String" value="0"/>

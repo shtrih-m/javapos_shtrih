@@ -546,6 +546,12 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(i, DeviceListActivity.REQUEST_CONNECT_BT_DEVICE);
             return true;
         }
+
+        if(id == R.id.action_auto_connect_bluetooth){
+            autoConnectBluetoothDevice();
+            return true;
+        }
+
         if (id == R.id.action_share_log) {
 
             shareLogFile();
@@ -553,6 +559,128 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void autoConnectBluetoothDevice() {
+
+        new AutoConnectBluetoothDeviceTask(
+                this,
+                tbNetworkAddress.getText().toString(),
+                createFirmwareUpdateObserver(),
+                nbTimeout.getText().toString(),
+                chbFastConnect.isChecked(),
+                chbScocFirmwareUpdate.isChecked()).execute();
+    }
+
+    private class AutoConnectBluetoothDeviceTask extends AsyncTask<Void, Void, String> {
+
+        private final Activity parent;
+        private final String address;
+        private final FirmwareUpdateObserver observer;
+        private final String timeout;
+        private final boolean fastConnect;
+        private final boolean scocFirmwareAutoupdate;
+
+        private long startedAt;
+        private long doneAt;
+
+        private String text;
+
+        private ProgressDialog dialog;
+
+        public AutoConnectBluetoothDeviceTask(Activity parent, String address, FirmwareUpdateObserver observer, String timeout, boolean fastConnect, boolean scocFirmwareAutoupdate) {
+            this.parent = parent;
+
+            this.address = address;
+            this.observer = observer;
+            this.timeout = timeout;
+            this.fastConnect = fastConnect;
+            this.scocFirmwareAutoupdate = scocFirmwareAutoupdate;
+        }
+
+        private int oldOrientation;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            oldOrientation = getRequestedOrientation();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
+            dialog = ProgressDialog.show(parent, "Connecting to device", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            try {
+                if (printer.getState() != JposConst.JPOS_S_CLOSED) {
+                    printer.close();
+                }
+
+                startedAt = System.currentTimeMillis();
+
+                log.debug("Generating jpos.xml...");
+
+                Map<String, String> props = new HashMap<>();
+                props.put("portName", "SHTRIH");
+                props.put("portType", "3");
+                props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothPort");
+                props.put("protocolType", selectedProtocol);
+                props.put("fastConnect", fastConnect ? "1" : "0");
+                props.put("capScocUpdateFirmware", scocFirmwareAutoupdate ? "1" : "0");
+                props.put("byteTimeout", timeout);
+                props.put("searchByPortEnabled", "1");
+
+                JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
+
+                log.debug("Opening...");
+
+                printer.open("ShtrihFptr");
+
+                log.debug("Claiming...");
+
+                printer.claim(3000);
+
+                log.debug("Setting device enabled...");
+
+                printer.setDeviceEnabled(true);
+                model.ScocUpdaterStatus.set("");
+
+                log.debug("Connected!");
+
+                printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, observer);
+
+                doneAt = System.currentTimeMillis();
+
+                String[] lines = new String[1];
+                printer.getData(FiscalPrinterConst.FPTR_GD_PRINTER_ID, null, lines);
+                String serialNumber = lines[0];
+                DeviceMetrics deviceMetrics = printer.readDeviceMetrics();
+
+                text = deviceMetrics.getDeviceName() + " " + serialNumber;
+
+                return null;
+
+            } catch (Exception e) {
+                log.error("Connection to Wi-Fi device " + address + " using protocol " + selectedProtocol + " failed", e);
+                return e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage(text + "\nSuccess " + (doneAt - startedAt) + " ms");
+            else
+                showMessage(result);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        }
     }
 
     private void shareLogFile() {

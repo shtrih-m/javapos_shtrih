@@ -649,7 +649,7 @@ public class CashDrawerImpl extends DeviceService implements
             }
 
             if (fptrParams.searchByPortEnabled) {
-                String[] ports = SerialPrinterPort.getPortNames();
+                String[] ports = port.getPortNames();
                 for (int i = 0; i < ports.length; i++) {
                     String portName = ports[i];
                     if (!fptrParams.portName.equalsIgnoreCase(portName)) {

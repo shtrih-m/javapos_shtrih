@@ -1,22 +1,19 @@
-/*
- * PrinterPort.java
- *
- * Created on August 30 2007, 12:29
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-/**
- *
- * @author V.Kravtsov
- */
 package com.shtrih.fiscalprinter.port;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import gnu.io.*;
-import com.shtrih.util.*;
+import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.Localizer;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Vector;
+
+import gnu.io.CommPortIdentifier;
+import gnu.io.SerialPort;
 
 public class SerialPrinterPort implements PrinterPort {
 
@@ -72,7 +69,7 @@ public class SerialPrinterPort implements PrinterPort {
     public synchronized void open(int timeout) throws Exception {
         if (isClosed()) {
             logger.debug("open(" + portName + "," + baudRate + ")"); // !!!
-            
+
             CommPortIdentifier portId = CommPortIdentifier
                     .getPortIdentifier(portName);
             if (portId == null) {
@@ -160,7 +157,7 @@ public class SerialPrinterPort implements PrinterPort {
         }
 
         long startTime = System.currentTimeMillis();
-        for (;;) {
+        for (; ; ) {
             long currentTime = System.currentTimeMillis();
             if (is.available() > 0) {
                 result = is.read();
@@ -181,7 +178,7 @@ public class SerialPrinterPort implements PrinterPort {
     public void initialize(Properties properties) throws Exception {
     }
 
-    public static String[] getPortNames() throws Exception {
+    public String[] getPortNames() {
         Vector result = new Vector();
         Enumeration e = CommPortIdentifier.getPortIdentifiers();
         while (e.hasMoreElements()) {

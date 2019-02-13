@@ -1,13 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.shtrih.fiscalprinter.port;
 
 /**
  * @author V.Kravtsov
  */
-
 public interface PrinterPort 
 {
     void open(int timeout) throws Exception;
@@ -33,4 +28,6 @@ public interface PrinterPort
     Object getSyncObject() throws Exception;
 
     boolean isSearchByBaudRateEnabled();
+
+    String[] getPortNames();
 }
