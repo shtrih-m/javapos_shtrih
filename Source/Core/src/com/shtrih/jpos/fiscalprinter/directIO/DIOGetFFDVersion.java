@@ -22,7 +22,9 @@ public class DIOGetFFDVersion extends DIOItem {
 
             data[0] = Integer.parseInt(printer.readTable(model.getFFDTableNumber(), 1, model.getFFDColumnNumber()));
         } else {
-            if (isDesktop()) {
+            if (isElves()) {
+                data[0] = 2; // У ЭЛВЕС нет возможность прочитать версию ФФД и он всгда работает на ФФД 1.05
+            } else if (isDesktop()) {
                 data[0] = Integer.parseInt(printer.readTable(17, 1, 17));
             } else {
                 data[0] = Integer.parseInt(printer.readTable(10, 1, 4));
@@ -33,6 +35,11 @@ public class DIOGetFFDVersion extends DIOItem {
     private boolean isDesktop() {
         DeviceMetrics metrics = getPrinter().getDeviceMetrics();
         return metrics.isDesktop() || metrics.isShtrihNano();
+    }
+
+    private boolean isElves() {
+        DeviceMetrics metrics = getPrinter().getDeviceMetrics();
+        return metrics.isElves();
     }
 
 }

@@ -3143,13 +3143,19 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     @Override
     public String readFullSerial() throws Exception {
         if (serial.isEmpty()) {
-            serial = readTable(getFsTableNumber(), 1, 1).trim();
+            if (getDeviceMetrics().isElves())
+                serial = getLongStatus().getSerial();
+            else
+                serial = readTable(getFsTableNumber(), 1, 1).trim();
         }
         return serial;
     }
 
     @Override
     public String readRnm() throws Exception {
+        if (getDeviceMetrics().isElves())
+            return readTable(11, 1, 2).trim();
+
         return readTable(getFsTableNumber(), 1, 3).trim();
     }
 
