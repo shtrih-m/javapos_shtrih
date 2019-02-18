@@ -612,27 +612,27 @@ public class DirectIOHandler2 {
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0:
-                paramValue = String.valueOf(service.getParams().taxValue[0]);
+                paramValue = String.valueOf(service.getParams().taxAmount[0]);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_1:
-                paramValue = String.valueOf(service.getParams().taxValue[1]);
+                paramValue = String.valueOf(service.getParams().taxAmount[1]);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_2:
-                paramValue = String.valueOf(service.getParams().taxValue[2]);
+                paramValue = String.valueOf(service.getParams().taxAmount[2]);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_3:
-                paramValue = String.valueOf(service.getParams().taxValue[3]);
+                paramValue = String.valueOf(service.getParams().taxAmount[3]);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_4:
-                paramValue = String.valueOf(service.getParams().taxValue[4]);
+                paramValue = String.valueOf(service.getParams().taxAmount[4]);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_5:
-                paramValue = String.valueOf(service.getParams().taxValue[5]);
+                paramValue = String.valueOf(service.getParams().taxAmount[5]);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM:
@@ -663,6 +663,9 @@ public class DirectIOHandler2 {
                 paramValue = String.valueOf(service.getParams().itemMarkType);
                 break;
 
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT:
+                paramValue = String.valueOf(service.getParams().itemTaxAmount);
+                break;
         }
         ((String[]) object)[0] = paramValue;
     }
@@ -719,27 +722,27 @@ public class DirectIOHandler2 {
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0:
-                service.getParams().taxValue[0] = value;
+                service.getParams().taxAmount[0] = value;
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_1:
-                service.getParams().taxValue[1] = value;
+                service.getParams().taxAmount[1] = value;
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_2:
-                service.getParams().taxValue[2] = value;
+                service.getParams().taxAmount[2] = value;
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_3:
-                service.getParams().taxValue[3] = value;
+                service.getParams().taxAmount[3] = value;
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_4:
-                service.getParams().taxValue[4] = value;
+                service.getParams().taxAmount[4] = value;
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_5:
-                service.getParams().taxValue[5] = value;
+                service.getParams().taxAmount[5] = value;
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM:
@@ -762,6 +765,9 @@ public class DirectIOHandler2 {
                 service.getParams().itemMarkType = (int) value;
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT:
+                service.getParams().itemTaxAmount = (long) value;
+                break;
         }
     }
 

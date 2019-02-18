@@ -3806,14 +3806,20 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(false);
-            //printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE, 0x1520);
-            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE, 3);
-            printer.setItemCode("04606203084623+A13gPh-4Hi7uGl");
-            printer.setPreLine("PreLine");
-            printer.setPostLine("PostLine");
-            printer.printRecItem("Прием платежа", 147032, 12, 0, 0, "");
-            printer.fsWriteOperationTag(1197, "24122017");
-            printer.printRecTotal(147532, 147532, "");
+            
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT, 123);
+            printer.printRecItem("1. Item 1, tax 1", 10000, 1000, 1, 0, "");
+            
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT, 234);
+            printer.printRecItem("2. Item 2, tax 2", 10000, 1000, 2, 0, "");
+            
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 0);
+            printer.printRecSubtotalAdjustment(1, "", 8000);
+            
+            printer.printRecTotal(20000, 20000, "");
+            
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 134);
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_1, 245);
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();

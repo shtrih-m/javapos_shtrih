@@ -68,27 +68,27 @@ public class DIOSetDriverParameter extends DIOItem {
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0:
-                service.getParams().taxValue[0] = ((long[]) object)[0];
+                service.getParams().taxAmount[0] = ((long[]) object)[0];
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_1:
-                service.getParams().taxValue[1] = ((long[]) object)[0];
+                service.getParams().taxAmount[1] = ((long[]) object)[0];
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_2:
-                service.getParams().taxValue[2] = ((long[]) object)[0];
+                service.getParams().taxAmount[2] = ((long[]) object)[0];
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_3:
-                service.getParams().taxValue[3] = ((long[]) object)[0];
+                service.getParams().taxAmount[3] = ((long[]) object)[0];
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_4:
-                service.getParams().taxValue[4] = ((long[]) object)[0];
+                service.getParams().taxAmount[4] = ((long[]) object)[0];
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_5:
-                service.getParams().taxValue[5] = ((long[]) object)[0];
+                service.getParams().taxAmount[5] = ((long[]) object)[0];
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM:
@@ -122,6 +122,11 @@ public class DIOSetDriverParameter extends DIOItem {
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE:
                 service.getParams().itemMarkType = ((int[]) object)[0];
                 break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT:
+                service.getParams().itemTaxAmount = (long) ((int[]) object)[0];
+                break;
+                
         }
     }
 }

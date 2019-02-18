@@ -25,6 +25,7 @@ public class PriceItem {
     private int tax3;
     private int tax4;
     private String text;
+    private Long taxAmount;
     private Long totalAmount;
     private int paymentType = 4;
     private int subjectType = 1;
@@ -148,6 +149,14 @@ public class PriceItem {
         return totalAmount;
     }
 
+    public void setTaxAmount(Long taxAmount) {
+        this.taxAmount = taxAmount;
+    }
+
+    public Long getTaxAmount() {
+        return taxAmount;
+    }
+    
     public int getPaymentType() {
         return paymentType;
     }

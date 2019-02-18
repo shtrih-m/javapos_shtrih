@@ -177,9 +177,10 @@ public class FptrParameters {
     public boolean FSReceiptItemDiscountEnabled = false;
     public boolean quantityCorrectionEnabled = false;
     public boolean paymentSumCorrectionEnabled = true;
-    public long taxValue[] = new long[6];
+    public long[] taxAmount = new long[6];
     public int taxSystem = 0;
     public Long itemTotalAmount = null;
+    public Long itemTaxAmount = null;
     public int paymentType = 4;
     public int subjectType = 1;
     public boolean calcReportEnabled = false;
@@ -210,12 +211,12 @@ public class FptrParameters {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
         subtotalFont = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
         discountFont = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
-        taxValue[0] = 0;
-        taxValue[1] = 0;
-        taxValue[2] = 0;
-        taxValue[3] = 0;
-        taxValue[4] = 0;
-        taxValue[5] = 0;
+        taxAmount[0] = 0;
+        taxAmount[1] = 0;
+        taxAmount[2] = 0;
+        taxAmount[3] = 0;
+        taxAmount[4] = 0;
+        taxAmount[5] = 0;
         taxSystem = 0;
     }
 

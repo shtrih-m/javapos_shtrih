@@ -88,6 +88,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         disablePrint = false;
         messages.clear();
         cancelled = false;
+        
+        getParams().itemTaxAmount = null;
+        getParams().itemTotalAmount = null;
     }
 
     public void beginFiscalReceipt(boolean printHeader) throws Exception {
@@ -466,12 +469,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 for (int i = 0; i < payments.length; i++) {
                     closeReceipt.setPayment(i, payments[i]);
                 }
-                closeReceipt.setTaxValue(0, getParams().taxValue[0]);
-                closeReceipt.setTaxValue(1, getParams().taxValue[1]);
-                closeReceipt.setTaxValue(2, getParams().taxValue[2]);
-                closeReceipt.setTaxValue(3, getParams().taxValue[3]);
-                closeReceipt.setTaxValue(4, getParams().taxValue[4]);
-                closeReceipt.setTaxValue(5, getParams().taxValue[5]);
+                for (int i = 0; i < 6; i++) {
+                    closeReceipt.setTaxValue(i, getParams().taxAmount[i]);
+                }
+
                 closeReceipt.setDiscount(discountAmount);
                 closeReceipt.setTaxSystem(getParams().taxSystem);
                 closeReceipt.setText(getParams().closeReceiptText);
@@ -633,11 +634,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 getDevice().printText(preLine);
                 item.setPreLine("");
             }
-        }
-
-        if (!getParams().FSCombineItemAdjustments) {
-            printRecItemAsText(item);
-            item.setText("//" + item.getText());
         }
 
         getDevice().checkItemCode(item.getBarcode());
@@ -1124,6 +1120,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             if (getParams().itemTotalAmount != null) {
                 item.setTotalAmount(getParams().itemTotalAmount);
                 getParams().itemTotalAmount = null;
+            }
+            if (getParams().itemTaxAmount != null) {
+                item.setTaxAmount(getParams().itemTaxAmount);
+                getParams().itemTaxAmount = null;
             }
 
             item.setPaymentType(getParams().paymentType);
