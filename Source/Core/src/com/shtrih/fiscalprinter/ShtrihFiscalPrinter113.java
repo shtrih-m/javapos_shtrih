@@ -2141,40 +2141,30 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public void startFSService() throws Exception {
-
         int[] data = new int[]{1};
-
         directIO(SmFptrConst.SMFPTR_DIO_SET_FS_SERVICE_STATE, data, null);
     }
 
     public void stopFSService() throws Exception {
-
         int[] data = new int[]{0};
-
         directIO(SmFptrConst.SMFPTR_DIO_SET_FS_SERVICE_STATE, data, null);
     }
 
     public void continuePrint() throws Exception {
-
         directIO(SmFptrConst.SMFPTR_DIO_CONTINUE_PRINT, new int[0], null);
     }
 
     public DocumentTLV fsReadDocumentTLV(int documentNumber) throws Exception {
-
         Object[] outParams = new Object[2];
         directIO(SmFptrConst.SMFPTR_DIO_FS_READ_DOCUMENT_TLV, new int[]{documentNumber}, outParams);
-
         int documentType = (Integer) outParams[0];
         byte[] tlv = (byte[]) outParams[1];
-
         return new DocumentTLV(documentNumber, documentType, tlv);
     }
 
     public Vector<String> fsReadDocumentTLVText(int documentNumber) throws Exception {
-
         Object[] outParams = new Object[1];
         directIO(SmFptrConst.SMFPTR_DIO_FS_READ_DOCUMENT_TLV_TEXT, new int[]{documentNumber}, outParams);
-
         Vector<String> document = (Vector<String>) outParams[0];
         return document;
     }
@@ -2197,6 +2187,12 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         return lines;
     }
 
+    public String[] fsReadStatus2() throws Exception {
+        String[] lines = new String[9];
+        directIO(SmFptrConst.SMFPTR_DIO_FS_READ_STATUS, null, lines);
+        return lines;
+    }
+    
     public byte[] readFiscalizationTag(int fiscalizationNumber, int tagNumber) throws Exception {
 
         Object[] outParams = new Object[1];

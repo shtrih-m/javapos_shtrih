@@ -78,17 +78,17 @@ public class NullHeader implements PrinterHeader {
 	}
 
 	@Override
-	public void beginDocument(String additionalHeader, String additionalTrailer)
+	public void beginDocument(String additionalHeader)
 			throws Exception {
 	}
 
 	@Override
-	public void endFiscal(String additionalHeader, String additionalTrailer)
+	public void endFiscal(String additionalTrailer)
 			throws Exception {
 	}
         
 	@Override
-	public void endNonFiscal(String additionalHeader, String additionalTrailer)
+	public void endNonFiscal(String additionalTrailer)
 			throws Exception {
 	}
 }

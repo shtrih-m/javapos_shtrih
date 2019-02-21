@@ -176,12 +176,12 @@ public class DriverHeader implements JposConst, PrinterHeader {
         return getModel().getFontHeight(font);
     }
 
-    public void endDocument(String additionalHeader, String additionalTrailer)
+    public void endDocument(String additionalTrailer)
             throws Exception {
         printTrailer(additionalTrailer);
         printHeaderBeforeCutter();
         printer.cutPaper();
-        printHeaderAfterCutter(additionalHeader);
+        printHeaderAfterCutter();
     }
 
     void printTrailer(String additionalTrailer) throws Exception {
@@ -228,7 +228,7 @@ public class DriverHeader implements JposConst, PrinterHeader {
         printer.waitForPrinting();
     }
 
-    void printHeaderAfterCutter(String additionalHeader) throws Exception {
+    void printHeaderAfterCutter() throws Exception {
         printer.waitForPrinting();
         int imageHeight = 0;
         int lineHeight = printer.getLineHeight(new FontNumber(PrinterConst.FONT_NUMBER_NORMAL));
@@ -251,11 +251,6 @@ public class DriverHeader implements JposConst, PrinterHeader {
             printLines(header, lineNumber + 1, header.size());
         }
         printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
-
-        if (additionalHeader.length() > 0) {
-            printer.printText(PrinterConst.SMFP_STATION_REC, additionalHeader,
-                    printer.getParams().getFont());
-        }
         printer.waitForPrinting();
     }
 
@@ -312,23 +307,34 @@ public class DriverHeader implements JposConst, PrinterHeader {
     }
 
     @Override
-    public void endFiscal(String additionalHeader, String additionalTrailer)
+    public void endFiscal(String additionalTrailer)
             throws Exception {
         logger.debug("endFiscal");
-        endDocument(additionalHeader, additionalTrailer);
+        endDocument(additionalTrailer);
     }
 
     @Override
-    public void endNonFiscal(String additionalHeader, String additionalTrailer)
+    public void endNonFiscal(String additionalTrailer)
             throws Exception {
         logger.debug("endNonFiscal");
-        endDocument(additionalHeader, additionalTrailer);
+        endDocument(additionalTrailer);
     }
 
+    public void printText(String text) throws Exception 
+    {
+        if (text.length() > 0) {
+            printer.printText(PrinterConst.SMFP_STATION_REC, text,
+                    printer.getParams().getFont());
+        }
+        printer.waitForPrinting();
+    }
+    
+    
     @Override
-    public void beginDocument(String additionalHeader, String additionalTrailer) throws Exception 
+    public void beginDocument(String additionalHeader) throws Exception 
     {
         logger.debug("beginDocument");
+        printText(additionalHeader);
     }
 
 }

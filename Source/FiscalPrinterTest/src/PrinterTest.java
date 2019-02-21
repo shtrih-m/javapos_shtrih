@@ -990,8 +990,9 @@ class PrinterTest implements FiscalPrinterConst {
             //printer.addLogo(0, SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
             //printer.printImage(index);
             //testSetDate();
+            //printFiscalReceipt145_6();
             
-            printFiscalReceipt145_6();
+            printFiscalReceipt106();
         } catch (Exception e) {
             e.printStackTrace();
         }

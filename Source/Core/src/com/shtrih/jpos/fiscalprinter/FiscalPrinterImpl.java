@@ -2410,7 +2410,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             docEndEnabled = true;
             isInReceiptTrailer = true;
             getPrinter().waitForPrinting();
-            header.endFiscal(additionalHeader, additionalTrailer);
+            header.endFiscal(additionalTrailer);
             isInReceiptTrailer = false;
         }
     }
@@ -2425,7 +2425,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             docEndEnabled = true;
             isInReceiptTrailer = true;
             getPrinter().waitForPrinting();
-            header.endNonFiscal(additionalHeader, additionalTrailer);
+            header.endNonFiscal(additionalTrailer);
             isInReceiptTrailer = false;
         }
     }
@@ -2433,7 +2433,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void printDocStart() throws Exception {
         synchronized (printer) {
             isInReceiptTrailer = true;
-            header.beginDocument(additionalHeader, additionalTrailer);
+            header.beginDocument(additionalHeader);
             isInReceiptTrailer = false;
         }
     }

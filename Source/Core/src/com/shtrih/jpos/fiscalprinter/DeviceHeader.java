@@ -127,7 +127,7 @@ public class DeviceHeader implements PrinterHeader {
     }
 
     @Override
-    public void beginDocument(String additionalHeader, String additionalTrailer)
+    public void beginDocument(String additionalHeader)
             throws Exception {
         printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
         if (additionalHeader.length() > 0) {
@@ -167,14 +167,14 @@ public class DeviceHeader implements PrinterHeader {
     }
     
     @Override
-    public void endNonFiscal(String additionalHeader, String additionalTrailer)
+    public void endNonFiscal(String additionalTrailer)
             throws Exception {
         printTrailer(additionalTrailer);
         printer.printTrailer();
         printer.printDocEnd();
     }
     
-    public void endFiscal(String additionalHeader, String additionalTrailer)
+    public void endFiscal(String additionalTrailer)
             throws Exception {
     }
 }
