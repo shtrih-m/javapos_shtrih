@@ -990,9 +990,10 @@ class PrinterTest implements FiscalPrinterConst {
             //printer.addLogo(0, SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
             //printer.printImage(index);
             //testSetDate();
-            //printFiscalReceipt145_6();
+            //printFiscalReceipt106();
             
-            printFiscalReceipt106();
+            printFiscalReceipt145_6();
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3822,6 +3823,13 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 134);
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_1, 245);
             printer.endFiscalReceipt(false);
+            
+            String docNum = printer.getParameter(SmFptrConst.SMFPTR_DIO_PARAM_DOC_NUM);
+            System.out.println("Document number: " + docNum);
+            
+            String docMac = printer.getParameter(SmFptrConst.SMFPTR_DIO_PARAM_DOC_MAC);
+            System.out.println("Document MAC: " + docMac);
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

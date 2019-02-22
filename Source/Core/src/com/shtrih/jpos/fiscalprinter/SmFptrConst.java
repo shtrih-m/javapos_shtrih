@@ -684,6 +684,9 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_PARAM_ITEM_MARK_TYPE     = 23;
     
     public static final int SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT    = 24;
+    
+    public static final int SMFPTR_DIO_PARAM_DOC_NUM            = 25;
+    public static final int SMFPTR_DIO_PARAM_DOC_MAC            = 26;
 
     // ///////////////////////////////////////////////////////////////////
     // TableMode

@@ -666,6 +666,14 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT:
                 paramValue = String.valueOf(service.getParams().itemTaxAmount);
                 break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_DOC_NUM:
+                paramValue = String.valueOf(service.getPrinter().getLastDocNumber());
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_DOC_MAC:
+                paramValue = String.valueOf(service.getPrinter().getLastMacValue());
+                break;
         }
         ((String[]) object)[0] = paramValue;
     }
@@ -760,11 +768,11 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE:
                 service.getParams().subjectType = (byte) ((int) value);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE:
                 service.getParams().itemMarkType = (int) value;
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT:
                 service.getParams().itemTaxAmount = (long) value;
                 break;

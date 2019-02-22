@@ -660,4 +660,8 @@ public interface SMFiscalPrinter {
     public void resetPrinter() throws Exception;
     
     public boolean getCapOperationTagsFirst();
+    
+    public long getLastDocNumber();
+    
+    public long getLastMacValue();
 }

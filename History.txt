@@ -7,6 +7,17 @@
     
 ********************************************************************************
 
+  22.02.2019
+  deviceServiceVersion = 1013567
+  
+  [+] Добавлены параметры SMFPTR_DIO_PARAM_DOC_NUM и SMFPTR_DIO_PARAM_DOC_MAC
+      для запроса номера и ФПД последнего чека
+	  
+      public static final int SMFPTR_DIO_PARAM_DOC_NUM  = 25;
+      public static final int SMFPTR_DIO_PARAM_DOC_MAC  = 26;
+  
+********************************************************************************
+
   21.02.2019
   deviceServiceVersion = 1013566
   

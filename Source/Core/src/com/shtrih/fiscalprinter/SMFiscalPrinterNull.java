@@ -1186,4 +1186,13 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public boolean getCapOperationTagsFirst(){
         return false;
     }
+    
+    public long getLastDocNumber() {
+        return 0;
+    }
+
+    public long getLastMacValue() {
+        return 0;
+    }
+    
 }
