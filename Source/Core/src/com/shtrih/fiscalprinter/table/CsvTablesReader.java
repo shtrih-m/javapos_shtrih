@@ -70,7 +70,7 @@ public class CsvTablesReader {
                 new InputStreamReader(new FileInputStream(fileName), "UTF8"));
         if (reader.ready()) {
             String line = reader.readLine();
-            if (!line.startsWith("///")) {
+            if (!line.contains("///")) {
                 reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-16LE"));
             }
         }
@@ -107,12 +107,17 @@ public class CsvTablesReader {
     public void loadLine(String line, PrinterFields fields) throws Exception {
         if (isComment(line)) {
             line = line.toUpperCase();
-            /// Модель: ЯРУС-01К; №00001000
-            String modelName = getModelName("МОДЕЛЬ:", line);
-            if (modelName.isEmpty()) {
-                modelName = getModelName("model:", line);
+            if (fields.getModelName().isEmpty())
+            {
+                /// Модель: ЯРУС-01К; №00001000
+                String modelName = getModelName("МОДЕЛЬ:", line);
+                if (modelName.isEmpty()) {
+                    modelName = getModelName("model:", line);
+                }
+                if (!modelName.isEmpty()){
+                    fields.setModelName(modelName);
+                }
             }
-            fields.setModelName(modelName);
         } else {
             int table = getParamInt(line, 0);
             int row = getParamInt(line, 1);

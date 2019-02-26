@@ -200,7 +200,7 @@ public class SerialPrinterPort2 implements PrinterPort {
     public void initialize(Properties properties) throws Exception {
     }
 
-    public String[] getPortNames() throws Exception {
+    public String[] getPortNames() {
         Vector result = new Vector();
         Enumeration e = CommPortIdentifier.getPortIdentifiers();
         while (e.hasMoreElements()) {

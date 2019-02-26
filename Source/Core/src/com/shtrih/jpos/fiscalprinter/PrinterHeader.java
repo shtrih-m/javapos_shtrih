@@ -22,12 +22,12 @@ public interface PrinterHeader {
 
 	public HeaderLine getTrailerLine(int number) throws Exception;
 
-	public void beginDocument(String additionalHeader, String additionalTrailer)
+	public void beginDocument(String additionalHeader)
 			throws Exception;
 
-	public void endFiscal(String additionalHeader, String additionalTrailer)
+	public void endFiscal(String additionalTrailer)
 			throws Exception;
 
-	public void endNonFiscal(String additionalHeader, String additionalTrailer)
+	public void endNonFiscal(String additionalTrailer)
 			throws Exception;
 }

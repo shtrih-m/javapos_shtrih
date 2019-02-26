@@ -49,47 +49,47 @@ public class DIOGetDriverParameter extends DIOItem {
             case SmFptrConst.SMFPTR_DIO_PARAM_FONT_NUMBER:
                 ((int[]) object)[0] = service.getFontNumber();
                 break;
-                
-            case  SmFptrConst.SMFPTR_DIO_PARAM_SYS_PASSWORD:
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_SYS_PASSWORD:
                 ((int[]) object)[0] = service.getPrinter().getSysPassword();
                 break;
-                
-            case  SmFptrConst.SMFPTR_DIO_PARAM_USR_PASSWORD:
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_USR_PASSWORD:
                 ((int[]) object)[0] = service.getPrinter().getUsrPassword();
                 break;
 
-            case  SmFptrConst.SMFPTR_DIO_PARAM_TAX_PASSWORD:
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_PASSWORD:
                 ((int[]) object)[0] = service.getPrinter().getTaxPassword();
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0:
-                ((long[]) object)[0] = service.getParams().taxValue[0];
+                ((long[]) object)[0] = service.getParams().taxAmount[0];
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_1:
-                ((long[]) object)[0] = service.getParams().taxValue[1];
+                ((long[]) object)[0] = service.getParams().taxAmount[1];
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_2:
-                ((long[]) object)[0] = service.getParams().taxValue[2];
+                ((long[]) object)[0] = service.getParams().taxAmount[2];
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_3:
-                ((long[]) object)[0] = service.getParams().taxValue[3];
+                ((long[]) object)[0] = service.getParams().taxAmount[3];
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_4:
-                ((long[]) object)[0] = service.getParams().taxValue[4];
+                ((long[]) object)[0] = service.getParams().taxAmount[4];
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_5:
-                ((long[]) object)[0] = service.getParams().taxValue[5];
+                ((long[]) object)[0] = service.getParams().taxAmount[5];
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM:
                 ((int[]) object)[0] = service.getParams().taxSystem;
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT:
                 ((long[]) object)[0] = service.getParams().itemTotalAmount;
                 break;
@@ -105,13 +105,25 @@ public class DIOGetDriverParameter extends DIOItem {
             case SmFptrConst.SMFPTR_DIO_PARAM_NEW_ITEM_STATUS:
                 ((int[]) object)[0] = service.getParams().newItemStatus;
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_CHECK_MODE:
                 ((int[]) object)[0] = service.getParams().itemCheckMode;
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE:
                 ((int[]) object)[0] = service.getParams().itemMarkType;
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT:
+                ((long[]) object)[0] = service.getParams().itemTaxAmount;
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_DOC_NUM:
+                ((long[]) object)[0] = service.getPrinter().getLastDocNumber();
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_DOC_MAC:
+                ((long[]) object)[0] = service.getPrinter().getLastMacValue();
                 break;
         }
     }

@@ -649,7 +649,7 @@ public class CashDrawerImpl extends DeviceService implements
             }
 
             if (fptrParams.searchByPortEnabled) {
-                String[] ports = SerialPrinterPort.getPortNames();
+                String[] ports = port.getPortNames();
                 for (int i = 0; i < ports.length; i++) {
                     String portName = ports[i];
                     if (!fptrParams.portName.equalsIgnoreCase(portName)) {
@@ -682,10 +682,11 @@ public class CashDrawerImpl extends DeviceService implements
             port.open(searchTimeout);
             printer.connect();
 
+            LongPrinterStatus status = printer.readLongStatus();
             // always set port parameters to update byte
             // receive timeout in fiscal printer
             int baudRateIndex = printer.getBaudRateIndex(fptrParams.getBaudRate());
-            printer.writePortParams(0, baudRateIndex, fptrParams.getDeviceByteTimeout());
+            printer.writePortParams(status.getPortNumber(), baudRateIndex, fptrParams.getDeviceByteTimeout());
             fptrParams.setBaudRate(printer.getModel().getSupportedBaudRates()[baudRateIndex]);
 
             // if baudrate changed - reopen port

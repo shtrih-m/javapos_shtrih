@@ -10,6 +10,9 @@ import com.shtrih.util.Localizer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -102,6 +105,7 @@ public class BluetoothPort implements PrinterPort {
                     throw new Exception("Bluetooth is turning off");
                 }
             }
+
             BluetoothDevice device = adapter.getRemoteDevice(portName);
             if (device == null) {
                 throw new Exception("Failed to get BluetoothDevice by address");
@@ -246,5 +250,25 @@ public class BluetoothPort implements PrinterPort {
 
     private void noConnectionError() throws Exception {
         throw new IOException(Localizer.getString(Localizer.NoConnection));
+    }
+
+    public String[] getPortNames() {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        Set<BluetoothDevice> pairedDevices;
+
+        if (bluetoothAdapter == null)
+            pairedDevices = new HashSet<>();
+        else
+            pairedDevices = bluetoothAdapter.getBondedDevices();
+
+        Set<String> ports = new HashSet<>();
+
+        for (BluetoothDevice device : pairedDevices) {
+            if (device.getName().startsWith(portName))
+                ports.add(device.getAddress());
+        }
+
+        return ports.toArray(new String[0]);
     }
 }

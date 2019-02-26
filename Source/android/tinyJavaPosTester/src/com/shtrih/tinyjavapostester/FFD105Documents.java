@@ -241,17 +241,17 @@ public class FFD105Documents {
                 if(!sendOperationTagsFirst)
                     fsOperationV2(printer, item);
 
-                // единица измерения предмета расчета
+                // Единица измерения предмета расчета, 1197
                 if (item.MeasurementUnit != null) {
                     printer.fsWriteOperationTag(1197, item.MeasurementUnit);
                 }
 
-                // признак агента по предмету расчета
+                // Признак агента по предмету расчета, 1222
                 if (item.SignSubjectCalculationAgent > 0) {
                     printer.fsWriteOperationTag(1222, item.SignSubjectCalculationAgent, 1);
                 }
 
-                // данные агента
+                // Данные агента, 1223
                 if (item.AgentData != null) {
 
                     byte[] agentData = buildAgentDataTLV(item.AgentData);
@@ -260,23 +260,30 @@ public class FFD105Documents {
                         printer.fsWriteOperationTag(1223, agentData);
                 }
 
-                // данные поставщика
+                // Информация о поставщике
                 if (item.PurveyorData != null) {
 
+                    // ИНН поставщика, 1226
                     if (item.PurveyorData.PurveyorVATIN != null)
                         printer.fsWriteOperationTag(1226, item.PurveyorData.PurveyorVATIN);
 
                     byte[] purveyorData = buildPurveyorDataTLV(item.PurveyorData);
 
+                    // Данные поставщика, 1224
                     if (purveyorData.length > 0)
                         printer.fsWriteOperationTag(1224, purveyorData);
                 }
 
-                // код товарной номенклатуры(КТН)
+                // Код товарной номенклатуры, 1162
                 if (item.GoodCodeData != null) {
                     byte[] data = generateKTN(item.GoodCodeData);
                     printer.fsWriteOperationTag(1162, data);
                 }
+                
+                // TODO: Дополнительный реквизит предмета расчета, 1191
+                // TODO: Код страны происхождения товара, 1230
+                // TODO: Номер таможенной декларации, 1231
+                // TODO: Акциз, 1229
 
                 // В мобайле и КЯ сперва нужно отправить тэги затем отправлять Операцию V2
                 if (sendOperationTagsFirst)
@@ -303,13 +310,11 @@ public class FFD105Documents {
         // адрес электронной почты отправителя чека
         writeTagIfNotNullAndNotEmpty(printer, 1117, params.Parameters.SenderEmail);
 
-        // адрес расчетов
-        // (51) Некорректные параметры в команде
-        // writeTagIfNotNullAndNotEmpty(printer, 1009, params.Parameters.AddressSettle);
+        // адрес расчетов, пердача данного тэга возможна только в режиме развозной торговли
+        writeTagIfNotNullAndNotEmpty(printer, 1009, params.Parameters.AddressSettle);
 
-        // место расчетов
-        // (51) Некорректные параметры в команде
-        // writeTagIfNotNullAndNotEmpty(printer, 1187, params.Parameters.PlaceSettle);
+        // место расчетов, пердача данного тэга возможна только в режиме развозной торговли
+        writeTagIfNotNullAndNotEmpty(printer, 1187, params.Parameters.PlaceSettle);
 
         // признак агента
         if (params.Parameters.AgentSign > 0)
@@ -332,6 +337,12 @@ public class FFD105Documents {
 
         // телефон поставщика
         writeTagIfNotNullAndNotEmpty(printer, 1171, params.Parameters.PurveyorData.PurveyorPhone);
+
+        // TODO: Номер автомата, 1036
+        // TODO: Дополнительный реквизит пользователя, 1084
+        // TODO: Дополнительный реквизит чека (БСО), 1192
+        // TODO: Покупатель (клиент), 1227
+        // TODO: ИНН покупателя (клиента), 1228
 
         if (params.Payments.getCash() > 0)
             printer.printRecTotal(0, params.Payments.getCash(), "0");

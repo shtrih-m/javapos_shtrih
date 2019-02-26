@@ -6,7 +6,9 @@
 package com.shtrih.jpos.fiscalprinter.directIO;
 
 import jpos.JposConst;
+
 import java.util.Arrays;
+
 import jpos.JposException;
 
 import com.shtrih.util.Localizer;
@@ -53,29 +55,30 @@ import com.shtrih.jpos.fiscalprinter.directIO.DIOReadShortStatus;
 import com.shtrih.jpos.fiscalprinter.directIO.DIOReadLongStatus;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
+
 import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_STATION_REC;
+
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
 
 /**
- *
  * @author V.Kravtsov
  */
 public class DirectIOHandler {
-    
+
     private final FiscalPrinterImpl service;
-    
-    public DirectIOHandler(FiscalPrinterImpl service){
+
+    public DirectIOHandler(FiscalPrinterImpl service) {
         this.service = service;
     }
-    
-    public SMFiscalPrinter getPrinter(){
+
+    public SMFiscalPrinter getPrinter() {
         return service.getPrinter();
     }
-    
-    public FptrParameters getParams(){
+
+    public FptrParameters getParams() {
         return service.getParams();
     }
-    
+
     public void directIO(int command, int[] data, Object object)
             throws Exception {
         PrinterImage image;
@@ -137,7 +140,7 @@ public class DirectIOHandler {
             case SmFptrConst.SMFPTR_DIO_LOAD_IMAGE:
                 String fileName = ((String[]) (object))[0];
                 PrinterImage printerImage = new PrinterImage(fileName);
-               getPrinter().loadImage(printerImage, true);
+                getPrinter().loadImage(printerImage, true);
                 int imageIndex = service.getPrinterImages().getIndex(printerImage);
                 data[0] = imageIndex;
                 break;
@@ -323,7 +326,7 @@ public class DirectIOHandler {
             case SmFptrConst.SMFPTR_DIO_CANCELIO:
                 getParams().cancelIO = true;
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_WRITE_TAG:
                 new DIOFSWriteTag(service).execute(data, object);
                 break;
@@ -335,27 +338,27 @@ public class DirectIOHandler {
             case SmFptrConst.SMFPTR_DIO_FS_WRITE_OPERATION_TLV:
                 new DIOFSWriteOperationTLV(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PRINT_DOC_END:
                 new DIOPrintDocEnd(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_DISABLE_PRINT:
                 new DIODisablePrint(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PRINT_NON_FISCAL:
                 new DIOPrintNonFiscal(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_WRITE_CUSTOMER_EMAIL:
                 new DIOFSWriteCustomerEmail(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_WRITE_CUSTOMER_PHONE:
                 new DIOFSWriteCustomerPhone(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_PRINT_CALC_REPORT:
                 new DIOFSPrintCalcReport(service).execute(data, object);
                 break;
@@ -363,39 +366,39 @@ public class DirectIOHandler {
             case SmFptrConst.SMFPTR_DIO_PRINT_JOURNAL:
                 new DIOPrintJournal(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_SET_DISCOUNT_AMOUNT:
                 new DIOSetDiscountAmount(service).execute(data, object);
                 break;
-                    
+
             case SmFptrConst.SMFPTR_DIO_READ_FS_PARAMS:
                 new DIOReadFSParams(service).execute(data, object);
                 break;
-    
+
             case SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS:
                 new DIOReadFSTickets(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS2:
                 new DIOReadFSTickets2(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS3:
                 new DIOReadFSTickets3(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS4:
                 new DIOReadFSTickets4(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PRINT_CORRECTION:
                 new DIOPrintCorrectionReceipt(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_PRINT_CORRECTION2:
                 new DIOPrintCorrectionReceipt2(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_READ_TOTALS:
                 new DIOReadTotals(service).execute(data, object);
                 break;
@@ -423,11 +426,11 @@ public class DirectIOHandler {
             case SmFptrConst.SMFPTR_DIO_FS_READ_DOCUMENT_TLV:
                 new DIOReadDocumentTLV(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_READ_DAY_OPEN:
                 new DIOReadDayOpen(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_READ_DAY_CLOSE:
                 new DIOReadDayClose(service).execute(data, object);
                 break;
@@ -435,15 +438,15 @@ public class DirectIOHandler {
             case SmFptrConst.SMFPTR_DIO_FS_READ_RECEIPT:
                 new DIOReadReceipt(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_READ_STATUS:
                 new DIOFSReadStatus(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_FIND_DOCUMENT:
                 new DIOFSFindDocument(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_DISABLE_DOCEND:
                 new DIODisableDocEnd(service).execute(data, object);
                 break;
@@ -459,68 +462,74 @@ public class DirectIOHandler {
             case SmFptrConst.SMFPTR_DIO_READ_DEVICE_METRICS:
                 new DIOReadDeviceMetrics(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_READ_TOTALIZER:
                 new DIOReadTotalizers(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_FS_READ_DOCUMENT_TLV_TEXT:
                 new DIOReadDocumentTLVText(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_READ_EJ_DOCUMENT:
                 new DIOReadEJDocument(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_START_DAY_CLOSE: 
+
+            case SmFptrConst.SMFPTR_DIO_START_DAY_CLOSE:
                 new DIOStartDayClose(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_START_DAY_OPEN: 
+
+            case SmFptrConst.SMFPTR_DIO_START_DAY_OPEN:
                 new DIOStartDayOpen(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_START_FISCALIZATION: 
+
+            case SmFptrConst.SMFPTR_DIO_START_FISCALIZATION:
                 new DIOStartFiscalization(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_START_CALC_REPORT: 
+
+            case SmFptrConst.SMFPTR_DIO_START_CALC_REPORT:
                 new DIOStartCalcReport(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_START_FISCAL_CLOSE: 
+
+            case SmFptrConst.SMFPTR_DIO_START_FISCAL_CLOSE:
                 new DIOStartFiscalClose(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_SET_ITEM_CODE: 
+
+            case SmFptrConst.SMFPTR_DIO_SET_ITEM_CODE:
                 new DIOSetItemCode(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_SEND_ITEM_CODE: 
+
+            case SmFptrConst.SMFPTR_DIO_SEND_ITEM_CODE:
                 new DIOSendItemCode(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_CHECK_ITEM_CODE: 
+
+            case SmFptrConst.SMFPTR_DIO_CHECK_ITEM_CODE:
                 new DIOCheckItemCode(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_ACCEPT_ITEM_CODE: 
+
+            case SmFptrConst.SMFPTR_DIO_ACCEPT_ITEM_CODE:
                 new DIOAcceptItemCode(service).execute(data, object);
                 break;
-                
-            case SmFptrConst.SMFPTR_DIO_BIND_ITEM_CODE: 
+
+            case SmFptrConst.SMFPTR_DIO_BIND_ITEM_CODE:
                 new DIOBindItemCode(service).execute(data, object);
                 break;
-                
+
             case SmFptrConst.SMFPTR_DIO_READ_KM_SERVER_STATUS:
                 new DIOReadKMServerStatus(service).execute(data, object);
                 break;
 
+            case SmFptrConst.SMFPTR_DIO_READ_FFD_VERSION:
+                new DIOGetFFDVersion(service).execute(data, object);
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_WRITE_FFD_VERSION:
+                new DIOSetFFDVersion(service).execute(data, object);
+                break;
+
             default:
-                throw new JposException(JposConst.JPOS_E_ILLEGAL,
-                        Localizer.getString(Localizer.invalidParameterValue)
-                        + ", command");
+                throw new JposException(JposConst.JPOS_E_ILLEGAL, Localizer.getString(Localizer.invalidParameterValue) + ", command");
         }
     }
-    
+
 }

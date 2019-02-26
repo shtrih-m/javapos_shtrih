@@ -3,6 +3,7 @@
 
     <string name="app_name">tinyJavaPosTester</string>
     <string name="action_connect_ptk">Connect bluetooth device</string>
+    <string name="action_auto_connect_bluetooth">Auto connect bluetooth device</string>
     <string name="action_share_log">Share log</string>
     <string name="scanning">scanning…</string>
     <string name="scan">scan</string>
@@ -30,6 +31,7 @@
     <string name="action_read_table">Read table</string>
     <string name="action_sync_date_time">Set current date and time</string>
     <string name="action_generate_mono_token">Generate mono token</string>
+    <string name="action_read_ffd_version">Read FFD version</string>
     <string name="defaultNetworkAddress">127.0.0.1:12345</string>
     <string name="lblNetworkAddress">Network address</string>
     <string name="lblPositions">Positions</string>
@@ -49,4 +51,5 @@
     <string name="lblTableField">Table field</string>
     <string name="lblTableCellValue">Table value</string>
     <string name="lblGenerateMonoToken">Mono token</string>
+    <string name="lblFFDVersion">FFD Version</string>
 </resources>

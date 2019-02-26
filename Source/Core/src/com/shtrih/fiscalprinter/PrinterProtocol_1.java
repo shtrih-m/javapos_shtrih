@@ -110,7 +110,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
     private byte[] readAnswer(int timeout) throws Exception {
         int enqNumber = 0;
         int nakCount = 0;
-        for (; ; ) {
+        for (;;) {
             port.setTimeout(timeout + byteTimeout);
             // STX
             while (portReadByte() != STX) {
@@ -133,7 +133,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
                 }
                 nakCount++;
                 portWrite(NAK);
-                for (; ; ) {
+                for (;;) {
                     portWrite(ENQ);
                     enqNumber++;
                     int B = readControlByte();
@@ -178,7 +178,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         int ackNumber = 0;
         int enqNumber = 0;
 
-        for (; ; ) {
+        for (;;) {
             port.setTimeout(byteTimeout);
             portWrite(ENQ);
             enqNumber++;
@@ -240,7 +240,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         int ackNumber = 0;
         int enqNumber = 0;
 
-        for (; ; ) {
+        for (;;) {
             try {
                 port.setTimeout(byteTimeout);
                 portWrite(ENQ);
@@ -387,8 +387,13 @@ public class PrinterProtocol_1 implements PrinterProtocol {
             return crc;
         }
 
-        public byte[] encode(byte[] data) {
+        public byte[] encode(byte[] data) throws Exception
+        {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            if (data.length > 0xFF) {
+                throw new Exception("Data length exeeds 256 bytes");
+            }
 
             baos.write(STX);
             baos.write(data.length);

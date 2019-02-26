@@ -7,7 +7,6 @@
  * and open the template in the editor.
  */
 /**
- *
  * @author V.Kravtsov
  */
 package com.shtrih.fiscalprinter.port;
@@ -15,6 +14,7 @@ package com.shtrih.fiscalprinter.port;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.Vector;
+
 import com.shtrih.util.Localizer;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.hoho.android.usbserial.driver.*;
@@ -40,8 +40,7 @@ public class HohoSerialPort implements PrinterPort {
     /**
      * Creates a new instance of PrinterPort
      */
-    public HohoSerialPort()
-    {
+    public HohoSerialPort() {
     }
 
     private Context getContext() throws Exception {
@@ -81,8 +80,7 @@ public class HohoSerialPort implements PrinterPort {
 
     public synchronized void open(int timeout) throws Exception {
 
-        if (isClosed())
-        {
+        if (isClosed()) {
             logger.debug("open");
 
             UsbManager usbManager = (UsbManager) getContext().getSystemService(Context.USB_SERVICE);
@@ -96,23 +94,22 @@ public class HohoSerialPort implements PrinterPort {
             }
 
             UsbSerialDriver driver = null;
-            if (drivers.size() == 0){
+            if (drivers.size() == 0) {
                 throw new Exception("No driver available");
             }
-            if (portName.isEmpty()){
+            if (portName.isEmpty()) {
                 driver = drivers.get(0);
             } else {
                 for (int i = 0; i < drivers.size(); i++) {
                     UsbDevice device = drivers.get(i).getDevice();
                     logger.debug("UsbDevice: " + device.getDeviceName());
-                    if (device.getDeviceName().equalsIgnoreCase(portName))
-                    {
+                    if (device.getDeviceName().equalsIgnoreCase(portName)) {
                         driver = drivers.get(i);
                         break;
                     }
                 }
             }
-            if (driver == null){
+            if (driver == null) {
                 throw new Exception("Driver not found");
             }
             port = driver.getPorts().get(0);
@@ -126,13 +123,11 @@ public class HohoSerialPort implements PrinterPort {
 
     public synchronized void close() {
 
-        if (isOpened())
-        {
+        if (isOpened()) {
             try {
                 port.close();
                 port = null;
-            }
-            catch(IOException e){
+            } catch (IOException e) {
                 logger.error(e);
             }
         }
@@ -151,8 +146,7 @@ public class HohoSerialPort implements PrinterPort {
     }
 
     public synchronized void updateBaudRate() throws Exception {
-        if (isOpened())
-        {
+        if (isOpened()) {
             port.setParameters(baudRate, UsbSerialPort.DATABITS_8, UsbSerialPort.STOPBITS_1,
                     UsbSerialPort.PARITY_NONE);
         }
@@ -200,10 +194,8 @@ public class HohoSerialPort implements PrinterPort {
     public void initialize(Properties properties) throws Exception {
     }
 
-    public static String[] getPortNames() throws Exception
-    {
-        Vector result = new Vector();
-        return (String[]) result.toArray(new String[0]);
+    public String[] getPortNames() {
+        return new String[]{portName};
     }
 
     public Object getSyncObject() throws Exception {
@@ -217,6 +209,6 @@ public class HohoSerialPort implements PrinterPort {
 
 
 /*
-*
-*
-* */
+ *
+ *
+ * */

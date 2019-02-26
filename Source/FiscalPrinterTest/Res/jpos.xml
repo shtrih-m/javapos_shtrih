@@ -11,7 +11,6 @@
 
         <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
     </JposEntry> 
-    
     <JposEntry logicalName="ShtrihFptr">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.fiscalprinter.FiscalPrinterService"/>
         <vendor name="SHTRIH-M" url="http://www.shtrih-m.com"/>
@@ -32,7 +31,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="COM3"/>
+        <prop name="portName" type="String" value="COM26"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="1"/>
@@ -65,7 +64,7 @@
         <!-- device state polling interval in milliseconds -->
         <prop name="pollInterval" type="String" value="5000"/>
         <!-- Amount coefficient -->
-        <prop name="amountFactor" type="String" value="1"/>
+        <prop name="amountFactor" type="String" value="0.01"/>
         <!-- Quantity coefficient -->
         <prop name="quantityFactor" type="String" value="1"/>
         <!-- Strings encoding -->
@@ -75,7 +74,7 @@
         <!-- Barcode print time -->
         <prop name="graphicsLineDelay" type="String" value="1000"/>
         <!-- fieldsFileName to initialize printer tables -->
-        <prop name="fieldsFileName" type="String" value="test.csv"/>
+        <prop name="fieldsFileName" type="String" value="SPAR_Retail_1F.csv"/>
         <!-- fieldsFilesPath to initialize printer tables -->
         <prop name="fieldsFilesPath" type="String" value=""/>
         <!-- Number of header lines -->
@@ -116,7 +115,7 @@
         <!-- Payment types -->
         <!-- Payment types -->
         <prop name="payType0" type="String" value="0"/>
-        <prop name="payType1" type="String" value="1"/>
+        <prop name="payType1" type="String" value="0"/>
         <prop name="payType2" type="String" value="2"/>
         <prop name="payType3" type="String" value="3"/>
         <prop name="payType4" type="String" value="4"/>
@@ -131,7 +130,7 @@
         <prop name="payType13" type="String" value="13"/>
         <prop name="payType14" type="String" value="14"/>
         <prop name="payType15" type="String" value="15"/>
-        <prop name="payType16" type="String" value="16"/>
+        <prop name="payType99" type="String" value="15"/>
 		<!-- Payment names -->
         <prop name="paymentName1" type="String" value="CASH"/>
         <prop name="paymentName2" type="String" value="CREDIT"/>
@@ -176,7 +175,7 @@
         <!-- Paper cut delay in milliseconds -->
         <prop name="cutPaperDelay" type="String" value="0"/>
         <!-- Sales Receipt type, 0 - normal, 1 - GLOBUS -->
-        <prop name="salesReceiptType" type="String" value="1"/>
+        <prop name="salesReceiptType" type="String" value="0"/>
         <!-- Amount field length -->
         <prop name="RFAmountLength" type="String" value="8"/>
         <!-- Quantity field length -->
@@ -196,7 +195,7 @@
         <!-- 1 - header stored and printed by printer, numHeaderLine and numTrailerLines are fixed -->
         <!-- 2 - header stored and printed with driver, header printed on receipt begin -->
         <!-- 3 - header will be printed when printer configured to do so -->
-        <prop name="headerMode" type="String" value="2"/>
+        <prop name="headerMode" type="String" value="0"/>
         <!-- headerImagePosition,  -->
         <!-- SMFPTR_LOGO_AFTER_HEADER     = 0  -->
         <!-- SMFPTR_LOGO_BEFORE_TRAILER   = 1  -->
@@ -259,11 +258,11 @@
         <!-- Text report empty lines enabled -->
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- Receipt template -->
-		<prop name="ReceiptTemplateEnabled" type="String" value="0"/>
+		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
 		<prop name="FieldSeparator" type="String" value=":"/>
-		<prop name="ItemTableHeader" type="String" value="                 Цена со:№пп Цена  Скидка скидкой Кол-во   ИТОГО: "/>
-		<prop name="ItemTableTrailer" type="String" value=""/>
-		<prop name="ItemRowFormat" type="String" value="%3cPOS% %6lPRICE% %8lSUM%*%3QUAN%%=$8TOTAL% %TAX_NAME%:%POSTLINE%:%PRELINE%"/>
+		<prop name="ItemTableHeader" type="String"  value="-------------------HEADER-----------------"/>
+		<prop name="ItemTableTrailer" type="String" value="-------------------TRAILER----------------"/>
+		<prop name="ItemRowFormat" type="String" value="%42lTITLE%%22SUM% X %5lQUAN%%=$10TOTAL_TAX%"/>
 		<!-- <prop name="DiscountFormat" type="String" value="    СКИДКА  %29lTITLE%%=$10TOTAL%"/> -->
 		<prop name="DiscountFormat" type="String" value=""/>
 		<!-- <prop name="ChargeFormat" type="String"   value="    НАДБАВКА  %29lTITLE%%=$10TOTAL%"/> -->
@@ -288,25 +287,28 @@
 		<prop name="printRecVoidItemAmount" type="String" value="0"/>
 		<!-- quantityCorrectionEnabled -->
 		<prop name="quantityCorrectionEnabled" type="String" value="0"/>
-		
-		<!-- Печать описани тэгов средствами драйвера -->
-		<prop name="FSPrintTags" type="String" value="1"/>
-		
-		<!-- Место печати тэгов в документе, если включена опция FSPrintTags:
-		     0 - после закрытия
-		     1 - в месте отправки, например, если тэг был отправлен до печати любой позиции
-		         он будет напечатан сразу после заголовка чека.
-		-->
-		<prop name="FSTagsPlacement" type="String" value="0"/>
 		<prop name="printVoidedReceipt" type="String" value="1"/>
 		<prop name="subtotalTextEnabled" type="String" value="0"/>
-		
 		<prop name="firmwarePath" type="String" value="firmware"/>
 		<prop name="capUpdateFirmware" type="String" value="1"/>
 		<prop name="printStringDelayInMs" type="String" value="0"/>
-		<prop name="footerFlagEnabled" type="String" value="0"/>
+		<prop name="footerFlagEnabled" type="String" value="1"/>
 		<prop name="itemCheckMode" type="String" value="0"/>
-		<prop name="checkItemCodeEnabled" type="String" value="1"/>
+		<prop name="checkItemCodeEnabled" type="String" value="0"/>
+		<prop name="userExtendedTagPrintMode" type="String" value="0"/>
+		<prop name="jsonUpdateEnabled" type="String" value="0"/>
+		<prop name="openReceiptOnBegin" type="String" value="0"/>
+		<!-- Режим записи тегов. 0 - в том месте, где был вызван, 1 - до позиций чека, 2 - после всех позиций чека -->
+		<prop name="writeTagMode" type="String" value="1"/>
+		<!-- Печать описани тэгов средствами драйвера -->
+		<prop name="FSPrintTags" type="String" value="1"/>
+		<!-- Место печати тэгов в документе, если включена опция FSPrintTags:
+		     0 - после закрытия, 1 - в месте отправки, например, 
+			 если тэг был отправлен до печати любой позиции он 
+			 будет напечатан сразу после заголовка чека. -->
+		<prop name="FSTagsPlacement" type="String" value="1"/>
+		<!-- Command delay in milliseconds -->
+		<prop name="commandDelayInMs" type="String" value="10"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>

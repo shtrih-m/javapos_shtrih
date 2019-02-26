@@ -2,6 +2,7 @@ package com.shtrih.fiscalprinter;
 
 import com.shtrih.util.BitUtils;
 import com.shtrih.util.Hex;
+import com.shtrih.util.HexUtils;
 import com.shtrih.util.encoding.IBM866;
 
 import java.math.BigDecimal;
@@ -16,8 +17,8 @@ import java.util.*;
  */
 public class TLVItem {
 
+    private byte[] data;
     private final int level;
-    private final byte[] data;
     private final TLVTag tag;
 
     public TLVItem(TLVTag tag, byte[] data, int level) {
@@ -128,13 +129,13 @@ public class TLVItem {
             throw new Exception("Неверная длина FVLN, ожидается минимум 2, получено " + data.length);
         }
         long value = toInt(data, 1);
-        int scale  = data[0];
+        int scale = data[0];
         return BigDecimal.valueOf(value, scale);
     }
 
     public BigDecimal toVLN() {
         long value = toInt();
-        int scale  = 2;
+        int scale = 2;
         return BigDecimal.valueOf(value, scale);
     }
 
@@ -154,6 +155,11 @@ public class TLVItem {
         return text;
     }
 
+    public void setText(String text) throws Exception {
+        data = tag.valueToBin(text);
+    }
+    
+    
     public String getText() throws Exception {
         switch (tag.getType()) {
             case itByte:

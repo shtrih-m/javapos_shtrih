@@ -166,4 +166,8 @@ public class SocketPort implements PrinterPort {
     public boolean isSearchByBaudRateEnabled() {
         return false;
     }
+
+    public String[] getPortNames() {
+        return new String[] { portName };
+    }
 }

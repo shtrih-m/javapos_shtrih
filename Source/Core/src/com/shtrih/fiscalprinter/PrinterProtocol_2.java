@@ -141,14 +141,6 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         int crc = readWord();
 
         CommandOutputStream stream = new CommandOutputStream("");
-//        stream.writeByte(Frame.STX);
-//        stream.writeShort(len);
-//        stream.writeShort(num);
-//        stream.writeBytes(rx);
-//        stream.writeShort(crc);
-//        Logger2.logRx(logger, stream.getData());
-
-//        stream = new CommandOutputStream("");
         stream.writeShort(len);
         stream.writeShort(num);
         stream.writeBytes(rx);

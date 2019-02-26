@@ -693,7 +693,10 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void enableDevice() {
         try {
+            //PrinterTest.class.getResourceAsStream("C:\\projects\\JavaPOS\\Source\\FiscalPrinterTest\\Res\\logging.properties");
             printer.setDeviceEnabled(true);
+            //printer.updateFirmware("C:\\projects\\JavaPOS\\Source\\FiscalPrinterTest\\Res\\firmware\\20181024\\upd_app.bin");
+            //printer.updateFirmware("C:\\projects\\JavaPOS\\Source\\FiscalPrinterTest\\Res\\firmware\\20181129\\upd_app.bin");
 
             //printCheckWithSmallSum();
             //readFSStatus();
@@ -719,9 +722,8 @@ class PrinterTest implements FiscalPrinterConst {
             System.out.println("Cash in drawer: " + printer.readCashRegister(241).getValue() / 100.0d);
              */
             //testTotalizers();
-            printer.fsReadDocumentTLVText(1);
-            printer.fsReadDocumentTLVText(2);
-
+            //printer.fsReadDocumentTLVText(1);
+            //printer.fsReadDocumentTLVText(2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -982,20 +984,29 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
-            String[] date = new String[1];
-            date[0] = "21092018133545";
-            printer.setDate(date[0]);
-            printer.getDate(date);
+            //printer.clearLogo();
+            //printer.clearImages();
+            //int index = printer.loadImage("reclame.bmp");
+            //printer.addLogo(0, SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
+            //printer.printImage(index);
+            //testSetDate();
+            //printFiscalReceipt106();
             
-            //printer.openFiscalDay();
-            //printEscBarcodesNormal();
-            //printFiscalReceipt145_4();
-            //checkItemBarcode();
+            printFiscalReceipt145_6();
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public void testSetDate() throws Exception
+    {
+        String[] date = new String[1];
+        printer.getDate(date);
+        printer.setDate(date[0]);
+        
+    }
+    
     public void disablePrint() {
         try {
             printer.disablePrint();
@@ -3673,18 +3684,18 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void checkItemBarcode(){
+    public void checkItemBarcode() {
         try {
             printer.resetPrinter();
             char GS = 0x1D;
             //String barcode = "018123456789123421000000000005L"+ GS +"2401234"+ GS +"100123456789ABCDEF1234"+ GS +"17170911911129"+ GS +"92E+NEWqvUuQ8CKBk4Rbk0JxKoFeGDo1Ay+9yyVf839Qt++pjSbsMLJbF2ZlFyzf+B8a+JcszhFHpuGpEu1gAlfA==";
-            String barcode = "018123456789123421000000000005M" + GS + "2401234"+ GS +"100123456789ABCDEF1234"+ GS +"17170911911129"+ GS +"92uZoDVpzZRuXoSs79Q54WhebeXNJa1oZ9kTyi09N4vW5E31B7vM3uwo17FIx9fd2T5g9tbVxhR1Wlmt9r3ivSvg==";
+            String barcode = "018123456789123421000000000005M" + GS + "2401234" + GS + "100123456789ABCDEF1234" + GS + "17170911911129" + GS + "92uZoDVpzZRuXoSs79Q54WhebeXNJa1oZ9kTyi09N4vW5E31B7vM3uwo17FIx9fd2T5g9tbVxhR1Wlmt9r3ivSvg==";
             printer.checkItemCode(barcode);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     public void printFiscalReceipt145_4() {
         try {
             printer.resetPrinter();
@@ -3692,17 +3703,17 @@ class PrinterTest implements FiscalPrinterConst {
             printer.beginFiscalReceipt(false);
 
             char GS = 0x1D;
-            String barcode = "018123456789123421000000000005M" + GS + "2401234"+ GS +"100123456789ABCDEF1234"+ GS +"17170911911129"+ GS +"92uZoDVpzZRuXoSs79Q54WhebeXNJa1oZ9kTyi09N4vW5E31B7vM3uwo17FIx9fd2T5g9tbVxhR1Wlmt9r3ivSvg==";
+            String barcode = "018123456789123421000000000005M" + GS + "2401234" + GS + "100123456789ABCDEF1234" + GS + "17170911911129" + GS + "92uZoDVpzZRuXoSs79Q54WhebeXNJa1oZ9kTyi09N4vW5E31B7vM3uwo17FIx9fd2T5g9tbVxhR1Wlmt9r3ivSvg==";
             printer.setItemCode(barcode, "");
             printer.printRecItem("1. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
             printer.printRecItemAdjustment(1, "            1206", 320, 2);
-            
-            printer.setItemCode("00000046200068", "5gk=IYQ");            
+
+            printer.setItemCode("00000046200068", "5gk=IYQ");
             printer.printRecItem("2. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
-            
-            printer.setItemCode("000000462000685gk=IYQAQC5pN/f", "");            
+
+            printer.setItemCode("000000462000685gk=IYQAQC5pN/f", "");
             printer.printRecItem("3. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
-                    
+
             printer.printRecSubtotal(27425);
             printer.printRecSubtotalAdjustment(1, "Округл.сдачи", 25);
             printer.printRecTotal(27400, 27400, "1");
@@ -3721,6 +3732,8 @@ class PrinterTest implements FiscalPrinterConst {
             printer.beginFiscalReceipt(false);
             printer.printRecItem("Item1", 1, 1000, 1, 1, "");
             printer.printRecTotal(1, 1, "0");
+            printer.fsWriteTag(1085, "1085, 012345678900123456789001234567890012345678900123456789001234567890");
+            printer.fsWriteTag(1086, "1086, 012345678900123456789001234567890012345678900123456789001234567890");
             printer.endFiscalReceipt(false);
 
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETSALE);
@@ -3745,4 +3758,83 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    public void printFiscalReceipt145_7() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("1. Ложка", 124, 0, 0, 0, "");
+            printer.printRecItem("2. Ложка", 124, 0, 0, 0, "");
+            printer.fsWriteTag(1008, "foo@example.com");
+            printer.printRecItem("3. Ложка", 124, 0, 0, 0, "");
+            
+            printer.printRecTotal(10000, 10000, "");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printFiscalReceipt145_8() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("1123 ХЛЕБ С ОТРУБЯМИ 1/20", 190000, 1000, 2, 190000, "");
+            printer.printRecTotal(190000, 100000, "1");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void printFiscalReceipt145_9() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("Item ", 424600, 500, 1, 849200, "");
+            printer.printRecSubtotal(424600);
+            printer.printRecSubtotalAdjustment(1, "", 4600);
+            printer.printRecTotal(420000, 420000, "1");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void printFiscalReceipt145_6() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+            printer.beginFiscalReceipt(false);
+            
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT, 123);
+            printer.printRecItem("1. Item 1, tax 1", 10000, 1000, 1, 0, "");
+            
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT, 234);
+            printer.printRecItem("2. Item 2, tax 2", 10000, 1000, 2, 0, "");
+            
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 0);
+            printer.printRecSubtotalAdjustment(1, "", 8000);
+            
+            printer.printRecTotal(10000, 10000, "1");
+            printer.printRecTotal(10000, 10000, "99");
+            
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 134);
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_1, 245);
+            printer.endFiscalReceipt(false);
+            
+            String docNum = printer.getParameter(SmFptrConst.SMFPTR_DIO_PARAM_DOC_NUM);
+            System.out.println("Document number: " + docNum);
+            
+            String docMac = printer.getParameter(SmFptrConst.SMFPTR_DIO_PARAM_DOC_MAC);
+            System.out.println("Document MAC: " + docMac);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    
 }

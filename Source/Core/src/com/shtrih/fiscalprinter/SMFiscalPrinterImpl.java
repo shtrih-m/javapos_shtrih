@@ -13,6 +13,7 @@ package com.shtrih.fiscalprinter;
 
 import java.nio.ByteOrder;
 import java.nio.ByteBuffer;
+import java.io.ByteArrayInputStream;
 
 import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.GS1BarcodeParser;
@@ -57,6 +58,7 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 import jpos.JposConst;
@@ -134,9 +136,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private boolean isFooter = false;
     private PrinterModelParameters modelParameters = null;
     private String serial = "";
+    private long lastDocNumber = 0;
+    private long lastMacValue = 0;
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
-                               FptrParameters params) {
+            FptrParameters params) {
         this.port = port;
         this.device = device;
         this.params = params;
@@ -195,6 +199,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void deviceExecute(PrinterCommand command) throws Exception {
         synchronized (port.getSyncObject()) {
+            if (params.commandDelayInMs > 0) {
+                Thread.sleep(params.commandDelayInMs);
+                logger.debug("Command delay: " + params.commandDelayInMs + " ms.");
+            }
             beforeCommand(command);
             device.send(command);
             if (command.getResultCode() != 0) {
@@ -209,6 +217,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         logger.debug("connect");
         synchronized (port.getSyncObject()) {
             device.connect();
+
+            ReadPrinterModelParameters command = new ReadPrinterModelParameters();
+            if (executeCommand(command) == 0) {
+                modelParameters = command.getParameters();
+            } else {
+                modelParameters = null;
+            }
+
             check(readDeviceMetrics());
             model = selectPrinterModel(getDeviceMetrics());
             return checkEcrMode();
@@ -347,9 +363,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     private boolean isReceiptCommand(PrinterCommand command) throws Exception {
         int[] codes = {
-                0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89,
-                0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F,
-                0xFF0C, 0xFF0D, 0x12, 0x17, 0x2F
+            0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89,
+            0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F,
+            0xFF0C, 0xFF0D, 0x12, 0x17, 0x2F
         };
         for (int i = 0; i < codes.length; i++) {
             if (command.getCode() == codes[i]) {
@@ -643,7 +659,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public int writeTable(int tableNumber, int rowNumber, int fieldNumber,
-                          String fieldValue) throws Exception {
+            String fieldValue) throws Exception {
         int result = 0;
         logger.debug("writeTable(" + String.valueOf(tableNumber) + ", "
                 + String.valueOf(rowNumber) + ", "
@@ -715,7 +731,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public int readTable(int tableNumber, int rowNumber, int fieldNumber,
-                         String[] fieldValue) throws Exception {
+            String[] fieldValue) throws Exception {
         int result = 0;
         logger.debug("readTable(" + String.valueOf(tableNumber) + ", "
                 + String.valueOf(rowNumber) + ", "
@@ -758,7 +774,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     private PrinterField getPrinterField(int tableNumber, int rowNumber,
-                                         int fieldNumber) throws Exception {
+            int fieldNumber) throws Exception {
         PrinterTable table = getTable(tableNumber);
         PrinterField field = table.getFields().find(tableNumber, rowNumber, fieldNumber);
         if (field == null) {
@@ -889,6 +905,18 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command;
     }
 
+    public int fsCloseReceipt(FSCloseReceipt command) throws Exception 
+    {
+        lastDocNumber = 0;
+        lastMacValue = 0;
+        int rc = executeCommand(command);
+        if (rc == 0) {
+            lastDocNumber = command.getDocNumber();
+            lastMacValue = command.getMacValue();
+        }
+        return rc;
+    }
+
     public long getSubtotal() throws Exception {
         logger.debug("getSubtotal");
         ReadSubtotal command = new ReadSubtotal(usrPassword);
@@ -993,7 +1021,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public PrintEJDayReportOnDates printEJDayReportOnDates(PrinterDate date1,
-                                                           PrinterDate date2, int reportType) throws Exception {
+            PrinterDate date2, int reportType) throws Exception {
         logger.debug("printEJDayReportOnDates");
         PrintEJDayReportOnDates command = new PrintEJDayReportOnDates();
         command.setPassword(sysPassword);
@@ -1005,7 +1033,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public PrintFMReportDates printFMReportDates(PrinterDate date1,
-                                                 PrinterDate date2, int reportType) throws Exception {
+            PrinterDate date2, int reportType) throws Exception {
         logger.debug("printFMReportDates");
         PrintFMReportDates command = new PrintFMReportDates();
         command.setPassword(taxPassword);
@@ -1017,7 +1045,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public PrintEJDayReportOnDays printEJReportDays(int day1, int day2,
-                                                    int reportType) throws Exception {
+            int reportType) throws Exception {
         logger.debug("printEJReportDays");
         PrintEJDayReportOnDays command = new PrintEJDayReportOnDays();
         command.setPassword(sysPassword);
@@ -1029,7 +1057,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public PrintFMReportDays printFMReportDays(int day1, int day2,
-                                               int reportType) throws Exception {
+            int reportType) throws Exception {
         logger.debug("printFMReportDays");
         PrintFMReportDays command = new PrintFMReportDays();
         command.setPassword(taxPassword);
@@ -1073,7 +1101,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         fsReceiptItem.setQuantity(item.getQuantity() * 1000);
         fsReceiptItem.setPrice(item.getPrice());
         fsReceiptItem.setAmount(item.getTotalAmount() == null ? 0xFFFFFFFFFFL : item.getTotalAmount());
-        fsReceiptItem.setTaxAmount(0xFFFFFFFFFFL);
+        fsReceiptItem.setTaxAmount(item.getTaxAmount() == null ? 0xFFFFFFFFFFL : item.getTaxAmount());
         fsReceiptItem.setTax(getTaxBits(item.getTax1()));
         fsReceiptItem.setDepartment(item.getDepartment());
         fsReceiptItem.setPaymentType(item.getPaymentType());
@@ -1248,6 +1276,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 
+    public void resetPrinter() throws Exception {
+        tlvItems.clear();
+    }
+
     public void writeTLVItems() throws Exception {
         for (int i = 0; i < tlvItems.size(); i++) {
             FSWriteTLV command = new FSWriteTLV();
@@ -1343,12 +1375,16 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 
-    public void writePortParams(int portNumber, int baudRate, int timeout)
+    public int writePortParams(int portNumber, int baudRate, int timeout)
             throws Exception {
         logger.debug("writePortParams(" + String.valueOf(portNumber) + ", "
                 + String.valueOf(baudRate) + ", " + String.valueOf(timeout)
                 + ")");
 
+        // For ports >= 3, fiscal printer return error
+        if (portNumber >= 3) {
+            return 0;
+        }
         MethodParameter.checkByte(portNumber, "portNumber");
         MethodParameter.checkByte(baudRate, "baudRate");
         WritePortParams command = new WritePortParams();
@@ -1356,8 +1392,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setPortNumber(portNumber);
         command.setBaudRate(baudRate);
         command.setTimeout(timeout);
-        execute(command);
+        int rc = executeCommand(command);
         SysUtils.sleep(300);
+        return rc;
     }
 
     public void printBarcode(String barcode) throws Exception {
@@ -1444,7 +1481,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setLine2(line2);
         command.setVscale(1);
         command.setHscale(1);
-        command.setFlags(2);
+        command.setFlags(getPrintStation(SMFP_STATION_REC));
         return executeCommand(command);
     }
 
@@ -1539,7 +1576,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         logger.debug("waitForPrinting");
         PrinterStatus status = null;
         try {
-            for (; ; ) {
+            for (;;) {
                 status = readPrinterStatus();
                 switch (status.getSubmode()) {
                     case ECR_SUBMODE_IDLE: {
@@ -1666,7 +1703,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public boolean connectDevice(int baudRate, int deviceBaudRate,
-                                 int deviceByteTimeout) throws Exception {
+            int deviceByteTimeout) throws Exception {
         setBaudRate(baudRate);
         LongPrinterStatus status = readLongStatus();
         writePortParams(status.getPortNumber(),
@@ -2062,12 +2099,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         isHeaderHeightInitialized = false;
         isFsHeaderDataInitialized = false;
         isCapDiscountInitialized = false;
+        capFiscalStorage = false;
 
         getModel().setFonts(new PrinterFonts(this));
 
-        ReadPrinterModelParameters command = new ReadPrinterModelParameters();
-        if (executeCommand(command) == 0) {
-            modelParameters = command.getParameters();
+        if (capModelParameters()) {
             capFiscalStorage = modelParameters.getCapFiscalStorage();
         }
 
@@ -2088,12 +2124,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (isShtrihMobile()) {
             capGraphics3Scale = true;
         }
-
+        capCutPaper = !isShtrihMobile();
         updateFirmware();
     }
 
     /**
-     * Устройство все прочие Штрих-устройства выпускаемые как стационарные, например Retail-01Ф
+     * Устройство все прочие Штрих-устройства выпускаемые как стационарные,
+     * например Retail-01Ф
      */
     public boolean isDesktop() {
         return deviceMetrics.isDesktop();
@@ -2338,7 +2375,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             if (barcode.getType() != SmFptrConst.SMFPTR_BARCODE_EAN13) {
                 throw new Exception(
                         Localizer
-                                .getString(Localizer.PrinterSupportesEAN13Only));
+                        .getString(Localizer.PrinterSupportesEAN13Only));
             }
 
             if (barcode.isTextAbove()) {
@@ -2361,6 +2398,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     private void printBarcodeLabel(PrinterBarcode barcode) throws Exception {
+        if (barcode.getLabel().isEmpty()) {
+            return;
+        }
         String data = centerLine(barcode.getLabel());
         doPrintText(SMFP_STATION_REC, data, params.font);
     }
@@ -2524,29 +2564,31 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public int loadBarcode3(int blockType, String text) throws Exception {
-        logger.debug("loadBarcode3");
+    public int loadDataBlock(int blockType, byte[] data) throws Exception {
+        logger.debug("loadDataBlock");
         // Load barcode data
+        byte[] block = new byte[LoadBarcode3.MAX_BLOCK_SIZE];
+        ByteArrayInputStream stream = new ByteArrayInputStream(data);
+        int blockNumber = 0;
         int result = 0;
-        int blockSize = LoadBarcode3.MAX_BLOCK_SIZE;
-        int blockCount = (text.length() + blockSize - 1) / blockSize;
-        for (int i = 0; i < blockCount; i++) {
-            int sIndex = i * blockSize;
-            int eIndex = (i + 1) * blockSize;
-            if (eIndex > (text.length())) {
-                eIndex = text.length();
+        while (stream.available() > 0) {
+            int len = stream.read(block);
+            if (len <= 0) {
+                throw new Exception("Read failed");
             }
-            String blockData = text.substring(sIndex, eIndex);
-
+            if (len < block.length) {
+                System.arraycopy(block, 0, block, 0, len);
+            }
             LoadBarcode3 command = new LoadBarcode3();
             command.setPassword(usrPassword);
             command.setBlockType(blockType);
-            command.setBlockNumber(i);
-            command.setBlockData(blockData.getBytes());
+            command.setBlockNumber(blockNumber);
+            command.setBlockData(block);
             result = executeCommand(command);
             if (result != 0) {
                 break;
             }
+            blockNumber++;
         }
         return result;
     }
@@ -2554,11 +2596,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public int printBarcode3(PrinterBarcode barcode) throws Exception {
         logger.debug("printBarcode3");
 
-        loadBarcode3(0, barcode.getText());
+        loadDataBlock(0, barcode.getText().getBytes());
         // Print barcode
         PrintBarcode3 command = new PrintBarcode3();
         command.setPassword(usrPassword);
-        command.setBarcodeType(PrintBarcode3.QRCODE);
+        int barcodeType = PrintBarcode3.QRCODE;
+        if (capFooterFlag && isFooter) {
+            barcodeType += 0x40;
+        }
+        command.setBarcodeType(barcodeType);
         command.setDataLength(barcode.getText().length());
         command.setBlockNumber(0);
         command.setInParameter1(0);
@@ -2715,8 +2761,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (imageWidth > maxGraphicsWidth) {
             throw new Exception(
                     Localizer.getString(Localizer.InvalidImageWidth) + ", "
-                            + String.valueOf(imageWidth) + " > "
-                            + String.valueOf(maxGraphicsWidth));
+                    + String.valueOf(imageWidth) + " > "
+                    + String.valueOf(maxGraphicsWidth));
         }
     }
 
@@ -2733,9 +2779,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         byte[] SEPARATOR_PATTERN_BLACK = {(byte) 0xFF};
         byte[] SEPARATOR_PATTERN_WHITE = {0x00};
         byte[] SEPARATOR_PATTERN_DOTTED_1 = {(byte) 0xFF, (byte) 0xFF,
-                (byte) 0xFF, 0x00, 0x00, 0x00};
+            (byte) 0xFF, 0x00, 0x00, 0x00};
         byte[] SEPARATOR_PATTERN_DOTTED_2 = {(byte) 0xFF, (byte) 0xFF,
-                (byte) 0xFF, (byte) 0xFF, 0x00, 0x00, 0x00, 0x00};
+            (byte) 0xFF, (byte) 0xFF, 0x00, 0x00, 0x00, 0x00};
         byte[] pattern;
 
         switch (separatorType) {
@@ -2969,8 +3015,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (image.getWidth() > getMaxGraphicsWidth()) {
             throw new Exception(
                     Localizer.getString(Localizer.InvalidImageWidth) + ", "
-                            + String.valueOf(image.getWidth()) + " > "
-                            + String.valueOf(getMaxGraphicsWidth()));
+                    + String.valueOf(image.getWidth()) + " > "
+                    + String.valueOf(getMaxGraphicsWidth()));
         }
         // write image to device
         if (getCapLoadGraphics3()) {
@@ -3109,13 +3155,21 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     @Override
     public String readFullSerial() throws Exception {
         if (serial.isEmpty()) {
-            serial = readTable(getFsTableNumber(), 1, 1).trim();
+            if (getDeviceMetrics().isElves()) {
+                serial = getLongStatus().getSerial();
+            } else {
+                serial = readTable(getFsTableNumber(), 1, 1).trim();
+            }
         }
         return serial;
     }
 
     @Override
     public String readRnm() throws Exception {
+        if (getDeviceMetrics().isElves()) {
+            return readTable(11, 1, 2).trim();
+        }
+
         return readTable(getFsTableNumber(), 1, 3).trim();
     }
 
@@ -3173,8 +3227,69 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 && (fsReadStatus().getDocType().isDocOpen()));
     }
 
+    public byte[] processTLVBeforeReceipt(byte[] tlv) throws Exception {
+        if (params.userExtendedTagPrintMode != FptrParameters.USER_EXTENDED_TAG_PRINT_MODE_DRIVER) {
+            return tlv;
+        }
+        TLVParser reader = new TLVParser();
+        reader.read(tlv);
+        TLVItems items = reader.getItems();
+        for (int i = items.size() - 1; i >= 0; i--) {
+            TLVItem item = items.get(i);
+            int tagId = item.getTag().getId();
+            if (tagId == 1085) {
+                String text = item.getText().replace("\r\n", "  ");
+                writeTable(17, 1, 13, text);
+            }
+        }
+        return reader.write();
+    }
+
+    public byte[] filterTLV(byte[] tlv) throws Exception {
+        if (params.userExtendedTagPrintMode == FptrParameters.USER_EXTENDED_TAG_PRINT_MODE_DRIVER) {
+            TLVParser reader = new TLVParser();
+            reader.read(tlv);
+            TLVItems items = reader.getItems();
+            for (int i = items.size() - 1; i >= 0; i--) {
+                TLVItem item = items.get(i);
+                int tagId = item.getTag().getId();
+                if (tagId == 1085) {
+                    printText(item.getText());
+                    items.remove(item);
+                }
+                if (tagId == 1086) {
+                    printText(item.getText());
+                    String text = item.getText().replace("\r\n", "  ");
+                    fsWriteTLVBuffer(15000, text);
+                    items.remove(item);
+                }
+            }
+            return reader.write();
+        } else if (params.userExtendedTagPrintMode == FptrParameters.USER_EXTENDED_TAG_PRINT_MODE_PRINTER) {
+            TLVParser reader = new TLVParser();
+            reader.read(tlv);
+            TLVItems items = reader.getItems();
+            for (int i = items.size() - 1; i >= 0; i--) {
+                TLVItem item = items.get(i);
+                int tagId = item.getTag().getId();
+                if ((tagId == 1085) || (tagId == 1086)) {
+                    String text = item.getText().replace("\r\n", "  ");
+                    item.setText(text);
+                }
+            }
+            return reader.write();
+        } else {
+            return tlv;
+        }
+    }
+
     public void fsWriteTLV(byte[] tlv) throws Exception {
         if (isFSDocumentOpened()) {
+            tlv = filterTLV(tlv);
+            if (tlv.length <= 0) {
+                return;
+            }
+
             FSWriteTLV command = new FSWriteTLV();
             command.setSysPassword(sysPassword);
             command.setTlv(tlv);
@@ -3477,11 +3592,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     private static String[] docNames = {
-            "ПРОДАЖА", "ПОКУПКА", "ВОЗВРАТ ПРОДАЖИ", "ВОЗВРАТ ПОКУПКИ"
+        "ПРОДАЖА", "ПОКУПКА", "ВОЗВРАТ ПРОДАЖИ", "ВОЗВРАТ ПОКУПКИ"
     };
 
     private static String[] fsDocNames = {
-            "ПРИХОД", "РАСХОД", "ВОЗВРАТ ПРИХОДА", "ВОЗВРАТ РАСХОДА"
+        "ПРИХОД", "РАСХОД", "ВОЗВРАТ ПРИХОДА", "ВОЗВРАТ РАСХОДА"
     };
 
     public String getReceiptName(int receiptType) {
@@ -3589,7 +3704,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public Vector<FSTicket> fsReadTickets(int firstFSDocumentNumber,
-                                          int documentCount) throws Exception {
+            int documentCount) throws Exception {
         Vector<FSTicket> tickets = new Vector<FSTicket>();
         FSReadStatus status = fsReadStatus();
         long lastFSDocumentNumber = status.getDocNumber();
@@ -3887,6 +4002,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void updateFirmware(String firmwareFileName) throws Exception {
+        logger.debug("updateFirmware(" + firmwareFileName + ")");
         if (!getCapUpdateFirmware()) {
             throw new Exception("Firmware update not supported");
         }
@@ -4004,7 +4120,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         int writePointCount = 0;
         int stopTestCount = 0;
 
-        for (; ; ) {
+        for (;;) {
             ReadLongStatus command = new ReadLongStatus();
             command.setPassword(getUsrPassword());
             int rc = executeCommand(command);
@@ -4081,7 +4197,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     if (writePointCount >= MaxStateCount) {
                         throw new Exception(
                                 Localizer
-                                        .getString(Localizer.WriteDecimalPointFailed));
+                                .getString(Localizer.WriteDecimalPointFailed));
                     }
                     break;
 
@@ -4150,8 +4266,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     // try to connect to device
-    private boolean connectDevice(String searchPortName, int searchBaudRate
-    ) throws Exception {
+    private boolean connectDevice(String searchPortName, int searchBaudRate) throws Exception {
         logger.debug("connectDevice(" + searchPortName + ", " + searchBaudRate + ")");
         try {
             port.setPortName(searchPortName);
@@ -4159,10 +4274,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             port.open(0);
             connect();
 
+            LongPrinterStatus status = readLongStatus();
             // always set port parameters to update byte
             // receive timeout in fiscal printer
             int baudRateIndex = getBaudRateIndex(params.getBaudRate());
-            writePortParams(0, baudRateIndex, params.getDeviceByteTimeout());
+            writePortParams(status.getPortNumber(), baudRateIndex, params.getDeviceByteTimeout());
             params.setBaudRate(getModel().getSupportedBaudRates()[baudRateIndex]);
 
             // if baudrate changed - reopen port
@@ -4181,21 +4297,20 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     // search device on ports and baudrates
     private void searchSerialDevice() throws Exception {
         if (params.searchByPortEnabled) {
-            String[] ports = SerialPrinterPort.getPortNames();
+            String[] ports = port.getPortNames();
             for (int i = 0; i < ports.length; i++) {
                 String portName = ports[i];
-                if (!params.portName.equalsIgnoreCase(portName)) {
-                    if (params.searchByBaudRateEnabled) {
-                        if (searchByBaudRates(portName, params.getBaudRate())) {
-                            return;
-                        }
-                    } else if (connectDevice(portName, params.getBaudRate())) {
+
+                if (params.searchByBaudRateEnabled && port.isSearchByBaudRateEnabled()) {
+                    if (searchByBaudRates(portName, params.getBaudRate())) {
                         return;
                     }
+                } else if (connectDevice(portName, params.getBaudRate())) {
+                    return;
                 }
             }
         }
-        if (params.searchByBaudRateEnabled) {
+        if (params.searchByBaudRateEnabled && port.isSearchByBaudRateEnabled()) {
             if (searchByBaudRates(params.portName, params.getBaudRate())) {
                 return;
             }
@@ -4208,7 +4323,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public LongPrinterStatus searchDevice() throws Exception {
         logger.debug("searchDevice");
         synchronized (port.getSyncObject()) {
-            if (port.isSearchByBaudRateEnabled()) {
+            if (params.searchByBaudRateEnabled || params.searchByPortEnabled) {
                 searchSerialDevice();
                 return readLongStatus();
             } else {
@@ -4392,7 +4507,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public int checkItemCode2(String barcode) throws Exception {
         int rc = 0;
-        rc = loadBarcode3(1, barcode);
+        rc = loadDataBlock(1, barcode.getBytes());
         if (rc == 0) {
             FSCheckBarcode checkCommand = fsCheckBarcode(barcode);
             rc = checkCommand.getResultCode();
@@ -4422,15 +4537,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public int sendItemCode1(GS1Barcode barcode) throws Exception {
-        String serial = barcode.serial;
-        if (serial.length() > 24) {
-            serial = barcode.serial.substring(0, 24);
-        }
-        if (serial.length() < 24) {
-            serial = serial + StringUtils.stringOfChar(' ', 24 - serial.length());
-        }
+    public byte[] longToBytes(long x) {
+        ByteBuffer buffer = ByteBuffer.allocate(8);
+        buffer.order(ByteOrder.BIG_ENDIAN);
+        buffer.putLong(x);
+        return buffer.array();
+    }
 
+    public int sendItemCode1(GS1Barcode barcode) throws Exception {
+        byte[] ba;
+        String serial = barcode.serial;
+        ByteBuffer buf;
         TLVWriter writer = new TLVWriter();
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         switch (params.itemMarkType) {
@@ -4438,10 +4555,36 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             case FptrParameters.MARK_TYPE_DRUGS:
             case FptrParameters.MARK_TYPE_TOBACCO:
 
-                ByteBuffer buf = ByteBuffer.allocate(32);
+                if (serial.length() > 24) {
+                    serial = barcode.serial.substring(0, 24);
+                }
+                if (serial.length() < 24) {
+                    serial = serial + StringUtils.stringOfChar(' ', 24 - serial.length());
+                }
+
+                buf = ByteBuffer.allocate(32);
                 buf.order(ByteOrder.BIG_ENDIAN);
-                buf.putLong(Long.parseLong(barcode.GTIN));
-                buf.putShort(0, (short) params.itemMarkType);
+                buf.putShort((short) params.itemMarkType);
+                ba = longToBytes(Long.parseLong(barcode.GTIN));
+                buf.put(ba, 0, 6);
+                buf.put(serial.getBytes());
+                writer.add(1162, buf.array());
+                return fsWriteOperationTLV(writer.getBytes());
+
+            case FptrParameters.MARK_TYPE_SHOES:
+
+                if (serial.length() > 13) {
+                    serial = barcode.serial.substring(0, 13);
+                }
+                if (serial.length() < 13) {
+                    serial = serial + StringUtils.stringOfChar(' ', 13 - serial.length());
+                }
+
+                buf = ByteBuffer.allocate(21);
+                buf.order(ByteOrder.BIG_ENDIAN);
+                buf.putShort((short) params.itemMarkType);
+                ba = longToBytes(Long.parseLong(barcode.GTIN));
+                buf.put(ba, 0, 6);
                 buf.put(serial.getBytes());
                 writer.add(1162, buf.array());
                 return fsWriteOperationTLV(writer.getBytes());
@@ -4489,5 +4632,29 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setPassword(sysPassword);
         executeCommand(command);
         return command;
+    }
+
+    public int fsWriteTLVBuffer(int tagId, String tagValue) throws Exception {
+        byte[] data = getTLVData(tagId, tagValue);
+        int rc = loadDataBlock(1, data);
+        if (failed(rc)) {
+            return rc;
+        }
+
+        FSWriteTLVBuffer command = new FSWriteTLVBuffer();
+        command.setSysPassword(sysPassword);
+        return executeCommand(command);
+    }
+
+    public boolean getCapOperationTagsFirst() {
+        return deviceMetrics.isCashCore() || deviceMetrics.isShtrihMobile();
+    }
+
+    public long getLastDocNumber() {
+        return lastDocNumber;
+    }
+
+    public long getLastMacValue() {
+        return lastMacValue;
     }
 }

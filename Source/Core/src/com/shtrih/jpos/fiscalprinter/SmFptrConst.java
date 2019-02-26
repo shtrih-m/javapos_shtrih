@@ -605,6 +605,16 @@ public interface SmFptrConst {
      * Read KM server status
      */
     public static final int SMFPTR_DIO_READ_KM_SERVER_STATUS = 0x65;
+
+    /**
+     * Read FFD version
+     */
+    public static final int SMFPTR_DIO_READ_FFD_VERSION = 0x66;
+
+    /**
+     * Write FFD version
+     */
+    public static final int SMFPTR_DIO_WRITE_FFD_VERSION = 0x67;
     
     /**
      * Set item barcode GTIN and serial
@@ -673,6 +683,10 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_PARAM_ITEM_CHECK_MODE    = 22;
     public static final int SMFPTR_DIO_PARAM_ITEM_MARK_TYPE     = 23;
     
+    public static final int SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT    = 24;
+    
+    public static final int SMFPTR_DIO_PARAM_DOC_NUM            = 25;
+    public static final int SMFPTR_DIO_PARAM_DOC_MAC            = 26;
 
     // ///////////////////////////////////////////////////////////////////
     // TableMode

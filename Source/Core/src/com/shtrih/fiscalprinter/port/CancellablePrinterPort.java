@@ -79,4 +79,8 @@ public class CancellablePrinterPort implements PrinterPort
     public boolean isSearchByBaudRateEnabled(){
         return port.isSearchByBaudRateEnabled();
     }
+
+    public String[] getPortNames() {
+        return port.getPortNames();
+    }
 }

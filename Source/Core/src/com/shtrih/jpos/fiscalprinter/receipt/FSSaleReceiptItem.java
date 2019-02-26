@@ -43,9 +43,11 @@ public class FSSaleReceiptItem {
     private FSSaleReceiptItem splittedItem;
     private final FSDiscounts discounts = new FSDiscounts();
     private Long totalAmount = null;
+    private Long taxAmount = null;
     private int paymentType = 4;
     private int subjectType = 1;
     private GS1Barcode barcode = null;
+    private final Vector tags = new Vector();
 
     public FSSaleReceiptItem() {
     }
@@ -71,10 +73,15 @@ public class FSSaleReceiptItem {
         item.priceUpdated = priceUpdated;
         item.splittedItem = null;
         item.totalAmount = totalAmount;
+        item.taxAmount = taxAmount;
         item.paymentType = paymentType;
         item.subjectType = subjectType;
         item.barcode = barcode;
         return item;
+    }
+
+    public Vector getTags() {
+        return tags;
     }
 
     public PriceItem getPriceItem() throws Exception {
@@ -87,6 +94,7 @@ public class FSSaleReceiptItem {
         item.setTax3(tax3);
         item.setTax4(tax4);
         item.setText(text);
+        item.setTaxAmount(taxAmount);
         item.setTotalAmount(totalAmount);
         item.setPaymentType(paymentType);
         item.setSubjectType(subjectType);
@@ -98,6 +106,10 @@ public class FSSaleReceiptItem {
         totalAmount = value;
     }
 
+    public void setTaxAmount(Long value) {
+        taxAmount = value;
+    }
+    
     public boolean getIsStorno() {
         return isStorno;
     }

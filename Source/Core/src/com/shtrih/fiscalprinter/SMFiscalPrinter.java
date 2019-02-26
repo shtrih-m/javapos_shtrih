@@ -25,6 +25,7 @@ import com.shtrih.fiscalprinter.command.FDOParameters;
 import com.shtrih.fiscalprinter.command.FMTotals;
 import com.shtrih.fiscalprinter.command.FSAcceptItemCode;
 import com.shtrih.fiscalprinter.command.FSBindItemCode;
+import com.shtrih.fiscalprinter.command.FSCloseReceipt;
 import com.shtrih.fiscalprinter.command.FSDocument;
 import com.shtrih.fiscalprinter.command.FSFindDocument;
 import com.shtrih.fiscalprinter.command.FSPrintCorrectionReceipt;
@@ -263,7 +264,7 @@ public interface SMFiscalPrinter {
 
     public int writeTime(PrinterTime time) throws Exception;
 
-    public void writePortParams(int portNumber, int baudRate, int timeout)
+    public int writePortParams(int portNumber, int baudRate, int timeout)
             throws Exception;
 
     public void printBarcode(String barcode) throws Exception;
@@ -651,4 +652,16 @@ public interface SMFiscalPrinter {
     public FSAcceptItemCode fsAcceptItemCode(int action) throws Exception;
 
     public FSReadKMServerStatus fsReadKMServerStatus() throws Exception;
+    
+    public int fsCloseReceipt(FSCloseReceipt command) throws Exception;
+    
+    public byte[] processTLVBeforeReceipt(byte[] tlv) throws Exception;
+    
+    public void resetPrinter() throws Exception;
+    
+    public boolean getCapOperationTagsFirst();
+    
+    public long getLastDocNumber();
+    
+    public long getLastMacValue();
 }

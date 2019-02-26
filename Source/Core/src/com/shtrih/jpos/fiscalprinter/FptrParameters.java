@@ -19,10 +19,25 @@ import static com.shtrih.jpos.fiscalprinter.SmFptrConst.SMFPTR_HEADER_MODE_DRIVE
 public class FptrParameters {
 
     ///////////////////////////////////////////////////////////////////////////
+    // gf constants
+    public static final int WRITE_TAG_MODE_IN_PLACE         = 0;
+    public static final int WRITE_TAG_MODE_BEFORE_ITEMS     = 1;
+    public static final int WRITE_TAG_MODE_AFTER_ITEMS      = 2;
+            
+    ///////////////////////////////////////////////////////////////////////////
     // itemMarkType constants
     public static final int MARK_TYPE_FUR       = 2;
     public static final int MARK_TYPE_DRUGS     = 3;
     public static final int MARK_TYPE_TOBACCO   = 5;
+    public static final int MARK_TYPE_SHOES     = 0x1520;
+    
+    ///////////////////////////////////////////////////////////////////////////
+    // userExtendedTagPrintMode constants
+    
+    public static final int USER_EXTENDED_TAG_PRINT_MODE_DRIVER     = 0;
+    public static final int USER_EXTENDED_TAG_PRINT_MODE_PRINTER    = 1;
+    
+    
     
     public static final int defaultGraphicsLineDelay = 200;
 
@@ -135,7 +150,7 @@ public class FptrParameters {
     public boolean textReportEnabled = false;
     public boolean readDiscountMode = true;
     public String textReportFileName = "documents.txt";
-    public boolean FSPrintTags = true;
+    public boolean FSPrintTags = false;
     public int FSTagsPlacement = 0;
     public boolean textReportEmptyLinesEnabled = true;
     public boolean ReceiptTemplateEnabled = false;
@@ -161,10 +176,11 @@ public class FptrParameters {
     public boolean printRecVoidItemAmount = false;
     public boolean FSReceiptItemDiscountEnabled = false;
     public boolean quantityCorrectionEnabled = false;
-    public boolean paymentSumCorrectionEnabled = false;
-    public long taxValue[] = new long[6];
+    public boolean paymentSumCorrectionEnabled = true;
+    public long[] taxAmount = new long[6];
     public int taxSystem = 0;
     public Long itemTotalAmount = null;
+    public Long itemTaxAmount = null;
     public int paymentType = 4;
     public int subjectType = 1;
     public boolean calcReportEnabled = false;
@@ -184,24 +200,32 @@ public class FptrParameters {
     public int newItemStatus = FSCheckBarcode.FS_ITEM_STATUS_RETAIL;
     public int itemCheckMode = FSCheckBarcode.FS_CHECK_MODE_FULL;
     public int itemMarkType = FptrParameters.MARK_TYPE_TOBACCO;
+    public int userExtendedTagPrintMode = USER_EXTENDED_TAG_PRINT_MODE_DRIVER;
+    public boolean jsonUpdateEnabled = false;
+    public int jsonUpdatePeriodInMinutes = 5;
+    public String jsonUpdateServerURL = "http://127.0.0.1:8888/check_firmware";
+    public int writeTagMode = FptrParameters.WRITE_TAG_MODE_IN_PLACE;
+    public int commandDelayInMs = 0;
     
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
         subtotalFont = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
         discountFont = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
-        taxValue[0] = 0;
-        taxValue[1] = 0;
-        taxValue[2] = 0;
-        taxValue[3] = 0;
-        taxValue[4] = 0;
-        taxValue[5] = 0;
+        taxAmount[0] = 0;
+        taxAmount[1] = 0;
+        taxAmount[2] = 0;
+        taxAmount[3] = 0;
+        taxAmount[4] = 0;
+        taxAmount[5] = 0;
         taxSystem = 0;
     }
 
     public void setDefaults() throws Exception {
         setPortType(SmFptrConst.PORT_TYPE_FROMCLASS);
         setBaudRate(4800);
-        FSPrintTags = true;
+        FSPrintTags = false;
+        userExtendedTagPrintMode = USER_EXTENDED_TAG_PRINT_MODE_DRIVER;
+        commandDelayInMs = 0;
     }
 
     public void load(JposEntry entry) throws Exception {
@@ -359,7 +383,7 @@ public class FptrParameters {
         FSDiscountEnabled = reader.readBoolean("FSDiscountEnabled", true);
         FSCombineItemAdjustments = reader.readBoolean("FSCombineItemAdjustments", true);
         readDiscountMode = reader.readBoolean("readDiscountMode", true);
-        FSPrintTags = reader.readBoolean("FSPrintTags", true);
+        FSPrintTags = reader.readBoolean("FSPrintTags", false);
         FSTagsPlacement = reader.readInteger("FSTagsPlacement", 0);
 
         textReportEnabled = reader.readBoolean("textReportEnabled", false);
@@ -413,7 +437,13 @@ public class FptrParameters {
         newItemStatus = reader.readInteger("newItemStatus", FSCheckBarcode.FS_ITEM_STATUS_RETAIL);
         itemCheckMode = reader.readInteger("itemCheckMode", FSCheckBarcode.FS_CHECK_MODE_FULL);
         itemMarkType = reader.readInteger("itemMarkType", FptrParameters.MARK_TYPE_TOBACCO);
-        paymentSumCorrectionEnabled = reader.readBoolean("paymentSumCorrectionEnabled", false);
+        paymentSumCorrectionEnabled = reader.readBoolean("paymentSumCorrectionEnabled", true);
+        userExtendedTagPrintMode = reader.readInteger("userExtendedTagPrintMode", USER_EXTENDED_TAG_PRINT_MODE_DRIVER);
+        jsonUpdateEnabled = reader.readBoolean("jsonUpdateEnabled", false);
+        jsonUpdatePeriodInMinutes = reader.readInteger("jsonUpdatePeriodInMinutes", 10);
+        jsonUpdateServerURL = reader.readString("jsonUpdateServerURL", "http://127.0.0.1:8888/check_firmware");
+        writeTagMode = reader.readInteger("writeTagMode", FptrParameters.WRITE_TAG_MODE_IN_PLACE);
+        commandDelayInMs = reader.readInteger("commandDelayInMs", 0);
 
         // paymentNames
         String paymentName;

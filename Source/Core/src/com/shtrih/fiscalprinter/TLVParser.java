@@ -1,8 +1,8 @@
 package com.shtrih.fiscalprinter;
 
-
-import com.shtrih.fiscalprinter.command.CommandInputStream;
 import com.shtrih.util.BitUtils;
+import com.shtrih.fiscalprinter.command.CommandInputStream;
+import com.shtrih.fiscalprinter.command.CommandOutputStream;
 
 import java.util.Vector;
 
@@ -15,6 +15,10 @@ public class TLVParser {
     public TLVParser() {
     }
 
+    public TLVTags getTags() {
+        return tags;
+    }
+    
     public TLVItems getItems() {
         return items;
     }
@@ -58,26 +62,34 @@ public class TLVParser {
 
             if (item.getTag().getId() == 1057 || item.getTag().getId() == 1222) {
                 line = "";
-                if (BitUtils.testBit(item.toInt(), 0))
+                if (BitUtils.testBit(item.toInt(), 0)) {
                     line += "БАНК. ПЛ. АГЕНТ";
-                if (BitUtils.testBit(item.toInt(), 1))
+                }
+                if (BitUtils.testBit(item.toInt(), 1)) {
                     line += " БАНК. ПЛ. СУБАГЕНТ";
-                if (BitUtils.testBit(item.toInt(), 2))
+                }
+                if (BitUtils.testBit(item.toInt(), 2)) {
                     line += " ПЛ. АГЕНТ";
-                if (BitUtils.testBit(item.toInt(), 3))
+                }
+                if (BitUtils.testBit(item.toInt(), 3)) {
                     line += " ПЛ. СУБАГЕНТ";
-                if (BitUtils.testBit(item.toInt(), 4))
+                }
+                if (BitUtils.testBit(item.toInt(), 4)) {
                     line += " ПОВЕРЕННЫЙ";
-                if (BitUtils.testBit(item.toInt(), 5))
+                }
+                if (BitUtils.testBit(item.toInt(), 5)) {
                     line += " КОМИССИОНЕР";
-                if (BitUtils.testBit(item.toInt(), 6))
+                }
+                if (BitUtils.testBit(item.toInt(), 6)) {
                     line += " АГЕНТ";
+                }
 
                 line = line.trim();
             }
 
-            if (line.equals(""))
+            if (line.equals("")) {
                 continue;
+            }
 
             lines.add(line);
         }
@@ -100,30 +112,49 @@ public class TLVParser {
 
             if (item.getTag().getId() == 1057) {
                 line = "";
-                if (BitUtils.testBit(item.toInt(), 0))
+                if (BitUtils.testBit(item.toInt(), 0)) {
                     line += "БАНК. ПЛ. АГЕНТ";
-                if (BitUtils.testBit(item.toInt(), 1))
+                }
+                if (BitUtils.testBit(item.toInt(), 1)) {
                     line += " БАНК. ПЛ. СУБАГЕНТ";
-                if (BitUtils.testBit(item.toInt(), 2))
+                }
+                if (BitUtils.testBit(item.toInt(), 2)) {
                     line += " ПЛ. АГЕНТ";
-                if (BitUtils.testBit(item.toInt(), 3))
+                }
+                if (BitUtils.testBit(item.toInt(), 3)) {
                     line += " ПЛ. СУБАГЕНТ";
-                if (BitUtils.testBit(item.toInt(), 4))
+                }
+                if (BitUtils.testBit(item.toInt(), 4)) {
                     line += " ПОВЕРЕННЫЙ";
-                if (BitUtils.testBit(item.toInt(), 5))
+                }
+                if (BitUtils.testBit(item.toInt(), 5)) {
                     line += " КОМИССИОНЕР";
-                if (BitUtils.testBit(item.toInt(), 6))
+                }
+                if (BitUtils.testBit(item.toInt(), 6)) {
                     line += " АГЕНТ";
+                }
 
                 line = line.trim();
             }
 
-            if (line.equals(""))
+            if (line.equals("")) {
                 continue;
+            }
 
             lines.add(line);
         }
         return lines;
+    }
+
+    public byte[] write() throws Exception {
+        CommandOutputStream stream = new CommandOutputStream("");
+        for (int i = 0; i < items.size(); i++) {
+            TLVItem item = items.get(i);
+            stream.writeShort(item.getTag().getId());
+            stream.writeShort(item.getData().length);
+            stream.writeBytes(item.getData());
+        }
+        return stream.getData();
     }
 
     public void read(byte[] data) throws Exception {

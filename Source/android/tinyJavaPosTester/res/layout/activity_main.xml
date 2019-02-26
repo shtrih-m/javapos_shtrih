@@ -533,6 +533,33 @@
                     android:inputType="text" />
             </LinearLayout>
 
+            <Button
+                android:id="@+id/btnReadFFDVersion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="readFFDVersion"
+                android:text="@string/action_read_ffd_version" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dip"
+                    android:layout_marginRight="5dip"
+                    android:text="@string/lblFFDVersion" />
+
+                <EditText
+                    android:id="@+id/tbFFDVersion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/lblLogPathValue"
                 android:layout_width="wrap_content"

@@ -125,4 +125,10 @@ public class DeviceMetrics {
         return getModel() == 152;
     }
 
+    /**
+     * ШТРИХ-ЭЛВЕС-МФ
+     */
+    public boolean isElves() {
+        return getModel() == 153;
+    }
 }
