@@ -96,8 +96,9 @@ public class DeviceMetrics {
      */
     public boolean isDesktop() {
         return !isShtrihNano() &&
-                !isShtrihMobile() && // Штрих-МОБАЙЛ
-                !isCashCore();  // КЯ
+                !isShtrihMobile() &&
+                !isCashCore() &&
+                !isElves();
     }
 
     /**
