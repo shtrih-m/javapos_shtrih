@@ -3818,7 +3818,8 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 0);
             printer.printRecSubtotalAdjustment(1, "", 8000);
             
-            printer.printRecTotal(20000, 20000, "");
+            printer.printRecTotal(10000, 10000, "1");
+            printer.printRecTotal(10000, 10000, "99");
             
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 134);
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_1, 245);

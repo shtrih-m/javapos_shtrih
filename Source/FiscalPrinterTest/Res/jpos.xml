@@ -115,7 +115,7 @@
         <!-- Payment types -->
         <!-- Payment types -->
         <prop name="payType0" type="String" value="0"/>
-        <prop name="payType1" type="String" value="1"/>
+        <prop name="payType1" type="String" value="0"/>
         <prop name="payType2" type="String" value="2"/>
         <prop name="payType3" type="String" value="3"/>
         <prop name="payType4" type="String" value="4"/>
@@ -130,7 +130,7 @@
         <prop name="payType13" type="String" value="13"/>
         <prop name="payType14" type="String" value="14"/>
         <prop name="payType15" type="String" value="15"/>
-        <prop name="payType20" type="String" value="15"/>
+        <prop name="payType99" type="String" value="15"/>
 		<!-- Payment names -->
         <prop name="paymentName1" type="String" value="CASH"/>
         <prop name="paymentName2" type="String" value="CREDIT"/>
