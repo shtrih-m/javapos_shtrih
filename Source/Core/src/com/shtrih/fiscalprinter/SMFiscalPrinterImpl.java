@@ -3501,9 +3501,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command.getData();
     }
 
+    public void printLines(String line1, String line2, FontNumber font) throws Exception {
+        String text = StringUtils.alignLines(line1, line2, getMessageLength(font));
+        printText(SMFP_STATION_REC, text, font);
+    }
     public void printLines(String line1, String line2) throws Exception {
-        String text = StringUtils.alignLines(line1, line2, getMessageLength());
-        printText(text);
+        printLines(line1, line2, params.font);    
     }
 
     public void printLines2(String line1, String line2) throws Exception {
@@ -4657,4 +4660,20 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public long getLastMacValue() {
         return lastMacValue;
     }
+    
+    private String formatStrings(String line1, String line2) throws Exception {
+        int len;
+        String S = "";
+        len = getMessageLength() - line2.length();
+
+        for (int i = 0; i < len; i++) {
+            if (i < line1.length()) {
+                S = S + line1.charAt(i);
+            } else {
+                S = S + " ";
+            }
+        }
+        return S + line2;
+    }
+    
 }

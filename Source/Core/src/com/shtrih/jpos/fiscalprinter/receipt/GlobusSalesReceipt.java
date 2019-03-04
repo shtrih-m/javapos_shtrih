@@ -306,9 +306,11 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         checkAmount(amount);
         printEndSeparator();
         printPreLine();
-        getPrinter().printStrings(getParams().subtotalText,
-                "=" + StringUtils.amountToString(getReceipt().getTotal()));
+        
+        String text = "=" + StringUtils.amountToString(getReceipt().getTotal());
+        getPrinter().getPrinter().printLines(getParams().subtotalText, text, getParams().subtotalFont);
         getPrinter().printPostLine();
+        
     }
 
     public void checkVatInfo(int vatInfo) throws Exception {

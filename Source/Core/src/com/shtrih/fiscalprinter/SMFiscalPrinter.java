@@ -511,6 +511,8 @@ public interface SMFiscalPrinter {
 
     public void printLines(String line1, String line2) throws Exception;
 
+    public void printLines(String line1, String line2, FontNumber font) throws Exception;
+            
     public void printItems(Vector<PrintItem> items) throws Exception;
 
     public void printFSHeader() throws Exception;

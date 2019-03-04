@@ -754,26 +754,15 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 vatInfo, description);
     }
 
-    private String formatStrings(String line1, String line2) throws Exception {
-        int len;
-        String S = "";
-        len = getDevice().getMessageLength() - line2.length();
-
-        for (int i = 0; i < len; i++) {
-            if (i < line1.length()) {
-                S = S + line1.charAt(i);
-            } else {
-                S = S + " ";
-            }
-        }
-        return S + line2;
-    }
-
     public void printRecSubtotal(long amount) throws Exception {
         checkTotal(getSubtotal(), amount);
-        if (getParams().subtotalTextEnabled) {
-            addTextItem(formatStrings(getParams().subtotalText,
-                    "=" + StringUtils.amountToString(getSubtotal())));
+        if (getParams().subtotalTextEnabled) 
+        {
+            String text = StringUtils.alignLines(
+                getParams().subtotalText,
+                "=" + StringUtils.amountToString(getSubtotal()), 
+                getDevice().getMessageLength(getParams().subtotalFont));
+            addTextItem(text, getParams().subtotalFont);
         }
     }
 

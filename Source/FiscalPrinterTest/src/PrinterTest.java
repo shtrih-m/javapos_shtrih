@@ -989,10 +989,9 @@ class PrinterTest implements FiscalPrinterConst {
             //int index = printer.loadImage("reclame.bmp");
             //printer.addLogo(0, SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
             //printer.printImage(index);
-            //testSetDate();
+            testSetDate();
             //printFiscalReceipt106();
-            
-            printFiscalReceipt145_6();
+            //printFiscalReceipt145_6();
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -1002,9 +1001,12 @@ class PrinterTest implements FiscalPrinterConst {
     public void testSetDate() throws Exception
     {
         String[] date = new String[1];
+        date[0] = "260220191620";
         printer.getDate(date);
+        System.out.println("Get date: " + date[0]);
         printer.setDate(date[0]);
-        
+        printer.getDate(date);
+        System.out.println("Get date: " + date[0]);
     }
     
     public void disablePrint() {
