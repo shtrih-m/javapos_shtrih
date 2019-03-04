@@ -2548,15 +2548,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return result;
     }
 
-    private long getSubtotal() throws Exception {
-        long total = 0;
-        PrinterStatus status = readPrinterStatus();
-        if (status.getPrinterMode().isReceiptOpened()) {
-            total = getPrinter().getSubtotal();
-        }
-        return total;
-    }
-
     public String getTenderData(int optArg) throws Exception {
         switch (optArg) {
             // Cash
@@ -2793,7 +2784,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 break;
 
             case FPTR_GD_CURRENT_TOTAL:
-                result = StringUtils.amountToString(getSubtotal());
+                result = StringUtils.amountToString(receipt.getSubtotal());
                 break;
 
             // Get the daily total.

@@ -1442,4 +1442,5 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void setItemBarcode(GS1Barcode barcode) throws Exception {
         this.barcode = barcode;
     }
+    
 }

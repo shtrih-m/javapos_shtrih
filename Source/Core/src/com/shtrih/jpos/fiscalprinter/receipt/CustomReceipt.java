@@ -16,6 +16,7 @@ import jpos.JposException;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
+import com.shtrih.fiscalprinter.command.PrinterStatus;
 import com.shtrih.fiscalprinter.model.PrinterModel;
 import com.shtrih.fiscalprinter.receipt.PrinterReceipt;
 import com.shtrih.jpos.fiscalprinter.FiscalDay;
@@ -271,4 +272,14 @@ public abstract class CustomReceipt implements FiscalReceipt {
 
     public void setItemBarcode2(String barcode) throws Exception {
     }
+
+    public long getSubtotal() throws Exception {
+        long total = 0;
+        PrinterStatus status = getPrinter().getPrinter().readPrinterStatus();
+        if (status.getPrinterMode().isReceiptOpened()) {
+            total = getPrinter().getSubtotal();
+        }
+        return total;
+    }
+
 }

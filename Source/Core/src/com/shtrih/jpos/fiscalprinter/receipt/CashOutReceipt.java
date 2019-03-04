@@ -45,4 +45,8 @@ public class CashOutReceipt extends CustomReceipt implements FiscalReceipt {
     public boolean getCapAutoCut() throws Exception {
         return getModel().getCapCashOutAutoCut();
     }
+    
+    public long getSubtotal() throws Exception {
+        return 0;
+    }
 }

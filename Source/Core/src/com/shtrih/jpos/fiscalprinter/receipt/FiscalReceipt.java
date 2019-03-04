@@ -117,4 +117,7 @@ public interface FiscalReceipt {
     void printGraphics(PrinterGraphics graphics) throws Exception;
     
     public void setItemBarcode(GS1Barcode barcode) throws Exception;
+    
+    public long getSubtotal() throws Exception;
+    
 }

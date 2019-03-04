@@ -237,4 +237,8 @@ public class NullReceipt implements FiscalReceipt {
     
     public void setItemBarcode2(String barcode) throws Exception {
     }
+    
+    public long getSubtotal() throws Exception {
+        return 0;
+    }
 }
