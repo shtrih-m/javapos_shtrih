@@ -11,7 +11,9 @@ package com.shtrih.jpos.fiscalprinter.directIO;
 
 import java.util.List;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
+import com.shtrih.fiscalprinter.command.FSDocument;
 import com.shtrih.fiscalprinter.command.FDOParameters;
+import com.shtrih.fiscalprinter.command.FSFindDocument;
 import com.shtrih.fiscalprinter.command.FSReadCommStatus;
 import com.shtrih.fiscalprinter.command.FSReadDayParameters;
 import com.shtrih.fiscalprinter.command.FSReadFiscalization;
@@ -24,19 +26,7 @@ import com.shtrih.jpos.fiscalprinter.JposFiscalPrinterDate;
 import com.shtrih.fiscalprinter.command.PrinterDate;
 import com.shtrih.fiscalprinter.command.PrinterTime;
 
-public class DIOReadFSParams extends DIOItem {
-
-    public DIOReadFSParams(FiscalPrinterImpl service) {
-        super(service);
-    }
-
 /*
-1) Дата и время первого непереданного ФД
-2) Количество непереданных ФД
-3) дата и время изменения статуса ФН (в частности, дата и время фискализации)
-4) номер фискального накопителя
-5) Дата, когда истечет срок действия ФН
-    
 0 - серийный номер ФН
 1 - РНМ
 2 - кол-во неотправленных ФД
@@ -48,20 +38,21 @@ public class DIOReadFSParams extends DIOItem {
 8 - номер смены
 9 - номер последнего ФД
 10 - дата и время последнего ФД (DDMMYYYYhhmm)
-11 - ЗН ККТ
-12 - Модель ФР
-13 - Наименование ОФД
-14 - Адрес сервера ОФД
-15 - № порта
-16 - Таймаут ожидание ответа от ОФД
-    
-
-    
-    
-
-    
+11 - фискальный признак последнего ФД
+12 - ЗН ККТ
+13 - Модель ФР
+14 - Наименование ОФД
+15 - Адрес сервера ОФД
+16 - № порта
+17 - Таймаут ожидание ответа от ОФД
 */
-    
+
+public class DIOReadFSParams2 extends DIOItem {
+
+    public DIOReadFSParams2(FiscalPrinterImpl service) {
+        super(service);
+    }
+
     public void execute(int[] data, Object object) throws Exception {
 
         SMFiscalPrinter printer = getPrinter();
@@ -74,6 +65,7 @@ public class DIOReadFSParams extends DIOItem {
         FSReadCommStatus commStatus = printer.fsReadCommStatus();
         FSReadFiscalization fiscalization = printer.fsReadFiscalization();
         FSReadDayParameters dayParams = printer.fsReadDayParameters();
+        FSDocument document = printer.fsFindDocument(fsStatus.getDocNumber()).getDocument();
         
         JposFiscalPrinterDate docDate = new JposFiscalPrinterDate(
                 commStatus.getDocumentDate(), commStatus.getDocumentTime());
@@ -81,29 +73,42 @@ public class DIOReadFSParams extends DIOItem {
                 fiscalization.getDate(), fiscalization.getTime());
         
         List<String> list = (List<String>) object;
+        // 0 - серийный номер ФН
         list.add(fsserial);
+        // 1 - РНМ
         list.add(rnm);
+        // 2 - кол-во неотправленных ФД
         list.add(String.valueOf(commStatus.getQueueSize()));
+        // 3 - дата и время самого раннего неотправленного ФД (DDMMYYYYhhmm)
         list.add(docDate.toString());
+        // 4 - номер документа последней перерегистрации
         list.add(String.valueOf(fiscalization.getDocNumber()));
+        // 5 - дата и время последней перерегистрации (DDMMYYYYhhmm)
         list.add(fiscDate.toString());
+        // 6 - дата окончания срока действия (DDMMYYYY)
         list.add(expDate.getDate().toJposString());
+        // 7 - кол-во чеков за смену
         list.add(String.valueOf(dayParams.getReceiptNumber()));
+        // 8 - номер смены
         list.add(String.valueOf(dayParams.getDayNumber()));
+        // 9 - номер последнего ФД
         list.add(String.valueOf(fsStatus.getDocNumber()));
+        // 10 - дата и время последнего ФД (DDMMYYYYhhmm)
         list.add(fsStatus.getDate().toJposString() + fsStatus.getTime().toJposString());
-        // 11 - ЗН ККТ
+        // 11 - фискальный признак последнего ФД
+        list.add(String.valueOf(document.getDocSign()));
+        // 12 - ЗН ККТ
         list.add(printer.readFullSerial());
-        // 12 - Модель ФР
+        // 13 - Модель ФР
         list.add(printer.getDeviceMetrics().getDeviceName());
-        // 13 - Наименование ОФД
+        // 14 - Наименование ОФД
         list.add(getPrinter().readParameter("fdoName"));
-        // 14 - Адрес сервера ОФД
+        // 15 - Адрес сервера ОФД
         FDOParameters fdoParameters = printer.readFDOParameters();
         list.add(fdoParameters.getHost());
-        // 15 - № порта
+        // 16 - № порта
         list.add(String.valueOf(fdoParameters.getPort()));
-        // 16 - Таймаут ожидание ответа от ОФД
+        // 17 - Таймаут ожидание ответа от ОФД
         list.add(String.valueOf(fdoParameters.getPollPeriodSeconds()));
     }
 

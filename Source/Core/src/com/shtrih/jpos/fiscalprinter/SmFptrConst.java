@@ -617,6 +617,11 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_WRITE_FFD_VERSION = 0x67;
     
     /**
+     * Read FS parameters 2
+     */
+    public static final int SMFPTR_DIO_READ_FS_PARAMS2 = 0x68;
+
+    /**
      * Set item barcode GTIN and serial
      */
     public static final int SMFPTR_DIO_SET_ITEM_CODE = 0x78;

@@ -375,6 +375,10 @@ public class DirectIOHandler {
                 new DIOReadFSParams(service).execute(data, object);
                 break;
 
+            case SmFptrConst.SMFPTR_DIO_READ_FS_PARAMS2:
+                new DIOReadFSParams2(service).execute(data, object);
+                break;
+                
             case SmFptrConst.SMFPTR_DIO_READ_FS_TICKETS:
                 new DIOReadFSTickets(service).execute(data, object);
                 break;

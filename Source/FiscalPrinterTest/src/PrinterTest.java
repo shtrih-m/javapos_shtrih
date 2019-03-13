@@ -989,9 +989,11 @@ class PrinterTest implements FiscalPrinterConst {
             //int index = printer.loadImage("reclame.bmp");
             //printer.addLogo(0, SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
             //printer.printImage(index);
-            testSetDate();
+            //testSetDate();
             //printFiscalReceipt106();
             //printFiscalReceipt145_6();
+            //printFiscalReceipt145_4();
+            //fsReadParameters2();
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -1410,6 +1412,15 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    public void fsReadParameters2() throws Exception {
+        Vector<String> list = new Vector<String>();
+        printer.directIO(SmFptrConst.SMFPTR_DIO_READ_FS_PARAMS2, null, list);
+        System.out.println("List size: " + list.size());
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println(String.valueOf(i) + ". " + list.get(i));
+        }
+    }
+    
     public void printFiscalReceipt1044() {
         try {
             printer.resetPrinter();
