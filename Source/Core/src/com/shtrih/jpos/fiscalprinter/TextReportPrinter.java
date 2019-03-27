@@ -17,6 +17,7 @@ public class TextReportPrinter {
 
         String storageFilePath = SysUtils.getFilesPath() + printer.getParams().textReportFileName;
         this.storage = new TextReportStorage(storageFilePath);
+        this.storage.searchForward = printer.getParams().textReportSearchForward;
     }
 
     public void start() {

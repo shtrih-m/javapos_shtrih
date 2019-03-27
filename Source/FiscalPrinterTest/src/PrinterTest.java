@@ -991,9 +991,10 @@ class PrinterTest implements FiscalPrinterConst {
             //printer.printImage(index);
             //testSetDate();
             //printFiscalReceipt106();
-            //printFiscalReceipt145_6();
             //printFiscalReceipt145_4();
             //fsReadParameters2();
+            
+            printFiscalReceipt145_6();
             
         } catch (Exception e) {
             e.printStackTrace();

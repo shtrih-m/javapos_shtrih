@@ -1119,7 +1119,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         if (capFSPrintItem) {
             int rc = fsPrintRecItem2(1, item);
-            if (isCommandSupported(rc)) {
+            if (isCommandSupported(rc)) 
+            {
+                check(rc);
                 return;
             }
         }

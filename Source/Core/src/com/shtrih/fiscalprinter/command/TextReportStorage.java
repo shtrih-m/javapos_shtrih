@@ -5,8 +5,10 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextReportStorage {
+public class TextReportStorage 
+{
     private final String filePath;
+    public boolean searchForward = false; 
 
     public TextReportStorage(String filePath) {
 
@@ -14,6 +16,14 @@ public class TextReportStorage {
     }
 
     public List<String> searchZReport(int dayNumber) throws Exception {
+        if (searchForward) {
+            return searchZReportForward(dayNumber);
+        } else{
+            return searchZReportBackward(dayNumber);
+        }
+    }
+    
+    public List<String> searchZReportForward(int dayNumber) throws Exception {
         List<String> lines = loadLines();
         int index1 = 0;
 
@@ -38,6 +48,31 @@ public class TextReportStorage {
         return null;
     }
 
+    public List<String> searchZReportBackward(int dayNumber) throws Exception {
+        List<String> lines = loadLines();
+        int index1 = 0;
+
+        for (int i = lines.size()-1; i >= 0; i--) {
+            String line = lines.get(i);
+
+            int dayNum = getDayNumber(line);
+            if (dayNum == -1)
+                continue;
+
+            if (dayNum == dayNumber) {
+                int index2 = findNextDocument(lines, i + 1);
+                if (index2 != -1)
+                    index2 -= 1;
+
+                return copyLines(lines, index1, index2);
+            } else {
+                index1 = findNextDocument(lines, i + 1);
+            }
+        }
+
+        return null;
+    }
+    
     private List<String> loadLines() throws Exception {
         List<String> result = new ArrayList<String>();
         BufferedReader reader = new BufferedReader(new FileReader(filePath));

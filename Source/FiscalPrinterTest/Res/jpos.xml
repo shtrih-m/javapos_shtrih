@@ -36,15 +36,15 @@
         <!--Default department-->
         <prop name="department" type="String" value="1"/>
         <!-- Default font number -->
-        <prop name="fontNumber" type="String" value="1"/>
+        <prop name="fontNumber" type="String" value="3"/>
 		<!-- discountFont -->
-        <prop name="discountFont" type="String" value="1"/>
+        <prop name="discountFont" type="String" value="3"/>
         <!-- Close Receipt text -->
         <prop name="closeReceiptText" type="String" value=""/>
         <!-- Subtotal text -->
         <prop name="subtotalText" type="String" value="ПОДЫТОГ:"/>
 		<!-- Subtotal font -->
-        <prop name="subtotalFont" type="String" value="1"/>
+        <prop name="subtotalFont" type="String" value="3"/>
         <!-- Driver byte receive timeout -->
         <prop name="byteTimeout" type="String" value="10000"/>
         <!-- Device byte receive timeout -->
@@ -189,7 +189,7 @@
         <!-- Receipt report file name -->
         <prop name="receiptReportFileName" type="String" value="ZCheckReport.xml"/>
         <!-- openReceiptType, 0 - open Receipt on item print, 1 - open Receipt in beginFiscalReceipt -->
-        <prop name="openReceiptType" type="String" value="0"/>
+        <prop name="openReceiptType" type="String" value="1"/>
         <!-- headerMode, the way how to print header and trailer lines -->
         <!-- 0 - header stored and printed with driver -->
         <!-- 1 - header stored and printed by printer, numHeaderLine and numTrailerLines are fixed -->
@@ -234,7 +234,7 @@
         <!-- Barcode text position NOTPRINTED=0, ABOVE=1, BELOW=2, BOTH=3 -->
         <prop name="barcodeTextPosition" type="String" value="2"/>
         <!-- Barcode text font, 1..7, default 1 -->
-        <prop name="barcodeTextFont" type="String" value="1"/>
+        <prop name="barcodeTextFont" type="String" value="3"/>
         <!-- Barcode aspect ratio -->
         <prop name="barcodeAspectRatio" type="String" value="3"/>
         <!-- Compatibility level, 0 - NONE, 1 - FULL -->

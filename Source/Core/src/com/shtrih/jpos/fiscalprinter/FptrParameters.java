@@ -206,6 +206,7 @@ public class FptrParameters {
     public String jsonUpdateServerURL = "http://127.0.0.1:8888/check_firmware";
     public int writeTagMode = FptrParameters.WRITE_TAG_MODE_IN_PLACE;
     public int commandDelayInMs = 0;
+    public boolean textReportSearchForward = false;
     
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -444,6 +445,7 @@ public class FptrParameters {
         jsonUpdateServerURL = reader.readString("jsonUpdateServerURL", "http://127.0.0.1:8888/check_firmware");
         writeTagMode = reader.readInteger("writeTagMode", FptrParameters.WRITE_TAG_MODE_IN_PLACE);
         commandDelayInMs = reader.readInteger("commandDelayInMs", 0);
+        textReportSearchForward = reader.readBoolean("textReportSearchForward", false);
 
         // paymentNames
         String paymentName;
