@@ -1248,7 +1248,7 @@ public class MainActivity extends AppCompatActivity {
         //Развернул сожержимое метода, чтобы было понятно, какие теги передаём
         printer.fsWriteTag(1016, "2225031594  ");
         printer.fsWriteTag(1073, "+78001000000");
-        printer.fsWriteTag(1057, "1");
+        //printer.fsWriteTag(1057, "1");
         printer.fsWriteTag(1005, "НОВОСИБИРСК,КИРОВА,86");
         printer.fsWriteTag(1075, "+73833358088");
         printer.fsWriteTag(1171, "+73833399242");

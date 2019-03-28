@@ -56,7 +56,7 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         }
     }
 
-    private boolean sendCmd(PrinterCommand command, int retryNum) {
+    private boolean sendCmd(PrinterCommand command, int retryNum) throws Exception {
 
         try {
             synchronizeFrames(byteTimeout);
@@ -85,6 +85,10 @@ public class PrinterProtocol_2 implements PrinterProtocol {
             logger.error(e);
             port.close();
             isSynchronized = false;
+
+            if (!command.getIsRepeatable())
+                throw e;
+
             return false;
         }
     }
