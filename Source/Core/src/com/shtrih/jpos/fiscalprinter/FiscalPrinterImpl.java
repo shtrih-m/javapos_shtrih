@@ -3144,7 +3144,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             checkEnabled();
             checkPrinterState(FPTR_PS_FISCAL_RECEIPT_ENDING);
 
-            receipt.endFiscalReceipt(printHeader);
+            try {
+                receipt.endFiscalReceipt(printHeader);
+            } catch (Exception e) {
+                getPrinter().waitForPrinting();
+                getPrinter().cancelReceipt();
+                throw e;
+            }
+            
             getPrinter().stopSaveCommands();
 
             try {

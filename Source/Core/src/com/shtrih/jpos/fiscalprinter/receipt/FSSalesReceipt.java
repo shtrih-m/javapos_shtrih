@@ -8,6 +8,7 @@ import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.TLVParser;
 import com.shtrih.fiscalprinter.command.AmountItem;
 import com.shtrih.fiscalprinter.command.CloseRecParams;
+import com.shtrih.fiscalprinter.command.EndFiscalReceipt;
 import com.shtrih.fiscalprinter.command.FSCloseReceipt;
 import com.shtrih.fiscalprinter.command.FSReceiptDiscount;
 import com.shtrih.fiscalprinter.command.PriceItem;
@@ -88,7 +89,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         disablePrint = false;
         messages.clear();
         cancelled = false;
-        
+
         getParams().itemTaxAmount = null;
         getParams().itemTotalAmount = null;
     }
@@ -491,10 +492,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     closeParams.setTax4(0);
                     closeParams.setDiscount(discountAmount);
                     closeParams.setText(getParams().closeReceiptText);
-                    getDevice().closeReceipt(closeParams);
-                } else {
-                    getDevice().check(rc);
+
+                    EndFiscalReceipt command = new EndFiscalReceipt();
+                    command.setPassword(getDevice().getUsrPassword());
+                    command.setParams(closeParams);
+                    rc = getDevice().closeReceipt(command);
                 }
+                getDevice().check(rc);
 
                 try {
                     getFiscalDay().closeFiscalRec();
@@ -756,12 +760,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecSubtotal(long amount) throws Exception {
         checkTotal(getSubtotal(), amount);
-        if (getParams().subtotalTextEnabled) 
-        {
+        if (getParams().subtotalTextEnabled) {
             String text = StringUtils.alignLines(
-                getParams().subtotalText,
-                "=" + StringUtils.amountToString(getSubtotal()), 
-                getDevice().getMessageLength(getParams().subtotalFont));
+                    getParams().subtotalText,
+                    "=" + StringUtils.amountToString(getSubtotal()),
+                    getDevice().getMessageLength(getParams().subtotalFont));
             addTextItem(text, getParams().subtotalFont);
         }
     }
@@ -1442,5 +1445,5 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void setItemBarcode(GS1Barcode barcode) throws Exception {
         this.barcode = barcode;
     }
-    
+
 }

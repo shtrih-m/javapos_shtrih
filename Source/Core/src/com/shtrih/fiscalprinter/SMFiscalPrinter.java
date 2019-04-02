@@ -202,6 +202,9 @@ public interface SMFiscalPrinter {
     public EndFiscalReceipt closeReceipt(CloseRecParams params)
             throws Exception;
 
+    public int closeReceipt(EndFiscalReceipt command)
+            throws Exception;
+    
     public long getSubtotal() throws Exception;
 
     public int readOperationRegister(OperationRegister register)

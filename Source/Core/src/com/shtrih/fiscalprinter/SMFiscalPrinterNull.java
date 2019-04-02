@@ -278,6 +278,11 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return new VoidFiscalReceipt();
     }
 
+    public int closeReceipt(EndFiscalReceipt command)
+            throws Exception {
+            return 0;
+    }
+    
     public EndFiscalReceipt closeReceipt(CloseRecParams params)
             throws Exception {
         return new EndFiscalReceipt();

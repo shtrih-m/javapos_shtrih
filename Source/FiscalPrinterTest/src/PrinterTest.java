@@ -3822,7 +3822,9 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(false);
-            printer.fsWriteTag(1203, "538022374423");
+            //printer.fsWriteTag(1203, "538022374423");
+            printer.fsWriteTag(1203, "012345678912");
+            
             printer.printRecItem("1. Item 1, tax 1", 10000, 1000, 1, 0, "");
             printer.printRecItem("2. Item 2, tax 2", 10000, 1000, 2, 0, "");
             printer.printRecTotal(10000, 10000, "1");

@@ -886,32 +886,34 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public EndFiscalReceipt closeReceipt(CloseRecParams params)
             throws Exception 
     {
-        logger.debug("closeReceipt");
-        writeTLVItems();
-                
         EndFiscalReceipt command = new EndFiscalReceipt();
         command.setPassword(usrPassword);
         command.setParams(params);
-        int resultCode = executeCommand(command);
-        if (resultCode == 168) {
-            ReadEJStatus command2 = new ReadEJStatus();
-            command2.setPassword(sysPassword);
-            int resultCode2 = executeCommand(command2);
-            if (resultCode2 == 0) {
-                logger.debug("EJ date: "
-                        + command2.getStatus().getDocDate().toString());
-                logger.debug("EJ time: "
-                        + command2.getStatus().getDocTime().toString());
-            }
-        }
-        check(resultCode);
+        check(closeReceipt(command));
         return command;
     }
 
-    public int fsCloseReceipt(FSCloseReceipt command) throws Exception 
-    {
+    public int closeReceipt(EndFiscalReceipt command)
+            throws Exception {
+        logger.debug("closeReceipt");
         writeTLVItems();
-        
+
+        int rc = executeCommand(command);
+        if (rc == 168) {
+            ReadEJStatus command2 = new ReadEJStatus();
+            command2.setPassword(sysPassword);
+            int rc2 = executeCommand(command2);
+            if (rc2 == 0) {
+                logger.debug("EJ date: " + command2.getStatus().getDocDate().toString());
+                logger.debug("EJ time: " + command2.getStatus().getDocTime().toString());
+            }
+        }
+        return rc;
+    }
+
+    public int fsCloseReceipt(FSCloseReceipt command) throws Exception {
+        writeTLVItems();
+
         lastDocNumber = 0;
         lastMacValue = 0;
         int rc = executeCommand(command);
@@ -1124,8 +1126,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         if (capFSPrintItem) {
             int rc = fsPrintRecItem2(1, item);
-            if (isCommandSupported(rc)) 
-            {
+            if (isCommandSupported(rc)) {
                 check(rc);
                 return;
             }
@@ -3513,8 +3514,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         String text = StringUtils.alignLines(line1, line2, getMessageLength(font));
         printText(SMFP_STATION_REC, text, font);
     }
+
     public void printLines(String line1, String line2) throws Exception {
-        printLines(line1, line2, params.font);    
+        printLines(line1, line2, params.font);
     }
 
     public void printLines2(String line1, String line2) throws Exception {
@@ -4668,7 +4670,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public long getLastMacValue() {
         return lastMacValue;
     }
-    
+
     private String formatStrings(String line1, String line2) throws Exception {
         int len;
         String S = "";
@@ -4683,5 +4685,5 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
         return S + line2;
     }
-    
+
 }
