@@ -3822,28 +3822,12 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(false);
-            
-            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT, 123);
+            printer.fsWriteTag(1203, "538022374423");
             printer.printRecItem("1. Item 1, tax 1", 10000, 1000, 1, 0, "");
-            
-            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT, 234);
             printer.printRecItem("2. Item 2, tax 2", 10000, 1000, 2, 0, "");
-            
-            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 0);
-            printer.printRecSubtotalAdjustment(1, "", 8000);
-            
             printer.printRecTotal(10000, 10000, "1");
             printer.printRecTotal(10000, 10000, "99");
-            
-            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 134);
-            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_1, 245);
             printer.endFiscalReceipt(false);
-            
-            String docNum = printer.getParameter(SmFptrConst.SMFPTR_DIO_PARAM_DOC_NUM);
-            System.out.println("Document number: " + docNum);
-            
-            String docMac = printer.getParameter(SmFptrConst.SMFPTR_DIO_PARAM_DOC_MAC);
-            System.out.println("Document MAC: " + docMac);
             
         } catch (Exception e) {
             e.printStackTrace();

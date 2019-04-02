@@ -884,8 +884,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public EndFiscalReceipt closeReceipt(CloseRecParams params)
-            throws Exception {
+            throws Exception 
+    {
         logger.debug("closeReceipt");
+        writeTLVItems();
+                
         EndFiscalReceipt command = new EndFiscalReceipt();
         command.setPassword(usrPassword);
         command.setParams(params);
@@ -907,6 +910,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public int fsCloseReceipt(FSCloseReceipt command) throws Exception 
     {
+        writeTLVItems();
+        
         lastDocNumber = 0;
         lastMacValue = 0;
         int rc = executeCommand(command);
@@ -1427,6 +1432,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
             if (capOpenReceipt) {
                 check(rc);
+                writeTLVItems();
             }
         }
     }
