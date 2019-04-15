@@ -18,26 +18,6 @@ import static com.shtrih.jpos.fiscalprinter.SmFptrConst.SMFPTR_HEADER_MODE_DRIVE
 
 public class FptrParameters {
 
-    ///////////////////////////////////////////////////////////////////////////
-    // gf constants
-    public static final int WRITE_TAG_MODE_IN_PLACE         = 0;
-    public static final int WRITE_TAG_MODE_BEFORE_ITEMS     = 1;
-    public static final int WRITE_TAG_MODE_AFTER_ITEMS      = 2;
-            
-    ///////////////////////////////////////////////////////////////////////////
-    // itemMarkType constants
-    public static final int MARK_TYPE_FUR       = 2;
-    public static final int MARK_TYPE_DRUGS     = 3;
-    public static final int MARK_TYPE_TOBACCO   = 5;
-    public static final int MARK_TYPE_SHOES     = 0x1520;
-    
-    ///////////////////////////////////////////////////////////////////////////
-    // userExtendedTagPrintMode constants
-    
-    public static final int USER_EXTENDED_TAG_PRINT_MODE_DRIVER     = 0;
-    public static final int USER_EXTENDED_TAG_PRINT_MODE_PRINTER    = 1;
-    
-    
     
     public static final int defaultGraphicsLineDelay = 200;
 
@@ -199,14 +179,15 @@ public class FptrParameters {
     public boolean checkItemCodeEnabled = false;
     public int newItemStatus = FSCheckBarcode.FS_ITEM_STATUS_RETAIL;
     public int itemCheckMode = FSCheckBarcode.FS_CHECK_MODE_FULL;
-    public int itemMarkType = FptrParameters.MARK_TYPE_TOBACCO;
-    public int userExtendedTagPrintMode = USER_EXTENDED_TAG_PRINT_MODE_DRIVER;
+    public int itemMarkType = SmFptrConst.MARK_TYPE_TOBACCO;
+    public int userExtendedTagPrintMode = SmFptrConst.USER_EXTENDED_TAG_PRINT_MODE_DRIVER;
     public boolean jsonUpdateEnabled = false;
     public int jsonUpdatePeriodInMinutes = 5;
     public String jsonUpdateServerURL = "http://127.0.0.1:8888/check_firmware";
-    public int writeTagMode = FptrParameters.WRITE_TAG_MODE_IN_PLACE;
+    public int writeTagMode = SmFptrConst.WRITE_TAG_MODE_IN_PLACE;
     public int commandDelayInMs = 0;
     public boolean textReportSearchForward = false;
+    public int taxCalculation = SmFptrConst.TAX_CALCULATION_PRINTER;
     
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -225,7 +206,7 @@ public class FptrParameters {
         setPortType(SmFptrConst.PORT_TYPE_FROMCLASS);
         setBaudRate(4800);
         FSPrintTags = false;
-        userExtendedTagPrintMode = USER_EXTENDED_TAG_PRINT_MODE_DRIVER;
+        userExtendedTagPrintMode = SmFptrConst.USER_EXTENDED_TAG_PRINT_MODE_DRIVER;
         commandDelayInMs = 0;
     }
 
@@ -437,15 +418,16 @@ public class FptrParameters {
         checkItemCodeEnabled = reader.readBoolean("checkItemCodeEnabled", false);
         newItemStatus = reader.readInteger("newItemStatus", FSCheckBarcode.FS_ITEM_STATUS_RETAIL);
         itemCheckMode = reader.readInteger("itemCheckMode", FSCheckBarcode.FS_CHECK_MODE_FULL);
-        itemMarkType = reader.readInteger("itemMarkType", FptrParameters.MARK_TYPE_TOBACCO);
+        itemMarkType = reader.readInteger("itemMarkType", SmFptrConst.MARK_TYPE_TOBACCO);
         paymentSumCorrectionEnabled = reader.readBoolean("paymentSumCorrectionEnabled", true);
-        userExtendedTagPrintMode = reader.readInteger("userExtendedTagPrintMode", USER_EXTENDED_TAG_PRINT_MODE_DRIVER);
+        userExtendedTagPrintMode = reader.readInteger("userExtendedTagPrintMode", SmFptrConst.USER_EXTENDED_TAG_PRINT_MODE_DRIVER);
         jsonUpdateEnabled = reader.readBoolean("jsonUpdateEnabled", false);
         jsonUpdatePeriodInMinutes = reader.readInteger("jsonUpdatePeriodInMinutes", 10);
         jsonUpdateServerURL = reader.readString("jsonUpdateServerURL", "http://127.0.0.1:8888/check_firmware");
-        writeTagMode = reader.readInteger("writeTagMode", FptrParameters.WRITE_TAG_MODE_IN_PLACE);
+        writeTagMode = reader.readInteger("writeTagMode", SmFptrConst.WRITE_TAG_MODE_IN_PLACE);
         commandDelayInMs = reader.readInteger("commandDelayInMs", 0);
         textReportSearchForward = reader.readBoolean("textReportSearchForward", false);
+        taxCalculation = reader.readInteger("taxCalculation", SmFptrConst.TAX_CALCULATION_PRINTER);
 
         // paymentNames
         String paymentName;

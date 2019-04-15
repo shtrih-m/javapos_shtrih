@@ -18,6 +18,30 @@ import static jpos.FiscalPrinterConst.FPTR_RT_SIMPLE_INVOICE;
  */
 public interface SmFptrConst {
 
+    ///////////////////////////////////////////////////////////////////////////
+    // gf constants
+    public static final int WRITE_TAG_MODE_IN_PLACE         = 0;
+    public static final int WRITE_TAG_MODE_BEFORE_ITEMS     = 1;
+    public static final int WRITE_TAG_MODE_AFTER_ITEMS      = 2;
+            
+    ///////////////////////////////////////////////////////////////////////////
+    // itemMarkType constants
+    public static final int MARK_TYPE_FUR       = 2;
+    public static final int MARK_TYPE_DRUGS     = 3;
+    public static final int MARK_TYPE_TOBACCO   = 5;
+    public static final int MARK_TYPE_SHOES     = 0x1520;
+    
+    ///////////////////////////////////////////////////////////////////////////
+    // userExtendedTagPrintMode constants
+    
+    public static final int USER_EXTENDED_TAG_PRINT_MODE_DRIVER     = 0;
+    public static final int USER_EXTENDED_TAG_PRINT_MODE_PRINTER    = 1;
+    
+    ///////////////////////////////////////////////////////////////////////////
+    // TaxCalculation constants
+    public static final int TAX_CALCULATION_PRINTER     = 0;
+    public static final int TAX_CALCULATION_DRIVER      = 1;
+    
     // ///////////////////////////////////////////////////////////////////
     // Report device for printReport, printPeriodicTotalsReport
     // ///////////////////////////////////////////////////////////////////

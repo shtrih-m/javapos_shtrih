@@ -3237,7 +3237,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public byte[] processTLVBeforeReceipt(byte[] tlv) throws Exception {
-        if (params.userExtendedTagPrintMode != FptrParameters.USER_EXTENDED_TAG_PRINT_MODE_DRIVER) {
+        if (params.userExtendedTagPrintMode != SmFptrConst.USER_EXTENDED_TAG_PRINT_MODE_DRIVER) {
             return tlv;
         }
         TLVParser reader = new TLVParser();
@@ -3255,7 +3255,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public byte[] filterTLV(byte[] tlv) throws Exception {
-        if (params.userExtendedTagPrintMode == FptrParameters.USER_EXTENDED_TAG_PRINT_MODE_DRIVER) {
+        if (params.userExtendedTagPrintMode == SmFptrConst.USER_EXTENDED_TAG_PRINT_MODE_DRIVER) {
             TLVParser reader = new TLVParser();
             reader.read(tlv);
             TLVItems items = reader.getItems();
@@ -3274,7 +3274,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 }
             }
             return reader.write();
-        } else if (params.userExtendedTagPrintMode == FptrParameters.USER_EXTENDED_TAG_PRINT_MODE_PRINTER) {
+        } else if (params.userExtendedTagPrintMode == SmFptrConst.USER_EXTENDED_TAG_PRINT_MODE_PRINTER) {
             TLVParser reader = new TLVParser();
             reader.read(tlv);
             TLVItems items = reader.getItems();
@@ -4564,9 +4564,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         TLVWriter writer = new TLVWriter();
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         switch (params.itemMarkType) {
-            case FptrParameters.MARK_TYPE_FUR:
-            case FptrParameters.MARK_TYPE_DRUGS:
-            case FptrParameters.MARK_TYPE_TOBACCO:
+            case SmFptrConst.MARK_TYPE_FUR:
+            case SmFptrConst.MARK_TYPE_DRUGS:
+            case SmFptrConst.MARK_TYPE_TOBACCO:
 
                 if (serial.length() > 24) {
                     serial = barcode.serial.substring(0, 24);
@@ -4579,12 +4579,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 buf.order(ByteOrder.BIG_ENDIAN);
                 buf.putShort((short) params.itemMarkType);
                 ba = longToBytes(Long.parseLong(barcode.GTIN));
-                buf.put(ba, 0, 6);
+                buf.put(ba, 2, 6);
                 buf.put(serial.getBytes());
                 writer.add(1162, buf.array());
                 return fsWriteOperationTLV(writer.getBytes());
 
-            case FptrParameters.MARK_TYPE_SHOES:
+            case SmFptrConst.MARK_TYPE_SHOES:
 
                 if (serial.length() > 13) {
                     serial = barcode.serial.substring(0, 13);
@@ -4597,7 +4597,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 buf.order(ByteOrder.BIG_ENDIAN);
                 buf.putShort((short) params.itemMarkType);
                 ba = longToBytes(Long.parseLong(barcode.GTIN));
-                buf.put(ba, 0, 6);
+                buf.put(ba, 2, 6);
                 buf.put(serial.getBytes());
                 writer.add(1162, buf.array());
                 return fsWriteOperationTLV(writer.getBytes());
