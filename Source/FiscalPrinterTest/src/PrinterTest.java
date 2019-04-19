@@ -3823,8 +3823,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setItemCode(barcode, "");
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE, SmFptrConst.MARK_TYPE_SHOES);
             
-            //printer.printRecItem("Item 1", 10099, 1000, 1, 10099, "");
-            printer.printRecItem("Item 1", 10000, 1000, 1, 10000, "");
+            printer.printRecItem("Item 1", 10099, 1000, 1, 10099, "");
             printer.printRecItem("Item 2", 20000, 1000, 2, 20000, "");
             printer.printRecItem("Item 3", 30000, 1000, 3, 30000, "");
             printer.printRecItem("Item 4", 40000, 1000, 4, 40000, "");
@@ -3832,8 +3831,8 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecItem("Item 6", 60000, 1000, 6, 60000, "");
             printer.printRecSubtotal(210099);
             
-            //printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 1);
-            //printer.printRecSubtotalAdjustment(1, "", 99);
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 1);
+            printer.printRecSubtotalAdjustment(1, "", 99);
             printer.printRecTotal(210000, 210000, "1");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
