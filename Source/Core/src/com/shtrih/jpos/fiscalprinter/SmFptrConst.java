@@ -788,13 +788,6 @@ public interface SmFptrConst {
     public static final int SMFPTR_PROTOCOL_2 = 1;
 
     // ///////////////////////////////////////////////////////////////////
-    // OpenReceiptType constants
-    // Open receipt with first operation (printRecItem etc.)
-    public static final int SMFPTR_OPEN_RECEIPT_ITEM = 0;
-    // Open receipt in beginFiscalReceipt method
-    public static final int SMFPTR_OPEN_RECEIPT_BEGIN = 1;
-
-    // ///////////////////////////////////////////////////////////////////
     // PortType constants
     public static final int PORT_TYPE_SERIAL = 0;
     public static final int PORT_TYPE_BLUETOOTH = 1;

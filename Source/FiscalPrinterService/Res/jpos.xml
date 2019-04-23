@@ -208,8 +208,6 @@
         <prop name="receiptReportEnabled" type="String" value="1"/>
         <!-- Receipt report file name -->
         <prop name="receiptReportFileName" type="String" value="ZCheckReport.xml"/>
-        <!-- openReceiptType, 0 - open receipt on item print, 1 - open receipt in beginFiscalReceipt -->
-        <prop name="openReceiptType" type="String" value="0"/>
         <!-- headerMode, the way how to print header and trailer lines -->
         <!-- 0 - header stored and printed with driver -->
         <!-- 1 - header stored and printed by printer, numHeaderLine and numTrailerLines are fixed -->

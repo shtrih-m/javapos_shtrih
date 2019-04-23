@@ -96,7 +96,6 @@ public class FptrParameters {
     public boolean receiptReportEnabled = false;
     public String receiptReportFileName = "ZCheckReport.xml";
     public int protocolType = SmFptrConst.SMFPTR_PROTOCOL_1;
-    public int openReceiptType = SmFptrConst.SMFPTR_OPEN_RECEIPT_ITEM;
     public boolean ZReportDayNumber = false;
     public int headerMode = SmFptrConst.SMFPTR_HEADER_MODE_DRIVER;
     private static CompositeLogger logger = CompositeLogger.getLogger(FptrParameters.class);
@@ -326,8 +325,6 @@ public class FptrParameters {
                 "ZCheckReport.xml");
         protocolType = reader.readInteger("protocolType",
                 SmFptrConst.SMFPTR_PROTOCOL_1);
-        openReceiptType = reader.readInteger("openReceiptType",
-                SmFptrConst.SMFPTR_OPEN_RECEIPT_ITEM);
         ZReportDayNumber = reader.readBoolean("ZReportDayNumber", false);
 
         headerMode = reader.readInteger("headerMode",

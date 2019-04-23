@@ -104,7 +104,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 || (getParams().writeTagMode == SmFptrConst.WRITE_TAG_MODE_BEFORE_ITEMS)
                 || (getParams().ReceiptTemplateEnabled)) {
             openReceipt(true);
-            getPrinter().openReceipt(receiptType);
         }
     }
 
@@ -115,6 +114,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     receiptType = PrinterConst.SMFP_RECTYPE_RETSALE;
                 }
             }
+            getPrinter().openReceipt(receiptType);
             isOpened = true;
         }
     }

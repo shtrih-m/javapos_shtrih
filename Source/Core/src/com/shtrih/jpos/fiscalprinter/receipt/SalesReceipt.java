@@ -81,7 +81,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         for (int i = 0; i < 5; i++) {
             vatAmounts[i] = 0;
         }
-        if (getParams().openReceiptType == SmFptrConst.SMFPTR_OPEN_RECEIPT_BEGIN) {
+        if (getParams().openReceiptOnBegin) {
             openReceipt(true);
         }
     }
