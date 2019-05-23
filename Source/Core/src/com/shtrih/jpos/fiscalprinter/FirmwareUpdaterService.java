@@ -183,7 +183,11 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
         stopFlag = true;
         if (thread != null) {
             thread.interrupt();
-//            thread.join();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+
+            }
         }
 
         thread = null;

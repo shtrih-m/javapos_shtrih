@@ -49,8 +49,12 @@ public class JsonUpdateService implements Runnable {
     public void stop() throws Exception {
         if (isStarted()) {
             stopFlag = true;
-            thread.join();
-            thread = null;
+            try {
+                thread.join();
+                thread = null;
+            } catch (InterruptedException e) {
+
+			}
         }
     }
 

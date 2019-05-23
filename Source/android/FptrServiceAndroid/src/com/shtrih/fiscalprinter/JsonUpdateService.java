@@ -20,7 +20,7 @@ public class JsonUpdateService implements Runnable {
     public JsonUpdateService(SMFiscalPrinter printer) {
     }
 
-    public void stop() throws Exception {
+    public void stop() {
     }
 
     public void start() throws Exception {

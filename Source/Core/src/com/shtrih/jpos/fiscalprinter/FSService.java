@@ -19,153 +19,157 @@ import java.net.Socket;
  */
 public class FSService implements Runnable {
 
-    private CompositeLogger logger = CompositeLogger.getLogger(FSService.class);
+	private CompositeLogger logger = CompositeLogger.getLogger(FSService.class);
 
 
-    private final FDOParameters parameters;
-    private final int connectTimeout;
-    private final SMFiscalPrinter printer;
+	private final FDOParameters parameters;
+	private final int connectTimeout;
+	private final SMFiscalPrinter printer;
 
-    private Thread thread = null;
-    private volatile boolean stopFlag = true;
+	private Thread thread = null;
+	private volatile boolean stopFlag = true;
 
-    public FSService(SMFiscalPrinter printer, FptrParameters parameters, FDOParameters ofdParameters) {
-        if (printer == null)
-            throw new IllegalArgumentException("printer is null");
-        if (parameters == null)
-            throw new IllegalArgumentException("parameters is null");
-        if (ofdParameters == null)
-            throw new IllegalArgumentException("ofdParameters is null");
+	public FSService(SMFiscalPrinter printer, FptrParameters parameters, FDOParameters ofdParameters) {
+		if (printer == null)
+			throw new IllegalArgumentException("printer is null");
+		if (parameters == null)
+			throw new IllegalArgumentException("parameters is null");
+		if (ofdParameters == null)
+			throw new IllegalArgumentException("ofdParameters is null");
 
-        this.printer = printer;
-        this.connectTimeout = parameters.FSConnectTimeout;
-        this.parameters = ofdParameters;
-    }
+		this.printer = printer;
+		this.connectTimeout = parameters.FSConnectTimeout;
+		this.parameters = ofdParameters;
+	}
 
-    public void run() {
-        try {
-            logger.debug(String.format("Starting FSService, OFD %s:%d, connection timeout %d ms, poll period %d ms",
-                    parameters.getHost(),
-                    parameters.getPort(),
-                    connectTimeout,
-                    parameters.getPollPeriodSeconds() * 1000));
+	public void run() {
+		try {
+			logger.debug(String.format("Starting FSService, OFD %s:%d, connection timeout %d ms, poll period %d ms",
+					parameters.getHost(),
+					parameters.getPort(),
+					connectTimeout,
+					parameters.getPollPeriodSeconds() * 1000));
 
-            while (!stopFlag) {
-                checkData();
+			while (!stopFlag) {
+				checkData();
 
-                if (stopFlag)
-                    break;
+				if (stopFlag)
+					break;
 
-                Thread.sleep(parameters.getPollPeriodSeconds() * 1000);
-            }
+				Thread.sleep(parameters.getPollPeriodSeconds() * 1000);
+			}
 
-            logger.error("FSService stopped");
-        } catch (InterruptedException e) {
-            logger.debug("FSService stopped");
-        } catch (Exception e) {
-            logger.error("FSService unexpected exception", e);
-        }
-    }
+			logger.error("FSService stopped");
+		} catch (InterruptedException e) {
+			logger.debug("FSService stopped");
+		} catch (Exception e) {
+			logger.error("FSService unexpected exception", e);
+		}
+	}
 
-    private void checkData() {
-        try {
-            if (stopFlag)
-                return;
+	private void checkData() {
+		try {
+			if (stopFlag)
+				return;
 
-            byte[] data = printer.fsReadBlockData();
+			byte[] data = printer.fsReadBlockData();
 
-            if (data.length == 0) {
-                return;
-            }
+			if (data.length == 0) {
+				return;
+			}
 
-            // System.out.println("FS -> OFD: " + Hex.toHex(data));
+			// System.out.println("FS -> OFD: " + Hex.toHex(data));
 
-            if (stopFlag)
-                return;
+			if (stopFlag)
+				return;
 
-            byte[] answer = sendData(data);
-            if (answer.length == 0) {
-                return;
-            }
+			byte[] answer = sendData(data);
+			if (answer.length == 0) {
+				return;
+			}
 
-            // System.out.println("FS <- OFD: " + Hex.toHex(answer));
+			// System.out.println("FS <- OFD: " + Hex.toHex(answer));
 
-            if (stopFlag)
-                return;
+			if (stopFlag)
+				return;
 
-            printer.fsWriteBlockData(answer);
+			printer.fsWriteBlockData(answer);
 
-        } catch (Exception e) {
-            logger.error("OFD data sending failed", e);
-        }
-    }
+		} catch (Exception e) {
+			logger.error("OFD data sending failed", e);
+		}
+	}
 
-    private byte[] sendData(byte[] data) throws Exception {
-        Socket socket = new Socket();
-        try {
-            socket.setTcpNoDelay(true);
-            socket.setSoTimeout(connectTimeout);
-            socket.connect(new InetSocketAddress(parameters.getHost(), parameters.getPort()));
-            socket.getOutputStream().write(data);
-            InputStream in = socket.getInputStream();
+	private byte[] sendData(byte[] data) throws Exception {
+		Socket socket = new Socket();
+		try {
+			socket.setTcpNoDelay(true);
+			socket.setSoTimeout(connectTimeout);
+			socket.connect(new InetSocketAddress(parameters.getHost(), parameters.getPort()));
+			socket.getOutputStream().write(data);
+			InputStream in = socket.getInputStream();
 
-            int headerSize = 30;
-            byte[] header = new byte[headerSize];
+			int headerSize = 30;
+			byte[] header = new byte[headerSize];
 
-            Read(in, header, headerSize);
+			Read(in, header, headerSize);
 
-            int size = ((header[25] << 8)) | (header[24] & 0xFF);
+			int size = ((header[25] << 8)) | (header[24] & 0xFF);
 
-            byte[] answer = new byte[headerSize + size];
-            System.arraycopy(header, 0, answer, 0, headerSize);
-            if (size > 0) {
-                Read(in, answer, headerSize, size);
-            }
-            return answer;
-        } finally {
-            try {
-                socket.close();
-            } catch (Exception e) {
-                logger.error("Socket close failed", e);
-            }
-        }
-    }
+			byte[] answer = new byte[headerSize + size];
+			System.arraycopy(header, 0, answer, 0, headerSize);
+			if (size > 0) {
+				Read(in, answer, headerSize, size);
+			}
+			return answer;
+		} finally {
+			try {
+				socket.close();
+			} catch (Exception e) {
+				logger.error("Socket close failed", e);
+			}
+		}
+	}
 
-    private void Read(InputStream in, byte[] buffer, int count) throws IOException {
-        Read(in, buffer, 0, count);
-    }
+	private void Read(InputStream in, byte[] buffer, int count) throws IOException {
+		Read(in, buffer, 0, count);
+	}
 
-    private void Read(InputStream in, byte[] buffer, int offset, int count) throws IOException {
-        int readCount = 0;
-        while (readCount < count) {
-            int newBytes = in.read(buffer, offset + readCount, count - readCount);
+	private void Read(InputStream in, byte[] buffer, int offset, int count) throws IOException {
+		int readCount = 0;
+		while (readCount < count) {
+			int newBytes = in.read(buffer, offset + readCount, count - readCount);
 
-            if(newBytes < 0)
-                throw new IOException("Connection reset by OFD");
+			if (newBytes < 0)
+				throw new IOException("Connection reset by OFD");
 
-            readCount += newBytes;
-        }
-    }
+			readCount += newBytes;
+		}
+	}
 
-    private boolean isStarted() {
-        return !stopFlag;
-    }
+	private boolean isStarted() {
+		return !stopFlag;
+	}
 
-    public void start() throws Exception {
-        if (!isStarted()) {
-            stopFlag = false;
-            thread = new Thread(this);
-            thread.start();
-        }
-    }
+	public void start() throws Exception {
+		if (!isStarted()) {
+			stopFlag = false;
+			thread = new Thread(this);
+			thread.start();
+		}
+	}
 
-    public void stop() throws Exception {
-        stopFlag = true;
-        if (thread != null) {
-            thread.interrupt();
-//            thread.join();
-        }
+	public void stop() {
+		stopFlag = true;
+		if (thread != null) {
+			thread.interrupt();
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
 
-        thread = null;
-    }
+			}
+		}
+
+		thread = null;
+	}
 }
