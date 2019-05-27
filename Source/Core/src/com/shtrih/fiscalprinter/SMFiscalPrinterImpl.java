@@ -884,8 +884,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public EndFiscalReceipt closeReceipt(CloseRecParams params)
-            throws Exception 
-    {
+            throws Exception {
         EndFiscalReceipt command = new EndFiscalReceipt();
         command.setPassword(usrPassword);
         command.setParams(params);
@@ -4265,13 +4264,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (connectDevice(portName, startBaudRate)) {
             return true;
         }
-
-        int[] deviceBaudRates = {4800, 9600, 19200, 38400, 57600, 115200, 2400};
-        for (int i = 0; i < deviceBaudRates.length; i++) {
-            int baudRate = deviceBaudRates[i];
-            if (baudRate != startBaudRate) {
-                if (connectDevice(portName, baudRate)) {
-                    return true;
+        if (port.isSearchByBaudRateEnabled()) {
+            int[] deviceBaudRates = {4800, 9600, 19200, 38400, 57600, 115200, 2400};
+            for (int i = 0; i < deviceBaudRates.length; i++) {
+                int baudRate = deviceBaudRates[i];
+                if (baudRate != startBaudRate) {
+                    if (connectDevice(portName, baudRate)) {
+                        return true;
+                    }
                 }
             }
         }
@@ -4301,7 +4301,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 port.open(0);
             }
             return true;
-        } catch (DeviceException e) {
+        } catch (Exception e) {
             logger.error(e);
             return false;
         }
@@ -4309,12 +4309,20 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     // search device on ports and baudrates
     private void searchSerialDevice() throws Exception {
+        if (params.searchByBaudRateEnabled) {
+            if (searchByBaudRates(params.portName, params.getBaudRate())) {
+                return;
+            }
+        } else if (connectDevice(params.portName, params.getBaudRate())) {
+            return;
+        }
+
         if (params.searchByPortEnabled) {
             String[] ports = port.getPortNames();
             for (int i = 0; i < ports.length; i++) {
                 String portName = ports[i];
 
-                if (params.searchByBaudRateEnabled && port.isSearchByBaudRateEnabled()) {
+                if (params.searchByBaudRateEnabled) {
                     if (searchByBaudRates(portName, params.getBaudRate())) {
                         return;
                     }
@@ -4322,13 +4330,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     return;
                 }
             }
-        }
-        if (params.searchByBaudRateEnabled && port.isSearchByBaudRateEnabled()) {
-            if (searchByBaudRates(params.portName, params.getBaudRate())) {
-                return;
-            }
-        } else if (connectDevice(params.portName, params.getBaudRate())) {
-            return;
         }
         throw new JposException(JPOS_E_NOHARDWARE);
     }

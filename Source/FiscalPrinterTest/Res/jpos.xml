@@ -31,8 +31,8 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="COM5"/>
-        <prop name="baudRate" type="String" value="115200"/>
+        <prop name="portName" type="String" value="COM1"/>
+        <prop name="baudRate" type="String" value="9600"/>
         <!--Default department-->
         <prop name="department" type="String" value="1"/>
         <!-- Default font number -->
@@ -50,7 +50,7 @@
         <!-- Device byte receive timeout -->
         <prop name="deviceByteTimeout" type="String" value="200"/>
         <!-- Device search enabled for all serial ports -->
-        <prop name="searchByPortEnabled" type="String" value="0"/>
+        <prop name="searchByPortEnabled" type="String" value="1"/>
         <!-- Device search enabled for all baud rates -->
         <prop name="searchByBaudRateEnabled" type="String" value="1"/>
         <!-- Tax officer password -->

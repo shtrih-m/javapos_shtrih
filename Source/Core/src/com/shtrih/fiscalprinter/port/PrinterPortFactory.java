@@ -28,7 +28,7 @@ public class PrinterPortFactory {
         PrinterPort result = null;
         switch (params.getPortType()) {
             case SmFptrConst.PORT_TYPE_SERIAL:
-                result = SerialPrinterPort.getInstance(params.portName);
+                result = new SerialPrinterPort(params.portName);
                 break;
 
             case SmFptrConst.PORT_TYPE_SOCKET:
