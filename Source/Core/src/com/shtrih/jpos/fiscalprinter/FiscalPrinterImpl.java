@@ -2048,11 +2048,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void claim(int timeout) throws Exception {
         checkOpened();
         if (!claimed) {
-//            synchronized (port.getSyncObject()) {
-//                port.setPortName(params.portName);
-//                port.setBaudRate(params.getBaudRate());
-//                port.open(timeout);
-//            }
+            synchronized (port.getSyncObject()) {
+                port.setPortName(params.portName);
+                port.setBaudRate(params.getBaudRate());
+                port.open(timeout);
+            }
             claimed = true;
         }
     }

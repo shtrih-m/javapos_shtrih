@@ -4342,12 +4342,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 return readLongStatus();
             } else {
                 port.setPortName(params.portName);
+                port.setBaudRate(params.getBaudRate());
                 port.open(0);
                 return connect();
             }
         }
     }
-
+    
     /*
      Старой командой запрашиваются старые счетчики. Для запроса новых добавлены новые команды:
      FE F4 01 00 00 00 - возвращает 16 8-ми байтовых счетчиков (по типам оплаты 1-16) для приходов.
