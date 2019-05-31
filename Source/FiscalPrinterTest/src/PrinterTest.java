@@ -984,7 +984,7 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
-            printFiscalReceipt145_9();
+            printFiscalReceipt145_10();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3835,6 +3835,34 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecSubtotalAdjustment(1, "", 99);
             printer.printRecTotal(210000, 210000, "1");
             printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void printFiscalReceipt145_10() {
+        try {
+            printer.resetPrinter();
+            // receipt 1
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("Бензин автомобильный N 2:00000", 100029, 22890, 1, 4370, "");
+            printer.printRecMessage("Сумма без скидки: 1000.29");
+            printer.printRecSubtotal(100029);
+            printer.printRecSubtotalAdjustment(1, "скидка округления -0.29", 29);
+            printer.printRecTotal(100029, 100000, "0");
+            printer.endFiscalReceipt(true);
+            // receipt 2
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("Бензин автомобильный N 2:00000", 100029, 22890, 1, 4370, "");
+            printer.printRecMessage("Сумма без скидки: 1000.29");
+            printer.printRecSubtotal(100029);
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 1);
+            printer.printRecSubtotalAdjustment(1, "скидка округления -0.29", 29);
+            printer.printRecTotal(100029, 100000, "0");
+            printer.endFiscalReceipt(true);
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

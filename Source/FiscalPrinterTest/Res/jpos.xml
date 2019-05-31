@@ -308,7 +308,7 @@
 		<!-- Command delay in milliseconds -->
 		<prop name="commandDelayInMs" type="String" value="10"/>
 		<!-- taxCalculation, 0 - fiscal printer on receipt items, 1 - driver on receipt total -->
-		<prop name="taxCalculation" type="String" value="0"/>
+		<prop name="taxCalculation" type="String" value="1"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>
