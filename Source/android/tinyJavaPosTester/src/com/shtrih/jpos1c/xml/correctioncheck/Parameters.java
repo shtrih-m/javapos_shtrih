@@ -84,10 +84,10 @@ public class Parameters {
     public BigDecimal Sum;
 
     /**
-     * Сумма НДС чека по ставке 18%
+     * Сумма НДС чека по ставке 20%
      */
     @Attribute(required = false)
-    public BigDecimal SumTAX18;
+    public BigDecimal SumTAX20;
 
     /**
      * Сумма НДС чека по ставке 10%
@@ -121,8 +121,8 @@ public class Parameters {
     private long correctionBaseDate;
     private int taxVarian;
 
-    public long getSumTAX18() {
-        return Money.toLong(SumTAX18);
+    public long getSumTAX20() {
+        return Money.toLong(SumTAX20);
     }
 
     public long getSumTAX10() {

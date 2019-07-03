@@ -151,7 +151,7 @@ public class FFD105Documents {
                 params.Payments.getAdvancePayment(),
                 params.Payments.getCredit(),
                 params.Payments.getCashProvision(),
-                params.Parameters.getSumTAX18(),
+                params.Parameters.getSumTAX20(),
                 params.Parameters.getSumTAX10(),
                 params.Parameters.getSumTAX0(),
                 params.Parameters.getSumTAXNone(),
