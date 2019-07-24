@@ -3821,9 +3821,12 @@ class PrinterTest implements FiscalPrinterConst {
                     "010405104227920221TB6qQHbmOTZBf" + GS + "2406402" + GS + "91ffd0" + GS + 
                     "92DbZgaQm2x0uA5+8/AzMM9hVq6apGvtM3bJzejjpHan2pvK4O+XbYcVgFRR5I4HmCLQvZ74KgKkIhVADd==";
             printer.setItemCode(barcode, "");
-            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE, SmFptrConst.MARK_TYPE_SHOES);
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE, SmFptrConst.MARK_TYPE_TOBACCO);
             
+                    
             printer.printRecItem("Item 1", 10099, 1000, 1, 10099, "");
+            printer.fsWriteOperationTag(1197, "KG");
+            
             printer.printRecItem("Item 2", 20000, 1000, 2, 20000, "");
             printer.printRecItem("Item 3", 30000, 1000, 3, 30000, "");
             printer.printRecItem("Item 4", 40000, 1000, 4, 40000, "");
@@ -3846,20 +3849,9 @@ class PrinterTest implements FiscalPrinterConst {
             // receipt 1
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(true);
-            printer.printRecItem("Бензин автомобильный N 2:00000", 100029, 22890, 1, 4370, "");
+            printer.printRecItem("RING WG AND DIA post", 8405000, 10, 1, 8405000, "");
             printer.printRecMessage("Сумма без скидки: 1000.29");
-            printer.printRecSubtotal(100029);
-            printer.printRecSubtotalAdjustment(1, "скидка округления -0.29", 29);
-            printer.printRecTotal(100029, 100000, "0");
-            printer.endFiscalReceipt(true);
-            // receipt 2
-            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
-            printer.beginFiscalReceipt(true);
-            printer.printRecItem("Бензин автомобильный N 2:00000", 100029, 22890, 1, 4370, "");
-            printer.printRecMessage("Сумма без скидки: 1000.29");
-            printer.printRecSubtotal(100029);
-            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 1);
-            printer.printRecSubtotalAdjustment(1, "скидка округления -0.29", 29);
+            printer.printRecSubtotal(8405000);
             printer.printRecTotal(100029, 100000, "0");
             printer.endFiscalReceipt(true);
             

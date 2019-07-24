@@ -1136,6 +1136,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 + ", quantity: " + quantity
                 + ", unitPrice: " + unitPrice);
 
+        
         double d = unitPrice * Math.abs(quantity);
         long amount = getParams().itemTotalAmount == null ? MathUtils.round((d / 1000.0)) : getParams().itemTotalAmount;
         FSSaleReceiptItem item = null;
@@ -1145,6 +1146,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 item.setQuantity(item.getQuantity() + quantity);
                 item.setItemAmount(item.getItemAmount() + price);
             }
+        }
+        if (price > amount){
+            price = amount;
         }
         if (item == null) {
             item = new FSSaleReceiptItem();
@@ -1187,7 +1191,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             printDiscount(amount - price, vatInfo, "");
         }
     }
-
+    
     FSSaleReceiptItem findItem(long price, String text) {
         for (int i = 0; i < items.size(); i++) {
             Object object = items.get(i);
