@@ -1547,17 +1547,17 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
 
     public int getSysPassword() throws JposException {
         String s = getParameter(SmFptrConst.SMFPTR_DIO_PARAM_SYS_PASSWORD);
-        return Integer.decode(s).intValue();
+        return Integer.decode(s);
     }
 
     public int getUsrPassword() throws JposException {
         String s = getParameter(SmFptrConst.SMFPTR_DIO_PARAM_USR_PASSWORD);
-        return Integer.decode(s).intValue();
+        return Integer.decode(s);
     }
 
     public int getTaxPassword() throws JposException {
         String s = getParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_PASSWORD);
-        return Integer.decode(s).intValue();
+        return Integer.decode(s);
     }
 
     public void fsReadStatus(FSReadStatus command) throws JposException {
@@ -2309,5 +2309,13 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void writeFFDVersion(int version) throws JposException {
         int[] data = new int[] { version };
         directIO(SmFptrConst.SMFPTR_DIO_WRITE_FFD_VERSION, data, null);
+    }
+
+    /**
+     * Возвращает версию протокола принтера
+     */
+    public int getProtocolType() throws JposException {
+        String s = getParameter(SmFptrConst.SMFPTR_DIO_PARAM_PROTOCOL_TYPE);
+        return Integer.decode(s);
     }
 }

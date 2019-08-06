@@ -125,6 +125,10 @@ public class DIOGetDriverParameter extends DIOItem {
             case SmFptrConst.SMFPTR_DIO_PARAM_DOC_MAC:
                 ((long[]) object)[0] = service.getPrinter().getLastMacValue();
                 break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_PROTOCOL_TYPE:
+                ((int[]) object)[0] = service.getParams().protocolType;
+                break;
         }
     }
 }

@@ -15,46 +15,12 @@ import com.shtrih.jpos.fiscalprinter.FirmwareUpdateObserver;
 import com.shtrih.util.Localizer;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.FontNumber;
-import com.shtrih.fiscalprinter.PrinterProtocol;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
 import com.shtrih.jpos.fiscalprinter.PrinterImage;
 import com.shtrih.jpos.fiscalprinter.ReceiptImage;
 import com.shtrih.jpos.fiscalprinter.DioCsvZReport;
 import com.shtrih.fiscalprinter.command.PrinterStatus;
 import com.shtrih.fiscalprinter.command.PrinterCommand;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOExecuteCommandStr2;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOGetDriverParameter;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOGetReceiptState;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOIsReadyFiscal;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOIsReadyNonFiscal;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOOpenDrawer;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOPrintBarcode2;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOPrintText;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadCashReg;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadCashierName;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadDayStatus;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadDrawerState;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadEJSerial;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadHeaderLine;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadLicense;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadMaxGraphics;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadOperReg;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadParameter;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadPaymentName;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadPrinterStatus;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadSerial;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadTable;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadTextLength;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadTrailerLine;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOSetDriverParameter;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOWaitPrint;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOWriteCashierName;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOWriteParameter;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOWritePaymentName;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOWriteTable;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOXMLZReport;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadShortStatus;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadLongStatus;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.CashRegister;
@@ -677,6 +643,10 @@ public class DirectIOHandler2 {
 
             case SmFptrConst.SMFPTR_DIO_PARAM_DOC_MAC:
                 paramValue = String.valueOf(service.getPrinter().getLastMacValue());
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_PROTOCOL_TYPE:
+                paramValue = String.valueOf(service.getParams().protocolType);
                 break;
         }
         ((String[]) object)[0] = paramValue;

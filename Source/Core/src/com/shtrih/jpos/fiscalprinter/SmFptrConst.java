@@ -717,6 +717,8 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_PARAM_DOC_NUM            = 25;
     public static final int SMFPTR_DIO_PARAM_DOC_MAC            = 26;
 
+    public static final int SMFPTR_DIO_PARAM_PROTOCOL_TYPE = 27;
+
     // ///////////////////////////////////////////////////////////////////
     // TableMode
     public static final int SMFPTR_TABLE_MODE_AUTO = 0;
