@@ -26,6 +26,7 @@ public class FptrParameters {
     private int statusCommand = PrinterConst.SMFP_STATUS_COMMAND_DS;
     private int graphicsLineDelay = defaultGraphicsLineDelay;
     public int barcodeDelay = 0;
+    public boolean waitForBarcodePrinting = true;
     private int portType = SmFptrConst.PORT_TYPE_SERIAL;
     private int baudRate = 4800;
     public String portClass = "com.shtrih.fiscalprinter.port.SerialPrinterPort";
@@ -234,10 +235,9 @@ public class FptrParameters {
         taxPassword = reader.readInteger("taxPassword", 0);
         usrPassword = reader.readInteger("operatorPassword", 1);
         sysPassword = reader.readInteger("sysAdminPassword", 30);
-        searchByPortEnabled = reader.readBoolean("searchByPortEnabled",
-                false);
-        searchByBaudRateEnabled = reader.readBoolean(
-                "searchByBaudRateEnabled", true);
+        searchByPortEnabled = reader.readBoolean("searchByPortEnabled",false);
+        waitForBarcodePrinting = reader.readBoolean("waitForBarcodePrinting",true);
+        searchByBaudRateEnabled = reader.readBoolean("searchByBaudRateEnabled", true);
         pollInterval = reader.readInteger("pollInterval", 500);
         pollEnabled = reader.readBoolean("pollEnabled", false);
         amountFactor = reader.readDouble("amountFactor", 1);

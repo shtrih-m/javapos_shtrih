@@ -45,9 +45,9 @@
 
 		     Значение по умолчанию - 4800.-->
 		<prop name="baudRate" type="String" value="115200"/>
-        
+
 		<!-- Отдел с указанием которого будут осуществляться опеации в чеке.
-		
+
 		     Значение по умолчанию - 1. -->
 		<prop name="department" type="String" value="0"/>
 
@@ -55,12 +55,12 @@
 
              Значение по умолчанию - 1. -->
 		<prop name="fontNumber" type="String" value="1"/>
-        
+
 		<!-- Close receipt text -->
 		<prop name="closeReceiptText" type="String" value=""/>
 		<!-- Subtotal text -->
 		<prop name="subtotalText" type="String" value="ПОДИТОГ:"/>
-		
+
 		<!-- Таймаут чтения данных, мс -->
 		<prop name="byteTimeout" type="String" value="3000"/>
 
@@ -87,7 +87,7 @@
 
 		     Значение по умолчанию - 30. -->
 		<prop name="sysAdminPassword" type="String" value="30"/>
-        
+
 		<!-- device state polling enabled -->
 		<prop name="pollEnabled" type="String" value="0"/>
 		<!-- device state polling interval in milliseconds -->
@@ -224,14 +224,14 @@
 		<prop name="textReportFileName" type="String" value="archive.txt"/>
 		<!-- Text report empty lines enabled -->
 		<prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
-		
+
 		<!-- Печать описания переданных в принтер тэгов средствами драйвера.
 		     Не все принтеры имеют встроенный механизм печати тэгов, в виду этого необходима данная
 		     настройка.
-		     
+
 		     Значение по умолчанию - 1. -->
 		<prop name="FSPrintTags" type="String" value="1"/>
-		
+
 		<!-- Место печати тэгов в документе, если включена опция FSPrintTags:
 		     0 - после закрытия
 		     1 - в месте отправки, например, если тэг был отправлен до печати любой позиции
@@ -257,13 +257,13 @@
 
              Значение по умолчанию - 0. -->
 		<prop name="FSServiceEnabled" type="String" value="1"/>
-		
+
 		<!-- Таймаут ожидания ответа от ОФД в мс. Используется при включенной отпции
 		     FSServiceEnabled.
 
 		     Значение по умолчанию - 3000 мс. -->
 		<prop name="FSConnectTimeout" type="String" value="30000"/>
-		
+
         <!-- Писать лог, на десктопе управляет записью лога в файл, на Андроиде - выводом лога в
              logcat в дополнение к настраиваемому приложением логированию. Т.к. в примере настройки
              логирования вывод идет в logcat, то что б не дублировался вывод отключаем.
@@ -277,7 +277,7 @@
 
 		     Значнеие по умолчанию - 1. -->
 		<prop name="stripExceptionDetails" type="String" value="0"/>
-		
+
 		<!-- Открывать чек при вызове метода beginFiscalReceipt, а не по первому вызову
 		     printRecItem.
 
@@ -334,7 +334,7 @@
 
              Значение по умолчанию - 0. -->
 		<prop name="paymentSumCorrectionEnabled" type="String" value="0"/>
-        
+
         <!-- Разрешить коррекцию количества.
              При регистрации позиации если quantity * unitPrice != price драйвер попробует подобрать
              такое количество, что б это неравенствено исправить.
@@ -343,6 +343,11 @@
              Значение по умолчанию - 0. -->
 		<prop name="quantityCorrectionEnabled" type="String" value="0"/>
 
+		<!-- Опрашивать принтер на предмет завершения печати после отправки команды печати штрих-кода.
+
+			 Значение по умолчанию - 1
+		-->
+		<prop name="waitForBarcodePrinting" type="String" value="1"/>
 
 	</JposEntry>
 </JposEntries>
