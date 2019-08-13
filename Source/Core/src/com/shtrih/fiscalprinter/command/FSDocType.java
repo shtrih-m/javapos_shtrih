@@ -23,6 +23,8 @@ public class FSDocType {
     public static final int FS_DOCTYPE_DAYOPEN = 2;
     // 03h – кассовый чек
     public static final int FS_DOCTYPE_RECEIPT = 3;
+    // 04h – БСО
+    public static final int FS_DOCTYPE_BSO = 4;
     // 05h – отчет о закрытии смены
     public static final int FS_DOCTYPE_DAYCLOSE = 5;
     // 10h – отчет о закрытии фискального режима
@@ -73,6 +75,8 @@ public class FSDocType {
                 return "Open fiscal day";
             case FS_DOCTYPE_RECEIPT:
                 return "Fiscal receipt";
+            case FS_DOCTYPE_BSO:
+                return "BSO";
             case FS_DOCTYPE_DAYCLOSE:
                 return "Close fiscal day";
             case FS_DOCTYPE_FISCAL_CLOSE:

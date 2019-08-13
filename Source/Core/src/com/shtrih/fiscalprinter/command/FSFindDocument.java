@@ -59,6 +59,10 @@ public class FSFindDocument extends PrinterCommand {
             case FSDocType.FS_DOCTYPE_RECEIPT:
                 document = new FSDocumentReceipt(in, docType);
                 break;
+
+            case FSDocType.FS_DOCTYPE_BSO:
+                document = new FSDocumentReceipt(in, docType);
+                break;
                 
             default: 
                 document = new FSDocument(in, docType);
