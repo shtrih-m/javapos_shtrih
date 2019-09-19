@@ -4316,19 +4316,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
 	// search device on ports and baudrates
 	private void searchSerialDevice() throws Exception {
-		if (params.searchByBaudRateEnabled) {
-			if (searchByBaudRates(params.portName, params.getBaudRate())) {
-				return;
-			}
-		} else if (connectDevice(params.portName, params.getBaudRate())) {
-			return;
-		}
-
 		if (params.searchByPortEnabled) {
 			String[] ports = port.getPortNames();
-			for (int i = 0; i < ports.length; i++) {
-				String portName = ports[i];
 
+			logger.debug("Searching " + ports.length + " port names");
+
+			for (String portName : ports) {
 				if (params.searchByBaudRateEnabled) {
 					if (searchByBaudRates(portName, params.getBaudRate())) {
 						return;
@@ -4338,7 +4331,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 				}
 			}
 		}
-		throw new JposException(JPOS_E_NOHARDWARE);
+
+		if (params.searchByBaudRateEnabled) {
+			if (searchByBaudRates(params.portName, params.getBaudRate())) {
+				return;
+			}
+		} else if (connectDevice(params.portName, params.getBaudRate())) {
+			return;
+		}
 	}
 
 	public LongPrinterStatus searchDevice() throws Exception {
