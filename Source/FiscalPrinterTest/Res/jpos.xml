@@ -31,20 +31,20 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="COM26"/>
+        <prop name="portName" type="String" value="COM1"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
-        <prop name="department" type="String" value="1"/>
+        <prop name="department" type="String" value="0"/>
         <!-- Default font number -->
-        <prop name="fontNumber" type="String" value="3"/>
+        <prop name="fontNumber" type="String" value="1"/>
 		<!-- discountFont -->
-        <prop name="discountFont" type="String" value="3"/>
+        <prop name="discountFont" type="String" value="1"/>
         <!-- Close Receipt text -->
         <prop name="closeReceiptText" type="String" value=""/>
         <!-- Subtotal text -->
         <prop name="subtotalText" type="String" value="ПОДЫТОГ:"/>
 		<!-- Subtotal font -->
-        <prop name="subtotalFont" type="String" value="3"/>
+        <prop name="subtotalFont" type="String" value="1"/>
         <!-- Driver byte receive timeout -->
         <prop name="byteTimeout" type="String" value="200"/>
         <!-- Device byte receive timeout -->
@@ -175,7 +175,7 @@
         <!-- Paper cut delay in milliseconds -->
         <prop name="cutPaperDelay" type="String" value="0"/>
         <!-- Sales Receipt type, 0 - normal, 1 - GLOBUS -->
-        <prop name="salesReceiptType" type="String" value="1"/>
+        <prop name="salesReceiptType" type="String" value="0"/>
         <!-- Amount field length -->
         <prop name="RFAmountLength" type="String" value="8"/>
         <!-- Quantity field length -->
@@ -232,7 +232,7 @@
         <!-- Barcode text position NOTPRINTED=0, ABOVE=1, BELOW=2, BOTH=3 -->
         <prop name="barcodeTextPosition" type="String" value="2"/>
         <!-- Barcode text font, 1..7, default 1 -->
-        <prop name="barcodeTextFont" type="String" value="3"/>
+        <prop name="barcodeTextFont" type="String" value="1"/>
         <!-- Barcode aspect ratio -->
         <prop name="barcodeAspectRatio" type="String" value="3"/>
         <!-- Compatibility level, 0 - NONE, 1 - FULL -->
@@ -248,7 +248,7 @@
         <!-- Enable discounts for Fiscal Storage printers 1 - enabled, 0 - disabled -->
         <prop name="FSDiscountEnabled" type="String" value="1"/>
         <!-- Combine item adjustments (enabled by default) -->
-		<prop name="FSCombineItemAdjustments" type="String" value="1"/>
+		<prop name="printReceiptItemAsText" type="String" value="0"/>
         <!-- Text report enabled -->
         <prop name="textReportEnabled" type="String" value="0"/>
         <!-- Text report file name -->
@@ -295,7 +295,7 @@
 		<prop name="checkItemCodeEnabled" type="String" value="0"/>
 		<prop name="userExtendedTagPrintMode" type="String" value="0"/>
 		<prop name="jsonUpdateEnabled" type="String" value="0"/>
-		<prop name="openReceiptOnBegin" type="String" value="0"/>
+		<prop name="openReceiptOnBegin" type="String" value="1"/>
 		<!-- Режим записи тегов. 0 - в том месте, где был вызван, 1 - до позиций чека, 2 - после всех позиций чека -->
 		<prop name="writeTagMode" type="String" value="0"/>
 		<!-- Печать описани тэгов средствами драйвера -->

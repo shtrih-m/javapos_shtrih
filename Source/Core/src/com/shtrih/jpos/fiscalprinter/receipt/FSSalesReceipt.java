@@ -696,6 +696,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             }
         }
 
+        if (getParams().printReceiptItemAsText) {
+            printRecItemAsText(item);
+            item.setText("//" + item.getText());
+        }
+
+        
         getDevice().checkItemCode(item.getBarcode());
         if (getDevice().getCapOperationTagsFirst()) {
             getDevice().sendItemCode(item.getBarcode());

@@ -126,7 +126,7 @@ public class FptrParameters {
     public boolean checkTotalEnabled = false;
     public int receiptNumberRequest = SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER;
     public boolean FSDiscountEnabled = true;
-    public boolean FSCombineItemAdjustments = true;
+    public boolean printReceiptItemAsText = false;
     public boolean textReportEnabled = false;
     public boolean readDiscountMode = true;
     public String textReportFileName = "documents.txt";
@@ -360,7 +360,7 @@ public class FptrParameters {
                 SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER);
 
         FSDiscountEnabled = reader.readBoolean("FSDiscountEnabled", true);
-        FSCombineItemAdjustments = reader.readBoolean("FSCombineItemAdjustments", true);
+        printReceiptItemAsText = reader.readBoolean("FSCombineItemAdjustments", true);
         readDiscountMode = reader.readBoolean("readDiscountMode", true);
         FSPrintTags = reader.readBoolean("FSPrintTags", false);
         FSTagsPlacement = reader.readInteger("FSTagsPlacement", 0);

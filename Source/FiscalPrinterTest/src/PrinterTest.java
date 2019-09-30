@@ -3846,15 +3846,11 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt145_10() {
         try {
             printer.resetPrinter();
-            // receipt 1
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(true);
-            printer.printRecItem("RING WG AND DIA post", 8405000, 10, 1, 8405000, "");
-            printer.printRecMessage("Сумма без скидки: 1000.29");
-            printer.printRecSubtotal(8405000);
-            printer.printRecTotal(100029, 100000, "0");
+            printer.printRecItem("Wiski", 0, 1000, 1, 500, "");
+            printer.printRecTotal(100000, 100000, "");
             printer.endFiscalReceipt(true);
-            
         } catch (Exception e) {
             e.printStackTrace();
         }
