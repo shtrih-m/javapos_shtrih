@@ -3848,8 +3848,10 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(true);
-            printer.printRecItem("Wiski", 0, 1000, 1, 500, "");
-            printer.printRecTotal(100000, 100000, "");
+            printer.setItemCode("04620039240015", "5EK3ntfHCgt24");
+            printer.printRecItem("Wiski", 2000, 1000, 1, 0, "");
+            printer.printRecTotal(1000, 1000, "0");
+            printer.printRecTotal(1000, 1000, "2");
             printer.endFiscalReceipt(true);
         } catch (Exception e) {
             e.printStackTrace();

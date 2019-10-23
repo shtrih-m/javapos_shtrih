@@ -224,5 +224,6 @@ public class FSReadStatus extends PrinterCommand {
     public void setDocNumber(long docNumber) {
         this.docNumber = docNumber;
     }
+
     
 }
