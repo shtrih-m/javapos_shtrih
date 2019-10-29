@@ -5,6 +5,7 @@
 package com.shtrih.jpos.fiscalprinter.receipt;
 
 import java.util.Vector;
+import java.util.HashMap;
 
 import com.shtrih.util.MathUtils;
 import com.shtrih.util.StringUtils;
@@ -48,6 +49,7 @@ public class FSSaleReceiptItem {
     private int subjectType = 1;
     private GS1Barcode barcode = null;
     private final Vector tags = new Vector();
+    private HashMap receiptFields = new HashMap();
 
     public FSSaleReceiptItem() {
     }
@@ -109,7 +111,7 @@ public class FSSaleReceiptItem {
     public void setTaxAmount(Long value) {
         taxAmount = value;
     }
-    
+
     public boolean getIsStorno() {
         return isStorno;
     }
@@ -410,5 +412,17 @@ public class FSSaleReceiptItem {
      */
     public void setBarcode(GS1Barcode barcode) {
         this.barcode = barcode;
+    }
+
+    public HashMap getReceiptFields() {
+        return receiptFields;
+    }
+
+    public String getReceiptField(String fieldName) throws Exception {
+        String fieldValue = (String) receiptFields.get(fieldName);
+        if (fieldValue == null) {
+            fieldValue = "";
+        }
+        return fieldValue;
     }
 }

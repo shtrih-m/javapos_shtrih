@@ -531,6 +531,14 @@ public class DirectIOHandler {
                 new DIOSetFFDVersion(service).execute(data, object);
                 break;
 
+            case SmFptrConst.SMFPTR_DIO_GET_RECEIPT_FIELD:
+                new DIOGetReceiptField(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_SET_RECEIPT_FIELD:
+                new DIOSetReceiptField(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL, Localizer.getString(Localizer.invalidParameterValue) + ", command");
         }

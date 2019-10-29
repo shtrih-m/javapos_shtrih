@@ -7,6 +7,16 @@
     
 ********************************************************************************
 
+  29.10.2019
+  deviceServiceVersion = 1013585
+
+  [+] Added custom fields support for receipt template 
+      User can add custom fields to receipt template and 
+      then set fields from application by name via directIO commands
+      SMFPTR_DIO_GET_RECEIPT_FIELD and SMFPTR_DIO_SET_RECEIPT_FIELD
+	  
+********************************************************************************
+
   23.10.2019
   deviceServiceVersion = 1013584
 

@@ -650,6 +650,13 @@ public interface SmFptrConst {
      */
     public static final int SMFPTR_DIO_SET_ITEM_CODE = 0x78;
     
+    /**
+     * Receipt field value for receipt template
+     */
+    public static final int SMFPTR_DIO_GET_RECEIPT_FIELD    = 0x79;
+    public static final int SMFPTR_DIO_SET_RECEIPT_FIELD    = 0x7A;
+
+    
     
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:

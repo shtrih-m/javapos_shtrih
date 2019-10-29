@@ -15,7 +15,7 @@ public class FieldFactory {
         String prefix = "";
         Field.Justify justify = Field.Justify.RIGHT;
         String tag;
-        Pattern pattern = Pattern.compile("((\\D)\\$)*((\\d{1,2})+([lc])*)*([A-Z_]+)");
+        Pattern pattern = Pattern.compile("((\\D)\\$)*((\\d{1,2})+([lc])*)*([A-Z_(\\d)]+)");
         Matcher matcher = pattern.matcher(from);
         if (matcher.matches()) {
             if (matcher.group(2) != null && matcher.group(2).length() > 0) {

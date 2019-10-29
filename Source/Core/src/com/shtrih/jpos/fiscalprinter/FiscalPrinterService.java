@@ -2722,6 +2722,10 @@ public class FiscalPrinterService extends DeviceService implements
                 "SMFPTR_DIO_READ_KM_SERVER_STATUS");
         map.put(SmFptrConst.SMFPTR_DIO_SET_ITEM_CODE, 
                 "SMFPTR_DIO_SET_ITEM_CODE");
+        map.put(SmFptrConst.SMFPTR_DIO_GET_RECEIPT_FIELD, 
+                "SMFPTR_DIO_GET_RECEIPT_FIELD");
+        map.put(SmFptrConst.SMFPTR_DIO_SET_RECEIPT_FIELD, 
+                "SMFPTR_DIO_SET_RECEIPT_FIELD");
    
         String result = map.get(command);
         if (result == null) {

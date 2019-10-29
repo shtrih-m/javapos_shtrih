@@ -258,7 +258,8 @@ public class ReceiptTemplate {
         if (f.tag.equals("MULT_NE_ONE")) {
             return item.getQuantity() == 1000 ? " " : "*";
         }
-        throw new ParsingException("Unknown tag: " + f.tag);
+        String fieldValue = item.getReceiptField(f.tag);
+        return fieldValue;
     }
 
     static String taxLetters = "АБВГДЕ";

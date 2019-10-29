@@ -9,6 +9,7 @@ import com.shtrih.util.StringUtils;
 
 import java.util.Enumeration;
 import java.util.Vector;
+import java.util.HashMap;
 
 import jpos.config.JposEntry;
 import jpos.config.RS232Const;
@@ -18,7 +19,6 @@ import static com.shtrih.jpos.fiscalprinter.SmFptrConst.SMFPTR_HEADER_MODE_DRIVE
 
 public class FptrParameters {
 
-    
     public static final int defaultGraphicsLineDelay = 200;
 
     public int byteTimeout = 3000;
@@ -188,7 +188,8 @@ public class FptrParameters {
     public int commandDelayInMs = 0;
     public boolean textReportSearchForward = false;
     public int taxCalculation = SmFptrConst.TAX_CALCULATION_PRINTER;
-    
+    private HashMap receiptFields = new HashMap();
+
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
         subtotalFont = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -235,8 +236,8 @@ public class FptrParameters {
         taxPassword = reader.readInteger("taxPassword", 0);
         usrPassword = reader.readInteger("operatorPassword", 1);
         sysPassword = reader.readInteger("sysAdminPassword", 30);
-        searchByPortEnabled = reader.readBoolean("searchByPortEnabled",false);
-        waitForBarcodePrinting = reader.readBoolean("waitForBarcodePrinting",true);
+        searchByPortEnabled = reader.readBoolean("searchByPortEnabled", false);
+        waitForBarcodePrinting = reader.readBoolean("waitForBarcodePrinting", true);
         searchByBaudRateEnabled = reader.readBoolean("searchByBaudRateEnabled", true);
         pollInterval = reader.readInteger("pollInterval", 500);
         pollEnabled = reader.readBoolean("pollEnabled", false);
@@ -578,10 +579,9 @@ public class FptrParameters {
         postLine = "";
     }
 
-    public String quantityToStr(long value, String unitName) throws Exception 
-    {
+    public String quantityToStr(long value, String unitName) throws Exception {
         value = Math.abs(value);
-        
+
         String result;
         if (((value % 1000) == 0) && (!unitName.equalsIgnoreCase(weightUnitName))) {
             result = String.valueOf(value / 1000);
@@ -591,8 +591,21 @@ public class FptrParameters {
         return result;
     }
 
-    public boolean isDriverHeader(){
-        return (headerMode == SMFPTR_HEADER_MODE_DRIVER)||
-                (headerMode == SMFPTR_HEADER_MODE_DRIVER2);
+    public boolean isDriverHeader() {
+        return (headerMode == SMFPTR_HEADER_MODE_DRIVER)
+                || (headerMode == SMFPTR_HEADER_MODE_DRIVER2);
     }
+
+    public HashMap getReceiptFields() {
+        return receiptFields;
+    }
+
+    public String getReceiptField(String fieldName) throws Exception {
+        return (String) receiptFields.get(fieldName);
+    }
+
+    public void setReceiptField(String fieldName, String fieldValue) throws Exception {
+        receiptFields.put(fieldName, fieldValue);
+    }
+
 }

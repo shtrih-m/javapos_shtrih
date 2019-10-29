@@ -1173,6 +1173,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             item.setUnitName(unitName);
             item.setIsStorno(isStorno);
             item.setBarcode(barcode);
+            item.getReceiptFields().clear();
+            item.getReceiptFields().putAll(getParams().getReceiptFields());
+            getParams().getReceiptFields().clear();
+            
             barcode = null;
 
             if (getParams().itemTotalAmount != null) {
