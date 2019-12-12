@@ -281,11 +281,12 @@ public class Localizer {
         add("PrinterError2C", "Fiscal day is closed");
         add("PrinterError2D", "Receipt total less that discount amount");
         add("PrinterError2E", "There is not enough money in ECR");
-        add("PrinterError2F", "Serial number in memory and FM are mismatched");
-
-        add("PrinterError30", "EJ: NAK returned");
-        add("PrinterError31", "EJ: Format error");
-        add("PrinterError32", "EJ: CRC error");
+       
+        add("PrinterError2F", "FS: I2C timeout");
+        add("PrinterError30", "FS: NAK returned");
+        add("PrinterError31", "FS: Format error");
+        add("PrinterError32", "FS: CRC error");
+        
         add("PrinterError33", "Incorrect command parameters");
         add("PrinterError34", "No data available");
         add("PrinterError35", "Settings: Incorrect command parameters");

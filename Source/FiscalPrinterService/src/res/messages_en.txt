@@ -110,11 +110,10 @@ PrinterError2B = Previous command cannot be cancelled
 PrinterError2C = Fiscal day is closed
 PrinterError2D = Receipt total less that discount amount
 PrinterError2E = There is not enough money in ECR
-PrinterError2F = Serial number in memory and FM are mismatched
-
-PrinterError30 = Waiting for tax inspector password   
-PrinterError31 = FM size is not matched with firmware version   
-PrinterError32 = Technological reset is needed
+PrinterError2F = FS: I2C timeout
+PrinterError30 = FS: NAK returned
+PrinterError31 = FS: Format error
+PrinterError32 = FS: CRC error
 PrinterError33 = Incorrect command parameters
 PrinterError34 = No data available
 PrinterError35 = Settings: Incorrect command parameters
