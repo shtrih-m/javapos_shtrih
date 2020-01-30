@@ -7,6 +7,14 @@
     
 ********************************************************************************
 
+  30.01.2020
+  deviceServiceVersion = 1013587
+
+  [+] Added parameter rebootBeforeDayOpen for reboot before day open. 
+      Default value: false    
+  
+********************************************************************************
+
   12.12.2019
   deviceServiceVersion = 1013586
 

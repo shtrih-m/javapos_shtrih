@@ -838,7 +838,9 @@ class PrinterTest implements FiscalPrinterConst {
     private void PrintCheckWithPassedPositionSum() {
         try {
             // Задаем тип чека SMFPTR_RT_SALE, SMFPTR_RT_RETSALE, SMFPTR_RT_BUY, SMFPTR_RT_RETBUY
-            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+            //printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETSALE);
+            printer.setFiscalReceiptType(FPTR_RT_REFUND);
+            
 
             // Указываем систему налогообложения
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM, 1);
@@ -859,7 +861,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecMessage("же не манж пасижур", 2);
 
             // Обычная позиция
-            printer.printRecItem("ITEM 1", 0, 1234, 0, 1000, "");
+            //printer.printRecItem("ITEM 1", 0, 1234, 0, 1000, "");
 
             // Позиция с коррекцией на +-1 копейку
             // Сумма позиции будет сброшена драйвером после вызова printRecItem
@@ -867,12 +869,11 @@ class PrinterTest implements FiscalPrinterConst {
             //printer.printRecItem("ITEM 2", 0, 1234, 0, 1000, "");
             // Позиция с признаком способа расчета и признаком предмета расчета
             // 1214, признак способа расчета, если не указывать будет 0
-            // ВНИМАНИЕ: значение сохраняется после вызова printRecItem
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, 2);
             // 1212, признак предмета расчета, если не указывать будет 0
-            // ВНИМАНИЕ: значение сохраняется после вызова printRecItem
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 3);
             printer.printRecItem("ITEM 3", 0, 1234, 0, 1000, "");
+            //printer.printRecRefund("ITEM 3", 1234, 0);
 
             // Оплата типом оплаты который привязан к jpos.xml к метке "0"
             // <prop name="payType0" type="String" value="0"/>
@@ -984,7 +985,7 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
-            printFiscalReceipt145_10();
+            PrintCheckWithPassedPositionSum();
         } catch (Exception e) {
             e.printStackTrace();
         }

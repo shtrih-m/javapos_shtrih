@@ -189,6 +189,7 @@ public class FptrParameters {
     public boolean textReportSearchForward = false;
     public int taxCalculation = SmFptrConst.TAX_CALCULATION_PRINTER;
     private HashMap receiptFields = new HashMap();
+    public boolean rebootBeforeDayOpen = false;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -209,6 +210,7 @@ public class FptrParameters {
         FSPrintTags = false;
         userExtendedTagPrintMode = SmFptrConst.USER_EXTENDED_TAG_PRINT_MODE_DRIVER;
         commandDelayInMs = 0;
+        rebootBeforeDayOpen = false;
     }
 
     public void load(JposEntry entry) throws Exception {
@@ -426,6 +428,7 @@ public class FptrParameters {
         commandDelayInMs = reader.readInteger("commandDelayInMs", 0);
         textReportSearchForward = reader.readBoolean("textReportSearchForward", false);
         taxCalculation = reader.readInteger("taxCalculation", SmFptrConst.TAX_CALCULATION_PRINTER);
+        rebootBeforeDayOpen = reader.readBoolean("rebootBeforeDayOpen", false);
 
         // paymentNames
         String paymentName;

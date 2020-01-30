@@ -138,6 +138,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private String serial = "";
     private long lastDocNumber = 0;
     private long lastMacValue = 0;
+    private volatile boolean stopFlag = true;
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params) {
@@ -1641,7 +1642,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void writeDecimalPoint(int position) throws Exception {
-
         WriteDecimalPoint command = new WriteDecimalPoint(sysPassword, position);
         execute(command);
     }
@@ -1649,6 +1649,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private int beginFiscalDay() throws Exception {
         if (!capOpenFiscalDay) {
             return 0;
+        }
+
+        if (params.rebootBeforeDayOpen) {
+            rebootAndWait();
         }
 
         if (!tlvItems.isEmpty()) {
@@ -3764,14 +3768,48 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         ServiceCommand command = new ServiceCommand();
         command.setFunctionCode(ServiceCommand.FUNCTION_CODE_REBOOT);
         command.setPassword(sysPassword);
-        return executeCommand(command);
+        int rc = executeCommand(command);
+        if (succeeded(rc)){
+            port.close();
+        }
+        return rc;
+    }
+
+    public void cancelWait() {
+        stopFlag = true;
+    }
+
+    public void rebootAndWait() throws Exception {
+        logger.debug("rebootAndWait");
+        
+        stopFlag = false;
+        reboot();
+        Thread.sleep(10 * 1000);
+        for (int i = 0; i < 10; i++) {
+            try {
+                if (stopFlag) {
+                    return;
+                }
+
+                connect();
+                break;
+            } catch (Exception e) {
+                Thread.sleep(5 * 1000);
+            }
+        }
+        connect();
+        logger.debug("rebootAndWait: OK");
     }
 
     public int rebootToDFU() throws Exception {
         ServiceCommand command = new ServiceCommand();
         command.setFunctionCode(ServiceCommand.FUNCTION_CODE_DFU_REBOOT);
         command.setPassword(sysPassword);
-        return executeCommand(command);
+        int rc = executeCommand(command);
+        if (succeeded(rc)){
+            port.close();
+        }
+        return rc;
     }
 
     /*
@@ -4118,7 +4156,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void updateFirmwareXModem(String firmwareFileName) throws Exception {
         logger.debug("updateFirmwareXModem");
         reboot();
-        port.close();
 
         FirmwareUpdater.updateFirmwareXModem(params.portName, firmwareFileName);
         logger.debug("updateFirmwareXModem: OK");
@@ -4126,7 +4163,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void updateFirmwareDFU(String firmwareFileName) throws Exception {
         rebootToDFU();
-        port.close();
         FirmwareUpdater.updateFirmwareDFU(firmwareFileName);
     }
 

@@ -181,7 +181,9 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
     public void stop() {
         stopFlag = true;
-        if (thread != null) {
+        if (thread != null) 
+        {
+            printer.cancelWait();
             thread.interrupt();
             try {
                 thread.join();
@@ -259,7 +261,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
             logger.debug("Firmware written in " + (doneAt - startedAt) + " ms");
 
             if (!printer.isShtrihNano())
-                rebootAndWait();
+                printer.rebootAndWait();
 
             if (tables != null) {
                 listener.OnWritingTables();
@@ -307,26 +309,6 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
             }
         }
-    }
-
-    private void rebootAndWait() throws Exception {
-        printer.reboot();
-
-        Thread.sleep(10 * 1000);
-
-        for (int i = 0; i < 10; i++) {
-            try {
-                if (stopFlag)
-                    return;
-
-                printer.connect();
-                break;
-            } catch (Exception e) {
-                Thread.sleep(5 * 1000);
-            }
-        }
-
-        printer.connect();
     }
 
     @Override

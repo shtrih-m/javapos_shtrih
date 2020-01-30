@@ -6,6 +6,7 @@ public class WriteSerialNumberCommand extends PrinterCommand {
 
     // in
     private final int functionCode = ServiceCommand.FUNCTION_CODE_SERIALNUMBER_PROG; // Function code
+    
     private final String serialNumber;   // Serial number (16 bytes)
 
     public WriteSerialNumberCommand(String serialNumber) {

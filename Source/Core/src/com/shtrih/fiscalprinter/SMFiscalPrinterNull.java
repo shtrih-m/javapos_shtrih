@@ -280,9 +280,9 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
 
     public int closeReceipt(EndFiscalReceipt command)
             throws Exception {
-            return 0;
+        return 0;
     }
-    
+
     public EndFiscalReceipt closeReceipt(CloseRecParams params)
             throws Exception {
         return new EndFiscalReceipt();
@@ -890,10 +890,9 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void printLines(String line1, String line2) throws Exception {
     }
 
-    public void printLines(String line1, String line2, FontNumber font) throws Exception
-    {
+    public void printLines(String line1, String line2, FontNumber font) throws Exception {
     }
-    
+
     public void printItems(Vector<PrintItem> items) throws Exception {
     }
 
@@ -1188,14 +1187,14 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public byte[] processTLVBeforeReceipt(byte[] tlv) throws Exception {
         return tlv;
     }
-    
+
     public void resetPrinter() throws Exception {
     }
-    
-    public boolean getCapOperationTagsFirst(){
+
+    public boolean getCapOperationTagsFirst() {
         return false;
     }
-    
+
     public long getLastDocNumber() {
         return 0;
     }
@@ -1203,5 +1202,10 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public long getLastMacValue() {
         return 0;
     }
-    
+
+    public void cancelWait() {
+    }
+
+    public void rebootAndWait() throws Exception {
+    }
 }

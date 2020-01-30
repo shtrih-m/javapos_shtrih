@@ -204,7 +204,7 @@ public interface SMFiscalPrinter {
 
     public int closeReceipt(EndFiscalReceipt command)
             throws Exception;
-    
+
     public long getSubtotal() throws Exception;
 
     public int readOperationRegister(OperationRegister register)
@@ -515,7 +515,7 @@ public interface SMFiscalPrinter {
     public void printLines(String line1, String line2) throws Exception;
 
     public void printLines(String line1, String line2, FontNumber font) throws Exception;
-            
+
     public void printItems(Vector<PrintItem> items) throws Exception;
 
     public void printFSHeader() throws Exception;
@@ -643,30 +643,34 @@ public interface SMFiscalPrinter {
     public boolean getCapOpenFiscalDay();
 
     public int sendItemCode(GS1Barcode barcode) throws Exception;
-    
+
     public int sendItemCode2(String barcode) throws Exception;
 
     public int checkItemCode(GS1Barcode barcode) throws Exception;
 
     public int checkItemCode2(String barcode) throws Exception;
-    
+
     public FSBindItemCode bindItemCode(String barcode) throws Exception;
-            
+
     public FSBindItemCode fsBindItemCode(int codeLength) throws Exception;
 
     public FSAcceptItemCode fsAcceptItemCode(int action) throws Exception;
 
     public FSReadKMServerStatus fsReadKMServerStatus() throws Exception;
-    
+
     public int fsCloseReceipt(FSCloseReceipt command) throws Exception;
-    
+
     public byte[] processTLVBeforeReceipt(byte[] tlv) throws Exception;
-    
+
     public void resetPrinter() throws Exception;
-    
+
     public boolean getCapOperationTagsFirst();
-    
+
     public long getLastDocNumber();
-    
+
     public long getLastMacValue();
+
+    public void cancelWait();
+
+    public void rebootAndWait() throws Exception;
 }
