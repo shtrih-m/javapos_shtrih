@@ -555,9 +555,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     rc = getDevice().closeReceipt(command);
                 }
                 getDevice().check(rc);
-
+                getFiscalDay().closeFiscalRec();
+                
                 try {
-                    getFiscalDay().closeFiscalRec();
+                    getDevice().waitForPrinting();
                     if (!disablePrint) {
                         for (int i = 0; i < messages.size(); i++) {
                             getDevice().printText(messages.get(i));

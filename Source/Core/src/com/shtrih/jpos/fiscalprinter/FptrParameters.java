@@ -363,7 +363,7 @@ public class FptrParameters {
                 SmFptrConst.SMFPTR_RN_FP_DOCUMENT_NUMBER);
 
         FSDiscountEnabled = reader.readBoolean("FSDiscountEnabled", true);
-        printReceiptItemAsText = reader.readBoolean("FSCombineItemAdjustments", true);
+        printReceiptItemAsText = reader.readBoolean("FSCombineItemAdjustments", false);
         readDiscountMode = reader.readBoolean("readDiscountMode", true);
         FSPrintTags = reader.readBoolean("FSPrintTags", false);
         FSTagsPlacement = reader.readInteger("FSTagsPlacement", 0);
