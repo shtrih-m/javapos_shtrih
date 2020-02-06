@@ -47,7 +47,7 @@ public class FSSaleReceiptItem {
     private Long taxAmount = null;
     private int paymentType = 4;
     private int subjectType = 1;
-    private GS1Barcode barcode = null;
+    private String barcode = null;
     private final Vector tags = new Vector();
     private HashMap receiptFields = new HashMap();
 
@@ -403,14 +403,14 @@ public class FSSaleReceiptItem {
     /**
      * @return the barcode
      */
-    public GS1Barcode getBarcode() {
+    public String getBarcode() {
         return barcode;
     }
 
     /**
      * @param barcode the barcode to set
      */
-    public void setBarcode(GS1Barcode barcode) {
+    public void setBarcode(String barcode) {
         this.barcode = barcode;
     }
 

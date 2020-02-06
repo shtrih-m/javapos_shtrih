@@ -23,12 +23,7 @@ public class DIOSetItemCode extends DIOItem {
     public void execute(int[] data, Object object) throws Exception {
 
         String[] lines = (String[])object;
-        String GTIN = lines[0];
-        String serial = "";
-        if (lines.length > 1) {
-            serial = lines[1];
-        }
-        GS1Barcode barcode = new GS1Barcode(GTIN, serial);
+        String barcode = lines[0];
         service.setItemBarcode(barcode);
     }
 

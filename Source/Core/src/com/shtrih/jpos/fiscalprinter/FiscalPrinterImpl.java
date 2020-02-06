@@ -4720,7 +4720,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return "";
     }
 
-    public void setItemBarcode(GS1Barcode barcode) throws Exception {
+    public void setItemBarcode(String barcode) throws Exception {
         receipt.setItemBarcode(barcode);
     }
 }

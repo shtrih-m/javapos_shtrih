@@ -24,7 +24,7 @@ import com.shtrih.fiscalprinter.command.EndTest;
 import com.shtrih.fiscalprinter.command.FDOParameters;
 import com.shtrih.fiscalprinter.command.FMTotals;
 import com.shtrih.fiscalprinter.command.FSAcceptItemCode;
-import com.shtrih.fiscalprinter.command.FSBindItemCode;
+import com.shtrih.fiscalprinter.command.FSSetOperationMarking;
 import com.shtrih.fiscalprinter.command.FSCloseReceipt;
 import com.shtrih.fiscalprinter.command.FSDocument;
 import com.shtrih.fiscalprinter.command.FSFindDocument;
@@ -642,17 +642,11 @@ public interface SMFiscalPrinter {
 
     public boolean getCapOpenFiscalDay();
 
-    public int sendItemCode(GS1Barcode barcode) throws Exception;
+    public int sendMarking(String barcode) throws Exception;
 
-    public int sendItemCode2(String barcode) throws Exception;
+    public int checkItemCode(String barcode) throws Exception;
 
-    public int checkItemCode(GS1Barcode barcode) throws Exception;
-
-    public int checkItemCode2(String barcode) throws Exception;
-
-    public FSBindItemCode bindItemCode(String barcode) throws Exception;
-
-    public FSBindItemCode fsBindItemCode(int codeLength) throws Exception;
+    public FSSetOperationMarking setOperationMarking(String data) throws Exception;
 
     public FSAcceptItemCode fsAcceptItemCode(int action) throws Exception;
 

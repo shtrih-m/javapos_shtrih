@@ -1148,23 +1148,15 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return false;
     }
 
-    public int sendItemCode(GS1Barcode barcode) throws Exception {
+    public int sendMarking(String barcode) throws Exception {
         return 0;
     }
 
-    public int sendItemCode2(String barcode) throws Exception {
+    public int checkItemCode(String barcode) throws Exception {
         return 0;
     }
 
-    public int checkItemCode(GS1Barcode barcode) throws Exception {
-        return 0;
-    }
-
-    public int checkItemCode2(String barcode) throws Exception {
-        return 0;
-    }
-
-    public FSBindItemCode fsBindItemCode(int codeLength) throws Exception {
+    public FSSetOperationMarking setOperationMarking(String data) throws Exception{
         return null;
     }
 
@@ -1176,7 +1168,7 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return null;
     }
 
-    public FSBindItemCode bindItemCode(String barcode) throws Exception {
+    public FSSetOperationMarking bindItemCode(String barcode) throws Exception {
         return null;
     }
 

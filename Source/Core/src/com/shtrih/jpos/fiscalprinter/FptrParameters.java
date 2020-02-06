@@ -190,6 +190,8 @@ public class FptrParameters {
     public int taxCalculation = SmFptrConst.TAX_CALCULATION_PRINTER;
     private HashMap receiptFields = new HashMap();
     public boolean rebootBeforeDayOpen = false;
+    public int markingType = SmFptrConst.MARKING_TYPE_PRINTER;
+
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -429,6 +431,7 @@ public class FptrParameters {
         textReportSearchForward = reader.readBoolean("textReportSearchForward", false);
         taxCalculation = reader.readInteger("taxCalculation", SmFptrConst.TAX_CALCULATION_PRINTER);
         rebootBeforeDayOpen = reader.readBoolean("rebootBeforeDayOpen", false);
+        markingType = reader.readInteger("markingType", SmFptrConst.MARKING_TYPE_PRINTER);
 
         // paymentNames
         String paymentName;

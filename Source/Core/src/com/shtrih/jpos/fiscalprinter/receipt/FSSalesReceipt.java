@@ -49,7 +49,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private Vector<String> messages = new Vector<String>();
     private final ReceiptTemplate receiptTemplate;
     private static CompositeLogger logger = CompositeLogger.getLogger(FSSalesReceipt.class);
-    private GS1Barcode barcode = null;
+    private String barcode = null;
 
     public FSSalesReceipt(ReceiptContext context, int receiptType) throws Exception {
         super(context);
@@ -629,7 +629,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setText("//" + item.getText());
         getDevice().checkItemCode(item.getBarcode());
         if (getDevice().getCapOperationTagsFirst()) {
-            getDevice().sendItemCode(item.getBarcode());
+            getDevice().sendMarking(item.getBarcode());
         }
         PriceItem priceItem = item.getPriceItem();
         if (!item.getIsStorno()) {
@@ -657,7 +657,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
         printOperationTLV(item);
         if (!getDevice().getCapOperationTagsFirst()) {
-            getDevice().sendItemCode(item.getBarcode());
+            getDevice().sendMarking(item.getBarcode());
         }
         item.setText(itemText);
     }
@@ -705,7 +705,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         
         getDevice().checkItemCode(item.getBarcode());
         if (getDevice().getCapOperationTagsFirst()) {
-            getDevice().sendItemCode(item.getBarcode());
+            getDevice().sendMarking(item.getBarcode());
         }
 
         PriceItem priceItem = item.getPriceItem();
@@ -733,8 +733,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             getDevice().printVoidItem(priceItem);
         }
         printOperationTLV(item);
-        if (!getDevice().getCapOperationTagsFirst()) {
-            getDevice().sendItemCode(item.getBarcode());
+        if (item.getBarcode() != null){
+            getDevice().sendMarking(item.getBarcode());
         }
 
         long discountTotal = item.getDiscounts().getTotal();
@@ -1513,7 +1513,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         items.add(graphics);
     }
 
-    public void setItemBarcode(GS1Barcode barcode) throws Exception {
+    public void setItemBarcode(String barcode) throws Exception {
         this.barcode = barcode;
     }
 

@@ -314,6 +314,10 @@
 		<!-- rebootBeforeDayOpen - reboot fiscal printer before open fiscal day -->
 		<!-- default value is false -->
 		<prop name="rebootBeforeDayOpen" type="String" value="1"/>
+		<!-- markingType - defines how tag 1162 created: 0 - by fiscal printer via command 0xFF67, 1 - by driver
+		<!-- default value is 0 -->
+		<prop name="markingType" type="String" value="0"/>
+		
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>

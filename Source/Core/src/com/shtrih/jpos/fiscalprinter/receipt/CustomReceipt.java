@@ -267,7 +267,7 @@ public abstract class CustomReceipt implements FiscalReceipt {
         graphics.print(getPrinter().getPrinter());
     }
 
-    public void setItemBarcode(GS1Barcode barcode) throws Exception {
+    public void setItemBarcode(String barcode) throws Exception {
     }
 
     public void setItemBarcode2(String barcode) throws Exception {

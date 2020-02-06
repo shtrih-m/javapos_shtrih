@@ -19,6 +19,12 @@ import static jpos.FiscalPrinterConst.FPTR_RT_SIMPLE_INVOICE;
 public interface SmFptrConst {
 
     ///////////////////////////////////////////////////////////////////////////
+    // How to make 1162 tag, from driver or from fiscal printer
+    
+    public static final int MARKING_TYPE_PRINTER    = 0;
+    public static final int MARKING_TYPE_DRIVER     = 1;
+
+    ///////////////////////////////////////////////////////////////////////////
     // gf constants
     public static final int WRITE_TAG_MODE_IN_PLACE         = 0;
     public static final int WRITE_TAG_MODE_BEFORE_ITEMS     = 1;

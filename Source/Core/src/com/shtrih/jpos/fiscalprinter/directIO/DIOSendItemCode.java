@@ -22,13 +22,8 @@ public class DIOSendItemCode extends DIOItem {
     public void execute(int[] data, Object object) throws Exception {
 
         String[] lines = (String[]) object;
-        String GTIN = lines[0];
-        String serial = "";
-        if (lines.length > 1) {
-            serial = lines[1];
-        }
-        GS1Barcode barcode = new GS1Barcode(GTIN, serial);
-        getPrinter().check(getPrinter().sendItemCode(barcode));
+        String barcode = lines[0];
+        getPrinter().check(getPrinter().sendMarking(barcode));
     }
 
 }

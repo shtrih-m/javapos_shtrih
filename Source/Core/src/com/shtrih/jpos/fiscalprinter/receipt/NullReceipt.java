@@ -232,7 +232,7 @@ public class NullReceipt implements FiscalReceipt {
     public void setMessages(Vector<TextLine> messages) {
     }
 
-    public void setItemBarcode(GS1Barcode barcode) throws Exception {
+    public void setItemBarcode(String barcode) throws Exception {
     }
     
     public void setItemBarcode2(String barcode) throws Exception {

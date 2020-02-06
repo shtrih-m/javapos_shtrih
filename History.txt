@@ -7,6 +7,14 @@
     
 ********************************************************************************
 
+  06.02.2020
+  deviceServiceVersion = 1013588
+
+  [+] Added parameter markingType: 0 - tag 1162 maked by printer, 1 - by driver
+      Default value: 0
+	  
+********************************************************************************
+
   30.01.2020
   deviceServiceVersion = 1013587
 

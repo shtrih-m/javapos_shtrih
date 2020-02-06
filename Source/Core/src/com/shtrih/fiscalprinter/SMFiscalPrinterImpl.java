@@ -3769,7 +3769,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setFunctionCode(ServiceCommand.FUNCTION_CODE_REBOOT);
         command.setPassword(sysPassword);
         int rc = executeCommand(command);
-        if (succeeded(rc)){
+        if (succeeded(rc)) {
             port.close();
         }
         return rc;
@@ -3781,7 +3781,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void rebootAndWait() throws Exception {
         logger.debug("rebootAndWait");
-        
+
         stopFlag = false;
         reboot();
         Thread.sleep(10 * 1000);
@@ -3806,7 +3806,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setFunctionCode(ServiceCommand.FUNCTION_CODE_DFU_REBOOT);
         command.setPassword(sysPassword);
         int rc = executeCommand(command);
-        if (succeeded(rc)){
+        if (succeeded(rc)) {
             port.close();
         }
         return rc;
@@ -4548,7 +4548,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command;
     }
 
-    public int checkItemCode(GS1Barcode barcode) throws Exception {
+    public int checkItemCode(String barcode) throws Exception {
         if (!params.checkItemCodeEnabled) {
             return 0;
         }
@@ -4556,10 +4556,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (barcode == null) {
             return 0;
         }
-        int rc = 0;
-        if (barcode.serial.isEmpty()) {
-            rc = checkItemCode2(barcode.GTIN);
-        }
+        int rc = checkItemCode2(barcode);
         return rc;
     }
 
@@ -4583,15 +4580,16 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return rc;
     }
 
-    public int sendItemCode(GS1Barcode barcode) throws Exception {
+    public int sendMarking(String barcode) throws Exception 
+    {
         if (barcode == null) {
             return 0;
         }
-
-        if (!barcode.serial.isEmpty()) {
-            return sendItemCode1(barcode);
+        
+        if (params.markingType == SmFptrConst.MARKING_TYPE_DRIVER) {
+            return sendMarkingDriver(barcode);
         } else {
-            return sendItemCode2(barcode.GTIN);
+            return setOperationMarking(barcode).getResultCode();
         }
     }
 
@@ -4602,7 +4600,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return buffer.array();
     }
 
-    public int sendItemCode1(GS1Barcode barcode) throws Exception {
+    public int sendMarkingDriver(String barcodeText) throws Exception 
+    {
+        GS1BarcodeParser parser = new GS1BarcodeParser();
+        GS1Barcode barcode = parser.decode(barcodeText);
+                
         byte[] ba;
         String serial = barcode.serial;
         ByteBuffer buf;
@@ -4644,27 +4646,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
         }
     }
-
-    public int sendItemCode2(String barcode) throws Exception {
-        int rc = 0;
-        GS1BarcodeParser parser = new GS1BarcodeParser();
-        GS1Barcode barcodeGS1 = parser.decode(barcode);
-        rc = sendItemCode1(barcodeGS1);
-        if (params.checkItemCodeEnabled) {
-            FSBindItemCode bindCommand = fsBindItemCode(barcode.length());
-            rc = bindCommand.getResultCode();
-        }
-        return rc;
-    }
-
-    public FSBindItemCode bindItemCode(String barcode) throws Exception {
-        return fsBindItemCode(barcode.length());
-    }
-
-    public FSBindItemCode fsBindItemCode(int codeLength) throws Exception {
-        FSBindItemCode command = new FSBindItemCode();
-        command.setPassword(usrPassword);
-        command.setCodeLength(codeLength);
+     
+    public FSSetOperationMarking setOperationMarking(String barcode) throws Exception {
+        FSSetOperationMarking command = new FSSetOperationMarking();
+        command.password = usrPassword;
+        command.data = barcode.getBytes();
         executeCommand(command);
         return command;
     }
