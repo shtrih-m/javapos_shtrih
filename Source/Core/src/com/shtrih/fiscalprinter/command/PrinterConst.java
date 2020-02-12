@@ -433,7 +433,11 @@ public interface PrinterConst {
     // REceipt buffer overflow
     public static final int SMFP_EFPTR_RECBUF_OVERFLOW = 0x4B;
     
-
+    // Driver error codes
+    // Cover is opened
+    public static final int SMFP_EFPTR_COVER_OPENED     = 0x100;
+    public static final int SMFP_EFPTR_PAPER_OR_COVER   = 0x101;
+    
     // ###################################################################
     // #### cut types
     // ###################################################################

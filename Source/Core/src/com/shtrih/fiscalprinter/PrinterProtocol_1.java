@@ -211,7 +211,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
                     return readAnswer(timeout);
 
                 default:
-                    SysUtils.sleep(100);
+                    Thread.sleep(100);
             }
 
             if (ackNumber >= maxAckNumber) {
@@ -256,7 +256,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
                         return;
 
                     default:
-                        SysUtils.sleep(100);
+                        Thread.sleep(100);
                         enqNumber++;
                 }
 

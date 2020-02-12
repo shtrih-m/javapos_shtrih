@@ -657,7 +657,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 case SMFP_EFPTR_RECBUF_OVERFLOW:
                     boolean recOpened = printer.readPrinterStatus().getPrinterMode().isReceiptOpened();
                     if (!recOpened) {
-                        printer.sleep(1000);
+                        Thread.sleep(1000);
                         command.setRepeatNeeded(true);
                     }
                     break;
@@ -3122,16 +3122,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    private void sleep(long millis) {
-        try {
-            SysUtils.sleep(millis);
-        } catch (InterruptedException e) {
-            // Restore the interrupted status
-            logger.error("InterruptedException", e);
-            Thread.currentThread().interrupt();
-        }
-    }
-
     public void cancelReceipt2() {
         try {
             getPrinter().waitForPrinting();
@@ -3159,7 +3149,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
             try {
                 if (!receipt.getDisablePrint()) {
-                    sleep(getParams().recCloseSleepTime);
+                    Thread.sleep(getParams().recCloseSleepTime);
                     if (!receipt.getCapAutoCut()) {
                         printEndFiscal();
                     }
@@ -4327,7 +4317,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         try {
             while (deviceThreadEnabled) {
                 checkDeviceStatus();
-                SysUtils.sleep(params.pollInterval);
+                Thread.sleep(params.pollInterval);
             }
         } catch (InterruptedException e) {
             logger.error("InterruptedException", e);

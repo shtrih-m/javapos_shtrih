@@ -399,8 +399,6 @@ public interface SMFiscalPrinter {
 
     public void printBarcode(PrinterBarcode barcode) throws Exception;
 
-    public void sleep(long millis);
-
     public PrinterImages getPrinterImages();
 
     public String processEscCommands(String text)

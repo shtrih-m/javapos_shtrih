@@ -649,9 +649,6 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void printBarcode(PrinterBarcode barcode) throws Exception {
     }
 
-    public void sleep(long millis) {
-    }
-
     public PrinterImages getPrinterImages() {
         return new PrinterImages();
     }

@@ -51,16 +51,6 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         return isOpened;
     }
 
-    private void sleep(long millis) {
-        try {
-            SysUtils.sleep(millis);
-        } catch (InterruptedException e) {
-            // Restore the interrupted status
-            logger.error("InterruptedException", e);
-            Thread.currentThread().interrupt();
-        }
-    }
-
     public void openReceipt(boolean isSale) throws Exception {
         if (!isOpened) {
             if (!isSale) {
@@ -163,7 +153,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
                 getPrinter().getPrinter().closeReceipt(closeParams);
                 getFiscalDay().closeFiscalRec();
                 // Print may not respond for some time
-                sleep(getParams().recCloseSleepTime);
+                Thread.sleep(getParams().recCloseSleepTime);
             }
         } else if (getReceipt().isCancelled()) {
             getPrinter().printText(getParams().receiptVoidText);

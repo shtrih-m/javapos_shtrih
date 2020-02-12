@@ -63,6 +63,7 @@ import java.util.Vector;
 
 import jpos.JposConst;
 import jpos.JposException;
+import jpos.FiscalPrinterConst;
 
 import static jpos.JposConst.JPOS_E_EXTENDED;
 import static jpos.JposConst.JPOS_E_NOHARDWARE;
@@ -310,7 +311,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
             if (command.getResultCode() == SMFP_EFPTR_PREVCOMMAND) {
                 // Do not count as an attempt, added to fix SHTRIH-MOBILE-F bug
-                SysUtils.sleep(SMFP_EFPTR_PREVCOMMAND_TimeToSleep);
+                Thread.sleep(SMFP_EFPTR_PREVCOMMAND_TimeToSleep);
                 i--;
             }
         }
@@ -548,7 +549,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         station = getPrintStation(station);
         PrintString command = new PrintString(usrPassword, station, line);
         execute(command);
-        SysUtils.sleep(getParams().printStringDelayInMs);
+        Thread.sleep(getParams().printStringDelayInMs);
         return command.getOperator();
     }
 
@@ -589,7 +590,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 font, line);
 
         execute(command);
-        SysUtils.sleep(getParams().printStringDelayInMs);
+        Thread.sleep(getParams().printStringDelayInMs);
         return command.getOperator();
     }
 
@@ -1401,7 +1402,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setBaudRate(baudRate);
         command.setTimeout(timeout);
         int rc = executeCommand(command);
-        SysUtils.sleep(300);
+        Thread.sleep(300);
         return rc;
     }
 
@@ -1519,7 +1520,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setFlags(station);
         command.setCapFlags(capGraphicsFlags());
         command.setData(data);
-        sleep(params.getGraphicsLineDelay());
+        Thread.sleep(params.getGraphicsLineDelay());
         return executeCommand(command);
     }
 
@@ -1546,7 +1547,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             case MODE_FULLREPORT:
             case MODE_EJREPORT:
             case MODE_SLPPRINT:
-                SysUtils.sleep(TimeToSleep);
+                Thread.sleep(TimeToSleep);
                 break;
 
             default:
@@ -1584,46 +1585,41 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public PrinterStatus waitForPrinting() throws Exception {
         logger.debug("waitForPrinting");
         PrinterStatus status = null;
-        try {
-            for (;;) {
-                status = readPrinterStatus();
-                switch (status.getSubmode()) {
-                    case ECR_SUBMODE_IDLE: {
-                        if (checkEcrMode(status.getMode())) {
-                            return status;
-                        }
-                        break;
-                    }
-
-                    case ECR_SUBMODE_PASSIVE:
-                    case ECR_SUBMODE_ACTIVE: {
-                        checkPaper(status);
-                        break;
-                    }
-
-                    case ECR_SUBMODE_AFTER: {
-                        continuePrint();
-                        break;
-                    }
-
-                    case ECR_SUBMODE_REPORT:
-                    case ECR_SUBMODE_PRINT: {
-                        SysUtils.sleep(TimeToSleep);
-                        break;
-                    }
-
-                    default: {
-                        logger.debug("Unknown submode");
+        for (;;) {
+            status = readPrinterStatus();
+            switch (status.getSubmode()) {
+                case ECR_SUBMODE_IDLE: {
+                    if (checkEcrMode(status.getMode())) {
                         return status;
                     }
+                    break;
+                }
+
+                case ECR_SUBMODE_PASSIVE:
+                case ECR_SUBMODE_ACTIVE: {
+                    checkPaper(status);
+                    // Flags can be ok, but status not
+                    throw new SmFiscalPrinterException(SMFP_EFPTR_PAPER_OR_COVER,
+                        getErrorText(SMFP_EFPTR_PAPER_OR_COVER));
+                }
+
+                case ECR_SUBMODE_AFTER: {
+                    continuePrint();
+                    break;
+                }
+
+                case ECR_SUBMODE_REPORT:
+                case ECR_SUBMODE_PRINT: {
+                    Thread.sleep(TimeToSleep);
+                    break;
+                }
+
+                default: {
+                    logger.debug("Unknown submode");
+                    return status;
                 }
             }
-        } catch (InterruptedException e) {
-            // Restore the interrupted status
-            logger.error("InterruptedException", e);
-            Thread.currentThread().interrupt();
         }
-        return status;
     }
 
     public int[] getSupportedBaudRates() throws Exception {
@@ -2228,6 +2224,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             throw new SmFiscalPrinterException(resultCode,
                     getErrorText(resultCode));
         }
+        if (getModel().getCapCoverSensor() && status.getPrinterFlags().isCoverOpened()) 
+        {
+            resultCode = SMFP_EFPTR_COVER_OPENED;
+            throw new SmFiscalPrinterException(resultCode,
+                    getErrorText(resultCode));
+        }
     }
 
     public int initTables() throws Exception {
@@ -2378,7 +2380,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         if (getParams().waitForBarcodePrinting) {
             waitForPrinting();
-            sleep(getParams().barcodeDelay);
+            Thread.sleep(getParams().barcodeDelay);
         }
     }
 
@@ -2712,16 +2714,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public int getMessageLength(FontNumber font) throws Exception {
         return getModel().getTextLength(font);
-    }
-
-    public void sleep(long millis) {
-        try {
-            SysUtils.sleep(millis);
-        } catch (InterruptedException e) {
-            // Restore the interrupted status
-            logger.error("InterruptedException", e);
-            Thread.currentThread().interrupt();
-        }
     }
 
     public int getMaxGraphicsWidth() throws Exception {
@@ -3143,7 +3135,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void cutPaper() throws Exception {
         if (capCutPaper && (params.cutMode == SmFptrConst.SMFPTR_CUT_MODE_AUTO)) {
             if (params.cutPaperDelay != 0) {
-                SysUtils.sleep(params.cutPaperDelay);
+                Thread.sleep(params.cutPaperDelay);
             }
             int rc = cutPaper(params.cutType);
             capCutPaper = isCommandSupported(rc);
@@ -3339,11 +3331,16 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public String getErrorText(int code) throws Exception {
-        if (capModelParameters() && modelParameters.isCapCommand6B()) {
+        if (capModelParameters() && modelParameters.isCapCommand6B() && (code >= 0) && (code <= 0xFF)) {
             return String.valueOf(code) + ", " + readErrorDescription(code);
         }
 
-        String key = "PrinterError" + Hex.toHex((byte) code);
+        String key = "PrinterError";
+        if ((code >= 0x00)&&(code <= 0xFF)){
+            key += Hex.toHex((byte) code);
+        } else{
+            key += Hex.toHex((short) code);
+        }
         if ((capFiscalStorage) && (code < 0x20)) {
             key = "FSPrinterError" + Hex.toHex((byte) code);
         }
@@ -4112,7 +4109,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     private void waitFirmwareUpdate() throws Exception {
         logger.debug("waitFirmwareUpdate");
-        SysUtils.sleep(firmwareUpdateDelay);
+        Thread.sleep(firmwareUpdateDelay);
         logger.debug("waitFirmwareUpdate: OK");
     }
 
@@ -4204,7 +4201,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
                 case ECR_SUBMODE_REPORT:
                 case ECR_SUBMODE_PRINT: {
-                    SysUtils.sleep(TimeToSleep);
+                    Thread.sleep(TimeToSleep);
                     continue;
                 }
 
@@ -4272,7 +4269,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 case MODE_FULLREPORT:
                 case MODE_EJREPORT:
                 case MODE_SLPPRINT:
-                    sleep(TimeToSleep);
+                    Thread.sleep(TimeToSleep);
                     break;
 
                 default:

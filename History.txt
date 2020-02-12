@@ -7,6 +7,14 @@
     
 ********************************************************************************
 
+  12.02.2020
+  deviceServiceVersion = 1013589
+
+  [-] Fixed error in waitForPrinting method. If paper present, but cover opened,
+      procedure waitForPrinting and driver will hang. 
+	  
+********************************************************************************
+
   06.02.2020
   deviceServiceVersion = 1013588
 

@@ -67,6 +67,14 @@ public class JposExceptionHandler implements JposConst, FiscalPrinterConst,
             String text = p.getMessage();
 
             switch (errorCode) {
+                case SMFP_EFPTR_COVER_OPENED:
+                    return new JposException(JPOS_E_EXTENDED,
+                            JPOS_EFPTR_COVER_OPEN, text);
+
+                case SMFP_EFPTR_PAPER_OR_COVER:
+                    return new JposException(JPOS_E_EXTENDED,
+                            JPOS_EFPTR_REC_EMPTY, text);
+
                 case SMFP_EFPTR_NO_REC_PAPER:
                     return new JposException(JPOS_E_EXTENDED,
                             JPOS_EFPTR_REC_EMPTY, text);
