@@ -15,29 +15,18 @@ import java.util.StringTokenizer;
 
 public class GS1BarcodeParser {
 
-    private final ApplicationIdentifiers ids = new ApplicationIdentifiers();
+    private final ApplicationIdentifiers ais = new ApplicationIdentifiers();
 
     public GS1BarcodeParser() {
-        ids.initialize();
+        ais.initialize();
     }
 
     public GS1Barcode decode(String barcode) throws Exception {
-        ApplicationIdentifiers identifiers = decodeBarcode(barcode);
-        ApplicationIdentifier ai = identifiers.find("01");
-        if (ai == null) {
-            throw new Exception("Tag not found, GTIN(01)");
-        }
-        String GTIN = ai.value;
-        ai = identifiers.find("21");
-        if (ai == null) {
-            throw new Exception("Tag not found, SerialNumber(21)");
-        }
-        String serial = ai.value;
-        return new GS1Barcode(GTIN, serial);
+        ApplicationIdentifiers items = decodeBarcode(barcode);
+        return new GS1Barcode(items);
     }
 
-    public String decodeText(String barcode) throws Exception 
-    {
+    public String decodeText(String barcode) throws Exception {
         String result = "";
         ApplicationIdentifiers identifiers = decodeBarcode(barcode);
         for (int i = 0; i < identifiers.size(); i++) {
@@ -46,7 +35,7 @@ public class GS1BarcodeParser {
         }
         return result;
     }
-    
+
     public ApplicationIdentifiers decodeBarcode(String barcode) throws Exception {
         ApplicationIdentifiers rc = new ApplicationIdentifiers();
         String GS = "\u001D";
@@ -55,23 +44,6 @@ public class GS1BarcodeParser {
         }
         barcode.replace("(", GS);
         barcode.replace(")", "");
-
-        if (barcode.length() == 29) {
-            ApplicationIdentifier ai;
-            ai = ids.find("01");
-            ai.value = barcode.substring(0, 14);
-            rc.add(ai);
-
-            ai = ids.find("21");
-            ai.value = barcode.substring(14, 21);
-            rc.add(ai);
-
-            ai = ids.find("9099");
-            ai.value = barcode.substring(21);
-            rc.add(ai);
-
-            return rc;
-        }
 
         StringTokenizer tokenizer = new StringTokenizer(barcode, GS);
         while (tokenizer.hasMoreTokens()) {
@@ -87,7 +59,7 @@ public class GS1BarcodeParser {
         int i = 0;
         while (i < barcode.length()) {
             id = id + barcode.charAt(i);
-            ApplicationIdentifier ai = ids.find(id);
+            ApplicationIdentifier ai = ais.find(id);
             i++;
 
             if (ai != null) {
@@ -155,6 +127,14 @@ public class GS1BarcodeParser {
                 }
             }
             return null;
+        }
+
+        public ApplicationIdentifier get(String id) throws Exception {
+            ApplicationIdentifier item = find(id);
+            if (item == null) {
+                throw new Exception("Identifier " + id + " not found");
+            }
+            return item;
         }
 
         public void initialize() {

@@ -30,7 +30,7 @@ public class ZXingEncoder implements SmBarcodeEncoder {
         this.yScale = yScale;
     }
 
-    static int getStandardUPCEANChecksum(CharSequence s) throws Exception {
+    public static int getStandardUPCEANChecksum(CharSequence s) throws Exception {
         int length = s.length();
         int sum = 0;
         for (int i = length - 1; i >= 0; i -= 2) {

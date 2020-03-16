@@ -33,7 +33,7 @@ public class PrinterModelRetail01K extends PrinterModelDefault {
         setCapGraphics(true);
         setCapGraphicsEx(true);
         setCapPrintStringFont(true);
-        setCapShortStatus(false);
+        setCapShortStatus(true);
         setCapFontMetrics(false);
         setCapOpenReceipt(false);
         setNumVatRates(4);

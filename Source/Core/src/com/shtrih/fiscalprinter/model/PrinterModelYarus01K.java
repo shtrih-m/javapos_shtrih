@@ -33,7 +33,7 @@ public class PrinterModelYarus01K extends PrinterModelDefault {
         setCapGraphics(true);
         setCapGraphicsEx(true);
         setCapPrintStringFont(true);
-        setCapShortStatus(false);
+        setCapShortStatus(true);
         setCapFontMetrics(false);
         setCapOpenReceipt(true);
         setNumVatRates(4);

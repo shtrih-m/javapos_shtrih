@@ -33,7 +33,7 @@ public class PrinterModelShtrihFRFv3 extends PrinterModelDefault {
         setCapGraphics(true);
         setCapGraphicsEx(true);
         setCapPrintStringFont(false);
-        setCapShortStatus(false);
+        setCapShortStatus(true);
         setCapFontMetrics(false);
         setCapOpenReceipt(false);
         setNumVatRates(4);

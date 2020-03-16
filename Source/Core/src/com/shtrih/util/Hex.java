@@ -216,7 +216,9 @@ public class Hex {
         int i;
         for (i = 0; i < len; i++) {
             s.append(toHex(b[i]));
-            s.append(" ");
+            if (i != (len-1)){
+                s.append(" ");
+            }
         }
         return s.toString();
     }

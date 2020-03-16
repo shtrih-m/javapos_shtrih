@@ -20,34 +20,32 @@ public interface SmFptrConst {
 
     ///////////////////////////////////////////////////////////////////////////
     // How to make 1162 tag, from driver or from fiscal printer
-    
-    public static final int MARKING_TYPE_PRINTER    = 0;
-    public static final int MARKING_TYPE_DRIVER     = 1;
+    public static final int MARKING_TYPE_PRINTER = 0;
+    public static final int MARKING_TYPE_DRIVER = 1;
 
     ///////////////////////////////////////////////////////////////////////////
     // gf constants
-    public static final int WRITE_TAG_MODE_IN_PLACE         = 0;
-    public static final int WRITE_TAG_MODE_BEFORE_ITEMS     = 1;
-    public static final int WRITE_TAG_MODE_AFTER_ITEMS      = 2;
-            
+    public static final int WRITE_TAG_MODE_IN_PLACE = 0;
+    public static final int WRITE_TAG_MODE_BEFORE_ITEMS = 1;
+    public static final int WRITE_TAG_MODE_AFTER_ITEMS = 2;
+
     ///////////////////////////////////////////////////////////////////////////
     // itemMarkType constants
-    public static final int MARK_TYPE_FUR       = 2;
-    public static final int MARK_TYPE_DRUGS     = 3;
-    public static final int MARK_TYPE_TOBACCO   = 5;
-    public static final int MARK_TYPE_SHOES     = 0x1520;
-    
+    public static final int MARK_TYPE_FUR = 2;
+    public static final int MARK_TYPE_DRUGS = 3;
+    public static final int MARK_TYPE_TOBACCO = 5;
+    public static final int MARK_TYPE_SHOES = 0x1520;
+
     ///////////////////////////////////////////////////////////////////////////
     // userExtendedTagPrintMode constants
-    
-    public static final int USER_EXTENDED_TAG_PRINT_MODE_DRIVER     = 0;
-    public static final int USER_EXTENDED_TAG_PRINT_MODE_PRINTER    = 1;
-    
+    public static final int USER_EXTENDED_TAG_PRINT_MODE_DRIVER = 0;
+    public static final int USER_EXTENDED_TAG_PRINT_MODE_PRINTER = 1;
+
     ///////////////////////////////////////////////////////////////////////////
     // TaxCalculation constants
-    public static final int TAX_CALCULATION_PRINTER     = 0;
-    public static final int TAX_CALCULATION_DRIVER      = 1;
-    
+    public static final int TAX_CALCULATION_PRINTER = 0;
+    public static final int TAX_CALCULATION_DRIVER = 1;
+
     // ///////////////////////////////////////////////////////////////////
     // Report device for printReport, printPeriodicTotalsReport
     // ///////////////////////////////////////////////////////////////////
@@ -431,41 +429,41 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_OPEN_DAY = 0x33;
 
     /**
-     * Write string tag 
+     * Write string tag
      */
     public static final int SMFPTR_DIO_FS_WRITE_TAG = 0x34;
-    
+
     /**
      * Cut and print document end
      */
     public static final int SMFPTR_DIO_PRINT_DOC_END = 0x35;
-    
+
     /**
      * Write TLV structure
      */
     public static final int SMFPTR_DIO_FS_WRITE_TLV = 0x36;
-    
+
     /**
      * Disable receipt printing
      */
     public static final int SMFPTR_DIO_FS_DISABLE_PRINT = 0x37;
-    
+
     /**
-     * Print non fiscal document 
-     * If receipt is opened - it will be cancelled 
+     * Print non fiscal document
+     * If receipt is opened - it will be cancelled
      */
     public static final int SMFPTR_DIO_PRINT_NON_FISCAL = 0x38;
-    
+
     /**
      * Write customer email
      */
     public static final int SMFPTR_DIO_FS_WRITE_CUSTOMER_EMAIL = 0x39;
-    
+
     /**
      * Write customer phone number
      */
     public static final int SMFPTR_DIO_FS_WRITE_CUSTOMER_PHONE = 0x3A;
-    
+
     /**
      * Print calculation report
      */
@@ -486,7 +484,7 @@ public interface SmFptrConst {
      * Read FS parameters
      */
     public static final int SMFPTR_DIO_READ_FS_PARAMS = 0x3E;
-    
+
     /**
      * Read FS tickets
      */
@@ -494,9 +492,9 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_READ_FS_TICKETS2 = 0x40;
     public static final int SMFPTR_DIO_READ_FS_TICKETS3 = 0x41;
     public static final int SMFPTR_DIO_READ_FS_TICKETS4 = 0x42;
-    
+
     public static final int SMFPTR_DIO_PRINT_CORRECTION2 = 0x43;
-    
+
     public static final int SMFPTR_DIO_READ_TOTALS = 0x44;
 
     public static final int SMFPTR_DIO_PRINT_RAW_GRAPHICS = 0x46;
@@ -525,27 +523,27 @@ public interface SmFptrConst {
      * Read last fiscal day open document
      */
     public static final int SMFPTR_DIO_FS_READ_DAY_OPEN = 0x4F;
-    
+
     /**
      * Read last fiscal day close document
      */
     public static final int SMFPTR_DIO_FS_READ_DAY_CLOSE = 0x50;
-    
+
     /**
      * Read last document
      */
     public static final int SMFPTR_DIO_FS_READ_RECEIPT = 0x51;
-    
+
     /**
      * Read FS status
      */
     public static final int SMFPTR_DIO_FS_READ_STATUS = 0x52;
-    
+
     /**
      * Find FS document
      */
     public static final int SMFPTR_DIO_FS_FIND_DOCUMENT = 0x53;
-    
+
     /**
      * Disable document end printing
      */
@@ -565,12 +563,12 @@ public interface SmFptrConst {
      * Read device metrics
      */
     public static final int SMFPTR_DIO_READ_DEVICE_METRICS = 0x57;
-    
+
     /**
      * Read totalizer value
      */
     public static final int SMFPTR_DIO_READ_TOTALIZER = 0x58;
-    
+
     /**
      * Read document TLV text from FS archive
      */
@@ -585,52 +583,52 @@ public interface SmFptrConst {
      * Read EJ document *
      */
     public static final int SMFPTR_DIO_READ_EJ_DOCUMENT = 0x5B;
-    
+
     /**
      * Start close day command
      */
     public static final int SMFPTR_DIO_START_DAY_CLOSE = 0x5C;
-    
+
     /**
      * Start day open command
      */
     public static final int SMFPTR_DIO_START_DAY_OPEN = 0x5D;
-    
+
     /**
      * Start fiscalization
      */
     public static final int SMFPTR_DIO_START_FISCALIZATION = 0x5E;
-    
+
     /**
      * Start calc report
      */
     public static final int SMFPTR_DIO_START_CALC_REPORT = 0x5F;
-    
+
     /**
      * Start fiscal close
      */
     public static final int SMFPTR_DIO_START_FISCAL_CLOSE = 0x60;
-    
+
     /**
      * Send item barcode GTIN and serial
      */
     public static final int SMFPTR_DIO_SEND_ITEM_CODE = 0x61;
-    
+
     /**
      * Check item barcode GTIN and serial
      */
     public static final int SMFPTR_DIO_CHECK_ITEM_CODE = 0x62;
-    
+
     /**
      * Accept or reject item barcode
      */
     public static final int SMFPTR_DIO_ACCEPT_ITEM_CODE = 0x63;
- 
+
     /**
      * Bind item barcode
      */
     public static final int SMFPTR_DIO_BIND_ITEM_CODE = 0x64;
-    
+
     /**
      * Read KM server status
      */
@@ -645,7 +643,7 @@ public interface SmFptrConst {
      * Write FFD version
      */
     public static final int SMFPTR_DIO_WRITE_FFD_VERSION = 0x67;
-    
+
     /**
      * Read FS parameters 2
      */
@@ -655,15 +653,13 @@ public interface SmFptrConst {
      * Set item barcode GTIN and serial
      */
     public static final int SMFPTR_DIO_SET_ITEM_CODE = 0x78;
-    
+
     /**
      * Receipt field value for receipt template
      */
-    public static final int SMFPTR_DIO_GET_RECEIPT_FIELD    = 0x79;
-    public static final int SMFPTR_DIO_SET_RECEIPT_FIELD    = 0x7A;
+    public static final int SMFPTR_DIO_GET_RECEIPT_FIELD = 0x79;
+    public static final int SMFPTR_DIO_SET_RECEIPT_FIELD = 0x7A;
 
-    
-    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,
@@ -707,28 +703,28 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_PARAM_USR_PASSWORD = 7;
     public static final int SMFPTR_DIO_PARAM_SYS_PASSWORD = 8;
     public static final int SMFPTR_DIO_PARAM_TAX_PASSWORD = 9;
-    
-    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_0   = 10;
-    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_1   = 11;
-    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_2   = 12;
-    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_3   = 13;
-    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_4   = 14;
-    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_5   = 15;
-    public static final int SMFPTR_DIO_PARAM_TAX_SYSTEM    = 16;
+
+    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_0 = 10;
+    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_1 = 11;
+    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_2 = 12;
+    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_3 = 13;
+    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_4 = 14;
+    public static final int SMFPTR_DIO_PARAM_TAX_VALUE_5 = 15;
+    public static final int SMFPTR_DIO_PARAM_TAX_SYSTEM = 16;
     public static final int SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT = 17;
     public static final int SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE = 18;
     public static final int SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE = 19;
 
     public static final int SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER = 20;
-   
-    public static final int SMFPTR_DIO_PARAM_NEW_ITEM_STATUS    = 21;
-    public static final int SMFPTR_DIO_PARAM_ITEM_CHECK_MODE    = 22;
-    public static final int SMFPTR_DIO_PARAM_ITEM_MARK_TYPE     = 23;
-    
-    public static final int SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT    = 24;
-    
-    public static final int SMFPTR_DIO_PARAM_DOC_NUM            = 25;
-    public static final int SMFPTR_DIO_PARAM_DOC_MAC            = 26;
+
+    public static final int SMFPTR_DIO_PARAM_NEW_ITEM_STATUS = 21;
+    public static final int SMFPTR_DIO_PARAM_ITEM_CHECK_MODE = 22;
+    public static final int SMFPTR_DIO_PARAM_ITEM_MARK_TYPE = 23;
+
+    public static final int SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT = 24;
+
+    public static final int SMFPTR_DIO_PARAM_DOC_NUM = 25;
+    public static final int SMFPTR_DIO_PARAM_DOC_MAC = 26;
 
     public static final int SMFPTR_DIO_PARAM_PROTOCOL_TYPE = 27;
 
@@ -814,7 +810,6 @@ public interface SmFptrConst {
 
     /////////////////////////////////////////////////////////////////////
     // Header mode constants
-
     // Header printed before receipt beginning
     public static final int SMFPTR_HEADER_MODE_DRIVER = 0;
     // Header printed by driver
@@ -834,28 +829,61 @@ public interface SmFptrConst {
     // 
     public static final int SMFPTR_COMPAT_LEVEL_FULL = 0;
     public static final int SMFPTR_COMPAT_LEVEL_NONE = 1;
-    
+
     /////////////////////////////////////////////////////////////////////
     // Receipt number request
-    
-    public static final int SMFPTR_RN_FP_DOCUMENT_NUMBER    = 0;
-    public static final int SMFPTR_RN_FS_DOCUMENT_NUMBER    = 1;
-    public static final int SMFPTR_RN_FS_RECEIPT_NUMBER     = 2;
+    public static final int SMFPTR_RN_FP_DOCUMENT_NUMBER = 0;
+    public static final int SMFPTR_RN_FS_DOCUMENT_NUMBER = 1;
+    public static final int SMFPTR_RN_FS_RECEIPT_NUMBER = 2;
 
     // ///////////////////////////////////////////////////////////////////
     // Report type constants
-
     public static final int SMFPTR_JRN_REPORT_CURRENT_DAY = 0;
     public static final int SMFPTR_JRN_REPORT_DAY_NUMBER = 1;
     public static final int SMFPTR_JRN_REPORT_DOC_NUMBER = 2;
     public static final int SMFPTR_JRN_REPORT_DOC_RANGE = 3;
-    
+
     // ///////////////////////////////////////////////////////////////////
     // Receipt type constants
+    public static final int SMFPTR_RT_SALE = 100;
+    public static final int SMFPTR_RT_BUY = 101;
+    public static final int SMFPTR_RT_RETSALE = 102;
+    public static final int SMFPTR_RT_RETBUY = 103;
+
+    // ///////////////////////////////////////////////////////////////////
+    // KTN types
+    // КН Код неопределенного идентификатора товара 00h 00h
+    public static final int KTN_UNKNOWN = 0;
     
-    public static final int SMFPTR_RT_SALE      = 100;
-    public static final int SMFPTR_RT_BUY       = 101;
-    public static final int SMFPTR_RT_RETSALE   = 102;
-    public static final int SMFPTR_RT_RETBUY    = 103;
+    public static final int KTN_LOTTERY_UNUSED = 1;
+    public static final int KTN_FURS = 2;
+    public static final int KTN_DRUGS = 3;
+    public static final int KTN_RESERVED = 4;
+    public static final int KTN_TOBACCO = 5;
+    public static final int KTN_FOOTWEAR = 0x1520;
+    
+    
+    // EAN-8, UPC-E (E8) Идентификатор товара по формату EAN-8 45h 08h
+    public static final int KTN_EAN8 = 0x4508;
+    // EAN-13, UPC-A (E13) Идентификатор товара по формату EAN-13 45h 0Dh
+    public static final int KTN_EAN13 = 0x450D;
+    // ITF-14 (I14) Идентификатор товара по формату ITF-14 49h 0Eh
+    public static final int KTN_ITF14 = 0x490E;
+    // GS1 Data Matrix (DM) Идентификатор товара по формату GS1 Data Matrix или
+    // Data Matrix маркировки товаров 44h 4Dh
+    public static final int KTN_DM = 0x444D;
+    // Изделия из натурального меха (RF)
+    // Идентификатор товара по формату маркированной
+    // продукции изделий из натурального меха 52h 46h
+    public static final int KTN_RF = 0x5246;
+    // ЕГАИС 2.0 (Е20) Идентификатор товара по формату 2 версии маркированной
+    // алкогольной продукции в формате PDF417 C5h 14h
+    public static final int KTN_EGAIS2 = 0xC514;
+    // ЕГАИС 3.0 (Е30) Идентификатор товара по формату 3 версии маркированной
+    // алкогольной продукции в формате Data Matrix C5h 1Eh
+    public static final int KTN_EGAIS3 = 0xC51E;
+    // Код товара в формате ТН ВЭД Идентификатор товара по формату классификатора ТН
+    // ВЭД для групп товаров моторного топлива (газообразногои жидкого). 45h 41h
+    public static final int KTN_FUEL = 0x4541;
     
 }

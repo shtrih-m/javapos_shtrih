@@ -840,7 +840,6 @@ class PrinterTest implements FiscalPrinterConst {
             // Задаем тип чека SMFPTR_RT_SALE, SMFPTR_RT_RETSALE, SMFPTR_RT_BUY, SMFPTR_RT_RETBUY
             //printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETSALE);
             printer.setFiscalReceiptType(FPTR_RT_REFUND);
-            
 
             // Указываем систему налогообложения
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM, 1);
@@ -862,7 +861,6 @@ class PrinterTest implements FiscalPrinterConst {
 
             // Обычная позиция
             //printer.printRecItem("ITEM 1", 0, 1234, 0, 1000, "");
-
             // Позиция с коррекцией на +-1 копейку
             // Сумма позиции будет сброшена драйвером после вызова printRecItem
             //printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT, 1235);
@@ -985,14 +983,13 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
-            printFiscalReceipt145_9();
+            printFiscalReceipt145_4();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void testSetDate() throws Exception
-    {
+    public void testSetDate() throws Exception {
         String[] date = new String[1];
         date[0] = "260220191620";
         printer.getDate(date);
@@ -1001,7 +998,7 @@ class PrinterTest implements FiscalPrinterConst {
         printer.getDate(date);
         System.out.println("Get date: " + date[0]);
     }
-    
+
     public void disablePrint() {
         try {
             printer.disablePrint();
@@ -1411,7 +1408,7 @@ class PrinterTest implements FiscalPrinterConst {
             System.out.println(String.valueOf(i) + ". " + list.get(i));
         }
     }
-    
+
     public void printFiscalReceipt1044() {
         try {
             printer.resetPrinter();
@@ -3712,7 +3709,6 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecItem("1. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
             printer.printRecItemAdjustment(1, "            1206", 320, 2);
 
-            printer.setItemCode("00000046200068", "5gk=IYQ");
             printer.printRecItem("2. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
 
             printer.setItemCode("000000462000685gk=IYQAQC5pN/f", "");
@@ -3771,7 +3767,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecItem("2. Ложка", 124, 0, 0, 0, "");
             printer.fsWriteTag(1008, "foo@example.com");
             printer.printRecItem("3. Ложка", 124, 0, 0, 0, "");
-            
+
             printer.printRecTotal(10000, 10000, "");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
@@ -3791,7 +3787,7 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
+
     public void printFiscalReceipt145_6() {
         try {
             printer.resetPrinter();
@@ -3799,13 +3795,13 @@ class PrinterTest implements FiscalPrinterConst {
             printer.beginFiscalReceipt(false);
             //printer.fsWriteTag(1203, "538022374423");
             printer.fsWriteTag(1203, "012345678912");
-            
+
             printer.printRecItem("1. Item 1, tax 1", 10000, 1000, 1, 0, "");
             printer.printRecItem("2. Item 2, tax 2", 10000, 1000, 2, 0, "");
             printer.printRecTotal(10000, 10000, "1");
             printer.printRecTotal(10000, 10000, "99");
             printer.endFiscalReceipt(false);
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3816,25 +3812,24 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(true);
-            
+
             char GS = 0x1D;
-            String barcode = 
-                    "010405104227920221TB6qQHbmOTZBf" + GS + "2406402" + GS + "91ffd0" + GS + 
-                    "92DbZgaQm2x0uA5+8/AzMM9hVq6apGvtM3bJzejjpHan2pvK4O+XbYcVgFRR5I4HmCLQvZ74KgKkIhVADd==";
+            String barcode
+                    = "010405104227920221TB6qQHbmOTZBf" + GS + "2406402" + GS + "91ffd0" + GS
+                    + "92DbZgaQm2x0uA5+8/AzMM9hVq6apGvtM3bJzejjpHan2pvK4O+XbYcVgFRR5I4HmCLQvZ74KgKkIhVADd==";
             printer.setItemCode(barcode, "");
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE, SmFptrConst.MARK_TYPE_TOBACCO);
-            
-                    
+
             printer.printRecItem("Item 1", 10099, 1000, 1, 10099, "");
             printer.fsWriteOperationTag(1197, "KG");
-            
+
             printer.printRecItem("Item 2", 20000, 1000, 2, 20000, "");
             printer.printRecItem("Item 3", 30000, 1000, 3, 30000, "");
             printer.printRecItem("Item 4", 40000, 1000, 4, 40000, "");
             printer.printRecItem("Item 5", 50000, 1000, 5, 50000, "");
             printer.printRecItem("Item 6", 60000, 1000, 6, 60000, "");
             printer.printRecSubtotal(210099);
-            
+
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 1);
             printer.printRecSubtotalAdjustment(1, "", 99);
             printer.printRecTotal(210000, 210000, "1");
@@ -3843,29 +3838,185 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
+
     public void printFiscalReceipt145_10() {
         try {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(true);
             printer.setItemCode("04620039240015", "5EK3ntfHCgt24");
-            
+
             printer.setReceiptField("FIELD0", "1. ");
             printer.setReceiptField("FIELD1", " T4");
             printer.printRecItem("Wiski 1", 2000, 1000, 1, 0, "");
-            
+
             printer.setReceiptField("FIELD0", "2. ");
             printer.setReceiptField("FIELD1", " T5");
             printer.printRecItem("Wiski 2", 2000, 1000, 1, 0, "");
-            
+
             printer.printRecItem("Wiski 3", 2000, 1000, 1, 0, "");
-            
+
             printer.printRecTotal(6000, 6000, "0");
             printer.endFiscalReceipt(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
+    public void testThermalHeadIssue() {
+        try {
+            for (int i = 1; i < 100; i++) {
+                printer.setFiscalReceiptType(4);
+                printer.beginFiscalReceipt(true);
+                printer.printRecMessage("0136 0330/001/007   18.02.20 10:06 AC-04                      ");
+                printer.printRecItem("1347 СЛОЙКА С ТВОРОГОМ 70", 550000, 2000, 1, 275000, "");
+                printer.printRecMessage("Скидка составила: -0,80");
+                printer.printRecMessage("----------------------------------------");
+                printer.printRecMessage("ИТОГ ЧЕКА БЕЗ СКИДОК:              55,80");
+                printer.printRecMessage("ОБЩАЯ СУММА СКИДКИ:                -0,80");
+                printer.printRecTotal(550000, 550000, "1");
+                printer.printRecMessage(" ");
+                printer.printRecMessage(" Ваша карта Спар-клуб                     ");
+                printer.printRecMessage(" Номер карты: **** **** **** 1370         ");
+                printer.printRecMessage(" Начислено бонусов: 0.56                  ");
+                printer.printRecMessage(" На сумму покупки 55.00                   ");
+                printer.printRecMessage(" Баланс бонусов: 15.07                    ");
+                printer.printRecMessage("                                          ");
+                printer.printRecMessage("         Уважаемый покупатель!            ");
+                printer.printRecMessage("     На товары, участвующие в акции,      ");
+                printer.printRecMessage(" бонусы на сумму покупки не начисляются!  ");
+                printer.printRecMessage(" **************************************** ");
+                printer.printRecMessage("            СПАСИБО ЗА ПОКУПКУ            ");
+                printer.printRecMessage("       Служба клиентской поддержки        ");
+                printer.printRecMessage("              8-800-500-13-29             ");
+                printer.printRecMessage("        Ежедневно с 8-00 до 20-00,        ");
+                printer.printRecMessage(" ---------------------------------------- ");
+                printer.printRecMessage("                                          ");
+                printer.printRecMessage("               ");
+                printer.endFiscalReceipt(false);
+
+                printer.setFiscalReceiptType(4);
+                printer.beginFiscalReceipt(true);
+                printer.printRecMessage("0137 0330/001/007   18.02.20 10:07 AC-04                      ");
+                printer.printRecItem("1162 ПАКЕТ МАЙКА SPAR 40x", 50000, 1000, 1, 50000, "");
+                printer.printRecItem("4680000235945 ВОДА ПИТЬЕВАЯ SPAR Н", 239000, 1000, 2, 239000, "");
+                printer.printRecItem("4607167840737 КЕФИР 2,5% SPAR 950Г", 619000, 1000, 2, 619000, "");
+                printer.printRecItem("2411280000006 ШАУРМА С КУРИЦЕЙ 250", 599000, 1000, 1, 599000, "");
+                printer.printRecMessage("----------------------------------------");
+                printer.printRecMessage("ИТОГ ЧЕКА БЕЗ СКИДОК:             150,70");
+                printer.printRecTotal(1507000, 1507000, "12");
+                printer.printRecMessage(" ЧЕК НОМ.           0064                  ");
+                printer.printRecMessage("");
+                printer.printRecMessage(" Ваша карта Спар-клуб                     ");
+                printer.printRecMessage(" Номер карты: **** **** **** 9054         ");
+                printer.printRecMessage(" Начислено бонусов: 1.27                  ");
+                printer.printRecMessage(" На сумму покупки 150.70                  ");
+                printer.printRecMessage(" Баланс бонусов: 34.89                    ");
+                printer.printRecMessage("                                          ");
+                printer.printRecMessage("         Уважаемый покупатель!            ");
+                printer.printRecMessage("     На товары, участвующие в акции,      ");
+                printer.printRecMessage(" бонусы на сумму покупки не начисляются!  ");
+                printer.printRecMessage("            СПАСИБО ЗА ПОКУПКУ            ");
+                printer.printRecMessage("       Служба клиентской поддержки        ");
+                printer.printRecMessage("              8-800-500-13-29             ");
+                printer.printRecMessage("        Ежедневно с 8-00 до 20-00,        ");
+                printer.printRecMessage(" ---------------------------------------- ");
+                printer.printRecMessage("                                          ");
+                printer.printRecMessage("               ");
+                printer.endFiscalReceipt(false);
+
+                printer.beginNonFiscal();
+                printer.printNormal(2, "18.02.20                           10:08  ");
+                printer.printNormal(2, "                 Оплата                   ");
+                printer.printNormal(2, "Терминал: 21834997 Мерчант: 141000030447  ");
+                printer.printNormal(2, "                  VISA    A0000000031010  ");
+                printer.printNormal(2, "Карта:(E1)              ************3146  ");
+                printer.printNormal(2, "Клиент:                                /  ");
+                printer.printNormal(2, "Сумма (Руб):                      150.70  ");
+                printer.printNormal(2, "Комиссия за операцию - 0 Руб.             ");
+                printer.printNormal(2, "                ОДОБРЕНО                  ");
+                printer.printNormal(2, "Код авторизации:                  218274  ");
+                printer.printNormal(2, "Номер ссылки:               004986587200  ");
+                printer.printNormal(2, "      Подпись клиента не требуется        ");
+                printer.printNormal(2, "0CF22E01C2BC43A286F6B0B4107807A3157DD7D3  ");
+                printer.printNormal(2, "========================================  ");
+                printer.printNormal(2, "                                          ");
+                printer.printNormal(2, "                                          ");
+                printer.printNormal(2, "                                          ");
+                printer.printNormal(2, "                                          ");
+                printer.endNonFiscal();
+
+                printer.setFiscalReceiptType(4);
+                printer.beginFiscalReceipt(true);
+                printer.printRecMessage("0138 0330/001/007   18.02.20 10:10 AC-04                      ");
+                printer.printRecItem("4607174577145 НЕКТАР ДОБРЫЙ ДЕРЕВЕ", 1198000, 2000, 2, 599000, "");
+                printer.printRecItem("1162 ПАКЕТ МАЙКА SPAR 40x", 150000, 3000, 1, 50000, "");
+                printer.printRecItem("4650075420287 НЕКТАР ДОБРЫЙ ИЗ ВИН", 769000, 1000, 2, 769000, "");
+                printer.printRecMessage("Скидка составила: -23,00");
+                printer.printRecItem("82 ДОМАШНЯЯ КУХНЯ", 7389900, 1610, 1, 4590000, "");
+                printer.printRecItem("4607942070090 СКАТЕРТЬ ОДНОРАЗОВАЯ", 350000, 1000, 1, 350000, "");
+                printer.printRecItem("4620749720654 СТАКАН SMART 0,1л 6ш", 375000, 3000, 1, 125000, "");
+                printer.printRecItem("4620749720678 СТАКАН SMART 0,33л 6", 627000, 3000, 1, 209000, "");
+                printer.printRecItem("4607168441438 СЫР ПЕРЛИНИ КОПЧЕНЫЙ", 1109000, 1000, 2, 1109000, "");
+                printer.printRecItem("4620747572248 САЛФЕТКИ БУМАЖНЫЕ SM", 219000, 1000, 1, 219000, "");
+                printer.printRecItem("4620749720197 НОЖ SMART ОДНОРАЗОВЫ", 130000, 1000, 1, 130000, "");
+                printer.printRecItem("4620749720166 ТАРЕЛКА SMART ОДНОСЕ", 299000, 1000, 1, 299000, "");
+                printer.printRecItem("4607089305734 СЫР SPAR МААСДАМ 45%", 1399000, 1000, 2, 1399000, "");
+                printer.printRecItem("4607104811097 КОЛБАСА СЫРОКОПЧЕНАЯ", 999000, 1000, 2, 999000, "");
+                printer.printRecMessage("Скидка составила: -26,00");
+                printer.printRecItem("4640020591254 КОЛБАСА СЫРОКОПЧЕНАЯ", 999000, 1000, 2, 999000, "");
+                printer.printRecMessage("Скидка составила: -26,00");
+                printer.printRecItem("4601686009866 БАТОН FAZER ЗЕРНОВОЙ", 649000, 1000, 2, 649000, "");
+                printer.printRecItem("4607104812957 ШЕЙКА ПО-ЕГОРЬЕВСКИ", 1350000, 1000, 1, 1350000, "");
+                printer.printRecItem("4630024911028 СЫР SPAR ЭДАМ 45% 15", 1099000, 1000, 2, 1099000, "");
+                printer.printRecItem("4602701200329 БАТОН ДОМАШНИЙ ВЫСШИ", 450000, 1000, 2, 450000, "");
+                printer.printRecItem("4607041137427 СОУС СОЕВЫЙ SPAR ОРИ", 1299000, 1000, 1, 1299000, "");
+                printer.printRecItem("375 МАНДАРИНЫ", 1398600, 1400, 2, 999000, "");
+                printer.printRecItem("4680000235945 ВОДА ПИТЬЕВАЯ SPAR Н", 239000, 1000, 2, 239000, "");
+                printer.printRecItem("5449000000439 НАПИТОК КОКА-КОЛА 1", 1059000, 1000, 1, 1059000, "");
+                printer.printRecItem("4602441011278 ВОДА МИНЕРАЛЬНАЯ ЧЕР", 348900, 1000, 1, 348900, "");
+                printer.printRecItem("4601132349300 СЕЛЬДЬ ФИЛЕ КУСОЧКИ", 745000, 1000, 2, 745000, "");
+                printer.printRecMessage("Скидка составила: -11,00");
+                printer.printRecItem("4601132567520 СЕЛЬДЬ ФИЛЕ-КУСОЧКИ", 745000, 1000, 2, 745000, "");
+                printer.printRecMessage("Скидка составила: -11,00");
+                printer.printRecItem("4607002990290 ОГУРЦЫ МАРИНОВАННЫЕ", 2798000, 2000, 1, 1399000, "");
+                printer.printRecItem("4607034023416 ТОМАТЫ ЧЕРРИ GREENRA", 799000, 1000, 1, 799000, "");
+                printer.printRecMessage("Скидка составила: -30,00");
+                printer.printRecItem("4640010110298 ПИКА  ДЛЯ КАНАПЕ  КА", 390000, 1000, 1, 390000, "");
+                printer.printRecItem("4607075851641 ШПРОТЫ 5 МОРЕЙ В МАС", 999000, 1000, 2, 999000, "");
+                printer.printRecMessage("Скидка составила: -29,00");
+                printer.printRecItem("4008638275148 МАСЛИНЫ LORADO С КОС", 799000, 1000, 1, 799000, "");
+                printer.printRecItem("3083680714631 ОЛИВКИ BONDUELLE ЗЕЛ", 1259600, 1000, 1, 1259600, "");
+                printer.printRecMessage("Скидка составила: -0,04");
+                printer.printRecMessage("----------------------------------------");
+                printer.printRecMessage("ИТОГ ЧЕКА БЕЗ СКИДОК:            3400,04");
+                printer.printRecMessage("ОБЩАЯ СУММА СКИДКИ:              -156,04");
+                printer.printRecTotal(32440000, 50000000, "1");
+                printer.printRecMessage("");
+                printer.printRecMessage(" Ваша карта Спар-клуб                     ");
+                printer.printRecMessage(" Номер карты: **** **** **** 4002         ");
+                printer.printRecMessage(" Начислено бонусов: 81.06                 ");
+                printer.printRecMessage(" На сумму покупки 3244.00                 ");
+                printer.printRecMessage(" Баланс бонусов: 560.72                   ");
+                printer.printRecMessage("                                          ");
+                printer.printRecMessage("         Уважаемый покупатель!            ");
+                printer.printRecMessage("     На товары, участвующие в акции,      ");
+                printer.printRecMessage(" бонусы на сумму покупки не начисляются!  ");
+                printer.printRecMessage(" Наклеек          +5                      ");
+                printer.printRecMessage(" **************************************** ");
+                printer.printRecMessage("            СПАСИБО ЗА ПОКУПКУ            ");
+                printer.printRecMessage("       Служба клиентской поддержки        ");
+                printer.printRecMessage("              8-800-500-13-29             ");
+                printer.printRecMessage("        Ежедневно с 8-00 до 20-00,        ");
+                printer.printRecMessage(" ---------------------------------------- ");
+                printer.printRecMessage("                                          ");
+                printer.printRecMessage("               ");
+                printer.endFiscalReceipt(false);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

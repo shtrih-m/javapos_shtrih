@@ -49,6 +49,8 @@ import com.shtrih.util.MathUtils;
 import com.shtrih.util.MethodParameter;
 import com.shtrih.util.StringUtils;
 import com.shtrih.util.SysUtils;
+import com.shtrih.util.ArrayUtils;
+
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -1600,7 +1602,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     checkPaper(status);
                     // Flags can be ok, but status not
                     throw new SmFiscalPrinterException(SMFP_EFPTR_PAPER_OR_COVER,
-                        getErrorText(SMFP_EFPTR_PAPER_OR_COVER));
+                            getErrorText(SMFP_EFPTR_PAPER_OR_COVER));
                 }
 
                 case ECR_SUBMODE_AFTER: {
@@ -2224,8 +2226,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             throw new SmFiscalPrinterException(resultCode,
                     getErrorText(resultCode));
         }
-        if (getModel().getCapCoverSensor() && status.getPrinterFlags().isCoverOpened()) 
-        {
+        if (getModel().getCapCoverSensor() && status.getPrinterFlags().isCoverOpened()) {
             resultCode = SMFP_EFPTR_COVER_OPENED;
             throw new SmFiscalPrinterException(resultCode,
                     getErrorText(resultCode));
@@ -3336,9 +3337,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
 
         String key = "PrinterError";
-        if ((code >= 0x00)&&(code <= 0xFF)){
+        if ((code >= 0x00) && (code <= 0xFF)) {
             key += Hex.toHex((byte) code);
-        } else{
+        } else {
             key += Hex.toHex((short) code);
         }
         if ((capFiscalStorage) && (code < 0x20)) {
@@ -4577,73 +4578,130 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return rc;
     }
 
-    public int sendMarking(String barcode) throws Exception 
-    {
+    public int sendMarking(String barcode) throws Exception {
         if (barcode == null) {
             return 0;
         }
-        
+
         if (params.markingType == SmFptrConst.MARKING_TYPE_DRIVER) {
-            return sendMarkingDriver(barcode);
+            byte[] tagValue = barcodeTo1162Tag(barcode);
+            return fsWriteOperationTLV(tagValue);
         } else {
             return setOperationMarking(barcode).getResultCode();
         }
     }
 
-    public byte[] longToBytes(long x) {
-        ByteBuffer buffer = ByteBuffer.allocate(8);
-        buffer.order(ByteOrder.BIG_ENDIAN);
-        buffer.putLong(x);
-        return buffer.array();
+    public static boolean checkEANChecksum(String barcode) throws Exception 
+    {
+        String s = barcode.substring(0, barcode.length()-1);
+        int crc = ZXingEncoder.getStandardUPCEANChecksum(s);
+        return (crc == Integer.parseInt(barcode.substring(barcode.length() - 1)));
     }
 
-    public int sendMarkingDriver(String barcodeText) throws Exception 
-    {
-        GS1BarcodeParser parser = new GS1BarcodeParser();
-        GS1Barcode barcode = parser.decode(barcodeText);
-                
-        byte[] ba;
-        String serial = barcode.serial;
-        ByteBuffer buf;
-        TLVWriter writer = new TLVWriter();
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        switch (params.itemMarkType) {
-            case SmFptrConst.MARK_TYPE_FUR:
-            case SmFptrConst.MARK_TYPE_DRUGS:
-            case SmFptrConst.MARK_TYPE_TOBACCO:
+    public static byte[] barcodeTo1162Value(String barcode) throws Exception {
+        byte[] barcodeData = barcode.getBytes();
+        int barcodeLength = barcode.length();
+        int barcodeType = SmFptrConst.KTN_UNKNOWN;
 
-                if (serial.length() > 24) {
-                    serial = barcode.serial.substring(0, 24);
-                }
-                buf = ByteBuffer.allocate(32);
-                buf.order(ByteOrder.BIG_ENDIAN);
-                buf.putShort((short) params.itemMarkType);
-                ba = longToBytes(Long.parseLong(barcode.GTIN));
-                buf.put(ba, 2, 6);
-                buf.put(serial.getBytes());
-                writer.add(1162, buf.array());
-                return fsWriteOperationTLV(writer.getBytes());
+        GS1Barcode gs1Barcode = GS1Barcode.parse(barcode);
+        if ((gs1Barcode.isValid()) && gs1Barcode.hasItem("01") && gs1Barcode.hasItem("21")) {
+            barcodeType = SmFptrConst.KTN_DM;
 
-            case SmFptrConst.MARK_TYPE_SHOES:
+            String gtin = gs1Barcode.getItem("01");
+            if (gtin.length() > 24) {
+                gtin = gtin.substring(0, 24);
+            }
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            byte[] ba = ArrayUtils.longToBytes(Long.parseLong(gtin), 6);
+            os.write(ba);
 
-                if (serial.length() > 13) {
-                    serial = barcode.serial.substring(0, 13);
-                }
-                buf = ByteBuffer.allocate(21);
-                buf.order(ByteOrder.BIG_ENDIAN);
-                buf.putShort((short) params.itemMarkType);
-                ba = longToBytes(Long.parseLong(barcode.GTIN));
-                buf.put(ba, 2, 6);
-                buf.put(serial.getBytes());
-                writer.add(1162, buf.array());
-                return fsWriteOperationTLV(writer.getBytes());
+            String serial = gs1Barcode.getItem("21");
+            os.write(serial.getBytes());
 
-            default: {
-                throw new Exception("Invalid itemMarkType value");
+            if (gs1Barcode.hasItem("8005")) {
+                String unitPrice = gs1Barcode.getItem("8005");
+                os.write(unitPrice.getBytes());
+            }
+            barcodeData = os.toByteArray();
+        } else {
+            switch (barcodeLength) {
+                case 8:
+                    if (barcode.matches("\\d+") && checkEANChecksum(barcode)) {
+                        barcodeType = SmFptrConst.KTN_EAN8;
+                        barcodeData = ArrayUtils.longToBytes(Long.parseLong(barcode), 6);
+                    }
+                    break;
+
+                case 10:
+                    if (barcode.matches("\\d+")) {
+                        barcodeType = SmFptrConst.KTN_FUEL;
+                        barcodeData = ArrayUtils.longToBytes(Long.parseLong(barcode), 6);
+                    }
+                    break;
+
+                case 13:
+                    if (barcode.matches("\\d+") && checkEANChecksum(barcode)) {
+                        barcodeType = SmFptrConst.KTN_EAN13;
+                        barcodeData = ArrayUtils.longToBytes(Long.parseLong(barcode), 6);
+                    }
+                    break;
+
+                case 14:
+                    if (barcode.matches("\\d+") ) {
+                        barcodeType = SmFptrConst.KTN_ITF14;
+                        barcodeData = ArrayUtils.longToBytes(Long.parseLong(barcode), 6);
+                    }
+                    break;
+
+                case 21:
+                    // Проверка на формат "СС-ЦЦЦЦЦЦ-ССССССССССС"
+                    if (barcode.matches("\\w{2}-\\d{6}-\\w{11}")) {
+                        barcodeType = SmFptrConst.KTN_RF;
+                    }
+                    break;
+
+                case 29:
+                    barcodeType = SmFptrConst.KTN_DM;
+                    String gtin = barcode.substring(0, 14);
+                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    byte[] ba = ArrayUtils.longToBytes(Long.parseLong(gtin), 6);
+                    os.write(ba);
+                    String serial = barcode.substring(14, 25) + "  ";
+                    os.write(serial.getBytes());
+                    barcodeData = os.toByteArray();
+                    break;
+                    
+                case 68:
+                    barcodeType = SmFptrConst.KTN_EGAIS2;
+                    barcodeData = barcode.substring(8, 31).getBytes();
+                    break;
+
+                case 150:
+                    barcodeType = SmFptrConst.KTN_EGAIS3;
+                    barcodeData = barcode.substring(0, 14).getBytes();
+                    break;
+
             }
         }
+        if (barcodeType == SmFptrConst.KTN_UNKNOWN) {
+            if (barcode.length() > 30) {
+                barcodeData = barcode.substring(0, 29).getBytes();
+            }
+        }
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        os.write((barcodeType >>> 8) & 0xFF);
+        os.write((barcodeType >>> 0) & 0xFF);
+        os.write(barcodeData);
+        return os.toByteArray();
     }
-     
+
+    public byte[] barcodeTo1162Tag(String barcode) throws Exception {
+        TLVWriter writer = new TLVWriter();
+        writer.add(1162, barcodeTo1162Value(barcode));
+        return writer.getBytes();
+    }
+
     public FSSetOperationMarking setOperationMarking(String barcode) throws Exception {
         FSSetOperationMarking command = new FSSetOperationMarking();
         command.password = usrPassword;

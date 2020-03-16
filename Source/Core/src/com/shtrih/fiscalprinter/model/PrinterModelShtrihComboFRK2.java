@@ -33,7 +33,7 @@ public class PrinterModelShtrihComboFRK2 extends PrinterModelDefault {
         setCapGraphics(false);
         setCapGraphicsEx(true);
         setCapPrintStringFont(true);
-        setCapShortStatus(false);
+        setCapShortStatus(true);
         setCapFontMetrics(false);
         setCapOpenReceipt(false);
         setNumVatRates(4);
