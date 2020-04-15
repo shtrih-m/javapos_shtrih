@@ -51,7 +51,6 @@ import com.shtrih.util.StringUtils;
 import com.shtrih.util.SysUtils;
 import com.shtrih.util.ArrayUtils;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -1645,31 +1644,33 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     private int beginFiscalDay() throws Exception {
-        if (!capOpenFiscalDay) {
-            return 0;
-        }
+        synchronized (port.getSyncObject()) {
 
-        if (params.rebootBeforeDayOpen) {
-            rebootAndWait();
-        }
-
-        if (!tlvItems.isEmpty()) {
-            if (fsReadStatus().getDocType().isDocClosed()) {
-                check(fsStartDayOpen());
+            if (!capOpenFiscalDay) {
+                return 0;
             }
-            writeTLVItems();
+
+            if (params.rebootBeforeDayOpen) {
+                rebootAndWait();
+            }
+
+            if (!tlvItems.isEmpty()) {
+                if (fsReadStatus().getDocType().isDocClosed()) {
+                    check(fsStartDayOpen());
+                }
+                writeTLVItems();
+            }
+
+            BeginFiscalDay command = new BeginFiscalDay();
+            command.setPassword(usrPassword);
+            int rc = executeCommand(command);
+            capOpenFiscalDay = isCommandSupported(rc);
+
+            if (capOpenFiscalDay) {
+                check(rc);
+            }
+            return rc;
         }
-
-        BeginFiscalDay command = new BeginFiscalDay();
-        command.setPassword(usrPassword);
-        int rc = executeCommand(command);
-        capOpenFiscalDay = isCommandSupported(rc);
-
-        if (capOpenFiscalDay) {
-            check(rc);
-        }
-
-        return rc;
     }
 
     public int hardReset() throws Exception {
@@ -3782,7 +3783,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         stopFlag = false;
         check(reboot());
-        Thread.sleep(15000L);
+        Thread.sleep(10 * 1000);
         for (int i = 0; i < 10; i++) {
             try {
                 if (stopFlag) {
@@ -4591,9 +4592,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public static boolean checkEANChecksum(String barcode) throws Exception 
-    {
-        String s = barcode.substring(0, barcode.length()-1);
+    public static boolean checkEANChecksum(String barcode) throws Exception {
+        String s = barcode.substring(0, barcode.length() - 1);
         int crc = ZXingEncoder.getStandardUPCEANChecksum(s);
         return (crc == Integer.parseInt(barcode.substring(barcode.length() - 1)));
     }
@@ -4647,7 +4647,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     break;
 
                 case 14:
-                    if (barcode.matches("\\d+") ) {
+                    if (barcode.matches("\\d+")) {
                         barcodeType = SmFptrConst.KTN_ITF14;
                         barcodeData = ArrayUtils.longToBytes(Long.parseLong(barcode), 6);
                     }
@@ -4670,7 +4670,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     os.write(serial.getBytes());
                     barcodeData = os.toByteArray();
                     break;
-                    
+
                 case 68:
                     barcodeType = SmFptrConst.KTN_EGAIS2;
                     barcodeData = barcode.substring(8, 31).getBytes();
