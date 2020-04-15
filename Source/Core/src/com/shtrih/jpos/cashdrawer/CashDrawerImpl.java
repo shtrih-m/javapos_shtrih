@@ -43,6 +43,7 @@ import com.shtrih.fiscalprinter.ProtocolFactory;
 import com.shtrih.fiscalprinter.SMFiscalPrinterImpl;
 import com.shtrih.fiscalprinter.command.LongPrinterStatus;
 import com.shtrih.fiscalprinter.port.PrinterPort;
+import com.shtrih.fiscalprinter.port.PrinterPortWrapper;
 import com.shtrih.fiscalprinter.port.PrinterPortFactory;
 import com.shtrih.fiscalprinter.port.SerialPrinterPort;
 import com.shtrih.jpos.DeviceService;
@@ -443,6 +444,7 @@ public class CashDrawerImpl extends DeviceService implements
             JposExceptionHandler.setStripExceptionDetails(fptrParams.stripExceptionDetails);
 
             port = PrinterPortFactory.createInstance(fptrParams);
+            port = new PrinterPortWrapper(port);
             device = ProtocolFactory.getProtocol(fptrParams, port);
             printer = new SMFiscalPrinterImpl(port, device, fptrParams);
 

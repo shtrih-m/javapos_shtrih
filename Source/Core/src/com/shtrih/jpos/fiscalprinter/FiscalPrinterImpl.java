@@ -35,6 +35,7 @@ import com.shtrih.fiscalprinter.command.TextDocumentFilter;
 import com.shtrih.fiscalprinter.command.TextLine;
 import com.shtrih.fiscalprinter.model.PrinterModel;
 import com.shtrih.fiscalprinter.port.PrinterPort;
+import com.shtrih.fiscalprinter.port.PrinterPortWrapper;
 import com.shtrih.fiscalprinter.port.PrinterPortFactory;
 import com.shtrih.fiscalprinter.receipt.PrinterReceipt;
 import com.shtrih.fiscalprinter.table.CsvTablesReader;
@@ -2182,6 +2183,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
             params.load(jposEntry);
             port = PrinterPortFactory.createInstance(params);
+            port = new PrinterPortWrapper(port);
             device = ProtocolFactory.getProtocol(params, port);
             printer = new SMFiscalPrinterImpl(port, device, params);
 

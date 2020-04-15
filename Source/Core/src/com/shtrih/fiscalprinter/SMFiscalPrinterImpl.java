@@ -3781,8 +3781,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         logger.debug("rebootAndWait");
 
         stopFlag = false;
-        reboot();
-        Thread.sleep(10 * 1000);
+        check(reboot());
+        Thread.sleep(15000L);
         for (int i = 0; i < 10; i++) {
             try {
                 if (stopFlag) {

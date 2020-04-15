@@ -125,7 +125,6 @@ public class SerialPrinterPortSingle {
     }
 
     public void write(byte[] b) throws Exception {
-        open(0);
         OutputStream out = getPort().getOutputStream();
         if (out == null) {
             throw new Exception("Port open failed");
@@ -154,7 +153,6 @@ public class SerialPrinterPortSingle {
     }
 
     public int doReadByte() throws Exception {
-        open(0);
         int result;
         SerialPort serialPort = getPort();
         InputStream is = serialPort.getInputStream();

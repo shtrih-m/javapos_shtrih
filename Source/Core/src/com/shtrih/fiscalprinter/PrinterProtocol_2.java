@@ -83,11 +83,11 @@ public class PrinterProtocol_2 implements PrinterProtocol {
             return true;
         } catch (Exception e) {
             logger.error(e);
-            port.close();
             isSynchronized = false;
 
-            if (!command.getIsRepeatable())
+            if (!command.getIsRepeatable()) {
                 throw e;
+            }
 
             return false;
         }
@@ -99,19 +99,10 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         }
 
         port.setTimeout(timeout);
-
-        try {
-            sendCommand(null);
-            frameNumber = readAnswer();
-            isSynchronized = true;
-            stepFrameNumber();
-
-        } catch (Exception e) {
-            logger.error(e);
-            port.close();
-
-            throw e;
-        }
+        sendCommand(null);
+        frameNumber = readAnswer();
+        isSynchronized = true;
+        stepFrameNumber();
     }
 
     private void sendCommand(byte[] data) throws Exception {
