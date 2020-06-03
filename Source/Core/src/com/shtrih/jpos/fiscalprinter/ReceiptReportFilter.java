@@ -27,6 +27,7 @@ import java.io.IOException;
  */
 public class ReceiptReportFilter implements IPrinterEvents {
 
+    private boolean enabled = true;
     private final SMFiscalPrinter printer;
     private final FptrParameters params;
     private final ReceiptReport report = new ReceiptReport();
@@ -35,10 +36,6 @@ public class ReceiptReportFilter implements IPrinterEvents {
     public ReceiptReportFilter(SMFiscalPrinter printer, FptrParameters params) {
         this.printer = printer;
         this.params = params;
-    }
-
-    
-    public void printerStatusRead(PrinterStatus status) {
     }
 
     public String getDayNumberText(int dayNumber) {
@@ -66,53 +63,55 @@ public class ReceiptReportFilter implements IPrinterEvents {
 
     }
 
-    @Override
-    public void init() {
+    public void afterCommand(PrinterCommand command) throws Exception {
+        if (!enabled) {
+            return;
+        }
+        if (command.isFailed()) {
+            return;
+        }
 
-    }
+        try {
+            enabled = false;
+            switch (command.getCode()) {
+                case 0x50:
+                    PrintCashIn cashInCommand = (PrintCashIn) command;
+                    report.state = 0;
+                    report.amount = cashInCommand.getAmount();
+                    report.payments[0] = 0;
+                    report.payments[1] = 0;
+                    report.payments[2] = 0;
+                    report.payments[3] = 0;
+                    saveReport(report);
+                    break;
 
-    @Override
-    public void done() {
+                case 0x51:
+                    PrintCashOut cashOutCommand = (PrintCashOut) command;
+                    report.state = 0;
+                    report.amount = cashOutCommand.getAmount();
+                    report.payments[0] = 0;
+                    report.payments[1] = 0;
+                    report.payments[2] = 0;
+                    report.payments[3] = 0;
+                    saveReport(report);
+                    break;
 
-    }
-
-    public void afterCommand(PrinterCommand command) throws Exception{
-        switch (command.getCode()) {
-            case 0x50:
-                PrintCashIn cashInCommand = (PrintCashIn) command;
-                report.state = 0;
-                report.amount = cashInCommand.getAmount();
-                report.payments[0] = 0;
-                report.payments[1] = 0;
-                report.payments[2] = 0;
-                report.payments[3] = 0;
-                saveReport(report);
-                break;
-
-            case 0x51:
-                PrintCashOut cashOutCommand = (PrintCashOut) command;
-                report.state = 0;
-                report.amount = cashOutCommand.getAmount();
-                report.payments[0] = 0;
-                report.payments[1] = 0;
-                report.payments[2] = 0;
-                report.payments[3] = 0;
-                saveReport(report);
-                break;
-
-            case 0x85:
-                EndFiscalReceipt endFiscalReceipt = (EndFiscalReceipt) command;
-                CloseRecParams params = endFiscalReceipt.getParams();
-                long amount = params.getSum1() + params.getSum2()
-                        + params.getSum3() + params.getSum4()
-                        - endFiscalReceipt.getChange();
-                report.state = 0;
-                report.amount = amount;
-                report.payments[0] = params.getSum1();
-                report.payments[1] = params.getSum2();
-                report.payments[2] = params.getSum3();
-                report.payments[3] = params.getSum4();
-                saveReport(report);
+                case 0x85:
+                    EndFiscalReceipt endFiscalReceipt = (EndFiscalReceipt) command;
+                    CloseRecParams params = endFiscalReceipt.getParams();
+                    long amount = params.getSum1() + params.getSum2()
+                            + params.getSum3() + params.getSum4()
+                            - endFiscalReceipt.getChange();
+                    report.state = 0;
+                    report.amount = amount;
+                    report.payments[0] = params.getSum1();
+                    report.payments[1] = params.getSum2();
+                    report.payments[2] = params.getSum3();
+                    report.payments[3] = params.getSum4();
+                    saveReport(report);
+            }
+        } finally {
+            enabled = true;
         }
     }
 
@@ -120,9 +119,16 @@ public class ReceiptReportFilter implements IPrinterEvents {
         return printer.readOperationRegister(num) + 1;
     }
 
-    
     public void beforeCommand(PrinterCommand command) throws Exception {
+        if (!enabled) {
+            return;
+        }
+        if (command.isFailed()) {
+            return;
+        }
+
         try {
+            enabled = false;
             LongPrinterStatus status;
             switch (command.getCode()) {
                 case 0x50:
@@ -176,10 +182,8 @@ public class ReceiptReportFilter implements IPrinterEvents {
                     }
             }
 
-        } catch (IOException e) {
-            throw e;
-        } catch (Exception e) {
-            logger.error(e);
+        } finally {
+            enabled = true;
         }
     }
 }

@@ -65,7 +65,7 @@ import com.shtrih.tinyjavapostester.databinding.ActivityMainBinding;
 import com.shtrih.tinyjavapostester.search.bluetooth.DeviceListActivity;
 import com.shtrih.tinyjavapostester.search.tcp.TcpDeviceSearchActivity;
 import com.shtrih.util.Hex;
-import com.shtrih.util.ImageReader;
+import com.shtrih.util.ImageRender;
 import com.shtrih.util.SysUtils;
 
 import org.slf4j.LoggerFactory;
@@ -816,7 +816,7 @@ public class MainActivity extends AppCompatActivity {
                 barcode.setVScale(5);
 
                 Map<EncodeHintType, Object> params = new HashMap<EncodeHintType, Object>();
-// Измерения, тут мы задаем количество колонок и столбцов
+// �?змерения, тут мы задаем количество колонок и столбцов
                 params.put(EncodeHintType.PDF417_DIMENSIONS, new Dimensions(3, 3, 2, 60));
 // Можно задать уровень коррекции ошибок, по умолчанию он 0
                 params.put(EncodeHintType.ERROR_CORRECTION, 1);
@@ -1249,7 +1249,7 @@ public class MainActivity extends AppCompatActivity {
         printer.fsWriteTag(1016, "2225031594  ");
         printer.fsWriteTag(1073, "+78001000000");
         //printer.fsWriteTag(1057, "1");
-        printer.fsWriteTag(1005, "НОВОСИБИРСК,КИРОВА,86");
+        printer.fsWriteTag(1005, "НОВОС�?Б�?РСК,К�?РОВА,86");
         printer.fsWriteTag(1075, "+73833358088");
         printer.fsWriteTag(1171, "+73833399242");
         printer.fsWriteTag(1044, "Прием денежных средств");
@@ -2451,8 +2451,9 @@ public class MainActivity extends AppCompatActivity {
                 JposConfig.copyAsset("ic_launcher-web.png", path, getApplicationContext());
 
                 startedAt = System.currentTimeMillis();
-
-                byte[][] data = new ImageReader(path).getData();
+                ImageRender render = new ImageRender();
+                render.render(path, 0, false);
+                byte[][] data = render.getData();
                 printer.printRawGraphics(data);
 
                 return null;

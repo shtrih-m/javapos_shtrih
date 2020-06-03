@@ -14,14 +14,19 @@ package com.shtrih.jpos.fiscalprinter;
  */
 // java
 
+import java.io.File;
 import java.util.Arrays;
+import java.io.FileInputStream;
+import java.security.MessageDigest;
 
 import jpos.config.JposEntry;
 
-import com.shtrih.util.CompositeLogger;
-
-import com.shtrih.util.ImageReader;
+import com.shtrih.util.Hex;
+import com.shtrih.util.BitUtils;
 import com.shtrih.util.Localizer;
+import com.shtrih.util.ImageRender;
+import com.shtrih.util.ImageRender;
+import com.shtrih.util.CompositeLogger;
 
 public class PrinterImage {
 
@@ -50,9 +55,8 @@ public class PrinterImage {
         startPos = 0;
         isLoaded = false;
     }
-    
-    public void assign(PrinterImage src) 
-    {
+
+    public void assign(PrinterImage src) {
         fileName = src.fileName;
         digest = src.digest;
         width = src.width;
@@ -61,25 +65,24 @@ public class PrinterImage {
         isLoaded = src.isLoaded;
         lines = src.lines;
     }
-        
-    public String getDigest(){
+
+    public String getDigest() {
         return digest;
     }
-    
-    public void setDigest(String value){
+
+    public void setDigest(String value) {
         digest = value;
     }
-    
+
     public String getFileName() {
         return fileName;
     }
 
-     public void  setFileName(String value) {
+    public void setFileName(String value) {
         this.fileName = value;
     }
-     
-   public int getEndPos() 
-   {
+
+    public int getEndPos() {
         return startPos + height - 1;
     }
 
@@ -112,17 +115,33 @@ public class PrinterImage {
     }
 
     // read image from file
-    public void readFile() throws Exception 
+    public void render(int maxWidth, boolean centerImage) throws Exception 
     {
-        ImageReader reader = new ImageReader(fileName);
-        lines = reader.getData();
-        height = reader.getHeight();
-        width = reader.getWidth();
-        digest = reader.getDigest();
+        logger.debug("render(" + maxWidth + ", " + centerImage + ")");
+        ImageRender render = new ImageRender();
+        render.render(fileName, maxWidth, centerImage);
+        lines = render.getData();
+        height = render.getHeight();
+        width = render.getWidth();
+        if (centerImage) {
+            centerImage(maxWidth);
+        }
+        digest = getFileDigest(new File(fileName));
     }
 
-    public void centerImage(int graphicsWidth) {
-        int offset = (graphicsWidth - width) / 16;
+    private String getFileDigest(File file) throws Exception {
+        byte[] buffer = new byte[(int) file.length()];
+        FileInputStream fis = new FileInputStream(file);
+        fis.read(buffer);
+        fis.close();
+
+        MessageDigest md = MessageDigest.getInstance("md5");
+        md.update(buffer);
+        return Hex.toHex2(md.digest());
+    }
+
+    private void centerImage(int maxWidth) {
+        int offset = (maxWidth - width) / 16;
         for (int i = 0; i < height; i++) {
             byte[] b = new byte[offset + lines[i].length];
             Arrays.fill(b, (byte) 0);
@@ -132,5 +151,4 @@ public class PrinterImage {
             lines[i] = b;
         }
     }
-
 }

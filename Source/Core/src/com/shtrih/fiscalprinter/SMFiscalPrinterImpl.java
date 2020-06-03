@@ -208,7 +208,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
             beforeCommand(command);
             device.send(command);
-            if (command.getResultCode() != 0) {
+            if (command.isFailed()) {
                 String text = getErrorText(command.getResultCode());
                 logger.error(text + ", " + command.getParametersText(commands));
             }
@@ -238,8 +238,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         for (IPrinterEvents printerEvents : events) {
             try {
                 printerEvents.beforeCommand(command);
-            } catch (IOException e) {
-                throw e;
             } catch (Exception e) {
                 logger.error(e);
             }
@@ -250,8 +248,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         for (IPrinterEvents printerEvents : events) {
             try {
                 printerEvents.afterCommand(command);
-            } catch (IOException e) {
-                throw e;
             } catch (Exception e) {
                 logger.error(e);
             }
@@ -1574,7 +1570,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         int maxCount = 3;
         for (int i = 1; i <= maxCount; i++) {
             ReadEJStatus command = readEJStatus();
-            if (command.getResultCode() == 0) {
+            if (command.isSucceeded()) {
                 return;
             }
             if (i == maxCount) {
@@ -1866,9 +1862,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             default:
                 status = readLongPrinterStatus();
                 break;
-        }
-        for (IPrinterEvents event : events) {
-            event.printerStatusRead(status);
         }
         return status;
     }
@@ -3000,30 +2993,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             logger.debug("Image already loaded");
             return;
         }
-
         if (image.getFileName().equals("")) {
             logger.debug("Empty file name");
             return;
         }
 
-        image.readFile();
+        image.render(getMaxGraphicsWidth(), getParams().centerImage);
         image.setStartPos(getPrinterImages().getTotalSize() + 1);
-        loadImage2(image);
-        if (addImage) {
-            getPrinterImages().add(image);
-        }
-    }
-
-    public void loadImage2(PrinterImage image) throws Exception {
-        logger.debug("loadImage2");
-        if (image.getIsLoaded()) {
-            logger.debug("Image already loaded");
-            return;
-        }
-
-        if (getParams().centerImage) {
-            image.centerImage(getMaxGraphicsWidth());
-        }
         // check max image width
         if (image.getWidth() > getMaxGraphicsWidth()) {
             throw new Exception(
@@ -3040,6 +3016,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
         }
         image.setIsLoaded(true);
+        
+        if (addImage) {
+            getPrinterImages().add(image);
+        }
     }
 
     public int loadRawGraphics(byte[][] data) throws Exception {

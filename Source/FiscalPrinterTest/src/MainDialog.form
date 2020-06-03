@@ -776,7 +776,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnPrintImage">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Print image"/>
+                    <Property name="text" type="java.lang.String" value="Print images"/>
                     <Property name="name" type="java.lang.String" value="btnPrintImages" noResource="true"/>
                   </Properties>
                   <Events>

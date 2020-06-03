@@ -21,11 +21,11 @@ public class TextReportPrinter {
     }
 
     public void start() {
-        printer.setTextDocumentFilterEnablinessTo(false);
+        printer.enableTextDocumentFilter(false);
     }
 
     public void stop() {
-        printer.setTextDocumentFilterEnablinessTo(true);
+        printer.enableTextDocumentFilter(true);
     }
 
     private void printLines(List<String> lines) throws Exception {

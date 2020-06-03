@@ -73,17 +73,16 @@ public class TextDocumentFilter implements IPrinterEvents {
 
     @Override
     public void beforeCommand(PrinterCommand command) throws Exception {
-        if (!enabled)
+        if (!enabled) {
             return;
-        if (command.isFailed())
+        }
+        if (command.isFailed()) {
             return;
-        if (!printer.getParams().textReportEnabled)
-            return;
+        }
 
         try {
-
+            enabled = false;
             connect();
-
             switch (command.getCode()) {
                 case 0x85:
                 case 0xFF45:
@@ -96,37 +95,22 @@ public class TextDocumentFilter implements IPrinterEvents {
                     break;
 
             }
-        } catch (IOException e) {
-            throw e;
-        } catch (Exception e) {
-            logger.error(e);
+        } finally {
+            enabled = true;
         }
     }
 
     @Override
     public void afterCommand(PrinterCommand command) throws Exception {
-        if (!enabled)
+        if (!enabled) {
             return;
-        if (command.isFailed())
+        }
+        if (command.isFailed()) {
             return;
-        if (!printer.getParams().textReportEnabled)
-            return;
-
+        }
         try {
+            enabled = false;
             switch (command.getCode()) {
-
-//                case 0x12:
-//                    add(((PrintBoldString) command).getLine());
-//                    break;
-//
-//                case 0x17:
-//                    add(((PrintString) command).getLine());
-//                    break;
-//
-//                case 0x2F:
-//                    add(((PrintStringFont) command).getLine());
-//                    break;
-
                 case 0x40:
                     printXReport((PrintXReport) command);
                     break;
@@ -199,10 +183,8 @@ public class TextDocumentFilter implements IPrinterEvents {
                     openReceipt((OpenReceipt) command);
                     break;
             }
-        } catch (IOException e) {
-            throw e;
-        } catch (Exception e) {
-            logger.error(e);
+        } finally {
+            enabled = true;
         }
     }
 
@@ -306,8 +288,9 @@ public class TextDocumentFilter implements IPrinterEvents {
             add(getPaymentName(3), summToStr(params.getSum4()));
         }
         // Change
-        if (command.getChange() > 0)
+        if (command.getChange() > 0) {
             add(SChangeText, summToStr(command.getChange()));
+        }
 
         addFiscalSign();
         readEJReport(true);
@@ -335,13 +318,15 @@ public class TextDocumentFilter implements IPrinterEvents {
         // Payments
         long[] payments = params.getPayments();
         for (int i = 0; i < payments.length; i++) {
-            if (payments[i] > 0)
+            if (payments[i] > 0) {
                 add(getPaymentName(i), summToStr(payments[i]));
+            }
         }
 
         // Change
-        if (command.getChange() > 0)
+        if (command.getChange() > 0) {
             add(SChangeText, summToStr(command.getChange()));
+        }
 
         addFiscalSign();
         readEJReport(true);
@@ -404,14 +389,18 @@ public class TextDocumentFilter implements IPrinterEvents {
     public String getTaxData(int tax1, int tax2, int tax3, int tax4) throws Exception {
         String result = "";
         String taxLetters = " АБВГДЕ";
-        if (tax1 > 0)
+        if (tax1 > 0) {
             result += taxLetters.charAt(tax1);
-        if (tax2 > 0)
+        }
+        if (tax2 > 0) {
             result += taxLetters.charAt(tax2);
-        if (tax3 > 0)
+        }
+        if (tax3 > 0) {
             result += taxLetters.charAt(tax3);
-        if (tax4 > 0)
+        }
+        if (tax4 > 0) {
             result += taxLetters.charAt(tax4);
+        }
         if (result.length() > 0) {
             result = "_" + result;
         }
@@ -461,14 +450,16 @@ public class TextDocumentFilter implements IPrinterEvents {
 
     private int taxBitsToInt(int tax) {
         for (int i = 0; i < 6; i++) {
-            if (BitUtils.testBit(tax, i))
+            if (BitUtils.testBit(tax, i)) {
                 return i + 1;
+            }
         }
 
         return 0;
     }
 
     public class Operator {
+
         private final int number;
         private final String name;
 
@@ -488,17 +479,20 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
 
     public class Payment {
+
         public long amount;
         public String text;
     }
 
     public class Cash {
+
         public long number;
         public long count;
         public long total;
     }
 
     public class Receipt {
+
         public Receipt() {
             for (int i = 0; i < 4; i++) {
                 payments.add(new Payment());
@@ -512,11 +506,13 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
 
     public class VoidReceipt {
+
         public long count;
         public long total;
     }
 
     public class XReport {
+
         public XReport() {
             for (int i = 0; i < 4; i++) {
                 receipts.add(new Receipt());
@@ -544,30 +540,26 @@ public class TextDocumentFilter implements IPrinterEvents {
 
     public void connect() throws Exception {
         if (!connected) {
-            try {
-                printer.removeEvents(this);
-                printer.check(printer.readDeviceMetrics()); //!
-                deviceName = printer.getDeviceMetrics().getDeviceName();
-                if (deviceName.equals("ШТРИХ-МОБАЙЛ-Ф")) {  // TODO: move deviceName to model.xml
-                    deviceName = "ККТ";
-                } else if (deviceName.contains("ПТК")) {
-                    deviceName = "ПТК";
-                } else {
-                    deviceName = "ККМ";
-                }
-                status = printer.readLongStatus();
-                operatorNumber = status.getOperatorNumber();
-                isFiscal = (status.getRegistrationNumber() > 0);
-                isEJPresent = status.getPrinterFlags().isEJPresent();
-                for (int i = 0; i <= 15; i++) {
-                    String[] fieldValue = new String[1];
-                    if (printer.readTable(PrinterConst.SMFP_TABLE_PAYTYPE, i + 1, 1, fieldValue) == 0)
-                        paymentNames[i] = fieldValue[0];
-                }
-                connected = true;
-            } finally {
-                printer.addEvents(this);
+            printer.check(printer.readDeviceMetrics()); //!
+            deviceName = printer.getDeviceMetrics().getDeviceName();
+            if (deviceName.equals("ШТРИХ-МОБАЙЛ-Ф")) {  // TODO: move deviceName to model.xml
+                deviceName = "ККТ";
+            } else if (deviceName.contains("ПТК")) {
+                deviceName = "ПТК";
+            } else {
+                deviceName = "ККМ";
             }
+            status = printer.readLongStatus();
+            operatorNumber = status.getOperatorNumber();
+            isFiscal = (status.getRegistrationNumber() > 0);
+            isEJPresent = status.getPrinterFlags().isEJPresent();
+            for (int i = 0; i <= 15; i++) {
+                String[] fieldValue = new String[1];
+                if (printer.readTable(PrinterConst.SMFP_TABLE_PAYTYPE, i + 1, 1, fieldValue) == 0) {
+                    paymentNames[i] = fieldValue[0];
+                }
+            }
+            connected = true;
         }
     }
 
@@ -609,10 +601,6 @@ public class TextDocumentFilter implements IPrinterEvents {
             report.voidedReceipts.get(i).total = printer.readCashRegister(249 + i);
         }
         return report;
-    }
-
-    @Override
-    public void printerStatusRead(PrinterStatus status) {
     }
 
     public void printCashIn(PrintCashIn command) throws Exception {
@@ -667,14 +655,6 @@ public class TextDocumentFilter implements IPrinterEvents {
         return sklWriter;
     }
 
-    @Override
-    public void init() {
-    }
-
-    @Override
-    public void done() {
-    }
-
     public void add(String line) throws Exception {
         getSKLWriter().add(line);
     }
@@ -689,8 +669,9 @@ public class TextDocumentFilter implements IPrinterEvents {
     private void printReceiptHeader() throws Exception {
         status = printer.readLongStatus();
         int documentNumber = status.getDocumentNumber();
-        if (!isDocumentPrinted)
+        if (!isDocumentPrinted) {
             documentNumber += 1;
+        }
 
         // ККМ
         String s1 = String.format("%s %s", deviceName, status.getSerial());
@@ -799,8 +780,9 @@ public class TextDocumentFilter implements IPrinterEvents {
             return;
         }
 
-        if (!(isFiscal && isEJPresent))
+        if (!(isFiscal && isEJPresent)) {
             return;
+        }
 
         List<String> lines = new ArrayList<String>();
         long docMACNumber = printer.readEJStatus().getStatus().getDocMACNumber();
@@ -848,4 +830,3 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
 
 }
-

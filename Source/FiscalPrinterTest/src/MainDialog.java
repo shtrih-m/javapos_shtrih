@@ -20,6 +20,8 @@ import com.shtrih.cashdrawer.*;
 import com.shtrih.fiscalprinter.*;
 import com.shtrih.jpos.fiscalprinter.*;
 import com.shtrih.fiscalprinter.command.*;
+import com.shtrih.util.ImageRender;
+
 import jpos.events.ErrorEvent;
 import jpos.events.ErrorListener;
 import jpos.events.DirectIOEvent;
@@ -590,7 +592,7 @@ public class MainDialog extends javax.swing.JDialog
         });
         pnlReceiptImage.add(btnLoadImages, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 30, 110, 26));
 
-        btnPrintImage.setText("Print image");
+        btnPrintImage.setText("Print images");
         btnPrintImage.setName("btnPrintImages"); // NOI18N
         btnPrintImage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -917,8 +919,17 @@ public class MainDialog extends javax.swing.JDialog
     }//GEN-LAST:event_btnLoadImagesActionPerformed
 
     private void btnPrintImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintImageActionPerformed
-        try {
-            printer.printImage((Integer) seImageIndex.getValue());
+        try 
+        {
+            int index;
+            printer.clearImages();
+            
+            index = printer.loadImage("Logo.bmp");
+            printer.printImage(index);
+            
+            index = printer.loadImage("Logo.gif");
+            printer.printImage(index);
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

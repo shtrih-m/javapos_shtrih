@@ -40,13 +40,15 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
     public void setListener(FirmwareUpdateObserver value) {
         listener = value;
 
-        if (listener == null)
+        if (listener == null) {
             listener = new FirmwareUpdateObserver();
+        }
     }
 
     public FirmwareUpdaterService(SMFiscalPrinter printer) {
-        if (printer == null)
+        if (printer == null) {
             throw new IllegalArgumentException("printer is null");
+        }
 
         this.printer = printer;
     }
@@ -59,11 +61,13 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
             while (!stopFlag) {
 
-                if (firmware == null)
+                if (firmware == null) {
                     checkData();
+                }
 
-                if (stopFlag)
+                if (stopFlag) {
                     break;
+                }
 
                 updateFirmware();
 
@@ -80,8 +84,9 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
     private void checkData() {
         try {
-            if (stopFlag)
+            if (stopFlag) {
                 return;
+            }
 
             logger.debug("Checking for firmware update");
             listener.OnCheckingForUpdate();
@@ -107,8 +112,9 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
                 firmwareVersion = printer.getDeviceMetrics().getModel() * 1000000 + printer.readLongStatus().getFirmwareBuild();
             }
 
-            if (stopFlag)
+            if (stopFlag) {
                 return;
+            }
 
             ScocClient client = new ScocClient(serialNumber, uin.longValue());
 
@@ -130,8 +136,9 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
             out.write(firstResponse.getData());
 
-            if (stopFlag)
+            if (stopFlag) {
                 return;
+            }
 
             long newVersion = firstResponse.getFirmwareVersion();
 
@@ -144,8 +151,9 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
             for (int i = 2; i <= firstResponse.getPartsCount(); i++) {
 
-                if (stopFlag)
+                if (stopFlag) {
                     return;
+                }
 
                 DeviceFirmwareResponse nextPart = client.readFirmware(newVersion, i);
 
@@ -181,8 +189,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
     public void stop() {
         stopFlag = true;
-        if (thread != null) 
-        {
+        if (thread != null) {
             printer.cancelWait();
             thread.interrupt();
             try {
@@ -197,38 +204,26 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
     }
 
     @Override
-    public void init() {
-
-    }
-
-    @Override
-    public void done() {
-
-    }
-
-    @Override
     public void afterCommand(PrinterCommand command) throws Exception {
 
-        if (command.isFailed())
+        if (command.isFailed()) {
             return;
+        }
 
-        try {
-            switch (command.getCode()) {
+        switch (command.getCode()) {
 
-                case 0x41:
-                    updateFirmware();
-                    break;
-            }
-        } catch (Exception e) {
-            logger.error(e);
+            case 0x41:
+                updateFirmware();
+                break;
         }
     }
 
     private void updateFirmware() {
 
         try {
-            if (firmware == null)
+            if (firmware == null) {
                 return;
+            }
 
             if (printer.isDesktop() && !printer.isSDCardPresent()) {
                 logger.debug("Firmware update skipped, no SD card");
@@ -253,15 +248,17 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
             writeFirmware();
 
-            if (stopFlag)
+            if (stopFlag) {
                 return;
+            }
 
             long doneAt = System.currentTimeMillis();
 
             logger.debug("Firmware written in " + (doneAt - startedAt) + " ms");
 
-            if (!printer.isShtrihNano())
+            if (!printer.isShtrihNano()) {
                 printer.rebootAndWait();
+            }
 
             if (tables != null) {
                 listener.OnWritingTables();
@@ -291,8 +288,9 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
         while (stream.available() > 0) {
 
-            if (stopFlag)
+            if (stopFlag) {
                 return;
+            }
 
             stream.read(block, 0, 128);
             printer.writeFirmwareBlockToSDCard(fileType, blockNumber, block);
@@ -313,11 +311,6 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
     @Override
     public void beforeCommand(PrinterCommand command) throws Exception {
-
-    }
-
-    @Override
-    public void printerStatusRead(PrinterStatus status) {
 
     }
 }

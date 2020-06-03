@@ -5,6 +5,7 @@ import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.ej.EJActivation;
 import com.shtrih.ej.EJReportParser;
 import com.shtrih.ej.EJStatus;
+import com.shtrih.fiscalprinter.command.*;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.PrinterGraphics;
 import com.shtrih.fiscalprinter.PrinterProtocol;
@@ -30,6 +31,7 @@ import com.shtrih.fiscalprinter.command.PrinterStatus;
 import com.shtrih.fiscalprinter.command.PrinterTime;
 import com.shtrih.fiscalprinter.command.ReadEJStatus;
 import com.shtrih.fiscalprinter.command.ReadFMLastRecordDate;
+import com.shtrih.fiscalprinter.command.ReadShortStatus;
 import com.shtrih.fiscalprinter.command.ShortPrinterStatus;
 import com.shtrih.fiscalprinter.command.TextDocumentFilter;
 import com.shtrih.fiscalprinter.command.TextLine;
@@ -258,7 +260,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private final MonitoringServerX5 monitoringServer = new MonitoringServerX5(this);
     private int receiptType = 0;
     private boolean isRecPresent = true;
-    private boolean inAfterCommand = false;
+    private boolean filterEnabled = true;
     private boolean isInReceiptTrailer = false;
     private TextDocumentFilter filter = null;
     private FSService fsSenderService;
@@ -266,7 +268,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private boolean docEndEnabled = true;
     private JsonUpdateService jsonUpdateService = null;
 
-    public void setTextDocumentFilterEnablinessTo(boolean value) {
+    public void enableTextDocumentFilter(boolean value) {
         filter.setEnabled(value);
     }
 
@@ -544,14 +546,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 this, outputID)));
     }
 
-    public void printerStatusRead(PrinterStatus status) {
-        try {
-            updateStatus(status);
-        } catch (Exception e) {
-            logger.error("printerStatusRead", e);
-        }
-    }
-
     public void disableDocEnd() throws Exception {
         docEndEnabled = false;
     }
@@ -575,32 +569,42 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public void beforeCommand(PrinterCommand command) {
+    public void beforeCommand(PrinterCommand command) throws Exception {
     }
 
-    @Override
-    public void init() {
-
-    }
-
-    @Override
-    public void done() {
-
-    }
-
-    public void afterCommand(PrinterCommand command) {
-        if (inAfterCommand) {
+    public void afterCommand(PrinterCommand command) throws Exception {
+        if (!filterEnabled) {
             return;
         }
-        inAfterCommand = true;
         try {
+            filterEnabled = false;
             setPowerState(JPOS_PS_ONLINE);
-            if (command.getResultCode() != 0) {
+            if (command.isFailed()) {
                 int errorCode = command.getResultCode() + 300;
                 logger.debug("ErrorEvent(JPOS_E_EXTENDED, " + errorCode + ")");
                 ErrorEvent event = new ErrorEvent(this, JPOS_E_EXTENDED,
                         errorCode, JPOS_EL_OUTPUT, 0);
                 addEvent(new ErrorEventRequest(cb, event));
+            }
+
+            if (command.isSucceeded()) {
+                switch (command.getCode()) {
+                    case 0x10: {
+                        if (command instanceof ReadShortStatus) {
+                            ShortPrinterStatus shortStatus = ((ReadShortStatus) command).getStatus();
+                            updateStatus(shortStatus.getPrinterStatus());
+                        }
+                    }
+                    break;
+                    case 0x11: {
+                        if (command instanceof ReadLongStatus) {
+                            LongPrinterStatus longStatus = ((ReadLongStatus) command).getStatus();
+                            updateStatus(longStatus.getPrinterStatus());
+                        }
+                    }
+                    break;
+
+                }
             }
 
             switch (command.getResultCode()) {
@@ -664,10 +668,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     break;
 
             }
-        } catch (Exception e) {
-            logger.error("afterCommand", e);
+        } finally {
+            filterEnabled = true;
         }
-        inAfterCommand = false;
     }
 
     public void setRecPaperState(boolean recEmpty, boolean recNearEnd)
@@ -1020,7 +1023,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
 
         firmwareUpdaterService = new FirmwareUpdaterService(printer);
-        //printer.addEvents(firmwareUpdaterService);
         firmwareUpdaterService.start();
     }
 

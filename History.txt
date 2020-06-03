@@ -7,6 +7,20 @@
     
 ********************************************************************************
 
+  03.06.2020
+  deviceServiceVersion = 1013593
+
+  [-] Fixed error with endFiscalReceipt when textReportEnabled = true
+  
+********************************************************************************
+
+  15.04.2020
+  deviceServiceVersion = 1013592
+
+  [-] Fixed error with reboot before day opening when rebootBeforeDayOpen=1
+  
+********************************************************************************
+
   16.03.2020
   deviceServiceVersion = 1013591
 
