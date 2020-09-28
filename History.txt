@@ -7,6 +7,16 @@
     
 ********************************************************************************
 
+  28.09.2020
+  deviceServiceVersion = 1013594
+
+  [+] Added parameter validTimeDiffInSecs in jpos.xml. Default value is 0.
+      If validTimeDiffInSecs > 0 driver will correct date before day open.
+	  
+  [+] Added printer status check before day open and before receipt open 
+  
+********************************************************************************
+
   03.06.2020
   deviceServiceVersion = 1013593
 

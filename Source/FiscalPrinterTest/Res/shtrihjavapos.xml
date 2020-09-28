@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<root>
+    <FiscalPrinter>
+        <FiscalPrinter_0588820041033297>
+            <Images/>
+            <ReceiptImages/>
+            <Header>
+                <Line DoubleWidth="0" Text=""/>
+                <Line DoubleWidth="0" Text=""/>
+                <Line DoubleWidth="0" Text=""/>
+                <Line DoubleWidth="0" Text=""/>
+                <Line DoubleWidth="0" Text=""/>
+                <Line DoubleWidth="0" Text=""/>
+            </Header>
+            <Trailer>
+                <Line DoubleWidth="0" Text=""/>
+                <Line DoubleWidth="0" Text=""/>
+                <Line DoubleWidth="0" Text=""/>
+            </Trailer>
+            <NonFiscal DocumentNumber="2"/>
+        </FiscalPrinter_0588820041033297>
+    </FiscalPrinter>
+</root>

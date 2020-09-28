@@ -89,6 +89,7 @@ import com.shtrih.printer.ncr7167.NCR7167Printer;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.FileUtils;
 import com.shtrih.util.FirmwareUpdater;
+import com.shtrih.util.Hex;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.LogWriter;
 import com.shtrih.util.ServiceVersion;
@@ -4659,6 +4660,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void fsWriteTLV(byte[] data) throws Exception {
+        logger.debug("fsWriteTLV: " + Hex.toHex(data));
         receipt.fsWriteTLV(data);
     }
 

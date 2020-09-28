@@ -207,12 +207,52 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 logger.debug("Command delay: " + params.commandDelayInMs + " ms.");
             }
             beforeCommand(command);
+            // correct date before day open
+            if (command.getCode() == 0xE0) {
+                checkEcrMode();
+                correctDate();
+            }
+            // check status before receipt open
+            if (command.getCode() == 0x8D) {
+                checkEcrMode();
+            }
+            
             device.send(command);
             if (command.isFailed()) {
                 String text = getErrorText(command.getResultCode());
                 logger.error(text + ", " + command.getParametersText(commands));
             }
             afterCommand(command);
+        }
+    }
+
+    // correct date
+    public void correctDate() throws Exception {
+        logger.debug("correctDate");
+        if (params.validTimeDiffInSecs <= 0) {
+            return;
+        }
+
+        LongPrinterStatus status = readLongStatus();
+        Calendar currentDate = Calendar.getInstance();
+        Calendar printerDate = Calendar.getInstance();
+        printerDate.set(
+                status.getDate().getYear(),
+                status.getDate().getMonth(),
+                status.getDate().getDay(),
+                status.getTime().getHour(),
+                status.getTime().getMin(),
+                status.getTime().getSec());
+
+        long timeDiffInSecs = Math.abs(currentDate.getTimeInMillis()
+                - printerDate.getTimeInMillis()) / 1000;
+        if (timeDiffInSecs > params.validTimeDiffInSecs) {
+            PrinterDate date = new PrinterDate();
+            PrinterTime time = new PrinterTime();
+
+            check(writeDate(date));
+            check(confirmDate(date));
+            check(writeTime(time));
         }
     }
 
@@ -3016,7 +3056,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
         }
         image.setIsLoaded(true);
-        
+
         if (addImage) {
             getPrinterImages().add(image);
         }
@@ -4271,7 +4311,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     private void deviceReset() throws Exception {
-        Calendar now = Calendar.getInstance();
         PrinterDate date = new PrinterDate();
         PrinterTime time = new PrinterTime();
 

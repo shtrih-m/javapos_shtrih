@@ -191,6 +191,7 @@ public class FptrParameters {
     private HashMap receiptFields = new HashMap();
     public boolean rebootBeforeDayOpen = false;
     public int markingType = SmFptrConst.MARKING_TYPE_PRINTER;
+    public int validTimeDiffInSecs = 0;
 
 
     public FptrParameters() throws Exception {
@@ -432,6 +433,7 @@ public class FptrParameters {
         taxCalculation = reader.readInteger("taxCalculation", SmFptrConst.TAX_CALCULATION_PRINTER);
         rebootBeforeDayOpen = reader.readBoolean("rebootBeforeDayOpen", false);
         markingType = reader.readInteger("markingType", SmFptrConst.MARKING_TYPE_DRIVER);
+        validTimeDiffInSecs = reader.readInteger("validTimeDiffInSecs", 0);
 
         // paymentNames
         String paymentName;
