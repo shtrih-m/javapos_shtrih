@@ -14,7 +14,7 @@ public class PrinterModelsTests {
         PrinterModels models = new PrinterModels();
         models.load();
 
-        assertEquals(24, models.size());
+        assertEquals(25, models.size());
 
         PrinterModel mobile = models.itemByID(25);
         assertEquals("SHTRIH-MOBILE-PTK", mobile.getName());
