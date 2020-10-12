@@ -983,7 +983,8 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
-            printFiscalReceipt145_4();
+            printFiscalReceipt666();
+            //printFiscalReceipt145_4();
         } catch (Exception e) {
             e.printStackTrace();
         }
