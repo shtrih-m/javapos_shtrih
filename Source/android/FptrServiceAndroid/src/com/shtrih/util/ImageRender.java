@@ -16,7 +16,7 @@ public class ImageRender {
 
     private int width;
     private int height;
-    private byte[][] data;
+    private byte[][] lines;
     private static CompositeLogger logger = CompositeLogger.getLogger(ImageRender.class);
 
     public ImageRender() {
@@ -31,36 +31,27 @@ public class ImageRender {
     }
 
     public byte[][] getData() {
-        return data;
+        return lines;
     }
-    
-    public void render(String fileName, int maxWidth, boolean centerImage) throws Exception {
-        logger.debug("render");
-        /*
-        File file = new File(fileName);
-        ImageDecoder.Source source = ImageDecoder.createSource(file);
-        Drawable drawable = ImageDecoder.decodeDrawable(source);
-  
-        
+ 
+    public void render(String fileName) throws Exception
+    {
         Bitmap srcbmp = BitmapFactory.decodeFile(fileName);
         if (srcbmp == null) {
             throw new Exception("Failed to decode file");
         }
 
         Bitmap bitmap = Bitmap.createBitmap(srcbmp.getWidth(), srcbmp.getHeight(), Bitmap.Config.ARGB_8888);
-        
         Canvas canvas = new Canvas(bitmap);
         ColorMatrix ma = new ColorMatrix();
         ma.setSaturation(0);
         Paint paint = new Paint();
         paint.setColorFilter(new ColorMatrixColorFilter(ma));
-        canvas.draw
         canvas.drawBitmap(srcbmp, 0, 0, paint);
-
         int widthInBytes = (bitmap.getWidth() + 7) / 8;
         width = bitmap.getWidth();
         height = bitmap.getHeight();
-        byte[][] lines = new byte[height][widthInBytes];
+        lines = new byte[height][widthInBytes];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < widthInBytes; x++) {
                 lines[y][x] = 0;
@@ -73,6 +64,6 @@ public class ImageRender {
                 }
             }
         }
-		*/
     }
 }
+

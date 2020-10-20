@@ -119,7 +119,7 @@ public class PrinterImage {
     {
         logger.debug("render(" + maxWidth + ", " + centerImage + ")");
         ImageRender render = new ImageRender();
-        render.render(fileName, maxWidth, centerImage);
+        render.render(fileName);
         lines = render.getData();
         height = render.getHeight();
         width = render.getWidth();

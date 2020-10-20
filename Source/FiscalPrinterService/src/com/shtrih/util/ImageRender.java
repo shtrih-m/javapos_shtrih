@@ -35,7 +35,7 @@ public class ImageRender {
         return data;
     }
     
-    public void render(String fileName, int maxWidth, boolean centerImage) throws Exception {
+    public void render(String fileName) throws Exception {
         logger.debug("render");
 
         File file = new File(fileName);

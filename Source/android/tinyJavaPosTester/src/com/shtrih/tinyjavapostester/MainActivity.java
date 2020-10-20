@@ -816,9 +816,9 @@ public class MainActivity extends AppCompatActivity {
                 barcode.setVScale(5);
 
                 Map<EncodeHintType, Object> params = new HashMap<EncodeHintType, Object>();
-// �?змерения, тут мы задаем количество колонок и столбцов
+                // Измерения, тут мы задаем количество колонок и столбцов
                 params.put(EncodeHintType.PDF417_DIMENSIONS, new Dimensions(3, 3, 2, 60));
-// Можно задать уровень коррекции ошибок, по умолчанию он 0
+                // Можно задать уровень коррекции ошибок, по умолчанию он 0
                 params.put(EncodeHintType.ERROR_CORRECTION, 1);
                 barcode.addParameter(params);
 
@@ -950,17 +950,6 @@ public class MainActivity extends AppCompatActivity {
         time = System.currentTimeMillis() - time;
         printer.printText(String.format("Barcode print time: %d ms", time));
         printer.printText("_________________________________________");
-    }
-
-    private void printImage() throws JposException, InterruptedException {
-        printer.resetPrinter();
-        File dcimDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        File picsDir = new File(dcimDir, "Camera");
-        picsDir.mkdirs(); // make if not exist
-        // File newFile = new File(picsDir, "PDF417.bmp");
-        File newFile = new File(picsDir, "printer.bmp");
-        int imageIndex = printer.loadImage(newFile.getAbsolutePath());
-        printer.printImage(imageIndex);
     }
 
     public void printText(View v) {
@@ -1249,7 +1238,7 @@ public class MainActivity extends AppCompatActivity {
         printer.fsWriteTag(1016, "2225031594  ");
         printer.fsWriteTag(1073, "+78001000000");
         //printer.fsWriteTag(1057, "1");
-        printer.fsWriteTag(1005, "НОВОС�?Б�?РСК,К�?РОВА,86");
+        printer.fsWriteTag(1005, "НОВОСИБИРСК,КИРОВА,86");
         printer.fsWriteTag(1075, "+73833358088");
         printer.fsWriteTag(1171, "+73833399242");
         printer.fsWriteTag(1044, "Прием денежных средств");
@@ -2446,15 +2435,18 @@ public class MainActivity extends AppCompatActivity {
 
 
             try {
-                String path = SysUtils.getFilesPath() + "/ic_launcher-web.png";
-
-                JposConfig.copyAsset("ic_launcher-web.png", path, getApplicationContext());
-
+                String path = SysUtils.getFilesPath() + "/printer.bmp";
+                JposConfig.copyAsset("printer.bmp", path, getApplicationContext());
                 startedAt = System.currentTimeMillis();
+
+                int imageIndex = printer.loadImage(path);
+                printer.printImage(imageIndex);
+                /*
                 ImageRender render = new ImageRender();
-                render.render(path, 0, false);
+                render.render(path);
                 byte[][] data = render.getData();
                 printer.printRawGraphics(data);
+                */
 
                 return null;
 

@@ -1273,10 +1273,8 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
 
     public int loadLogo(int logoPosition, String fileName) throws JposException {
         int[] data = new int[1];
-        String[] object = new String[1];
         data[0] = logoPosition;
-        object[0] = fileName;
-        directIO(SmFptrConst.SMFPTR_DIO_LOAD_LOGO, data, object);
+        directIO(SmFptrConst.SMFPTR_DIO_LOAD_LOGO, data, fileName);
         return data[0];
     }
 

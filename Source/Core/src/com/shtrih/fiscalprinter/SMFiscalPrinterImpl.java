@@ -2753,15 +2753,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public int getMaxGraphicsWidth() throws Exception {
         if (capModelParameters()) {
-            if (getCapLoadGraphics3()) {
-                return modelParameters.getGraphics512Width();
-            } else {
-                return modelParameters.getGraphicsWidth();
-            }
-        } else if (getCapLoadGraphics3()) {
-            return 512;
-        } else {
-            return 320;
+            return modelParameters.getGraphicsWidth();
+        } else
+        {
+            return getModel().getFonts().itemByNumber(FontNumber.getNormalFont()).getPaperWidth();
         }
     }
 
