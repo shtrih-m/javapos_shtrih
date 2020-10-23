@@ -83,6 +83,8 @@ public interface PrinterModel
 
     int getMaxGraphicsHeight();
 
+    int getMaxGraphics512Height();
+    
     int getMaxGraphicsWidth();
 
     int getMinHeaderLines();

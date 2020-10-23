@@ -432,7 +432,7 @@ public class FptrParameters {
         textReportSearchForward = reader.readBoolean("textReportSearchForward", false);
         taxCalculation = reader.readInteger("taxCalculation", SmFptrConst.TAX_CALCULATION_PRINTER);
         rebootBeforeDayOpen = reader.readBoolean("rebootBeforeDayOpen", false);
-        markingType = reader.readInteger("markingType", SmFptrConst.MARKING_TYPE_DRIVER);
+        markingType = reader.readInteger("markingType", SmFptrConst.MARKING_TYPE_PRINTER);
         validTimeDiffInSecs = reader.readInteger("validTimeDiffInSecs", 0);
 
         // paymentNames

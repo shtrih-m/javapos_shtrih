@@ -983,7 +983,11 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
-            printFiscalReceipt666();
+            printImage("logo.bmp");
+            //printImage("logo.png");
+            //printImage("logo.gif");
+            
+            //printFiscalReceipt666();
             //printFiscalReceipt145_4();
         } catch (Exception e) {
             e.printStackTrace();
@@ -2595,10 +2599,13 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     public void printImage(String fileName) {
-        try {
-            printer.beginNonFiscal();
-            printer.printNormal(FPTR_S_RECEIPT, getLoadImageCommand2(fileName));
-            printer.endNonFiscal();
+        try 
+        {
+            printer.resetPrinter();
+            printer.clearLogo();
+            printer.clearImages();
+            int index = printer.loadImage(fileName);
+            printer.printImage(index);
         } catch (Exception e) {
             e.printStackTrace();
         }

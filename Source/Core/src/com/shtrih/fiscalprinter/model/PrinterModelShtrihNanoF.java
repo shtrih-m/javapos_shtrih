@@ -46,8 +46,9 @@ public class PrinterModelShtrihNanoF extends PrinterModelDefault {
         setTrailerTableRow(1);
         setMinHeaderLines(12);
         setMinTrailerLines(0);
-        setMaxGraphicsWidth(320);
-        setMaxGraphicsHeight(100000);
+        setMaxGraphicsWidth(384);
+        setMaxGraphicsHeight(820);
+        setMaxGraphics512Height(512);
         setPrintWidth(384);
         setTextLength(new int[] {  42, 21, 42, 21, 42, 42, 56, 24, 23 });
         setFontHeight(new int[] {  });

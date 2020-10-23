@@ -34,8 +34,8 @@ public class ImageRender {
     public byte[][] getData() {
         return data;
     }
-    
-    public void render(String fileName) throws Exception {
+
+    public void render(String fileName, int maxWidth, int maxHeight) throws Exception {
         logger.debug("render");
 
         File file = new File(fileName);
@@ -43,24 +43,32 @@ public class ImageRender {
         if (image == null) {
             throw new Exception("Failed to read image");
         }
-        BufferedImage img = new BufferedImage(image.getWidth(),
-                image.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
+        width = image.getWidth();
+        height = image.getHeight();
+        if (width > maxWidth) {
+            width = maxWidth;
+        }
+        if (height > maxHeight){
+            height = maxHeight;
+        }
+
+        BufferedImage img = new BufferedImage(width, height,
+                BufferedImage.TYPE_BYTE_BINARY);
         Graphics2D g2 = img.createGraphics();
         try {
-            g2.drawImage(image, 0, 0, Color.WHITE, null);
+            g2.drawImage(image, 0, 0, width, height, Color.WHITE, null);
         } finally {
             g2.dispose();
         }
 
         image = img;
-
         width = image.getWidth();
         height = image.getHeight();
         data = new byte[height][];
         int[] pixels = new int[width];
         Raster raster = image.getData();
         for (int i = 0; i < height; i++) {
-            raster.getPixels(0, i, image.getWidth(), 1, pixels);
+            raster.getPixels(0, i, width, 1, pixels);
             data[i] = pixelsToBits(pixels);
             data[i] = BitUtils.swap(data[i]);
         }

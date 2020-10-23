@@ -1,5 +1,6 @@
 package com.shtrih.util;
 
+import android.graphics.Rect;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -34,20 +35,27 @@ public class ImageRender {
         return lines;
     }
  
-    public void render(String fileName) throws Exception
+    public void render(String fileName, int maxWidth, int maxHeight) throws Exception
     {
         Bitmap srcbmp = BitmapFactory.decodeFile(fileName);
         if (srcbmp == null) {
             throw new Exception("Failed to decode file");
         }
-
-        Bitmap bitmap = Bitmap.createBitmap(srcbmp.getWidth(), srcbmp.getHeight(), Bitmap.Config.ARGB_8888);
+        width = srcbmp.getWidth();
+        height = srcbmp.getHeight();
+        if (width > maxWidth){
+            width = maxWidth;
+        }
+        if (height > maxHeight){
+            height = maxHeight;
+        }
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         ColorMatrix ma = new ColorMatrix();
         ma.setSaturation(0);
         Paint paint = new Paint();
         paint.setColorFilter(new ColorMatrixColorFilter(ma));
-        canvas.drawBitmap(srcbmp, 0, 0, paint);
+        canvas.drawBitmap(srcbmp, null, new Rect(0,0,width,height), paint);
         int widthInBytes = (bitmap.getWidth() + 7) / 8;
         width = bitmap.getWidth();
         height = bitmap.getHeight();

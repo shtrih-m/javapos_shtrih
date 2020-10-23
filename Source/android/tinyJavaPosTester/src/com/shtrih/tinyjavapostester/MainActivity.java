@@ -70,11 +70,16 @@ import com.shtrih.util.SysUtils;
 
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -2431,10 +2436,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(Void... params) {
-
-
-            try {
+        protected String doInBackground(Void... params)
+        {
+            try
+            {
                 String path = SysUtils.getFilesPath() + "/printer.bmp";
                 JposConfig.copyAsset("printer.bmp", path, getApplicationContext());
                 startedAt = System.currentTimeMillis();

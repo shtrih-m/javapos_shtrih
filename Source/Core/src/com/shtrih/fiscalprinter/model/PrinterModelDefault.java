@@ -68,6 +68,7 @@ public class PrinterModelDefault implements PrinterModel {
     protected boolean capFontMetrics;
     protected int maxGraphicsWidth;
     protected int maxGraphicsHeight;
+    protected int maxGraphics512Height;
     protected boolean capOpenReceipt;
     protected int[] textLength = new int[0];
     protected int[] fontHeight = new int[0];
@@ -140,6 +141,7 @@ public class PrinterModelDefault implements PrinterModel {
         capFontMetrics = false;
         maxGraphicsWidth = 320;
         maxGraphicsHeight = 255;
+        maxGraphics512Height = 1000;
         capOpenReceipt = false;
         capFiscalCut = true;
 
@@ -366,6 +368,10 @@ public class PrinterModelDefault implements PrinterModel {
         return maxGraphicsHeight;
     }
 
+    public int getMaxGraphics512Height() {
+        return maxGraphics512Height;
+    }
+    
     public boolean getCapOpenReceipt() {
         return capOpenReceipt;
     }
@@ -530,6 +536,10 @@ public class PrinterModelDefault implements PrinterModel {
         this.maxGraphicsHeight = maxGraphicsHeight;
     }
 
+    public void setMaxGraphics512Height(int maxGraphics512Height) {
+        this.maxGraphics512Height = maxGraphics512Height;
+    }
+    
     public void setCapOpenReceipt(boolean capOpenReceipt) {
         this.capOpenReceipt = capOpenReceipt;
     }

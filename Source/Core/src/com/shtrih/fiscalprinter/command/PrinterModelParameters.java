@@ -140,7 +140,7 @@ public class PrinterModelParameters implements PrinterConst {
     private final int graphics512WidthBytes;
 
     // Количество линий в буфере графики-512 (2 байта)
-    private final int graphics512HeightLines;
+    private final int maxGraphics512Height;
 
     // Номер таблицы Фискального Накопителя (1 байт) 0 - не поддерживается, 1…255
     private final int fsTableNumber;
@@ -220,9 +220,9 @@ public class PrinterModelParameters implements PrinterConst {
         graphics512WidthBytes = readByteIfAvailable(in);
 
         if (in.getSize() >= 2) {
-            graphics512HeightLines = in.readShort();
+            maxGraphics512Height = in.readShort();
         } else {
-            graphics512HeightLines = 0;
+            maxGraphics512Height = 0;
         }
 
         fsTableNumber = readByteIfAvailable(in);
@@ -364,8 +364,8 @@ public class PrinterModelParameters implements PrinterConst {
     /**
      * @return the graphics512HeightLines
      */
-    public int getGraphics512HeightLines() {
-        return graphics512HeightLines;
+    public int getMaxGraphics512Height() {
+        return maxGraphics512Height;
     }
 
     /**

@@ -576,7 +576,7 @@ public class MainDialog extends javax.swing.JDialog
         pnlReceiptImage.setName(""); // NOI18N
         pnlReceiptImage.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        edtImageFile.setText("Logo2.bmp");
+        edtImageFile.setText("Logo.bmp");
         edtImageFile.setName("edtFileName"); // NOI18N
         pnlReceiptImage.add(edtImageFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 30, 180, -1));
 
@@ -925,9 +925,6 @@ public class MainDialog extends javax.swing.JDialog
             printer.clearImages();
             
             index = printer.loadImage("Logo.bmp");
-            printer.printImage(index);
-            
-            index = printer.loadImage("Logo.gif");
             printer.printImage(index);
             
         } catch (Exception e) {

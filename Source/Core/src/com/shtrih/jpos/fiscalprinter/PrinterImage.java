@@ -115,11 +115,11 @@ public class PrinterImage {
     }
 
     // read image from file
-    public void render(int maxWidth, boolean centerImage) throws Exception 
+    public void render(int maxWidth, int maxHeight, boolean centerImage) throws Exception 
     {
         logger.debug("render(" + maxWidth + ", " + centerImage + ")");
         ImageRender render = new ImageRender();
-        render.render(fileName);
+        render.render(fileName, maxWidth, maxHeight);
         lines = render.getData();
         height = render.getHeight();
         width = render.getWidth();

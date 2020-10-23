@@ -2,13 +2,8 @@
 <root>
     <FiscalPrinter>
         <FiscalPrinter_0588820041033297>
-            <Images>
-                <Image Digest="E19C20F17A9770E06DCD6C33730D34B5"
-                    FileName="logo.bmp" FirstLine="1" Height="139" IsLoaded="1"/>
-            </Images>
-            <ReceiptImages>
-                <ReceiptImage ImageIndex="0" Position="4"/>
-            </ReceiptImages>
+            <Images/>
+            <ReceiptImages/>
             <Header>
                 <Line DoubleWidth="0" Text="         Header line 1"/>
                 <Line DoubleWidth="0" Text="         Header line 2"/>

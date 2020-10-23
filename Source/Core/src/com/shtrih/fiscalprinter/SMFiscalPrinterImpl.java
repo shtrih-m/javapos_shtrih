@@ -216,7 +216,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             if (command.getCode() == 0x8D) {
                 checkEcrMode();
             }
-            
+
             device.send(command);
             if (command.isFailed()) {
                 String text = getErrorText(command.getResultCode());
@@ -2751,11 +2751,23 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return getModel().getTextLength(font);
     }
 
+    public int getMaxGraphicsHeight() throws Exception {
+        int height = 0;
+        if (capModelParameters()) {
+            height = modelParameters.getMaxGraphics512Height();
+        } else {
+            height = getModel().getMaxGraphicsHeight();
+            if (height > getModel().getMaxGraphics512Height()) {
+                height = getModel().getMaxGraphics512Height();
+            }
+        }
+        return height-1;
+    }
+
     public int getMaxGraphicsWidth() throws Exception {
         if (capModelParameters()) {
             return modelParameters.getGraphicsWidth();
-        } else
-        {
+        } else {
             return getModel().getFonts().itemByNumber(FontNumber.getNormalFont()).getPaperWidth();
         }
     }
@@ -3033,7 +3045,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             return;
         }
 
-        image.render(getMaxGraphicsWidth(), getParams().centerImage);
+        image.render(getMaxGraphicsWidth(), getMaxGraphicsHeight(), getParams().centerImage);
         image.setStartPos(getPrinterImages().getTotalSize() + 1);
         // check max image width
         if (image.getWidth() > getMaxGraphicsWidth()) {
