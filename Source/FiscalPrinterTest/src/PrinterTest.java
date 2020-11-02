@@ -983,11 +983,11 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
-            printImage("logo.bmp");
+            //printImage("logo.bmp");
             //printImage("logo.png");
             //printImage("logo.gif");
             
-            //printFiscalReceipt666();
+            printFiscalReceipt666();
             //printFiscalReceipt145_4();
         } catch (Exception e) {
             e.printStackTrace();

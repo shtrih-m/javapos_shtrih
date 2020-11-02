@@ -1137,12 +1137,17 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void doPrintSale(long price, long quantity, long unitPrice,
             int department, int vatInfo, String description, String unitName,
-            boolean isStorno) throws Exception {
+            boolean isStorno) throws Exception 
+    {
         logger.debug(
                 "price: " + price
                 + ", quantity: " + quantity
                 + ", unitPrice: " + unitPrice);
 
+        
+        if (vatInfo == 0) {
+            vatInfo = 4;
+        }
         
         double d = unitPrice * Math.abs(quantity);
         long amount = getParams().itemTotalAmount == null ? MathUtils.round((d / 1000.0)) : getParams().itemTotalAmount;
@@ -1174,6 +1179,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             item.setUnitName(unitName);
             item.setIsStorno(isStorno);
             item.setBarcode(barcode);
+            double taxRate = getDevice().getTaxRate(vatInfo) / 10000.0;
+            item.setTaxRate(taxRate);
             item.getReceiptFields().clear();
             item.getReceiptFields().putAll(getParams().getReceiptFields());
             getParams().getReceiptFields().clear();
@@ -1483,17 +1490,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         printTotalAndTax(item);
     }
 
-    protected void printTotalAndTax(FSSaleReceiptItem item) throws Exception {
+    protected void printTotalAndTax(FSSaleReceiptItem item) throws Exception 
+    {
         String line;
-        int tax = item.getTax1();
-        if (tax == 0) {
-            tax = 4;
-        }
-        double taxRate = getDevice().getTaxRate(tax) / 10000.0;
-        long taxAmount = (long) ((item.getTotal()) * taxRate / (1 + taxRate) + 0.5);
-
-        line = getDevice().getTaxName(tax);
-        line = formatLines(line, StringUtils.amountToString(taxAmount));
+        line = getDevice().getTaxName(item.getTax1());
+        line = formatLines(line, StringUtils.amountToString(item.getTaxAmount()));
         getDevice().printText(line);
     }
 

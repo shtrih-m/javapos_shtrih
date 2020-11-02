@@ -50,6 +50,7 @@ public class FSSaleReceiptItem {
     private String barcode = null;
     private final Vector tags = new Vector();
     private HashMap receiptFields = new HashMap();
+    private double taxRate = 0;
 
     public FSSaleReceiptItem() {
     }
@@ -79,6 +80,7 @@ public class FSSaleReceiptItem {
         item.paymentType = paymentType;
         item.subjectType = subjectType;
         item.barcode = barcode;
+        item.taxRate = taxRate;
         return item;
     }
 
@@ -425,4 +427,17 @@ public class FSSaleReceiptItem {
         }
         return fieldValue;
     }
+
+    public void setTaxRate(double taxRate) {
+        this.taxRate = taxRate;
+    }
+
+    public double getTaxRate() {
+        return taxRate;
+    }
+
+    public long getTaxAmount() throws Exception {
+        return (long) ((getTotal()) * taxRate / (1 + taxRate) + 0.5);
+    }
+
 }

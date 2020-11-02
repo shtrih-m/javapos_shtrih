@@ -31,7 +31,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="COM4"/>
+        <prop name="portName" type="String" value="COM56"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="0"/>
@@ -236,7 +236,7 @@
         <!-- Barcode aspect ratio -->
         <prop name="barcodeAspectRatio" type="String" value="3"/>
         <!-- Compatibility level, 0 - FULL, 1 - NONE  -->
-        <prop name="compatibilityLevel" type="String" value="1"/>
+        <prop name="compatibilityLevel" type="String" value="0"/>
         <!-- Receipt void text -->
         <prop name="receiptVoidText" type="String" value="ЧЕК ОТМЕНЕН"/>
         <!-- Check total enabled, default 0 (disabled) -->
@@ -257,11 +257,12 @@
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- Receipt template -->
 		<prop name="FSCombineItemAdjustments" type="String" value="0"/>
-		<prop name="ReceiptTemplateEnabled" type="String" value="0"/>
+		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
 		<prop name="FieldSeparator" type="String" value=":"/>
 		<prop name="ItemTableHeader" type="String"  value="-------------------HEADER-----------------"/>
 		<prop name="ItemTableTrailer" type="String" value="-------------------TRAILER----------------"/>
-		<prop name="ItemRowFormat" type="String" value="%3lFIELD0%%36lTITLE%%3FIELD1%%22SUM% X %5lQUAN%%=$10TOTAL_TAX%"/>
+		<prop name="ItemRowFormat" type="String" value="%3lFIELD0%%36lTITLE%%3FIELD1%%22SUM% X %5lQUAN%%=$10TOTAL_TAX%
+		%TAX_NAME% = %TAX_AMOUNT%"/>
 		<!-- <prop name="DiscountFormat" type="String" value="    СКИДКА  %29lTITLE%%=$10TOTAL%"/> -->
 		<prop name="DiscountFormat" type="String" value=""/>
 		<!-- <prop name="ChargeFormat" type="String"   value="    НАДБАВКА  %29lTITLE%%=$10TOTAL%"/> -->

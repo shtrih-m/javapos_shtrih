@@ -2151,7 +2151,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void directIO(int command, int[] data, Object object)
             throws Exception {
-        if (params.compatibilityLevel == 1) {
+        if (params.compatibilityLevel == SmFptrConst.SMFPTR_COMPAT_LEVEL_NONE) {
             (new DirectIOHandler(this)).directIO(command, data, object);
         } else {
             (new DirectIOHandler2(this)).directIO(command, data, object);

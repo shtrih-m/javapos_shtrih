@@ -245,6 +245,9 @@ public class ReceiptTemplate {
         if (f.tag.equals("TAX_NAME")) {
             return getTaxName(item.getTax1());
         }
+        if (f.tag.equals("TAX_AMOUNT")) {
+            return getTaxAmount(item);
+        }
         if (f.tag.equals("PRELINE")) {
             String text = item.getPreLine();
             item.setPreLine("");
@@ -266,6 +269,10 @@ public class ReceiptTemplate {
 
     private String getTaxName(int tax) throws Exception {
         return context.getPrinter().getPrinter().getTaxName(tax);
+    }
+
+    private String getTaxAmount(FSSaleReceiptItem item) throws Exception {
+        return StringUtils.amountToString(item.getTaxAmount());
     }
 
     private String getTaxLetter(int tax) {

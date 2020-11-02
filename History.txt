@@ -7,6 +7,13 @@
     
 ********************************************************************************
 
+  02.11.2020
+  deviceServiceVersion = 1013599
+
+  [+] Added receipt template field TAX_AMOUNT for receipt item tax amount
+
+********************************************************************************
+
   23.10.2020
   deviceServiceVersion = 1013598
 
