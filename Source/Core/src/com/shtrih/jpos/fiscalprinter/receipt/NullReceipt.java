@@ -194,7 +194,7 @@ public class NullReceipt implements FiscalReceipt {
         return false;
     }
 
-    public void disablePrint() throws Exception {
+    public void disablePrintOnce() throws Exception {
         notOpenedException();
     }
 

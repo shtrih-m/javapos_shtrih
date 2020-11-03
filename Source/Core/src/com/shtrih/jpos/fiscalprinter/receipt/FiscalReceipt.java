@@ -102,10 +102,6 @@ public interface FiscalReceipt {
 
     public void fsWriteTag(int tagId, String tagValue) throws Exception;
 
-    public void disablePrint() throws Exception;
-
-    public boolean getDisablePrint();
-
     public void fsWriteCustomerEmail(String text) throws Exception;
 
     public void fsWriteCustomerPhone(String text) throws Exception;

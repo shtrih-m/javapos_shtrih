@@ -987,13 +987,29 @@ class PrinterTest implements FiscalPrinterConst {
             //printImage("logo.png");
             //printImage("logo.gif");
             
-            printFiscalReceipt666();
+            //printFiscalReceipt666();
             //printFiscalReceipt145_4();
+            printOpenDayTest();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public void printOpenDayTest() throws Exception {
+        printer.resetPrinter();
+        printer.disablePrint();
+        printer.printZReport();
+        printer.enablePrint();
+        printer.openFiscalDay();
+        printFiscalReceipt145_8();
+        
+        printer.disablePrint();
+        printer.printZReport();
+        printer.enablePrint();
+        printFiscalReceipt145_8();
+    }
+            
+    
     public void testSetDate() throws Exception {
         String[] date = new String[1];
         date[0] = "260220191620";
@@ -1006,7 +1022,7 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void disablePrint() {
         try {
-            printer.disablePrint();
+            printer.disablePrintOnce();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1018,7 +1034,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setFiscalReceiptType(FPTR_RT_SALES);
             printer.beginFiscalReceipt(true);
             if (disablePrint) {
-                printer.disablePrint();
+                printer.disablePrintOnce();
             }
             printer.printRecItem("Item 1", 107466, 4497, 1, 23897, "");
             printer.printRecTotal(200000, 200000, "");
@@ -3788,8 +3804,8 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(true);
-            printer.printRecItem("1123 ХЛЕБ С ОТРУБЯМИ 1/20", 190000, 1000, 2, 190000, "");
-            printer.printRecTotal(190000, 100000, "1");
+            printer.printRecItem("1123 ХЛЕБ С ОТРУБЯМИ 1/20", 100, 1000, 2, 100, "");
+            printer.printRecTotal(100, 100, "1");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();

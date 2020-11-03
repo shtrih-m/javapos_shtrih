@@ -3472,7 +3472,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void disablePrint() throws Exception {
         // !!! write table and by name
-        writeTable(17, 1, 7, "1");
+        writeTable(17, 1, 7, "2");
     }
 
     public void enablePrint() throws Exception {

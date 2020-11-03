@@ -40,7 +40,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private int receiptType = 0;
     private int discountAmount = 0;
     private boolean isOpened = false;
-    private boolean disablePrint = false;
     private String voidDescription = "";
     private final Vector items = new Vector();
     private final Vector endingItems = new Vector();
@@ -88,7 +87,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             payments[i] = 0;
         }
         voidDescription = "";
-        disablePrint = false;
         messages.clear();
         cancelled = false;
 
@@ -330,9 +328,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printEndingItems() throws Exception {
-        if (disablePrint) {
-            return;
-        }
         getPrinter().waitForPrinting();
         for (int i = 0; i < endingItems.size(); i++) {
             Object item = endingItems.get(i);
@@ -486,10 +481,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 printTLVItems();
             }
 
-            if (disablePrint) {
-                getDevice().disablePrint();
-            }
-
             if (!cancelled && getDevice().isCapFooterFlag()) {
                 getDevice().setIsFooter(true);
                 try {
@@ -559,29 +550,21 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 
                 try {
                     getDevice().waitForPrinting();
-                    if (!disablePrint) {
-                        for (int i = 0; i < messages.size(); i++) {
-                            getDevice().printText(messages.get(i));
-                        }
+                    for (int i = 0; i < messages.size(); i++) {
+                        getDevice().printText(messages.get(i));
                     }
                 } catch (Exception e) {
                     logger.error("Receipt messages printing failed", e);
                 }
             }
         }
-        if (cancelled || (!getDevice().isCapFooterFlag())) {
+        if (cancelled || (!getDevice().isCapFooterFlag())) 
+        {
             try {
                 printEndingItems();
             } catch (Exception e) {
                 logger.error("Receipt ending items printing failed", e);
             }
-        }
-        try {
-            if (disablePrint) {
-                getDevice().enablePrint();
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage());
         }
     }
 
@@ -1402,14 +1385,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         public FontNumber getFont() {
             return font;
         }
-    }
-
-    public void disablePrint() throws Exception {
-        disablePrint = true;
-    }
-
-    public boolean getDisablePrint() {
-        return disablePrint;
     }
 
     public void fsWriteTLV(byte[] data) throws Exception {

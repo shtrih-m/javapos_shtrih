@@ -234,13 +234,6 @@ public abstract class CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void disablePrint() throws Exception {
-    }
-
-    public boolean getDisablePrint() {
-        return false;
-    }
-
     public void fsWriteTLV(byte[] data) throws Exception {
     }
 

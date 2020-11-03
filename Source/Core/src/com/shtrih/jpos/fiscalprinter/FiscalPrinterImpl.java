@@ -268,6 +268,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private FirmwareUpdaterService firmwareUpdaterService;
     private boolean docEndEnabled = true;
     private JsonUpdateService jsonUpdateService = null;
+    private boolean disablePrintOnce = false;
 
     public void enableTextDocumentFilter(boolean value) {
         filter.setEnabled(value);
@@ -2400,7 +2401,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         getPrinter().printLine(SMFP_STATION_REC, line, params.font);
     }
 
-    public void printEndFiscal() throws Exception {
+    public void printEndFiscal() throws Exception 
+    {
+        if (disablePrintOnce) {
+            getPrinter().enablePrint();
+            disablePrintOnce = false;
+            return;
+        }
+
         if (!docEndEnabled) {
             docEndEnabled = true;
             return;
@@ -2415,7 +2423,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public void printEndNonFiscal() throws Exception {
+    public void printEndNonFiscal() throws Exception 
+    {
+        if (disablePrintOnce) {
+            getPrinter().enablePrint();
+            disablePrintOnce = false;
+            return;
+        }
+        
         if (!docEndEnabled && params.canDisableNonFiscalEnding) {
             docEndEnabled = true;
             return;
@@ -3153,11 +3168,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             getPrinter().stopSaveCommands();
 
             try {
-                if (!receipt.getDisablePrint()) {
-                    Thread.sleep(getParams().recCloseSleepTime);
-                    if (!receipt.getCapAutoCut()) {
-                        printEndFiscal();
-                    }
+                Thread.sleep(getParams().recCloseSleepTime);
+                if (!receipt.getCapAutoCut()) {
+                    printEndFiscal();
                 }
             } catch (Exception e) {
                 // ignore print errors because cashin is succeeded
@@ -3723,6 +3736,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         printer.resetPrinter();
         receiptType = 0;
         isReceiptOpened = false;
+        disablePrintOnce = false;
     }
 
     public void setDate(String date) throws Exception {
@@ -4672,10 +4686,21 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         receipt.fsWriteTag(tagId, tagValue);
     }
 
-    public void disablePrint() throws Exception {
-        receipt.disablePrint();
+    public void disablePrintOnce() throws Exception {
+        if (!disablePrintOnce) {
+            getPrinter().disablePrint();
+            disablePrintOnce = true;
+        }
     }
 
+    public void disablePrint() throws Exception {
+        getPrinter().disablePrint();
+    }
+    
+    public void enablePrint() throws Exception {
+        getPrinter().enablePrint();
+    }
+    
     public void fsWriteCustomerEmail(String text) throws Exception {
         receipt.fsWriteCustomerEmail(text);
     }

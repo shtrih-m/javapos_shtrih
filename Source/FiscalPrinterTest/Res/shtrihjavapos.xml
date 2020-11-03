@@ -24,7 +24,7 @@
                 <Line DoubleWidth="0" Text="         Trailer line 5"/>
                 <Line DoubleWidth="0" Text="         Trailer line 6"/>
             </Trailer>
-            <NonFiscal DocumentNumber="11"/>
+            <NonFiscal DocumentNumber="23"/>
         </FiscalPrinter_0588820041033297>
     </FiscalPrinter>
 </root>

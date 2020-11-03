@@ -2630,8 +2630,12 @@ public class FiscalPrinterService extends DeviceService implements
                 "SMFPTR_DIO_PRINT_DOC_END");
         map.put(SmFptrConst.SMFPTR_DIO_FS_WRITE_TLV, 
                 "SMFPTR_DIO_FS_WRITE_TLV");
+        map.put(SmFptrConst.SMFPTR_DIO_FS_DISABLE_PRINT_ONCE, 
+                "SMFPTR_DIO_FS_DISABLE_PRINT_ONCE");
         map.put(SmFptrConst.SMFPTR_DIO_FS_DISABLE_PRINT, 
                 "SMFPTR_DIO_FS_DISABLE_PRINT");
+        map.put(SmFptrConst.SMFPTR_DIO_FS_ENABLE_PRINT, 
+                "SMFPTR_DIO_FS_ENABLE_PRINT");
         map.put(SmFptrConst.SMFPTR_DIO_PRINT_NON_FISCAL, 
                 "SMFPTR_DIO_PRINT_NON_FISCAL");
         map.put(SmFptrConst.SMFPTR_DIO_FS_WRITE_CUSTOMER_EMAIL, 
