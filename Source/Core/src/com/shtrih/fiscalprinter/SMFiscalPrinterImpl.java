@@ -140,8 +140,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private String serial = "";
     private long lastDocNum = 0;
     private long lastDocMAC = 0;
-    private PrinterDate lastDocDate;
-    private PrinterTime lastDocTime;
+    private PrinterDate lastDocDate = new PrinterDate();
+    private PrinterTime lastDocTime  = new PrinterTime();
     private long lastDocTotal = 0;
     private volatile boolean stopFlag = true;
 
@@ -967,9 +967,22 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             lastDocTime = command.getDocTime();
             if (lastDocDate == null)
             {
-                LongPrinterStatus status = readLongStatus();
-                lastDocDate = status.getDate();
-                lastDocTime = status.getTime();
+                lastDocDate = new PrinterDate();
+                lastDocTime = new PrinterTime();
+                try
+                {
+                    ReadLongStatus sCommand = new ReadLongStatus();
+                    sCommand.setPassword(usrPassword);
+                    executeCommand(sCommand);
+                    if (sCommand.isSucceeded())
+                    {
+                        LongPrinterStatus status = sCommand.getStatus();
+                        lastDocDate = status.getDate();
+                        lastDocTime = status.getTime();
+                    }
+                } catch(Exception e)
+                {
+                }
             }
         }
         return rc;

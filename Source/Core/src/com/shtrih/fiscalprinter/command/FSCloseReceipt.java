@@ -62,7 +62,7 @@ public class FSCloseReceipt extends PrinterCommand {
     }
 
     public final String getText() {
-        return "Fiscal storage: close receipt";
+        return "Fiscal storage: close receipt V2";
     }
 
     public void encode(CommandOutputStream out) throws Exception {
