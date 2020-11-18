@@ -2349,5 +2349,4 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_SET_RECEIPT_FIELD, null, lines);
         return lines[1];
     }
-
 }

@@ -654,16 +654,27 @@ public class DirectIOHandler2 {
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_DOC_NUM:
-                paramValue = String.valueOf(service.getPrinter().getLastDocNumber());
+                paramValue = String.valueOf(service.getPrinter().getLastDocNum());
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_DOC_MAC:
-                paramValue = String.valueOf(service.getPrinter().getLastMacValue());
+                paramValue = String.valueOf(service.getPrinter().getLastDocMac());
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_PROTOCOL_TYPE:
                 paramValue = String.valueOf(service.getParams().protocolType);
                 break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_DOC_DATETIME:
+                paramValue = 
+                        service.getPrinter().getLastDocDate().toJposString() + 
+                        service.getPrinter().getLastDocTime().toJposString();
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_DOC_TOTAL:
+                paramValue = String.valueOf(service.getPrinter().getLastDocTotal());
+                break;
+                
         }
         ((String[]) object)[0] = paramValue;
     }

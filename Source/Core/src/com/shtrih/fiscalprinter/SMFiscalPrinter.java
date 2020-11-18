@@ -658,10 +658,16 @@ public interface SMFiscalPrinter {
 
     public boolean getCapOperationTagsFirst();
 
-    public long getLastDocNumber();
+    public long getLastDocNum();
 
-    public long getLastMacValue();
+    public long getLastDocMac();
 
+    public PrinterDate getLastDocDate();
+    
+    public PrinterTime getLastDocTime();
+    
+    public long getLastDocTotal();
+    
     public void cancelWait();
 
     public void rebootAndWait() throws Exception;

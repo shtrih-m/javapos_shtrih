@@ -73,7 +73,7 @@ public class CommandInputStream {
         return readBytes(stream.available());
     }
 
-    public FSDateTime readFSDate() throws Exception
+    public FSDateTime readFSDateTime() throws Exception
     {
         return new FSDateTime(readBytes(FSDateTime.BodyLength));
     }
@@ -99,7 +99,7 @@ public class CommandInputStream {
         return new PrinterTime(hour, min, sec);
     }
 
-    public PrinterTime readTime2() throws Exception
+    public PrinterTime readFSTime() throws Exception
     {
         int hour = readByte();
         int min = readByte();
@@ -114,7 +114,7 @@ public class CommandInputStream {
         return new PrinterDate(day, month, year);
     }
 
-    public PrinterDate readDateYMD() throws Exception
+    public PrinterDate readFSDate() throws Exception
     {
         int year = readByte() + 2000;
         int month = readByte();

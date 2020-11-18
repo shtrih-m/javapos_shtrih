@@ -12,45 +12,28 @@ import com.shtrih.util.BitUtils;
  * @author V.Kravtsov
  */
 /**
- Закрытие чека расширенное вариант V2 FF45H
-Код команды FF45H. Длина сообщения: 182 байт.
-Пароль системного администратора: 4 байта
-Сумма наличных (5 байт) 
-Сумма типа оплаты 2 (5 байт) 
-Сумма типа оплаты 3 (5 байт) 
-Сумма типа оплаты 4 (5 байт) 
-Сумма типа оплаты 5 (5 байт) 
-Сумма типа оплаты 6 (5 байт) 
-Сумма типа оплаты 7 (5 байт) 
-Сумма типа оплаты 8 (5 байт) 
-Сумма типа оплаты 9 (5 байт) 
-Сумма типа оплаты 10 (5 байт) 
-Сумма типа оплаты 11 (5 байт) 
-Сумма типа оплаты 12 (5 байт) 
-Сумма типа оплаты 13 (5 байт) 
-Сумма типа оплаты 14 (5 байт) (предоплата)
-Сумма типа оплаты 15 (5 байт) (постоплата)
-Сумма типа оплаты 16 (5 байт) (встречное представление)
-Округление до рубля в копейках (1 байт)
-Налог 1 (5 байт) (НДС 20%)
-Налог 2 (5 байт) (НДС 10%)
-Оборот по налогу 3 (5 байт) (НДС 0%)
-Оборот по налогу 4 (5 байт) (Без НДС)
-Налог 5 (5 байт) (НДС расч. 18/118)
-Налог 6 (5 байт) (НДС расч. 10/110) 
-Система налогообложения(1 байт) 
-Текст (0-64 байт)
-_______________________________________________________
-Примечания: 
-Типы оплаты 2-13 при передаче в ОФД суммируются и передаются как оплата «ЭЛЕКТРОННЫМИ».
-В режиме начисления налогов 0 ( 1 Таблица) касса рассчитывает налоги самостоятельно исходя из проведенных в документе операций и налоги переданные в команде игнорируются. В режиме начисления налогов 1 налоги должны быть обязательно переданы из верхнего ПО.
-
-Ответ:   FF45h Длина сообщения: 14 байт.
-Код ошибки: 1 байт
-Сдача ( 5 байт) 
-Номер ФД :4 байта
-Фискальный признак: 4 байта
-
+ * Закрытие чека расширенное вариант V2 FF45H Код команды FF45H. Длина
+ * сообщения: 182 байт. Пароль системного администратора: 4 байта Сумма наличных
+ * (5 байт) Сумма типа оплаты 2 (5 байт) Сумма типа оплаты 3 (5 байт) Сумма типа
+ * оплаты 4 (5 байт) Сумма типа оплаты 5 (5 байт) Сумма типа оплаты 6 (5 байт)
+ * Сумма типа оплаты 7 (5 байт) Сумма типа оплаты 8 (5 байт) Сумма типа оплаты 9
+ * (5 байт) Сумма типа оплаты 10 (5 байт) Сумма типа оплаты 11 (5 байт) Сумма
+ * типа оплаты 12 (5 байт) Сумма типа оплаты 13 (5 байт) Сумма типа оплаты 14 (5
+ * байт) (предоплата) Сумма типа оплаты 15 (5 байт) (постоплата) Сумма типа
+ * оплаты 16 (5 байт) (встречное представление) Округление до рубля в копейках
+ * (1 байт) Налог 1 (5 байт) (НДС 20%) Налог 2 (5 байт) (НДС 10%) Оборот по
+ * налогу 3 (5 байт) (НДС 0%) Оборот по налогу 4 (5 байт) (Без НДС) Налог 5 (5
+ * байт) (НДС расч. 18/118) Налог 6 (5 байт) (НДС расч. 10/110) Система
+ * налогообложения(1 байт) Текст (0-64 байт)
+ * _______________________________________________________ Примечания: Типы
+ * оплаты 2-13 при передаче в ОФД суммируются и передаются как оплата
+ * «ЭЛЕКТРОННЫМИ». В режиме начисления налогов 0 ( 1 Таблица) касса рассчитывает
+ * налоги самостоятельно исходя из проведенных в документе операций и налоги
+ * переданные в команде игнорируются. В режиме начисления налогов 1 налоги
+ * должны быть обязательно переданы из верхнего ПО.
+ *
+ * Ответ: FF45h Длина сообщения: 14 байт. Код ошибки: 1 байт Сдача ( 5 байт)
+ * Номер ФД :4 байта Фискальный признак: 4 байта Дата и время: 5 байт DATE_TIME3
  */
 public class FSCloseReceipt extends PrinterCommand {
 
@@ -63,8 +46,10 @@ public class FSCloseReceipt extends PrinterCommand {
     private String text = "";
     // out
     private long change;
-    private long docNumber;
-    private long macValue;
+    private long docNum;
+    private long docMAC;
+    private PrinterDate docDate;
+    private PrinterTime docTime;
 
     public FSCloseReceipt() {
         for (int i = 0; i < payments.length; i++) {
@@ -86,18 +71,23 @@ public class FSCloseReceipt extends PrinterCommand {
             out.writeLong(payments[i], 5);
         }
         out.writeByte(discount);
-        for (int i = 0; i < taxValues.length; i++) 
-        {
+        for (int i = 0; i < taxValues.length; i++) {
             out.writeLong(taxValues[i], 5);
         }
         out.writeByte(taxSystem);
         out.writeString(text, 0);
     }
-    
+
     public void decode(CommandInputStream in) throws Exception {
+        docDate = null;
+        docTime = null;
         change = in.readLong(5);
-        docNumber = in.readLong(4);
-        macValue = in.readLong(4);
+        docNum = in.readLong(4);
+        docMAC = in.readLong(4);
+        if (in.getSize() >= 5) {
+            docDate = in.readFSDate();
+            docTime = in.readFSTime();
+        }
     }
 
     /**
@@ -170,10 +160,10 @@ public class FSCloseReceipt extends PrinterCommand {
         this.taxSystem = taxSystem;
     }
 
-
-    public String  getPrintableText() {
+    public String getPrintableText() {
         return text;
     }
+
     /**
      * @param text the text to set
      */
@@ -198,29 +188,22 @@ public class FSCloseReceipt extends PrinterCommand {
     /**
      * @return the docNumber
      */
-    public long getDocNumber() {
-        return docNumber;
+    public long getDocNum() {
+        return docNum;
     }
 
     /**
-     * @param docNumber the docNumber to set
+     * @return the document MAC, Message Authentication Code
      */
-    public void setDocNumber(long docNumber) {
-        this.docNumber = docNumber;
+    public long getDocMAC() {
+        return docMAC;
     }
 
-    /**
-     * @return the macValue
-     */
-    public long getMacValue() {
-        return macValue;
+    public PrinterDate getDocDate() {
+        return docDate;
     }
 
-    /**
-     * @param macValue the macValue to set
-     */
-    public void setMacValue(long macValue) {
-        this.macValue = macValue;
+    public PrinterTime getDocTime() {
+        return docTime;
     }
-
 }

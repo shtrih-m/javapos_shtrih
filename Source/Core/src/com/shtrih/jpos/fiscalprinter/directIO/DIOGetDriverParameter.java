@@ -119,15 +119,25 @@ public class DIOGetDriverParameter extends DIOItem {
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_DOC_NUM:
-                ((long[]) object)[0] = service.getPrinter().getLastDocNumber();
+                ((long[]) object)[0] = service.getPrinter().getLastDocNum();
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_DOC_MAC:
-                ((long[]) object)[0] = service.getPrinter().getLastMacValue();
+                ((long[]) object)[0] = service.getPrinter().getLastDocMac();
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_PROTOCOL_TYPE:
                 ((int[]) object)[0] = service.getParams().protocolType;
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_DOC_DATETIME:
+                ((String[]) object)[0] = 
+                        service.getPrinter().getLastDocDate().toJposString() + 
+                        service.getPrinter().getLastDocTime().toJposString();
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_DOC_TOTAL:
+                ((long[]) object)[0] = service.getPrinter().getLastDocTotal();
                 break;
         }
     }

@@ -1184,14 +1184,26 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return false;
     }
 
-    public long getLastDocNumber() {
+    public long getLastDocNum() {
         return 0;
     }
 
-    public long getLastMacValue() {
+    public long getLastDocMac() {
         return 0;
     }
 
+    public PrinterDate getLastDocDate() {
+        return null;
+    }
+    
+    public PrinterTime getLastDocTime() {
+        return null;
+    }
+    
+    public long getLastDocTotal() {
+        return 0;
+    }
+    
     public void cancelWait() {
     }
 

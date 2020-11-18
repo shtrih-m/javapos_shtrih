@@ -138,8 +138,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private boolean isFooter = false;
     private PrinterModelParameters modelParameters = null;
     private String serial = "";
-    private long lastDocNumber = 0;
-    private long lastMacValue = 0;
+    private long lastDocNum = 0;
+    private long lastDocMAC = 0;
+    private PrinterDate lastDocDate;
+    private PrinterTime lastDocTime;
+    private long lastDocTotal = 0;
     private volatile boolean stopFlag = true;
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
@@ -952,12 +955,22 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public int fsCloseReceipt(FSCloseReceipt command) throws Exception {
         writeTLVItems();
 
-        lastDocNumber = 0;
-        lastMacValue = 0;
+        
+        lastDocNum = 0;
+        lastDocMAC = 0;
+        lastDocTotal = getSubtotal();
         int rc = executeCommand(command);
-        if (rc == 0) {
-            lastDocNumber = command.getDocNumber();
-            lastMacValue = command.getMacValue();
+        if (succeeded(rc)) {
+            lastDocNum = command.getDocNum();
+            lastDocMAC = command.getDocMAC();
+            lastDocDate = command.getDocDate();
+            lastDocTime = command.getDocTime();
+            if (lastDocDate == null)
+            {
+                LongPrinterStatus status = readLongStatus();
+                lastDocDate = status.getDate();
+                lastDocTime = status.getTime();
+            }
         }
         return rc;
     }
@@ -4767,14 +4780,28 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return deviceMetrics.isCashCore() || deviceMetrics.isShtrihMobile();
     }
 
-    public long getLastDocNumber() {
-        return lastDocNumber;
+    public long getLastDocNum() {
+        return lastDocNum;
     }
 
-    public long getLastMacValue() {
-        return lastMacValue;
+    public long getLastDocMac() {
+        return lastDocMAC;
     }
 
+    public PrinterDate getLastDocDate() {
+        return lastDocDate;
+    }
+    
+    public PrinterTime getLastDocTime() {
+        return lastDocTime;
+    }
+    
+    public long getLastDocTotal() {
+        return lastDocTotal;
+    }
+    
+    
+    
     private String formatStrings(String line1, String line2) throws Exception {
         int len;
         String S = "";

@@ -733,6 +733,10 @@ public interface SmFptrConst {
 
     public static final int SMFPTR_DIO_PARAM_PROTOCOL_TYPE = 27;
 
+    public static final int SMFPTR_DIO_PARAM_DOC_DATETIME = 28;
+    
+    public static final int SMFPTR_DIO_PARAM_DOC_TOTAL = 29;
+    
     // ///////////////////////////////////////////////////////////////////
     // TableMode
     public static final int SMFPTR_TABLE_MODE_AUTO = 0;

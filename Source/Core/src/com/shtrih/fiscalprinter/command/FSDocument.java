@@ -16,7 +16,7 @@ public class FSDocument{
     {
         this.docType = docType;
         ticketReceived = in.readByte() != 0;
-        dateTime = in.readFSDate();
+        dateTime = in.readFSDateTime();
         docNumber = in.readInt();
         docSign = in.readLong(4);
         in.mark();

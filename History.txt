@@ -7,6 +7,20 @@
     
 ********************************************************************************
 
+  18.11.2020
+  deviceServiceVersion = 1013600
+
+  [+] Added directIO parameters to read last document date and total with 
+      directIO(SMFPTR_DIO_GET_DRIVER_PARAMETER):
+      SMFPTR_DIO_PARAM_DOC_DATETIME = 28; // read last document date and time
+      SMFPTR_DIO_PARAM_DOC_TOTAL = 29; // read last document total
+
+      If enabled extended format of close receipt v2 command 0xFF45 in T17F36, 
+      driver will get document date and time from 0xFF45 answer. If not, 
+      driver will read date and time from 0x11 long status request. 
+
+********************************************************************************
+
   02.11.2020
   deviceServiceVersion = 1013599
 

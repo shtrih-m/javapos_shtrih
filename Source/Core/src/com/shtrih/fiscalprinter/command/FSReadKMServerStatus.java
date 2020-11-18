@@ -75,7 +75,7 @@ public final class FSReadKMServerStatus extends PrinterCommand {
         messageQuantity = (int) in.readLong(2);
         messageNumber = (int) in.readLong(4);
         messageDate = in.readDate();
-        messageTime = in.readTime2();
+        messageTime = in.readFSTime();
         freeMemorySizeInKB = (int) in.readLong(4);
     }
 

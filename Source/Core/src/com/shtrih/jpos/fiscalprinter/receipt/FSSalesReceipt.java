@@ -526,7 +526,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 closeReceipt.setText(getParams().closeReceiptText);
 
                 int rc = getDevice().fsCloseReceipt(closeReceipt);
-
                 if (rc == SMFP_EFPTR_NOT_SUPPORTED) {
                     CloseRecParams closeParams = new CloseRecParams();
                     closeParams.setSum1(payments[0]);

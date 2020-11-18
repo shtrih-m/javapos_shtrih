@@ -2,29 +2,24 @@
 <root>
     <FiscalPrinter>
         <FiscalPrinter_0588820041033297>
-            <Images>
-                <Image Digest="DAC2065BC5378021108627E5DD433C81"
-                    FileName="logo.bmp" FirstLine="1" Height="69" IsLoaded="1"/>
-            </Images>
-            <ReceiptImages>
-                <ReceiptImage ImageIndex="0" Position="4"/>
-            </ReceiptImages>
+            <Images/>
+            <ReceiptImages/>
             <Header>
-                <Line DoubleWidth="0" Text="         Header line 1"/>
-                <Line DoubleWidth="0" Text="         Header line 2"/>
-                <Line DoubleWidth="0" Text="         Header line 3"/>
-                <Line DoubleWidth="0" Text="         Header line 4"/>
-                <Line DoubleWidth="0" Text="         Header line 5"/>
+                <Line DoubleWidth="0" Text=""/>
+                <Line DoubleWidth="0" Text=""/>
+                <Line DoubleWidth="0" Text=""/>
+                <Line DoubleWidth="0" Text=""/>
+                <Line DoubleWidth="0" Text=""/>
             </Header>
             <Trailer>
-                <Line DoubleWidth="0" Text="         Trailer line 1"/>
-                <Line DoubleWidth="0" Text="         Trailer line 2"/>
-                <Line DoubleWidth="0" Text="         Trailer line 3"/>
-                <Line DoubleWidth="0" Text="         Trailer line 4"/>
-                <Line DoubleWidth="0" Text="         Trailer line 5"/>
-                <Line DoubleWidth="0" Text="         Trailer line 6"/>
+                <Line DoubleWidth="0" Text=""/>
+                <Line DoubleWidth="0" Text=""/>
+                <Line DoubleWidth="0" Text=""/>
+                <Line DoubleWidth="0" Text=""/>
+                <Line DoubleWidth="0" Text=""/>
+                <Line DoubleWidth="0" Text=""/>
             </Trailer>
-            <NonFiscal DocumentNumber="23"/>
+            <NonFiscal DocumentNumber="3"/>
         </FiscalPrinter_0588820041033297>
     </FiscalPrinter>
 </root>

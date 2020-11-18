@@ -983,18 +983,35 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
-            //printImage("logo.bmp");
-            //printImage("logo.png");
-            //printImage("logo.gif");
-            
-            //printFiscalReceipt666();
-            //printFiscalReceipt145_4();
-            printOpenDayTest();
+            printFiscalReceiptDate();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public void printFiscalReceiptDate(){
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("Item 1", 100, 1000, 1, 100, "");
+            printer.printRecTotal(100, 100, "1");
+            printer.endFiscalReceipt(false);
+
+            System.out.println("Last document number : " + 
+                    printer.getParameter(SmFptrConst.SMFPTR_DIO_PARAM_DOC_NUM));
+            System.out.println("Last document MAC    : " + 
+                    printer.getParameter(SmFptrConst.SMFPTR_DIO_PARAM_DOC_MAC));
+            System.out.println("Last document date   : " + 
+                    printer.getParameter(SmFptrConst.SMFPTR_DIO_PARAM_DOC_DATETIME));
+            System.out.println("Last document total  : " + 
+                    printer.getParameter(SmFptrConst.SMFPTR_DIO_PARAM_DOC_TOTAL));
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+            
     public void printOpenDayTest() throws Exception {
         printer.resetPrinter();
         printer.disablePrint();
