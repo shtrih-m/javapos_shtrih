@@ -218,6 +218,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             // check status before receipt open
             if (command.getCode() == 0x8D) {
                 checkEcrMode();
+                correctDate();
             }
 
             device.send(command);
@@ -230,34 +231,42 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     // correct date
-    public void correctDate() throws Exception {
+    public void correctDate() 
+    {
         logger.debug("correctDate");
-        if (params.validTimeDiffInSecs <= 0) {
-            return;
+        try
+        {
+            if (params.validTimeDiffInSecs <= 0) {
+                return;
+            }
+
+            LongPrinterStatus status = readLongStatus();
+            Calendar currentDate = Calendar.getInstance();
+            Calendar printerDate = Calendar.getInstance();
+            printerDate.set(
+                    status.getDate().getYear(),
+                    status.getDate().getMonth(),
+                    status.getDate().getDay(),
+                    status.getTime().getHour(),
+                    status.getTime().getMin(),
+                    status.getTime().getSec());
+
+            long timeDiffInSecs = Math.abs(currentDate.getTimeInMillis()
+                    - printerDate.getTimeInMillis()) / 1000;
+            if (timeDiffInSecs > params.validTimeDiffInSecs) {
+                PrinterDate date = new PrinterDate();
+                PrinterTime time = new PrinterTime();
+
+                check(writeDate(date));
+                check(confirmDate(date));
+                check(writeTime(time));
+            }
         }
-
-        LongPrinterStatus status = readLongStatus();
-        Calendar currentDate = Calendar.getInstance();
-        Calendar printerDate = Calendar.getInstance();
-        printerDate.set(
-                status.getDate().getYear(),
-                status.getDate().getMonth(),
-                status.getDate().getDay(),
-                status.getTime().getHour(),
-                status.getTime().getMin(),
-                status.getTime().getSec());
-
-        long timeDiffInSecs = Math.abs(currentDate.getTimeInMillis()
-                - printerDate.getTimeInMillis()) / 1000;
-        if (timeDiffInSecs > params.validTimeDiffInSecs) {
-            PrinterDate date = new PrinterDate();
-            PrinterTime time = new PrinterTime();
-
-            check(writeDate(date));
-            check(confirmDate(date));
-            check(writeTime(time));
+        catch(Exception e){
+            logger.error("Correct date failed: " + e.getMessage());
         }
     }
+        
 
     public LongPrinterStatus connect() throws Exception {
         logger.debug("connect");
