@@ -32,6 +32,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Build;
+import android.Manifest;
+import android.Manifest.permission;
 
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.pdf417.encoder.Compaction;
@@ -396,12 +399,49 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    public void verifyBTPermissions() {
+
+        // For Android 6 or higher you have to check the location permission
+        // Seen at https://stackoverflow.com/questions/45197191/how-can-i-modify-bluetoothlegatt-to-enable-ble-device-scanning-on-android-6-0
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            ArrayList<String> permissions = new ArrayList<String>();
+
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) !=
+                    PackageManager.PERMISSION_GRANTED)
+            {
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION))
+                {
+                    permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+                }
+            }
+            /*
+            if (checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) !=
+                    PackageManager.PERMISSION_GRANTED)
+            {
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_BACKGROUND_LOCATION))
+                {
+                    permissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+                }
+            }
+            */
+            if(permissions.size() != 0)
+            {
+                requestPermissions(permissions.toArray(new String[0]), 1002);
+            }
+        }
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         switch (requestCode) {
             case DeviceListActivity.REQUEST_CONNECT_BT_DEVICE:
-                if (resultCode == Activity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    verifyBTPermissions();
 
                     Bundle extras = data.getExtras();
 
@@ -492,7 +532,7 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String, String> props = new HashMap<>();
                 props.put("portName", address);
                 props.put("portType", "3");
-                props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothPort");
+                props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothLEPort");
                 props.put("protocolType", selectedProtocol);
                 props.put("fastConnect", fastConnect ? "1" : "0");
                 props.put("capScocUpdateFirmware", scocFirmwareAutoupdate ? "1" : "0");
@@ -630,7 +670,7 @@ public class MainActivity extends AppCompatActivity {
                 Map<String, String> props = new HashMap<>();
                 props.put("portName", "SHTRIH");
                 props.put("portType", "3");
-                props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothPort");
+                props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothLEPort");
                 props.put("protocolType", selectedProtocol);
                 props.put("fastConnect", fastConnect ? "1" : "0");
                 props.put("capScocUpdateFirmware", scocFirmwareAutoupdate ? "1" : "0");
