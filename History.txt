@@ -7,6 +7,13 @@
     
 ********************************************************************************
 
+  24.12.2020
+  deviceServiceVersion = 1013602
+
+  [+] Added port BluetoothLEPort to connect to Bluetooth LE device SHTRIH-NANO-F
+
+********************************************************************************
+
   15.12.2020
   deviceServiceVersion = 1013601
 

@@ -983,7 +983,7 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
-            printFiscalReceiptDate();
+            printOpenDayTest();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1014,16 +1014,14 @@ class PrinterTest implements FiscalPrinterConst {
             
     public void printOpenDayTest() throws Exception {
         printer.resetPrinter();
-        printer.disablePrint();
-        printer.printZReport();
-        printer.enablePrint();
-        printer.openFiscalDay();
-        printFiscalReceipt145_8();
         
         printer.disablePrint();
         printer.printZReport();
         printer.enablePrint();
-        printFiscalReceipt145_8();
+        
+        printer.disablePrint();
+        printer.openFiscalDay();
+        printer.enablePrint();
     }
             
     
