@@ -1015,13 +1015,17 @@ class PrinterTest implements FiscalPrinterConst {
     public void printOpenDayTest() throws Exception {
         printer.resetPrinter();
         
+        //printer.disablePrint();
+        //printer.openFiscalDay();
+        //printer.enablePrint();
+        
+        printer.enablePrint();
+        printFiscalReceipt14();
+        
         printer.disablePrint();
         printer.printZReport();
         printer.enablePrint();
         
-        printer.disablePrint();
-        printer.openFiscalDay();
-        printer.enablePrint();
     }
             
     
@@ -4058,4 +4062,4 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-}
+ }

@@ -319,7 +319,7 @@
 		     default value is 0 -->
 		<prop name="markingType" type="String" value="1"/>
 		<!-- validTimeDiffInSecs -->
-		<prop name="validTimeDiffInSecs" type="String" value="5"/>
+		<prop name="validTimeDiffInSecs" type="String" value="0"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>
