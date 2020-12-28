@@ -119,9 +119,12 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         }
     }
 
-    private int readAnswer() throws Exception {
+    private int readAnswer() throws Exception 
+    {
         int b = readByte();
-        while (b != Frame.STX) {
+        while (b != Frame.STX) 
+        {
+            b = readByte();
             Logger2.logRx(logger, (byte) b);
         }
 
@@ -129,7 +132,6 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         int num = readWord();
         if (len > 0) {
             rx = readBytes(len - 2);
-
             Logger2.logRx(logger, rx);
         }
 

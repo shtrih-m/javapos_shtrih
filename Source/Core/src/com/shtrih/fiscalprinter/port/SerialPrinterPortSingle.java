@@ -10,6 +10,7 @@ package com.shtrih.fiscalprinter.port;
  * @author V.Kravtsov
  */
 import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.Hex;
 import com.shtrih.util.Localizer;
 
 import java.io.IOException;
