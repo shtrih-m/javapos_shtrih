@@ -511,7 +511,7 @@ public class CircularByteBuffer {
                     }
                 }
                 try {
-                    Thread.sleep(100);
+                    Time.delay(100);
                 } catch(Exception x){
                     throw new IOException("Blocking read operation interrupted.");
                 }
@@ -574,7 +574,7 @@ public class CircularByteBuffer {
                     }
                 }
                 try {
-                    Thread.sleep(100);
+                    Time.delay(100);
                 } catch(Exception x){
                     throw new IOException("Blocking read operation interrupted.");
                 }
@@ -634,7 +634,7 @@ public class CircularByteBuffer {
                     }
                 }
                 try {
-                    Thread.sleep(100);
+                    Time.delay(100);
                 } catch(Exception x){
                     throw new IOException("Blocking read operation interrupted.");
                 }
@@ -752,7 +752,7 @@ public class CircularByteBuffer {
                 }
                 if (len > 0){
                     try {
-                        Thread.sleep(100);
+                        Time.delay(100);
                     } catch(Exception x){
                         throw new IOException("Waiting for available space in buffer interrupted.");
                     }
@@ -797,7 +797,7 @@ public class CircularByteBuffer {
                 }
                 if (!written){
                     try {
-                        Thread.sleep(100);
+                        Time.delay(100);
                     } catch(Exception x){
                         throw new IOException("Waiting for available space in buffer interrupted.");
                     }

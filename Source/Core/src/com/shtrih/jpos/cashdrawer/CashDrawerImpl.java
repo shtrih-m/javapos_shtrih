@@ -570,7 +570,7 @@ public class CashDrawerImpl extends DeviceService implements
                 timeLeft = startTime - currentTime;
                 if (timeLeft > beepTimeout) {
                     Sound.beep(beepFrequency, beepDuration);
-                    Thread.sleep(beepDelay);
+                    Time.delay(beepDelay);
                 }
             }
         } catch (Exception e) {

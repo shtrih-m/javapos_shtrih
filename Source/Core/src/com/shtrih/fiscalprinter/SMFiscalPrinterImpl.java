@@ -15,6 +15,7 @@ import java.nio.ByteOrder;
 import java.nio.ByteBuffer;
 import java.io.ByteArrayInputStream;
 
+import com.shtrih.util.Time;
 import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.GS1BarcodeParser;
 import com.shtrih.barcode.PrinterBarcode;
@@ -205,10 +206,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void deviceExecute(PrinterCommand command) throws Exception {
         synchronized (port.getSyncObject()) {
-            if (params.commandDelayInMs > 0) {
-                Thread.sleep(params.commandDelayInMs);
-                logger.debug("Command delay: " + params.commandDelayInMs + " ms.");
-            }
+            Time.delay(params.commandDelayInMs);
             beforeCommand(command);
             // correct date before day open
             if (command.getCode() == 0xE0) {
@@ -360,7 +358,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
             if (command.getResultCode() == SMFP_EFPTR_PREVCOMMAND) {
                 // Do not count as an attempt, added to fix SHTRIH-MOBILE-F bug
-                Thread.sleep(SMFP_EFPTR_PREVCOMMAND_TimeToSleep);
+                Time.delay(SMFP_EFPTR_PREVCOMMAND_TimeToSleep);
                 i--;
             }
         }
@@ -598,7 +596,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         station = getPrintStation(station);
         PrintString command = new PrintString(usrPassword, station, line);
         execute(command);
-        Thread.sleep(getParams().printStringDelayInMs);
+        Time.delay(getParams().printStringDelayInMs);
         return command.getOperator();
     }
 
@@ -639,7 +637,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 font, line);
 
         execute(command);
-        Thread.sleep(getParams().printStringDelayInMs);
+        Time.delay(getParams().printStringDelayInMs);
         return command.getOperator();
     }
 
@@ -1474,7 +1472,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setBaudRate(baudRate);
         command.setTimeout(timeout);
         int rc = executeCommand(command);
-        Thread.sleep(300);
+        Time.delay(300);
         return rc;
     }
 
@@ -1592,7 +1590,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setFlags(station);
         command.setCapFlags(capGraphicsFlags());
         command.setData(data);
-        Thread.sleep(params.getGraphicsLineDelay());
+        Time.delay(params.getGraphicsLineDelay());
         return executeCommand(command);
     }
 
@@ -1619,7 +1617,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             case MODE_FULLREPORT:
             case MODE_EJREPORT:
             case MODE_SLPPRINT:
-                Thread.sleep(TimeToSleep);
+                Time.delay(TimeToSleep);
                 break;
 
             default:
@@ -1682,7 +1680,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
                 case ECR_SUBMODE_REPORT:
                 case ECR_SUBMODE_PRINT: {
-                    Thread.sleep(TimeToSleep);
+                    Time.delay(TimeToSleep);
                     break;
                 }
 
@@ -2450,7 +2448,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         if (getParams().waitForBarcodePrinting) {
             waitForPrinting();
-            Thread.sleep(getParams().barcodeDelay);
+            Time.delay(getParams().barcodeDelay);
         }
     }
 
@@ -3199,7 +3197,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void cutPaper() throws Exception {
         if (capCutPaper && (params.cutMode == SmFptrConst.SMFPTR_CUT_MODE_AUTO)) {
             if (params.cutPaperDelay != 0) {
-                Thread.sleep(params.cutPaperDelay);
+                Time.delay(params.cutPaperDelay);
             }
             int rc = cutPaper(params.cutType);
             capCutPaper = isCommandSupported(rc);
@@ -3358,8 +3356,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public void fsWriteTLV(byte[] tlv) throws Exception {
-        if (isFSDocumentOpened()) {
+    public void fsWriteTLV(byte[] tlv) throws Exception 
+    {
+        if (readPrinterStatus().getPrinterMode().isReceiptOpened()) {
             tlv = filterTLV(tlv);
             if (tlv.length <= 0) {
                 return;
@@ -3845,7 +3844,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         stopFlag = false;
         check(reboot());
-        Thread.sleep(10 * 1000);
+        Time.delay(10 * 1000);
         for (int i = 0; i < 10; i++) {
             try {
                 if (stopFlag) {
@@ -3855,7 +3854,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 connect();
                 break;
             } catch (Exception e) {
-                Thread.sleep(5 * 1000);
+                Time.delay(5 * 1000);
             }
         }
         connect();
@@ -4173,7 +4172,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     private void waitFirmwareUpdate() throws Exception {
         logger.debug("waitFirmwareUpdate");
-        Thread.sleep(firmwareUpdateDelay);
+        Time.delay(firmwareUpdateDelay);
         logger.debug("waitFirmwareUpdate: OK");
     }
 
@@ -4265,7 +4264,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
                 case ECR_SUBMODE_REPORT:
                 case ECR_SUBMODE_PRINT: {
-                    Thread.sleep(TimeToSleep);
+                    Time.delay(TimeToSleep);
                     continue;
                 }
 
@@ -4333,7 +4332,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 case MODE_FULLREPORT:
                 case MODE_EJREPORT:
                 case MODE_SLPPRINT:
-                    Thread.sleep(TimeToSleep);
+                    Time.delay(TimeToSleep);
                     break;
 
                 default:

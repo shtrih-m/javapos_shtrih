@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
         restoreAndSaveChangesTo(chbFastConnect, pref, "FastConnect", true);
 
         chbScocFirmwareUpdate = findViewById(R.id.chbScocFirmwareUpdate);
-        restoreAndSaveChangesTo(chbScocFirmwareUpdate, pref, "ScocFirmwareUpdate", true);
+        restoreAndSaveChangesTo(chbScocFirmwareUpdate, pref, "ScocFirmwareUpdate", false);
 
         Spinner cbProtocol = findViewById(R.id.cbProtocol);
 
@@ -537,8 +537,10 @@ public class MainActivity extends AppCompatActivity {
                 props.put("fastConnect", fastConnect ? "1" : "0");
                 props.put("capScocUpdateFirmware", scocFirmwareAutoupdate ? "1" : "0");
                 props.put("byteTimeout", timeout);
-
                 JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
+
+
+                // test reconnection
                 if (printer.getState() != JposConst.JPOS_S_CLOSED) {
                     printer.close();
                 }
@@ -547,9 +549,7 @@ public class MainActivity extends AppCompatActivity {
                 printer.setDeviceEnabled(true);
                 model.ScocUpdaterStatus.set("");
                 printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, observer);
-
                 return null;
-
             } catch (Exception e) {
                 log.error("Bluetooth device " + address + " connection using protocol " + selectedProtocol + " failed", e);
                 return e.getMessage();
@@ -1269,7 +1269,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void printSalesReceipt(final int positions, final int strings) throws Exception {
+    private void printSalesReceipt(final int positions, final int strings) throws Exception
+    {
+        //printer.close();
+
 
         final int fiscalReceiptType = FiscalPrinterConst.FPTR_RT_SALES;
 

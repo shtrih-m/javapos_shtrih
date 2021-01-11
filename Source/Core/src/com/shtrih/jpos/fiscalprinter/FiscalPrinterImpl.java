@@ -96,6 +96,8 @@ import com.shtrih.util.ServiceVersion;
 import com.shtrih.util.ServiceVersionUtil;
 import com.shtrih.util.StringUtils;
 import com.shtrih.util.SysUtils;
+import com.shtrih.jpos.fiscalprinter.JsonUpdateService;
+import com.shtrih.util.Time;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -664,7 +666,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 case SMFP_EFPTR_RECBUF_OVERFLOW:
                     boolean recOpened = printer.readPrinterStatus().getPrinterMode().isReceiptOpened();
                     if (!recOpened) {
-                        Thread.sleep(1000);
+                        Time.delay(1000);
                         command.setRepeatNeeded(true);
                     }
                     break;
@@ -3168,7 +3170,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             getPrinter().stopSaveCommands();
 
             try {
-                Thread.sleep(getParams().recCloseSleepTime);
+                Time.delay(getParams().recCloseSleepTime);
                 if (!receipt.getCapAutoCut()) {
                     printEndFiscal();
                 }
@@ -4336,7 +4338,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         try {
             while (deviceThreadEnabled) {
                 checkDeviceStatus();
-                Thread.sleep(params.pollInterval);
+                Time.delay(params.pollInterval);
             }
         } catch (InterruptedException e) {
             logger.error("InterruptedException", e);

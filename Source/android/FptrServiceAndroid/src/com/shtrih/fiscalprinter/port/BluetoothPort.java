@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothSocket;
 
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Localizer;
+import com.shtrih.util.Time;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -148,7 +149,7 @@ public class BluetoothPort implements PrinterPort {
         for (; ; ) {
             long currentTime = System.currentTimeMillis();
             if (adapter.getState() == BluetoothAdapter.STATE_TURNING_ON) {
-                Thread.sleep(100);
+                Time.delay(100);
             } else {
                 break;
             }

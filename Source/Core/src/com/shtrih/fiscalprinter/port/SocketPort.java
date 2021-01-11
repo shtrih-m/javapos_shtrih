@@ -78,7 +78,7 @@ public class SocketPort implements PrinterPort {
             if (socket != null) {
                 socket.close();
             }
-            Thread.sleep(100);
+            Time.delay(100);
         } catch (Exception e) {
         }
         socket = null;

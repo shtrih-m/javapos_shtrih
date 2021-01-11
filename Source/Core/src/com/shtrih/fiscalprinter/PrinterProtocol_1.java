@@ -22,6 +22,7 @@ import com.shtrih.fiscalprinter.port.PrinterPort;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.Logger2;
 import com.shtrih.util.SysUtils;
+import com.shtrih.util.Time;
 
 public class PrinterProtocol_1 implements PrinterProtocol {
     // serial port interface
@@ -211,7 +212,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
                     return readAnswer(timeout);
 
                 default:
-                    Thread.sleep(100);
+                    Time.delay(100);
             }
 
             if (ackNumber >= maxAckNumber) {
@@ -256,7 +257,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
                         return;
 
                     default:
-                        Thread.sleep(100);
+                        Time.delay(100);
                         enqNumber++;
                 }
 

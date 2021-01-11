@@ -250,7 +250,7 @@
         <!-- Combine item adjustments (enabled by default) -->
 		<prop name="printReceiptItemAsText" type="String" value="0"/>
         <!-- Text report enabled -->
-        <prop name="textReportEnabled" type="String" value="1"/>
+        <prop name="textReportEnabled" type="String" value="0"/>
         <!-- Text report file name -->
         <prop name="textReportFileName" type="String" value="archive.txt"/>
         <!-- Text report empty lines enabled -->
@@ -308,7 +308,7 @@
 			 будет напечатан сразу после заголовка чека. -->
 		<prop name="FSTagsPlacement" type="String" value="1"/>
 		<!-- Command delay in milliseconds -->
-		<prop name="commandDelayInMs" type="String" value="10"/>
+		<prop name="commandDelayInMs" type="String" value="0"/>
 		<!-- taxCalculation, 0 - fiscal printer on receipt items, 1 - driver on receipt total -->
 		<prop name="taxCalculation" type="String" value="1"/>
 		
@@ -319,7 +319,7 @@
 		     default value is 0 -->
 		<prop name="markingType" type="String" value="1"/>
 		<!-- validTimeDiffInSecs -->
-		<prop name="validTimeDiffInSecs" type="String" value="0"/>
+		<prop name="validTimeDiffInSecs" type="String" value="5"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>

@@ -983,7 +983,7 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
-            printOpenDayTest();
+            printSalesReceipt99(5,5);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -4062,4 +4062,33 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    private void printSalesReceipt99(int positions, int strings) 
+    {
+        try
+        {
+            int fiscalReceiptType = FiscalPrinterConst.FPTR_RT_SALES;
+            printer.setFiscalReceiptType(fiscalReceiptType);
+            printer.beginFiscalReceipt(true);
+            printer.fsWriteTag(1016, "2225031594  ");
+            printer.fsWriteTag(1073, "+78001000000");
+            printer.fsWriteTag(1005, "НОВОСИБИРСК,КИРОВА,86");
+            printer.fsWriteTag(1075, "+73833358088");
+            printer.fsWriteTag(1171, "+73833399242");
+            printer.fsWriteTag(1044, "Прием денежных средств");
+            printer.fsWriteTag(1026, "РНКО \"ПЛАТЕЖНЫЙ ЦЕНТР\"");
+            printer.printNormal(FiscalPrinterConst.FPTR_S_RECEIPT, "receipt.getReceipt()");
+            String unitName = "Оплата";
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, 4);
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 4);
+            printer.printRecItem("Приём платежа", 12300, 0, 0, 0, unitName);
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, 4);
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 4);
+            printer.printRecItem("Размер вознаграждения", 123, 0, 3, 0, unitName);
+            printer.printRecTotal(12423, 12423, "0");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
  }

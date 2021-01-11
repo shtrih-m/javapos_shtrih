@@ -29,6 +29,8 @@ import com.shtrih.util.Localizer;
 import com.shtrih.util.MathUtils;
 import com.shtrih.util.StringUtils;
 import com.shtrih.util.SysUtils;
+import com.shtrih.util.Time;
+
 import static jpos.FiscalPrinterConst.FPTR_PS_MONITOR;
 import static jpos.FiscalPrinterConst.JPOS_EFPTR_BAD_ITEM_AMOUNT;
 import static jpos.FiscalPrinterConst.JPOS_EFPTR_NEGATIVE_TOTAL;
@@ -153,7 +155,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
                 getPrinter().getPrinter().closeReceipt(closeParams);
                 getFiscalDay().closeFiscalRec();
                 // Print may not respond for some time
-                Thread.sleep(getParams().recCloseSleepTime);
+                Time.delay(getParams().recCloseSleepTime);
             }
         } else if (getReceipt().isCancelled()) {
             getPrinter().printText(getParams().receiptVoidText);

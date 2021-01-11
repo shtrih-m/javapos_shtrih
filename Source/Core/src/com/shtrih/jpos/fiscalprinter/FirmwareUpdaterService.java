@@ -11,6 +11,7 @@ import com.shtrih.fiscalprinter.scoc.commands.DeviceStatusResponse;
 import com.shtrih.fiscalprinter.table.PrinterTables;
 import com.shtrih.util.BitUtils;
 import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.Time;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -55,7 +56,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
     public void run() {
         try {
-            Thread.sleep(5 * 1000);
+            Time.delay(5 * 1000);
 
             logger.debug("Starting FirmwareUpdaterService");
 
@@ -70,13 +71,10 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
                 }
 
                 updateFirmware();
-
-                Thread.sleep(pollPeriodSeconds * 1000);
+                Time.delay(pollPeriodSeconds * 1000);
             }
 
-            logger.error("FirmwareUpdaterService stopped");
-        } catch (InterruptedException e) {
-            logger.error("FirmwareUpdaterService stopped");
+            logger.debug("FirmwareUpdaterService stopped");
         } catch (Exception e) {
             logger.error("FirmwareUpdaterService unexpected exception", e);
         }

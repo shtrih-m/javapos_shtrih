@@ -19,7 +19,7 @@
                 <Line DoubleWidth="0" Text=""/>
                 <Line DoubleWidth="0" Text=""/>
             </Trailer>
-            <NonFiscal DocumentNumber="3"/>
+            <NonFiscal DocumentNumber="5"/>
         </FiscalPrinter_0588820041033297>
     </FiscalPrinter>
 </root>

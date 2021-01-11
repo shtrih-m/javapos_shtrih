@@ -8,6 +8,7 @@ package com.shtrih.jpos.fiscalprinter;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.FDOParameters;
 import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.Time;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,7 +57,7 @@ public class FSService implements Runnable {
 				if (stopFlag)
 					break;
 
-				Thread.sleep(parameters.getPollPeriodSeconds() * 1000);
+				Time.delay(parameters.getPollPeriodSeconds() * 1000);
 			}
 
 			logger.error("FSService stopped");
