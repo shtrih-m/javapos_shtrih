@@ -1,5 +1,6 @@
 package com.shtrih.tinyjavapostester;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -16,6 +17,7 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -32,9 +34,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.Build;
-import android.Manifest;
-import android.Manifest.permission;
 
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.pdf417.encoder.Compaction;
@@ -68,21 +67,15 @@ import com.shtrih.tinyjavapostester.databinding.ActivityMainBinding;
 import com.shtrih.tinyjavapostester.search.bluetooth.DeviceListActivity;
 import com.shtrih.tinyjavapostester.search.tcp.TcpDeviceSearchActivity;
 import com.shtrih.util.Hex;
-import com.shtrih.util.ImageRender;
 import com.shtrih.util.SysUtils;
 
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -162,54 +155,54 @@ public class MainActivity extends AppCompatActivity {
 
         final SharedPreferences pref = this.getSharedPreferences("MainActivity", Context.MODE_PRIVATE);
 
-        tbNetworkAddress = findViewById(R.id.tbNetworkAddress);
+        tbNetworkAddress = (EditText)findViewById(R.id.tbNetworkAddress);
         restoreAndSaveChangesTo(tbNetworkAddress, pref, "NetworkAddress", "127.0.0.1:12345");
 
-        nbPositionsCount = findViewById(R.id.nbPositionsCount);
+        nbPositionsCount = (EditText)findViewById(R.id.nbPositionsCount);
         restoreAndSaveChangesTo(nbPositionsCount, pref, "CheckPositionsCount", "5");
 
-        nbTextStringCount = findViewById(R.id.nbTextStringsCount);
+        nbTextStringCount = (EditText)findViewById(R.id.nbTextStringsCount);
         restoreAndSaveChangesTo(nbTextStringCount, pref, "CheckStringsCount", "5");
 
-        nbFiscalizationNumber = findViewById(R.id.nbFiscalizationNumber);
+        nbFiscalizationNumber = (EditText)findViewById(R.id.nbFiscalizationNumber);
         restoreAndSaveChangesTo(nbFiscalizationNumber, pref, "FiscalizationNumber", "1");
 
-        nbDocumentNumber = findViewById(R.id.nbDocumentNumber);
+        nbDocumentNumber = (EditText)findViewById(R.id.nbDocumentNumber);
         restoreAndSaveChangesTo(nbDocumentNumber, pref, "DocumentNumber", "1");
 
-        nbTagNumber = findViewById(R.id.nbTagNumber);
+        nbTagNumber = (EditText)findViewById(R.id.nbTagNumber);
         restoreAndSaveChangesTo(nbTagNumber, pref, "TagNumber", "1041");
 
-        nbTextLinesCount = findViewById(R.id.nbTextLinesCount);
+        nbTextLinesCount = (EditText)findViewById(R.id.nbTextLinesCount);
         restoreAndSaveChangesTo(nbTextLinesCount, pref, "TextLinesCount", "100");
 
-        nbTableNumber = findViewById(R.id.nbTableNumber);
+        nbTableNumber = (EditText)findViewById(R.id.nbTableNumber);
         restoreAndSaveChangesTo(nbTableNumber, pref, "TableNumber", "1");
 
-        nbTableField = findViewById(R.id.nbTableField);
+        nbTableField = (EditText)findViewById(R.id.nbTableField);
         restoreAndSaveChangesTo(nbTableField, pref, "TableField", "1");
 
-        nbTableRow = findViewById(R.id.nbTableRow);
+        nbTableRow = (EditText)findViewById(R.id.nbTableRow);
         restoreAndSaveChangesTo(nbTableRow, pref, "TableRow", "1");
 
-        tbTableCellValue = findViewById(R.id.tbTableCellValue);
+        tbTableCellValue = (EditText)findViewById(R.id.tbTableCellValue);
         restoreAndSaveChangesTo(tbTableCellValue, pref, "TableCellValue", "");
 
-        tbMonoToken = findViewById(R.id.tbMonoToken);
+        tbMonoToken = (EditText)findViewById(R.id.tbMonoToken);
         restoreAndSaveChangesTo(tbMonoToken, pref, "MonoToken", "");
 
-        tbFFDVersion = findViewById(R.id.tbFFDVersion);
+        tbFFDVersion = (EditText)findViewById(R.id.tbFFDVersion);
 
-        nbTimeout = findViewById(R.id.nbTimeout);
+        nbTimeout = (EditText)findViewById(R.id.nbTimeout);
         restoreAndSaveChangesTo(nbTimeout, pref, "ByteTimeout", "3000");
 
-        chbFastConnect = findViewById(R.id.chbFastConnect);
+        chbFastConnect = (AppCompatCheckBox)findViewById(R.id.chbFastConnect);
         restoreAndSaveChangesTo(chbFastConnect, pref, "FastConnect", true);
 
-        chbScocFirmwareUpdate = findViewById(R.id.chbScocFirmwareUpdate);
+        chbScocFirmwareUpdate = (AppCompatCheckBox)findViewById(R.id.chbScocFirmwareUpdate);
         restoreAndSaveChangesTo(chbScocFirmwareUpdate, pref, "ScocFirmwareUpdate", false);
 
-        Spinner cbProtocol = findViewById(R.id.cbProtocol);
+        Spinner cbProtocol = (Spinner)findViewById(R.id.cbProtocol);
 
         ArrayList<EnumViewModel> protocols = new ArrayList<>();
         protocols.add(new EnumViewModel("0", "Standard"));
@@ -243,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
 
         String logPath = "Log path: " + SysUtils.getFilesPath() + LogbackConfig.MainFileName;
 
-        TextView lblLogPath = findViewById(R.id.lblLogPathValue);
+        TextView lblLogPath = (TextView)findViewById(R.id.lblLogPathValue);
         lblLogPath.setText(logPath);
     }
 
@@ -489,7 +482,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class ConnectToBluetoothDeviceTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private final String address;
         private final FirmwareUpdateObserver observer;
         private final String timeout;
@@ -501,7 +494,7 @@ public class MainActivity extends AppCompatActivity {
 
         private ProgressDialog dialog;
 
-        public ConnectToBluetoothDeviceTask(Activity parent, String address, FirmwareUpdateObserver observer, String timeout, boolean fastConnect, boolean scocFirmwareAutoupdate) {
+        public ConnectToBluetoothDeviceTask(AppCompatActivity parent, String address, FirmwareUpdateObserver observer, String timeout, boolean fastConnect, boolean scocFirmwareAutoupdate) {
             this.parent = parent;
 
             this.address = address;
@@ -619,7 +612,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class AutoConnectBluetoothDeviceTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private final String address;
         private final FirmwareUpdateObserver observer;
         private final String timeout;
@@ -633,7 +626,7 @@ public class MainActivity extends AppCompatActivity {
 
         private ProgressDialog dialog;
 
-        public AutoConnectBluetoothDeviceTask(Activity parent, String address, FirmwareUpdateObserver observer, String timeout, boolean fastConnect, boolean scocFirmwareAutoupdate) {
+        public AutoConnectBluetoothDeviceTask(AppCompatActivity parent, String address, FirmwareUpdateObserver observer, String timeout, boolean fastConnect, boolean scocFirmwareAutoupdate) {
             this.parent = parent;
 
             this.address = address;
@@ -766,12 +759,12 @@ public class MainActivity extends AppCompatActivity {
 
     private class PrintEAN13BarcodeTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private long startedAt;
         private long doneAt;
         private ProgressDialog dialog;
 
-        public PrintEAN13BarcodeTask(Activity parent) {
+        public PrintEAN13BarcodeTask(AppCompatActivity parent) {
             this.parent = parent;
         }
 
@@ -827,12 +820,12 @@ public class MainActivity extends AppCompatActivity {
 
     private class PrintPDF417BarcodeTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private long startedAt;
         private long doneAt;
         private ProgressDialog dialog;
 
-        public PrintPDF417BarcodeTask(Activity parent) {
+        public PrintPDF417BarcodeTask(AppCompatActivity parent) {
             this.parent = parent;
         }
 
@@ -898,12 +891,12 @@ public class MainActivity extends AppCompatActivity {
 
     private class PrintQRBarcodeTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private long startedAt;
         private long doneAt;
         private ProgressDialog dialog;
 
-        public PrintQRBarcodeTask(Activity parent) {
+        public PrintQRBarcodeTask(AppCompatActivity parent) {
             this.parent = parent;
         }
 
@@ -1006,14 +999,14 @@ public class MainActivity extends AppCompatActivity {
 
     private class PrintTextTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private final int lines;
 
         private long startedAt;
         private long doneAt;
         private ProgressDialog dialog;
 
-        public PrintTextTask(Activity parent, int lines) {
+        public PrintTextTask(AppCompatActivity parent, int lines) {
             this.parent = parent;
             this.lines = lines;
         }
@@ -1090,13 +1083,13 @@ public class MainActivity extends AppCompatActivity {
 
     private class DisconnectTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
 
         private long startedAt;
         private long doneAt;
         private ProgressDialog dialog;
 
-        public DisconnectTask(Activity parent) {
+        public DisconnectTask(AppCompatActivity parent) {
             this.parent = parent;
         }
 
@@ -1152,7 +1145,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class PrintReceiptTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private final int positions;
         private final int strings;
 
@@ -1160,7 +1153,7 @@ public class MainActivity extends AppCompatActivity {
         private long doneAt;
         private ProgressDialog dialog;
 
-        public PrintReceiptTask(Activity parent, int positions, int strings) {
+        public PrintReceiptTask(AppCompatActivity parent, int positions, int strings) {
             this.parent = parent;
             this.positions = positions;
             this.strings = strings;
@@ -1217,7 +1210,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class ReadFSCommStatusTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
 
         private int documentsCount;
 
@@ -1225,7 +1218,7 @@ public class MainActivity extends AppCompatActivity {
         private long doneAt;
         private ProgressDialog dialog;
 
-        public ReadFSCommStatusTask(Activity parent) {
+        public ReadFSCommStatusTask(AppCompatActivity parent) {
             this.parent = parent;
         }
 
@@ -1362,12 +1355,12 @@ public class MainActivity extends AppCompatActivity {
 
     private class PrintZReportTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private long startedAt;
         private long doneAt;
         private ProgressDialog dialog;
 
-        public PrintZReportTask(Activity parent) {
+        public PrintZReportTask(AppCompatActivity parent) {
             this.parent = parent;
         }
 
@@ -1418,12 +1411,12 @@ public class MainActivity extends AppCompatActivity {
 
     private class OpenFiscalDayTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private long startedAt;
         private long doneAt;
         private ProgressDialog dialog;
 
-        public OpenFiscalDayTask(Activity parent) {
+        public OpenFiscalDayTask(AppCompatActivity parent) {
             this.parent = parent;
         }
 
@@ -1473,12 +1466,12 @@ public class MainActivity extends AppCompatActivity {
 
     private class PrintJournalCurrentDayTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private long startedAt;
         private long doneAt;
         private ProgressDialog dialog;
 
-        public PrintJournalCurrentDayTask(Activity parent) {
+        public PrintJournalCurrentDayTask(AppCompatActivity parent) {
             this.parent = parent;
         }
 
@@ -1526,12 +1519,12 @@ public class MainActivity extends AppCompatActivity {
 
     private class PrintDuplicateReceiptTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private long startedAt;
         private long doneAt;
         private ProgressDialog dialog;
 
-        public PrintDuplicateReceiptTask(Activity parent) {
+        public PrintDuplicateReceiptTask(AppCompatActivity parent) {
             this.parent = parent;
         }
 
@@ -1586,7 +1579,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class ConnectToWiFiDeviceTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private final String address;
         private final FirmwareUpdateObserver observer;
         private final String timeout;
@@ -1600,7 +1593,7 @@ public class MainActivity extends AppCompatActivity {
 
         private ProgressDialog dialog;
 
-        public ConnectToWiFiDeviceTask(Activity parent, String address, FirmwareUpdateObserver observer, String timeout, boolean fastConnect, boolean scocFirmwareAutoupdate) {
+        public ConnectToWiFiDeviceTask(AppCompatActivity parent, String address, FirmwareUpdateObserver observer, String timeout, boolean fastConnect, boolean scocFirmwareAutoupdate) {
             this.parent = parent;
 
             this.address = address;
@@ -1760,6 +1753,82 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void connectToDevice(View view)
+    {
+        (new ConnectToDeviceTask(this)).execute();
+    }
+
+
+    private class ConnectToDeviceTask extends AsyncTask<Void, Void, String>
+    {
+        private long startedAt;
+        private long doneAt;
+        private final AppCompatActivity parent;
+        private ProgressDialog dialog;
+
+        public ConnectToDeviceTask(AppCompatActivity parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog = ProgressDialog.show(parent, "Connecting to device", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+                connectToDevice();
+                return null;
+            } catch (Exception e) {
+                log.error("Connect to device failed", e);
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage("Success " + (doneAt - startedAt) + " ms");
+            else
+                showMessage(result);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        }
+
+    }
+
+    private void connectToDevice() throws Exception
+    {
+        HashMap<String, String> props = new HashMap<>();
+        props.put("portName", "SHTRIH-NANO-F");
+        props.put("portType", "3");
+        props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothLEPort");
+        props.put("protocolType", "1");
+        props.put("fastConnect", "1");
+        props.put("capScocUpdateFirmware", "0");
+        props.put("byteTimeout", "10000");
+        JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
+
+        if (printer.getState() != JposConst.JPOS_S_CLOSED) {
+            printer.close();
+        }
+        printer.open("ShtrihFptr");
+        printer.claim(3000);
+        printer.setDeviceEnabled(true);
+    }
+
+
     public void readFiscalizationTag(View view) {
 
         final int fiscalizationNumber = Integer.parseInt(nbFiscalizationNumber.getText().toString());
@@ -1770,7 +1839,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class ReadFiscalizationTagTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private final int fiscalizationNumber;
         private final int tagNumber;
 
@@ -1781,7 +1850,7 @@ public class MainActivity extends AppCompatActivity {
 
         private ProgressDialog dialog;
 
-        public ReadFiscalizationTagTask(Activity parent, int fiscalizationNumber, int tagNumber) {
+        public ReadFiscalizationTagTask(AppCompatActivity parent, int fiscalizationNumber, int tagNumber) {
             this.parent = parent;
             this.fiscalizationNumber = fiscalizationNumber;
             this.tagNumber = tagNumber;
@@ -1843,7 +1912,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class ReadFiscalizationTLVTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private final int fiscalizationNumber;
 
         private long startedAt;
@@ -1853,7 +1922,7 @@ public class MainActivity extends AppCompatActivity {
 
         private ProgressDialog dialog;
 
-        public ReadFiscalizationTLVTask(Activity parent, int fiscalizationNumber) {
+        public ReadFiscalizationTLVTask(AppCompatActivity parent, int fiscalizationNumber) {
             this.parent = parent;
             this.fiscalizationNumber = fiscalizationNumber;
         }
@@ -1914,7 +1983,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class ReadDocumentTLVTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private final int fiscalizationNumber;
 
         private long startedAt;
@@ -1924,7 +1993,7 @@ public class MainActivity extends AppCompatActivity {
 
         private ProgressDialog dialog;
 
-        public ReadDocumentTLVTask(Activity parent, int fiscalizationNumber) {
+        public ReadDocumentTLVTask(AppCompatActivity parent, int fiscalizationNumber) {
             this.parent = parent;
             this.fiscalizationNumber = fiscalizationNumber;
         }
@@ -2044,7 +2113,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class ReadTableCellTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private final int tableNumber;
         private final int tableColumn;
         private final int tableField;
@@ -2052,7 +2121,7 @@ public class MainActivity extends AppCompatActivity {
 
         private ProgressDialog dialog;
 
-        public ReadTableCellTask(Activity parent, int tableNumber, int tableColumn, int tableField, EditText value) {
+        public ReadTableCellTask(AppCompatActivity parent, int tableNumber, int tableColumn, int tableField, EditText value) {
             this.parent = parent;
             this.tableNumber = tableNumber;
             this.tableColumn = tableColumn;
@@ -2115,7 +2184,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class WriteTableCellTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private final int tableNumber;
         private final int tableColumn;
         private final int tableField;
@@ -2123,7 +2192,7 @@ public class MainActivity extends AppCompatActivity {
 
         private ProgressDialog dialog;
 
-        public WriteTableCellTask(Activity parent, int tableNumber, int tableColumn, int tableField, String value) {
+        public WriteTableCellTask(AppCompatActivity parent, int tableNumber, int tableColumn, int tableField, String value) {
             this.parent = parent;
             this.tableNumber = tableNumber;
             this.tableColumn = tableColumn;
@@ -2178,7 +2247,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class ReadTablesTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
 
         private ProgressDialog dialog;
 
@@ -2187,7 +2256,7 @@ public class MainActivity extends AppCompatActivity {
         private long startedAt;
         private long doneAt;
 
-        public ReadTablesTask(Activity parent) {
+        public ReadTablesTask(AppCompatActivity parent) {
             this.parent = parent;
         }
 
@@ -2273,7 +2342,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class ReadTableTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
         private final int tableNumber;
 
         private ProgressDialog dialog;
@@ -2283,7 +2352,7 @@ public class MainActivity extends AppCompatActivity {
         private long startedAt;
         private long doneAt;
 
-        public ReadTableTask(Activity parent, int tableNumber) {
+        public ReadTableTask(AppCompatActivity parent, int tableNumber) {
             this.parent = parent;
             this.tableNumber = tableNumber;
         }
@@ -2375,14 +2444,14 @@ public class MainActivity extends AppCompatActivity {
 
     private class SyncDateTimeTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
 
         private ProgressDialog dialog;
 
         private long startedAt;
         private long doneAt;
 
-        public SyncDateTimeTask(Activity parent) {
+        public SyncDateTimeTask(AppCompatActivity parent) {
             this.parent = parent;
         }
 
@@ -2455,14 +2524,14 @@ public class MainActivity extends AppCompatActivity {
 
     private class PrintImageTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
 
         private ProgressDialog dialog;
 
         private long startedAt;
         private long doneAt;
 
-        public PrintImageTask(Activity parent) {
+        public PrintImageTask(AppCompatActivity parent) {
             this.parent = parent;
         }
 
@@ -2527,7 +2596,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class GenerateMonoTokenTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
 
         private ProgressDialog dialog;
 
@@ -2535,7 +2604,7 @@ public class MainActivity extends AppCompatActivity {
         private long doneAt;
         private String token;
 
-        public GenerateMonoTokenTask(Activity parent) {
+        public GenerateMonoTokenTask(AppCompatActivity parent) {
             this.parent = parent;
         }
 
@@ -2595,7 +2664,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class ReadFFDVersionTask extends AsyncTask<Void, Void, String> {
 
-        private final Activity parent;
+        private final AppCompatActivity parent;
 
         private ProgressDialog dialog;
 
@@ -2603,7 +2672,7 @@ public class MainActivity extends AppCompatActivity {
         private long doneAt;
         private String token;
 
-        public ReadFFDVersionTask(Activity parent) {
+        public ReadFFDVersionTask(AppCompatActivity parent) {
             this.parent = parent;
         }
 

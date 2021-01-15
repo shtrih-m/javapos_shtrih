@@ -146,6 +146,13 @@
                 android:text="@string/action_connect_to_usb_device" />
 
             <Button
+                android:id="@+id/btnConnectToDevice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="connectToDevice"
+                android:text="@string/action_connect_to_device" />
+
+            <Button
                 android:id="@+id/btnDisconnect"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

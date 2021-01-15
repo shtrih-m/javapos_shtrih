@@ -1,4 +1,4 @@
-package com.shtrih.fiscalprinter.port;
+ package com.shtrih.fiscalprinter.port;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -16,14 +16,20 @@ import android.content.IntentFilter;
 import android.content.Context;
 import android.content.BroadcastReceiver;
 import android.content.pm.PackageManager;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanResult;
 
 import java.util.UUID;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Vector;
 import java.util.ArrayList;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
+import com.shtrih.jpos.cashdrawer.CashDrawerImpl;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Hex;
 import com.shtrih.util.StaticContext;
@@ -60,6 +66,14 @@ public class BluetoothLEPort implements PrinterPort {
         DiscoverServices, DiscoverServicesFailed, UartServiceNotSupported,
         TxCharCharacteristicNotSupported, TxCharCccdDescriptorNotSupported, Connected};
     private ConnectState state = ConnectState.Disconnected;
+    private enum ScanState {ScanStopped, ScanStarted, ScanFailed, ScanCompleted};
+    private ScanState scanState = ScanState.ScanStopped;
+    private int scanError = 0;
+    private int scanTimeout = 5000;
+    private String scanDeviceName = "";
+    private boolean scanSingle = false;
+    List<BluetoothDevice> scanDevices = new Vector<BluetoothDevice>();
+
 
     public BluetoothLEPort() {
     }
@@ -413,14 +427,27 @@ public class BluetoothLEPort implements PrinterPort {
         StaticContext.getContext().registerReceiver(broadcastReceiver, filter);
 
         BluetoothAdapter adapter = getBluetoothAdapter();
-        BluetoothDevice device = adapter.getRemoteDevice(portName);
+        if (BluetoothAdapter.checkBluetoothAddress(portName))
+        {
+            // portName is valid MAC address
+            BluetoothDevice device = adapter.getRemoteDevice(portName);
+            connectDevice(device);
+        } else{
+            // portName is deviceName prefix, for example "SHTRIH-NANO-F"
+            BluetoothDevice device = scanSingle(portName, 10000);
+            connectDevice(device);
+        }
+        loggerDebug("open: OK");
+    }
+
+    private void connectDevice(BluetoothDevice device) throws Exception
+    {
         state = ConnectState.ConnectGatt;
         bluetoothGatt = device.connectGatt(StaticContext.getContext(), false, new BluetoothGattCallbackImpl());
-        if (bluetoothGatt == null){
+        if (bluetoothGatt == null) {
             throw new Exception("ConnectGatt returns null");
         }
         waitOpened(openTimeout);
-        loggerDebug("open: OK");
     }
 
     private void waitOpened(int timeout) throws Exception
@@ -606,5 +633,108 @@ public class BluetoothLEPort implements PrinterPort {
         }
         return ports.toArray(new String[0]);
     }
+
+    public List<BluetoothDevice> scan(String deviceName, int timeout, boolean singleDevice) throws Exception
+    {
+        checkPermissions();
+        scanSingle = singleDevice;
+        scanDevices.clear();
+        scanTimeout = timeout;
+        scanDeviceName = deviceName;
+        scanState = ScanState.ScanStarted;
+        //getBluetoothAdapter().getBluetoothLeScanner().startScan(scanCallback);
+        //waitScanCompleted(scanTimeout);
+
+        Thread thread = new Thread(new Runnable() {
+            public void run()
+            {
+                try{
+                    getBluetoothAdapter().getBluetoothLeScanner().startScan(scanCallback);
+                    waitScanCompleted(scanTimeout);
+                }
+                catch(Exception e){
+                    loggerError(e.getMessage());
+                }
+            }
+        });
+        thread.start();
+        thread.join();
+
+        return scanDevices;
+    }
+
+    public List<BluetoothDevice> scan(String deviceName, int timeout) throws Exception
+    {
+        return scan(deviceName, timeout, false);
+    }
+
+    public BluetoothDevice scanSingle(String deviceName, int timeout) throws Exception
+    {
+        List<BluetoothDevice> devices = scan(deviceName, timeout, true);
+        if (devices.isEmpty()) throw new Exception("Device not found");
+        return devices.get(0);
+    }
+
+    private void waitScanCompleted(int timeout) throws Exception{
+        loggerDebug("waitScanCompleted.start");
+        long startTime = System.currentTimeMillis();
+        for (; ; ) {
+            long currentTime = System.currentTimeMillis();
+
+            if (scanState == ScanState.ScanFailed) {
+                throw new Exception("Scan failed to start, error code " + scanError);
+            }
+            if (scanState == ScanState.ScanCompleted) break;
+
+            Time.delay(100);
+            if ((currentTime - startTime) > timeout) break;
+        }
+        loggerDebug("waitScanCompleted.end");
+    }
+
+    private boolean isValidDevice(BluetoothDevice device) {
+        if (device == null) return false;
+        String name = device.getName();
+        if (name == null) return false;
+        if (name.isEmpty()) return false;
+        if (scanDeviceName.isEmpty()) return true;
+        if (name.startsWith(scanDeviceName)) return true;
+        return false;
+    }
+
+    private ScanCallback scanCallback = new ScanCallback()
+    {
+        // Callback when batch results are delivered.
+        @Override
+        public void onBatchScanResults(List<ScanResult> results)
+        {
+            loggerDebug("onBatchScanResults: " + results.toString());
+        }
+
+        //Callback when scan could not be started.
+        @Override
+        public void onScanFailed(int errorCode)
+        {
+            loggerDebug("onScanFailed: " + errorCode);
+
+            scanError = errorCode;
+            scanState = ScanState.ScanFailed;
+        }
+
+        //Callback when a BLE advertisement has been found.
+        @Override
+        public void onScanResult(int callbackType, ScanResult result)
+        {
+            loggerDebug("onScanResult: " + result.toString());
+            if (isValidDevice(result.getDevice()))
+            {
+                scanDevices.add(result.getDevice());
+                if (scanSingle) {
+                    scanState = ScanState.ScanCompleted;
+                }
+            }
+        }
+
+    };
 
 }

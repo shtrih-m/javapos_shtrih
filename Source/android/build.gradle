@@ -7,7 +7,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.3'
+        classpath 'com.android.tools.build:gradle:4.1.1'
         classpath 'org.slf4j:slf4j-api:1.7.25'
         classpath 'com.github.tony19:logback-android:2.0.0'
     }

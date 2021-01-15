@@ -1,11 +1,11 @@
 package com.shtrih.tinyjavapostester.search.tcp;
 
-import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.content.Intent;
 import android.databinding.ObservableArrayList;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -92,12 +92,12 @@ public class TcpDeviceSearchViewModel extends AndroidViewModel implements Runnab
         }
     }
 
-    public void onItemSelected(Activity activity, TcpDevice device) {
+    public void onItemSelected(AppCompatActivity activity, TcpDevice device) {
 
         Intent intent = new Intent();
         intent.putExtra("Address", device.address);
 
-        activity.setResult(Activity.RESULT_OK, intent);
+        activity.setResult(AppCompatActivity.RESULT_OK, intent);
         activity.finish();
     }
 }
