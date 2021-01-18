@@ -58,8 +58,8 @@ public class BluetoothLEPort implements PrinterPort {
     private BluetoothDevice device  = null;
     private BluetoothGatt bluetoothGatt = null;
     private BluetoothGattCharacteristic TxChar = null;
-    private PipedOutputStream outStream = null;
-    private PipedInputStream inStream = null;
+    private final PipedInputStream inStream;
+    private final PipedOutputStream outStream;
     private MainBroadcastReceiver broadcastReceiver = new MainBroadcastReceiver();
     private static CompositeLogger logger = CompositeLogger.getLogger(BluetoothLEPort.class);
     private enum ConnectState {Disconnected, ConnectGatt, FailedToConnectGatt, RequestMtu,
@@ -75,7 +75,10 @@ public class BluetoothLEPort implements PrinterPort {
     List<BluetoothDevice> scanDevices = new Vector<BluetoothDevice>();
 
 
-    public BluetoothLEPort() {
+    public BluetoothLEPort() throws Exception
+    {
+        outStream = new PipedOutputStream();
+        inStream = new PipedInputStream(outStream);
     }
 
     private static final String ACCESS_FINE_LOCATION = "android.permission.ACCESS_FINE_LOCATION";
@@ -332,7 +335,6 @@ public class BluetoothLEPort implements PrinterPort {
         try
         {
             if (characteristic == null) return;
-            if (outStream == null) return;
 
             if (characteristic.getUuid().equals(TX_CHAR_UUID)) {
                 //loggerDebug("Received: " + Hex.toHex(characteristic.getValue()));
@@ -415,8 +417,6 @@ public class BluetoothLEPort implements PrinterPort {
         if (isOpened()) return;
 
         checkPermissions();
-        outStream = new PipedOutputStream();
-        inStream = new PipedInputStream(outStream);
 
         mHandler = new Handler(StaticContext.getContext().getMainLooper());
         IntentFilter filter = new IntentFilter();
@@ -492,8 +492,6 @@ public class BluetoothLEPort implements PrinterPort {
 
         mHandler = null;
         TxChar = null;
-        inStream= null;
-        outStream= null;
         state = ConnectState.Disconnected;
         loggerDebug("close: OK");
     }

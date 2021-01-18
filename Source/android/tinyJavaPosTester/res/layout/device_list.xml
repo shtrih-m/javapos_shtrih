@@ -54,7 +54,7 @@
  >
 
         <Button
-            android:id="@+id/button_scan"
+            android:id="@+id/button_scan_bt"
             style="?android:buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,7 +62,20 @@
             android:shadowDx="1.2"
             android:shadowDy="1.2"
             android:shadowRadius="1.2"
-            android:text="scan" />
+            android:text="Scan BT devices" />
+
+        <Button
+            android:id="@+id/button_scan_ble"
+            style="?android:buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:shadowDx="1.2"
+            android:shadowDy="1.2"
+            android:shadowRadius="1.2"
+            android:text="Scan BLE devices"
+            android:visibility="invisible" />
+
     </LinearLayout>
 
 </LinearLayout>

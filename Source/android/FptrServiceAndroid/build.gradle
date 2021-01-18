@@ -5,6 +5,9 @@ clean.doFirst {
     delete "${rootDir}/../../dist/zip/android"
 }
 
+task prepareKotlinBuildScriptModel {
+}
+
 android {
     compileSdkVersion 25
 
