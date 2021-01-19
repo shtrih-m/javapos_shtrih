@@ -3,6 +3,8 @@ package com.shtrih.tinyjavapostester.search.bluetooth;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanResult;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,12 +24,19 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanSettings;
 
+import com.shtrih.fiscalprinter.port.BluetoothLEPort;
 import com.shtrih.tinyjavapostester.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+
 import java.util.Set;
+import java.util.HashSet;
 
 public class DeviceListActivity extends AppCompatActivity {
     // Debugging
@@ -41,9 +50,15 @@ public class DeviceListActivity extends AppCompatActivity {
     private org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DeviceListActivity.class);
 
     private BluetoothAdapter mBtAdapter;
+    private BluetoothLeScanner bleScanner;
     private ArrayAdapter<String> mPairedDevicesArrayAdapter;
     private ArrayAdapter<String> mNewDevicesArrayAdapter;
+    private HashSet<BluetoothDevice> devices = new HashSet<>();
     private CharSequence originalTitle;
+    Button btnScanBT;
+    Button btnScanBLE;
+    boolean btScanStarted = false;
+    boolean bleScanStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,19 +74,37 @@ public class DeviceListActivity extends AppCompatActivity {
         setResult(Activity.RESULT_CANCELED);
 
         // Initialize the button to perform device discovery
-        Button btnScanBT = (Button) findViewById(R.id.button_scan_bt);
+        btnScanBT = (Button) findViewById(R.id.button_scan_bt);
+        btnScanBLE = (Button) findViewById(R.id.button_scan_ble);
+
         btnScanBT.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                scanBT();
+
+                if (Build.VERSION.SDK_INT >= 23) {
+                    accessLocationPermission();
+                }
+                if (btScanStarted) {
+                    stopDiscovery();
+                } else {
+                    startBTDiscovery();
+                }
             }
         });
 
-        Button btnScanBLE = (Button) findViewById(R.id.button_scan_ble);
         btnScanBLE.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //scanBLE();
+            public void onClick(View v)
+            {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    accessLocationPermission();
+                }
+                if (bleScanStarted)
+                {
+                    stopDiscovery();
+                } else {
+                    startBLEDiscovery();
+                }
             }
         });
 
@@ -109,6 +142,8 @@ public class DeviceListActivity extends AppCompatActivity {
             finish();
             return;
         }
+        bleScanner = mBtAdapter.getBluetoothLeScanner();
+
 
         // Get a set of currently paired devices Set<BluetoothDevice>
         Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices(); // If there are paired devices, add each one to the ArrayAdapter
@@ -142,8 +177,6 @@ public class DeviceListActivity extends AppCompatActivity {
         if (!listRequestPermission.isEmpty()) {
             String[] strRequestPermission = listRequestPermission.toArray(new String[listRequestPermission.size()]);
             requestPermissions(strRequestPermission, REQUEST_CODE_LOC);
-        } else {
-            startBTDiscovery();
         }
     }
 
@@ -160,7 +193,7 @@ public class DeviceListActivity extends AppCompatActivity {
                         }
                     }
 
-                    startBTDiscovery();
+                    //startBTDiscovery(); !!!
                 }
                 break;
             default:
@@ -173,47 +206,96 @@ public class DeviceListActivity extends AppCompatActivity {
         super.onDestroy();
 
         // Make sure we're not doing discovery anymore
-        stopBTDiscovery();
+        stopDiscovery();
 
         // Unregister broadcast listeners
         this.unregisterReceiver(mReceiver);
         // saveSettings();
     }
 
-    /**
-     * Start device discover with the BluetoothAdapter
-     */
-    private void scanBT()
+    private void discoveryFinished() {
+        setTitle(originalTitle);
+        setProgressBarIndeterminateVisibility(false);
+        btnScanBT.setText("Start BT scan");
+        btnScanBLE.setText("Start BLE scan");
+    }
+
+    private void stopDiscovery()
     {
-        stopBTDiscovery();
-        if (Build.VERSION.SDK_INT >= 23) {
-            accessLocationPermission();
-            return;
+        if (btScanStarted)
+        {
+            btScanStarted = false;
+            if (mBtAdapter.isDiscovering()) {
+                mBtAdapter.cancelDiscovery();
+            }
         }
-        startBTDiscovery();
+        if (bleScanStarted){
+            bleScanStarted = false;
+            bleScanner.stopScan(scanCallback);
+        }
+        discoveryFinished();
     }
 
-    private void stopBTDiscovery() {
-        if (mBtAdapter != null && mBtAdapter.isDiscovering()) {
-            mBtAdapter.cancelDiscovery();
-            mBtAdapter = null;
-        }
+    private void startBLEDiscovery()
+    {
+        if (!checkAdapterEnabled()) return;
+        setProgressBarIndeterminateVisibility(true);
+        setTitle(R.string.scanning);
+        btnScanBLE.setText("Stop BLE scan");
+
+        devices.clear();
+        devices.addAll(mBtAdapter.getBondedDevices());
+        mNewDevicesArrayAdapter.clear();
+        bleScanner.startScan(scanCallback);
+        bleScanStarted = true;
     }
 
-    private void startBTDiscovery() {
+    private ScanCallback scanCallback = new ScanCallback()
+    {
+        // Callback when batch results are delivered.
+        @Override
+        public void onBatchScanResults(List<ScanResult> results)
+        {
+            log.debug("onBatchScanResults: " + results.toString());
+        }
+
+        //Callback when scan could not be started.
+        @Override
+        public void onScanFailed(int errorCode)
+        {
+            log.error("Scan failed: " + errorCode);
+            Toast.makeText(getApplicationContext(), "Scan failed: " + errorCode, Toast.LENGTH_LONG).show();
+        }
+
+        //Callback when a BLE advertisement has been found.
+        @Override
+        public void onScanResult(int callbackType, ScanResult result)
+        {
+            if (!bleScanStarted) return;
+            addDevice(result.getDevice());
+        }
+    };
+
+    private void startBTDiscovery()
+    {
+        if (!checkAdapterEnabled()) return;
+        setProgressBarIndeterminateVisibility(true);
+        setTitle(R.string.scanning);
+        btnScanBT.setText("Stop BT scan");
+
+        devices.clear();
+        devices.addAll(mBtAdapter.getBondedDevices());
+        mNewDevicesArrayAdapter.clear();
+        mBtAdapter.startDiscovery();
+        btScanStarted = true;
+    }
+
+    private boolean checkAdapterEnabled() {
         if (!mBtAdapter.isEnabled()) {
             log.error("BT adapter disabled");
             Toast.makeText(getApplicationContext(), "BT adapter disabled", Toast.LENGTH_LONG).show();
-            return;
         }
-
-        setProgressBarIndeterminateVisibility(true);
-        setTitle(R.string.scanning);
-        findViewById(R.id.button_scan_bt).setVisibility(View.GONE);
-        findViewById(R.id.button_scan_ble).setVisibility(View.GONE);
-
-        mNewDevicesArrayAdapter.clear();
-        mBtAdapter.startDiscovery();
+        return mBtAdapter.isEnabled();
     }
 
     // The on-click listener for all devices in the ListViews
@@ -222,7 +304,7 @@ public class DeviceListActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
             // Cancel discovery because it's costly and we're about to connect
 
-            stopBTDiscovery();
+            stopDiscovery();
 
             // Get the device MAC address, which is the last 17 chars in the
             // View
@@ -238,29 +320,37 @@ public class DeviceListActivity extends AppCompatActivity {
         }
     };
 
-    // The BroadcastReceiver that listens for discovered devices and
-    // changes the title when discovery is finished
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, Intent intent)
+        {
+            if (!btScanStarted) return;
             String action = intent.getAction();
 
             // When discovery finds a device
             if (BluetoothDevice.ACTION_FOUND.equals(action))
             {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                addDevice(device);
+            }
 
-                log.debug("BT Device: " + device.getName() + ": " + device.getAddress());
-                mNewDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-
-                // When discovery is finished, change the Activity title
-            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                setProgressBarIndeterminateVisibility(false);
-                setTitle(originalTitle);
-                findViewById(R.id.button_scan_bt).setVisibility(View.VISIBLE);
-                findViewById(R.id.button_scan_ble).setVisibility(View.VISIBLE);
+            if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action))
+            {
+                discoveryFinished();
             }
         }
     };
 
+    private void addDevice(BluetoothDevice device)
+    {
+        if (device == null) return;
+        log.debug("BT Device: " + device.getName() + ": " + device.getAddress());
+        if (!devices.contains(device))
+        {
+            if (device.getName() != null) {
+                devices.add(device);
+                mNewDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+            }
+        }
+    }
 }

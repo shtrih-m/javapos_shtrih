@@ -10,7 +10,7 @@ public class Time
     public static void delay(int millis) throws InterruptedException
     {
         if (millis > 0) {
-            logger.debug("Delay " + millis + " ms.");
+            //logger.debug("Delay " + millis + " ms.");
             Thread.sleep(millis);
         }
     }

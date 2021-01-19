@@ -7,6 +7,18 @@
     
 ********************************************************************************
 
+  19.01.2021
+  deviceServiceVersion = 1013606
+
+  [-] Fixed error with class BluetoothLEPort
+      Driver did not wait for write operation to complete, 
+      but Bluetooth communications requires to have only one 
+      outstanding operation at a time. Added timeout to write operations. 
+
+  [+] Added BLE search to test application
+
+********************************************************************************
+
   18.01.2021
   deviceServiceVersion = 1013605
 

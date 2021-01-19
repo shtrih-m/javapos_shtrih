@@ -4,6 +4,35 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        style="?android:buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/button_scan_bt"
+            style="?android:buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:shadowDx="1.2"
+            android:shadowDy="1.2"
+            android:shadowRadius="1.2"
+            android:text="Start BT scan" />
+
+        <Button
+            android:id="@+id/button_scan_ble"
+            style="?android:buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:shadowDx="1.2"
+            android:shadowDy="1.2"
+            android:shadowRadius="1.2"
+            android:text="Start BLE scan" />
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/title_paired_devices"
         android:layout_width="match_parent"
@@ -46,36 +75,5 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:stackFromBottom="true" />
-
-    <LinearLayout
-        style="?android:buttonBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
- >
-
-        <Button
-            android:id="@+id/button_scan_bt"
-            style="?android:buttonBarButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:shadowDx="1.2"
-            android:shadowDy="1.2"
-            android:shadowRadius="1.2"
-            android:text="Scan BT devices" />
-
-        <Button
-            android:id="@+id/button_scan_ble"
-            style="?android:buttonBarButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:shadowDx="1.2"
-            android:shadowDy="1.2"
-            android:shadowRadius="1.2"
-            android:text="Scan BLE devices"
-            android:visibility="invisible" />
-
-    </LinearLayout>
 
 </LinearLayout>

@@ -20,6 +20,7 @@ import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.Set;
 import java.util.HashSet;
@@ -53,6 +54,7 @@ public class BluetoothLEPort implements PrinterPort {
     private int bluetoothmtu = -1;
     private String portName = "";
     private int timeout = 5000;
+    private int writeTimeout = 5000;
     private int openTimeout = 5000;
     private Handler mHandler = null;
     private BluetoothDevice device  = null;
@@ -73,6 +75,8 @@ public class BluetoothLEPort implements PrinterPort {
     private String scanDeviceName = "";
     private boolean scanSingle = false;
     List<BluetoothDevice> scanDevices = new Vector<BluetoothDevice>();
+    HashMap<Object, StatusOperation> operations = new HashMap<Object, StatusOperation>();
+
 
 
     public BluetoothLEPort() throws Exception
@@ -158,6 +162,7 @@ public class BluetoothLEPort implements PrinterPort {
                 characteristic, int status)
         {
             loggerDebug("BluetoothGattCallback.onCharacteristicWrite(status: " + status);
+            completeOperation(characteristic, status);
         }
 
         public void onCharacteristicChanged (BluetoothGatt gatt, BluetoothGattCharacteristic
@@ -319,6 +324,19 @@ public class BluetoothLEPort implements PrinterPort {
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         bluetoothGatt.writeDescriptor(descriptor);
     }
+/*
+
+            if (status == BluetoothGatt.GATT_SUCCESS)
+            {
+                writeStatus = OperationStatus.Succeeded;
+            } else{
+                writeStatus = OperationStatus.Failed;
+                writeError
+            }
+
+ */
+
+
 
     private void broadcastUpdate(String action)
     {
@@ -544,7 +562,7 @@ public class BluetoothLEPort implements PrinterPort {
 
     public void write(byte[] b) throws Exception
     {
-        //loggerDebug("write(" + Hex.toHex(b) + ")");
+        loggerDebug("write(" + Hex.toHex(b) + ")");
 
         int blockSize = 20;
         if (bluetoothmtu > 0) blockSize = bluetoothmtu;
@@ -561,12 +579,12 @@ public class BluetoothLEPort implements PrinterPort {
 
             if (!writeData(blockData)) break;
         }
-        //loggerDebug("write: OK");
+        loggerDebug("write: OK");
     }
 
     private boolean writeData(byte[] blockData) throws Exception
     {
-        //loggerDebug("writeData: " + Hex.toHex(blockData));
+        loggerDebug("writeData: " + Hex.toHex(blockData));
 
         openPort();
 
@@ -581,11 +599,63 @@ public class BluetoothLEPort implements PrinterPort {
             return false;
         }
         RxChar.setValue(blockData);
+        StatusOperation operation = new StatusOperation(RxChar, "Write");
+        operations.put(RxChar, operation);
         boolean status = bluetoothGatt.writeCharacteristic(RxChar);
         if (!status) {
             loggerError("Failed bluetoothGatt.writeCharacteristic");
         }
+        operation.wait(writeTimeout);
+        operation.checkStatus();
+        operations.remove(operation);
         return status;
+    }
+
+    private class StatusOperation
+    {
+        private int status;
+        private final Object obj;
+        private final String name;
+        private boolean completed = false;
+
+        public StatusOperation(Object obj, String name){
+            this.obj = obj;
+            this.name = name;
+        }
+
+        public void complete(int status){
+            this.status = status;
+            completed = true;
+        }
+
+        public void wait(int timeout) throws Exception
+        {
+            long startTime = System.currentTimeMillis();
+            while (!completed)
+            {
+                    long currentTime = System.currentTimeMillis();
+                    if ((currentTime - startTime) > timeout) {
+                        throw new Exception(name + "failed with timeout");
+                    }
+                    Time.delay(1);
+            }
+        }
+
+        public void checkStatus() throws Exception
+        {
+            if (status != BluetoothGatt.GATT_SUCCESS){
+                throw new Exception(name + "failed with status " + status);
+            }
+        }
+
+    }
+
+    public void completeOperation(Object object, int status)
+    {
+        StatusOperation operation = operations.get(object);
+        if (operation != null){
+            operation.complete(status);
+        }
     }
 
     // no baudrate available for bluwtooth connection

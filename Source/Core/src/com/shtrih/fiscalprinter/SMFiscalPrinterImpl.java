@@ -3358,19 +3358,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void fsWriteTLV(byte[] tlv) throws Exception 
     {
-        if (readPrinterStatus().getPrinterMode().isReceiptOpened()) {
-            tlv = filterTLV(tlv);
-            if (tlv.length <= 0) {
-                return;
-            }
-
-            FSWriteTLV command = new FSWriteTLV();
-            command.setSysPassword(sysPassword);
-            command.setTlv(tlv);
-            execute(command);
-        } else {
-            tlvItems.add(tlv);
-        }
+        tlvItems.add(tlv);
     }
 
     public int fsWriteOperationTLV(byte[] tlv) throws Exception {
