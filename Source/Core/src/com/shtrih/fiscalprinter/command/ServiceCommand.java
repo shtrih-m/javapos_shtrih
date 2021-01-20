@@ -16,44 +16,45 @@ package com.shtrih.fiscalprinter.command;
  * **************************************************************************
  * Service command: FE Length: 6 bytes.
  * - Function code (1 byte)
- * - Operator password (4 bytes)
- * Answer: FEH. Length: 2 bytes.
- * Result Code (1 byte)
+ - Operator parameter (4 bytes)
+ Answer: FEH. Length: 2 bytes.
+ Result Code (1 byte)
  ***************************************************************************
  */
 public class ServiceCommand extends PrinterCommand {
 
-    public static final int FUNCTION_CODE_FM_WRITE = 0x00;
-    public static final int FUNCTION_CODE_FM_READ = 0x01;
-    public static final int FUNCTION_CODE_PB_READ = 0x02;
-    public static final int FUNCTION_CODE_CF_WRITE = 0x03;
-    public static final int FUNCTION_CODE_GET_PRN_VER = 0xeb;
-    public static final int FUNCTION_CODE_GET_BL_VER = 0xec;
-    public static final int FUNCTION_CODE_DFU_REBOOT = 0xed;
-    public static final int FUNCTION_CODE_PROG_LIC = 0xee;
-    public static final int FUNCTION_CODE_READ_LIC = 0xef;
-    public static final int FUNCTION_CODE_READ_MCU_UID = 0xf0;
-    public static final int FUNCTION_CODE_SERIALNUMBER_REPLACE = 0xf1;
-    public static final int FUNCTION_CODE_PING = 0xf2;
-    public static final int FUNCTION_CODE_REBOOT = 0xf3;
-    public static final int FUNCTION_CODE_GLOBALSUMM_GET = 0xf4;
-    public static final int FUNCTION_CODE_SERIALNUMBER_PROG = 0xf5;
-    public static final int FUNCTION_CODE_FLASHKEY_PROG = 0xf6;
-    public static final int FUNCTION_CODE_SET_MODEL = 0xf7;
-    public static final int FUNCTION_CODE_MASS_ERASE = 0xf8;
-    public static final int FUNCTION_CODE_SESSIONKEY_PROG = 0xf9;
-    public static final int FUNCTION_CODE_MASTERKEY_PROG = 0xfa;
-    public static final int FUNCTION_CODE_WIFI_PROG = 0xfb;
-    public static final int FUNCTION_CODE_PRINTER_INIT = 0xfc;
-    public static final int FUNCTION_CODE_FM_PROG = 0xfd;
-    public static final int FUNCTION_CODE_GRAPH_OFF = 0xfe;
-    public static final int FUNCTION_CODE_GRAPH_ON = 0xff;
+    private final String charsetName = "Cp1251";
+    public static final int CODE_FM_WRITE = 0x00;
+    public static final int CODE_FM_READ = 0x01;
+    public static final int CODE_PB_READ = 0x02;
+    public static final int CODE_CF_WRITE = 0x03;
+    public static final int CODE_GET_PRN_VER = 0xeb;
+    public static final int CODE_GET_BL_VER = 0xec;
+    public static final int CODE_DFU_REBOOT = 0xed;
+    public static final int CODE_PROG_LIC = 0xee;
+    public static final int CODE_READ_LIC = 0xef;
+    public static final int CODE_READ_MCU_UID = 0xf0;
+    public static final int CODE_SERIALNUMBER_REPLACE = 0xf1;
+    public static final int CODE_PING = 0xf2;
+    public static final int CODE_REBOOT = 0xf3;
+    public static final int CODE_GLOBALSUMM_GET = 0xf4;
+    public static final int CODE_SERIALNUMBER_PROG = 0xf5;
+    public static final int CODE_FLASHKEY_PROG = 0xf6;
+    public static final int CODE_SET_MODEL = 0xf7;
+    public static final int CODE_MASS_ERASE = 0xf8;
+    public static final int CODE_SESSIONKEY_PROG = 0xf9;
+    public static final int CODE_MASTERKEY_PROG = 0xfa;
+    public static final int CODE_WIFI_PROG = 0xfb;
+    public static final int CODE_PRINTER_INIT = 0xfc;
+    public static final int CODE_FM_PROG = 0xfd;
+    public static final int CODE_GRAPH_OFF = 0xfe;
+    public static final int CODE_GRAPH_ON = 0xff;
 
     // in
-    private int functionCode = 0;       // Function code
-    private int password = 0;   // Admin password (4 bytes)
+    private int functionCode = 0; // Function code
+    private byte[] data; // Parameter (X bytes)
     // out
-    private byte[] rawAnswer;
+    private byte[] answer;
 
     /**
      * Creates a new instance of Beep
@@ -62,6 +63,23 @@ public class ServiceCommand extends PrinterCommand {
         super();
     }
 
+    public static final int SerialNumberLength = 16;
+    public ServiceCommand writeSerialCommand(String serialNumber) throws Exception
+    {
+        if(serialNumber == null)
+            throw new IllegalArgumentException("Serial number should not be null");
+
+        if(serialNumber.length() != SerialNumberLength)
+            throw new IllegalArgumentException("Incorrect serial number length");
+
+        CommandOutputStream stream = new CommandOutputStream(charsetName);
+        stream.writeString(serialNumber, SerialNumberLength);
+        ServiceCommand command = new ServiceCommand();
+        command.setFunctionCode(CODE_SERIALNUMBER_PROG);
+        command.setData(stream.getData());
+        return command;
+    }
+            
     public final int getCode() {
         return 0xFE;
     }
@@ -72,23 +90,30 @@ public class ServiceCommand extends PrinterCommand {
 
     public void encode(CommandOutputStream out) throws Exception {
         out.writeByte(functionCode);
-        out.writeInt(password);
-    }
+        out.writeBytes(data);
+   }
 
     public void decode(CommandInputStream in) throws Exception {
-        rawAnswer = in.readBytesToEnd();
+        answer = in.readBytesToEnd();
     }
 
-    public byte[] getRawAnswer() {
-        return rawAnswer;
+    public byte[] getAnswer() {
+        return answer;
     }
 
-    public int getPassword() {
-        return password;
+    public byte[] getData() {
+        return data;
     }
 
-    public void setPassword(int password) {
-        this.password = password;
+    public void setIntData(int value) throws Exception
+    {
+        CommandOutputStream stream = new CommandOutputStream("");
+        stream.writeInt(value);
+        data = stream.getData();
+    }
+    
+    public void setData(byte[] data) {
+        this.data = data;
     }
 
     /**

@@ -2933,13 +2933,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
 
         ServiceCommand command = new ServiceCommand();
-        command.setFunctionCode(ServiceCommand.FUNCTION_CODE_GLOBALSUMM_GET);
-        command.setPassword(0);
+        command.setFunctionCode(ServiceCommand.CODE_GLOBALSUMM_GET);
+        command.setIntData(0);
         int rc = executeCommand(command);
         capFSTotals = isCommandSupported(rc);
         if (succeeded(rc)) {
             CommandInputStream stream = new CommandInputStream(charsetName);
-            stream.setData(command.getRawAnswer());
+            stream.setData(command.getAnswer());
             long saleAmount = stream.readLong(8);
             long retSaleAmount = stream.readLong(8);
             long buyAmount = stream.readLong(8);
@@ -3814,8 +3814,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public int reboot() throws Exception {
         ServiceCommand command = new ServiceCommand();
-        command.setFunctionCode(ServiceCommand.FUNCTION_CODE_REBOOT);
-        command.setPassword(sysPassword);
+        command.setFunctionCode(ServiceCommand.CODE_REBOOT);
+        command.setIntData(0);
         int rc = executeCommand(command);
         if (succeeded(rc)) {
             port.close();
@@ -3851,8 +3851,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public int rebootToDFU() throws Exception {
         ServiceCommand command = new ServiceCommand();
-        command.setFunctionCode(ServiceCommand.FUNCTION_CODE_DFU_REBOOT);
-        command.setPassword(sysPassword);
+        command.setFunctionCode(ServiceCommand.CODE_DFU_REBOOT);
+        command.setIntData(0);
         int rc = executeCommand(command);
         if (succeeded(rc)) {
             port.close();
@@ -4010,12 +4010,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public int readLoaderVersion() throws Exception {
         int result = 0;
         ServiceCommand command = new ServiceCommand();
-        command.setFunctionCode(ServiceCommand.FUNCTION_CODE_GET_BL_VER);
-        command.setPassword(sysPassword);
+        command.setFunctionCode(ServiceCommand.CODE_GET_BL_VER);
+        command.setIntData(0);
         executeCommand(command);
         if (command.isSucceeded()) {
             CommandInputStream stream = new CommandInputStream(charsetName);
-            stream.setData(command.getRawAnswer());
+            stream.setData(command.getAnswer());
             result = stream.readInt();
         }
         return result;
@@ -4451,12 +4451,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public int readTotalizers(int recType, long[] totalizers) throws Exception {
         logger.debug("readPaymentTotalizers");
         ServiceCommand command = new ServiceCommand();
-        command.setFunctionCode(ServiceCommand.FUNCTION_CODE_GLOBALSUMM_GET);
-        command.setPassword(recType);
+        command.setFunctionCode(ServiceCommand.CODE_GLOBALSUMM_GET);
+        command.setIntData(recType);
         executeCommand(command);
         if (command.isSucceeded()) {
             CommandInputStream stream = new CommandInputStream(charsetName);
-            stream.setData(command.getRawAnswer());
+            stream.setData(command.getAnswer());
             for (int i = 0; i < totalizers.length; i++) {
                 totalizers[i] = stream.readLong(8);
             }
