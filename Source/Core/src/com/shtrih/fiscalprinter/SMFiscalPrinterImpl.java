@@ -2931,19 +2931,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (!capFSTotals) {
             return new FMTotals();
         }
-
-        ServiceCommand command = new ServiceCommand();
-        command.setFunctionCode(ServiceCommand.CODE_GLOBALSUMM_GET);
-        command.setIntData(0);
-        int rc = executeCommand(command);
+        
+        long[] totalizers = new long[4];
+        int rc = readTotalizers(0, totalizers);
         capFSTotals = isCommandSupported(rc);
         if (succeeded(rc)) {
-            CommandInputStream stream = new CommandInputStream(charsetName);
-            stream.setData(command.getAnswer());
-            long saleAmount = stream.readLong(8);
-            long retSaleAmount = stream.readLong(8);
-            long buyAmount = stream.readLong(8);
-            long retBuyAmount = stream.readLong(8);
+            long saleAmount = totalizers[0];
+            long retSaleAmount = totalizers[1];
+            long buyAmount = totalizers[2];
+            long retBuyAmount = totalizers[3];
             FMTotals totals = new FMTotals(saleAmount, buyAmount, retSaleAmount, retBuyAmount);
             return totals;
         } else {
@@ -4440,16 +4436,23 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     /*
-     Старой командой запрашиваются старые счетчики. Для запроса новых добавлены новые команды:
-     FE F4 01 00 00 00 - возвращает 16 8-ми байтовых счетчиков (по типам оплаты 1-16) для приходов.
-     FE F4 02 00 00 00 - возвращает 16 8-ми байтовых счетчиков (по типам оплаты 1-16) для возвратов приходов.
-     FE F4 03 00 00 00 - возвращает 16 8-ми байтовых счетчиков (по типам оплаты 1-16) для расходов.
-     FE F4 04 00 00 00 - возвращает 16 8-ми байтовых счетчиков (по типам оплаты 1-16) для возвратов расходов.
-     Старые и новые счетчики считаются параллельно и независимо.
-     Чтобы получить общую сумму для новых счетчиков надо просуммировать все 16 чисел.
+   
+    Второй параметр отвечает за тип запрашиваемых сумм
+•   FE F4 00 00 00 00 - возвращает 4 8-ми байтных числа (приход, возврат прихода, расход, возврат расхода). Это НС без деталировки по типам оплаты
+•   FE F4 01 00 00 00 - возвращает 16 8-ми байтных числа (приход). Это НС с деталировкой по 16-ти типам оплаты
+•   FE F4 02 00 00 00 - возвращает 16 8-ми байтных числа (возврат прихода). Это НС с деталировкой по 16-ти типам оплаты
+•   FE F4 03 00 00 00 - возвращает 16 8-ми байтных числа (расход). Это НС с деталировкой по 16-ти типам оплаты
+•   FE F4 04 00 00 00 - возвращает 16 8-ми байтных числа (возврат расхода). Это НС с деталировкой по 16-ти типам оплаты
+•   FE F4 05 00 00 00 - возвращает 4 8-ми байтных числа (коррекция прихода, коррекция возврата прихода, коррекция расхода, коррекция возврата расхода)
+    
      */
-    public int readTotalizers(int recType, long[] totalizers) throws Exception {
+    public int readTotalizers(int recType, long[] totalizers) throws Exception 
+    {
         logger.debug("readPaymentTotalizers");
+        if ((recType < 0)||(recType > 5)){
+            return 0x33;
+        }
+                
         ServiceCommand command = new ServiceCommand();
         command.setFunctionCode(ServiceCommand.CODE_GLOBALSUMM_GET);
         command.setIntData(recType);
@@ -4457,6 +4460,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (command.isSucceeded()) {
             CommandInputStream stream = new CommandInputStream(charsetName);
             stream.setData(command.getAnswer());
+            int count = stream.getSize() / 8;
+            if (count < totalizers.length)
+            {
+                // Workaround, fiscal printer does not check parameter
+                // Invalid parameter works as parameter 0.
+                return 0x33; // Invalid command parameters
+            }
+                    
             for (int i = 0; i < totalizers.length; i++) {
                 totalizers[i] = stream.readLong(8);
             }
@@ -4468,6 +4479,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         int count = 0;
         switch (recType) {
             case 0:
+            case 5: 
                 count = 4;
                 break;
             case 1:
@@ -4477,7 +4489,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 count = 16;
                 break;
             default:
-                throw new Exception("Invalid recType value");
+                check(0x33);
         }
         long[] totalizers = new long[count];
         check(readTotalizers(recType, totalizers));

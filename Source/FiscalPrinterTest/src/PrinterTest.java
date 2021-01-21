@@ -721,7 +721,7 @@ class PrinterTest implements FiscalPrinterConst {
             System.out.println("Unsent documents: " + fsCommunicationStatus.getUnsentDocumentsCount());
             System.out.println("Cash in drawer: " + printer.readCashRegister(241).getValue() / 100.0d);
              */
-            //testTotalizers();
+            testTotalizers();
             //printer.fsReadDocumentTLVText(1);
             //printer.fsReadDocumentTLVText(2);
         } catch (Exception e) {
@@ -730,17 +730,26 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     private void testTotalizers() throws Exception {
-        showTotalizers(0, printer.readTotalizers(0));
-        showTotalizers(1, printer.readTotalizers(1));
-        showTotalizers(2, printer.readTotalizers(2));
-        showTotalizers(3, printer.readTotalizers(3));
-        showTotalizers(4, printer.readTotalizers(4));
+        showTotalizers(0);
+        showTotalizers(1);
+        showTotalizers(2);
+        showTotalizers(3);
+        showTotalizers(4);
+        showTotalizers(5);
+        showTotalizers(6);
     }
 
-    private void showTotalizers(int recType, long[] totalizers) {
+    private void showTotalizers(int recType) 
+    {
         logger.debug("showTotalizers: " + recType);
-        for (int i = 0; i < totalizers.length; i++) {
-            logger.debug("Totalizer : " + i + ": " + totalizers[i]);
+        try{
+            long[] totalizers = printer.readTotalizers(recType);
+            for (int i = 0; i < totalizers.length; i++) {
+                logger.debug("Totalizer : " + i + ": " + totalizers[i]);
+            }
+        }
+        catch(Exception e){
+            logger.error(e.getMessage());
         }
     }
 
