@@ -9,7 +9,7 @@ task prepareKotlinBuildScriptModel {
 }
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 25
 
     defaultConfig {
         minSdkVersion 12
@@ -148,7 +148,7 @@ dependencies {
     implementation 'd2xx:d2xx:1.0',
             'org.slf4j:slf4j-api:1.7.25',
             'xerces4android:xerces4android:1.0'
-    implementation 'com.android.support:appcompat-v7:21.0.3'
+    implementation 'com.android.support:appcompat-v7:25.0.0'
 
     androidTestImplementation 'com.android.support:support-annotations:27.1.0'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'

@@ -7,9 +7,10 @@
     
 ********************************************************************************
 
-  21.01.2021
+  27.01.2021
   deviceServiceVersion = 1013607
 
+  [-] Fixed error "Read dead end" with BluetoothLEPort class
   [+] Improved command 0xFEF4, Read totalizers value
 
 ********************************************************************************

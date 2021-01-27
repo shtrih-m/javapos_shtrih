@@ -8,18 +8,16 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
-import android.os.Bundle;
 import android.os.Build;
 import android.os.Handler;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Context;
 import android.content.BroadcastReceiver;
-import android.content.pm.PackageManager;
-import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
-import androidx.core.content.ContextCompat;
+//import androidx.core.content.ContextCompat;
+
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -27,15 +25,14 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
-import java.util.ArrayList;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 
-import com.shtrih.jpos.cashdrawer.CashDrawerImpl;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Hex;
 import com.shtrih.util.StaticContext;
 import com.shtrih.util.Time;
+import com.shtrih.util.ByteBuffer;
+
+
 
 
 public class BluetoothLEPort implements PrinterPort {
@@ -61,8 +58,7 @@ public class BluetoothLEPort implements PrinterPort {
     private BluetoothDevice device  = null;
     private BluetoothGatt bluetoothGatt = null;
     private BluetoothGattCharacteristic TxChar = null;
-    private final PipedInputStream inStream;
-    private final PipedOutputStream outStream;
+    private final ByteBuffer rxBuffer = new ByteBuffer(1024);
     private MainBroadcastReceiver broadcastReceiver = new MainBroadcastReceiver();
     private static CompositeLogger logger = CompositeLogger.getLogger(BluetoothLEPort.class);
     private enum ConnectState {Disconnected, ConnectGatt, FailedToConnectGatt, RequestMtu,
@@ -82,8 +78,6 @@ public class BluetoothLEPort implements PrinterPort {
 
     public BluetoothLEPort() throws Exception
     {
-        outStream = new PipedOutputStream();
-        inStream = new PipedInputStream(outStream);
     }
 
     private static final String ACCESS_FINE_LOCATION = "android.permission.ACCESS_FINE_LOCATION";
@@ -109,10 +103,13 @@ public class BluetoothLEPort implements PrinterPort {
         }
     }
 
-    private void checkPermission(String permission) throws Exception {
+    private void checkPermission(String permission) throws Exception
+    {
+        /* !!!
         if (ContextCompat.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
             throw new Exception("No permission " + permission);
         }
+         */
     }
 
     private class BluetoothGattCallbackImpl extends BluetoothGattCallback
@@ -357,7 +354,7 @@ public class BluetoothLEPort implements PrinterPort {
 
             if (characteristic.getUuid().equals(TX_CHAR_UUID)) {
                 //loggerDebug("Received: " + Hex.toHex(characteristic.getValue()));
-                outStream.write(characteristic.getValue());
+                rxBuffer.write(characteristic.getValue());
             }
         }
         catch(Exception e){
@@ -536,12 +533,11 @@ public class BluetoothLEPort implements PrinterPort {
             throw new Exception("Data length <= 0");
         }
 
-        byte[] data = new byte[len];
         // wait for data available with timaout
         long startTime = System.currentTimeMillis();
         for (;;)
         {
-            if (inStream.available() >= len) break;
+            if (rxBuffer.available() >= len) break;
 
             Time.delay(100);
             long currentTime = System.currentTimeMillis();
@@ -549,7 +545,7 @@ public class BluetoothLEPort implements PrinterPort {
                 throw new Exception("Data read timeout");
             }
         }
-        inStream.read(data, 0, len);
+        byte[] data = rxBuffer.read(len);
         //loggerDebug("read(" + Hex.toHex(data) + ")");
         return data;
     }
@@ -564,6 +560,8 @@ public class BluetoothLEPort implements PrinterPort {
     public void write(byte[] b) throws Exception
     {
         loggerDebug("write(" + Hex.toHex(b) + ")");
+
+        rxBuffer.clear();
 
         int blockSize = 20;
         if (bluetoothmtu > 0) blockSize = bluetoothmtu;
