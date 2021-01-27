@@ -2730,6 +2730,9 @@ public class FiscalPrinterService extends DeviceService implements
                 "SMFPTR_DIO_GET_RECEIPT_FIELD");
         map.put(SmFptrConst.SMFPTR_DIO_SET_RECEIPT_FIELD, 
                 "SMFPTR_DIO_SET_RECEIPT_FIELD");
+        map.put(SmFptrConst.SMFPTR_DIO_READ_JOURNAL, 
+                "SMFPTR_DIO_READ_JOURNAL");
+        
    
         String result = map.get(command);
         if (result == null) {

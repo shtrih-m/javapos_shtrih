@@ -1,4 +1,4 @@
- package com.shtrih.fiscalprinter.port;
+package com.shtrih.fiscalprinter.port;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -19,6 +19,7 @@ import android.content.pm.PackageManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
+import androidx.core.content.ContextCompat;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -109,7 +110,7 @@ public class BluetoothLEPort implements PrinterPort {
     }
 
     private void checkPermission(String permission) throws Exception {
-        if (StaticContext.getContext().checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
             throw new Exception("No permission " + permission);
         }
     }

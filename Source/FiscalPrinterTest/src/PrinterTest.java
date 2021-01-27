@@ -4099,5 +4099,28 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
+
+    private void testJournalDayNumber(){
+        try
+        {
+            printer.resetPrinter();
+            String[] data = new String[1];
+            printer.getData(FPTR_GD_Z_REPORT, null, data);
+            int dayNumber = Integer.parseInt(data[0]);
+            
+            int[] params = new int[2];
+            Object[] out = new Object[1];
+            params[0] = SmFptrConst.SMFPTR_JRN_REPORT_DAY_NUMBER;
+            params[1] = dayNumber;
+            printer.directIO(SmFptrConst.SMFPTR_DIO_READ_JOURNAL, params, out);
+            List<String> lines = (List<String>)out[0];
+            
+            
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     
  }

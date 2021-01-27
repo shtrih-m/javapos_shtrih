@@ -375,6 +375,10 @@ public class DirectIOHandler {
                 new DIOPrintJournal(service).execute(data, object);
                 break;
 
+            case SmFptrConst.SMFPTR_DIO_READ_JOURNAL:
+                new DIOReadJournal(service).execute(data, object);
+                break;
+                
             case SmFptrConst.SMFPTR_DIO_SET_DISCOUNT_AMOUNT:
                 new DIOSetDiscountAmount(service).execute(data, object);
                 break;

@@ -5,7 +5,7 @@ task prepareKotlinBuildScriptModel {
 }
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 21
     defaultConfig {
         applicationId "com.example.tinyjavaposttester"
         minSdkVersion 14
@@ -129,7 +129,7 @@ repositories {
 dependencies {
     //compile fileTree(include: ['*.jar'], dir: '../lib')
     implementation project(':FptrServiceAndroid')
-    implementation 'com.android.support:appcompat-v7:25.0.0'
+    implementation 'com.android.support:appcompat-v7:21.0.3'
     implementation 'org.slf4j:slf4j-api:1.7.21'
     implementation 'com.github.tony19:logback-android-core:1.1.1-6'
     implementation('com.github.tony19:logback-android-classic:1.1.1-6') {

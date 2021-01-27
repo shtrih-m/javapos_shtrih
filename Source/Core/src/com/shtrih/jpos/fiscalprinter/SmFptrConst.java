@@ -664,6 +664,10 @@ public interface SmFptrConst {
     
     public static final int SMFPTR_DIO_FS_DISABLE_PRINT = 0x7C;
     
+    /**
+     * Read journal report
+     */
+    public static final int SMFPTR_DIO_READ_JOURNAL = 0x7D;
     
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
