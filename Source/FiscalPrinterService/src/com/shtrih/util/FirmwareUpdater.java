@@ -7,9 +7,9 @@ package com.shtrih.util;
 
 import gnu.io.*;
 import java.io.*;
-import java.nio.*;
 import org.usb4java.*;
 import java.nio.channels.*;
+import java.nio.ByteBuffer;
 import ru.sir.ymodem.XModem;
 import com.github.kairyu.flop.programmer.dfu.*;
 

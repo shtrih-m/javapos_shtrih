@@ -1,6 +1,6 @@
 package com.shtrih.util;
 
-public class ByteBuffer {
+public class CircularBuffer {
 
     /** Size of the buffer */
     private final int size;
@@ -14,7 +14,7 @@ public class ByteBuffer {
     /** Index of the next data written in the buffer */
     private int writeIndex;
 
-    public ByteBuffer(int size) {
+    public CircularBuffer(int size) {
         this.size = size;
         buffer = new byte[size];
     }

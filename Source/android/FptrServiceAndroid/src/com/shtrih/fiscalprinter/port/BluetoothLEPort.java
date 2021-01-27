@@ -30,7 +30,7 @@ import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Hex;
 import com.shtrih.util.StaticContext;
 import com.shtrih.util.Time;
-import com.shtrih.util.ByteBuffer;
+import com.shtrih.util.CircularBuffer;
 
 
 
@@ -58,7 +58,7 @@ public class BluetoothLEPort implements PrinterPort {
     private BluetoothDevice device  = null;
     private BluetoothGatt bluetoothGatt = null;
     private BluetoothGattCharacteristic TxChar = null;
-    private final ByteBuffer rxBuffer = new ByteBuffer(1024);
+    private final CircularBuffer rxBuffer = new CircularBuffer(1024);
     private MainBroadcastReceiver broadcastReceiver = new MainBroadcastReceiver();
     private static CompositeLogger logger = CompositeLogger.getLogger(BluetoothLEPort.class);
     private enum ConnectState {Disconnected, ConnectGatt, FailedToConnectGatt, RequestMtu,
