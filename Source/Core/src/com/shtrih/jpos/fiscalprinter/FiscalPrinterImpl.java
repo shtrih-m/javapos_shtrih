@@ -2190,6 +2190,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             params.load(jposEntry);
             port = PrinterPortFactory.createInstance(params);
             port = new PrinterPortWrapper(port);
+            port.setPortEvents(new PortEventsNotifier());
             device = ProtocolFactory.getProtocol(params, port);
             printer = new SMFiscalPrinterImpl(port, device, params);
 
@@ -2231,6 +2232,20 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
         state = JPOS_S_IDLE;
         setFreezeEvents(false);
+    }
+
+    private class PortEventsNotifier implements PrinterPort.IPortEvents
+    {
+        public PortEventsNotifier(){}
+
+        public void onConnect(){
+            setPowerState(JPOS_PS_ONLINE);
+        }
+
+        public void onDisconnect(){
+            setPowerState(JPOS_PS_OFFLINE);
+        }
+
     }
 
     private PrinterHeader createHeader() {

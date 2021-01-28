@@ -18,7 +18,7 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 //import androidx.core.content.ContextCompat;
 
-
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.Set;
@@ -73,7 +73,7 @@ public class BluetoothLEPort implements PrinterPort {
     private boolean scanSingle = false;
     List<BluetoothDevice> scanDevices = new Vector<BluetoothDevice>();
     HashMap<Object, StatusOperation> operations = new HashMap<Object, StatusOperation>();
-
+    private IPortEvents events = null;
 
 
     public BluetoothLEPort() throws Exception
@@ -411,7 +411,7 @@ public class BluetoothLEPort implements PrinterPort {
         for (; ; ) {
             long currentTime = System.currentTimeMillis();
             if (adapter.getState() == BluetoothAdapter.STATE_TURNING_ON) {
-                Time.delay(100);
+                Time.delay(10);
             } else {
                 break;
             }
@@ -453,6 +453,9 @@ public class BluetoothLEPort implements PrinterPort {
             BluetoothDevice device = scanSingle(portName, 10000);
             connectDevice(device);
         }
+        if (events != null) {
+            events.onConnect();
+        }
         loggerDebug("open: OK");
     }
 
@@ -490,7 +493,7 @@ public class BluetoothLEPort implements PrinterPort {
                     throw new Exception("TxChar CCCD descriptor not supported");
             }
 
-            Time.delay(100);
+            Time.delay(10);
             if ((currentTime - startTime) > timeout) {
                 loggerDebug("waitOpened(): timeout");
                 throw new Exception("Port open timeout");
@@ -509,6 +512,10 @@ public class BluetoothLEPort implements PrinterPort {
         mHandler = null;
         TxChar = null;
         state = ConnectState.Disconnected;
+        if (events != null) {
+            events.onDisconnect();
+        }
+
         loggerDebug("close: OK");
     }
 
@@ -537,17 +544,24 @@ public class BluetoothLEPort implements PrinterPort {
         long startTime = System.currentTimeMillis();
         for (;;)
         {
+            checkPortState();
             if (rxBuffer.available() >= len) break;
 
-            Time.delay(100);
+            Time.delay(1);
             long currentTime = System.currentTimeMillis();
             if ((currentTime - startTime) > timeout) {
-                throw new Exception("Data read timeout");
+                throw new IOException("Data read timeout");
             }
         }
         byte[] data = rxBuffer.read(len);
         //loggerDebug("read(" + Hex.toHex(data) + ")");
         return data;
+    }
+
+    public void checkPortState() throws IOException {
+        if (state != ConnectState.Connected) {
+            throw new IOException("Device disconnected");
+        }
     }
 
     public void write(int b) throws Exception
@@ -632,18 +646,19 @@ public class BluetoothLEPort implements PrinterPort {
             long startTime = System.currentTimeMillis();
             while (!completed)
             {
-                    long currentTime = System.currentTimeMillis();
-                    if ((currentTime - startTime) > timeout) {
-                        throw new Exception(name + "failed with timeout");
-                    }
-                    Time.delay(1);
+                checkPortState();
+                long currentTime = System.currentTimeMillis();
+                if ((currentTime - startTime) > timeout) {
+                    throw new IOException(name + "failed with timeout");
+                }
+                Time.delay(1);
             }
         }
 
         public void checkStatus() throws Exception
         {
             if (status != BluetoothGatt.GATT_SUCCESS){
-                throw new Exception(name + "failed with status " + status);
+                throw new IOException(name + "failed with status " + status);
             }
         }
 
@@ -753,7 +768,7 @@ public class BluetoothLEPort implements PrinterPort {
             }
             if (scanState == ScanState.ScanCompleted) break;
 
-            Time.delay(100);
+            Time.delay(10);
             if ((currentTime - startTime) > timeout) break;
         }
         loggerDebug("waitScanCompleted.end");
@@ -804,4 +819,7 @@ public class BluetoothLEPort implements PrinterPort {
 
     };
 
+    public void setPortEvents(IPortEvents events){
+        this.events = events;
+    }
 }

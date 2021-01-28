@@ -272,4 +272,7 @@ public class BluetoothPort implements PrinterPort {
 
         return ports.toArray(new String[0]);
     }
+    public void setPortEvents(IPortEvents events){
+
+    }
 }

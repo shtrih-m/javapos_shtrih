@@ -80,4 +80,8 @@ public class SerialPrinterPort implements PrinterPort {
     public String[] getPortNames(){
         return port.getPortNames();
     }
+
+    public void setPortEvents(IPortEvents events){
+
+    }
 }

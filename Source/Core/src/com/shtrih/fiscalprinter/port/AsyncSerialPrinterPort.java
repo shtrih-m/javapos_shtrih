@@ -236,4 +236,6 @@ public class AsyncSerialPrinterPort implements Runnable, PrinterPort
         return true;
     }
 
+    public void setPortEvents(IPortEvents events){
+    }
 }

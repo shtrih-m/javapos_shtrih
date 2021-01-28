@@ -205,6 +205,10 @@ public class HohoSerialPort implements PrinterPort {
     public boolean isSearchByBaudRateEnabled() {
         return true;
     }
+
+    public void setPortEvents(IPortEvents events){
+
+    }
 }
 
 

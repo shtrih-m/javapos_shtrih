@@ -170,4 +170,8 @@ public class SocketPort implements PrinterPort {
     public String[] getPortNames() {
         return new String[] { portName };
     }
+
+    public void setPortEvents(IPortEvents events){
+
+    }
 }

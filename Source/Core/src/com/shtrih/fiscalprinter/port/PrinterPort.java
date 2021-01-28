@@ -3,6 +3,7 @@ package com.shtrih.fiscalprinter.port;
 /**
  * @author V.Kravtsov
  */
+
 public interface PrinterPort 
 {
     void open(int timeout) throws Exception;
@@ -30,4 +31,12 @@ public interface PrinterPort
     boolean isSearchByBaudRateEnabled();
 
     String[] getPortNames();
+
+    void setPortEvents(IPortEvents events);
+
+    public interface IPortEvents
+    {
+        void onConnect();
+        void onDisconnect();
+    }
 }

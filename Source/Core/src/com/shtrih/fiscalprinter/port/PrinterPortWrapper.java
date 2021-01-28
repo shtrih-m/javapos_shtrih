@@ -114,4 +114,8 @@ public class PrinterPortWrapper implements PrinterPort {
     public String[] getPortNames() {
         return port.getPortNames();
     }
+
+    public void setPortEvents(IPortEvents events){
+        port.setPortEvents(events);
+    }
 }
