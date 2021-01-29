@@ -1106,6 +1106,12 @@ public class MainActivity extends AppCompatActivity {
             startedAt = System.currentTimeMillis();
 
             try {
+                if (printer.getDeviceEnabled()){
+                    printer.setDeviceEnabled(false);
+                }
+                if (printer.getClaimed()){
+                    printer.release();
+                }
                 if (printer.getState() != JposConst.JPOS_S_CLOSED) {
                     printer.close();
                 }

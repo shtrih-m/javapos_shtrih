@@ -135,9 +135,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private Thread asyncThread = null;
     private Thread deviceThread = null;
     private Thread eventThread = null;
-    private boolean asyncThreadEnabled = false;
-    private boolean deviceThreadEnabled = false;
-    private boolean eventThreadEnabled = false;
     private boolean deviceEnabled = false;
     private EventCallbacks cb = null;
     private final Vector events = new Vector();
@@ -835,7 +832,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     // event delivery routine
     public void eventProc() {
         try {
-            while (eventThreadEnabled) {
+            while (Thread.currentThread().isInterrupted()) {
                 synchronized (events) {
                     while (!events.isEmpty()) {
                         ((Runnable) events.remove(0)).run();
@@ -845,15 +842,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 }
             }
         } catch (InterruptedException e) {
-            // Restore the interrupted status
-            logger.error("InterruptedException", e);
             Thread.currentThread().interrupt();
         }
     }
 
     public void asyncProc() {
         try {
-            while (asyncThreadEnabled) {
+            while (Thread.currentThread().isInterrupted()) {
                 synchronized (requests) {
                     while (!requests.isEmpty()) {
                         setState(JPOS_S_BUSY);
@@ -865,8 +860,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 setState(JPOS_S_IDLE);
             }
         } catch (InterruptedException e) {
-            // Restore the interrupted status
-            logger.error("InterruptedException", e);
             Thread.currentThread().interrupt();
         }
     }
@@ -881,14 +874,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void startPoll() throws Exception {
-        deviceThreadEnabled = true;
         deviceThread = new Thread(new DeviceTarget(this));
         deviceThread.start();
     }
 
     private void stopPoll() throws Exception {
-        if (deviceThreadEnabled) {
-            deviceThreadEnabled = false;
+        if (deviceThread != null)
+        {
+            deviceThread.interrupt();
             deviceThread.join();
             deviceThread = null;
         }
@@ -1216,25 +1209,21 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void stopEventThread() throws Exception {
-        if (eventThreadEnabled) {
-            eventThreadEnabled = false;
+        if (eventThread != null)
+        {
             synchronized (events) {
                 events.notifyAll();
             }
-            if (eventThread != null) {
-                eventThread.join();
-            }
+            eventThread.interrupt();
+            eventThread.join();
             eventThread = null;
         }
     }
 
     private void startEventThread() throws Exception {
-        if (!eventThreadEnabled) {
-            eventThreadEnabled = true;
-            if (eventThread == null) {
-                eventThread = new Thread(new EventTarget(this));
-                eventThread.start();
-            }
+        if (eventThread == null) {
+            eventThread = new Thread(new EventTarget(this));
+            eventThread.start();
         }
     }
 
@@ -1478,11 +1467,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void setAsyncMode(boolean asyncMode) throws Exception {
         if (asyncMode != this.asyncMode) {
             if (asyncMode) {
-                asyncThreadEnabled = true;
                 asyncThread = new Thread(new AsyncTarget(this));
                 asyncThread.start();
             } else {
-                asyncThreadEnabled = false;
+                asyncThread.interrupt();
                 asyncThread.join();
                 asyncThread = null;
             }
@@ -4351,12 +4339,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void deviceProc() {
         try {
-            while (deviceThreadEnabled) {
+            while (!Thread.currentThread().isInterrupted())
+            {
                 checkDeviceStatus();
-                Time.delay(params.pollInterval);
+                Thread.sleep(params.pollInterval);
             }
         } catch (InterruptedException e) {
-            logger.error("InterruptedException", e);
             Thread.currentThread().interrupt();
         }
     }
