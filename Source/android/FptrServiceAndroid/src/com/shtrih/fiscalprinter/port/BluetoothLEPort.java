@@ -16,6 +16,9 @@ import android.content.Context;
 import android.content.BroadcastReceiver;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanSettings;
+import android.bluetooth.le.BluetoothLeScanner;
 //import androidx.core.content.ContextCompat;
 
 import java.io.IOException;
@@ -25,15 +28,13 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Hex;
 import com.shtrih.util.StaticContext;
 import com.shtrih.util.Time;
 import com.shtrih.util.CircularBuffer;
-
-
-
 
 public class BluetoothLEPort implements PrinterPort {
 
@@ -55,7 +56,7 @@ public class BluetoothLEPort implements PrinterPort {
     private int writeTimeout = 5000;
     private int openTimeout = 5000;
     private Handler mHandler = null;
-    private BluetoothDevice device  = null;
+    private BluetoothDevice device = null;
     private BluetoothGatt bluetoothGatt = null;
     private BluetoothGattCharacteristic TxChar = null;
     private final CircularBuffer rxBuffer = new CircularBuffer(1024);
@@ -74,17 +75,14 @@ public class BluetoothLEPort implements PrinterPort {
     List<BluetoothDevice> scanDevices = new Vector<BluetoothDevice>();
     HashMap<Object, StatusOperation> operations = new HashMap<Object, StatusOperation>();
     private IPortEvents events = null;
-
-
-    public BluetoothLEPort() throws Exception
-    {
-    }
+    private boolean portOpened = false;
+    private BluetoothLeScanner scanner;
 
     private static final String ACCESS_FINE_LOCATION = "android.permission.ACCESS_FINE_LOCATION";
     private static final String ACCESS_BACKGROUND_LOCATION = "android.permission.ACCESS_BACKGROUND_LOCATION";
 
     private void loggerDebug(String text) {
-        //logger.debug(text);
+        logger.debug(text);
     }
 
     private void loggerError(String text) {
@@ -181,6 +179,9 @@ public class BluetoothLEPort implements PrinterPort {
         {
             loggerDebug("BluetoothGattCallback.onDescriptorWrite(status: " + status + ")");
             state = ConnectState.Connected;
+            if (events != null) {
+                events.onConnect();
+            }
         }
 
         public void onReliableWriteCompleted (BluetoothGatt gatt,int status)
@@ -280,9 +281,41 @@ public class BluetoothLEPort implements PrinterPort {
     private void gattDisconnected() throws Exception
     {
         loggerDebug("gattDisconnected");
-        close();
+        doClose();
         state = ConnectState.FailedToConnectGatt;
+        // start wait for device
+        if (portOpened)
+        {
+            loggerDebug("Start scan");
+
+            scanState = ScanState.ScanStarted;
+            List<ScanFilter> filters = new ArrayList<>();
+            filters.add(new ScanFilter.Builder().setDeviceAddress(device.getAddress()).build());
+            ScanSettings settings = new ScanSettings.Builder().setScanMode(
+                    ScanSettings.CALLBACK_TYPE_FIRST_MATCH).build();
+
+            scanner = getBluetoothAdapter().getBluetoothLeScanner();
+            scanner.startScan(filters, settings, scanOpenedDeviceCallback);
+            loggerDebug("Scan started!");
+        }
     }
+
+    private ScanCallback scanOpenedDeviceCallback = new ScanCallback()
+    {
+        @Override
+        public void onScanResult(int callbackType, ScanResult result)
+        {
+            loggerDebug("scanOpenedDeviceCallback.onScanResult: " + result.toString());
+
+            scanner.stopScan(scanOpenedDeviceCallback);
+            state = ConnectState.ConnectGatt;
+            device = result.getDevice();
+            bluetoothGatt = device.connectGatt(null, false, new BluetoothGattCallbackImpl());
+            if (bluetoothGatt == null) {
+                loggerError("ConnectGatt returns null");
+            }
+        }
+    };
 
     private void discoverServices() {
         // Attempts to discover services after successful connection.
@@ -428,34 +461,45 @@ public class BluetoothLEPort implements PrinterPort {
 
     public void open(int timeout) throws Exception
     {
+        doOpen(timeout);
+        portOpened = true;
+    }
+
+    public void doOpen(int timeout) throws Exception
+    {
         loggerDebug("open(" + timeout + ")");
 
         if (isOpened()) return;
 
-        checkPermissions();
-
-        mHandler = new Handler(StaticContext.getContext().getMainLooper());
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_MTU_CHANGED);
-        filter.addAction(ACTION_GATT_CONNECTED);
-        filter.addAction(ACTION_GATT_DISCONNECTED);
-        filter.addAction(ACTION_GATT_SERVICES_DISCOVERED);
-        StaticContext.getContext().registerReceiver(broadcastReceiver, filter);
-
-        BluetoothAdapter adapter = getBluetoothAdapter();
-        if (BluetoothAdapter.checkBluetoothAddress(portName))
+        if (state == ConnectState.Disconnected)
         {
-            // portName is valid MAC address
-            BluetoothDevice device = adapter.getRemoteDevice(portName);
-            connectDevice(device);
-        } else{
-            // portName is deviceName prefix, for example "SHTRIH-NANO-F"
-            BluetoothDevice device = scanSingle(portName, 10000);
-            connectDevice(device);
+            checkPermissions();
+
+            mHandler = new Handler(StaticContext.getContext().getMainLooper());
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(ACTION_MTU_CHANGED);
+            filter.addAction(ACTION_GATT_CONNECTED);
+            filter.addAction(ACTION_GATT_DISCONNECTED);
+            filter.addAction(ACTION_GATT_SERVICES_DISCOVERED);
+            StaticContext.getContext().registerReceiver(broadcastReceiver, filter);
+
+            if (scanner != null){
+                scanner.stopScan(scanOpenedDeviceCallback);
+            }
+
+            BluetoothAdapter adapter = getBluetoothAdapter();
+            if (BluetoothAdapter.checkBluetoothAddress(portName)) {
+                // portName is valid MAC address
+                device = adapter.getRemoteDevice(portName);
+                connectDevice(device);
+                
+            } else {
+                // portName is deviceName prefix, for example "SHTRIH-NANO-F"
+                device = scanSingle(portName, 10000);
+                connectDevice(device);
+            }
         }
-        if (events != null) {
-            events.onConnect();
-        }
+        waitOpened(openTimeout);
         loggerDebug("open: OK");
     }
 
@@ -466,7 +510,6 @@ public class BluetoothLEPort implements PrinterPort {
         if (bluetoothGatt == null) {
             throw new Exception("ConnectGatt returns null");
         }
-        waitOpened(openTimeout);
     }
 
     private void waitOpened(int timeout) throws Exception
@@ -476,6 +519,7 @@ public class BluetoothLEPort implements PrinterPort {
         for (; ; ) {
             long currentTime = System.currentTimeMillis();
             if (isOpened()) break;
+
             switch (state){
                 case FailedToConnectGatt:
                     throw new Exception("Failed to connect Gatt");
@@ -503,9 +547,18 @@ public class BluetoothLEPort implements PrinterPort {
 
     public void close()
     {
+        doClose();
+        portOpened = false;
+    }
+
+    public void doClose()
+    {
         loggerDebug("close");
         if (!isOpened()) return;
 
+        if (scanner != null){
+            scanner.stopScan(scanOpenedDeviceCallback);
+        }
         bluetoothGatt.close();
         bluetoothGatt = null;
 
