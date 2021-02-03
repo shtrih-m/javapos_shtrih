@@ -454,21 +454,21 @@ public class BluetoothLEPort implements PrinterPort {
         }
     }
 
-
-    public void openPort() throws Exception{
-        open(0);
-    }
-
     public void open(int timeout) throws Exception
     {
+        loggerDebug("open(" + timeout + ")");
+
         doOpen(timeout);
         portOpened = true;
+        loggerDebug("open: OK");
+    }
+
+    public void openPort() throws Exception{
+        doOpen(0);
     }
 
     public void doOpen(int timeout) throws Exception
     {
-        loggerDebug("open(" + timeout + ")");
-
         if (isOpened()) return;
 
         if (state == ConnectState.Disconnected)
@@ -500,7 +500,6 @@ public class BluetoothLEPort implements PrinterPort {
             }
         }
         waitOpened(openTimeout);
-        loggerDebug("open: OK");
     }
 
     private void connectDevice(BluetoothDevice device) throws Exception
@@ -547,13 +546,14 @@ public class BluetoothLEPort implements PrinterPort {
 
     public void close()
     {
+        loggerDebug("close");
         doClose();
         portOpened = false;
+        loggerDebug("close: OK");
     }
 
     public void doClose()
     {
-        loggerDebug("close");
         if (!isOpened()) return;
 
         if (scanner != null){
@@ -562,14 +562,22 @@ public class BluetoothLEPort implements PrinterPort {
         bluetoothGatt.close();
         bluetoothGatt = null;
 
+        if (mHandler != null)
+        {
+            try {
+                StaticContext.getContext().unregisterReceiver(broadcastReceiver);
+            }
+            catch(Exception e){
+                loggerError(e.getMessage());
+            }
+        }
         mHandler = null;
+
         TxChar = null;
         state = ConnectState.Disconnected;
         if (events != null) {
             events.onDisconnect();
         }
-
-        loggerDebug("close: OK");
     }
 
     public int byteToInt(int B) {
