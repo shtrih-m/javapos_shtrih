@@ -18,7 +18,6 @@ import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanSettings;
 import android.bluetooth.le.BluetoothLeScanner;
-//import androidx.core.content.ContextCompat;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -62,7 +61,6 @@ public class BluetoothLEPort implements PrinterPort {
     private enum ScanState {ScanStopped, ScanStarted, ScanFailed, ScanCompleted};
     private ScanState scanState = ScanState.ScanStopped;
     private int scanError = 0;
-    private int scanTimeout = 5000;
     private String scanDeviceName = "";
     private boolean scanSingle = false;
     List<BluetoothDevice> scanDevices = new Vector<BluetoothDevice>();
@@ -79,9 +77,18 @@ public class BluetoothLEPort implements PrinterPort {
     }
 
     private void loggerError(String text) {
+
         logger.error(text);
     }
-    
+
+    private void setState(ConnectState newState)
+    {
+        if (newState != state){
+            loggerDebug("setState(" + newState + ")");
+            state = newState;
+        }
+    }
+
     private void checkPermissions() throws Exception
     {
         if (Build.VERSION.SDK_INT >= 23)
@@ -173,7 +180,7 @@ public class BluetoothLEPort implements PrinterPort {
                                        int status)
         {
             loggerDebug("BluetoothGattCallback.onDescriptorWrite(status: " + status + ")");
-            state = ConnectState.Connected;
+            setState(ConnectState.Connected);
             if (events != null) {
                 events.onConnect();
             }
@@ -212,7 +219,7 @@ public class BluetoothLEPort implements PrinterPort {
         {
             int mtu = BLE_MTU + 3; // Maximum allowed 517 - 3 bytes of BLE
             if (bluetoothGatt == null) return;
-            state = ConnectState.RequestMtu;
+            setState(ConnectState.RequestMtu);
             if (!bluetoothGatt.requestMtu(mtu)){
                 loggerError("Failed to configure MTU");
             }
@@ -226,7 +233,7 @@ public class BluetoothLEPort implements PrinterPort {
         loggerDebug("gattDisconnected");
 
         doClose();
-        state = ConnectState.FailedToConnectGatt;
+        setState(ConnectState.FailedToConnectGatt);
         // start wait for device
         if (portOpened)
         {
@@ -252,7 +259,7 @@ public class BluetoothLEPort implements PrinterPort {
             loggerDebug("scanOpenedDeviceCallback.onScanResult: " + result.toString());
 
             scanner.stopScan(scanOpenedDeviceCallback);
-            state = ConnectState.ConnectGatt;
+            setState(ConnectState.ConnectGatt);
             device = result.getDevice();
             bluetoothGatt = device.connectGatt(null, false, new BluetoothGattCallbackImpl());
             if (bluetoothGatt == null) {
@@ -264,11 +271,11 @@ public class BluetoothLEPort implements PrinterPort {
     private void discoverServices() {
         // Attempts to discover services after successful connection.
         if (bluetoothGatt == null) return;
-        state = ConnectState.DiscoverServices;
+        setState(ConnectState.DiscoverServices);
         if (!bluetoothGatt.discoverServices())
         {
             loggerError("Failed to discover services");
-            state = ConnectState.DiscoverServicesFailed;
+            setState(ConnectState.DiscoverServicesFailed);
         }
     }
 
@@ -285,21 +292,21 @@ public class BluetoothLEPort implements PrinterPort {
         BluetoothGattService uartService = bluetoothGatt.getService(UART_SERVICE_UUID);
         if (uartService == null) {
             loggerError("UartService not found!");
-            state = ConnectState.UartServiceNotSupported;
+            setState(ConnectState.UartServiceNotSupported);
             return;
         }
         TxChar = uartService.getCharacteristic(TX_CHAR_UUID);
         if (TxChar == null)
         {
             loggerError("Tx charateristic not found!");
-            state = ConnectState.TxCharCharacteristicNotSupported;
+            setState(ConnectState.TxCharCharacteristicNotSupported);
             return;
         }
         bluetoothGatt.setCharacteristicNotification(TxChar, true);
         BluetoothGattDescriptor descriptor = TxChar.getDescriptor(CCCD);
         if(descriptor == null){
             loggerError("CCCD == null!");
-            state = ConnectState.TxCharCccdDescriptorNotSupported;
+            setState(ConnectState.TxCharCccdDescriptorNotSupported);
             return;
         }
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
@@ -396,9 +403,9 @@ public class BluetoothLEPort implements PrinterPort {
 
     public void doOpen(int timeout) throws Exception
     {
+        if (isOpened()) return;
         if (state == ConnectState.Disconnected)
         {
-            if (isOpened()) return;
             checkPermissions();
 
             if (scanner != null){
@@ -422,7 +429,7 @@ public class BluetoothLEPort implements PrinterPort {
 
     private void connectDevice(BluetoothDevice device) throws Exception
     {
-        state = ConnectState.ConnectGatt;
+        setState(ConnectState.ConnectGatt);
         bluetoothGatt = device.connectGatt(StaticContext.getContext(), false, new BluetoothGattCallbackImpl());
         if (bluetoothGatt == null) {
             throw new Exception("ConnectGatt returns null");
@@ -482,7 +489,7 @@ public class BluetoothLEPort implements PrinterPort {
         bluetoothGatt = null;
 
         TxChar = null;
-        state = ConnectState.Disconnected;
+        setState(ConnectState.Disconnected);
         if (events != null) {
             events.onDisconnect();
         }
@@ -690,25 +697,24 @@ public class BluetoothLEPort implements PrinterPort {
         checkPermissions();
         scanSingle = singleDevice;
         scanDevices.clear();
-        scanTimeout = timeout;
         scanDeviceName = deviceName;
         scanState = ScanState.ScanStarted;
 
-        Thread thread = new Thread(new Runnable() {
-            public void run()
-            {
-                try{
-                    getBluetoothAdapter().getBluetoothLeScanner().startScan(scanCallback);
-                    waitScanCompleted(scanTimeout);
-                }
-                catch(Exception e){
-                    loggerError(e.getMessage());
-                }
-            }
-        });
-        thread.start();
-        thread.join();
+        getBluetoothAdapter().getBluetoothLeScanner().startScan(scanCallback);
+        long startTime = System.currentTimeMillis();
+        for (; ; ) {
+            long currentTime = System.currentTimeMillis();
 
+            if (scanState == ScanState.ScanFailed) {
+                getBluetoothAdapter().getBluetoothLeScanner().stopScan(scanCallback);
+                throw new Exception("Scan failed to start, error code " + scanError);
+            }
+            if (scanState == ScanState.ScanCompleted) break;
+
+            Time.delay(10);
+            if ((currentTime - startTime) > timeout) break;
+        }
+        getBluetoothAdapter().getBluetoothLeScanner().stopScan(scanCallback);
         return scanDevices;
     }
 
@@ -722,23 +728,6 @@ public class BluetoothLEPort implements PrinterPort {
         List<BluetoothDevice> devices = scan(deviceName, timeout, true);
         if (devices.isEmpty()) throw new Exception("Device not found");
         return devices.get(0);
-    }
-
-    private void waitScanCompleted(int timeout) throws Exception{
-        loggerDebug("waitScanCompleted.start");
-        long startTime = System.currentTimeMillis();
-        for (; ; ) {
-            long currentTime = System.currentTimeMillis();
-
-            if (scanState == ScanState.ScanFailed) {
-                throw new Exception("Scan failed to start, error code " + scanError);
-            }
-            if (scanState == ScanState.ScanCompleted) break;
-
-            Time.delay(10);
-            if ((currentTime - startTime) > timeout) break;
-        }
-        loggerDebug("waitScanCompleted.end");
     }
 
     private boolean isValidDevice(BluetoothDevice device) {

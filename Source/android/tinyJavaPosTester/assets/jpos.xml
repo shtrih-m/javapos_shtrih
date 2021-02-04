@@ -142,7 +142,7 @@
 		<!-- maxAckNumber -->
 		<prop name="maxAckNumber" type="String" value="3"/>
 		<!-- maxRepeatCount -->
-		<prop name="maxRepeatCount" type="String" value="3"/>
+		<prop name="maxRepeatCount" type="String" value="1"/>
 		<!-- Payment types -->
 		<prop name="payType0" type="String" value="0"/>
 		<prop name="payType1" type="String" value="1"/>

@@ -2177,7 +2177,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
             params.load(jposEntry);
             port = PrinterPortFactory.createInstance(params);
-            port = new PrinterPortWrapper(port);
             port.setPortEvents(new PortEventsNotifier());
             device = ProtocolFactory.getProtocol(params, port);
             printer = new SMFiscalPrinterImpl(port, device, params);

@@ -292,37 +292,14 @@ public class PrinterProtocol_1 implements PrinterProtocol {
                 command.decodeData(rx);
                 break;
 
-            } catch (IOException e) {
-                logger.error("IOException: ", e);
-
-                if (!command.getIsRepeatable()) {
-                    throw e;
-                }
-
-                if (repeatCount >= maxRepeatCount) {
-                    throw e;
-                }
-            } catch (DeviceException e) {
-                logger.error("DeviceException: ", e);
-
-                if (!command.getIsRepeatable()) {
-                    throw e;
-                }
-                if (repeatCount >= maxRepeatCount) {
-                    throw e;
-                }
-            } catch (AnswerCodeException e) {
+            } catch (AnswerCodeException e)
+            {
+                // !!! Thread.sleep(100) ???
                 try {
                     port.readBytes(0xFF);
                 } catch (Exception e1) {
                 }
-
-                if (!command.getIsRepeatable()) {
-                    throw e;
-                }
-                if (repeatCount >= maxRepeatCount) {
-                    throw e;
-                }
+                throw e;
             }
         }
     }

@@ -81,15 +81,10 @@ public class PrinterProtocol_2 implements PrinterProtocol {
             stepFrameNumber();
             command.decodeData(rx);
             return true;
+
         } catch (Exception e) {
-            logger.error(e);
             isSynchronized = false;
-
-            if (!command.getIsRepeatable()) {
-                throw e;
-            }
-
-            return false;
+            throw e;
         }
     }
 

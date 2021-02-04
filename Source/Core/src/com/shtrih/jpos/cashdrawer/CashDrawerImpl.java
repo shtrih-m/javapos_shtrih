@@ -444,7 +444,6 @@ public class CashDrawerImpl extends DeviceService implements
             JposExceptionHandler.setStripExceptionDetails(fptrParams.stripExceptionDetails);
 
             port = PrinterPortFactory.createInstance(fptrParams);
-            port = new PrinterPortWrapper(port);
             device = ProtocolFactory.getProtocol(fptrParams, port);
             printer = new SMFiscalPrinterImpl(port, device, fptrParams);
 
