@@ -314,7 +314,6 @@ public class PrinterProtocol_1 implements PrinterProtocol {
             } catch (AnswerCodeException e) {
                 try {
                     port.readBytes(0xFF);
-                    port.close();
                 } catch (Exception e1) {
                 }
 

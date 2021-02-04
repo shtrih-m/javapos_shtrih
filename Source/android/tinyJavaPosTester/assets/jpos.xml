@@ -105,7 +105,7 @@
 		<!-- Statistics file name -->
 		<prop name="statisticFileName" type="String" value="ShtrihFiscalPrinter.xml"/>
 		<!-- Barcode print time -->
-		<prop name="graphicsLineDelay" type="String" value="0"/>
+		<prop name="grapclohicsLineDelay" type="String" value="0"/>
 		<!-- fieldsFileName to initialize printer tables -->
 		<prop name="fieldsFileName" type="String" value="Tables.csv"/>
 		<!-- Number of header lines -->

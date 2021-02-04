@@ -7,6 +7,14 @@
     
 ********************************************************************************
 
+  04.02.2021
+  deviceServiceVersion = 1013610
+
+  [-] Fixed error with device events
+  [-] Fixed error tax amount printing (tax 0 instead of 0xFFFFFFFFFF in 0xFF46 command)
+
+********************************************************************************
+
   01.02.2021
   deviceServiceVersion = 1013609
 
