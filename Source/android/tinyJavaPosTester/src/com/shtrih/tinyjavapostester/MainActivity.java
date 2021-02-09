@@ -122,6 +122,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText nbTextStringCount;
     private EditText nbPositionsCount;
     private EditText nbFiscalizationNumber;
+    private EditText nbReceiptCount;
+    private EditText nbReceiptInterval;
     private EditText nbDocumentNumber;
     private EditText nbTagNumber;
     private EditText nbTextLinesCount;
@@ -137,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
     private String selectedProtocol;
 
     private MainViewModel model;
+    PrintReceiptTask printReceiptTask = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,6 +166,12 @@ public class MainActivity extends AppCompatActivity {
 
         nbTextStringCount = (EditText)findViewById(R.id.nbTextStringsCount);
         restoreAndSaveChangesTo(nbTextStringCount, pref, "CheckStringsCount", "5");
+
+        nbReceiptCount = (EditText)findViewById(R.id.nbReceiptCount);
+        restoreAndSaveChangesTo(nbReceiptCount, pref, "ReceiptCount", "5");
+
+        nbReceiptInterval = (EditText)findViewById(R.id.nbReceiptInterval);
+        restoreAndSaveChangesTo(nbReceiptInterval, pref, "ReceiptInterval", "5");
 
         nbFiscalizationNumber = (EditText)findViewById(R.id.nbFiscalizationNumber);
         restoreAndSaveChangesTo(nbFiscalizationNumber, pref, "FiscalizationNumber", "1");
@@ -1146,7 +1155,29 @@ public class MainActivity extends AppCompatActivity {
         final int positions = Integer.parseInt(nbPositionsCount.getText().toString());
         final int strings = Integer.parseInt(nbTextStringCount.getText().toString());
 
-        new PrintReceiptTask(this, positions, strings).execute();
+        if (printReceiptTask == null) {
+            printReceiptTask = new PrintReceiptTask(this, positions, strings, 1, 0);
+            printReceiptTask.execute();
+        } else{
+            printReceiptTask.cancel(true);
+            printReceiptTask = null;
+        }
+    }
+
+    public void printReceipts(View v) {
+
+        final int positions = Integer.parseInt(nbPositionsCount.getText().toString());
+        final int strings = Integer.parseInt(nbTextStringCount.getText().toString());
+        final int receipts = Integer.parseInt(nbReceiptCount.getText().toString());
+        final int interval = Integer.parseInt(nbReceiptInterval.getText().toString());
+
+        if (printReceiptTask == null) {
+            printReceiptTask = new PrintReceiptTask(this, positions, strings, receipts, interval);
+            printReceiptTask.execute();
+        } else{
+            printReceiptTask.cancel(true);
+            printReceiptTask = null;
+        }
     }
 
     private class PrintReceiptTask extends AsyncTask<Void, Void, String> {
@@ -1154,21 +1185,25 @@ public class MainActivity extends AppCompatActivity {
         private final AppCompatActivity parent;
         private final int positions;
         private final int strings;
+        private final int receipts;
+        private final int interval;
 
         private long startedAt;
         private long doneAt;
         private ProgressDialog dialog;
 
-        public PrintReceiptTask(AppCompatActivity parent, int positions, int strings) {
+        public PrintReceiptTask(AppCompatActivity parent, int positions, int strings,
+            int receipts, int interval) {
             this.parent = parent;
             this.positions = positions;
             this.strings = strings;
+            this.receipts = receipts;
+            this.interval = interval;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
             dialog = ProgressDialog.show(parent, "Printing receipt", "Please wait...", true);
         }
 
@@ -1176,11 +1211,21 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(Void... params) {
 
             try {
-                printer.resetPrinter();
-
                 startedAt = System.currentTimeMillis();
+                for (int i=0;i<receipts;i++)
+                {
+                    if (isCancelled()) break;
 
-                printSalesReceipt(positions, strings);
+                    try
+                    {
+                        printSalesReceipt(positions, strings);
+                    }
+                    catch(Exception e)
+                    {
+                        log.error("Receipt printing failed " + i + e.getMessage());
+                    }
+                    //Thread.sleep(interval * 1000);
+                }
 
                 return null;
 
@@ -1272,6 +1317,7 @@ public class MainActivity extends AppCompatActivity {
     {
         //printer.close();
 
+        printer.resetPrinter();
 
         final int fiscalReceiptType = FiscalPrinterConst.FPTR_RT_SALES;
 

@@ -9,6 +9,7 @@
     <string name="scan">scan</string>
     <string name="select_device">select device</string>
     <string name="action_print_receipt">Print receipt</string>
+    <string name="action_print_receipts">Print receipts</string>
     <string name="action_print_ean13_bar_code">Print EAN13 bar code</string>
     <string name="action_print_pdf417_bar_code">Print PDF417 bar code</string>
     <string name="action_print_qr_code">Print QR code</string>
@@ -41,6 +42,8 @@
     <string name="chbFastConnect">Fast connection</string>
     <string name="chbScocFirmwareUpdate">SCoC firmware autoupdate</string>
     <string name="lblTextStrings">Text lines</string>
+    <string name="lblReceiptCount">Receipt count</string>
+    <string name="lblReceiptInterval">Receipt interval, sec</string>
     <string name="defaultPositionsCount">5</string>
     <string name="defaultTimeout">3000</string>
     <string name="defaultTextStringsCount">5</string>

@@ -73,7 +73,7 @@ public class BluetoothLEPort implements PrinterPort {
     private static final String ACCESS_BACKGROUND_LOCATION = "android.permission.ACCESS_BACKGROUND_LOCATION";
 
     private void loggerDebug(String text) {
-        logger.debug(text);
+        //logger.debug(text);
     }
 
     private void loggerError(String text) {
