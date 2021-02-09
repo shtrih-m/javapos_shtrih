@@ -208,14 +208,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         synchronized (port.getSyncObject()) {
             Time.delay(params.commandDelayInMs);
             beforeCommand(command);
-            // correct date before day open
-            if (command.getCode() == 0xE0) {
-                checkEcrMode();
-                correctDate();
-            }
-            // check status before receipt open
-            if (command.getCode() == 0x8D) {
-                checkEcrMode();
+            switch (command.getCode())
+            {
+                // correct date before day open
+                case 0xE0:
+                // check status before receipt open
+                case 0x8D:
+                // close receipt 1
+                case 0x85:
+                // close receipt 2
+                case 0xFF45:
+
                 correctDate();
             }
 
@@ -237,6 +240,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             if (params.validTimeDiffInSecs <= 0) {
                 return;
             }
+
+            checkEcrMode();
 
             LongPrinterStatus status = readLongStatus();
             Calendar currentDate = Calendar.getInstance();
