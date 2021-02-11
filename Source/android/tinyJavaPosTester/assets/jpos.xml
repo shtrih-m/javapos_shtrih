@@ -322,7 +322,7 @@
              передавать ИНН кассира, чего в случае с автооткрытием сделано не будет.
              
              Значение по умолчанию - 1. -->
-		<prop name="autoOpenShift" type="String" value="0"/>
+		<prop name="autoOpenShift" type="String" value="1"/>
 
         <!-- Если при попытке снять Z-отчет смена закрыта, то она будет предварительно открыта.
              Это может быть нежелательным поведением, если нужно в отчет об открытии смены
@@ -352,6 +352,9 @@
 			 Значение по умолчанию - 1
 		-->
 		<prop name="waitForBarcodePrinting" type="String" value="1"/>
+
+		<!-- validTimeDiffInSecs -->
+		<prop name="validTimeDiffInSecs" type="String" value="0"/>
 
 	</JposEntry>
 </JposEntries>

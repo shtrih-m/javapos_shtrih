@@ -130,7 +130,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public int logoPosition = SMFPTR_LOGO_PRINT;
     private final FptrParameters params;
-    private boolean freezeEvents;
+    private boolean freezeEvents = true;
     private final FiscalPrinterFilters filters = new FiscalPrinterFilters();
     private Thread asyncThread = null;
     private Thread deviceThread = null;
@@ -439,7 +439,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         capUpdateStatistics = true;
         capStatisticsReporting = true;
         deviceServiceVersion = deviceVersion113 + ServiceVersionUtil.getVersionInt();
-        freezeEvents = true;
     }
 
     public SMFiscalPrinter getPrinter() {
@@ -832,7 +831,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     // event delivery routine
     public void eventProc() {
         try {
-            while (Thread.currentThread().isInterrupted()) {
+            while (!Thread.currentThread().isInterrupted()) {
                 synchronized (events) {
                     while (!events.isEmpty()) {
                         ((Runnable) events.remove(0)).run();
@@ -848,7 +847,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void asyncProc() {
         try {
-            while (Thread.currentThread().isInterrupted()) {
+            while (!Thread.currentThread().isInterrupted()) {
                 synchronized (requests) {
                     while (!requests.isEmpty()) {
                         setState(JPOS_S_BUSY);

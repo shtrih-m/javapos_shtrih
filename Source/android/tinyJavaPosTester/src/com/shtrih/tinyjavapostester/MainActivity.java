@@ -76,6 +76,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -85,10 +86,16 @@ import java.util.Random;
 import jpos.FiscalPrinterConst;
 import jpos.JposConst;
 import jpos.JposException;
+import jpos.events.StatusUpdateEvent;
+import jpos.events.StatusUpdateListener;
+import jpos.events.ErrorListener;
+import jpos.events.DirectIOListener;
+import jpos.events.StatusUpdateListener;
 
 import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_EFPTR_INVALID_TABLE;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+{
 
     private class EnumViewModel {
         private final String value;
@@ -139,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
     private String selectedProtocol;
 
     private MainViewModel model;
-    PrintReceiptTask printReceiptTask = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -547,6 +553,7 @@ public class MainActivity extends AppCompatActivity {
                     printer.close();
                 }
                 printer.open("ShtrihFptr");
+                //printer.addStatusUpdateListener(new FptrEventListener());
                 printer.claim(3000);
                 printer.setDeviceEnabled(true);
                 model.ScocUpdaterStatus.set("");
@@ -572,6 +579,13 @@ public class MainActivity extends AppCompatActivity {
                 showMessage(result);
 
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        }
+    }
+
+    public class FptrEventListener implements StatusUpdateListener
+    {
+        public void statusUpdateOccurred(StatusUpdateEvent event) {
+            log.debug("Application statusUpdateOccurred: " + event.getStatus());
         }
     }
 
@@ -1155,13 +1169,7 @@ public class MainActivity extends AppCompatActivity {
         final int positions = Integer.parseInt(nbPositionsCount.getText().toString());
         final int strings = Integer.parseInt(nbTextStringCount.getText().toString());
 
-        if (printReceiptTask == null) {
-            printReceiptTask = new PrintReceiptTask(this, positions, strings, 1, 0);
-            printReceiptTask.execute();
-        } else{
-            printReceiptTask.cancel(true);
-            printReceiptTask = null;
-        }
+        (new PrintReceiptTask(this, positions, strings, 1, 0)).execute();
     }
 
     public void printReceipts(View v) {
@@ -1170,17 +1178,10 @@ public class MainActivity extends AppCompatActivity {
         final int strings = Integer.parseInt(nbTextStringCount.getText().toString());
         final int receipts = Integer.parseInt(nbReceiptCount.getText().toString());
         final int interval = Integer.parseInt(nbReceiptInterval.getText().toString());
-
-        if (printReceiptTask == null) {
-            printReceiptTask = new PrintReceiptTask(this, positions, strings, receipts, interval);
-            printReceiptTask.execute();
-        } else{
-            printReceiptTask.cancel(true);
-            printReceiptTask = null;
-        }
+        (new PrintReceiptTask(this, positions, strings, receipts, interval)).execute();
     }
 
-    private class PrintReceiptTask extends AsyncTask<Void, Void, String> {
+    private class PrintReceiptTask extends AsyncTask<Void, String, String> {
 
         private final AppCompatActivity parent;
         private final int positions;
@@ -1208,16 +1209,23 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
+        protected void onProgressUpdate(String... title){
+            dialog.setTitle(title[0]);
+        }
+
+        @Override
         protected String doInBackground(Void... params) {
 
             try {
                 startedAt = System.currentTimeMillis();
-                for (int i=0;i<receipts;i++)
+                for (int i=1;i<=receipts;i++)
                 {
                     if (isCancelled()) break;
 
                     try
                     {
+                        String title = String.format("Printing receipt %d...", i);
+                        publishProgress(title);
                         printSalesReceipt(positions, strings);
                     }
                     catch(Exception e)
