@@ -1321,20 +1321,19 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void printSalesReceipt(final int positions, final int strings) throws Exception
+    private void printSalesReceipt(int positions, int strings) throws Exception
     {
-        //printer.close();
+        if (positions <= 0){
+            positions = 1;
+        }
+        if (strings < 0){
+            strings = 0;
+        }
 
         printer.resetPrinter();
-
         final int fiscalReceiptType = FiscalPrinterConst.FPTR_RT_SALES;
-
         printer.setFiscalReceiptType(fiscalReceiptType);
-
         printer.beginFiscalReceipt(true);
-
-
-        //writePaymentTags(receipt.getTags());
         //Развернул сожержимое метода, чтобы было понятно, какие теги передаём
         printer.fsWriteTag(1016, "2225031594  ");
         printer.fsWriteTag(1073, "+78001000000");
@@ -1345,22 +1344,19 @@ public class MainActivity extends AppCompatActivity
         printer.fsWriteTag(1044, "Прием денежных средств");
         printer.fsWriteTag(1026, "РНКО \"ПЛАТЕЖНЫЙ ЦЕНТР\"");
 
-        //receipt.getReceipt() - текст чека типа String
-        printer.printNormal(FiscalPrinterConst.FPTR_S_RECEIPT, "receipt.getReceipt()");
-
-        final String unitName = "Оплата";
-
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, 4);
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 4);
-
-        printer.printRecItem("Приём платежа", 12300, 0, 0, 0, unitName);
-
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, 4);
-        printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 4);
-
-        printer.printRecItem("Размер вознаграждения", 123, 0, 3, 0, unitName);
-
-        printer.printRecTotal(12423, 12423, "0");
+        // receipt items
+        for (int i=0;i<positions;i++) {
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, 4);
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 4);
+            printer.printRecItem("Приём платежа", 123, 0, 0, 0, "Оплата");
+        }
+        // text lines
+        for (int i=0;i<strings;i++)
+        {
+            printer.printNormal(FiscalPrinterConst.FPTR_S_RECEIPT, "Text line " + i);
+        }
+        long total = positions * 123;
+        printer.printRecTotal(total, total, "0");
         printer.endFiscalReceipt(false);
     }
 

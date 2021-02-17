@@ -354,7 +354,7 @@
 		<prop name="waitForBarcodePrinting" type="String" value="1"/>
 
 		<!-- validTimeDiffInSecs -->
-		<prop name="validTimeDiffInSecs" type="String" value="0"/>
+		<prop name="validTimeDiffInSecs" type="String" value="1"/>
 
 	</JposEntry>
 </JposEntries>
