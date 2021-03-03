@@ -38,20 +38,17 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
     private FirmwareUpdateObserver listener = new FirmwareUpdateObserver();
 
-    public void setListener(FirmwareUpdateObserver value) {
-        listener = value;
-
-        if (listener == null) {
-            listener = new FirmwareUpdateObserver();
-        }
-    }
-
     public FirmwareUpdaterService(SMFiscalPrinter printer) {
         if (printer == null) {
             throw new IllegalArgumentException("printer is null");
         }
-
         this.printer = printer;
+    }
+
+    public void setListener(FirmwareUpdateObserver value) {
+        if (value != null) {
+            listener = value;
+        }
     }
 
     public void run() {
@@ -59,9 +56,8 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
             Time.delay(5 * 1000);
 
             logger.debug("Starting FirmwareUpdaterService");
-
-            while (!stopFlag) {
-
+            while (!Thread.currentThread().isInterrupted())
+            {
                 if (firmware == null) {
                     checkData();
                 }
@@ -216,8 +212,8 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
         }
     }
 
-    private void updateFirmware() {
-
+    private void updateFirmware()
+    {
         try {
             if (firmware == null) {
                 return;

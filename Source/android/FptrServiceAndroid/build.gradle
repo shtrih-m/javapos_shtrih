@@ -9,11 +9,11 @@ task prepareKotlinBuildScriptModel {
 }
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 23
 
     defaultConfig {
         minSdkVersion 12
-        targetSdkVersion 25
+        targetSdkVersion 23
         versionCode 1
         versionName "$version"
 

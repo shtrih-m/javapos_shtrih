@@ -23,7 +23,7 @@
 		<prop name="portType" type="String" value="3"/>
 
 		<!-- Класс порта, используется, если portType = 3.  -->
-		<prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.BluetoothLEPort"/>
+		<prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.BluetoothPort"/>
 
 		<!-- Протокол обмена.
 		     0 - стандартный.
@@ -42,7 +42,7 @@
 		<!--
 		<prop name="portName" type="String" value="30:AE:A4:95:60:3E"/>
 		     -->
-		<prop name="portName" type="String" value="ШТРИХ-НАНО"/>
+		<prop name="portName" type="String" value="SHTRIH-NANO-F"/>
 
 		<!--Скорость обмена при работе по COM-порту.
 		    Возможные значениея 2400;4800;9600;19200;38400;57600;115200;230400;460800.

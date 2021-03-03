@@ -5,11 +5,11 @@ task prepareKotlinBuildScriptModel {
 }
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 23
     defaultConfig {
         applicationId "com.example.tinyjavaposttester"
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 23
         versionCode 1
         versionName "$version"
         //multiDexEnabled true

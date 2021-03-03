@@ -160,17 +160,12 @@ public class FSService implements Runnable {
 		}
 	}
 
-	public void stop() {
+	public void stop() throws Exception{
 		stopFlag = true;
 		if (thread != null) {
 			thread.interrupt();
-			try {
-				thread.join();
-			} catch (InterruptedException e) {
-
-			}
+			thread.join();
+			thread = null;
 		}
-
-		thread = null;
 	}
 }
