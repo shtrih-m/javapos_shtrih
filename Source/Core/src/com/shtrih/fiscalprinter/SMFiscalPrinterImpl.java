@@ -4602,12 +4602,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return status.getPrinterMode().isDayClosed();
     }
 
-    public FSCheckBarcode fsCheckBarcode(String barcode) throws Exception {
-        FSCheckBarcode command = new FSCheckBarcode();
+    public FSCheckBarcode fsCheckBarcode(FSCheckBarcode command) throws Exception {
         command.password = sysPassword;
-        command.itemStatus = params.newItemStatus;
-        command.barcodeLength = barcode.length();
-        command.checkMode = params.itemCheckMode;
         executeCommand(command);
         return command;
     }
@@ -4624,7 +4620,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return rc;
     }
 
-    public int checkItemCode2(String barcode) throws Exception {
+    public int checkItemCode2(String barcode) throws Exception 
+    {
+        /* !!!!
         int rc = 0;
         rc = loadDataBlock(1, barcode.getBytes());
         if (rc == 0) {
@@ -4642,6 +4640,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
         }
         return rc;
+        */
+        return 0;
     }
 
     public int sendMarking(String barcode) throws Exception {
@@ -4783,11 +4783,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command;
     }
 
-    public FSReadKMServerStatus fsReadKMServerStatus() throws Exception {
-        FSReadKMServerStatus command = new FSReadKMServerStatus();
-        command.setPassword(sysPassword);
-        executeCommand(command);
-        return command;
+    public int fsReadKMServerStatus(FSReadKMServerStatus command) throws Exception {
+        command.password = sysPassword;
+        return executeCommand(command);
     }
 
     public int fsWriteTLVBuffer(int tagId, String tagValue) throws Exception {

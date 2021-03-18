@@ -38,7 +38,7 @@ public final class FSSetOperationMarking extends PrinterCommand {
     public int itemCode;
     public int codeType;
 
-    /**
+    /*
      * Creates a new instance of ConfirmDate
      */
     public FSSetOperationMarking() {
@@ -63,5 +63,6 @@ public final class FSSetOperationMarking extends PrinterCommand {
         itemCode = in.readShort();
         codeType = in.readByte();
    }
-
+   
+    
 }

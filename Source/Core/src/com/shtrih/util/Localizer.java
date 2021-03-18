@@ -227,15 +227,30 @@ public class Localizer {
         add("FSPrinterError07", "FS: Invalid date/time value");
         add("FSPrinterError08", "FS: No data available");
         add("FSPrinterError09", "FS: Invalid parameter value");
+        add("FSPrinterError0A", "FS: Incorrect command");
+        add("FSPrinterError0B", "FS: Invalid requisites");
+        add("FSPrinterError0C", "FS: Data duplication");
+        add("FSPrinterError0D", "FS: No data required");
+        add("FSPrinterError0E", "FS: Too many receipt items");
         add("FSPrinterError10", "FS: TLV size too large");
         add("FSPrinterError11", "FS: No transport connection ");
-        add("FSPrinterError12", "FS: Cryptographic coprocessor resource exhausted");
+        add("FSPrinterError12", "FS: Resource exhausted");
         add("FSPrinterError14", "FS: Documents resource exhausted");
         add("FSPrinterError15", "FS: Maximum send time limit reached");
         add("FSPrinterError16", "FS: Fiscal day last for 24 hours");
         add("FSPrinterError17", "FS: Invalid time range betseen two operations");
+        add("FSPrinterError18", "FS: Invalid requisite");
+        add("FSPrinterError19", "FS: Requisite do not match fiscalization parameters");
         add("FSPrinterError20", "FS: Server message can not be received");
-
+        add("FSPrinterError23", "FS: Negative answer from key update server");
+        add("FSPrinterError24", "FS: Unknown answer from key update server");
+        add("FSPrinterError30", "FS: Key update repeat required");
+        add("FSPrinterErrorA0", "FS: Item marking is disables");
+        add("FSPrinterErrorA1", "FS: Invalid 0xBx commands sequence");
+        add("FSPrinterErrorA2", "FS: Item marking is temporary blocked");
+        add("FSPrinterErrorA3", "FS: Item marking table overflow");
+        add("FSPrinterErrorA4", "FS: Item marking table overflow");
+        
         add("PrinterError00", "No errors");
         add("PrinterError01", "FM: FM1 FM2 or RTC error");
         add("PrinterError02", "FM: FM1 missing");

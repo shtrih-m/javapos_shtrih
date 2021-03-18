@@ -1161,8 +1161,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return null;
     }
 
-    public FSReadKMServerStatus fsReadKMServerStatus() throws Exception {
-        return null;
+    public int fsReadKMServerStatus(FSReadKMServerStatus command) throws Exception{
+        return 0;
     }
 
     public FSSetOperationMarking bindItemCode(String barcode) throws Exception {

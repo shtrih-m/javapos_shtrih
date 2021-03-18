@@ -27,14 +27,15 @@ public class DIOReadKMServerStatus extends DIOItem {
         String[] params = (String[]) object;
         DIOUtils.checkObjectMinLength(params, 6);
         int codeLength = Integer.parseInt(params[0]);
-        FSReadKMServerStatus command = getPrinter().fsReadKMServerStatus();
+        FSReadKMServerStatus command = new FSReadKMServerStatus();
+        getPrinter().fsReadKMServerStatus(command);
         getPrinter().check(command.getResultCode());
-        params[0] = String.valueOf(command.getConnectionStatus());
-        params[1] = String.valueOf(command.getMessageQuantity());
-        params[2] = String.valueOf(command.getMessageNumber());
-        params[3] = command.getMessageDate().toString();
-        params[4] = command.getMessageTime().toString();
-        params[5] = String.valueOf(command.getFreeMemorySizeInKB());
+        params[0] = String.valueOf(0);
+        params[1] = String.valueOf(command.messageQuantity);
+        params[2] = String.valueOf(command.messageNumber);
+        params[3] = command.messageDate.toString();
+        params[4] = command.messageTime.toString();
+        params[5] = String.valueOf(command.freeMemoryPercents);
     }
 
 }

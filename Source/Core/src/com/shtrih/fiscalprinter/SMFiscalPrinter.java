@@ -648,7 +648,7 @@ public interface SMFiscalPrinter {
 
     public FSAcceptItemCode fsAcceptItemCode(int action) throws Exception;
 
-    public FSReadKMServerStatus fsReadKMServerStatus() throws Exception;
+    public int fsReadKMServerStatus(FSReadKMServerStatus command) throws Exception;
 
     public int fsCloseReceipt(FSCloseReceipt command) throws Exception;
 
