@@ -7,6 +7,15 @@
     
 ********************************************************************************
 
+  18.03.2021
+  deviceServiceVersion = 1013614
+
+  [-] Fixed error with operation TLV transfer before and after operation
+  [-] Fixed error with serial port reopening after fiscal printer reboot 
+      or after cable reconnect
+
+********************************************************************************
+
   03.03.2021
   deviceServiceVersion = 1013613
 
