@@ -877,7 +877,7 @@ public class MainActivity extends AppCompatActivity
                 barcode.setVScale(5);
 
                 Map<EncodeHintType, Object> params = new HashMap<EncodeHintType, Object>();
-                // Измерения, тут мы задаем количество колонок и столбцов
+                // �?змерения, тут мы задаем количество колонок и столбцов
                 params.put(EncodeHintType.PDF417_DIMENSIONS, new Dimensions(3, 3, 2, 60));
                 // Можно задать уровень коррекции ошибок, по умолчанию он 0
                 params.put(EncodeHintType.ERROR_CORRECTION, 1);
@@ -1321,6 +1321,35 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void printFiscalReceipt() throws Exception
+    {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+            printer.beginFiscalReceipt(true);
+
+            char GS = 0x1D;
+            String barcode
+                    = "010405104227920221TB6qQHbmOTZBf" + GS + "2406402" + GS + "91ffd0" + GS
+                    + "92DbZgaQm2x0uA5+8/AzMM9hVq6apGvtM3bJzejjpHan2pvK4O+XbYcVgFRR5I4HmCLQvZ74KgKkIhVADd==";
+            printer.setItemCode(barcode, "");
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE, SmFptrConst.MARK_TYPE_TOBACCO);
+
+            printer.printRecItem("Item 1", 10099, 1000, 1, 10099, "");
+            printer.fsWriteOperationTag(1197, "KG");
+
+            printer.printRecItem("Item 2", 20000, 1000, 2, 20000, "");
+            printer.printRecItem("Item 3", 30000, 1000, 3, 30000, "");
+            printer.printRecItem("Item 4", 40000, 1000, 4, 40000, "");
+            printer.printRecItem("Item 5", 50000, 1000, 5, 50000, "");
+            printer.printRecItem("Item 6", 60000, 1000, 6, 60000, "");
+            printer.printRecSubtotal(210099);
+
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 1);
+            printer.printRecSubtotalAdjustment(1, "", 99);
+            printer.printRecTotal(210000, 210000, "1");
+            printer.endFiscalReceipt(false);
+    }
+
     private void printSalesReceipt(int positions, int strings) throws Exception
     {
         if (positions <= 0){
@@ -1338,7 +1367,7 @@ public class MainActivity extends AppCompatActivity
         printer.fsWriteTag(1016, "2225031594  ");
         printer.fsWriteTag(1073, "+78001000000");
         //printer.fsWriteTag(1057, "1");
-        printer.fsWriteTag(1005, "НОВОСИБИРСК,КИРОВА,86");
+        printer.fsWriteTag(1005, "НОВОС�?Б�?РСК,К�?РОВА,86");
         printer.fsWriteTag(1075, "+73833358088");
         printer.fsWriteTag(1171, "+73833399242");
         printer.fsWriteTag(1044, "Прием денежных средств");

@@ -31,7 +31,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="COM66"/>
+        <prop name="portName" type="String" value="COM6"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="0"/>
@@ -257,7 +257,7 @@
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- Receipt template -->
 		<prop name="FSCombineItemAdjustments" type="String" value="0"/>
-		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
+		<prop name="ReceiptTemplateEnabled" type="String" value="0"/>
 		<prop name="FieldSeparator" type="String" value=":"/>
 		<prop name="ItemTableHeader" type="String"  value="-------------------HEADER-----------------"/>
 		<prop name="ItemTableTrailer" type="String" value="-------------------TRAILER----------------"/>
@@ -319,7 +319,7 @@
 		     default value is 0 -->
 		<prop name="markingType" type="String" value="1"/>
 		<!-- validTimeDiffInSecs -->
-		<prop name="validTimeDiffInSecs" type="String" value="5"/>
+		<prop name="validTimeDiffInSecs" type="String" value="0"/>
     </JposEntry> 
     <JposEntry logicalName="ShtrihCashDrawer">
         <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.cashdrawer.CashDrawerImpl"/>

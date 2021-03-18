@@ -992,7 +992,8 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
-            printSalesReceipt99(5,5);
+            //printSalesReceipt99(5,5);
+            printFiscalReceipt145_9();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -4090,6 +4091,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, 4);
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 4);
             printer.printRecItem("Приём платежа", 12300, 0, 0, 0, unitName);
+            //printer.printRecItem("Салфетки 24*24см[100шт];бум. салфет.;,L=12,B=12см;белый", 0, 1, 0, 2100, "");
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, 4);
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 4);
             printer.printRecItem("Размер вознаграждения", 123, 0, 3, 0, unitName);
