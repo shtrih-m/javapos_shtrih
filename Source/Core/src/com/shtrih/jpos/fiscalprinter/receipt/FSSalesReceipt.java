@@ -236,11 +236,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printTLVItem(Object item) throws Exception {
-        if (item instanceof FSOperationTLVItem) {
-            FSOperationTLVItem tlvItem = (FSOperationTLVItem) item;
-            getDevice().check(getDevice().fsWriteOperationTLV(tlvItem.getData()));
-        }
-
         if (item instanceof FSTLVItem) {
             FSTLVItem tlvItem = (FSTLVItem) item;
             getDevice().fsWriteTLV(tlvItem.getData());
@@ -294,8 +289,15 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void templatePrintReceiptItems() throws Exception {
         for (int i = 0; i < items.size(); i++) {
             Object item = items.get(i);
-            if (item instanceof FSSaleReceiptItem) {
-                printFSSaleTemplate((FSSaleReceiptItem) item);
+            if (item instanceof FSSaleReceiptItem) 
+            {
+                FSSaleReceiptItem sitem = (FSSaleReceiptItem) item;
+                
+                String itemText = sitem.getText();
+                sitem.setText("//" + sitem.getText());
+
+                printReceiptItem(sitem);
+                sitem.setText(itemText);
             }
         }
         printTemplateHeader();
@@ -606,13 +608,15 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void printFSSaleTemplate(FSSaleReceiptItem item) throws Exception {
-        String itemText = item.getText();
-        item.setText("//" + item.getText());
+    public void printReceiptItem(FSSaleReceiptItem item) throws Exception
+    {
         getDevice().checkItemCode(item.getBarcode());
-        if (getDevice().getCapOperationTagsFirst()) {
+        if (getDevice().getCapOperationTagsFirst()) 
+        {
+            printOperationTLV(item);
             getDevice().sendMarking(item.getBarcode());
         }
+        
         PriceItem priceItem = item.getPriceItem();
         if (!item.getIsStorno()) {
             switch (receiptType) {
@@ -637,11 +641,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         } else {
             getDevice().printVoidItem(priceItem);
         }
-        printOperationTLV(item);
-        if (!getDevice().getCapOperationTagsFirst()) {
+        if (!getDevice().getCapOperationTagsFirst()) 
+        {
+            printOperationTLV(item);
             getDevice().sendMarking(item.getBarcode());
         }
-        item.setText(itemText);
     }
 
     public void printTextTemplate(FSSaleReceiptItem item) throws Exception {
@@ -670,7 +674,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void printFSSaleNoTemplate(FSSaleReceiptItem item) throws Exception {
+    public void printFSSaleNoTemplate(FSSaleReceiptItem item) throws Exception 
+    {
         if (!receiptTemplate.hasPreLine()) {
             String preLine = item.getPreLine();
             if (preLine.length() > 0) {
@@ -684,41 +689,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             item.setText("//" + item.getText());
         }
 
+        printReceiptItem(item);
         
-        getDevice().checkItemCode(item.getBarcode());
-        if (getDevice().getCapOperationTagsFirst()) {
-            getDevice().sendMarking(item.getBarcode());
-        }
-
-        PriceItem priceItem = item.getPriceItem();
-        if (!item.getIsStorno()) {
-            switch (receiptType) {
-                case PrinterConst.SMFP_RECTYPE_SALE:
-                    getDevice().printSale(priceItem);
-                    break;
-
-                case PrinterConst.SMFP_RECTYPE_RETSALE:
-                    getDevice().printVoidSale(priceItem);
-                    break;
-
-                case PrinterConst.SMFP_RECTYPE_BUY:
-                    getDevice().printRefund(priceItem);
-                    break;
-
-                case PrinterConst.SMFP_RECTYPE_RETBUY:
-                    getDevice().printVoidRefund(priceItem);
-                    break;
-                default:
-                    getDevice().printSale(priceItem);
-            }
-        } else {
-            getDevice().printVoidItem(priceItem);
-        }
-        printOperationTLV(item);
-        if (item.getBarcode() != null){
-            getDevice().sendMarking(item.getBarcode());
-        }
-
         long discountTotal = item.getDiscounts().getTotal();
         if (discountTotal != 0) {
             String text = "=" + StringUtils.amountToString(discountTotal);
@@ -735,14 +707,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printOperationTLV(FSSaleReceiptItem item) throws Exception {
-        if (!getDevice().getCapOperationTagsFirst()) {
-            for (int i = 0; i < item.getTags().size(); i++) {
-                FSOperationTLVItem tag = (FSOperationTLVItem) item.getTags().get(i);
-                getDevice().check(getDevice().fsWriteOperationTLV(tag.getData()));
-            }
+        for (int i = 0; i < item.getTags().size(); i++) {
+            FSOperationTLVItem tag = (FSOperationTLVItem) item.getTags().get(i);
+            getDevice().check(getDevice().fsWriteOperationTLV(tag.getData()));
         }
     }
-
+    
     public void templatePrintTextItem(FSSaleReceiptItem item) throws Exception {
         if (!receiptTemplate.hasPreLine()) {
             String preLine = item.getPreLine();

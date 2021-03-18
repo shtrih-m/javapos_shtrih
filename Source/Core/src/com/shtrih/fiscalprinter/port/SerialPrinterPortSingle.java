@@ -61,8 +61,11 @@ public class SerialPrinterPortSingle {
         return portName;
     }
 
-    public SerialPort getPort() throws Exception {
-        checkOpened();
+    public SerialPort getPort() throws Exception 
+    {
+        if (port == null){
+            open(0);
+        }
         return port;
     }
 
