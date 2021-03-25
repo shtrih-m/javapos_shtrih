@@ -877,7 +877,7 @@ public class MainActivity extends AppCompatActivity
                 barcode.setVScale(5);
 
                 Map<EncodeHintType, Object> params = new HashMap<EncodeHintType, Object>();
-                // �?змерения, тут мы задаем количество колонок и столбцов
+                // Измерения, тут мы задаем количество колонок и столбцов
                 params.put(EncodeHintType.PDF417_DIMENSIONS, new Dimensions(3, 3, 2, 60));
                 // Можно задать уровень коррекции ошибок, по умолчанию он 0
                 params.put(EncodeHintType.ERROR_CORRECTION, 1);
@@ -1367,7 +1367,7 @@ public class MainActivity extends AppCompatActivity
         printer.fsWriteTag(1016, "2225031594  ");
         printer.fsWriteTag(1073, "+78001000000");
         //printer.fsWriteTag(1057, "1");
-        printer.fsWriteTag(1005, "НОВОС�?Б�?РСК,К�?РОВА,86");
+        printer.fsWriteTag(1005, "НОВОСИБИРСК,КИРОВА,86");
         printer.fsWriteTag(1075, "+73833358088");
         printer.fsWriteTag(1171, "+73833399242");
         printer.fsWriteTag(1044, "Прием денежных средств");

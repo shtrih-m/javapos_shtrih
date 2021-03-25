@@ -80,7 +80,10 @@ public class PrinterTime {
         StringTokenizer tokenizer = new StringTokenizer(text, ":");
         int hour = Integer.parseInt(tokenizer.nextToken());
         int min = Integer.parseInt(tokenizer.nextToken());
-        int sec = Integer.parseInt(tokenizer.nextToken()) % 100;
+        int sec = 0;
+        if (tokenizer.countTokens() > 2) {
+            sec = Integer.parseInt(tokenizer.nextToken()) % 100;
+        }
         return new PrinterTime(hour, min, sec);
     }
 

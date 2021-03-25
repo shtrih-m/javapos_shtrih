@@ -42,6 +42,7 @@ public class CommandParam {
     public static final int PARAM_TYPE_VSRC = 18; // Power supply voltage
     public static final int PARAM_TYPE_TIMEOUT = 19; // Timeout
     public static final int PARAM_TYPE_EJTIME = 20; // Time
+    public static final int PARAM_TYPE_FSDATE = 21; // Date
 
     private final String name;
     private final int size;
@@ -183,9 +184,7 @@ public class CommandParam {
                 break;
 
             case PARAM_TYPE_EJTIME:
-                EJournalTime time = EJournalTime.fromText(value);
-                out.writeByte(time.getHour());
-                out.writeByte(time.getMin());
+                out.writeTime2(PrinterTime.fromText(value));
                 break;
         }
     }
@@ -228,14 +227,11 @@ public class CommandParam {
                 break;
 
             case PARAM_TYPE_TIME:
-                value = PrinterTime.toString(in.readTime());
+                value = in.readTimeHMS().toString();
                 break;
 
             case PARAM_TYPE_EJTIME:
-                int hour = in.readByte();
-                int min = in.readByte();
-                EJournalTime time = new EJournalTime(hour, min);
-                value = EJournalTime.toText(time);
+                value = in.readTimeHM().toString2();
                 break;
 
         }

@@ -678,7 +678,10 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_PARAM_DOC_TOTAL:
                 paramValue = String.valueOf(service.getPrinter().getLastDocTotal());
                 break;
-                
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_UNIT:
+                paramValue = String.valueOf(service.getParams().itemUnit);
+                break;
         }
         ((String[]) object)[0] = paramValue;
     }
@@ -781,7 +784,10 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT:
                 service.getParams().itemTaxAmount = (long) value;
                 break;
-                
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_UNIT:
+                service.getParams().itemUnit = new Integer((int)value);
+                break;
         }
     }
 

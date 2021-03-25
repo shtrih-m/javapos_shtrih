@@ -5,8 +5,6 @@
  */
 package com.shtrih.fiscalprinter.command;
 
-import com.shtrih.util.BitUtils;
-
 /**
  *
  * @author V.Kravtsov
@@ -86,7 +84,7 @@ public class FSCloseReceipt extends PrinterCommand {
         docMAC = in.readLong(4);
         if (in.getSize() >= 5) {
             docDate = in.readFSDate();
-            docTime = in.readFSTime();
+            docTime = in.readTimeHM();
         }
     }
 

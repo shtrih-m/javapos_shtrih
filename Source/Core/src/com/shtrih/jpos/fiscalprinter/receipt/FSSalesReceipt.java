@@ -11,6 +11,7 @@ import com.shtrih.fiscalprinter.command.CloseRecParams;
 import com.shtrih.fiscalprinter.command.EndFiscalReceipt;
 import com.shtrih.fiscalprinter.command.FSCloseReceipt;
 import com.shtrih.fiscalprinter.command.FSReceiptDiscount;
+import com.shtrih.fiscalprinter.command.FlexCommand;
 import com.shtrih.fiscalprinter.command.PriceItem;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.jpos.fiscalprinter.PackageAdjustment;
@@ -1150,6 +1151,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
             item.setPaymentType(getParams().paymentType);
             item.setSubjectType(getParams().subjectType);
+            // Item unit
+            if (getParams().itemUnit != null){
+                item.setUnit(getParams().itemUnit);
+                getParams().itemUnit = null;
+            }
+
             items.add(item);
 
             getParams().paymentType = 4;

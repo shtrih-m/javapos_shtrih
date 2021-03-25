@@ -5,8 +5,6 @@
  */
 package com.shtrih.fiscalprinter.command;
 
-import com.shtrih.util.BitUtils;
-
 /**
  *
  * @author V.Kravtsov
@@ -67,7 +65,7 @@ public class FSReadCommStatus extends PrinterCommand {
         queueSize = in.readShort();
         documentNumber = in.readInt(); 
         documentDate = in.readFSDate(); 
-        documentTime = in.readFSTime(); 
+        documentTime = in.readTimeHM();
     }
     
     /**

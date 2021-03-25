@@ -180,6 +180,7 @@ public class FptrParameters {
     public int newItemStatus = FSCheckBarcode.FS_ITEM_STATUS_RETAIL;
     public int itemCheckMode = FSCheckBarcode.FS_CHECK_MODE_FULL;
     public int itemMarkType = SmFptrConst.MARK_TYPE_TOBACCO;
+    public Integer itemUnit = null;
     public int userExtendedTagPrintMode = SmFptrConst.USER_EXTENDED_TAG_PRINT_MODE_DRIVER;
     public boolean jsonUpdateEnabled = false;
     public int jsonUpdatePeriodInMinutes = 5;

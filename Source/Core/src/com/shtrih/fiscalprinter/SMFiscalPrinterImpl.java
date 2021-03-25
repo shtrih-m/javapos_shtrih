@@ -1192,6 +1192,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         fsReceiptItem.setText(item.getText());
         int rc = fsPrintRecItem(fsReceiptItem);
         capFSPrintItem = isCommandSupported(rc);
+        // send item units
+        if (succeeded(rc) && (item.getUnit() != null))
+        {
+            TLVWriter writer = new TLVWriter();
+            writer.add(2108, item.getUnit());
+            fsWriteOperationTLV(writer.getBytes());
+        }
         return rc;
     }
 
@@ -3393,7 +3400,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         } else {
             key += Hex.toHex((short) code);
         }
-        if ((capFiscalStorage) && (code < 0x20)) {
+        if ((capFiscalStorage) && ((code < 0x20)||((code >= 0xA0) && (code <= 0xB2)))) {
             key = "FSPrinterError" + Hex.toHex((byte) code);
         }
         String result = Localizer.getString(key);

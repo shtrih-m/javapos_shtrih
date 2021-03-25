@@ -5,8 +5,6 @@
  */
 package com.shtrih.fiscalprinter.command;
 
-import com.shtrih.util.BitUtils;
-
 /**
  *
  * @author V.Kravtsov
@@ -80,7 +78,7 @@ public class FSReadStatus extends PrinterCommand {
         setIsDayOpened(in.readByte() != 0);
         flags = in.readByte();
         date = in.readFSDate();
-        time = in.readFSTime();
+        time = in.readTimeHM();
         fsSerial = in.readString(16);
         docNumber = in.readLong(4);
     }

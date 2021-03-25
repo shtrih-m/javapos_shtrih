@@ -68,7 +68,7 @@ public class LongPrinterStatus implements PrinterConst {
         fmFirmwareBuild = in.readShort();
         fmFirmwareDate = in.readDate();
         date = in.readDate();
-        time = in.readTime();
+        time = in.readTimeHMS();
         fmFlags = in.readByte();
         serialNumber = in.readInt();
         dayNumber = in.readShort();

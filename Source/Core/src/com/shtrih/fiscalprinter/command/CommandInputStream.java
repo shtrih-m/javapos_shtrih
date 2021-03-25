@@ -91,7 +91,7 @@ public class CommandInputStream {
         return ((ch1 << 8) + (ch2 << 0));
     }
 
-    public PrinterTime readTime() throws Exception
+    public PrinterTime readTimeHMS() throws Exception
     {
         int hour = readByte();
         int min = readByte();
@@ -99,7 +99,7 @@ public class CommandInputStream {
         return new PrinterTime(hour, min, sec);
     }
 
-    public PrinterTime readFSTime() throws Exception
+    public PrinterTime readTimeHM() throws Exception
     {
         int hour = readByte();
         int min = readByte();

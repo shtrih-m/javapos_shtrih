@@ -249,8 +249,9 @@ public class Localizer {
         add("FSPrinterErrorA1", "FS: Invalid 0xBx commands sequence");
         add("FSPrinterErrorA2", "FS: Item marking is temporary blocked");
         add("FSPrinterErrorA3", "FS: Item marking table overflow");
-        add("FSPrinterErrorA4", "FS: Item marking table overflow");
-        
+        add("FSPrinterErrorAA", "FS: TLB block has no required requisites");
+        add("FSPrinterErrorAC", "FS: Tag 2007 has already checked marking code");
+
         add("PrinterError00", "No errors");
         add("PrinterError01", "FM: FM1 FM2 or RTC error");
         add("PrinterError02", "FM: FM1 missing");
@@ -288,7 +289,6 @@ public class Localizer {
         add("PrinterError25", "FM: Activation with specified number not found");
         add("PrinterError26", "FM: More than 3 records corrupted");
         add("PrinterError27", "FM: Check sum error");
-
         add("PrinterError28", "FM: Technological sign is present");
         add("PrinterError29", "FM: Technological sign is not present");
         add("PrinterError2A", "FM: FM size is not matched with firmware version");
@@ -296,12 +296,10 @@ public class Localizer {
         add("PrinterError2C", "Fiscal day is closed");
         add("PrinterError2D", "Receipt total less that discount amount");
         add("PrinterError2E", "There is not enough money in ECR");
-       
         add("PrinterError2F", "FS: I2C timeout");
         add("PrinterError30", "FS: NAK returned");
         add("PrinterError31", "FS: Format error");
         add("PrinterError32", "FS: CRC error");
-        
         add("PrinterError33", "Incorrect command parameters");
         add("PrinterError34", "No data available");
         add("PrinterError35", "Settings: Incorrect command parameters");

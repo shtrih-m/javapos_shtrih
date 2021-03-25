@@ -993,7 +993,10 @@ class PrinterTest implements FiscalPrinterConst {
     public void printFiscalReceipt() {
         try {
             //printSalesReceipt99(5,5);
-            printFiscalReceipt145_9();
+            //printFiscalReceipt145_9();
+            String ffdVersion = printer.readTable(17, 1, 17);
+            System.out.println("FFD version: " + ffdVersion);
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -29,6 +29,7 @@ public class PriceItem {
     private Long totalAmount;
     private int paymentType = 4;
     private int subjectType = 1;
+    private Integer unit;
 
     /**
      * Creates a new instance of PriceItem
@@ -171,5 +172,13 @@ public class PriceItem {
 
     public void setSubjectType(int subjectType) {
         this.subjectType = subjectType;
+    }
+
+    public Integer getUnit() {
+        return unit;
+    }
+
+    public void setUnit(Integer unit) {
+        this.unit = unit;
     }
 }

@@ -66,6 +66,16 @@ FSPrinterError15 = FS: Maximum send time limit reached
 FSPrinterError16 = FS: Fiscal day last for 24 hours
 FSPrinterError17 = FS: Invalid time range betseen two operations
 FSPrinterError20 = FS: Server message can not be received
+FSPrinterError23 = FS: Negative answer from key update server
+FSPrinterError24 = FS: Unknown answer from key update server
+FSPrinterError30 = FS: Key update repeat required
+FSPrinterErrorA0 = FS: Item marking is disables
+FSPrinterErrorA1 = FS: Invalid 0xBx commands sequence
+FSPrinterErrorA2 = FS: Item marking is temporary blocked
+FSPrinterErrorA3 = FS: Item marking table overflow
+FSPrinterErrorAA = FS: TLB block has no required requisites
+FSPrinterErrorAC = FS: Tag 2007 has already checked marking code
+
 PrinterError00 = No errors
 PrinterError01 = FM: FM1 FM2 or RTC error
 PrinterError02 = FM: FM1 missing

@@ -139,6 +139,10 @@ public class DIOGetDriverParameter extends DIOItem {
             case SmFptrConst.SMFPTR_DIO_PARAM_DOC_TOTAL:
                 ((long[]) object)[0] = service.getPrinter().getLastDocTotal();
                 break;
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_UNIT:
+                ((int[]) object)[0] = service.getParams().itemUnit;
+                break;
         }
     }
 }

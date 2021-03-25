@@ -7,16 +7,10 @@ package com.shtrih.jpos.fiscalprinter.receipt;
 import java.util.Vector;
 import java.util.HashMap;
 
-import com.shtrih.util.MathUtils;
-import com.shtrih.util.StringUtils;
-import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.MethodParameter;
 import com.shtrih.fiscalprinter.receipt.*;
-import com.shtrih.fiscalprinter.GS1Barcode;
-import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.PriceItem;
 import com.shtrih.fiscalprinter.command.AmountItem;
-import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 
 /**
  * @author V.Kravtsov
@@ -51,6 +45,7 @@ public class FSSaleReceiptItem {
     private final Vector tags = new Vector();
     private HashMap receiptFields = new HashMap();
     private double taxRate = 0;
+    private Integer unit;
 
     public FSSaleReceiptItem() {
     }
@@ -102,6 +97,7 @@ public class FSSaleReceiptItem {
         item.setTotalAmount(totalAmount);
         item.setPaymentType(paymentType);
         item.setSubjectType(subjectType);
+        item.setUnit(getUnit());
 
         return item;
     }
@@ -438,6 +434,14 @@ public class FSSaleReceiptItem {
 
     public long getTaxAmount() throws Exception {
         return (long) ((getTotal()) * taxRate / (1 + taxRate) + 0.5);
+    }
+
+    public Integer getUnit() {
+        return unit;
+    }
+
+    public void setUnit(Integer unit) {
+        this.unit = unit;
     }
 
 }

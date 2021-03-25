@@ -63,7 +63,9 @@ public final class FSReadMCStatus extends PrinterCommand {
     private int password;
     // out
     // Состояние по проверке КМ
-    private int status; 
+    private enum CharState {REGULAR, ESCAPED, IN_FIELD}
+
+    private int status;
     // Состояние по формированию уведомления
     private int notificationStatus; 
     // Флаги разрешения команд работы с КМ
