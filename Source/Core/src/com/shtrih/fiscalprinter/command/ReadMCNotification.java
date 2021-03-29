@@ -40,11 +40,11 @@ public final class ReadMCNotification extends PrinterCommand {
     // in
     public int password;
     // out
-    public long notificationNumber;
-    public int notificationSize;
-    public int notificationOffset;
+    public int number;
+    public int size;
+    public int offset;
     public int blockSize;
-    public byte[] data;
+    public byte[] blockData;
 
     /**
      * Creates a new instance of ConfirmDate
@@ -66,12 +66,10 @@ public final class ReadMCNotification extends PrinterCommand {
     }
 
     public final void decode(CommandInputStream in) throws Exception {
-        notificationNumber = in.readLong(4);
-        notificationSize = in.readShort();
-        notificationOffset = in.readShort();
+        number = in.readInt();
+        size = in.readShort();
+        offset = in.readShort();
         blockSize = in.readShort();
-        data = in.readBytesToEnd();
+        blockData = in.readBytesToEnd();
    }
-   
-    
 }

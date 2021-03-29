@@ -41,4 +41,23 @@ public class MathUtils {
         return 0;
     }
 
+    public static int CRC16CCITT(byte[] bytes) 
+    { 
+        return CRC16(bytes, 0x1021, 0);
+    }
+
+    public static int CRC16(byte[] bytes, int polynomial, int crc) 
+    {
+        for (byte b : bytes) {
+            for (int i = 0; i < 8; i++) {
+                boolean bit = ((b   >> (7-i) & 1) == 1);
+                boolean c15 = ((crc >> 15    & 1) == 1);
+                crc <<= 1;
+                if (c15 ^ bit) crc ^= polynomial;
+            }
+        }
+        crc &= 0xffff;
+        return crc;
+    }
+    
 }

@@ -24,6 +24,10 @@ public class DIOItem {
         this.service = service;
     }
 
+    public FiscalPrinterImpl getService() {
+        return service;
+    }
+    
     public SMFiscalPrinter getPrinter() {
         return service.getPrinter();
     }

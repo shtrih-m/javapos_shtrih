@@ -34,8 +34,8 @@ package com.shtrih.fiscalprinter.command;
 public final class ConfirmMCNotification extends PrinterCommand {
     // in
     public int password;
-    public int notificationNumber;
-    public int notificationCrc;
+    public int number;
+    public int crc;
 
     /**
      * Creates a new instance of ConfirmDate
@@ -54,8 +54,8 @@ public final class ConfirmMCNotification extends PrinterCommand {
 
     public final void encode(CommandOutputStream out) throws Exception {
         out.writeInt(password);
-        out.writeInt(notificationNumber);
-        out.writeShort(notificationCrc);
+        out.writeInt(number);
+        out.writeShort(crc);
     }
 
     public final void decode(CommandInputStream in) throws Exception {

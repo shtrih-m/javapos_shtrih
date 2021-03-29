@@ -654,7 +654,7 @@ public interface SmFptrConst {
      */
     public static final int SMFPTR_DIO_SET_ITEM_CODE = 0x78;
 
-    /**
+    /**-
      * Receipt field value for receipt template
      */
     public static final int SMFPTR_DIO_GET_RECEIPT_FIELD = 0x79;
@@ -668,6 +668,9 @@ public interface SmFptrConst {
      * Read journal report
      */
     public static final int SMFPTR_DIO_READ_JOURNAL = 0x7D;
+
+    // Save marking codes notification
+    public static final int SMFPTR_DIO_SAVE_MC_NOTIFICATIONS = 0x7E;
     
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:

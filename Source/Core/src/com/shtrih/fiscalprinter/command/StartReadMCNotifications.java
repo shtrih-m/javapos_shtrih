@@ -30,9 +30,9 @@ public final class StartReadMCNotifications extends PrinterCommand {
     // in
     public int password;
     // out
-    public int notificationCount;
-    public long notificationNumber;
-    public int notificationSize;
+    public int count;
+    public long number;
+    public int size;
 
     /**
      * Creates a new instance of ConfirmDate
@@ -54,9 +54,9 @@ public final class StartReadMCNotifications extends PrinterCommand {
     }
 
     public final void decode(CommandInputStream in) throws Exception {
-        notificationCount = in.readShort();
-        notificationNumber = in.readLong(4);
-        notificationSize = in.readShort();
+        count = in.readShort();
+        number = in.readLong(4);
+        size = in.readShort();
    }
    
     

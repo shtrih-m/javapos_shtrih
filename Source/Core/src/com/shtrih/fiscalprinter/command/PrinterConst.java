@@ -710,6 +710,12 @@ public interface PrinterConst {
     public static final int SMFP_IF_PC_USB           = 1;
     public static final int SMFP_IF_PC_TCP_SERVER    = 2;
     public static final int SMFP_IF_PC_I2C_TUNNEL    = 3;
-   
-    
+
+    // Fiscal document format
+    public static final int FS_FORMAT_NOT_ACTIVATED = 0;
+    public static final int FS_FORMAT_FFD_1_0       = 1;
+    public static final int FS_FORMAT_FFD_1_0_5     = 2;
+    public static final int FS_FORMAT_FFD_1_1       = 3;
+    public static final int FS_FORMAT_FFD_1_2       = 4;
+
 }

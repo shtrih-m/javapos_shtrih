@@ -11,11 +11,13 @@
  */
 package com.shtrih.fiscalprinter;
 
+import java.util.HashMap;
 import java.nio.ByteOrder;
 import java.nio.ByteBuffer;
 import java.io.ByteArrayInputStream;
 
 import com.shtrih.util.Time;
+import com.shtrih.fiscalprinter.MCNotification;
 import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.GS1BarcodeParser;
 import com.shtrih.barcode.PrinterBarcode;
@@ -142,9 +144,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private long lastDocNum = 0;
     private long lastDocMAC = 0;
     private PrinterDate lastDocDate = new PrinterDate();
-    private PrinterTime lastDocTime  = new PrinterTime();
+    private PrinterTime lastDocTime = new PrinterTime();
     private long lastDocTotal = 0;
     private volatile boolean stopFlag = true;
+    private Integer fdVersion = null;
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params) {
@@ -208,8 +211,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         synchronized (port.getSyncObject()) {
             Time.delay(params.commandDelayInMs);
             beforeCommand(command);
-            switch (command.getCode())
-            {
+            switch (command.getCode()) {
                 // correct date before day open
                 case 0xE0:
                 // check status before receipt open
@@ -219,7 +221,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 // close receipt 2
                 case 0xFF45:
 
-                correctDate();
+                    correctDate();
             }
 
             device.send(command);
@@ -232,11 +234,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     // correct date
-    public void correctDate() 
-    {
+    public void correctDate() {
         logger.debug("correctDate");
-        try
-        {
+        try {
             if (params.validTimeDiffInSecs <= 0) {
                 return;
             }
@@ -264,12 +264,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 check(confirmDate(date));
                 check(writeTime(time));
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             logger.error("Correct date failed: " + e.getMessage());
         }
     }
-        
 
     public LongPrinterStatus connect() throws Exception {
         logger.debug("connect");
@@ -967,7 +965,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public int fsCloseReceipt(FSCloseReceipt command) throws Exception {
         writeTLVItems();
 
-        
         lastDocNum = 0;
         lastDocMAC = 0;
         lastDocTotal = getSubtotal();
@@ -977,23 +974,19 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             lastDocMAC = command.getDocMAC();
             lastDocDate = command.getDocDate();
             lastDocTime = command.getDocTime();
-            if (lastDocDate == null)
-            {
+            if (lastDocDate == null) {
                 lastDocDate = new PrinterDate();
                 lastDocTime = new PrinterTime();
-                try
-                {
+                try {
                     ReadLongStatus sCommand = new ReadLongStatus();
                     sCommand.setPassword(usrPassword);
                     executeCommand(sCommand);
-                    if (sCommand.isSucceeded())
-                    {
+                    if (sCommand.isSucceeded()) {
                         LongPrinterStatus status = sCommand.getStatus();
                         lastDocDate = status.getDate();
                         lastDocTime = status.getTime();
                     }
-                } catch(Exception e)
-                {
+                } catch (Exception e) {
                 }
             }
         }
@@ -1193,8 +1186,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         int rc = fsPrintRecItem(fsReceiptItem);
         capFSPrintItem = isCommandSupported(rc);
         // send item units
-        if (succeeded(rc) && (item.getUnit() != null))
-        {
+        if (succeeded(rc) && (item.getUnit() != null)) {
             TLVWriter writer = new TLVWriter();
             writer.add(2108, item.getUnit());
             fsWriteOperationTLV(writer.getBytes());
@@ -2806,7 +2798,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 height = getModel().getMaxGraphics512Height();
             }
         }
-        return height-1;
+        return height - 1;
     }
 
     public int getMaxGraphicsWidth() throws Exception {
@@ -2943,7 +2935,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (!capFSTotals) {
             return new FMTotals();
         }
-        
+
         long[] totalizers = new long[4];
         int rc = readTotalizers(0, totalizers);
         capFSTotals = isCommandSupported(rc);
@@ -3364,8 +3356,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public void fsWriteTLV(byte[] tlv) throws Exception 
-    {
+    public void fsWriteTLV(byte[] tlv) throws Exception {
         tlvItems.add(tlv);
     }
 
@@ -3400,7 +3391,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         } else {
             key += Hex.toHex((short) code);
         }
-        if ((capFiscalStorage) && ((code < 0x20)||((code >= 0xA0) && (code <= 0xB2)))) {
+        if ((capFiscalStorage) && ((code < 0x20) || ((code >= 0xA0) && (code <= 0xB2)))) {
             key = "FSPrinterError" + Hex.toHex((byte) code);
         }
         String result = Localizer.getString(key);
@@ -4449,22 +4440,21 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     /*
    
-    Второй параметр отвечает за тип запрашиваемых сумм
-•   FE F4 00 00 00 00 - возвращает 4 8-ми байтных числа (приход, возврат прихода, расход, возврат расхода). Это НС без деталировки по типам оплаты
-•   FE F4 01 00 00 00 - возвращает 16 8-ми байтных числа (приход). Это НС с деталировкой по 16-ти типам оплаты
-•   FE F4 02 00 00 00 - возвращает 16 8-ми байтных числа (возврат прихода). Это НС с деталировкой по 16-ти типам оплаты
-•   FE F4 03 00 00 00 - возвращает 16 8-ми байтных числа (расход). Это НС с деталировкой по 16-ти типам оплаты
-•   FE F4 04 00 00 00 - возвращает 16 8-ми байтных числа (возврат расхода). Это НС с деталировкой по 16-ти типам оплаты
-•   FE F4 05 00 00 00 - возвращает 4 8-ми байтных числа (коррекция прихода, коррекция возврата прихода, коррекция расхода, коррекция возврата расхода)
+     Второй параметр отвечает за тип запрашиваемых сумм
+     •   FE F4 00 00 00 00 - возвращает 4 8-ми байтных числа (приход, возврат прихода, расход, возврат расхода). Это НС без деталировки по типам оплаты
+     •   FE F4 01 00 00 00 - возвращает 16 8-ми байтных числа (приход). Это НС с деталировкой по 16-ти типам оплаты
+     •   FE F4 02 00 00 00 - возвращает 16 8-ми байтных числа (возврат прихода). Это НС с деталировкой по 16-ти типам оплаты
+     •   FE F4 03 00 00 00 - возвращает 16 8-ми байтных числа (расход). Это НС с деталировкой по 16-ти типам оплаты
+     •   FE F4 04 00 00 00 - возвращает 16 8-ми байтных числа (возврат расхода). Это НС с деталировкой по 16-ти типам оплаты
+     •   FE F4 05 00 00 00 - возвращает 4 8-ми байтных числа (коррекция прихода, коррекция возврата прихода, коррекция расхода, коррекция возврата расхода)
     
      */
-    public int readTotalizers(int recType, long[] totalizers) throws Exception 
-    {
+    public int readTotalizers(int recType, long[] totalizers) throws Exception {
         logger.debug("readPaymentTotalizers");
-        if ((recType < 0)||(recType > 5)){
+        if ((recType < 0) || (recType > 5)) {
             return 0x33;
         }
-                
+
         ServiceCommand command = new ServiceCommand();
         command.setFunctionCode(ServiceCommand.CODE_GLOBALSUMM_GET);
         command.setIntData(recType);
@@ -4473,13 +4463,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             CommandInputStream stream = new CommandInputStream(charsetName);
             stream.setData(command.getAnswer());
             int count = stream.getSize() / 8;
-            if (count < totalizers.length)
-            {
+            if (count < totalizers.length) {
                 // Workaround, fiscal printer does not check parameter
                 // Invalid parameter works as parameter 0.
                 return 0x33; // Invalid command parameters
             }
-                    
+
             for (int i = 0; i < totalizers.length; i++) {
                 totalizers[i] = stream.readLong(8);
             }
@@ -4491,7 +4480,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         int count = 0;
         switch (recType) {
             case 0:
-            case 5: 
+            case 5:
                 count = 4;
                 break;
             case 1:
@@ -4627,27 +4616,26 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return rc;
     }
 
-    public int checkItemCode2(String barcode) throws Exception 
-    {
+    public int checkItemCode2(String barcode) throws Exception {
         /* !!!!
-        int rc = 0;
-        rc = loadDataBlock(1, barcode.getBytes());
-        if (rc == 0) {
-            FSCheckBarcode checkCommand = fsCheckBarcode(barcode);
-            rc = checkCommand.getResultCode();
-            if (checkCommand.isSucceeded()) {
-                int action = 0;
-                if (checkCommand.isCorrect()) {
-                    action = 1;
-                }
-                FSAcceptItemCode acceptCommand = fsAcceptItemCode(action);
-                rc = acceptCommand.getResultCode();
+         int rc = 0;
+         rc = loadDataBlock(1, barcode.getBytes());
+         if (rc == 0) {
+         FSCheckBarcode checkCommand = fsCheckBarcode(barcode);
+         rc = checkCommand.getResultCode();
+         if (checkCommand.isSucceeded()) {
+         int action = 0;
+         if (checkCommand.isCorrect()) {
+         action = 1;
+         }
+         FSAcceptItemCode acceptCommand = fsAcceptItemCode(action);
+         rc = acceptCommand.getResultCode();
 
-                checkCommand.checkCorrect();
-            }
-        }
-        return rc;
-        */
+         checkCommand.checkCorrect();
+         }
+         }
+         return rc;
+         */
         return 0;
     }
 
@@ -4822,17 +4810,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public PrinterDate getLastDocDate() {
         return lastDocDate;
     }
-    
+
     public PrinterTime getLastDocTime() {
         return lastDocTime;
     }
-    
+
     public long getLastDocTotal() {
         return lastDocTotal;
     }
-    
-    
-    
+
     private String formatStrings(String line1, String line2) throws Exception {
         int len;
         String S = "";
@@ -4848,4 +4834,84 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return S + line2;
     }
 
+    public int getFDVersion() throws Exception {
+        if (fdVersion == null) {
+            fdVersion = Integer.parseInt(readTable(17, 1, 17));
+        }
+        return fdVersion;
+    }
+
+    public void checkFDVersion(int version) throws Exception {
+        if (getFDVersion() < version) {
+            throw new Exception("Not supported in FD version");
+        }
+    }
+
+    public StartReadMCNotifications startReadMCNotifications() throws Exception {
+        StartReadMCNotifications command = new StartReadMCNotifications();
+        command.password = sysPassword;
+        executeCommand(command);
+        return command;
+    }
+
+    public ReadMCNotification readMCNotification() throws Exception {
+        ReadMCNotification command = new ReadMCNotification();
+        command.password = sysPassword;
+        executeCommand(command);
+        return command;
+    }
+
+    public MCNotifications readNotifications() throws Exception 
+    {
+        MCNotifications items = new MCNotifications();
+        StartReadMCNotifications startCommand = startReadMCNotifications();
+        check(startCommand.getResultCode());
+        int count = startCommand.count;
+        for (int i = 0; i < count; i++) {
+            if (!readNotification(items)) {
+                break;
+            }
+        }
+        return items;
+    }
+
+    public boolean readNotification(MCNotifications items) throws Exception {
+        int number = 0;
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        for (;;) {
+            ReadMCNotification command = readMCNotification();
+            if (command.getResultCode() == 8) {
+                break;
+            }
+            check(command.getResultCode());
+            number = command.number;
+            stream.write(command.blockData);
+            if (stream.size() >= command.size) {
+                break;
+            }
+        }
+        if (stream.size() == 0) {
+            return false;
+        }
+
+        MCNotification item = new MCNotification(
+                number, stream.toByteArray());
+        items.put(item);
+        return true;
+    }
+
+    public void confirmNotifications(MCNotifications items) throws Exception 
+    {
+        ConfirmMCNotification command = new ConfirmMCNotification();
+        int count = items.size();
+        for (int i = 0; i < count; i++) 
+        {
+            MCNotification item = items.get(i);
+            command.password = sysPassword;
+            command.number = item.getNumber();
+            command.crc = item.getCrc();
+            execute(command);
+        }
+    }
+    
 }
