@@ -4846,26 +4846,22 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             throw new Exception("Not supported in FD version");
         }
     }
-
-    public StartReadMCNotifications startReadMCNotifications() throws Exception {
-        StartReadMCNotifications command = new StartReadMCNotifications();
+    
+    public int startReadMCNotifications(StartReadMCNotifications command) throws Exception {
         command.password = sysPassword;
-        executeCommand(command);
-        return command;
+        return executeCommand(command);
     }
 
-    public ReadMCNotification readMCNotification() throws Exception {
-        ReadMCNotification command = new ReadMCNotification();
+    public int readMCNotification(ReadMCNotification command) throws Exception {
         command.password = sysPassword;
-        executeCommand(command);
-        return command;
+        return executeCommand(command);
     }
 
     public MCNotifications readNotifications() throws Exception 
     {
         MCNotifications items = new MCNotifications();
-        StartReadMCNotifications startCommand = startReadMCNotifications();
-        check(startCommand.getResultCode());
+        StartReadMCNotifications startCommand = new StartReadMCNotifications();
+        check(startReadMCNotifications(startCommand));
         int count = startCommand.count;
         for (int i = 0; i < count; i++) {
             if (!readNotification(items)) {
@@ -4879,7 +4875,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         int number = 0;
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         for (;;) {
-            ReadMCNotification command = readMCNotification();
+            ReadMCNotification command = new ReadMCNotification();
+            readMCNotification(command);
+            
             if (command.getResultCode() == 8) {
                 break;
             }

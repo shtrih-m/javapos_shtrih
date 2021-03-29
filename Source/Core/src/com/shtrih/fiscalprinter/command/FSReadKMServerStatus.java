@@ -50,7 +50,7 @@ public final class FSReadKMServerStatus extends PrinterCommand {
     public PrinterDate messageDate;
     public PrinterTime messageTime;
     //Размер свободной области для хранения «Отчет об изменении статуса» в килобайтах : 4 байта
-    public long freeMemoryPercents;
+    public int freeMemoryPercents;
 
     /**
      * Creates a new instance of ConfirmDate
@@ -73,8 +73,8 @@ public final class FSReadKMServerStatus extends PrinterCommand {
 
     public final void decode(CommandInputStream in) throws Exception {
         messageStatus = in.readByte();
-        messageQuantity = (int) in.readLong(2);
-        messageNumber = (int) in.readLong(4);
+        messageQuantity = in.readShort();
+        messageNumber = in.readInt();
         messageDate = in.readDate();
         messageTime = in.readTimeHM();
         freeMemoryPercents = in.readByte();

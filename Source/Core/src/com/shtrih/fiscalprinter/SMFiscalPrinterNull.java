@@ -1209,4 +1209,20 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
 
     public void rebootAndWait() throws Exception {
     }
+    
+    public void confirmNotifications(MCNotifications items) throws Exception{
+    }
+    
+    public MCNotifications readNotifications() throws Exception{
+        return null;
+    }
+    
+    public int startReadMCNotifications(StartReadMCNotifications command) throws Exception{
+        return 0;
+    }
+    
+    public int readMCNotification(ReadMCNotification command) throws Exception{
+        return 0;
+    }
+   
 }

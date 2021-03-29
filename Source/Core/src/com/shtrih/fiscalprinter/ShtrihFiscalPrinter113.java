@@ -21,10 +21,13 @@ import jpos.events.StatusUpdateListener;
 
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.command.*;
+import com.shtrih.jpos.DIOUtils;
+import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 
 import jpos.events.OutputCompleteListener;
 
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
+import com.shtrih.jpos.fiscalprinter.directIO.DIOReadKMServerStatus;
 
 /**
  * Wrapper class to help using directIO codes *
@@ -2348,5 +2351,19 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         lines[0] = fieldName;
         directIO(SmFptrConst.SMFPTR_DIO_SET_RECEIPT_FIELD, null, lines);
         return lines[1];
+    }
+    
+    public void saveNotifications(String fileName) throws JposException
+    {
+        String[] lines = new String[1];
+        lines[0] = fileName;
+        directIO(SmFptrConst.SMFPTR_DIO_SAVE_MC_NOTIFICATIONS, null, lines);
+   }
+
+    public String[] readKMServerStatus() throws JposException
+    {
+        String[] lines = new String[6];
+        directIO(SmFptrConst.SMFPTR_DIO_READ_KM_SERVER_STATUS, null, lines);
+        return lines;
     }
 }

@@ -21,7 +21,7 @@
         <!--<prop name="portClass" type="String" value="com.shtrih.bluetooth.BTPrinterPort"/>-->
         <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
         <!-- ProtocolType, 0 - protocol 1, 1 - protocol 2 -->
-        <prop name="protocolType" type="String" value="1"/>
+        <prop name="protocolType" type="String" value="0"/>
         <!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass -->
         <prop name="portType" type="String" value="0"/>
         <!--Port name-->
@@ -31,7 +31,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="COM6"/>
+        <prop name="portName" type="String" value="COM1"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="0"/>
@@ -317,7 +317,7 @@
 		<prop name="rebootBeforeDayOpen" type="String" value="1"/>
 		<!-- markingType - defines how tag 1162 created: 0 - by fiscal printer via command 0xFF67, 1 - by driver
 		     default value is 0 -->
-		<prop name="markingType" type="String" value="1"/>
+		<prop name="markingType" type="String" value="0"/>
 		<!-- validTimeDiffInSecs -->
 		<prop name="validTimeDiffInSecs" type="String" value="0"/>
     </JposEntry> 

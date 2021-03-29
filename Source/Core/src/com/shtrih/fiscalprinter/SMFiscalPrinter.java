@@ -68,9 +68,11 @@ import com.shtrih.fiscalprinter.command.ReadCashRegister;
 import com.shtrih.fiscalprinter.command.ReadEJActivationReport;
 import com.shtrih.fiscalprinter.command.ReadEJStatus;
 import com.shtrih.fiscalprinter.command.ReadFMLastRecordDate;
+import com.shtrih.fiscalprinter.command.ReadMCNotification;
 import com.shtrih.fiscalprinter.command.ReadOperationRegister;
 import com.shtrih.fiscalprinter.command.ReadTableInfo;
 import com.shtrih.fiscalprinter.command.ShortPrinterStatus;
+import com.shtrih.fiscalprinter.command.StartReadMCNotifications;
 import com.shtrih.fiscalprinter.command.VoidFiscalReceipt;
 import com.shtrih.fiscalprinter.model.PrinterModel;
 import com.shtrih.fiscalprinter.table.PrinterField;
@@ -671,4 +673,12 @@ public interface SMFiscalPrinter {
     public void cancelWait();
 
     public void rebootAndWait() throws Exception;
+    
+    public void confirmNotifications(MCNotifications items) throws Exception;
+    
+    public MCNotifications readNotifications() throws Exception;
+    
+    public int startReadMCNotifications(StartReadMCNotifications command) throws Exception;
+    
+    public int readMCNotification(ReadMCNotification command) throws Exception;
 }

@@ -98,6 +98,8 @@ import com.shtrih.util.StringUtils;
 import com.shtrih.util.SysUtils;
 import com.shtrih.jpos.fiscalprinter.JsonUpdateService;
 import com.shtrih.util.Time;
+import com.shtrih.fiscalprinter.MCNotifications;
+import com.shtrih.fiscalprinter.MCNotificationsReport;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -4750,11 +4752,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     
     public void saveMCNotifications(String fileName) throws Exception
     {
-        /*
-        MCNotifications items = printer.readMCNotifications();
-        MCNotificationReport report = new MCNotificationReport();
+        MCNotifications items = printer.readNotifications();
+        MCNotificationsReport report = new MCNotificationsReport();
         report.save(items, fileName);
         printer.confirmNotifications(items);
-        */
     }
 }

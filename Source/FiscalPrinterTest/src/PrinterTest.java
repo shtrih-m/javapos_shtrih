@@ -992,11 +992,28 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
+            // System.out.println("FFD version: " + printer.readFFDVersion());
             //printSalesReceipt99(5,5);
-            //printFiscalReceipt145_9();
-            String ffdVersion = printer.readTable(17, 1, 17);
-            System.out.println("FFD version: " + ffdVersion);
             
+            //printFiscalReceipt145_9();
+            //printer.saveNotifications("notifications.txt");
+            
+            readKMServerStatus();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void readKMServerStatus()
+    {
+        try {
+            String[] lines = printer.readKMServerStatus();
+            System.out.println("Message quantity : " + lines[1]);
+            System.out.println("Message number   : " + lines[2]);
+            System.out.println("Message date     : " + lines[3]);
+            System.out.println("Message time     : " + lines[4]);
+            System.out.println("Free memory, %   : " + lines[5]);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3877,7 +3894,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE, SmFptrConst.MARK_TYPE_TOBACCO);
 
             printer.printRecItem("Item 1", 10099, 1000, 1, 10099, "");
-            printer.fsWriteOperationTag(1197, "KG");
+            //printer.fsWriteOperationTag(1197, "KG");
 
             printer.printRecItem("Item 2", 20000, 1000, 2, 20000, "");
             printer.printRecItem("Item 3", 30000, 1000, 3, 30000, "");

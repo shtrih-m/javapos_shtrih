@@ -26,7 +26,6 @@ public class DIOReadKMServerStatus extends DIOItem {
     public void execute(int[] data, Object object) throws Exception {
         String[] params = (String[]) object;
         DIOUtils.checkObjectMinLength(params, 6);
-        int codeLength = Integer.parseInt(params[0]);
         FSReadKMServerStatus command = new FSReadKMServerStatus();
         getPrinter().fsReadKMServerStatus(command);
         getPrinter().check(command.getResultCode());
