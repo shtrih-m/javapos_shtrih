@@ -82,8 +82,8 @@ public class FSCloseReceipt extends PrinterCommand {
         change = in.readLong(5);
         docNum = in.readLong(4);
         docMAC = in.readLong(4);
-        if (in.getSize() >= 5) {
-            docDate = in.readFSDate();
+        if (in.size() >= 5) {
+            docDate = in.readDateYMD();
             docTime = in.readTimeHM();
         }
     }

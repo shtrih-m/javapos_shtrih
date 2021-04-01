@@ -48,7 +48,7 @@ public final class ReadFMLastRecordDate extends PrinterCommand {
     public final void decode(CommandInputStream in) throws Exception {
         operator = in.readByte();
         recordType = in.readByte();
-        recordDate = in.readDate();
+        recordDate = in.readDateDMY();
     }
 
     public void setPassword(int password) {

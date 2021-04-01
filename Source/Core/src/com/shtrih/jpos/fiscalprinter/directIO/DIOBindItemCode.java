@@ -12,7 +12,7 @@ package com.shtrih.jpos.fiscalprinter.directIO;
 import com.shtrih.jpos.DIOUtils;
 import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
-import com.shtrih.fiscalprinter.command.FSSetOperationMarking;
+import com.shtrih.fiscalprinter.command.FSBindMC;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import com.shtrih.util.MethodParameter;
 
@@ -26,7 +26,7 @@ public class DIOBindItemCode extends DIOItem {
         String[] params = (String[])object;
         DIOUtils.checkObjectMinLength(params, 2);
         String barcode = params[0];
-        FSSetOperationMarking command = getPrinter().setOperationMarking(barcode);
+        FSBindMC command = getPrinter().setOperationMarking(barcode);
         getPrinter().check(command.getResultCode());
         params[0] = String.valueOf(command.itemCode);
         params[1] = String.valueOf(command.codeType);

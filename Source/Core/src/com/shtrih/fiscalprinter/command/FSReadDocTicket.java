@@ -46,7 +46,7 @@ public class FSReadDocTicket extends PrinterCommand {
     }
 
     public void decode(CommandInputStream in) throws Exception {
-        setTicket(in.readBytes(in.getSize()));
+        setTicket(in.readBytes(in.size()));
     }
 
     /**

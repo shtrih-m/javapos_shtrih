@@ -17,6 +17,7 @@ import java.nio.ByteBuffer;
 import java.io.ByteArrayInputStream;
 
 import com.shtrih.util.Time;
+import com.shtrih.jpos.fiscalprinter.receipt.FSSaleReceiptItem;
 import com.shtrih.fiscalprinter.MCNotification;
 import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.GS1BarcodeParser;
@@ -1194,6 +1195,46 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return rc;
     }
 
+    public void checkItemCode(boolean isSale, FSSaleReceiptItem item) throws Exception 
+    {
+        if (item.getBarcode() == null) return;
+        if (getFDVersion() != PrinterConst.FS_FORMAT_FFD_1_2){
+            return;
+        }
+ 
+        boolean isPeace = (item.getQuantity() == 1000);
+        int itemStatus = FSCheckMC.FS_ITEM_STATUS_NOCHANGE;
+        if (isSale){
+            if (isPeace) {
+                itemStatus = FSCheckMC.FS_ITEM_STATUS_PIECE_SELL;
+            } else {
+                itemStatus = FSCheckMC.FS_ITEM_STATUS_WEIGHT_SELL;
+            }
+        } else{
+            if (isPeace) {
+                itemStatus = FSCheckMC.FS_ITEM_STATUS_PIECE_RETURN;
+            } else {
+                itemStatus = FSCheckMC.FS_ITEM_STATUS_WEIGHT_RETURN;
+            }
+        }
+                
+        FSCheckMC command = new FSCheckMC();
+        command.password = sysPassword;
+        command.itemStatus = itemStatus;
+        command.checkMode = 0;
+        command.mcData = item.getBarcode().getBytes();
+        command.tlv = null;
+        execute(command);
+        // accept
+        FSAcceptMC acceptCommand = new FSAcceptMC();
+        acceptCommand.setPassword(sysPassword);
+        acceptCommand.setAction(1);
+        execute(acceptCommand);
+        if (acceptCommand.getErrorCode() != 0x0F){
+            throw new Exception("Error with marking code check");
+        }
+    }
+    
     public void printSale(PriceItem item) throws Exception {
         logger.debug("printSale");
         String text = getRecItemText(item.getText());
@@ -1210,6 +1251,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         execute(command);
     }
 
+    
     public void printVoidSale(PriceItem item) throws Exception {
         logger.debug("printVoidSale");
         String text = getRecItemText(item.getText());
@@ -4462,7 +4504,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (command.isSucceeded()) {
             CommandInputStream stream = new CommandInputStream(charsetName);
             stream.setData(command.getAnswer());
-            int count = stream.getSize() / 8;
+            int count = stream.size() / 8;
             if (count < totalizers.length) {
                 // Workaround, fiscal printer does not check parameter
                 // Invalid parameter works as parameter 0.
@@ -4598,45 +4640,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return status.getPrinterMode().isDayClosed();
     }
 
-    public FSCheckBarcode fsCheckBarcode(FSCheckBarcode command) throws Exception {
+    public FSCheckMC fsCheckBarcode(FSCheckMC command) throws Exception {
         command.password = sysPassword;
         executeCommand(command);
         return command;
-    }
-
-    public int checkItemCode(String barcode) throws Exception {
-        if (!params.checkItemCodeEnabled) {
-            return 0;
-        }
-
-        if (barcode == null) {
-            return 0;
-        }
-        int rc = checkItemCode2(barcode);
-        return rc;
-    }
-
-    public int checkItemCode2(String barcode) throws Exception {
-        /* !!!!
-         int rc = 0;
-         rc = loadDataBlock(1, barcode.getBytes());
-         if (rc == 0) {
-         FSCheckBarcode checkCommand = fsCheckBarcode(barcode);
-         rc = checkCommand.getResultCode();
-         if (checkCommand.isSucceeded()) {
-         int action = 0;
-         if (checkCommand.isCorrect()) {
-         action = 1;
-         }
-         FSAcceptItemCode acceptCommand = fsAcceptItemCode(action);
-         rc = acceptCommand.getResultCode();
-
-         checkCommand.checkCorrect();
-         }
-         }
-         return rc;
-         */
-        return 0;
     }
 
     public int sendMarking(String barcode) throws Exception {
@@ -4762,23 +4769,23 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return writer.getBytes();
     }
 
-    public FSSetOperationMarking setOperationMarking(String barcode) throws Exception {
-        FSSetOperationMarking command = new FSSetOperationMarking();
+    public FSBindMC setOperationMarking(String barcode) throws Exception {
+        FSBindMC command = new FSBindMC();
         command.password = usrPassword;
         command.data = barcode.getBytes();
         executeCommand(command);
         return command;
     }
 
-    public FSAcceptItemCode fsAcceptItemCode(int action) throws Exception {
-        FSAcceptItemCode command = new FSAcceptItemCode();
+    public FSAcceptMC fsAcceptItemCode(int action) throws Exception {
+        FSAcceptMC command = new FSAcceptMC();
         command.setPassword(usrPassword);
         command.setAction(action);
         executeCommand(command);
         return command;
     }
 
-    public int fsReadKMServerStatus(FSReadKMServerStatus command) throws Exception {
+    public int fsReadKMServerStatus(FSReadMCNotificationStatus command) throws Exception {
         command.password = sysPassword;
         return executeCommand(command);
     }

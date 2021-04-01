@@ -45,7 +45,7 @@ public final class ReadEJActivationReport extends PrinterCommand {
     }
 
     public final void decode(CommandInputStream in) throws Exception {
-        setEcrModel(in.readString(in.getSize()));
+        setEcrModel(in.readString(in.size()));
     }
 
     public String getEcrModel() {

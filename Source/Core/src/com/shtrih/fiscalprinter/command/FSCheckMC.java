@@ -32,62 +32,20 @@ import com.shtrih.util.MethodParameter;
  *
  ***************************************************************************
  */
-public class FSCheckBarcode extends PrinterCommand {
+public class FSCheckMC extends PrinterCommand {
     ////////////////////////////////////////////////////////////////////////////
-    // ItemStatus codes
-
-    // 1 - «Сформирован».Не выдан регистратору.
-    public static final int FS_ITEM_STATUS_FORMED = 1;
-    // 2 - «Готов». Выдан регистратору, но не применен.
-    public static final int FS_ITEM_STATUS_READY = 2;
-    // 3 - «Выдан». КМ выдан ТС для нанесения. Применение не подтверждено.
-    public static final int FS_ITEM_STATUS_SENT = 3;
-    // 4 - «Выпущен». КМ нанесен на товар или упаковку, правильность нанесения кода подтверждена, маркированный товар произведен.
-    public static final int FS_ITEM_STATUS_RELEASED = 4;
-    // 5 - «Не использован». КМ не был выдан ТС к моменту закрытия заказа.
-    public static final int FS_ITEM_STATUS_NOTUSED = 5;
-    // 6 - «Упакован». Товар или упаковка с данным КМ находится в составе логистической единицы.
-    public static final int FS_ITEM_STATUS_PACKED = 6;
-    // 7 - «Распакован». Маркированный объект находится в обороте или в употреблении в виде товарной единицы.
-    public static final int FS_ITEM_STATUS_UNPACKED = 7;
-    // 8 - Выбыл по определенным, известным участникам обращения товара, причинам на этапе производства (например, отобран, как опытный образец для испытаний), оптового или розничного оборота (уничтожен безвозвратно в составе логистической единицы, похищенной, испорченной в совокупности со всем содержимым и т.п.).
-    public static final int FS_ITEM_STATUS_DROPPED = 8;
-    //9 - «Выбыл через розничную сеть».
-    public static final int FS_ITEM_STATUS_RETAIL = 9;
-    // 10 - «В состоянии выбытия» (мерный товар).
-    public static final int FS_ITEM_STATUS_DROPPING = 10;
-    //11 - «Утерян».
-    public static final int FS_ITEM_STATUS_LOST = 11;
-    // 12 - «Оборот приостановлен».
-    public static final int FS_ITEM_STATUS_DELAYED = 12;
-    // 13 - «Оборот запрещен».
-    public static final int FS_ITEM_STATUS_DISABLED = 13;
-    // 14 - «Потреблен».
-    public static final int FS_ITEM_STATUS_SOLD = 14;
-    // 15 - «Дублирован».
-    public static final int FS_ITEM_STATUS_DUPLICATED = 15;
-
-    ////////////////////////////////////////////////////////////////////////////
-    // checkMode constants
-    // 0 – полная проверка.
-    public static final int FS_CHECK_MODE_FULL = 0;
-    // 1 – только онлайн проверка.
-    public static final int FS_CHECK_MODE_ONLINE = 1;
-    // 2 – только локальная проверка.
-    public static final int FS_CHECK_MODE_LOCAL = 2;
-
-    ////////////////////////////////////////////////////////////////////////////
-    // localResultCode constants
-    // Результат локальной проверки кода маркировки: 1 байт
-    // 0 – проверка не проводилась, (для симметричной криптографической системы). 
-    public static final int FS_LOCAL_RESULT_CODE_SYMMETRIC = 0;
-    // 1 – код маркировки проверен, достоверный. 
-    public static final int FS_LOCAL_RESULT_CODE_VALID = 1;
-    // 2 – код маркировки проверен, недостоверный.
-    public static final int FS_LOCAL_RESULT_CODE_INVALID = 2;
-    // 3 – проверка не проводилась, (криптографическая система асимметричная, но в ФН-М нет ключа с идентификатором КПКИЗ.ид)
-    public static final int FS_LOCAL_RESULT_CODE_ASYMMETRIC = 0;
-
+    // ItemStatus codes, 2003 tag
+    // Штучный товар, реализован
+    public static final int FS_ITEM_STATUS_PIECE_SELL   = 1;
+    // Мерный товар, реализован
+    public static final int FS_ITEM_STATUS_WEIGHT_SELL  = 2;
+    // Штучный товар, возвращен
+    public static final int FS_ITEM_STATUS_PIECE_RETURN   = 3;
+    // Мерный товар, возвращен
+    public static final int FS_ITEM_STATUS_WEIGHT_RETURN  = 4;
+    // Статус товара не изменился
+    public static final int FS_ITEM_STATUS_NOCHANGE       = 255;
+    
     ////////////////////////////////////////////////////////////////////////////
     // salePermission constants
     // Разрешение на продажу товара от ИСМ: 1 байт.
@@ -130,7 +88,7 @@ public class FSCheckBarcode extends PrinterCommand {
     public byte[] serverTLVData;
    
 
-    public FSCheckBarcode() {
+    public FSCheckMC() {
     }
 
     public final int getCode() {
@@ -186,14 +144,14 @@ public class FSCheckBarcode extends PrinterCommand {
 
 /*    
     public boolean isCorrect() throws Exception {
-        if (localResultCode == FSCheckBarcode.FS_LOCAL_RESULT_CODE_INVALID) {
+        if (localResultCode == FSCheckMC.FS_LOCAL_RESULT_CODE_INVALID) {
             return false;
         }
         if (processingCode == 0) {
-            if (salePermission != FSCheckBarcode.FS_SALE_PERMISSION_OK) {
+            if (salePermission != FSCheckMC.FS_SALE_PERMISSION_OK) {
                 return false;
             }
-            if (serverResultCode != FSCheckBarcode.FS_SERVER_OK) {
+            if (serverResultCode != FSCheckMC.FS_SERVER_OK) {
                 return false;
             }
         }
@@ -201,14 +159,14 @@ public class FSCheckBarcode extends PrinterCommand {
     }
 
     public void checkCorrect() throws Exception {
-        if (localResultCode == FSCheckBarcode.FS_LOCAL_RESULT_CODE_INVALID) {
+        if (localResultCode == FSCheckMC.FS_LOCAL_RESULT_CODE_INVALID) {
             throw new Exception("Barcode is not valid");
         }
         if (processingCode == 0) {
-            if (salePermission != FSCheckBarcode.FS_SALE_PERMISSION_OK) {
+            if (salePermission != FSCheckMC.FS_SALE_PERMISSION_OK) {
                 throw new Exception("Item is forbidden to sold");
             }
-            if (serverResultCode != FSCheckBarcode.FS_SERVER_OK) {
+            if (serverResultCode != FSCheckMC.FS_SERVER_OK) {
                 throw new Exception(getServerResultCodeText());
             }
         }

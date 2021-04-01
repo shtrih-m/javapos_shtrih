@@ -49,7 +49,7 @@ public class FSReadExpDate extends PrinterCommand {
     }
 
     public void decode(CommandInputStream in) throws Exception {
-        date = in.readFSDate();
+        date = in.readDateYMD();
         remainingRegistrationsCount  = in.readByte();
         registrationsCount  = in.readByte();
     }

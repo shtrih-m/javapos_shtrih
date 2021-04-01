@@ -66,7 +66,7 @@ public class ReadTable extends PrinterCommand {
 
     
     public final void decode(CommandInputStream in) throws Exception {
-        fieldValue = in.readBytes(in.getSize());
+        fieldValue = in.readBytes(in.size());
     }
 
     

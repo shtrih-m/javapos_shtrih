@@ -67,13 +67,13 @@ public final class ReadEJDayReportOnDates extends PrinterCommand {
     public final void encode(CommandOutputStream out) throws Exception {
         out.writeInt(password);
         out.writeByte(reportType);
-        out.writeDate(date1);
-        out.writeDate(date2);
+        out.writeDateDMY(date1);
+        out.writeDateDMY(date2);
     }
 
     
     public final void decode(CommandInputStream in) throws Exception {
-        ecrModel = in.readString(in.getSize());
+        ecrModel = in.readString(in.size());
     }
 
     public String getEcrModel() {

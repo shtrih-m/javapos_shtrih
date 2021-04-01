@@ -51,7 +51,7 @@ public final class ReadEJDocument extends PrinterCommand {
     }
 
     public final void decode(CommandInputStream in) throws Exception {
-        line = in.readString(in.getSize());
+        line = in.readString(in.size());
     }
 
     public String getLine() {

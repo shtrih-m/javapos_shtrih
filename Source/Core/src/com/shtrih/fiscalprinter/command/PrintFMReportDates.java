@@ -54,13 +54,13 @@ public final class PrintFMReportDates extends PrinterCommand {
     public final void encode(CommandOutputStream out) throws Exception {
         out.writeInt(getPassword());
         out.writeByte(getReportType());
-        out.writeDate(getDate1());
-        out.writeDate(getDate2());
+        out.writeDateDMY(getDate1());
+        out.writeDateDMY(getDate2());
     }
 
     public final void decode(CommandInputStream in) throws Exception {
-        setSessionDate1(in.readDate());
-        setSessionDate2(in.readDate());
+        setSessionDate1(in.readDateDMY());
+        setSessionDate2(in.readDateDMY());
         setSessionNumber1(in.readShort());
         setSessionNumber2(in.readShort());
     }

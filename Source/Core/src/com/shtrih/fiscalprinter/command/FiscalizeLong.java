@@ -63,7 +63,7 @@ public final class FiscalizeLong extends PrinterCommand {
         setFiscNumber(in.readByte());
         setFiscNumberLeft(in.readByte());
         setSessionNumber(in.readShort());
-        setDate(in.readDate());
+        setDate(in.readDateDMY());
     }
 
     public int getPassword() {

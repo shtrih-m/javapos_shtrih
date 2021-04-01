@@ -35,7 +35,7 @@ package com.shtrih.fiscalprinter.command;
  *
  ***************************************************************************
  */
-public final class FSReadKMServerStatus extends PrinterCommand {
+public final class FSReadMCNotificationStatus extends PrinterCommand {
 
     // in
     public int password;
@@ -55,7 +55,7 @@ public final class FSReadKMServerStatus extends PrinterCommand {
     /**
      * Creates a new instance of ConfirmDate
      */
-    public FSReadKMServerStatus() {
+    public FSReadMCNotificationStatus() {
         super();
     }
 
@@ -75,7 +75,7 @@ public final class FSReadKMServerStatus extends PrinterCommand {
         messageStatus = in.readByte();
         messageQuantity = in.readShort();
         messageNumber = in.readInt();
-        messageDate = in.readDate();
+        messageDate = in.readDateDMY();
         messageTime = in.readTimeHM();
         freeMemoryPercents = in.readByte();
     }

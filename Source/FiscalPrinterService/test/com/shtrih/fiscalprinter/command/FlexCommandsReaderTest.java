@@ -16,7 +16,7 @@ public class FlexCommandsReaderTest {
         FlexCommands commands = new FlexCommands();
         FlexCommandsReader instance = new FlexCommandsReader();
         instance.load(commands);
-        assertEquals(171, commands.size());
+        assertEquals(173, commands.size());
     }
 
     @Test
@@ -25,7 +25,7 @@ public class FlexCommandsReaderTest {
         FlexCommands commands = new FlexCommands();
         FlexCommandsReader instance = new FlexCommandsReader();
         instance.load(commands);
-        assertEquals(171, commands.size());
+        assertEquals(173, commands.size());
 
         /*
             Vector 8200 ms

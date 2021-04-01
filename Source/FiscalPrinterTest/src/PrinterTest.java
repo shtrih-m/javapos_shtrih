@@ -142,18 +142,28 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public String executeCommand() {
+    public void testCommands() {
         try {
+            String out;
             int timeout = 10000;
-            String out = printer.executeCommand(0xFF01, timeout, "30");
-            FSReadSerial command = new FSReadSerial();
-            command.setSysPassword(printer.getSysPassword());
-            printer.fsReadSerial(command);
-            return "";
-
+            out = printer.executeCommand(0xFF01, timeout, "30");
+            System.out.println("0xFF01: " + out);
+            
+            out = printer.executeCommand(0xFF02, timeout, "30");
+            System.out.println("0xFF02: " + out);
+            
+            out = printer.executeCommand(0xFF03, timeout, "30");
+            System.out.println("0xFF03: " + out);
+            
+            out = printer.executeCommand(0xFF04, timeout, "30");
+            System.out.println("0xFF04: " + out);
+            
+            out = printer.executeCommand(0xFF09, timeout, "30");
+            System.out.println("0xFF09: " + out);
+            
+            
         } catch (Exception e) {
             e.printStackTrace();
-            return e.getMessage();
         }
     }
 
@@ -998,7 +1008,8 @@ class PrinterTest implements FiscalPrinterConst {
             //printFiscalReceipt145_9();
             //printer.saveNotifications("notifications.txt");
             
-            readKMServerStatus();
+            //readKMServerStatus();
+            testCommands();
             
         } catch (Exception e) {
             e.printStackTrace();

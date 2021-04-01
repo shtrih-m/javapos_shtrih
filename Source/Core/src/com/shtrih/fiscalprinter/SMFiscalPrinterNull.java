@@ -22,6 +22,7 @@ import com.shtrih.jpos.fiscalprinter.PrinterImage;
 import com.shtrih.jpos.fiscalprinter.ReceiptImages;
 import com.shtrih.util.BitUtils;
 import com.shtrih.jpos.fiscalprinter.PrintItem;
+import com.shtrih.jpos.fiscalprinter.receipt.FSSaleReceiptItem;
 
 /**
  *
@@ -1149,23 +1150,22 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
-    public int checkItemCode(String barcode) throws Exception {
-        return 0;
+    public void checkItemCode(boolean isSale, FSSaleReceiptItem item) throws Exception {
     }
 
-    public FSSetOperationMarking setOperationMarking(String data) throws Exception{
+    public FSBindMC setOperationMarking(String data) throws Exception {
         return null;
     }
 
-    public FSAcceptItemCode fsAcceptItemCode(int action) throws Exception {
+    public FSAcceptMC fsAcceptItemCode(int action) throws Exception {
         return null;
     }
 
-    public int fsReadKMServerStatus(FSReadKMServerStatus command) throws Exception{
+    public int fsReadKMServerStatus(FSReadMCNotificationStatus command) throws Exception {
         return 0;
     }
 
-    public FSSetOperationMarking bindItemCode(String barcode) throws Exception {
+    public FSBindMC bindItemCode(String barcode) throws Exception {
         return null;
     }
 
@@ -1195,34 +1195,34 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public PrinterDate getLastDocDate() {
         return null;
     }
-    
+
     public PrinterTime getLastDocTime() {
         return null;
     }
-    
+
     public long getLastDocTotal() {
         return 0;
     }
-    
+
     public void cancelWait() {
     }
 
     public void rebootAndWait() throws Exception {
     }
-    
-    public void confirmNotifications(MCNotifications items) throws Exception{
+
+    public void confirmNotifications(MCNotifications items) throws Exception {
     }
-    
-    public MCNotifications readNotifications() throws Exception{
+
+    public MCNotifications readNotifications() throws Exception {
         return null;
     }
-    
-    public int startReadMCNotifications(StartReadMCNotifications command) throws Exception{
+
+    public int startReadMCNotifications(StartReadMCNotifications command) throws Exception {
         return 0;
     }
-    
-    public int readMCNotification(ReadMCNotification command) throws Exception{
+
+    public int readMCNotification(ReadMCNotification command) throws Exception {
         return 0;
     }
-   
+
 }

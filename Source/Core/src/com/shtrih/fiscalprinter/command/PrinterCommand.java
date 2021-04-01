@@ -78,7 +78,7 @@ public abstract class PrinterCommand {
         rxData = data;
         CommandInputStream in = new CommandInputStream(charsetName);
         in.setData(data);
-        checkMinLength(in.getSize(), 2);
+        checkMinLength(in.size(), 2);
         int code = in.readByte();
         if (getCode() > 0xFF) {
             code = (code << 8) + in.readByte();

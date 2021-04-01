@@ -25,7 +25,7 @@ public class DIOAcceptItemCode extends DIOItem {
 
         String[] params = (String[])object;
         int action = Integer.parseInt(params[0]);
-        FSAcceptItemCode command = getPrinter().fsAcceptItemCode(action);
+        FSAcceptMC command = getPrinter().fsAcceptItemCode(action);
         getPrinter().check(command.getResultCode());
     }
 

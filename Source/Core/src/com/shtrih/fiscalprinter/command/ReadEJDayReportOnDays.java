@@ -58,7 +58,7 @@ public final class ReadEJDayReportOnDays extends PrinterCommand {
     }
 
     public final void decode(CommandInputStream in) throws Exception {
-        ecrModel = in.readString(in.getSize());
+        ecrModel = in.readString(in.size());
     }
 
     public String getEcrModel() {

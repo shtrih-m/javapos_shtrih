@@ -44,7 +44,7 @@ public final class PBGetLine extends PrinterCommand {
     }
 
     public final void decode(CommandInputStream in) throws Exception {
-        setLineText(in.readString(in.getSize()));
+        setLineText(in.readString(in.size()));
     }
 
     public int getPassword() {

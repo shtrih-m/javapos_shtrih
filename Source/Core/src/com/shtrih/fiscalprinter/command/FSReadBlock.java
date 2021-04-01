@@ -47,7 +47,7 @@ public class FSReadBlock extends PrinterCommand {
     }
 
     public void decode(CommandInputStream in) throws Exception {
-        data = in.readBytes(in.getSize());
+        data = in.readBytes(in.size());
     }
 
     /**

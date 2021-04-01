@@ -11,22 +11,22 @@ package com.shtrih.jpos.fiscalprinter.directIO;
 import com.shtrih.jpos.DIOUtils;
 import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
-import com.shtrih.fiscalprinter.command.FSReadKMServerStatus;
+import com.shtrih.fiscalprinter.command.FSReadMCNotificationStatus;
 import com.shtrih.fiscalprinter.command.PrinterDate;
 import com.shtrih.fiscalprinter.command.PrinterTime;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import com.shtrih.util.MethodParameter;
 
-public class DIOReadKMServerStatus extends DIOItem {
+public class DIOReadMCNotificationStatus extends DIOItem {
 
-    public DIOReadKMServerStatus(FiscalPrinterImpl service) {
+    public DIOReadMCNotificationStatus(FiscalPrinterImpl service) {
         super(service);
     }
 
     public void execute(int[] data, Object object) throws Exception {
         String[] params = (String[]) object;
         DIOUtils.checkObjectMinLength(params, 6);
-        FSReadKMServerStatus command = new FSReadKMServerStatus();
+        FSReadMCNotificationStatus command = new FSReadMCNotificationStatus();
         getPrinter().fsReadKMServerStatus(command);
         getPrinter().check(command.getResultCode());
         params[0] = String.valueOf(0);

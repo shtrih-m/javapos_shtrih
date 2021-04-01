@@ -30,18 +30,24 @@ package com.shtrih.fiscalprinter.command;
     3-КМ 44.
 ****************************************************************************/
 
-public final class FSSetOperationMarking extends PrinterCommand {
+public final class FSBindMC extends PrinterCommand {
     // in
     public int password;
     public byte[] data; 
     // out
     public int itemCode;
     public int codeType;
+    public int localCheckStatus;
+    public int localErrorCode;
+    public int symbolicType;
+    public int serverErrorCode;
+    public int serverCheckStatus;
+    public byte[] serverTLVData;
 
     /*
      * Creates a new instance of ConfirmDate
      */
-    public FSSetOperationMarking() {
+    public FSBindMC() {
         super();
     }
 
@@ -50,7 +56,7 @@ public final class FSSetOperationMarking extends PrinterCommand {
     }
 
     public final String getText() {
-        return "FS: Bind item marking";
+        return "FS: Bind marking code";
     }
 
     public final void encode(CommandOutputStream out) throws Exception {
@@ -62,6 +68,18 @@ public final class FSSetOperationMarking extends PrinterCommand {
     public final void decode(CommandInputStream in) throws Exception {
         itemCode = in.readShort();
         codeType = in.readByte();
+        if (in.size() >= 4){
+            localCheckStatus = in.readByte();
+            localErrorCode = in.readByte();
+            symbolicType = in.readByte();
+            int paramLen = in.readByte();
+            if (paramLen > 0)
+            {
+                serverErrorCode = in.readByte();
+                serverCheckStatus = in.readByte();
+                serverTLVData =  in.readBytesToEnd();
+            }
+        }
    }
    
     

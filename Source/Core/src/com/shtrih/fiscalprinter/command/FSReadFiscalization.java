@@ -74,7 +74,7 @@ public class FSReadFiscalization extends PrinterCommand {
     }
 
     public void decode(CommandInputStream in) throws Exception {
-        setDate(in.readFSDate());
+        setDate(in.readDateYMD());
         setTime(in.readTimeHM());
         setTaxID(in.readString(12));
         setRegID(in.readString(20));

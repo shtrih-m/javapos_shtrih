@@ -219,7 +219,7 @@ public class PrinterModelParameters implements PrinterConst {
         graphicsWidthBytes = in.readByte();
         graphics512WidthBytes = readByteIfAvailable(in);
 
-        if (in.getSize() >= 2) {
+        if (in.size() >= 2) {
             maxGraphics512Height = in.readShort();
         } else {
             maxGraphics512Height = 0;
@@ -233,7 +233,7 @@ public class PrinterModelParameters implements PrinterConst {
     }
 
     private int readByteIfAvailable(CommandInputStream in) throws Exception {
-        if (in.getSize() >= 1) {
+        if (in.size() >= 1) {
             return in.readByte();
         } else {
             return 0;

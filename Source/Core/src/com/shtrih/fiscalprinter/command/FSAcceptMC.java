@@ -18,22 +18,26 @@ package com.shtrih.fiscalprinter.command;
  * Код команды FF69h. Длина сообщения: 7 байт.
  * Пароль оператора: 4 байта
  * Решение : 1 байт. 0 – отвергнуть, 1 – принять.
+ * 
  * Команду необходимо подавать после проверки каждого КМ.
- * Ответ: FF69h	Длина сообщения: 1 байт.
+ * Ответ: FF69h	Длина сообщения: 2 байта.
  * Код ошибки: 1 байт
+ * Результат проверки (1 байт) тег 2106
  *
  ***************************************************************************
  */
-public final class FSAcceptItemCode extends PrinterCommand {
+public final class FSAcceptMC extends PrinterCommand {
 
     // in
     private int password;
     private int action;
+    // out
+    private int errorCode;
 
     /**
      * Creates a new instance of ConfirmDate
      */
-    public FSAcceptItemCode() {
+    public FSAcceptMC() {
         super();
     }
 
@@ -42,7 +46,7 @@ public final class FSAcceptItemCode extends PrinterCommand {
     }
 
     public final String getText() {
-        return "FS: Accept or reject item marking";
+        return "FS: Accept or reject marking code";
     }
 
     public final void encode(CommandOutputStream out) throws Exception {
@@ -50,7 +54,9 @@ public final class FSAcceptItemCode extends PrinterCommand {
         out.writeByte(getAction());
     }
 
-    public final void decode(CommandInputStream in) throws Exception {
+    public final void decode(CommandInputStream in) throws Exception 
+    {
+        setErrorCode(in.readByte());
     }
 
     public int getPassword() {
@@ -73,6 +79,20 @@ public final class FSAcceptItemCode extends PrinterCommand {
      */
     public void setAction(int action) {
         this.action = action;
+    }
+
+    /**
+     * @return the errorCode
+     */
+    public int getErrorCode() {
+        return errorCode;
+    }
+
+    /**
+     * @param errorCode the errorCode to set
+     */
+    public void setErrorCode(int errorCode) {
+        this.errorCode = errorCode;
     }
 
 }

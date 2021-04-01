@@ -59,8 +59,8 @@ public final class PrintFMReportDays extends PrinterCommand {
     }
 
     public final void decode(CommandInputStream in) throws Exception {
-        setSessionDate1(in.readDate());
-        setSessionDate2(in.readDate());
+        setSessionDate1(in.readDateDMY());
+        setSessionDate2(in.readDateDMY());
         setSessionNumber1(in.readShort());
         setSessionNumber2(in.readShort());
     }

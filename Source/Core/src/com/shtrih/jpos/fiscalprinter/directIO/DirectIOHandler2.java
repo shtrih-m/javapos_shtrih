@@ -483,8 +483,8 @@ public class DirectIOHandler2 {
                 new DIOBindItemCode(service).execute(data, object);
                 break;
 
-            case SmFptrConst.SMFPTR_DIO_READ_KM_SERVER_STATUS:
-                new DIOReadKMServerStatus(service).execute(data, object);
+            case SmFptrConst.SMFPTR_DIO_READ_MC_NOTIFICATION_STATUS:
+                new DIOReadMCNotificationStatus(service).execute(data, object);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_READ_FFD_VERSION:

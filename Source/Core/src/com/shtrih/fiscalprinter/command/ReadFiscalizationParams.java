@@ -63,6 +63,6 @@ public final class ReadFiscalizationParams extends PrinterCommand {
         regID = in.readLong(5);
         taxID = in.readLong(6);
         sessionNumber = in.readShort();
-        date = in.readDate();
+        date = in.readDateDMY();
     }
 }

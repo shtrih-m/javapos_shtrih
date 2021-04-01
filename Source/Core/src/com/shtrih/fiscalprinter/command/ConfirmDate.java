@@ -39,7 +39,7 @@ public final class ConfirmDate extends PrinterCommand {
 
     public final void encode(CommandOutputStream out) throws Exception {
         out.writeInt(getPassword());
-        out.writeDate(getDate());
+        out.writeDateDMY(getDate());
     }
 
     public final void decode(CommandInputStream in) throws Exception {

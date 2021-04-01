@@ -33,19 +33,25 @@ public class CommandOutputStream {
         stream.reset();
     }
 
-    public void writeDate(PrinterDate date) throws Exception {
+    public void writeDateDMY(PrinterDate date) throws Exception {
         writeByte(date.getDay());
         writeByte(date.getMonth());
         writeByte(date.getYear() % 100);
     }
 
-    public void writeTime(PrinterTime time) throws Exception {
+    public void writeDateYMD(PrinterDate date) throws Exception {
+        writeByte(date.getYear() % 100);
+        writeByte(date.getMonth());
+        writeByte(date.getDay());
+    }
+    
+    public void writeTimeHMS(PrinterTime time) throws Exception {
         writeByte(time.getHour());
         writeByte(time.getMin());
         writeByte(time.getSec());
     }
 
-    public void writeTime2(PrinterTime time) throws Exception {
+    public void writeTimeHM(PrinterTime time) throws Exception {
         writeByte(time.getHour());
         writeByte(time.getMin());
     }

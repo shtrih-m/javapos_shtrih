@@ -52,7 +52,7 @@ public class LongPrinterStatus implements PrinterConst {
         version[1] = (byte) in.readByte();
         firmwareVersion = new String(version, in.getCharsetName());
         firmwareBuild = in.readShort();
-        firmwareDate = in.readDate();
+        firmwareDate = in.readDateDMY();
         logicalNumber = in.readByte();
         documentNumber = in.readShort();
         flags = in.readShort();
@@ -66,8 +66,8 @@ public class LongPrinterStatus implements PrinterConst {
         fmFirmwareVersion = s.charAt(0) + "." + s.charAt(1);
 
         fmFirmwareBuild = in.readShort();
-        fmFirmwareDate = in.readDate();
-        date = in.readDate();
+        fmFirmwareDate = in.readDateDMY();
+        date = in.readDateDMY();
         time = in.readTimeHMS();
         fmFlags = in.readByte();
         serialNumber = in.readInt();

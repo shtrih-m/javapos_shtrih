@@ -113,7 +113,9 @@ public class SerialPrinterPortSingle {
         return port == null;
     }
 
-    public synchronized void setTimeout(int timeout) {
+    public synchronized void setTimeout(int timeout) 
+    {
+        //logger.debug("setTimeout(" + timeout + ")");
         this.timeout = timeout;
     }
 

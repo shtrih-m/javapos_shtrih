@@ -6,14 +6,12 @@
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
  */
-
 package com.shtrih.fiscalprinter.command;
 
 /**
  *
  * @author V.Kravtsov
  */
-
 import com.shtrih.util.Hex;
 import com.shtrih.util.HexUtils;
 
@@ -22,11 +20,11 @@ public class CommandParam {
     public static final int PARAM_TYPE_INT = 0; // Integer
     public static final int PARAM_TYPE_STR = 1; // String
     public static final int PARAM_TYPE_HEX = 2; // Binary byte array in hex
-                                                // format
-    public static final int PARAM_TYPE_DATE = 3; // Date
-    public static final int PARAM_TYPE_TIME = 4; // Time
+    // format
+    public static final int PARAM_TYPE_DATE_DMY = 3; // Date
+    public static final int PARAM_TYPE_TIME_HMS = 4; // Time
     public static final int PARAM_TYPE_FINT = 5; // Number, Taxpayer ID, if all
-                                                 // $FF - not accepted
+    // $FF - not accepted
     public static final int PARAM_TYPE_SYS = 6; // System administrator password
     public static final int PARAM_TYPE_USR = 7; // Operator password
     public static final int PARAM_TYPE_TAX = 8; // Tax officer password
@@ -41,8 +39,8 @@ public class CommandParam {
     public static final int PARAM_TYPE_VBAT = 17; // Battery voltage
     public static final int PARAM_TYPE_VSRC = 18; // Power supply voltage
     public static final int PARAM_TYPE_TIMEOUT = 19; // Timeout
-    public static final int PARAM_TYPE_EJTIME = 20; // Time
-    public static final int PARAM_TYPE_FSDATE = 21; // Date
+    public static final int PARAM_TYPE_TIME_HM = 20; // Time
+    public static final int PARAM_TYPE_DATE_YMD = 21; // Date
 
     private final String name;
     private final int size;
@@ -52,12 +50,15 @@ public class CommandParam {
     private final String defaultValue;
     private String value = "";
 
-    /** Creates a new instance of CommandParam */
+    /**
+     * Creates a new instance of CommandParam
+     */
     public CommandParam(String name, int size, int type, int min, int max,
-            String defaultValue) {
+            String defaultValue) 
+    {
 
         this.name = name;
-        this.size = size;
+        this.size = getSizeInBytes(type, size);
         this.type = type;
         this.min = min;
         this.max = max;
@@ -104,9 +105,9 @@ public class CommandParam {
                 return "Str";
             case PARAM_TYPE_HEX:
                 return "Hex";
-            case PARAM_TYPE_DATE:
+            case PARAM_TYPE_DATE_DMY:
                 return "Date";
-            case PARAM_TYPE_TIME:
+            case PARAM_TYPE_TIME_HMS:
                 return "Time";
             case PARAM_TYPE_FINT:
                 return "FInt";
@@ -138,14 +139,17 @@ public class CommandParam {
                 return "VSrc";
             case PARAM_TYPE_TIMEOUT:
                 return "Timeout";
-            case PARAM_TYPE_EJTIME:
-                return "EJTime";
+            case PARAM_TYPE_TIME_HM:
+                return "TimeHM";
+            case PARAM_TYPE_DATE_YMD:
+                return "DateYMD";
             default:
                 return "";
         }
     }
 
-    public void encode(CommandOutputStream out) throws Exception {
+    public void encode(CommandOutputStream out) throws Exception 
+    {
         switch (type) {
             case PARAM_TYPE_INT:
             case PARAM_TYPE_FINT:
@@ -175,21 +179,50 @@ public class CommandParam {
                 out.writeBytes(data);
                 break;
 
-            case PARAM_TYPE_DATE:
-                out.writeDate(PrinterDate.parse(value));
+            case PARAM_TYPE_DATE_DMY:
+                out.writeDateDMY(PrinterDate.parse(value));
                 break;
 
-            case PARAM_TYPE_TIME:
-                out.writeTime(PrinterTime.fromText(value));
+            case PARAM_TYPE_DATE_YMD:
+                out.writeDateYMD(PrinterDate.parse(value));
                 break;
 
-            case PARAM_TYPE_EJTIME:
-                out.writeTime2(PrinterTime.fromText(value));
+            case PARAM_TYPE_TIME_HMS:
+                out.writeTimeHMS(PrinterTime.fromText(value));
+                break;
+
+            case PARAM_TYPE_TIME_HM:
+                out.writeTimeHM(PrinterTime.fromText(value));
                 break;
         }
     }
 
-    public void decode(CommandInputStream in) throws Exception {
+    public static int getSizeInBytes(int type, int size) {
+        switch (type) 
+        {
+            case PARAM_TYPE_TIME_HM:
+                return 2;
+                
+            case PARAM_TYPE_DATE_DMY:
+            case PARAM_TYPE_DATE_YMD:
+            case PARAM_TYPE_TIME_HMS:
+                return 3;
+
+            case PARAM_TYPE_SYS:
+            case PARAM_TYPE_USR:
+            case PARAM_TYPE_TAX:
+                return 4;
+                
+            default:
+                return size;
+        }
+    }
+
+    public boolean decode(CommandInputStream in) throws Exception {
+        if (in.size() < size) {
+            return false;
+        }
+
         switch (type) {
             case PARAM_TYPE_FVALUE:
             case PARAM_TYPE_INT:
@@ -222,19 +255,24 @@ public class CommandParam {
                 value = Hex.toHex(in.readBytes(size));
                 break;
 
-            case PARAM_TYPE_DATE:
-                value = in.readDate().toText();
+            case PARAM_TYPE_DATE_DMY:
+                value = in.readDateDMY().toText();
                 break;
 
-            case PARAM_TYPE_TIME:
+            case PARAM_TYPE_DATE_YMD:
+                value = in.readDateYMD().toText();
+                break;
+
+            case PARAM_TYPE_TIME_HMS:
                 value = in.readTimeHMS().toString();
                 break;
 
-            case PARAM_TYPE_EJTIME:
+            case PARAM_TYPE_TIME_HM:
                 value = in.readTimeHM().toString2();
                 break;
 
         }
+        return true;
     }
 
 }

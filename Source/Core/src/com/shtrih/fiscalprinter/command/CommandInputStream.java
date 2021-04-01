@@ -38,7 +38,7 @@ public class CommandInputStream {
         stream = new ByteArrayInputStream(data);
     }
 
-    public int getSize() throws IOException {
+    public int size() throws IOException {
         return stream.available();
     }
     
@@ -106,7 +106,7 @@ public class CommandInputStream {
         return new PrinterTime(hour, min, 0);
     }
 
-    public PrinterDate readDate() throws Exception
+    public PrinterDate readDateDMY() throws Exception
     {
         int day = readByte();
         int month = readByte();
@@ -114,7 +114,7 @@ public class CommandInputStream {
         return new PrinterDate(day, month, year);
     }
 
-    public PrinterDate readFSDate() throws Exception
+    public PrinterDate readDateYMD() throws Exception
     {
         int year = readByte() + 2000;
         int month = readByte();

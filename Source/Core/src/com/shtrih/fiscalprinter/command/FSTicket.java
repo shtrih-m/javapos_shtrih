@@ -38,7 +38,7 @@ public class FSTicket {
         if ((resultCode == 0) && (data.length >= 27)) {
             CommandInputStream stream = new CommandInputStream("");
             stream.setData(data);
-            date = stream.readFSDate();
+            date = stream.readDateYMD();
             time = stream.readTimeHM();
             documentMAC = stream.readBytes(18);
             documentNumber = stream.readLong(4);

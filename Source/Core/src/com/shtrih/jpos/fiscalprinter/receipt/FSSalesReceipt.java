@@ -611,7 +611,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printReceiptItem(FSSaleReceiptItem item) throws Exception
     {
-        getDevice().checkItemCode(item.getBarcode());
         if (getDevice().getCapOperationTagsFirst()) 
         {
             printOperationTLV(item);
@@ -1156,7 +1155,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 item.setUnit(getParams().itemUnit);
                 getParams().itemUnit = null;
             }
-
+            // check MC
+            getDevice().checkItemCode(isSaleReceipt(), item);
+            
             items.add(item);
 
             getParams().paymentType = 4;

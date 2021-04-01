@@ -41,7 +41,7 @@ public final class WriteTime extends PrinterCommand {
 
     public final void encode(CommandOutputStream out) throws Exception {
         out.writeInt(password);
-        out.writeTime(time);
+        out.writeTimeHMS(time);
     }
 
     public final void decode(CommandInputStream in) throws Exception {

@@ -11,7 +11,7 @@ public class TLVReader {
 
         List<TLVRecord> tags = new ArrayList<TLVRecord>();
 
-        while (reader.getSize() > 4) {
+        while (reader.size() > 4) {
             int tagId = (int) reader.readLong(2);
             int len = (int) reader.readLong(2);
             byte[] data = reader.readBytes(len);

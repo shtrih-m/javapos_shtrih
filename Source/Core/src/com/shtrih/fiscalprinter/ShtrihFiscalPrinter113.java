@@ -27,7 +27,7 @@ import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import jpos.events.OutputCompleteListener;
 
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
-import com.shtrih.jpos.fiscalprinter.directIO.DIOReadKMServerStatus;
+import com.shtrih.jpos.fiscalprinter.directIO.DIOReadMCNotificationStatus;
 
 /**
  * Wrapper class to help using directIO codes *
@@ -2363,7 +2363,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public String[] readKMServerStatus() throws JposException
     {
         String[] lines = new String[6];
-        directIO(SmFptrConst.SMFPTR_DIO_READ_KM_SERVER_STATUS, null, lines);
+        directIO(SmFptrConst.SMFPTR_DIO_READ_MC_NOTIFICATION_STATUS, null, lines);
         return lines;
     }
 }

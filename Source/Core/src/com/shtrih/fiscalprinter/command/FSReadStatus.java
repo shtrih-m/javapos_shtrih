@@ -77,7 +77,7 @@ public class FSReadStatus extends PrinterCommand {
         setIsDocReceived(in.readByte() != 0);
         setIsDayOpened(in.readByte() != 0);
         flags = in.readByte();
-        date = in.readFSDate();
+        date = in.readDateYMD();
         time = in.readTimeHM();
         fsSerial = in.readString(16);
         docNumber = in.readLong(4);

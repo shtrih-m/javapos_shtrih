@@ -88,7 +88,7 @@ public final class Fiscalize extends PrinterCommand {
         setFiscNumber(in.readByte());
         setFreeNumber(in.readByte());
         setDayNumber(in.readShort());
-        setDate(in.readDate());
+        setDate(in.readDateDMY());
     }
 
     public long getRegID() {

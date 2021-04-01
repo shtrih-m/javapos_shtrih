@@ -166,7 +166,7 @@ public class TLVParser {
         CommandInputStream stream = new CommandInputStream("");
         stream.setData(data);
 
-        while (stream.getSize() >= 4) {
+        while (stream.size() >= 4) {
             int tagId = stream.readShort();
             int len = stream.readShort();
             byte[] adata = stream.readBytes(len);

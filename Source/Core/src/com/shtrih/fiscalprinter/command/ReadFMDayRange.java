@@ -52,8 +52,8 @@ public class ReadFMDayRange {
     }
 
     public final void decode(CommandInputStream in) throws Exception {
-        firstDate = in.readDate();
-        lastDate = in.readDate();
+        firstDate = in.readDateDMY();
+        lastDate = in.readDateDMY();
         firstDay = in.readShort();
         lastDay = in.readShort();
     }

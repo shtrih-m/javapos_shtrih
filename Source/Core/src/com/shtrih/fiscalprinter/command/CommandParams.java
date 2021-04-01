@@ -50,7 +50,7 @@ public class CommandParams {
     public void decode(CommandInputStream in) throws Exception {
         for (int i = 0; i < size(); i++) {
             CommandParam param = get(i);
-            param.decode(in);
+            if (!param.decode(in)) break;
         }
     }
 

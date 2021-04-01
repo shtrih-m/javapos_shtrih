@@ -64,7 +64,7 @@ public class FSReadCommStatus extends PrinterCommand {
         readStatus = in.readByte(); 
         queueSize = in.readShort();
         documentNumber = in.readInt(); 
-        documentDate = in.readFSDate(); 
+        documentDate = in.readDateYMD(); 
         documentTime = in.readTimeHM();
     }
     

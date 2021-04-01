@@ -23,8 +23,8 @@ import com.shtrih.fiscalprinter.command.EndFiscalReceipt;
 import com.shtrih.fiscalprinter.command.EndTest;
 import com.shtrih.fiscalprinter.command.FDOParameters;
 import com.shtrih.fiscalprinter.command.FMTotals;
-import com.shtrih.fiscalprinter.command.FSAcceptItemCode;
-import com.shtrih.fiscalprinter.command.FSSetOperationMarking;
+import com.shtrih.fiscalprinter.command.FSAcceptMC;
+import com.shtrih.fiscalprinter.command.FSBindMC;
 import com.shtrih.fiscalprinter.command.FSCloseReceipt;
 import com.shtrih.fiscalprinter.command.FSDocument;
 import com.shtrih.fiscalprinter.command.FSFindDocument;
@@ -36,7 +36,7 @@ import com.shtrih.fiscalprinter.command.FSReadDocument;
 import com.shtrih.fiscalprinter.command.FSReadExpDate;
 import com.shtrih.fiscalprinter.command.FSReadFiscalization;
 import com.shtrih.fiscalprinter.command.FSReadFiscalizationTag;
-import com.shtrih.fiscalprinter.command.FSReadKMServerStatus;
+import com.shtrih.fiscalprinter.command.FSReadMCNotificationStatus;
 import com.shtrih.fiscalprinter.command.FSReadSerial;
 import com.shtrih.fiscalprinter.command.FSReadStatus;
 import com.shtrih.fiscalprinter.command.FSReceiptDiscount;
@@ -84,6 +84,7 @@ import com.shtrih.jpos.fiscalprinter.PrintItem;
 import com.shtrih.jpos.fiscalprinter.PrinterImage;
 import com.shtrih.jpos.fiscalprinter.PrinterImages;
 import com.shtrih.jpos.fiscalprinter.ReceiptImages;
+import com.shtrih.jpos.fiscalprinter.receipt.FSSaleReceiptItem;
 import com.shtrih.printer.ncr7167.NCR7167Printer;
 
 import java.util.Vector;
@@ -644,13 +645,13 @@ public interface SMFiscalPrinter {
 
     public int sendMarking(String barcode) throws Exception;
 
-    public int checkItemCode(String barcode) throws Exception;
+    public void checkItemCode(boolean isSale, FSSaleReceiptItem item) throws Exception;
 
-    public FSSetOperationMarking setOperationMarking(String data) throws Exception;
+    public FSBindMC setOperationMarking(String data) throws Exception;
 
-    public FSAcceptItemCode fsAcceptItemCode(int action) throws Exception;
+    public FSAcceptMC fsAcceptItemCode(int action) throws Exception;
 
-    public int fsReadKMServerStatus(FSReadKMServerStatus command) throws Exception;
+    public int fsReadKMServerStatus(FSReadMCNotificationStatus command) throws Exception;
 
     public int fsCloseReceipt(FSCloseReceipt command) throws Exception;
 

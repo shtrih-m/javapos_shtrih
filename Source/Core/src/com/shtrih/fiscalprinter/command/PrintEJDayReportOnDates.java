@@ -59,8 +59,8 @@ public final class PrintEJDayReportOnDates extends PrinterCommand {
     public final void encode(CommandOutputStream out) throws Exception {
         out.writeInt(getPassword());
         out.writeByte(getReportType());
-        out.writeDate(getDate1());
-        out.writeDate(getDate2());
+        out.writeDateDMY(getDate1());
+        out.writeDateDMY(getDate2());
     }
 
     

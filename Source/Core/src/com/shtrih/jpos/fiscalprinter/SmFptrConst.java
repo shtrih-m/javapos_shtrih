@@ -8,7 +8,7 @@
  */
 package com.shtrih.jpos.fiscalprinter;
 
-import com.shtrih.fiscalprinter.command.FSCheckBarcode;
+import com.shtrih.fiscalprinter.command.FSCheckMC;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 import static jpos.FiscalPrinterConst.FPTR_RT_SERVICE;
 import static jpos.FiscalPrinterConst.FPTR_RT_SIMPLE_INVOICE;
@@ -632,7 +632,7 @@ public interface SmFptrConst {
     /**
      * Read KM server status
      */
-    public static final int SMFPTR_DIO_READ_KM_SERVER_STATUS = 0x65;
+    public static final int SMFPTR_DIO_READ_MC_NOTIFICATION_STATUS = 0x65;
 
     /**
      * Read FFD version
@@ -671,6 +671,10 @@ public interface SmFptrConst {
 
     // Save marking codes notification
     public static final int SMFPTR_DIO_SAVE_MC_NOTIFICATIONS = 0x7E;
+    
+    // Read MC server status
+    public static final int SMFPTR_DIO_READ_KM_SERVER_STATUS = 0x65;
+    
     
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:

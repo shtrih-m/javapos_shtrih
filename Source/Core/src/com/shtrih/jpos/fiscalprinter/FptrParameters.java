@@ -1,6 +1,6 @@
 package com.shtrih.jpos.fiscalprinter;
 
-import com.shtrih.fiscalprinter.command.FSCheckBarcode;
+import com.shtrih.fiscalprinter.command.FSCheckMC;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.jpos.JposPropertyReader;
@@ -177,8 +177,8 @@ public class FptrParameters {
     public boolean postLineAsItemTextEnabled = false;
     public boolean canDisableNonFiscalEnding = true;
     public boolean checkItemCodeEnabled = false;
-    public int newItemStatus = FSCheckBarcode.FS_ITEM_STATUS_RETAIL;
-    public int itemCheckMode = FSCheckBarcode.FS_CHECK_MODE_FULL;
+    public int newItemStatus = 0;
+    public int itemCheckMode = 0;
     public int itemMarkType = SmFptrConst.MARK_TYPE_TOBACCO;
     public Integer itemUnit = null;
     public int userExtendedTagPrintMode = SmFptrConst.USER_EXTENDED_TAG_PRINT_MODE_DRIVER;
@@ -420,8 +420,8 @@ public class FptrParameters {
         postLineAsItemTextEnabled = reader.readBoolean("postLineAsItemTextEnabled", false);
         canDisableNonFiscalEnding = reader.readBoolean("canDisableNonFiscalEnding", true);
         checkItemCodeEnabled = reader.readBoolean("checkItemCodeEnabled", false);
-        newItemStatus = reader.readInteger("newItemStatus", FSCheckBarcode.FS_ITEM_STATUS_RETAIL);
-        itemCheckMode = reader.readInteger("itemCheckMode", FSCheckBarcode.FS_CHECK_MODE_FULL);
+        newItemStatus = reader.readInteger("newItemStatus", 0);
+        itemCheckMode = reader.readInteger("itemCheckMode", 0);
         itemMarkType = reader.readInteger("itemMarkType", SmFptrConst.MARK_TYPE_TOBACCO);
         paymentSumCorrectionEnabled = reader.readBoolean("paymentSumCorrectionEnabled", true);
         userExtendedTagPrintMode = reader.readInteger("userExtendedTagPrintMode", SmFptrConst.USER_EXTENDED_TAG_PRINT_MODE_DRIVER);

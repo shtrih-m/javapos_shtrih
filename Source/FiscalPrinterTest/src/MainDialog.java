@@ -1249,7 +1249,6 @@ public class MainDialog extends javax.swing.JDialog
     }//GEN-LAST:event_btnPrintBarcodesActionPerformed
 
     private void btnExecuteCommandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExecuteCommandActionPerformed
-        controller.executeCommand();
     }//GEN-LAST:event_btnExecuteCommandActionPerformed
 
     private void btnEnable1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnable1ActionPerformed

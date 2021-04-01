@@ -66,8 +66,8 @@ public final class PrintEJDepartmentReportOnDates extends PrinterCommand {
         out.writeInt(password);
         out.writeByte(reportType);
         out.writeByte(department);
-        out.writeDate(date1);
-        out.writeDate(date2);
+        out.writeDateDMY(date1);
+        out.writeDateDMY(date2);
     }
 
     

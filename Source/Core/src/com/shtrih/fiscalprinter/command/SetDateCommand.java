@@ -43,7 +43,7 @@ public final class SetDateCommand extends PrinterCommand {
 
     public final void encode(CommandOutputStream out) throws Exception {
         out.writeInt(password);
-        out.writeDate(date);
+        out.writeDateDMY(date);
     }
 
     public final void decode(CommandInputStream in) throws Exception {
