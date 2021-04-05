@@ -7,6 +7,14 @@
     
 ********************************************************************************
 
+  05.04.2021
+  deviceServiceVersion = 1013616
+
+  [-] Fixed error with marking code check
+  [+] Added flex command definitions commands.xml
+
+********************************************************************************
+
   01.04.2021
   deviceServiceVersion = 1013615
 

@@ -1224,14 +1224,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.checkMode = 0;
         command.mcData = item.getBarcode().getBytes();
         command.tlv = null;
-        execute(command);
-        // accept
-        FSAcceptMC acceptCommand = new FSAcceptMC();
-        acceptCommand.setPassword(sysPassword);
-        acceptCommand.setAction(1);
-        execute(acceptCommand);
-        if (acceptCommand.getErrorCode() != 0x0F){
-            throw new Exception("Error with marking code check");
+        executeCommand(command);
+        if (command.isSucceeded())
+        {
+            // accept
+            FSAcceptMC acceptCommand = new FSAcceptMC();
+            acceptCommand.setPassword(sysPassword);
+            acceptCommand.setAction(1);
+            executeCommand(acceptCommand);
         }
     }
     
@@ -4651,11 +4651,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             return 0;
         }
 
-        if (params.markingType == SmFptrConst.MARKING_TYPE_DRIVER) {
+        if  ((getFDVersion() == PrinterConst.FS_FORMAT_FFD_1_2)||
+            (params.markingType == SmFptrConst.MARKING_TYPE_PRINTER))
+        {
+            return setOperationMarking(barcode).getResultCode();
+        } else
+        {
             byte[] tagValue = barcodeTo1162Tag(barcode);
             return fsWriteOperationTLV(tagValue);
-        } else {
-            return setOperationMarking(barcode).getResultCode();
         }
     }
 

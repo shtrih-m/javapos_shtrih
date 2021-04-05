@@ -29,6 +29,8 @@ public class MCNotificationsReport {
         
         String line = "Отчет о реализации маркированного товара";
         stream.write(line);
+        
+        
     }
     
 }

@@ -1006,7 +1006,7 @@ class PrinterTest implements FiscalPrinterConst {
             //printSalesReceipt99(5,5);
             
             //printFiscalReceipt145_9();
-            //printer.saveNotifications("notifications.txt");
+            printer.saveNotifications("notifications.txt");
             
             //readKMServerStatus();
             testCommands();
