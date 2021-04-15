@@ -15,14 +15,14 @@ import com.shtrih.util.MethodParameter;
  * - Длина КМ в байтах: 1 байт
  * - Длина списка TLV в байтах: 1 байт
  * - Сам КМ, как он был прочитан сканером: N байт
- * - Список TLV	
- * Если планируется частичное выбытие (согласно с тегом 2003), 
- * то необходимо сформировать буфер из тегов 2108 (мера) и 1023(количество) и 
+ * - Список TLV
+ * Если планируется частичное выбытие (согласно с тегом 2003),
+ * то необходимо сформировать буфер из тегов 2108 (мера) и 1023(количество) и
  * передать его здесь
-* 
+ *
  * Ответ: FF61h	Длина сообщения: 8 байт.
  * - Код ошибки: 1 байт
- * - Статус  локальной проверки: 1 байт
+ * - Статус локальной проверки: 1 байт
  * - Причина, по которой не была проведена локальная проверка: 1 байт
  * - Распознанный тип КМ: 1 байт
  * - Длина дополнительных параметров: 1 байт
@@ -32,8 +32,8 @@ import com.shtrih.util.MethodParameter;
  *
  ***************************************************************************
  */
-public class FSCheckMC extends PrinterCommand 
-{
+public class FSCheckMC extends PrinterCommand {
+
     ////////////////////////////////////////////////////////////////////////////
     // Local error code
     // 0 – КМ проверен в ФН
@@ -46,46 +46,19 @@ public class FSCheckMC extends PrinterCommand
     public static final int FS_LEC_MC_FORMAT_ERROR = 3;
     // 4 – Проверка КМ в ФН невозможна по иной причине 
     public static final int FS_LEC_CHECK_FAILED = 4;
-    
+
     ////////////////////////////////////////////////////////////////////////////
     // ItemStatus codes, 2003 tag
     // Штучный товар, реализован
-    public static final int FS_ITEM_STATUS_PIECE_SELL   = 1;
+    public static final int FS_ITEM_STATUS_PIECE_SELL = 1;
     // Мерный товар, реализован
-    public static final int FS_ITEM_STATUS_WEIGHT_SELL  = 2;
+    public static final int FS_ITEM_STATUS_WEIGHT_SELL = 2;
     // Штучный товар, возвращен
-    public static final int FS_ITEM_STATUS_PIECE_RETURN   = 3;
+    public static final int FS_ITEM_STATUS_PIECE_RETURN = 3;
     // Мерный товар, возвращен
-    public static final int FS_ITEM_STATUS_WEIGHT_RETURN  = 4;
+    public static final int FS_ITEM_STATUS_WEIGHT_RETURN = 4;
     // Статус товара не изменился
-    public static final int FS_ITEM_STATUS_NOCHANGE       = 255;
-    
-    ////////////////////////////////////////////////////////////////////////////
-    // salePermission constants
-    // Разрешение на продажу товара от ИСМ: 1 байт.
-    // 0 – товар разрешен к продаже
-    public static final int FS_SALE_PERMISSION_OK = 0;
-    // 1 – товар запрещен к продаже
-    public static final int FS_SALE_PERMISSION_DENIED = 1;
-
-    ////////////////////////////////////////////////////////////////////////////
-    // serverResultCode constants
-    // Код ошибки от сервера КМ: 1 байт
-    // 0 - Статус успешно изменен
-    // Контрольные идентификационные знаки (КиЗ)
-    // Control Identification Mark (CIM)
-    // 0 - Статус успешно изменен
-    public static final int FS_SERVER_OK = 0;
-    // 1 - КИЗ отсутствует в базе Серверы СКЗКМ или КИЗ отсутствует в базе ИСМ
-    public static final int FS_SERVER_CIM_NOTFOUND = 1;
-    // 2 - Не корректен формат КИЗ
-    public static final int FS_SERVER_CIM_INCORRECT_FORMAT = 2;
-    // 3 - Криптографическая проверка КПКИЗ дала отрицательный результат
-    public static final int FS_SERVER_CIM_INCORRECT_CRC = 3;
-    // 4 - КИЗ имеет в базе Серверы СКЗКМ статус не совместимый с запрашиваемым
-    public static final int FS_SERVER_CIM_INCORRECT_STATUS = 4;
-    // 5 - В списке вложения обнаружены ошибки
-    public static final int FS_SERVER_CIM_ATTACH_ERROR = 5;
+    public static final int FS_ITEM_STATUS_NOCHANGE = 255;
 
     // in 
     public int password;
@@ -100,7 +73,6 @@ public class FSCheckMC extends PrinterCommand
     public int serverErrorCode;
     public int serverCheckStatus;
     public byte[] serverTLVData;
-   
 
     public FSCheckMC() {
     }
@@ -131,26 +103,27 @@ public class FSCheckMC extends PrinterCommand
         localErrorCode = in.readByte();
         symbolicType = in.readByte();
         int paramLen = in.readByte();
-        if (paramLen > 0)
-        {
+        if (paramLen > 0) {
             serverErrorCode = in.readByte();
             serverCheckStatus = in.readByte();
-            serverTLVData =  in.readBytesToEnd();
+            serverTLVData = in.readBytesToEnd();
         }
     }
 
-    public String getServerResultCodeText(int serverResultCode) {
-        switch (serverResultCode) {
-            case FS_SERVER_CIM_NOTFOUND:
-                return "КИЗ отсутствует в базе Серверы СКЗКМ или КИЗ отсутствует в базе ИСМ";
-            case FS_SERVER_CIM_INCORRECT_FORMAT:
-                return "Не корректен формат КИЗ";
-            case FS_SERVER_CIM_INCORRECT_CRC:
-                return "Криптографическая проверка КПКИЗ дала отрицательный результат";
-            case FS_SERVER_CIM_INCORRECT_STATUS:
-                return "КИЗ имеет в базе Серверы СКЗКМ статус не совместимый с запрашиваемым";
-            case FS_SERVER_CIM_ATTACH_ERROR:
-                return "В списке вложения обнаружены ошибки";
+    public String getServerErrorCodeText() {
+        switch (serverErrorCode) {
+            case 1:
+                return "Неверный фискальный признак ответа";
+            case 2:
+                return "Неверный формат реквизиов ответа";
+            case 3:
+                return "Неверный номер запроса в ответе";
+            case 4:
+                return "Неверный номер ФН";
+            case 5:
+                return "Неверный CRC блока данных";
+            case 7:
+                return "Неверная длина ответа";
             default:
                 return "Неизвестный код ошибки";
         }

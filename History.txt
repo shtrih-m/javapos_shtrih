@@ -7,6 +7,25 @@
     
 ********************************************************************************
 
+  15.04.2021
+  deviceServiceVersion = 1013617
+
+  [-] Fixed error with modelParameters error
+  
+  [+] Added directIO command to check marking codes
+		SMFPTR_DIO_SAVE_MC_NOTIFICATIONS,
+		SMFPTR_DIO_CHECK_ITEM_CODE2,
+		SMFPTR_DIO_SYNC_REGISTERS,
+		SMFPTR_DIO_FS_READ_MEM_SIZE,
+		SMFPTR_DIO_FS_WRITE_TLV_BUFFER,
+		SMFPTR_DIO_FS_READ_RANDOM_DATA,
+		SMFPTR_DIO_FS_AUTHORIZE,
+		SMFPTR_DIO_FS_READ_MC_STATUS,
+		SMFPTR_DIO_FS_START_READ_MC_NOTIFICATIONS,
+		SMFPTR_DIO_FS_READ_MC_NOTIFICATION
+  
+********************************************************************************
+
   05.04.2021
   deviceServiceVersion = 1013616
 

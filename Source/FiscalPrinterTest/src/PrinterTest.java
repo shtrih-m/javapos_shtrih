@@ -1005,11 +1005,11 @@ class PrinterTest implements FiscalPrinterConst {
             // System.out.println("FFD version: " + printer.readFFDVersion());
             //printSalesReceipt99(5,5);
             
-            //printFiscalReceipt145_9();
-            printer.saveNotifications("notifications.txt");
+            printFiscalReceipt145_9();
+            //printer.saveNotifications("notifications.txt");
             
             //readKMServerStatus();
-            testCommands();
+            //testCommands();
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -3917,6 +3917,15 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 1);
             printer.printRecSubtotalAdjustment(1, "", 99);
             printer.printRecTotal(210000, 210000, "1");
+            printer.printText("After printRecTotal.0");
+            printer.printText("After printRecTotal.1");
+            printer.printText("After printRecTotal.2");
+            
+            printer.printNormal(FPTR_S_RECEIPT, "printNormal.0");
+            printer.printNormal(FPTR_S_RECEIPT, "printNormal.1");
+            printer.printNormal(FPTR_S_RECEIPT, "printNormal.2");
+            
+            
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();

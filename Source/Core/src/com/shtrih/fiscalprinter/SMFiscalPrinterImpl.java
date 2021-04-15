@@ -1212,12 +1212,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             } else {
                 itemStatus = FSCheckMC.FS_ITEM_STATUS_WEIGHT_SELL;
             }
+        } else if (isPeace) {
+            itemStatus = FSCheckMC.FS_ITEM_STATUS_PIECE_RETURN;
         } else {
-            if (isPeace) {
-                itemStatus = FSCheckMC.FS_ITEM_STATUS_PIECE_RETURN;
-            } else {
-                itemStatus = FSCheckMC.FS_ITEM_STATUS_WEIGHT_RETURN;
-            }
+            itemStatus = FSCheckMC.FS_ITEM_STATUS_WEIGHT_RETURN;
         }
 
         FSCheckMC command = new FSCheckMC();
@@ -1227,29 +1225,40 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.mcData = barcode.getBytes();
         command.tlv = null;
         execute(command);
-        if (command.localCheckStatus == 0)
-        {
-            if (command.localErrorCode == FSCheckMC.FS_LEC_FS_HAS_NO_KEY){
+        if (command.localCheckStatus == 0) {
+            if (command.localErrorCode == FSCheckMC.FS_LEC_FS_HAS_NO_KEY) {
                 throw new Exception("Fiscal storage has no key for this MC type");
             }
-            if (command.localErrorCode == FSCheckMC.FS_LEC_MC_FORMAT_ERROR){
+            if (command.localErrorCode == FSCheckMC.FS_LEC_MC_FORMAT_ERROR) {
                 throw new Exception("MC format error");
             }
-            if (command.localErrorCode == FSCheckMC.FS_LEC_CHECK_FAILED){
+            if (command.localErrorCode == FSCheckMC.FS_LEC_CHECK_FAILED) {
                 throw new Exception("MC check failed");
             }
         }
-        if (command.localCheckStatus == 1){
-                throw new Exception("MC check return negative status");
+        if (command.localCheckStatus == 1) {
+            throw new Exception("MC check return negative status");
         }
-        if (command.serverErrorCode == 0x20){
-            
+        if (command.serverCheckStatus == 0x20) 
+        {
+            throw new Exception(command.getServerErrorCodeText());
         }
         // accept
         FSAcceptMC acceptCommand = new FSAcceptMC();
         acceptCommand.setPassword(sysPassword);
         acceptCommand.setAction(1);
-        executeCommand(acceptCommand);
+        execute(acceptCommand);
+        int ErrorCode = acceptCommand.getErrorCode();
+        boolean isFSChecked = BitUtils.testBit(ErrorCode, 0);
+        boolean isFSCheckStatusOK = BitUtils.testBit(ErrorCode, 1);
+        boolean isMSChecked = BitUtils.testBit(ErrorCode, 2);
+        boolean isMSCheckStatusOK = BitUtils.testBit(ErrorCode, 3);
+        if (isFSChecked &&(!isFSCheckStatusOK)){
+            throw new Exception("Результат проверки КП КМ отрицательный");
+        }
+        if (isMSChecked &&(!isMSCheckStatusOK)){
+            throw new Exception("Планируемый статус товара некорректен");
+        }
     }
 
     public void printSale(PriceItem item) throws Exception {
@@ -3948,15 +3957,29 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     private int getOfdTableNumber() throws Exception {
-        return modelParameters.capOfdTableNumber()
-                ? modelParameters.getOfdTableNumber()
-                : (isShtrihMobile() ? 15 : 19);
+        int result = 19;
+        if (isShtrihMobile()) {
+            result = 15;
+        }
+        if (capModelParameters()) {
+            if (modelParameters.capOfdTableNumber()) {
+                result = modelParameters.getOfdTableNumber();
+            }
+        }
+        return result;
     }
 
     private int getFsTableNumber() throws Exception {
-        return modelParameters.capFsTableNumber()
-                ? modelParameters.getFsTableNumber()
-                : (isShtrihMobile() ? 14 : 18);
+        int result = 18;
+        if (isShtrihMobile()) {
+            result = 14;
+        }
+        if (capModelParameters()) {
+            if (modelParameters.capFsTableNumber()) {
+                result = modelParameters.getFsTableNumber();
+            }
+        }
+        return result;
     }
 
     private int readTableIntValueFromStringOrInt(int tableNumber, int portField) throws Exception {
@@ -4941,17 +4964,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setSysPassword(sysPassword);
         return executeCommand(command);
     }
-    
+
     public int fsReadRandomData(FSReadRandomData command) throws Exception {
         command.password = sysPassword;
         return executeCommand(command);
     }
-    
+
     public int fsAuthorize(FSAuthorize command) throws Exception {
         command.password = sysPassword;
         return executeCommand(command);
     }
-    
+
     public int fsReadMCStatus(FSReadMCStatus command) throws Exception {
         command.setPassword(sysPassword);
         return executeCommand(command);
