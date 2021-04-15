@@ -1195,46 +1195,63 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return rc;
     }
 
-    public void checkItemCode(boolean isSale, FSSaleReceiptItem item) throws Exception 
-    {
-        if (item.getBarcode() == null) return;
-        if (getFDVersion() != PrinterConst.FS_FORMAT_FFD_1_2){
+    public void checkItemCode(String barcode, boolean isSale,
+            long quantity) throws Exception {
+        if (barcode == null) {
             return;
         }
- 
-        boolean isPeace = (item.getQuantity() == 1000);
+        if (getFDVersion() != PrinterConst.FS_FORMAT_FFD_1_2) {
+            return;
+        }
+
+        boolean isPeace = (quantity == 1000);
         int itemStatus = FSCheckMC.FS_ITEM_STATUS_NOCHANGE;
-        if (isSale){
+        if (isSale) {
             if (isPeace) {
                 itemStatus = FSCheckMC.FS_ITEM_STATUS_PIECE_SELL;
             } else {
                 itemStatus = FSCheckMC.FS_ITEM_STATUS_WEIGHT_SELL;
             }
-        } else{
+        } else {
             if (isPeace) {
                 itemStatus = FSCheckMC.FS_ITEM_STATUS_PIECE_RETURN;
             } else {
                 itemStatus = FSCheckMC.FS_ITEM_STATUS_WEIGHT_RETURN;
             }
         }
-                
+
         FSCheckMC command = new FSCheckMC();
         command.password = sysPassword;
         command.itemStatus = itemStatus;
         command.checkMode = 0;
-        command.mcData = item.getBarcode().getBytes();
+        command.mcData = barcode.getBytes();
         command.tlv = null;
-        executeCommand(command);
-        if (command.isSucceeded())
+        execute(command);
+        if (command.localCheckStatus == 0)
         {
-            // accept
-            FSAcceptMC acceptCommand = new FSAcceptMC();
-            acceptCommand.setPassword(sysPassword);
-            acceptCommand.setAction(1);
-            executeCommand(acceptCommand);
+            if (command.localErrorCode == FSCheckMC.FS_LEC_FS_HAS_NO_KEY){
+                throw new Exception("Fiscal storage has no key for this MC type");
+            }
+            if (command.localErrorCode == FSCheckMC.FS_LEC_MC_FORMAT_ERROR){
+                throw new Exception("MC format error");
+            }
+            if (command.localErrorCode == FSCheckMC.FS_LEC_CHECK_FAILED){
+                throw new Exception("MC check failed");
+            }
         }
+        if (command.localCheckStatus == 1){
+                throw new Exception("MC check return negative status");
+        }
+        if (command.serverErrorCode == 0x20){
+            
+        }
+        // accept
+        FSAcceptMC acceptCommand = new FSAcceptMC();
+        acceptCommand.setPassword(sysPassword);
+        acceptCommand.setAction(1);
+        executeCommand(acceptCommand);
     }
-    
+
     public void printSale(PriceItem item) throws Exception {
         logger.debug("printSale");
         String text = getRecItemText(item.getText());
@@ -1251,7 +1268,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         execute(command);
     }
 
-    
     public void printVoidSale(PriceItem item) throws Exception {
         logger.debug("printVoidSale");
         String text = getRecItemText(item.getText());
@@ -3375,7 +3391,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 if (tagId == 1086) {
                     printText(item.getText());
                     String text = item.getText().replace("\r\n", "  ");
-                    fsWriteTLVBuffer(15000, text);
+                    fsWriteTLVData(15000, text);
                     items.remove(item);
                 }
             }
@@ -4640,10 +4656,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return status.getPrinterMode().isDayClosed();
     }
 
-    public FSCheckMC fsCheckBarcode(FSCheckMC command) throws Exception {
+    public int fsCheckMC(FSCheckMC command) throws Exception {
         command.password = sysPassword;
-        executeCommand(command);
-        return command;
+        return executeCommand(command);
     }
 
     public int sendMarking(String barcode) throws Exception {
@@ -4651,12 +4666,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             return 0;
         }
 
-        if  ((getFDVersion() == PrinterConst.FS_FORMAT_FFD_1_2)||
-            (params.markingType == SmFptrConst.MARKING_TYPE_PRINTER))
-        {
-            return setOperationMarking(barcode).getResultCode();
-        } else
-        {
+        if ((getFDVersion() == PrinterConst.FS_FORMAT_FFD_1_2)
+                || (params.markingType == SmFptrConst.MARKING_TYPE_PRINTER)) {
+            FSBindMC command = new FSBindMC();
+            command.data = barcode.getBytes();
+            return fsBindMC(command);
+        } else {
             byte[] tagValue = barcodeTo1162Tag(barcode);
             return fsWriteOperationTLV(tagValue);
         }
@@ -4772,20 +4787,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return writer.getBytes();
     }
 
-    public FSBindMC setOperationMarking(String barcode) throws Exception {
-        FSBindMC command = new FSBindMC();
+    public int fsBindMC(FSBindMC command) throws Exception {
         command.password = usrPassword;
-        command.data = barcode.getBytes();
-        executeCommand(command);
-        return command;
+        return executeCommand(command);
     }
 
-    public FSAcceptMC fsAcceptItemCode(int action) throws Exception {
-        FSAcceptMC command = new FSAcceptMC();
+    public int fsAcceptMC(FSAcceptMC command) throws Exception {
         command.setPassword(usrPassword);
-        command.setAction(action);
-        executeCommand(command);
-        return command;
+        return executeCommand(command);
     }
 
     public int fsReadKMServerStatus(FSReadMCNotificationStatus command) throws Exception {
@@ -4793,7 +4802,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 
-    public int fsWriteTLVBuffer(int tagId, String tagValue) throws Exception {
+    public int fsWriteTLVData(int tagId, String tagValue) throws Exception {
         byte[] data = getTLVData(tagId, tagValue);
         int rc = loadDataBlock(1, data);
         if (failed(rc)) {
@@ -4801,8 +4810,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
 
         FSWriteTLVBuffer command = new FSWriteTLVBuffer();
-        command.setSysPassword(sysPassword);
-        return executeCommand(command);
+        return fsWriteTLVBuffer(command);
     }
 
     public boolean getCapOperationTagsFirst() {
@@ -4856,7 +4864,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             throw new Exception("Not supported in FD version");
         }
     }
-    
+
     public int startReadMCNotifications(StartReadMCNotifications command) throws Exception {
         command.password = sysPassword;
         return executeCommand(command);
@@ -4867,8 +4875,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 
-    public MCNotifications readNotifications() throws Exception 
-    {
+    public MCNotifications readNotifications() throws Exception {
         MCNotifications items = new MCNotifications();
         StartReadMCNotifications startCommand = new StartReadMCNotifications();
         check(startReadMCNotifications(startCommand));
@@ -4887,7 +4894,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         for (;;) {
             ReadMCNotification command = new ReadMCNotification();
             readMCNotification(command);
-            
+
             if (command.getResultCode() == 8) {
                 break;
             }
@@ -4908,12 +4915,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return true;
     }
 
-    public void confirmNotifications(MCNotifications items) throws Exception 
-    {
+    public void confirmNotifications(MCNotifications items) throws Exception {
         ConfirmMCNotification command = new ConfirmMCNotification();
         int count = items.size();
-        for (int i = 0; i < count; i++) 
-        {
+        for (int i = 0; i < count; i++) {
             MCNotification item = items.get(i);
             command.password = sysPassword;
             command.number = item.getNumber();
@@ -4921,5 +4926,34 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             execute(command);
         }
     }
+
+    public int fsSyncRegisters(FSSyncRegisters command) throws Exception {
+        command.password = sysPassword;
+        return executeCommand(command);
+    }
+
+    public int fsReadMemorySize(FSReadMemorySize command) throws Exception {
+        command.password = sysPassword;
+        return executeCommand(command);
+    }
+
+    public int fsWriteTLVBuffer(FSWriteTLVBuffer command) throws Exception {
+        command.setSysPassword(sysPassword);
+        return executeCommand(command);
+    }
     
+    public int fsReadRandomData(FSReadRandomData command) throws Exception {
+        command.password = sysPassword;
+        return executeCommand(command);
+    }
+    
+    public int fsAuthorize(FSAuthorize command) throws Exception {
+        command.password = sysPassword;
+        return executeCommand(command);
+    }
+    
+    public int fsReadMCStatus(FSReadMCStatus command) throws Exception {
+        command.setPassword(sysPassword);
+        return executeCommand(command);
+    }
 }

@@ -23,8 +23,10 @@ import com.shtrih.fiscalprinter.command.EndFiscalReceipt;
 import com.shtrih.fiscalprinter.command.EndTest;
 import com.shtrih.fiscalprinter.command.FDOParameters;
 import com.shtrih.fiscalprinter.command.FMTotals;
+import com.shtrih.fiscalprinter.command.FSAuthorize;
 import com.shtrih.fiscalprinter.command.FSAcceptMC;
 import com.shtrih.fiscalprinter.command.FSBindMC;
+import com.shtrih.fiscalprinter.command.FSCheckMC;
 import com.shtrih.fiscalprinter.command.FSCloseReceipt;
 import com.shtrih.fiscalprinter.command.FSDocument;
 import com.shtrih.fiscalprinter.command.FSFindDocument;
@@ -37,10 +39,15 @@ import com.shtrih.fiscalprinter.command.FSReadExpDate;
 import com.shtrih.fiscalprinter.command.FSReadFiscalization;
 import com.shtrih.fiscalprinter.command.FSReadFiscalizationTag;
 import com.shtrih.fiscalprinter.command.FSReadMCNotificationStatus;
+import com.shtrih.fiscalprinter.command.FSReadMCStatus;
+import com.shtrih.fiscalprinter.command.FSReadMemorySize;
+import com.shtrih.fiscalprinter.command.FSReadRandomData;
 import com.shtrih.fiscalprinter.command.FSReadSerial;
 import com.shtrih.fiscalprinter.command.FSReadStatus;
 import com.shtrih.fiscalprinter.command.FSReceiptDiscount;
+import com.shtrih.fiscalprinter.command.FSSyncRegisters;
 import com.shtrih.fiscalprinter.command.FSTicket;
+import com.shtrih.fiscalprinter.command.FSWriteTLVBuffer;
 import com.shtrih.fiscalprinter.command.FlexCommands;
 import com.shtrih.fiscalprinter.command.IPrinterEvents;
 import com.shtrih.fiscalprinter.command.LongPrinterStatus;
@@ -645,11 +652,9 @@ public interface SMFiscalPrinter {
 
     public int sendMarking(String barcode) throws Exception;
 
-    public void checkItemCode(boolean isSale, FSSaleReceiptItem item) throws Exception;
+    public int fsBindMC(FSBindMC command) throws Exception;
 
-    public FSBindMC setOperationMarking(String data) throws Exception;
-
-    public FSAcceptMC fsAcceptItemCode(int action) throws Exception;
+    public int fsAcceptMC(FSAcceptMC command) throws Exception;
 
     public int fsReadKMServerStatus(FSReadMCNotificationStatus command) throws Exception;
 
@@ -682,4 +687,20 @@ public interface SMFiscalPrinter {
     public int startReadMCNotifications(StartReadMCNotifications command) throws Exception;
     
     public int readMCNotification(ReadMCNotification command) throws Exception;
+    
+    public void checkItemCode(String barcode, boolean isSale, long quantity) throws Exception;
+    
+    public int fsCheckMC(FSCheckMC command) throws Exception;
+    
+    public int fsSyncRegisters(FSSyncRegisters command) throws Exception;
+    
+    public int fsReadMemorySize(FSReadMemorySize command) throws Exception;
+    
+    public int fsWriteTLVBuffer(FSWriteTLVBuffer command) throws Exception;
+    
+    public int fsReadRandomData(FSReadRandomData command) throws Exception;
+   
+    public int fsAuthorize(FSAuthorize command) throws Exception;
+    
+    public int fsReadMCStatus(FSReadMCStatus command) throws Exception;
 }

@@ -59,4 +59,13 @@ public class DIOUtils {
         }
     }
 
+    public static void checkObjectMinLength(Object[] object, int minLength)
+            throws JposException {
+        checkObjectNotNull(object);
+        if (object.length < minLength) {
+            throw new JposException(JposConst.JPOS_E_ILLEGAL,
+                    Localizer.getString(Localizer.InsufficientObjectLen)
+                            + String.valueOf(minLength));
+        }
+    }
 }

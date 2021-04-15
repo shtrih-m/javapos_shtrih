@@ -1156,7 +1156,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 getParams().itemUnit = null;
             }
             // check MC
-            getDevice().checkItemCode(isSaleReceipt(), item);
+            if (getParams().checkItemCodeEnabled)
+            {
+                getDevice().checkItemCode(item.getBarcode(), isSaleReceipt(), item.getQuantity());
+            }
             
             items.add(item);
 

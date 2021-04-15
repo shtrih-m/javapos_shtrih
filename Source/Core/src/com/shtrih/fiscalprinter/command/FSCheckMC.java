@@ -32,7 +32,21 @@ import com.shtrih.util.MethodParameter;
  *
  ***************************************************************************
  */
-public class FSCheckMC extends PrinterCommand {
+public class FSCheckMC extends PrinterCommand 
+{
+    ////////////////////////////////////////////////////////////////////////////
+    // Local error code
+    // 0 – КМ проверен в ФН
+    public static final int FS_LEC_OK = 0;
+    // 1 – КМ данного типа не подлежит проверки в ФН 
+    public static final int FS_LEC_NOT_CHECK_ABLE = 1;
+    // 2 – ФН не содержит ключ проверки кода проверки этого КМ 
+    public static final int FS_LEC_FS_HAS_NO_KEY = 2;
+    // 3 – Проверка невозможна, так как отсутствуют идентификаторы применения GS1 91 и / или 92 или их формат неверный. 
+    public static final int FS_LEC_MC_FORMAT_ERROR = 3;
+    // 4 – Проверка КМ в ФН невозможна по иной причине 
+    public static final int FS_LEC_CHECK_FAILED = 4;
+    
     ////////////////////////////////////////////////////////////////////////////
     // ItemStatus codes, 2003 tag
     // Штучный товар, реализован
@@ -141,35 +155,4 @@ public class FSCheckMC extends PrinterCommand {
                 return "Неизвестный код ошибки";
         }
     }
-
-/*    
-    public boolean isCorrect() throws Exception {
-        if (localResultCode == FSCheckMC.FS_LOCAL_RESULT_CODE_INVALID) {
-            return false;
-        }
-        if (processingCode == 0) {
-            if (salePermission != FSCheckMC.FS_SALE_PERMISSION_OK) {
-                return false;
-            }
-            if (serverResultCode != FSCheckMC.FS_SERVER_OK) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public void checkCorrect() throws Exception {
-        if (localResultCode == FSCheckMC.FS_LOCAL_RESULT_CODE_INVALID) {
-            throw new Exception("Barcode is not valid");
-        }
-        if (processingCode == 0) {
-            if (salePermission != FSCheckMC.FS_SALE_PERMISSION_OK) {
-                throw new Exception("Item is forbidden to sold");
-            }
-            if (serverResultCode != FSCheckMC.FS_SERVER_OK) {
-                throw new Exception(getServerResultCodeText());
-            }
-        }
-    }
-*/
 }

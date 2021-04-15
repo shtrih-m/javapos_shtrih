@@ -1150,11 +1150,12 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
-    public void checkItemCode(boolean isSale, FSSaleReceiptItem item) throws Exception {
+    public void checkItemCode(String barcode, boolean isSale, long quantity) throws Exception
+    {
     }
 
-    public FSBindMC setOperationMarking(String data) throws Exception {
-        return null;
+    public int fsBindMC(FSBindMC command) throws Exception{
+        return 0;
     }
 
     public FSAcceptMC fsAcceptItemCode(int action) throws Exception {
@@ -1225,4 +1226,35 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
+    public int fsCheckMC(FSCheckMC command) throws Exception{
+        return 0;
+    }
+    
+    public int fsAcceptMC(FSAcceptMC command) throws Exception{
+        return 0;
+    }
+    
+    public int fsSyncRegisters(FSSyncRegisters command) throws Exception{
+        return 0;
+    }
+    
+    public int fsReadMemorySize(FSReadMemorySize command) throws Exception{
+        return 0;
+    }
+    
+    public int fsWriteTLVBuffer(FSWriteTLVBuffer command) throws Exception {
+        return 0;
+    }
+    
+    public int fsReadRandomData(FSReadRandomData command) throws Exception{
+        return 0;
+    }
+    
+    public int fsAuthorize(FSAuthorize command) throws Exception{
+        return 0;
+    }
+    
+    public int fsReadMCStatus(FSReadMCStatus command) throws Exception{
+        return 0;
+    }
 }

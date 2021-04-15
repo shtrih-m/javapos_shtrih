@@ -523,6 +523,10 @@ public class DirectIOHandler {
                 new DIOCheckItemCode(service).execute(data, object);
                 break;
 
+            case SmFptrConst.SMFPTR_DIO_CHECK_ITEM_CODE2:
+                new DIOCheckItemCode2(service).execute(data, object);
+                break;
+                
             case SmFptrConst.SMFPTR_DIO_ACCEPT_ITEM_CODE:
                 new DIOAcceptItemCode(service).execute(data, object);
                 break;
@@ -553,6 +557,38 @@ public class DirectIOHandler {
                 
             case SmFptrConst.SMFPTR_DIO_SAVE_MC_NOTIFICATIONS:
                 new DIOSaveMCNotifications(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_SYNC_REGISTERS:
+                new DIOSyncRegisters(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_FS_READ_MEM_SIZE:
+                new DIOReadMemorySize(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_FS_WRITE_TLV_BUFFER:
+                new DIOWriteTLVBuffer(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_FS_READ_RANDOM_DATA:
+                new DIOReadRandomData(service).execute(data, object);
+                break;
+             
+            case SmFptrConst.SMFPTR_DIO_FS_AUTHORIZE:
+                new DIOAuthorize(service).execute(data, object);
+                break;
+            
+            case SmFptrConst.SMFPTR_DIO_FS_READ_MC_STATUS:
+                new DIOReadMCStatus(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_FS_START_READ_MC_NOTIFICATIONS:
+                new DIOStartReadMCNotifications(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_FS_READ_MC_NOTIFICATION:
+                new DIOReadMCNotification(service).execute(data, object);
                 break;
                 
             default:

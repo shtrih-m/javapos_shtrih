@@ -23,10 +23,15 @@ public class DIOAcceptItemCode extends DIOItem {
 
     public void execute(int[] data, Object object) throws Exception {
 
-        String[] params = (String[])object;
-        int action = Integer.parseInt(params[0]);
-        FSAcceptMC command = getPrinter().fsAcceptItemCode(action);
-        getPrinter().check(command.getResultCode());
+        Object[] params = (Object[])object;
+        DIOUtils.checkObjectMinLength(params, 2);
+        
+        int action = (Integer)params[0];
+        FSAcceptMC command = new FSAcceptMC();
+        command.setAction(action);
+        int rc = getPrinter().fsAcceptMC(command);
+        getPrinter().check(rc);
+        params[1] = new Integer(command.getErrorCode());
     }
 
 }

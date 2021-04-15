@@ -672,9 +672,32 @@ public interface SmFptrConst {
     // Save marking codes notification
     public static final int SMFPTR_DIO_SAVE_MC_NOTIFICATIONS = 0x7E;
     
-    // Read MC server status
-    public static final int SMFPTR_DIO_READ_KM_SERVER_STATUS = 0x65;
+    // Check item barcode
+    public static final int SMFPTR_DIO_CHECK_ITEM_CODE2 = 0x7F;
     
+    // Synchronize registers
+    public static final int SMFPTR_DIO_SYNC_REGISTERS = 0x80;
+    
+    // FS read memory size
+    public static final int SMFPTR_DIO_FS_READ_MEM_SIZE = 0x81;
+    
+    // FS write TLV buffer
+    public static final int SMFPTR_DIO_FS_WRITE_TLV_BUFFER = 0x82;
+    
+    // FS read random data
+    public static final int SMFPTR_DIO_FS_READ_RANDOM_DATA = 0x83;
+    
+    // FS authorize
+    public static final int SMFPTR_DIO_FS_AUTHORIZE = 0x84;
+    
+    // FS read MC status
+    public static final int SMFPTR_DIO_FS_READ_MC_STATUS = 0x85;
+    
+    // FS start read MC notifications
+    public static final int SMFPTR_DIO_FS_START_READ_MC_NOTIFICATIONS = 0x86;
+    
+    // FS read MC notifications
+    public static final int SMFPTR_DIO_FS_READ_MC_NOTIFICATION = 0x87;
     
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:

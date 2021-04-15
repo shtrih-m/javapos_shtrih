@@ -8,7 +8,6 @@ package com.shtrih.jpos.fiscalprinter.directIO;
  *
  * @author V.Kravtsov
  */
-
 import com.shtrih.jpos.DIOUtils;
 import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
@@ -23,13 +22,19 @@ public class DIOBindItemCode extends DIOItem {
     }
 
     public void execute(int[] data, Object object) throws Exception {
-        String[] params = (String[])object;
-        DIOUtils.checkObjectMinLength(params, 2);
-        String barcode = params[0];
-        FSBindMC command = getPrinter().setOperationMarking(barcode);
+        Object[] params = (Object[]) object;
+        DIOUtils.checkObjectMinLength(params, 7);
+        FSBindMC command = new FSBindMC();
+        command.data = (byte[]) params[0];
+        int rc = getPrinter().fsBindMC(command);
         getPrinter().check(command.getResultCode());
-        params[0] = String.valueOf(command.itemCode);
-        params[1] = String.valueOf(command.codeType);
+        params[0] = new Integer(command.itemCode);
+        params[1] = new Integer(command.codeType);
+        params[2] = new Integer(command.localCheckStatus);
+        params[3] = new Integer(command.localErrorCode);
+        params[4] = new Integer(command.symbolicType);
+        params[5] = new Integer(command.serverErrorCode);
+        params[6] = new Integer(command.serverCheckStatus);
+        params[7] = command.serverTLVData;
     }
-
 }

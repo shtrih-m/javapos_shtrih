@@ -24,7 +24,14 @@ public class DIOCheckItemCode extends DIOItem {
 
         String[] lines = (String[])object;
         String barcode = lines[0];
-        //getPrinter().checkItemCode(barcode);
+        long quantity = 1000;
+        boolean isSale = true;
+        if (lines.length > 3)
+        {
+            isSale = !(lines[1].equalsIgnoreCase("0"));
+            quantity = Long.parseLong(lines[2]);
+        }
+        getPrinter().checkItemCode(barcode, isSale, quantity);
     }
 
 }
