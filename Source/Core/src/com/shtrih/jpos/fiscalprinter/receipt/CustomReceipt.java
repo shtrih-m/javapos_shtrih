@@ -266,6 +266,9 @@ public abstract class CustomReceipt implements FiscalReceipt {
     public void setItemBarcode2(String barcode) throws Exception {
     }
 
+    public void addItemCode(byte[] mcdata) throws Exception{
+    }
+    
     public long getSubtotal() throws Exception {
         long total = 0;
         PrinterStatus status = getPrinter().getPrinter().readPrinterStatus();

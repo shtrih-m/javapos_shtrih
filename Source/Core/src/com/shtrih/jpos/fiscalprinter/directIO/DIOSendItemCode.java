@@ -23,7 +23,7 @@ public class DIOSendItemCode extends DIOItem {
 
         String[] lines = (String[]) object;
         String barcode = lines[0];
-        getPrinter().check(getPrinter().sendMarking(barcode));
+        getPrinter().check(getPrinter().sendItemCode(barcode.getBytes()));
     }
 
 }

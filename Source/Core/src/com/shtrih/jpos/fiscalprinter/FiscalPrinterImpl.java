@@ -4750,6 +4750,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         receipt.setItemBarcode(barcode);
     }
     
+    public void addItemCode(byte[] mcdata) throws Exception {
+        receipt.addItemCode(mcdata);
+    }
+    
     public void saveMCNotifications(String fileName) throws Exception
     {
         MCNotifications items = printer.readNotifications();

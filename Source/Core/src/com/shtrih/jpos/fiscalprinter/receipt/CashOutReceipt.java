@@ -49,4 +49,5 @@ public class CashOutReceipt extends CustomReceipt implements FiscalReceipt {
     public long getSubtotal() throws Exception {
         return 0;
     }
+    
 }

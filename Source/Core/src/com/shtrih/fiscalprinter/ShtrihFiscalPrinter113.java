@@ -2283,6 +2283,10 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_SET_ITEM_CODE, null, new String[]{barcode});
     }
 
+    public void addItemCode(byte[] data) throws JposException {
+        directIO(SmFptrConst.SMFPTR_DIO_ADD_ITEM_CODE, null, new Object[]{data});
+    }
+    
     public void sendItemCode(String barcode) throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_SEND_ITEM_CODE, null, new String[]{barcode});
     }

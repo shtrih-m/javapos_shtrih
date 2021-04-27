@@ -650,8 +650,10 @@ public interface SMFiscalPrinter {
 
     public boolean getCapOpenFiscalDay();
 
-    public int sendMarking(String barcode) throws Exception;
+    public int sendItemCode(byte[] data) throws Exception;
 
+    public void checkItemCode(byte[] data, boolean isSale, long quantity) throws Exception;
+    
     public int fsBindMC(FSBindMC command) throws Exception;
 
     public int fsAcceptMC(FSAcceptMC command) throws Exception;
@@ -687,8 +689,6 @@ public interface SMFiscalPrinter {
     public int startReadMCNotifications(StartReadMCNotifications command) throws Exception;
     
     public int readMCNotification(ReadMCNotification command) throws Exception;
-    
-    public void checkItemCode(String barcode, boolean isSale, long quantity) throws Exception;
     
     public int fsCheckMC(FSCheckMC command) throws Exception;
     

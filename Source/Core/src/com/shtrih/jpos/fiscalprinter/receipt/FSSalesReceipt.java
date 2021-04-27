@@ -49,7 +49,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private Vector<String> messages = new Vector<String>();
     private final ReceiptTemplate receiptTemplate;
     private static CompositeLogger logger = CompositeLogger.getLogger(FSSalesReceipt.class);
-    private String barcode = null;
+    private Vector<byte[]> itemCodes = new Vector<byte[]>();
+    private Vector itemTags = new Vector();
 
     public FSSalesReceipt(ReceiptContext context, int receiptType) throws Exception {
         super(context);
@@ -256,7 +257,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 }
             }
         }
-
     }
 
     public void printReceiptItems() throws Exception {
@@ -290,10 +290,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void templatePrintReceiptItems() throws Exception {
         for (int i = 0; i < items.size(); i++) {
             Object item = items.get(i);
-            if (item instanceof FSSaleReceiptItem) 
-            {
+            if (item instanceof FSSaleReceiptItem) {
                 FSSaleReceiptItem sitem = (FSSaleReceiptItem) item;
-                
+
                 String itemText = sitem.getText();
                 sitem.setText("//" + sitem.getText());
 
@@ -404,31 +403,31 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     /*
-    88.Оборот по налогу А с продаж в чеке                       : 0.00
-    89.Оборот по налогу А с покупок в чеке                      : 0.00
-    90.Оборот по налогу А с возврата продаж в чеке              : 0.00
-    91.Оборот по налогу А с возврата покупок в чеке             : 0.00
-    92.Оборот по налогу Б с продаж в чеке                       : 0.00
-    93.Оборот по налогу Б с покупок в чеке                      : 0.00
-    94.Оборот по налогу Б с возврата продаж в чеке              : 0.00
-    95.Оборот по налогу Б с возврата покупок в чеке             : 0.00
-    96.Оборот по налогу В с продаж в чеке                       : 0.00
-    97.Оборот по налогу В с покупок в чеке                      : 0.00
-    98.Оборот по налогу В с возврата продаж в чеке              : 0.00
-    99.Оборот по налогу В с возврата покупок в чеке             : 0.00
-    100.Оборот по налогу Г с продаж в чеке                       : 0.00
-    101.Оборот по налогу Г с покупок в чеке                      : 0.00
-    102.Оборот по налогу Г с возврата продаж в чеке              : 0.00
-    103.Оборот по налогу Г с возврата покупок в чеке             : 0.00    
+     88.Оборот по налогу А с продаж в чеке                       : 0.00
+     89.Оборот по налогу А с покупок в чеке                      : 0.00
+     90.Оборот по налогу А с возврата продаж в чеке              : 0.00
+     91.Оборот по налогу А с возврата покупок в чеке             : 0.00
+     92.Оборот по налогу Б с продаж в чеке                       : 0.00
+     93.Оборот по налогу Б с покупок в чеке                      : 0.00
+     94.Оборот по налогу Б с возврата продаж в чеке              : 0.00
+     95.Оборот по налогу Б с возврата покупок в чеке             : 0.00
+     96.Оборот по налогу В с продаж в чеке                       : 0.00
+     97.Оборот по налогу В с покупок в чеке                      : 0.00
+     98.Оборот по налогу В с возврата продаж в чеке              : 0.00
+     99.Оборот по налогу В с возврата покупок в чеке             : 0.00
+     100.Оборот по налогу Г с продаж в чеке                       : 0.00
+     101.Оборот по налогу Г с покупок в чеке                      : 0.00
+     102.Оборот по налогу Г с возврата продаж в чеке              : 0.00
+     103.Оборот по налогу Г с возврата покупок в чеке             : 0.00    
     
-    4192.Оборот по налогу 18/118 с продаж в чеке                  : 0.00
-    4193.Оборот по налогу 18/118 с покупок в чеке                 : 0.00
-    4194.Оборот по налогу 18/118 с возврата продаж в чеке         : 0.00
-    4195.Оборот по налогу 18/118 с возврата покупок в чеке        : 0.00
-    4196.Оборот по налогу 10/110 с продаж в чеке                  : 0.00
-    4197.Оборот по налогу 10/110 с покупок в чеке                 : 0.00
-    4198.Оборот по налогу 10/110 с возврата продаж в чеке         : 0.00
-    4199.Оборот по налогу 10/110 с возврата покупок в чеке        : 0.00
+     4192.Оборот по налогу 18/118 с продаж в чеке                  : 0.00
+     4193.Оборот по налогу 18/118 с покупок в чеке                 : 0.00
+     4194.Оборот по налогу 18/118 с возврата продаж в чеке         : 0.00
+     4195.Оборот по налогу 18/118 с возврата покупок в чеке        : 0.00
+     4196.Оборот по налогу 10/110 с продаж в чеке                  : 0.00
+     4197.Оборот по налогу 10/110 с покупок в чеке                 : 0.00
+     4198.Оборот по налогу 10/110 с возврата продаж в чеке         : 0.00
+     4199.Оборот по налогу 10/110 с возврата покупок в чеке        : 0.00
      */
     public long calculateTaxAmount(int index, int tax, int discount) throws Exception {
         long result = 0;
@@ -444,9 +443,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
         if (taxRate == 0) {
             result = amount;
-        } else 
-        {
-            double taxAmount = ((double)amount) * taxRate / (10000 + taxRate);
+        } else {
+            double taxAmount = ((double) amount) * taxRate / (10000 + taxRate);
             result = Math.round(taxAmount);
         }
         return result;
@@ -549,7 +547,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 }
                 getDevice().check(rc);
                 getFiscalDay().closeFiscalRec();
-                
+
                 try {
                     getDevice().waitForPrinting();
                     for (int i = 0; i < messages.size(); i++) {
@@ -560,8 +558,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 }
             }
         }
-        if (cancelled || (!getDevice().isCapFooterFlag())) 
-        {
+        if (cancelled || (!getDevice().isCapFooterFlag())) {
             try {
                 printEndingItems();
             } catch (Exception e) {
@@ -609,14 +606,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void printReceiptItem(FSSaleReceiptItem item) throws Exception
-    {
-        if (getDevice().getCapOperationTagsFirst()) 
-        {
-            printOperationTLV(item);
-            getDevice().sendMarking(item.getBarcode());
+    public void printReceiptItem(FSSaleReceiptItem item) throws Exception {
+        if (getDevice().getCapOperationTagsFirst()) {
+            writeOperationTLV(item);
+            sendItemCodes(item.getItemCodes());
         }
-        
+
         PriceItem priceItem = item.getPriceItem();
         if (!item.getIsStorno()) {
             switch (receiptType) {
@@ -641,10 +636,16 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         } else {
             getDevice().printVoidItem(priceItem);
         }
-        if (!getDevice().getCapOperationTagsFirst()) 
-        {
-            printOperationTLV(item);
-            getDevice().sendMarking(item.getBarcode());
+        if (!getDevice().getCapOperationTagsFirst()) {
+            writeOperationTLV(item);
+            sendItemCodes(item.getItemCodes());
+        }
+        printOperationTLV(item);
+    }
+
+    public void sendItemCodes(Vector<byte[]> codes) throws Exception {
+        for (int i = 0; i < codes.size(); i++) {
+            getDevice().sendItemCode(codes.get(i));
         }
     }
 
@@ -674,8 +675,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void printFSSaleNoTemplate(FSSaleReceiptItem item) throws Exception 
-    {
+    public void printFSSaleNoTemplate(FSSaleReceiptItem item) throws Exception {
         if (!receiptTemplate.hasPreLine()) {
             String preLine = item.getPreLine();
             if (preLine.length() > 0) {
@@ -690,7 +690,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
 
         printReceiptItem(item);
-        
+
         long discountTotal = item.getDiscounts().getTotal();
         if (discountTotal != 0) {
             String text = "=" + StringUtils.amountToString(discountTotal);
@@ -706,13 +706,30 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void printOperationTLV(FSSaleReceiptItem item) throws Exception {
+    public void writeOperationTLV(FSSaleReceiptItem item) throws Exception {
         for (int i = 0; i < item.getTags().size(); i++) {
-            FSOperationTLVItem tag = (FSOperationTLVItem) item.getTags().get(i);
+            FSTLVItem tag = (FSTLVItem) item.getTags().get(i);
             getDevice().check(getDevice().fsWriteOperationTLV(tag.getData()));
         }
     }
-    
+
+    public void printOperationTLV(FSSaleReceiptItem item) throws Exception {
+        if (!getParams().FSPrintTags) {
+            return;
+        }
+        for (int i = 0; i < item.getTags().size(); i++) {
+            FSTLVItem tag = (FSTLVItem) item.getTags().get(i);
+
+            TLVParser reader = new TLVParser();
+            reader.read(tag.getData());
+            Vector<String> lines = reader.getPrintText();
+
+            for (String line : lines) {
+                getDevice().printText(SMFP_STATION_REC, line, tag.getFont());
+            }
+        }
+    }
+
     public void templatePrintTextItem(FSSaleReceiptItem item) throws Exception {
         if (!receiptTemplate.hasPreLine()) {
             String preLine = item.getPreLine();
@@ -1089,18 +1106,16 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void doPrintSale(long price, long quantity, long unitPrice,
             int department, int vatInfo, String description, String unitName,
-            boolean isStorno) throws Exception 
-    {
+            boolean isStorno) throws Exception {
         logger.debug(
                 "price: " + price
                 + ", quantity: " + quantity
                 + ", unitPrice: " + unitPrice);
 
-        
         if (vatInfo == 0) {
             vatInfo = 4;
         }
-        
+
         double d = unitPrice * Math.abs(quantity);
         long amount = getParams().itemTotalAmount == null ? MathUtils.round((d / 1000.0)) : getParams().itemTotalAmount;
         FSSaleReceiptItem item = null;
@@ -1111,7 +1126,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 item.setItemAmount(item.getItemAmount() + price);
             }
         }
-        if (price > amount){
+        if (price > amount) {
             price = amount;
         }
         if (item == null) {
@@ -1130,14 +1145,16 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             item.setPostLine(getPostLine());
             item.setUnitName(unitName);
             item.setIsStorno(isStorno);
-            item.setBarcode(barcode);
+            item.setItemCodes(itemCodes);
+            item.setTags(itemTags);
             double taxRate = getDevice().getTaxRate(vatInfo) / 10000.0;
             item.setTaxRate(taxRate);
             item.getReceiptFields().clear();
             item.getReceiptFields().putAll(getParams().getReceiptFields());
             getParams().getReceiptFields().clear();
-            
-            barcode = null;
+
+            itemTags = new Vector();
+            itemCodes = new Vector<byte[]>();
 
             if (getParams().itemTotalAmount != null) {
                 item.setTotalAmount(getParams().itemTotalAmount);
@@ -1151,16 +1168,18 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             item.setPaymentType(getParams().paymentType);
             item.setSubjectType(getParams().subjectType);
             // Item unit
-            if (getParams().itemUnit != null){
+            if (getParams().itemUnit != null) {
                 item.setUnit(getParams().itemUnit);
                 getParams().itemUnit = null;
             }
             // check MC
-            if (getParams().checkItemCodeEnabled)
-            {
-                getDevice().checkItemCode(item.getBarcode(), isSaleReceipt(), item.getQuantity());
+            if (getParams().checkItemCodeEnabled) {
+                Vector<byte[]> codes = item.getItemCodes();
+                for (int i = 0; i < codes.size(); i++) {
+                    getDevice().checkItemCode(codes.get(i), isSaleReceipt(), item.getQuantity());
+                }
             }
-            
+
             items.add(item);
 
             getParams().paymentType = 4;
@@ -1172,7 +1191,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             printDiscount(amount - price, vatInfo, "");
         }
     }
-    
+
     FSSaleReceiptItem findItem(long price, String text) {
         for (int i = 0; i < items.size(); i++) {
             Object object = items.get(i);
@@ -1348,33 +1367,14 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public class FSOperationTLVItem {
-
-        private final byte[] data;
-        private FontNumber font;
-
-        public FSOperationTLVItem(byte[] data, FontNumber font) {
-            this.data = data;
-            this.font = font;
-        }
-
-        public byte[] getData() {
-            return data;
-        }
-
-        public FontNumber getFont() {
-            return font;
-        }
-    }
-
     public void fsWriteTLV(byte[] data) throws Exception {
         items.add(new FSTLVItem(data, getParams().getFont()));
     }
 
     public void fsWriteOperationTLV(byte[] data) throws Exception {
-        FSOperationTLVItem item = new FSOperationTLVItem(data, getParams().getFont());
+        FSTLVItem item = new FSTLVItem(data, getParams().getFont());
         if (getDevice().getCapOperationTagsFirst()) {
-            items.add(item);
+            itemTags.add(item);
         } else {
             getLastItem().getTags().add(item);
         }
@@ -1445,8 +1445,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         printTotalAndTax(item);
     }
 
-    protected void printTotalAndTax(FSSaleReceiptItem item) throws Exception 
-    {
+    protected void printTotalAndTax(FSSaleReceiptItem item) throws Exception {
         String line;
         line = getDevice().getTaxName(item.getTax1());
         line = formatLines(line, StringUtils.amountToString(item.getTaxAmount()));
@@ -1470,7 +1469,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void setItemBarcode(String barcode) throws Exception {
-        this.barcode = barcode;
+        itemCodes.add(barcode.getBytes());
     }
 
+    public void addItemCode(byte[] mcdata) throws Exception {
+        itemCodes.add(mcdata);
+    }
 }

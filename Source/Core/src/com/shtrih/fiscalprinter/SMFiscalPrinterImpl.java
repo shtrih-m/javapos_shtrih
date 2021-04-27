@@ -1195,9 +1195,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return rc;
     }
 
-    public void checkItemCode(String barcode, boolean isSale,
+    public void checkItemCode(byte[] data, boolean isSale,
             long quantity) throws Exception {
-        if (barcode == null) {
+        if (data == null) {
             return;
         }
         if (getFDVersion() != PrinterConst.FS_FORMAT_FFD_1_2) {
@@ -1222,7 +1222,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.password = sysPassword;
         command.itemStatus = itemStatus;
         command.checkMode = 0;
-        command.mcData = barcode.getBytes();
+        command.mcData = data;
         command.tlv = null;
         execute(command);
         if (command.localCheckStatus == 0) {
@@ -4684,18 +4684,18 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 
-    public int sendMarking(String barcode) throws Exception {
-        if (barcode == null) {
+    public int sendItemCode(byte[] data) throws Exception {
+        if (data == null) {
             return 0;
         }
 
         if ((getFDVersion() == PrinterConst.FS_FORMAT_FFD_1_2)
                 || (params.markingType == SmFptrConst.MARKING_TYPE_PRINTER)) {
             FSBindMC command = new FSBindMC();
-            command.data = barcode.getBytes();
+            command.data = data;
             return fsBindMC(command);
         } else {
-            byte[] tagValue = barcodeTo1162Tag(barcode);
+            byte[] tagValue = barcodeTo1162Tag(data);
             return fsWriteOperationTLV(tagValue);
         }
     }
@@ -4706,8 +4706,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return (crc == Integer.parseInt(barcode.substring(barcode.length() - 1)));
     }
 
-    public static byte[] barcodeTo1162Value(String barcode) throws Exception {
-        byte[] barcodeData = barcode.getBytes();
+    public static byte[] barcodeTo1162Value(byte[] data) throws Exception {
+        String barcode = new String(data);
+        byte[] barcodeData = data;
         int barcodeLength = barcode.length();
         int barcodeType = SmFptrConst.KTN_UNKNOWN;
 
@@ -4804,9 +4805,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return os.toByteArray();
     }
 
-    public byte[] barcodeTo1162Tag(String barcode) throws Exception {
+    public byte[] barcodeTo1162Tag(byte[] data) throws Exception {
         TLVWriter writer = new TLVWriter();
-        writer.add(1162, barcodeTo1162Value(barcode));
+        writer.add(1162, barcodeTo1162Value(data));
         return writer.getBytes();
     }
 

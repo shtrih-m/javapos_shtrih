@@ -1146,15 +1146,14 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return false;
     }
 
-    public int sendMarking(String barcode) throws Exception {
+    public int sendItemCode(byte[] data) throws Exception {
         return 0;
     }
 
-    public void checkItemCode(String barcode, boolean isSale, long quantity) throws Exception
-    {
+    public void checkItemCode(byte[] data, boolean isSale, long quantity) throws Exception {
     }
 
-    public int fsBindMC(FSBindMC command) throws Exception{
+    public int fsBindMC(FSBindMC command) throws Exception {
         return 0;
     }
 
@@ -1226,35 +1225,35 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
-    public int fsCheckMC(FSCheckMC command) throws Exception{
+    public int fsCheckMC(FSCheckMC command) throws Exception {
         return 0;
     }
-    
-    public int fsAcceptMC(FSAcceptMC command) throws Exception{
+
+    public int fsAcceptMC(FSAcceptMC command) throws Exception {
         return 0;
     }
-    
-    public int fsSyncRegisters(FSSyncRegisters command) throws Exception{
+
+    public int fsSyncRegisters(FSSyncRegisters command) throws Exception {
         return 0;
     }
-    
-    public int fsReadMemorySize(FSReadMemorySize command) throws Exception{
+
+    public int fsReadMemorySize(FSReadMemorySize command) throws Exception {
         return 0;
     }
-    
+
     public int fsWriteTLVBuffer(FSWriteTLVBuffer command) throws Exception {
         return 0;
     }
-    
-    public int fsReadRandomData(FSReadRandomData command) throws Exception{
+
+    public int fsReadRandomData(FSReadRandomData command) throws Exception {
         return 0;
     }
-    
-    public int fsAuthorize(FSAuthorize command) throws Exception{
+
+    public int fsAuthorize(FSAuthorize command) throws Exception {
         return 0;
     }
-    
-    public int fsReadMCStatus(FSReadMCStatus command) throws Exception{
+
+    public int fsReadMCStatus(FSReadMCStatus command) throws Exception {
         return 0;
     }
 }

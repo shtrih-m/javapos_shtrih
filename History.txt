@@ -7,6 +7,15 @@
     
 ********************************************************************************
 
+  27.04.2021
+  deviceServiceVersion = 1013618
+
+  [-] Fixed error with prining operation tags
+  [+] Added directIO command to add item codes, SMFPTR_DIO_ADD_ITEM_CODE
+
+
+********************************************************************************
+
   16.04.2021
   deviceServiceVersion = 1013617
 

@@ -591,6 +591,10 @@ public class DirectIOHandler {
                 new DIOReadMCNotification(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_ADD_ITEM_CODE:
+                new DIOAddItemCode(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL, Localizer.getString(Localizer.invalidParameterValue) + ", command");
         }

@@ -114,6 +114,8 @@ public interface FiscalReceipt {
     
     public void setItemBarcode(String barcode) throws Exception;
     
+    public void addItemCode(byte[] mcdata) throws Exception;
+    
     public long getSubtotal() throws Exception;
     
 }

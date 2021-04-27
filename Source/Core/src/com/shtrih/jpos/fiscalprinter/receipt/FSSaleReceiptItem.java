@@ -41,11 +41,11 @@ public class FSSaleReceiptItem {
     private Long taxAmount = null;
     private int paymentType = 4;
     private int subjectType = 1;
-    private String barcode = null;
-    private final Vector tags = new Vector();
+    private Vector tags = new Vector();
     private HashMap receiptFields = new HashMap();
     private double taxRate = 0;
     private Integer unit;
+    private Vector<byte[]> itemCodes = new Vector<byte[]>();
 
     public FSSaleReceiptItem() {
     }
@@ -74,7 +74,7 @@ public class FSSaleReceiptItem {
         item.taxAmount = taxAmount;
         item.paymentType = paymentType;
         item.subjectType = subjectType;
-        item.barcode = barcode;
+        item.itemCodes = itemCodes;
         item.taxRate = taxRate;
         return item;
     }
@@ -83,6 +83,10 @@ public class FSSaleReceiptItem {
         return tags;
     }
 
+    public void setTags(Vector tags) {
+        this.tags = tags;
+    }
+    
     public PriceItem getPriceItem() throws Exception {
         PriceItem item = new PriceItem();
         item.setDepartment(department);
@@ -398,20 +402,6 @@ public class FSSaleReceiptItem {
         this.subjectType = subjectType;
     }
 
-    /**
-     * @return the barcode
-     */
-    public String getBarcode() {
-        return barcode;
-    }
-
-    /**
-     * @param barcode the barcode to set
-     */
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
-    }
-
     public HashMap getReceiptFields() {
         return receiptFields;
     }
@@ -444,4 +434,11 @@ public class FSSaleReceiptItem {
         this.unit = unit;
     }
 
+    public Vector<byte[]> getItemCodes(){
+        return itemCodes;
+    }
+    
+    public void setItemCodes(Vector<byte[]> itemCodes){
+        this.itemCodes = itemCodes;
+    }
 }

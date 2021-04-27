@@ -699,6 +699,9 @@ public interface SmFptrConst {
     // FS read MC notifications
     public static final int SMFPTR_DIO_FS_READ_MC_NOTIFICATION = 0x87;
     
+    // Add item marking code
+    public static final int SMFPTR_DIO_ADD_ITEM_CODE = 0x88;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,
