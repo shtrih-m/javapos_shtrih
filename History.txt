@@ -7,7 +7,14 @@
     
 ********************************************************************************
 
-  27.04.2021
+  04.05.2021
+  deviceServiceVersion = 1013619
+
+  [-] Fixed error with receipt item duplication
+
+********************************************************************************
+
+  28.04.2021
   deviceServiceVersion = 1013618
 
   [-] Fixed error with prining operation tags

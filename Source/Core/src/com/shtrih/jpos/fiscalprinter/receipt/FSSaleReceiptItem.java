@@ -309,6 +309,7 @@ public class FSSaleReceiptItem {
     }
 
     public long getTotal2() {
+        
         return Math.abs(PrinterAmount.getAmount(getPriceWithDiscount(), getQuantity()));
     }
 
@@ -323,7 +324,7 @@ public class FSSaleReceiptItem {
         if (discounts.getTotal() == 0) {
             return price;
         }
-        long price1 = Math.abs((long) (getTotal() * 1000.0 / quantity));
+        long price1 = Math.abs(Math.round(getTotal() * 1000.0 / quantity));
         return price1;
     }
 
@@ -423,7 +424,7 @@ public class FSSaleReceiptItem {
     }
 
     public long getTaxAmount() throws Exception {
-        return (long) ((getTotal()) * taxRate / (1 + taxRate) + 0.5);
+        return Math.round((getTotal()) * taxRate / (1 + taxRate));
     }
 
     public Integer getUnit() {

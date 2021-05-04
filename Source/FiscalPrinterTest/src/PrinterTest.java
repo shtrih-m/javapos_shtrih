@@ -3825,12 +3825,9 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
-
-            printer.printRecItem("1. СДОБА ЗАМОСКВОРЕЦКАЯ", 100, 1000, 2, 100, "шт");
-            printer.fsWriteOperationTag(1222, 1, 1);
-            printer.fsWriteOperationTag(1226, "505303696069");
-            
-            printer.printRecTotal(27400, 27400, "1");
+            printer.printRecItem("3153446 ТЕНД.Туш.цып.бр.1с охл.фас.1кг", 20809, 1508, 2, 13799, "г.");
+            printer.printRecItemAdjustment(1, "", 1041, 2);
+            printer.printRecTotal(1379900, 1379900, "1");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();

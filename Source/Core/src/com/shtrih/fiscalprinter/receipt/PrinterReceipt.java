@@ -190,7 +190,7 @@ public class PrinterReceipt {
     }
 
     long roundAmount(double amount) {
-        return (long) (amount + 0.5);
+        return Math.round(amount);
     }
 
     private long[] getTaxTotals(long amount) 

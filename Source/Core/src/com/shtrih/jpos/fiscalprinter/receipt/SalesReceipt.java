@@ -97,7 +97,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         printReceiptItem(description, itemPrice, quantity, vatInfo);
 
         double d = unitPrice * Math.abs(quantity);
-        long amount = MathUtils.round((d / 1000.0));
+        long amount = Math.round((d / 1000.0));
         if (amount > price) {
             printDiscount(amount - price, vatInfo, "");
         }

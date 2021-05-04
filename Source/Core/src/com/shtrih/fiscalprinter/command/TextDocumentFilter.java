@@ -265,7 +265,7 @@ public class TextDocumentFilter implements IPrinterEvents {
             // ВСЕГО
             add(STotalText, summToStr(receiptTotal));
             // СКИДКА
-            long discountAmount = MathUtils.round(receiptTotal * params.getDiscount() / 100);
+            long discountAmount = Math.round(receiptTotal * params.getDiscount() / 100);
             String line = String.format("%s %s %%", SDiscountText, amountToStr(params.getDiscount()));
             add(line, summToStr(discountAmount)
                     + getTaxData(params.getTax1(), params.getTax2(), params.getTax3(), params.getTax4()));
@@ -408,7 +408,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
 
     private String summToStr(long price, long quantity) {
-        long amount = MathUtils.round(quantity / 1000.0d * price);
+        long amount = Math.round(quantity / 1000.0d * price);
         return summToStr(amount);
     }
 
@@ -427,7 +427,7 @@ public class TextDocumentFilter implements IPrinterEvents {
                     + getTaxData(item.getTax1(), item.getTax2(), item.getTax3(), item.getTax4());
             add(String.format("%02d", item.getDepartment()), line);
         } else {
-            long amount = MathUtils.round(item.getQuantity() / 1000 * item.getPrice());
+            long amount = Math.round(item.getQuantity() / 1000 * item.getPrice());
             line = "=" + amountToStr(amount)
                     + getTaxData(item.getTax1(), item.getTax2(), item.getTax3(), item.getTax4());
             add(String.format("%02d", item.getDepartment()), line);

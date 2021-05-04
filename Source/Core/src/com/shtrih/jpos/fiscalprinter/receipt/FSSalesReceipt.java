@@ -803,7 +803,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public long getItemPercentAdjustmentAmount(long amount) throws Exception {
         double d = getLastItem().getAmount() * amount;
-        return MathUtils.round(d / 10000.0);
+        return Math.round(d / 10000.0);
     }
 
     public void checkDiscountsEnabled() throws Exception {
@@ -856,12 +856,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_DISCOUNT:
-                amount = MathUtils.round(((double) getSubtotal() * amount) / 10000.0);
+                amount = Math.round((getSubtotal() * amount) / 10000.0);
                 printTotalDiscount(amount, 0, description);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_SURCHARGE:
-                amount = MathUtils.round(((double) getSubtotal() * amount) / 10000.0);
+                amount = Math.round((getSubtotal() * amount) / 10000.0);
                 printTotalDiscount(-amount, 0, description);
                 break;
 
@@ -953,13 +953,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_DISCOUNT:
                 double d = getSubtotal() * amount;
-                amount = MathUtils.round(d / 10000.0);
+                amount = Math.round(d / 10000.0);
                 printTotalDiscount(amount, 0, "");
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_SURCHARGE:
                 d = getSubtotal() * amount;
-                amount = MathUtils.round(d / 10000.0);
+                amount = Math.round(d / 10000.0);
                 printTotalDiscount(amount, 0, "");
                 break;
 
@@ -1063,7 +1063,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
         for (;;) {
             double d = unitPrice * quantity;
-            long amount = MathUtils.round(d / 1000.0);
+            long amount = Math.round(d / 1000.0);
             if (amount >= price) {
                 break;
             }
@@ -1117,7 +1117,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
 
         double d = unitPrice * Math.abs(quantity);
-        long amount = getParams().itemTotalAmount == null ? MathUtils.round((d / 1000.0)) : getParams().itemTotalAmount;
+        long amount = getParams().itemTotalAmount == null ? Math.round((d / 1000.0)) : getParams().itemTotalAmount;
         FSSaleReceiptItem item = null;
         if (getParams().combineReceiptItems) {
             item = findItem(unitPrice, description);
