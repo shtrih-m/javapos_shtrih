@@ -234,19 +234,10 @@ public abstract class CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void fsWriteTLV(byte[] data) throws Exception {
+    public void fsWriteTLV(byte[] data, boolean print) throws Exception {
     }
 
-    public void fsWriteOperationTLV(byte[] data) throws Exception {
-    }
-
-    public void fsWriteTag(int tagId, String tagValue) throws Exception {
-    }
-
-    public void fsWriteCustomerEmail(String text) throws Exception {
-    }
-
-    public void fsWriteCustomerPhone(String text) throws Exception {
+    public void fsWriteOperationTLV(byte[] data, boolean print) throws Exception{
     }
 
     public void setDiscountAmount(int amount) throws Exception {

@@ -9,7 +9,10 @@ public class DIOFSWriteTLV extends DIOItem {
     }
 
     public void execute(int[] data, Object object) throws Exception {
-        service.fsWriteTLV((byte[]) object);
+        boolean print = true;
+        if (data != null) {
+            print = (data[0] == 1);
+        }
+        service.fsWriteTLV((byte[]) object, print);
     }
 }
-

@@ -21,8 +21,13 @@ public class DIOFSWriteCustomerEmail extends DIOItem {
     }
 
     public void execute(int[] data, Object object) throws Exception {
-
-        service.fsWriteCustomerEmail((String)object);
+        boolean print = true;
+        if (data != null) {
+            print = (data[0] == 1);
+        }
+        String text = (String) object;
+        byte[] tlv = getPrinter().getTLVData(1008, text);
+        service.fsWriteTLV(tlv, print);
     }
 
 }

@@ -1903,13 +1903,28 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     }
 
     public void fsWriteCustomerEmail(String data) throws JposException {
-        directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_CUSTOMER_EMAIL, null, data);
+        fsWriteCustomerEmail(data, true);
     }
 
+    public void fsWriteCustomerEmail(String email, boolean print) throws JposException {
+        int[] data = new int[1];
+        data[0] = 0;
+        if (print) data[0] = 1;
+        directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_CUSTOMER_EMAIL, data, email);
+    }
+    
     public void fsWriteCustomerPhone(String data) throws JposException {
-        directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_CUSTOMER_PHONE, null, data);
+        fsWriteCustomerPhone(data, true);
     }
 
+    public void fsWriteCustomerPhone(String phone, boolean print) throws JposException 
+    {
+        int[] data = new int[1];
+        data[0] = 0;
+        if (print) data[0] = 1;
+        directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_CUSTOMER_PHONE, data, phone);
+    }
+    
     public void fsWriteTLV(byte[] data) throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_TLV, null, data);
     }
@@ -1936,30 +1951,55 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         fsWriteTLV(tlv.getBytes());
     }
 
-    public void fsWriteOperationTLV(byte[] data) throws JposException {
-        directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_OPERATION_TLV, null, data);
+    public void fsWriteOperationTLV(byte[] tlvdata) throws JposException {
+        fsWriteOperationTLV(tlvdata, true);
     }
 
+    public void fsWriteOperationTLV(byte[] tlvdata, boolean print) throws JposException 
+    {
+        int[] data = new int[1];
+        data[0] = 0;
+        if (print) data[0] = 1;
+        directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_OPERATION_TLV, data, tlvdata);
+    }
+    
+    
     public void fsWriteOperationTag(int tagId, String tagValue) throws Exception {
+        fsWriteOperationTag(tagId, tagValue, true);
+    }
+    
+    public void fsWriteOperationTag(int tagId, String tagValue, boolean print) throws Exception {
         TLVWriter tlv = new TLVWriter();
         tlv.add(tagId, tagValue);
-        fsWriteOperationTLV(tlv.getBytes());
+        fsWriteOperationTLV(tlv.getBytes(), print);
     }
 
     public void fsWriteOperationTag(int tagId, byte[] value) throws Exception {
+        fsWriteOperationTag(tagId, value, true);
+    }
+    
+    public void fsWriteOperationTag(int tagId, byte[] value, boolean print) throws Exception {
         TLVWriter tlv = new TLVWriter();
         tlv.add(tagId, value);
-        fsWriteOperationTLV(tlv.getBytes());
+        fsWriteOperationTLV(tlv.getBytes(), print);
     }
 
     public void fsWriteOperationTag(int tagId, boolean value) throws Exception {
-        fsWriteOperationTag(tagId, value ? 1 : 0, 1);
+        fsWriteOperationTag(tagId, value, true);
+    }
+    
+    public void fsWriteOperationTag(int tagId, boolean value, boolean print) throws Exception {
+        fsWriteOperationTag(tagId, value ? 1 : 0, 1, print);
     }
 
     public void fsWriteOperationTag(int tagId, long value, int length) throws Exception {
+        fsWriteOperationTag(tagId, value, length, true);
+    }
+    
+    public void fsWriteOperationTag(int tagId, long value, int length, boolean print) throws Exception {
         TLVWriter tlv = new TLVWriter();
         tlv.add(tagId, value, length);
-        fsWriteOperationTLV(tlv.getBytes());
+        fsWriteOperationTLV(tlv.getBytes(), print);
     }
 
     public void printDocEnd() throws JposException {

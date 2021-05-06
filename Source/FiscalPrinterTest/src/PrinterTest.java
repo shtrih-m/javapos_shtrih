@@ -1008,7 +1008,9 @@ class PrinterTest implements FiscalPrinterConst {
             //readKMServerStatus();
             //testGetTextLength();
             //printFiscalReceipt145_4();
-            printFiscalReceiptWithTag1222();
+            //printFiscalReceiptWithTag1222();
+            
+            printFiscalReceiptWithTag1225();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3829,6 +3831,28 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecItemAdjustment(1, "", 1041, 2);
             printer.printRecTotal(1379900, 1379900, "1");
             printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void printFiscalReceiptWithTag1225() {
+        try {
+            
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(FPTR_RT_SALES);
+            printer.beginFiscalReceipt(true);
+            
+            
+            TLVWriter writer = new TLVWriter();
+            writer.add(1171, "+79616195832");
+            writer.add(1225, "ТестТест");
+            printer.fsWriteOperationTag(1224, writer.getBytes());
+            printer.fsWriteOperationTag(1226, "3664069397  ", false);
+            printer.printRecItem("Позиция1", 0, 1000, 1, 10000, "0");
+            
+            printer.printRecTotal(10000, 10000, "REC_TOTAL_CASH_DESCRIPTION");
+            printer.endFiscalReceipt(true);    
         } catch (Exception e) {
             e.printStackTrace();
         }

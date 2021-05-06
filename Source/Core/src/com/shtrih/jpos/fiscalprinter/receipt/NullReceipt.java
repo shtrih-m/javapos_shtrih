@@ -198,24 +198,12 @@ public class NullReceipt implements FiscalReceipt {
         notOpenedException();
     }
 
-    public void fsWriteTLV(byte[] data) throws Exception {
+    public void fsWriteTLV(byte[] data, boolean print) throws Exception {
         getPrinter().getPrinter().fsWriteTLV(data);
     }
 
-    public void fsWriteOperationTLV(byte[] data) throws Exception {
+    public void fsWriteOperationTLV(byte[] data, boolean print) throws Exception {
         getPrinter().getPrinter().fsWriteOperationTLV(data);
-    }
-
-    public void fsWriteTag(int tagId, String tagValue) throws Exception {
-        getPrinter().getPrinter().fsWriteTag(tagId, tagValue);
-    }
-
-    public void fsWriteCustomerEmail(String text) throws Exception {
-        notOpenedException();
-    }
-
-    public void fsWriteCustomerPhone(String text) throws Exception {
-        notOpenedException();
     }
 
     public void setDiscountAmount(int amount) throws Exception {
@@ -234,13 +222,13 @@ public class NullReceipt implements FiscalReceipt {
 
     public void setItemBarcode(String barcode) throws Exception {
     }
-    
+
     public void setItemBarcode2(String barcode) throws Exception {
     }
-    
-    public void addItemCode(byte[] mcdata) throws Exception{
+
+    public void addItemCode(byte[] mcdata) throws Exception {
     }
-    
+
     public long getSubtotal() throws Exception {
         return 0;
     }

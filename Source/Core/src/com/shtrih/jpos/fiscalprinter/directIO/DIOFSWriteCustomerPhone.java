@@ -8,7 +8,6 @@ package com.shtrih.jpos.fiscalprinter.directIO;
  *
  * @author V.Kravtsov
  */
-
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.TLVList;
 import com.shtrih.jpos.DIOUtils;
@@ -21,8 +20,13 @@ public class DIOFSWriteCustomerPhone extends DIOItem {
     }
 
     public void execute(int[] data, Object object) throws Exception {
-
-        service.fsWriteCustomerPhone((String)object);
+        boolean print = true;
+        if (data != null) {
+            print = (data[0] == 1);
+        }
+        String text = (String) object;
+        byte[] tlv = getPrinter().getTLVData(1008, text);
+        service.fsWriteTLV(tlv, print);
     }
 
 }

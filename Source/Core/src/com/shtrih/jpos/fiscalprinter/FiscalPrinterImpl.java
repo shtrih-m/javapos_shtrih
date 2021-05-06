@@ -4678,17 +4678,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return printer.getReceiptImages();
     }
 
-    public void fsWriteTLV(byte[] data) throws Exception {
+    public void fsWriteTLV(byte[] data, boolean print) throws Exception {
         logger.debug("fsWriteTLV: " + Hex.toHex(data));
-        receipt.fsWriteTLV(data);
+        receipt.fsWriteTLV(data, print);
     }
 
-    public void fsWriteOperationTLV(byte[] data) throws Exception {
-        receipt.fsWriteOperationTLV(data);
-    }
-
-    public void fsWriteTag(int tagId, String tagValue) throws Exception {
-        receipt.fsWriteTag(tagId, tagValue);
+    public void fsWriteOperationTLV(byte[] data, boolean print) throws Exception {
+        receipt.fsWriteOperationTLV(data, print);
     }
 
     public void disablePrintOnce() throws Exception {
@@ -4706,14 +4702,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         getPrinter().enablePrint();
     }
     
-    public void fsWriteCustomerEmail(String text) throws Exception {
-        receipt.fsWriteCustomerEmail(text);
-    }
-
-    public void fsWriteCustomerPhone(String text) throws Exception {
-        receipt.fsWriteCustomerPhone(text);
-    }
-
     public void fsPrintCalcReport() throws Exception {
         printDocStart();
         FSPrintCalcReport command = new FSPrintCalcReport(printer.getSysPassword());

@@ -242,7 +242,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             FSTLVItem tlvItem = (FSTLVItem) item;
             getDevice().fsWriteTLV(tlvItem.getData());
 
-            if (getParams().FSPrintTags) {
+            if (getParams().FSPrintTags && tlvItem.getPrint()) {
 
                 TLVParser reader = new TLVParser();
                 reader.read(tlvItem.getData());
@@ -720,12 +720,14 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         for (int i = 0; i < item.getTags().size(); i++) {
             FSTLVItem tag = (FSTLVItem) item.getTags().get(i);
 
-            TLVParser reader = new TLVParser();
-            reader.read(tag.getData());
-            Vector<String> lines = reader.getPrintText();
+            if (tag.getPrint()) {
+                TLVParser reader = new TLVParser();
+                reader.read(tag.getData());
+                Vector<String> lines = reader.getPrintText();
 
-            for (String line : lines) {
-                getDevice().printText(SMFP_STATION_REC, line, tag.getFont());
+                for (String line : lines) {
+                    getDevice().printText(SMFP_STATION_REC, line, tag.getFont());
+                }
             }
         }
     }
@@ -1348,10 +1350,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
         private byte[] data;
         private FontNumber font;
+        private boolean print;
 
-        public FSTLVItem(byte[] data, FontNumber font) {
+        public FSTLVItem(byte[] data, FontNumber font, boolean print) {
             this.data = data;
             this.font = font;
+            this.print = print;
         }
 
         public void setData(byte[] data) {
@@ -1365,38 +1369,22 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         public FontNumber getFont() {
             return font;
         }
+
+        public boolean getPrint() {
+            return print;
+        }
     }
 
-    public void fsWriteTLV(byte[] data) throws Exception {
-        items.add(new FSTLVItem(data, getParams().getFont()));
+    public void fsWriteTLV(byte[] data, boolean print) throws Exception {
+        items.add(new FSTLVItem(data, getParams().getFont(), print));
     }
 
-    public void fsWriteOperationTLV(byte[] data) throws Exception {
-        FSTLVItem item = new FSTLVItem(data, getParams().getFont());
+    public void fsWriteOperationTLV(byte[] data, boolean print) throws Exception {
+        FSTLVItem item = new FSTLVItem(data, getParams().getFont(), print);
         if (getDevice().getCapOperationTagsFirst()) {
             itemTags.add(item);
         } else {
             getLastItem().getTags().add(item);
-        }
-    }
-
-    private void fsWriteTag2(int tagId, String tagValue) throws Exception {
-        fsWriteTLV(getDevice().getTLVData(tagId, tagValue));
-    }
-
-    public void fsWriteTag(int tagId, String tagValue) throws Exception {
-        fsWriteTag2(tagId, tagValue);
-    }
-
-    public void fsWriteCustomerEmail(String text) throws Exception {
-        if (!text.isEmpty()) {
-            fsWriteTag2(1008, text);
-        }
-    }
-
-    public void fsWriteCustomerPhone(String text) throws Exception {
-        if (!text.isEmpty()) {
-            fsWriteTag2(1008, text);
         }
     }
 
@@ -1476,3 +1464,27 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         itemCodes.add(mcdata);
     }
 }
+
+/*
+ private void fsWriteTag2(int tagId, String tagValue) throws Exception {
+ fsWriteTLV(getDevice().getTLVData(tagId, tagValue));
+ }
+
+ public void fsWriteTag(int tagId, String tagValue) throws Exception {
+ fsWriteTag2(tagId, tagValue);
+ }
+
+ public void fsWriteCustomerEmail(String text) throws Exception {
+ if (!text.isEmpty()) {
+ fsWriteTag2(1008, text);
+ }
+ }
+
+ public void fsWriteCustomerPhone(String text) throws Exception {
+ if (!text.isEmpty()) {
+ fsWriteTag2(1008, text);
+ }
+ }
+
+
+ */

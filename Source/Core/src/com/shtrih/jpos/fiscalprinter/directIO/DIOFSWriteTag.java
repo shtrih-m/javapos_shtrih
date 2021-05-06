@@ -8,7 +8,6 @@ package com.shtrih.jpos.fiscalprinter.directIO;
  *
  * @author V.Kravtsov
  */
-
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.TLVList;
 import com.shtrih.jpos.DIOUtils;
@@ -24,8 +23,13 @@ public class DIOFSWriteTag extends DIOItem {
 
         DIOUtils.checkDataMinLength(data, 1);
         int tagId = data[0];
-        String tagValue = (String)object;
-        service.fsWriteTag(tagId, tagValue);
+        boolean print = true;
+        if (data.length > 1){
+            print = data[1] == 1;
+        }
+        String tagValue = (String) object;
+        byte[] tlv = getPrinter().getTLVData(tagId, tagValue);
+        service.fsWriteTLV(tlv, print);
     }
 
 }
