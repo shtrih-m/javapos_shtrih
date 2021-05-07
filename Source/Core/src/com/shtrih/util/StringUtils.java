@@ -148,23 +148,19 @@ public class StringUtils {
          return result;
     }
 
-    public static String quantityToStr2(long value) throws Exception {
-        if ((value % 1000) == 0) {
-            return String.valueOf(Math.abs(value) / 1000);
-        } else {
-            return StringUtils.quantityToString(value / 1000.0);
-        }
+    public static String quantityToStr2(double value) throws Exception {
+        return StringUtils.quantityToString(value);
     }
 
-    public static String quantityToStr(long value) throws Exception {
-        return StringUtils.quantityToString(Math.abs(value) / 1000.0);
+    public static String quantityToStr(double value) throws Exception {
+        return StringUtils.quantityToString(Math.abs(value));
     }
 
     public static String quantityToString(double value) {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(
                 Locale.getDefault());
         symbols.setDecimalSeparator('.');
-        DecimalFormat formatter = new DecimalFormat("0.000", symbols);
+        DecimalFormat formatter = new DecimalFormat("0.000000", symbols);
         return formatter.format(Math.abs(value));
     }
 

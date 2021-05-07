@@ -119,7 +119,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void printRecItem(String description, long price, int quantity,
+    public void printRecItem(String description, long price, double quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
         openReceipt(true);
         printSale(price, quantity, unitPrice, getParams().department,
@@ -213,11 +213,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             if (object instanceof FSSaleReceiptItem) {
                 FSSaleReceiptItem item = (FSSaleReceiptItem) object;
                 item.updatePrice();
-                FSSaleReceiptItem splitItem = item.getSplittedItem();
-                if (splitItem != null) {
-                    items.insertElementAt(splitItem, i + 1);
-                    i++;
-                }
             }
         }
         int pos = 1;
@@ -761,7 +756,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printRecRefund(String description, long amount, int vatInfo)
             throws Exception {
         openReceipt(false);
-        printSale(amount, 1000, amount, getParams().department, vatInfo,
+        printSale(amount, 1, amount, getParams().department, vatInfo,
                 description, "");
     }
 
@@ -785,7 +780,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         clearPrePostLine();
     }
 
-    public void printRecItemVoid(String description, long price, int quantity,
+    public void printRecItemVoid(String description, long price, double quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
         openReceipt(false);
         printStorno(price, quantity, unitPrice, getParams().department,
@@ -874,10 +869,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void printRecVoidItem(String description, long amount, int quantity,
+    public void printRecVoidItem(String description, long amount, double quantity,
             int adjustmentType, long adjustment, int vatInfo) throws Exception {
         openReceipt(false);
-        long total = Math.round(amount * quantity / 1000.0);
+        long total = Math.round(amount * quantity);
         printStorno(total, quantity, amount, getParams().department, vatInfo,
                 description);
     }
@@ -886,7 +881,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             throws Exception {
         openReceipt(false);
 
-        printStorno(amount, 1000, 0, getParams().department, vatInfo,
+        printStorno(amount, 1.0, 0, getParams().department, vatInfo,
                 description);
 
     }
@@ -1003,7 +998,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printRecItemRefund(String description, long amount,
-            int quantity, int vatInfo, long unitAmount, String unitName)
+            double quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
         openReceipt(false);
         printSale(amount, quantity, unitAmount, getParams().department, vatInfo,
@@ -1012,7 +1007,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printRecItemRefundVoid(String description, long amount,
-            int quantity, int vatInfo, long unitAmount, String unitName)
+            double quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
         openReceipt(true);
         printStorno(amount, quantity, unitAmount, getParams().department, vatInfo,
@@ -1058,47 +1053,43 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         return result;
     }
 
-    private long correctQuantity(long price, long quantity, long unitPrice) {
+    private double correctQuantity(long price, double quantity, long unitPrice) {
         if (!getParams().quantityCorrectionEnabled) {
             return quantity;
         }
 
-        for (;;) {
-            double d = unitPrice * quantity;
-            long amount = Math.round(d / 1000.0);
-            if (amount >= price) {
-                break;
-            }
-            quantity = quantity + 1;
+        long amount = Math.round(unitPrice * quantity);
+        if (amount != price) {
+            quantity = amount / unitPrice;
         }
         return quantity;
     }
 
-    public void printStorno(long price, long quantity, long unitPrice,
+    public void printStorno(long price, double quantity, long unitPrice,
             int department, int vatInfo, String description) throws Exception {
         if (unitPrice == 0) {
             if (price != 0) {
-                quantity = 1000;
+                quantity = 1;
                 unitPrice = price;
             }
         } else if (quantity == 0) {
-            quantity = 1000;
+            quantity = 1;
         }
         doPrintSale(price, quantity, unitPrice, department, vatInfo,
                 description, "", true);
 
     }
 
-    public void printSale(long price, long quantity, long unitPrice,
+    public void printSale(long price, double quantity, long unitPrice,
             int department, int vatInfo, String description,
             String unitName) throws Exception {
         if (unitPrice == 0) {
             if (price != 0) {
-                quantity = 1000;
+                quantity = 1.0;
                 unitPrice = price;
             }
         } else if (quantity == 0) {
-            quantity = 1000;
+            quantity = 1.0;
         }
 
         quantity = correctQuantity(price, quantity, unitPrice);
@@ -1106,7 +1097,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         doPrintSale(price, quantity, unitPrice, department, vatInfo, description, unitName, false);
     }
 
-    public void doPrintSale(long price, long quantity, long unitPrice,
+    public void doPrintSale(long price, double quantity, long unitPrice,
             int department, int vatInfo, String description, String unitName,
             boolean isStorno) throws Exception {
         logger.debug(
@@ -1118,8 +1109,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             vatInfo = 4;
         }
 
-        double d = unitPrice * Math.abs(quantity);
-        long amount = getParams().itemTotalAmount == null ? Math.round((d / 1000.0)) : getParams().itemTotalAmount;
+        long amount = getParams().itemTotalAmount == null ? Math.round(unitPrice * quantity) : getParams().itemTotalAmount;
         FSSaleReceiptItem item = null;
         if (getParams().combineReceiptItems) {
             item = findItem(unitPrice, description);

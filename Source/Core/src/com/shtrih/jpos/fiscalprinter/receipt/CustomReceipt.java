@@ -100,7 +100,7 @@ public abstract class CustomReceipt implements FiscalReceipt {
     public void endFiscalReceipt(boolean printHeader) throws Exception {
     }
 
-    public void printRecItem(String description, long price, int quantity,
+    public void printRecItem(String description, long price, double quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
         notSupported();
     }
@@ -138,7 +138,7 @@ public abstract class CustomReceipt implements FiscalReceipt {
         cancelled = true;
     }
 
-    public void printRecVoidItem(String description, long amount, int quantity,
+    public void printRecVoidItem(String description, long amount, double quantity,
             int adjustmentType, long adjustment, int vatInfo) throws Exception {
         notSupported();
     }
@@ -147,7 +147,7 @@ public abstract class CustomReceipt implements FiscalReceipt {
         notSupported();
     }
 
-    public void printRecItemFuel(String description, long price, int quantity,
+    public void printRecItemFuel(String description, long price, double quantity,
             int vatInfo, long unitPrice, String unitName, long specialTax,
             String specialTaxName) throws Exception {
         notSupported();
@@ -182,7 +182,7 @@ public abstract class CustomReceipt implements FiscalReceipt {
         notSupported();
     }
 
-    public void printRecItemVoid(String description, long price, int quantity,
+    public void printRecItemVoid(String description, long price, double quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
         notSupported();
     }
@@ -193,13 +193,13 @@ public abstract class CustomReceipt implements FiscalReceipt {
     }
 
     public void printRecItemRefund(String description, long amount,
-            int quantity, int vatInfo, long unitAmount, String unitName)
+            double quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
         notSupported();
     }
 
     public void printRecItemRefundVoid(String description, long amount,
-            int quantity, int vatInfo, long unitAmount, String unitName)
+            double quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
         notSupported();
     }

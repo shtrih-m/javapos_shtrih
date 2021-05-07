@@ -1150,7 +1150,7 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
-    public void checkItemCode(byte[] data, boolean isSale, long quantity) throws Exception {
+    public void checkItemCode(byte[] data, boolean isSale, double quantity) throws Exception {
     }
 
     public int fsBindMC(FSBindMC command) throws Exception {

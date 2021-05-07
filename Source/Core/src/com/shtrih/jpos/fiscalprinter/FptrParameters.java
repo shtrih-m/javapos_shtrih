@@ -588,16 +588,8 @@ public class FptrParameters {
         postLine = "";
     }
 
-    public String quantityToStr(long value, String unitName) throws Exception {
-        value = Math.abs(value);
-
-        String result;
-        if (((value % 1000) == 0) && (!unitName.equalsIgnoreCase(weightUnitName))) {
-            result = String.valueOf(value / 1000);
-        } else {
-            result = StringUtils.quantityToString(value / 1000.0);
-        }
-        return result;
+    public String quantityToStr(double value, String unitName) throws Exception {
+        return StringUtils.quantityToString(Math.abs(value));
     }
 
     public boolean isDriverHeader() {

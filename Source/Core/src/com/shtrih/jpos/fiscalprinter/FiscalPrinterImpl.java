@@ -419,8 +419,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         jrnNearEnd = false;
         predefinedPaymentLines = "";
         printerState.setValue(FPTR_PS_MONITOR);
-        quantityDecimalPlaces = 3;
-        quantityLength = 10;
+        quantityDecimalPlaces = 6;
+        quantityLength = 15;
         recEmpty = false;
         recNearEnd = false;
         reservedWord = "";
@@ -3286,8 +3286,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return Math.abs((long) (value * params.amountFactor));
     }
 
-    private int convertQuantity(int value) {
-        return (int) (value * params.quantityFactor);
+    private double convertQuantity(int value) {
+        return value * params.quantityFactor / 1000000.0;
     }
 
     public void printRecItemAsync(String description, long price, int quantity,
@@ -3296,7 +3296,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         description = decodeText(description);
         price = convertAmount(price);
         unitPrice = convertAmount(unitPrice);
-        quantity = convertQuantity(quantity);
 
         checkEnabled();
         checkReceiptStation();
@@ -3305,7 +3304,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkPrice(unitPrice);
         checkVatInfo(vatInfo);
         description = updateDescription(description);
-        receipt.printRecItem(description, price, quantity, vatInfo, unitPrice, unitName);
+        receipt.printRecItem(description, price, convertQuantity(quantity), vatInfo, unitPrice, unitName);
     }
 
     public String updateDescription(String description) throws Exception {
@@ -3547,7 +3546,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkEnabled();
         description = decodeText(description);
         amount = convertAmount(amount);
-        quantity = convertQuantity(quantity);
 
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
         checkQuantity(quantity);
@@ -3557,8 +3555,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             quantity = 1000;
         }
 
-        receipt.printRecVoidItem(description, amount, quantity, adjustmentType,
-                adjustment, vatInfo);
+        receipt.printRecVoidItem(description, amount, convertQuantity(quantity), 
+                adjustmentType, adjustment, vatInfo);
     }
 
     /*
@@ -4100,7 +4098,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             int quantity, int vatInfo, long unitPrice, String unitName)
             throws Exception {
         price = convertAmount(price);
-        quantity = convertQuantity(quantity);
         unitPrice = convertAmount(unitPrice);
         description = decodeText(description);
         unitName = decodeText(unitName);
@@ -4110,8 +4107,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkVatInfo(vatInfo);
 
         description = updateDescription(description);
-        receipt.printRecItemVoid(description, price, quantity, vatInfo,
-                unitPrice, unitName);
+        receipt.printRecItemVoid(description, price, convertQuantity(quantity), 
+                vatInfo, unitPrice, unitName);
     }
 
     public void printRecItemVoid(String description, long price, int quantity,
@@ -4382,7 +4379,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         description = decodeText(description);
         amount = convertAmount(amount);
         unitAmount = convertAmount(unitAmount);
-        quantity = convertQuantity(quantity);
 
         checkEnabled();
         checkReceiptStation();
@@ -4392,8 +4388,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkVatInfo(vatInfo);
 
         description = updateDescription(description);
-        receipt.printRecItemRefund(description, amount, quantity, vatInfo,
-                unitAmount, unitName);
+        receipt.printRecItemRefund(description, amount, convertQuantity(quantity), 
+                vatInfo, unitAmount, unitName);
     }
 
     public void printRecItemRefundVoid(String description, long amount,
@@ -4413,7 +4409,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
         amount = convertAmount(amount);
-        quantity = convertQuantity(quantity);
         unitAmount = convertAmount(unitAmount);
         description = decodeText(description);
         unitName = decodeText(unitName);
@@ -4423,8 +4418,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkVatInfo(vatInfo);
 
         description = updateDescription(description);
-        receipt.printRecItemRefundVoid(description, amount, quantity, vatInfo,
-                unitAmount, unitName);
+        receipt.printRecItemRefundVoid(description, amount, 
+                convertQuantity(quantity), vatInfo, unitAmount, unitName);
     }
 
     public void saveXmlZReport(String fileName) throws JposException {

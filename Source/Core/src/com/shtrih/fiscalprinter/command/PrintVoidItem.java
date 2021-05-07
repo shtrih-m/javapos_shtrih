@@ -48,7 +48,7 @@ public final class PrintVoidItem extends PrinterCommand {
     public final void encode(CommandOutputStream out) throws Exception {
 
         out.writeInt(getPassword());
-        out.writeLong(getItem().getQuantity(), 5);
+        out.writeLong(Math.round(getItem().getQuantity() * 1000.0), 5);
         out.writeLong(getItem().getPrice(), 5);
         out.writeByte(getItem().getDepartment());
         out.writeByte(getItem().getTax1());

@@ -31,7 +31,7 @@ public class DIOCheckItemCode extends DIOItem {
             isSale = !(lines[1].equalsIgnoreCase("0"));
             quantity = Long.parseLong(lines[2]);
         }
-        getPrinter().checkItemCode(barcode.getBytes(), isSale, quantity);
+        getPrinter().checkItemCode(barcode.getBytes(), isSale, quantity / 1000.0);
     }
 
 }

@@ -1175,7 +1175,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public int fsPrintRecItem2(int operation, PriceItem item) throws Exception {
         FSReceiptItem fsReceiptItem = new FSReceiptItem();
         fsReceiptItem.setOperation(operation);
-        fsReceiptItem.setQuantity(item.getQuantity() * 1000);
+        fsReceiptItem.setQuantity(Math.round(item.getQuantity() * 1000000.0));
         fsReceiptItem.setPrice(item.getPrice());
         fsReceiptItem.setAmount(item.getTotalAmount() == null ? 0xFFFFFFFFFFL : item.getTotalAmount());
         fsReceiptItem.setTaxAmount(item.getTaxAmount() == null ? 0L : item.getTaxAmount());
@@ -1196,7 +1196,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void checkItemCode(byte[] data, boolean isSale,
-            long quantity) throws Exception {
+            double quantity) throws Exception {
         if (data == null) {
             return;
         }
@@ -1204,7 +1204,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             return;
         }
 
-        boolean isPeace = (quantity == 1000);
+        boolean isPeace = (((long)(quantity * 1000)) == 0);
         int itemStatus = FSCheckMC.FS_ITEM_STATUS_NOCHANGE;
         if (isSale) {
             if (isPeace) {

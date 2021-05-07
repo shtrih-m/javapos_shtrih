@@ -90,17 +90,17 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         endSeparatorPrinted = false;
     }
 
-    public void printRecItem(String description, long price, int quantity,
+    public void printRecItem(String description, long price, double quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
 
         doOpenReceipt();
         printPreLine();
-        // if unitPrice is zero then we use price and quantity = 1000
+        // if unitPrice is zero then we use price and quantity = 1
         if (unitPrice == 0) {
-            quantity = 1000;
+            quantity = 1.0;
         } else {
             if (quantity == 0) {
-                quantity = 1000;
+                quantity = 1.0;
             }
             price = unitPrice;
         }
@@ -136,7 +136,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         return StringUtils.alignLines(line1, line2, getPrinter().getTextLength());
     }
 
-    public void printReceiptItem(String description, long price, long quantity,
+    public void printReceiptItem(String description, long price, double quantity,
             int vatInfo) throws Exception {
         price = Math.abs(price);
         quantity = Math.abs(quantity);
@@ -169,7 +169,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         getPrinter().printText(text);
     }
 
-    public void printReceiptItemVoid(String description, long price, long quantity,
+    public void printReceiptItemVoid(String description, long price, double quantity,
             int vatInfo) throws Exception {
         price = Math.abs(price);
         quantity = Math.abs(quantity);
@@ -265,7 +265,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         updateRecType();
         doOpenReceipt();
         printPreLine();
-        printReceiptItem(description, amount, 1000, vatInfo);
+        printReceiptItem(description, amount, 1, vatInfo);
         getPrinter().printPostLine();
     }
 
@@ -282,7 +282,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         getPrinter().printPostLine();
     }
 
-    public void printRecItemVoid(String description, long price, int quantity,
+    public void printRecItemVoid(String description, long price, double quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
         doOpenReceipt();
         // checkPrice(price);
@@ -291,10 +291,10 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         checkVatInfo(vatInfo);
 
         if (unitPrice == 0) {
-            quantity = 1000;
+            quantity = 1;
         } else {
             if (quantity == 0) {
-                quantity = 1000;
+                quantity = 1;
             }
             price = unitPrice;
         }
@@ -362,13 +362,13 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         getPrinter().printPostLine();
     }
 
-    public void printRecVoidItem(String description, long amount, int quantity,
+    public void printRecVoidItem(String description, long amount, double quantity,
             int adjustmentType, long adjustment, int vatInfo) throws Exception {
         doOpenReceipt();
         checkAmount(amount);
         checkVatInfo(vatInfo);
         if (quantity <= 0) {
-            quantity = 1000;
+            quantity = 1;
         }
         printReceiptItemVoid(description, amount, quantity, vatInfo);
     }
@@ -378,7 +378,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         doOpenReceipt();
         checkAmount(amount);
         checkVatInfo(vatInfo);
-        printReceiptItemVoid(description, amount, 1000, vatInfo);
+        printReceiptItemVoid(description, amount, 1, vatInfo);
     }
 
     public void printRecPackageAdjustment(int adjustmentType,
@@ -461,21 +461,21 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printRecItemRefund(String description, long amount,
-            int quantity, int vatInfo, long unitAmount, String unitName)
+            double quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
         checkAmount(amount);
         checkAmount(unitAmount);
         // checkQuantity(quantity);
         checkVatInfo(vatInfo);
 
-        long itemQuantity;
+        double itemQuantity;
         long itemPrice;
         if ((unitAmount == 0) || (quantity == 0)) {
-            itemQuantity = 1000;
+            itemQuantity = 1;
             itemPrice = amount;
         } else {
             if (quantity == 0) {
-                quantity = 1000;
+                quantity = 1;
             }
             itemQuantity = quantity;
             itemPrice = unitAmount;
@@ -487,7 +487,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printRecItemRefundVoid(String description, long price,
-            int quantity, int vatInfo, long unitPrice, String unitName)
+            double quantity, int vatInfo, long unitPrice, String unitName)
             throws Exception {
         checkAmount(price);
         checkAmount(unitPrice);
@@ -495,10 +495,10 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         checkVatInfo(vatInfo);
 
         if (unitPrice == 0) {
-            quantity = 1000;
+            quantity = 1;
         } else {
             if (quantity == 0) {
-                quantity = 1000;
+                quantity = 1;
             }
             price = unitPrice;
         }
@@ -518,7 +518,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         return getReceipt().isPayed();
     }
 
-    public void printStorno(long price, int quantity, int department,
+    public void printStorno(long price, double quantity, int department,
             int vatInfo, String description) throws Exception {
         PriceItem item = new PriceItem();
         item.setPrice(price);
@@ -600,7 +600,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         if (getReceipt().getTotal() == 0) {
             PriceItem item = new PriceItem();
             item.setPrice(0);
-            item.setQuantity(1000);
+            item.setQuantity(1);
             item.setDepartment(getParams().department);
             item.setTax1(0);
             item.setTax2(0);
@@ -616,7 +616,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
                         Math.abs(getReceipt().getDiscountAmount(i));
                 PriceItem item = new PriceItem();
                 item.setPrice(Math.abs(amount));
-                item.setQuantity(1000);
+                item.setQuantity(1);
                 item.setDepartment(getParams().department);
                 item.setTax1(i);
                 item.setTax2(0);

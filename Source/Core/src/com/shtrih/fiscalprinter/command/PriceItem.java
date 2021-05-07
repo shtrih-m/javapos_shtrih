@@ -18,7 +18,7 @@ import com.shtrih.util.MethodParameter;
 public class PriceItem {
 
     private long price;
-    private long quantity;
+    private double quantity;
     private int department;
     private int tax1;
     private int tax2;
@@ -41,7 +41,7 @@ public class PriceItem {
         return price;
     }
 
-    public long getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
 
@@ -84,9 +84,8 @@ public class PriceItem {
      * @param quantity
      * the quantity to set
      */
-    public void setQuantity(long quantity) throws Exception {
+    public void setQuantity(double quantity) throws Exception {
         quantity = Math.abs(quantity);
-        MethodParameter.checkRange(price, 0, 0xFFFFFFFFFFL, "price");
         this.quantity = quantity;
     }
 

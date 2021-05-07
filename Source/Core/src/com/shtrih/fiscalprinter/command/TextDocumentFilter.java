@@ -382,8 +382,8 @@ public class TextDocumentFilter implements IPrinterEvents {
         return String.format("%d.%02d", value / 100, value % 100);
     }
 
-    private String quantityToStr(long value) {
-        return String.format("%d.%03d", value / 1000, value % 1000);
+    private String quantityToStr(double value) {
+        return String.format("%.6f", value);
     }
 
     public String getTaxData(int tax1, int tax2, int tax3, int tax4) throws Exception {
@@ -407,9 +407,8 @@ public class TextDocumentFilter implements IPrinterEvents {
         return result;
     }
 
-    private String summToStr(long price, long quantity) {
-        long amount = Math.round(quantity / 1000.0d * price);
-        return summToStr(amount);
+    private String summToStr(long price, double quantity) {
+        return summToStr(Math.round(quantity * price));
     }
 
     private String summToStr(long amount) {
@@ -419,7 +418,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     private void printReceiptItem(PriceItem item) throws Exception {
         String line = "";
         add(item.getText());
-        if (item.getQuantity() != 1000) {
+        if (item.getQuantity() != 1.0) {
             line = String.format("%s X %s", quantityToStr(item.getQuantity()), amountToStr(item.getPrice()));
             add("", line);
 
@@ -427,7 +426,7 @@ public class TextDocumentFilter implements IPrinterEvents {
                     + getTaxData(item.getTax1(), item.getTax2(), item.getTax3(), item.getTax4());
             add(String.format("%02d", item.getDepartment()), line);
         } else {
-            long amount = Math.round(item.getQuantity() / 1000 * item.getPrice());
+            long amount = Math.round(item.getQuantity() * item.getPrice());
             line = "=" + amountToStr(amount)
                     + getTaxData(item.getTax1(), item.getTax2(), item.getTax3(), item.getTax4());
             add(String.format("%02d", item.getDepartment()), line);
@@ -438,12 +437,10 @@ public class TextDocumentFilter implements IPrinterEvents {
         String line = "";
         add(item.getText());
 
-        long qty = item.getQuantity() / 1000;
-
-        line = String.format("%s X %s", quantityToStr(qty), amountToStr(item.getPrice()));
+        line = String.format("%s X %s", quantityToStr(item.getQuantity()), amountToStr(item.getPrice()));
         add("", line);
 
-        line = summToStr(item.getPrice(), qty)
+        line = summToStr(item.getPrice(), item.getQuantity())
                 + getTaxData(taxBitsToInt(item.getTax()), 0, 0, 0);
         add(String.format("%02d", item.getDepartment()), line);
     }

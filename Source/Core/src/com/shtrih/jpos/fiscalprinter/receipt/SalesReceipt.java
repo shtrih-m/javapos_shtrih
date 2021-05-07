@@ -78,33 +78,32 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void printRecItem(String description, long price, int quantity,
+    public void printRecItem(String description, long price, double quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
 
         openReceipt(true);
         getPrinter().printPreLine();
-        // if unitPrice is zero then we use price and quantity = 1000
+        // if unitPrice is zero then we use price and quantity = 1
         long itemPrice = price;
         if (unitPrice == 0) {
-            quantity = 1000;
+            quantity = 1;
         } else {
             if (quantity == 0) {
-                quantity = 1000;
+                quantity = 1;
             }
             itemPrice = unitPrice;
         }
         description = getPrinter().printDescription(description);
         printReceiptItem(description, itemPrice, quantity, vatInfo);
 
-        double d = unitPrice * Math.abs(quantity);
-        long amount = Math.round((d / 1000.0));
+        long amount = Math.round(unitPrice * Math.abs(quantity));
         if (amount > price) {
             printDiscount(amount - price, vatInfo, "");
         }
         getPrinter().printPostLine();
     }
 
-    public void printReceiptItem(String description, long price, int quantity,
+    public void printReceiptItem(String description, long price, double quantity,
             int vatInfo) throws Exception {
         switch (receiptType) {
             case PrinterConst.SMFP_RECTYPE_SALE:
@@ -167,7 +166,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         openReceipt(false);
         getPrinter().printPreLine();
         description = getPrinter().printDescription(description);
-        printReceiptItem(description, amount, 1000, vatInfo);
+        printReceiptItem(description, amount, 1, vatInfo);
     }
 
     public void printRecTotal(long total, long payment, long payType,
@@ -179,16 +178,16 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         getPrinter().printPostLine();
     }
 
-    public void printRecItemVoid(String description, long price, int quantity,
+    public void printRecItemVoid(String description, long price, double quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
         openReceipt(false);
         getPrinter().printPreLine();
-        // if unitPrice is zero - use price and quantity = 1000
+        // if unitPrice is zero - use price and quantity = 1
         if (unitPrice == 0) {
-            quantity = 1000;
+            quantity = 1;
         } else {
             if (quantity == 0) {
-                quantity = 1000;
+                quantity = 1;
             }
             price = unitPrice;
         }
@@ -276,7 +275,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         getPrinter().printPostLine();
     }
 
-    public void printRecVoidItem(String description, long amount, int quantity,
+    public void printRecVoidItem(String description, long amount, double quantity,
             int adjustmentType, long adjustment, int vatInfo) throws Exception {
         openReceipt(false);
         description = getPrinter().printDescription(description);
@@ -288,7 +287,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
             throws Exception {
         openReceipt(true);
         description = getPrinter().printDescription(description);
-        printStorno(amount, 1000, getParams().department, vatInfo,
+        printStorno(amount, 1, getParams().department, vatInfo,
                 description);
     }
 
@@ -439,16 +438,16 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printRecItemRefund(String description, long amount,
-            int quantity, int vatInfo, long unitAmount, String unitName)
+            double quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
         openReceipt(false);
         getPrinter().printPreLine();
-        // if unitPrice is zero then we use price and quantity = 1000
+        // if unitPrice is zero then we use price and quantity = 1
         if (unitAmount == 0) {
-            quantity = 1000;
+            quantity = 1;
         } else {
             if (quantity == 0) {
-                quantity = 1000;
+                quantity = 1;
             }
             amount = unitAmount;
         }
@@ -458,16 +457,16 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printRecItemRefundVoid(String description, long amount,
-            int quantity, int vatInfo, long unitAmount, String unitName)
+            double quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
         openReceipt(true);
         getPrinter().printPreLine();
-        // if unitPrice is zero - use price and quantity = 1000
+        // if unitPrice is zero - use price and quantity = 1
         if (unitAmount == 0) {
-            quantity = 1000;
+            quantity = 1;
         } else {
             if (quantity == 0) {
-                quantity = 1000;
+                quantity = 1;
             }
             amount = unitAmount;
         }
@@ -486,7 +485,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         return getReceipt().isPayed();
     }
 
-    public void printSale(long price, long quantity, int department,
+    public void printSale(long price, double quantity, int department,
             int vatInfo, String description) throws Exception {
         PriceItem item = new PriceItem();
         item.setPrice(price);
@@ -502,7 +501,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         getReceipt().printSale(item);
     }
 
-    public void printVoidSale(long price, long quantity, int department,
+    public void printVoidSale(long price, double quantity, int department,
             int vatInfo, String description) throws Exception {
         PriceItem item = new PriceItem();
         item.setPrice(price);
@@ -517,7 +516,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         getReceipt().printSaleRefund(item);
     }
 
-    public void printRefund(long price, long quantity, int department,
+    public void printRefund(long price, double quantity, int department,
             int vatInfo, String description) throws Exception {
         PriceItem item = new PriceItem();
         item.setPrice(price);
@@ -532,7 +531,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         getReceipt().printSaleRefund(item);
     }
 
-    public void printVoidRefund(long price, long quantity, int department,
+    public void printVoidRefund(long price, double quantity, int department,
             int vatInfo, String description) throws Exception {
         PriceItem item = new PriceItem();
         item.setPrice(price);
@@ -547,7 +546,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         getReceipt().printSale(item);
     }
 
-    public void printStorno(long price, int quantity, int department,
+    public void printStorno(long price, double quantity, int department,
             int vatInfo, String description) throws Exception {
         long vatAmount = PrinterAmount.getAmount(price, quantity);
         if ((vatInfo == 0) || (vatAmount <= vatAmounts[vatInfo])) {

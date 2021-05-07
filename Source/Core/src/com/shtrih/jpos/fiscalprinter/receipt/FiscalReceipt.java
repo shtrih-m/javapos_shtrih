@@ -29,7 +29,7 @@ public interface FiscalReceipt {
 
     public void endFiscalReceipt(boolean printHeader) throws Exception;
 
-    public void printRecItem(String description, long price, int quantity,
+    public void printRecItem(String description, long price, double quantity,
                              int vatInfo, long unitPrice, String unitName) throws Exception;
 
     public void printRecItemAdjustment(int adjustmentType, String description,
@@ -54,12 +54,12 @@ public interface FiscalReceipt {
 
     public void printRecVoid(String description) throws Exception;
 
-    public void printRecVoidItem(String description, long amount, int quantity,
+    public void printRecVoidItem(String description, long amount, double quantity,
                                  int adjustmentType, long adjustment, int vatInfo) throws Exception;
 
     public void printRecCash(long amount) throws Exception;
 
-    public void printRecItemFuel(String description, long price, int quantity,
+    public void printRecItemFuel(String description, long price, double quantity,
                                  int vatInfo, long unitPrice, String unitName, long specialTax,
                                  String specialTaxName) throws Exception;
 
@@ -80,18 +80,18 @@ public interface FiscalReceipt {
 
     public void printRecTaxID(String taxID) throws Exception;
 
-    public void printRecItemVoid(String description, long price, int quantity,
+    public void printRecItemVoid(String description, long price, double quantity,
                                  int vatInfo, long unitPrice, String unitName) throws Exception;
 
     public void printRecItemAdjustmentVoid(int adjustmentType,
                                            String description, long amount, int vatInfo) throws Exception;
 
     public void printRecItemRefund(String description, long amount,
-                                   int quantity, int vatInfo, long unitAmount, String unitName)
+                                   double quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception;
 
     public void printRecItemRefundVoid(String description, long amount,
-                                       int quantity, int vatInfo, long unitAmount, String unitName)
+                                       double quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception;
 
     public void printNormal(int station, String data) throws Exception;

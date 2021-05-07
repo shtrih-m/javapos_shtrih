@@ -652,7 +652,7 @@ public interface SMFiscalPrinter {
 
     public int sendItemCode(byte[] data) throws Exception;
 
-    public void checkItemCode(byte[] data, boolean isSale, long quantity) throws Exception;
+    public void checkItemCode(byte[] data, boolean isSale, double quantity) throws Exception;
     
     public int fsBindMC(FSBindMC command) throws Exception;
 

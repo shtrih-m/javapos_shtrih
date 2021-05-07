@@ -94,7 +94,7 @@ public final class SlipPrintItem extends PrinterCommand {
         // line
         out.writeByte(line);
         // item
-        out.writeLong(item.getQuantity(), 5);
+        out.writeLong(Math.round(item.getQuantity() * 1000.0), 5);
         out.writeLong(item.getPrice(), 5);
         out.writeByte(item.getDepartment());
         out.writeByte(item.getTax1());

@@ -11,7 +11,7 @@ public class PrinterAmount {
     private PrinterAmount() {
     }
 
-    public static long getAmount(long price, long quantity) {
-        return Math.round((price * Math.abs(quantity)) / 1000.0);
+    public static long getAmount(long price, double quantity) {
+        return Math.round(price * Math.abs(quantity));
     }
 }
