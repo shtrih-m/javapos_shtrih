@@ -5,7 +5,7 @@
  */
 package com.shtrih.jpos.fiscalprinter.directIO;
 
-import com.shtrih.fiscalprinter.TLVParser;
+import com.shtrih.fiscalprinter.TLVReader;
 import com.shtrih.fiscalprinter.command.FSDocType;
 import com.shtrih.fiscalprinter.command.FSFindDocument;
 import com.shtrih.fiscalprinter.command.FSReadDocument;
@@ -13,7 +13,6 @@ import com.shtrih.fiscalprinter.command.FSReadStatus;
 import com.shtrih.jpos.DIOUtils;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import java.io.ByteArrayOutputStream;
-import com.shtrih.fiscalprinter.TLVItems;
 import java.util.Vector;
 import com.shtrih.fiscalprinter.command.FSDocumentReceipt;
 import com.shtrih.util.StringUtils;

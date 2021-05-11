@@ -42,10 +42,9 @@ import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
 import com.shtrih.fiscalprinter.SmFiscalPrinterException;
-import com.shtrih.fiscalprinter.TLVItem;
-import com.shtrih.fiscalprinter.TLVItems;
-import com.shtrih.fiscalprinter.TLVParser;
 import com.shtrih.fiscalprinter.TLVTag;
+import com.shtrih.fiscalprinter.TLVItem;
+import com.shtrih.fiscalprinter.TLVReader;
 import com.shtrih.fiscalprinter.command.BeginNonFiscalDocument;
 import com.shtrih.fiscalprinter.command.CloseNonFiscal;
 import com.shtrih.fiscalprinter.command.DeviceMetrics;
@@ -2140,15 +2139,13 @@ public class MainActivity extends AppCompatActivity
 
     private void renderTLV(StringBuilder sb, String indent, byte[] tlv) throws Exception {
 
-        TLVParser parser = new TLVParser();
-        parser.parse(tlv);
-
-        TLVItems items = parser.getItems();
+        TLVReader reader = new TLVReader();
+        List<TLVItem> items = reader.read(tlv);
 
         for (int i = 0; i < items.size(); i++) {
             TLVItem item = items.get(i);
             if (item.getTag().getType() == TLVTag.TLVType.itSTLV) {
-                String tagName = item.getTag().getPrintName();
+                String tagName = item.getTag().getPrintName(item.getText());
 
                 sb.append(indent);
                 sb.append(item.getTag().getId());
@@ -2159,8 +2156,8 @@ public class MainActivity extends AppCompatActivity
                 renderTLV(sb, indent + "  ", item.getData());
             } else {
 
-                String tagName = item.getTag().getPrintName();
                 String itemText = item.getText();
+                String tagName = item.getTag().getPrintName(itemText);
 
                 if (item.getTag().getId() == 1077) {// 1077,ФП
                     itemText = toFP(item.getData()) + "(" + Hex.toHex2(item.getData()) + ")";

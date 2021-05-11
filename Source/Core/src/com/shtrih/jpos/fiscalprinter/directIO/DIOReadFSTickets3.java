@@ -8,10 +8,11 @@ package com.shtrih.jpos.fiscalprinter.directIO;
  *
  * @author V.Kravtsov
  */
-import java.util.Vector;
+import java.util.List;
+
+import com.shtrih.jpos.DIOUtils;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.FSTicket;
-import com.shtrih.jpos.DIOUtils;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 
 public class DIOReadFSTickets3 extends DIOItem {
@@ -28,7 +29,7 @@ public class DIOReadFSTickets3 extends DIOItem {
         if (data.length > 1){
             documentCount = data[1];
         }
-        Vector<FSTicket> tickets = service.getPrinter().fsReadTickets(firstFSDocumentNumber, documentCount);
+        List<FSTicket> tickets = service.getPrinter().fsReadTickets(firstFSDocumentNumber, documentCount);
         String[] lines = new String[tickets.size()];
         for (int i = 0; i < tickets.size(); i++) 
         {

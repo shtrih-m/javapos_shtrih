@@ -5,7 +5,8 @@ import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.PrinterGraphics;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
-import com.shtrih.fiscalprinter.TLVParser;
+import com.shtrih.fiscalprinter.TLVItem;
+import com.shtrih.fiscalprinter.TLVReader;
 import com.shtrih.fiscalprinter.command.AmountItem;
 import com.shtrih.fiscalprinter.command.CloseRecParams;
 import com.shtrih.fiscalprinter.command.EndFiscalReceipt;
@@ -23,6 +24,7 @@ import com.shtrih.util.MathUtils;
 import com.shtrih.util.MethodParameter;
 import com.shtrih.util.StringUtils;
 import com.shtrih.util.SysUtils;
+import com.shtrih.fiscalprinter.TLVTextWriter;
 
 import java.util.Vector;
 
@@ -34,6 +36,7 @@ import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_EFPTR_NOT_SUPPO
 import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_STATION_REC;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
+import java.util.List;
 
 public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
@@ -239,10 +242,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
             if (getParams().FSPrintTags && tlvItem.getPrint()) {
 
-                TLVParser reader = new TLVParser();
-                reader.read(tlvItem.getData());
-                Vector<String> lines = reader.getPrintText();
-
+                TLVReader reader = new TLVReader();
+                List<TLVItem> items = reader.read(tlvItem.getData());
+                TLVTextWriter writer = new TLVTextWriter(items);
+                List<String> lines = new Vector<String>();
+                writer.getPrintText(lines);
                 if (getParams().FSTagsPlacement == 1) {
                     for (String line : lines) {
                         getDevice().printText(SMFP_STATION_REC, line, tlvItem.getFont());
@@ -392,7 +396,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             Object item = items.get(i);
             if (item instanceof FSTLVItem) {
                 FSTLVItem tlvItem = (FSTLVItem) item;
-                tlvItem.setData(getDevice().processTLVBeforeReceipt(tlvItem.getData()));
+                getDevice().processTLVBeforeReceipt(tlvItem.getData());
             }
         }
     }
@@ -716,10 +720,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             FSTLVItem tag = (FSTLVItem) item.getTags().get(i);
 
             if (tag.getPrint()) {
-                TLVParser reader = new TLVParser();
-                reader.read(tag.getData());
-                Vector<String> lines = reader.getPrintText();
-
+                TLVReader reader = new TLVReader();
+                List<TLVItem> items = reader.read(tag.getData());
+                TLVTextWriter writer = new TLVTextWriter(items);
+                List<String> lines = new Vector<String>();
+                writer.getPrintText(lines);
                 for (String line : lines) {
                     getDevice().printText(SMFP_STATION_REC, line, tag.getFont());
                 }

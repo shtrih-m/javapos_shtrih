@@ -7,6 +7,14 @@
     
 ********************************************************************************
 
+  11.05.2021
+  deviceServiceVersion = 1013620
+
+  [-] Fixed error with receipt item duplication
+  [-] Fixed error with tag printing
+
+********************************************************************************
+
   04.05.2021
   deviceServiceVersion = 1013619
 

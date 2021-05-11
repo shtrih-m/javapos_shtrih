@@ -94,6 +94,7 @@ import com.shtrih.jpos.fiscalprinter.ReceiptImages;
 import com.shtrih.jpos.fiscalprinter.receipt.FSSaleReceiptItem;
 import com.shtrih.printer.ncr7167.NCR7167Printer;
 
+import java.util.List;
 import java.util.Vector;
 import jpos.JposException;
 
@@ -524,7 +525,7 @@ public interface SMFiscalPrinter {
 
     public void printLines(String line1, String line2, FontNumber font) throws Exception;
 
-    public void printItems(Vector<PrintItem> items) throws Exception;
+    public void printItems(List<PrintItem> items) throws Exception;
 
     public void printFSHeader() throws Exception;
 
@@ -546,9 +547,9 @@ public interface SMFiscalPrinter {
 
     void fsWriteBlockData(byte[] data) throws Exception;
 
-    public Vector<FSTicket> fsReadTickets(int[] fsDocumentNumbers) throws Exception;
+    public List<FSTicket> fsReadTickets(int[] fsDocumentNumbers) throws Exception;
 
-    public Vector<FSTicket> fsReadTickets(int firstFSDocumentNumber, int documentCount) throws Exception;
+    public List<FSTicket> fsReadTickets(int firstFSDocumentNumber, int documentCount) throws Exception;
 
     public boolean getCapDisableDiscountText() throws Exception;
 
@@ -662,7 +663,7 @@ public interface SMFiscalPrinter {
 
     public int fsCloseReceipt(FSCloseReceipt command) throws Exception;
 
-    public byte[] processTLVBeforeReceipt(byte[] tlv) throws Exception;
+    public void processTLVBeforeReceipt(byte[] tlv) throws Exception;
 
     public void resetPrinter() throws Exception;
 

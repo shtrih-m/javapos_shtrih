@@ -1,24 +1,39 @@
 package com.shtrih.fiscalprinter;
 
 import com.shtrih.fiscalprinter.command.CommandInputStream;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+
 
 public class TLVReader {
-    public List<TLVRecord> read(byte[] tlv) throws Exception {
-        CommandInputStream reader = new CommandInputStream(tlv);
 
-        List<TLVRecord> tags = new ArrayList<TLVRecord>();
+    public TLVReader() {
+    }
 
-        while (reader.size() > 4) {
-            int tagId = (int) reader.readLong(2);
-            int len = (int) reader.readLong(2);
-            byte[] data = reader.readBytes(len);
+    public List<TLVItem> read(byte[] data) throws Exception {
+        List<TLVItem> items = new ArrayList<TLVItem>();
+        parse(items, data);
+        return items;
+    }
 
-            tags.add(new TLVRecord(tagId, data));
+    private void parse(List<TLVItem> items, byte[] data) throws Exception {
+        TLVTags tags = TLVTags.getInstance();
+        CommandInputStream stream = new CommandInputStream("");
+        stream.setData(data);
+
+        while (stream.size() >= 4) {
+            int tagId = stream.readShort();
+            int len = stream.readShort();
+            byte[] adata = stream.readBytes(len);
+
+            TLVTag tag = tags.find(tagId);
+            TLVItem item = new TLVItem(tagId, adata, tag);
+            items.add(item);
+            if (tag != null) {
+                if (tag.getType() == TLVTag.TLVType.itSTLV) {
+                    parse(item.getItems(), adata);
+                }
+            }
         }
-
-        return tags;
     }
 }

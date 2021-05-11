@@ -1,17 +1,17 @@
 package com.shtrih.fiscalprinter.scoc.commands;
 
 import com.shtrih.fiscalprinter.TLVReader;
-import com.shtrih.fiscalprinter.TLVRecord;
+import com.shtrih.fiscalprinter.TLVItem;
 
 public class DeviceStatusResponse {
 
     public static DeviceStatusResponse read(byte[] data) throws Exception {
 
-        TLVReader parser = new TLVReader();
+        TLVReader reader = new TLVReader();
 
-        for (TLVRecord record : parser.read(data)) {
-            if (record.getTagId() == 8101) {
-                return parseStatusResponse(parser, record.getData());
+        for (TLVItem item : reader.read(data)) {
+            if (item.getId() == 8101) {
+                return parseStatusResponse(reader, item.getData());
             }
         }
 
@@ -24,15 +24,15 @@ public class DeviceStatusResponse {
         int flags = 0;
         long documentNumber = 0;
 
-        for (TLVRecord record : parser.read(data)) {
-            if (record.getTagId() == 8213)
-                resultCode = (int) record.toInt();
+        for (TLVItem item : parser.read(data)) {
+            if (item.getId() == 8213)
+                resultCode = (int) item.toInt();
 
-            if (record.getTagId() == 8215)
-                flags = (int) record.toInt();
+            if (item.getId() == 8215)
+                flags = (int) item.toInt();
 
-            if (record.getTagId() == 8200)
-                documentNumber = record.toInt();
+            if (item.getId() == 8200)
+                documentNumber = item.toInt();
         }
 
         return new DeviceStatusResponse(resultCode, flags, documentNumber);

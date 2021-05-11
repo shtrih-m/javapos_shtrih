@@ -1,7 +1,7 @@
 package com.shtrih.fiscalprinter.scoc.commands;
 
 import com.shtrih.fiscalprinter.TLVReader;
-import com.shtrih.fiscalprinter.TLVRecord;
+import com.shtrih.fiscalprinter.TLVItem;
 
 public class DeviceFirmwareResponse {
 
@@ -9,9 +9,9 @@ public class DeviceFirmwareResponse {
 
         TLVReader parser = new TLVReader();
 
-        for (TLVRecord record : parser.read(data)) {
+        for (TLVItem record : parser.read(data)) {
 
-            if (record.getTagId() == 8103) {
+            if (record.getId() == 8103) {
                 return parseFirmwareResponse(parser, record.getData());
             }
         }
@@ -26,18 +26,18 @@ public class DeviceFirmwareResponse {
         long firmwareVersion = 0;
         byte[] firmwareData = new byte[0];
 
-        for (TLVRecord record : parser.read(data)) {
+        for (TLVItem record : parser.read(data)) {
 
-            if (record.getTagId() == 8219)
+            if (record.getId() == 8219)
                 firmwareVersion = record.toInt();
 
-            if (record.getTagId() == 8220)
+            if (record.getId() == 8220)
                 partNumber = (int) record.toInt();
 
-            if (record.getTagId() == 8221)
+            if (record.getId() == 8221)
                 partsCount = (int) record.toInt();
 
-            if (record.getTagId() == 8222)
+            if (record.getId() == 8222)
                 firmwareData = record.getData();
         }
 

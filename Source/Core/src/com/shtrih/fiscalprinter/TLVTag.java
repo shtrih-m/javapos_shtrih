@@ -34,6 +34,7 @@ public class TLVTag {
     private final Vector<TLVBit> bits = new Vector<TLVBit>();
 
     public enum TLVType {
+
         itByte, itUInt16, itUInt32, itVLN, itFVLN, itBitMask,
         itUnixTime, itASCII, itSTLV, itByteArray
     }
@@ -106,7 +107,7 @@ public class TLVTag {
     public byte[] getBinValue() throws Exception {
         return valueToBin(value);
     }
-    
+
     public byte[] valueToBin(String value) throws Exception {
         switch (type) {
             case itByte:
@@ -119,7 +120,7 @@ public class TLVTag {
                 SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
                 sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
                 String text = value.substring(0, 8);
-                long unixTime = sdf.parse(text).getTime()/1000;
+                long unixTime = sdf.parse(text).getTime() / 1000;
                 return intToTLV(unixTime, 4);
             case itByteArray:
                 return HexUtils.hexToBytes(value);
@@ -187,7 +188,12 @@ public class TLVTag {
         return displayName;
     }
 
-    public String getPrintName() {
+    public String getPrintName(String text) {
+        // При выводе e-mail в приказе ФНС прописано, что строка должна начинаться с "ЭЛ. АДР. ПОКУПАТЕЛЯ".
+        // При выводе телефона - строка начинается с "ТЕЛ. ПОКУПАТЕЛЯ".
+        if (getId() == 1008) {
+            return text.contains("@") ? "ЭЛ. АДР. ПОКУПАТЕЛЯ" : "ТЕЛ. ПОКУПАТЕЛЯ";
+        }
         return printName;
     }
 
