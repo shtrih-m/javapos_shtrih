@@ -54,12 +54,6 @@ public class DIOReadFSParams extends DIOItem {
 14 - Адрес сервера ОФД
 15 - № порта
 16 - Таймаут ожидание ответа от ОФД
-    
-
-    
-    
-
-    
 */
     
     public void execute(int[] data, Object object) throws Exception {

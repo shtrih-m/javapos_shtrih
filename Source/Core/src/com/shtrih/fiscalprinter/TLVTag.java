@@ -11,11 +11,18 @@ import com.shtrih.fiscalprinter.command.CommandOutputStream;
 import com.shtrih.fiscalprinter.command.PrinterDate;
 import com.shtrih.fiscalprinter.command.PrinterTime;
 import com.shtrih.jpos.fiscalprinter.JposFiscalPrinterDate;
+import com.shtrih.util.BitUtils;
+import com.shtrih.util.Hex;
 import com.shtrih.util.HexUtils;
 import com.shtrih.util.StringUtils;
 import com.shtrih.util.encoding.IBM866;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -24,7 +31,6 @@ import java.util.TimeZone;
  */
 public class TLVTag {
 
-    private String value = "";
     private final int id;
     private final int size;
     private final boolean fixedSize;
@@ -37,23 +43,6 @@ public class TLVTag {
 
         itByte, itUInt16, itUInt32, itVLN, itFVLN, itBitMask,
         itUnixTime, itASCII, itSTLV, itByteArray
-    }
-
-    public byte[] getData() throws Exception {
-        CommandOutputStream stream = new CommandOutputStream("");
-        byte[] bytes = getBinValue();
-        stream.writeShort(id);
-        stream.writeShort(bytes.length);
-        stream.writeBytes(bytes);
-        return stream.getData();
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 
     public byte[] strToTLV(String text) throws Exception {
@@ -104,11 +93,7 @@ public class TLVTag {
         return stream.toByteArray();
     }
 
-    public byte[] getBinValue() throws Exception {
-        return valueToBin(value);
-    }
-
-    public byte[] valueToBin(String value) throws Exception {
+    public byte[] textToBin(String value) throws Exception {
         switch (type) {
             case itByte:
                 return intToTLV(Integer.parseInt(value), 1);
@@ -137,6 +122,112 @@ public class TLVTag {
             default:
                 throw new Exception("Invalid type value");
         }
+    }
+
+    public String binToText(byte[] data) throws Exception {
+        switch (getType()) {
+            case itByte:
+                return String.valueOf(toInt(data));
+            case itUInt16:
+                return String.valueOf(toInt(data));
+            case itUInt32:
+                return String.valueOf(toInt(data));
+            case itVLN:
+                return format(toVLN(data));
+            case itFVLN:
+                return format(toFVLN(data));
+            case itUnixTime:
+                return format(toDate(data));
+            case itByteArray:
+                return Hex.toHex(data).trim();
+            case itASCII:
+                return toASCII(data).trim();
+            case itBitMask:
+                return toBitMask(data);
+            case itSTLV:
+                return "";
+
+            default:
+                return Hex.toHex(data).trim();
+        }
+    }
+
+    private long toInt(byte[] data) {
+        return toInt(data, 0);
+    }
+
+    private long toInt(byte[] d, int offset) {
+        long result = 0;
+        for (int i = d.length - 1; i >= offset; i--) {
+            result <<= 8;
+            result |= d[i] & 0xFF;
+        }
+        return result;
+    }
+
+    public Date toDate(byte[] data) {
+        long unixTime = toInt(data);
+        Calendar mydate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        mydate.setTimeInMillis(unixTime * 1000);
+        return new Date(
+                mydate.get(Calendar.YEAR) - 1900,
+                mydate.get(Calendar.MONTH),
+                mydate.get(Calendar.DAY_OF_MONTH),
+                mydate.get(Calendar.HOUR_OF_DAY),
+                mydate.get(Calendar.MINUTE),
+                mydate.get(Calendar.SECOND));
+    }
+
+    public String toASCII(byte[] data) {
+        return new String(data, new IBM866());
+    }
+
+    public BigDecimal toFVLN(byte[] data) throws Exception {
+        if (data.length < 2) {
+            throw new Exception("Неверная длина FVLN, ожидается минимум 2, получено " + data.length);
+        }
+        long value = toInt(data, 1);
+        int scale = data[0];
+        return BigDecimal.valueOf(value, scale);
+    }
+
+    public BigDecimal toVLN(byte[] data) {
+        long value = toInt(data);
+        int scale = 2;
+        return BigDecimal.valueOf(value, scale);
+    }
+
+    public String toBitMask(byte[] data) {
+        int value = (int) toInt(data);
+        String text = "";
+        Vector<TLVBit> bits = getBits();
+        for (int i = 0; i < bits.size(); i++) {
+            TLVBit bit = bits.get(i);
+            if (BitUtils.testBit(value, bit.getBit())) {
+                if (!text.isEmpty()) {
+                    text += " ";
+                }
+                text += bit.getPrintName();
+            }
+        }
+        return text;
+    }
+
+    private String format(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        return sdf.format(date);
+    }
+
+    private String format(BigDecimal value) {
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(value.scale());
+        df.setMinimumFractionDigits(value.scale());
+        DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.getDefault());
+        otherSymbols.setDecimalSeparator('.');
+        otherSymbols.setGroupingSeparator(' ');
+        df.setDecimalFormatSymbols(otherSymbols);
+        df.setGroupingUsed(false);
+        return df.format(value);
     }
 
     public TLVTag(int id, String displayName, String printName,
@@ -212,4 +303,9 @@ public class TLVTag {
         bits.add(item);
         return item;
     }
+
+    public boolean isSTLV() {
+        return getType() == TLVTag.TLVType.itSTLV;
+    }
+
 }

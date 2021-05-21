@@ -2,7 +2,7 @@ package com.shtrih.fiscalprinter.command;
 
 import com.shtrih.util.StringUtils;
 
-public class FSDateTime {
+public class PrinterDateTime {
     public static final int BodyLength = 5;
 
     private final int year;
@@ -15,7 +15,7 @@ public class FSDateTime {
 
     private final int minutes;
 
-    public FSDateTime(byte[] data) {
+    public PrinterDateTime(byte[] data) {
 
         if (data.length != BodyLength)
             throw new RuntimeException("Incorrect data length. Expecte 5, but was " + data.length);
@@ -27,7 +27,7 @@ public class FSDateTime {
         minutes = data[4];
     }
 
-    public FSDateTime(PrinterDate date, PrinterTime time) {
+    public PrinterDateTime(PrinterDate date, PrinterTime time) {
         year = date.getYear();
         month = date.getMonth();
         day = date.getDay();

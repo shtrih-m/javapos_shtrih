@@ -10,11 +10,11 @@ public class FSStatusInfo {
     private final boolean isDocReceived;
     private final boolean isDayOpened;
     private final int flags;
-    private final FSDateTime dateTime;
+    private final PrinterDateTime dateTime;
     private final String fsSerial;
     private final long docNumber;
 
-    public FSStatusInfo(FSStatus status, FSDocType docType, boolean isDocReceived, boolean isDayOpened, int flags, FSDateTime dateTime, String fsSerial, long docNumber){
+    public FSStatusInfo(FSStatus status, FSDocType docType, boolean isDocReceived, boolean isDayOpened, int flags, PrinterDateTime dateTime, String fsSerial, long docNumber){
         this.status = status;
         this.docType = docType;
         this.isDocReceived = isDocReceived;
@@ -45,7 +45,7 @@ public class FSStatusInfo {
         return flags;
     }
 
-    public FSDateTime getDateTime() {
+    public PrinterDateTime getDateTime() {
         return dateTime;
     }
 

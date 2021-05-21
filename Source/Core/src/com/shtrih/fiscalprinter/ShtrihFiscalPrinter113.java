@@ -1577,7 +1577,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
                 command.isDocReceived(),
                 command.isDayOpened(),
                 command.getFlags(),
-                new FSDateTime(command.getDate(), command.getTime()),
+                new PrinterDateTime(command.getDate(), command.getTime()),
                 command.getFsSerial(),
                 command.getDocNumber());
     }
@@ -1823,7 +1823,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         return new FSCommunicationStatus(
                 command.getQueueSize(),
                 command.getDocumentNumber(),
-                new FSDateTime(command.getDocumentDate(), command.getDocumentTime()),
+                new PrinterDateTime(command.getDocumentDate(), command.getDocumentTime()),
                 command.getStatus(),
                 command.getReadStatus());
     }

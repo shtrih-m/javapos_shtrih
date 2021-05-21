@@ -1010,7 +1010,10 @@ class PrinterTest implements FiscalPrinterConst {
             //printFiscalReceipt145_4();
             //printFiscalReceiptWithTag1222();
             
-            printFiscalReceiptWithTag1225();
+            //printFiscalReceiptWithTag1225();
+            //fsReadParameters();
+            //printFiscalReceipt11();
+            printFiscalReceipt145_5();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1264,21 +1267,6 @@ class PrinterTest implements FiscalPrinterConst {
             System.out.println("CapRecNearEndSensor: " + printer.getCapRecNearEndSensor());
             System.out.println("RecEmpty: " + printer.getRecEmpty());
             System.out.println("RecNearEnd: " + printer.getRecNearEnd());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void printFiscalReceipt11() {
-        try {
-            printer.resetPrinter();
-            printer.setFiscalReceiptType(FPTR_RT_SALES);
-            printer.beginFiscalReceipt(false);
-            printer.printRecRefund("****      100359344 Item1", 5596, 2);
-            printer.printRecSubtotal(5596);
-            printer.printRecSubtotalAdjustment(1, "", 1000);
-            printer.printRecTotal(5596, 5596, "payTypeName1");
-            printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3865,26 +3853,11 @@ class PrinterTest implements FiscalPrinterConst {
             printer.beginFiscalReceipt(false);
             printer.printRecItem("Item1", 1, 1000, 1, 1, "");
             printer.printRecTotal(1, 1, "0");
-            printer.fsWriteTag(1085, "1085, 012345678900123456789001234567890012345678900123456789001234567890");
-            printer.fsWriteTag(1086, "1086, 012345678900123456789001234567890012345678900123456789001234567890");
-            printer.endFiscalReceipt(false);
-
-            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETSALE);
-            printer.beginFiscalReceipt(false);
-            printer.printRecItem("Item1", 1, 1000, 1, 1, "");
-            printer.printRecTotal(1, 1, "0");
-            printer.endFiscalReceipt(false);
-
-            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_BUY);
-            printer.beginFiscalReceipt(false);
-            printer.printRecItem("Item1", 1, 1000, 1, 1, "");
-            printer.printRecTotal(1, 1, "0");
-            printer.endFiscalReceipt(false);
-
-            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_RETBUY);
-            printer.beginFiscalReceipt(false);
-            printer.printRecItem("Item1", 1, 1000, 1, 1, "");
-            printer.printRecTotal(1, 1, "0");
+           
+            TLVWriter writer = new TLVWriter();
+            writer.add(1085, "Tag 1085 \r\n Tag 1085.1");
+            writer.add(1086, "Tag 1086 \r\n Tag 1086.1");
+            printer.fsWriteTag(1084, writer.getBytes());
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
@@ -4225,4 +4198,18 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
   
+    public void printFiscalReceipt11() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(FPTR_RT_SALES);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("3300573 Пакет ПЯТЕРОЧКА 65х40см", 550, 1000, 1, 550, "ST");
+            printer.printRecSubtotalAdjustment(1, "", 50);
+            printer.printRecTotal(500, 500, "payTypeName1");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

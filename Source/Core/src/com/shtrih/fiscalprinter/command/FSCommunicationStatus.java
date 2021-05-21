@@ -7,14 +7,14 @@ public class FSCommunicationStatus {
 
     private final int unsentDocumentsCount;
     private final int firstUnsentDocumentNumber;
-    private final FSDateTime firstUnsentDocumentDateTime;
+    private final PrinterDateTime firstUnsentDocumentDateTime;
     private final int communicationState;
     private final int messageReadingStatus;
 
     public FSCommunicationStatus(
             int unsentDocumentsCount, 
             int firstUnsentDocumentNumber, 
-            FSDateTime firstUnsentDocumentDateTime, 
+            PrinterDateTime firstUnsentDocumentDateTime, 
             int communicationState, 
             int messageReadingStatus) {
         this.unsentDocumentsCount = unsentDocumentsCount;
@@ -24,7 +24,7 @@ public class FSCommunicationStatus {
         this.messageReadingStatus = messageReadingStatus;
     }
 
-    public FSDateTime getFirstUnsentDocumentDateTime() {
+    public PrinterDateTime getFirstUnsentDocumentDateTime() {
         return firstUnsentDocumentDateTime;
     }
 

@@ -2,8 +2,9 @@ package com.shtrih.fiscalprinter;
 
 import com.shtrih.util.encoding.IBM866;
 
-import java.io.ByteArrayOutputStream;
+import java.util.List;
 import java.util.Arrays;
+import java.io.ByteArrayOutputStream;
 
 /**
  * @author V.Kravtsov
@@ -105,5 +106,39 @@ public class TLVWriter {
         add(value, len);
 
         return this;
+    }
+
+    public byte[] getData(List<TLVItem> items) throws Exception {
+        ByteArrayOutputStream stm = new ByteArrayOutputStream();
+        for (int i = 0; i < items.size(); i++) {
+            stm.write(getData(items.get(i)));
+        }
+        return stm.toByteArray();
+    }
+
+    public byte[] getData(TLVItem item) throws Exception {
+        ByteArrayOutputStream stm = new ByteArrayOutputStream();
+        byte[] data;
+        if (item.isSTLV()) {
+            data = getData(item.getItems());
+        } else {
+            data = item.getData();
+        }
+        stm.write(item.getId() & 0xFF);
+        stm.write((item.getId() >>> 8) & 0xFF);
+        stm.write(data.length & 0xFF);
+        stm.write((data.length >>> 8) & 0xFF);
+        stm.write(data);
+        return stm.toByteArray();
+    }
+
+    public void add(TLVItem item) throws Exception {
+        stream.write(getData(item));
+    }
+
+    public void add(List<TLVItem> items) throws Exception {
+        for (int i = 0; i < items.size(); i++) {
+            add(items.get(i));
+        }
     }
 }

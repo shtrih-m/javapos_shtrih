@@ -1431,10 +1431,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void writeTLVItems() throws Exception {
         for (int i = 0; i < tlvItems.size(); i++) {
-            FSWriteTLV command = new FSWriteTLV();
-            command.setSysPassword(sysPassword);
-            command.setTlv(tlvItems.get(i));
-            execute(command);
+            byte[] tlv = tlvItems.get(i);
+            tlv = filterTLV(tlv);
+            if (tlv.length != 0) {
+                FSWriteTLV command = new FSWriteTLV();
+                command.setSysPassword(sysPassword);
+                command.setTlv(tlv);
+                execute(command);
+            }
         }
         tlvItems.clear();
     }
@@ -3373,6 +3377,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         TLVReader reader = new TLVReader();
         List<TLVItem> items = reader.read(tlv);
+        processTLVBeforeReceipt2(items);
+    }
+
+    public void processTLVBeforeReceipt2(List<TLVItem> items) throws Exception {
         for (int i = items.size() - 1; i >= 0; i--) {
             TLVItem item = items.get(i);
             int tagId = item.getId();
@@ -3380,11 +3388,76 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 String text = item.getText().replace("\r\n", "  ");
                 writeTable(17, 1, 13, text);
             }
+            processTLVBeforeReceipt2(item.getItems());
         }
     }
 
     public void fsWriteTLV(byte[] tlv) throws Exception {
         tlvItems.add(tlv);
+    }
+
+    public TLVItem itemById(List<TLVItem> items, int id) throws Exception {
+        for (int i = items.size() - 1; i >= 0; i--) {
+            TLVItem item = items.get(i);
+            if (item.getId() == id) {
+                return item;
+            }
+            item = itemById(item.getItems(), id);
+            if (item != null) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public byte[] filterTLV(byte[] tlv) throws Exception {
+        TLVReader reader = new TLVReader();
+        List<TLVItem> items = reader.read(tlv);
+        if (params.userExtendedTagPrintMode
+                == SmFptrConst.USER_EXTENDED_TAG_PRINT_MODE_DRIVER) {
+            filterTLVItemsDriver(items);
+        } else {
+            filterTLVItemsPrinter(items);
+        }
+        boolean isEmptySTLV = ((items.size() == 1)
+                && (items.get(0).isSTLV())
+                && (items.get(0).getItems().size() == 0));
+
+        TLVWriter writer = new TLVWriter();
+        if (!isEmptySTLV) {
+            writer.add(items);
+        }
+        return writer.getBytes();
+    }
+
+    public void filterTLVItemsDriver(List<TLVItem> items) throws Exception {
+        for (int i = items.size() - 1; i >= 0; i--) {
+            TLVItem item = items.get(i);
+            int tagId = item.getTag().getId();
+            if (tagId == 1085) {
+                printText(item.getText());
+                items.remove(item);
+            }
+            if (tagId == 1086) {
+                printText(item.getText());
+                String text = item.getText().replace("\r\n", "  ");
+                fsWriteTLVData(15000, text);
+                items.remove(item);
+            }
+            filterTLVItemsDriver(item.getItems());
+        }
+    }
+
+    public void filterTLVItemsPrinter(List<TLVItem> items) throws Exception {
+        for (int i = items.size() - 1; i >= 0; i--) {
+            TLVItem item = items.get(i);
+            int tagId = item.getTag().getId();
+            if ((tagId == 1085) || (tagId == 1086)) {
+                String text = item.getText().replace("\r\n", "  ");
+                item.setText(text);
+            }
+            filterTLVItemsPrinter(item.getItems());
+        }
     }
 
     public int fsWriteOperationTLV(byte[] tlv) throws Exception {
@@ -3463,8 +3536,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 TLVTags tags = TLVTags.getInstance();
                 TLVTag tag = tags.find(tagId);
                 if (tag != null) {
-                    tag.setValue(tagValue);
-                    return tag.getData();
+                    return tag.textToBin(tagValue);
                 } else {
                     list.add(tagId, tagValue);
                 }
@@ -4942,46 +5014,3 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 }
-
-/*
- public byte[] filterTLV(byte[] tlv) throws Exception {
- if (params.userExtendedTagPrintMode == SmFptrConst.USER_EXTENDED_TAG_PRINT_MODE_DRIVER) {
- TLVReader reader = new TLVReader();
- reader.read(tlv);
- TLVItems items = reader.getItems();
- for (int i = items.size() - 1; i >= 0; i--) {
- TLVItem item = items.get(i);
- int tagId = item.getTag().getId();
- if (tagId == 1085) {
- printText(item.getText());
- items.remove(item);
- }
- if (tagId == 1086) {
- printText(item.getText());
- String text = item.getText().replace("\r\n", "  ");
- fsWriteTLVData(15000, text);
- items.remove(item);
- }
- }
- return reader.write();
-            
- } else if (params.userExtendedTagPrintMode == SmFptrConst.USER_EXTENDED_TAG_PRINT_MODE_PRINTER) {
- TLVReader reader = new TLVReader();
- reader.read(tlv);
- TLVItems items = reader.getItems();
- for (int i = items.size() - 1; i >= 0; i--) {
- TLVItem item = items.get(i);
- int tagId = item.getTag().getId();
- if ((tagId == 1085) || (tagId == 1086)) {
- String text = item.getText().replace("\r\n", "  ");
- item.setText(text);
- }
- }
- return reader.write();
- } else {
- return tlv;
- }
- }
-
-
- */

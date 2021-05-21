@@ -8,11 +8,11 @@ public class FSDocumentInfo {
     private final int fsDocType;
     private final boolean sentToOFD;
     private final byte[] data;
-    private final FSDateTime dateTime;
+    private final PrinterDateTime dateTime;
     private final long documentNumber;
     private final long fp;
 
-    public FSDocumentInfo(int fsDocType, boolean sentToOFD, byte[] data, FSDateTime dateTime, long documentNumber, long fp) {
+    public FSDocumentInfo(int fsDocType, boolean sentToOFD, byte[] data, PrinterDateTime dateTime, long documentNumber, long fp) {
 
         this.fsDocType = fsDocType;
         this.sentToOFD = sentToOFD;
@@ -30,7 +30,7 @@ public class FSDocumentInfo {
         return sentToOFD;
     }
 
-    public FSDateTime getDateTime() {
+    public PrinterDateTime getDateTime() {
         return dateTime;
     }
 

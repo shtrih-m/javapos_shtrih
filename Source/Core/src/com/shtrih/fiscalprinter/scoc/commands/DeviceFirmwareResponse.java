@@ -19,26 +19,26 @@ public class DeviceFirmwareResponse {
         throw new Exception("Tag 8103 was not found");
     }
 
-    private static DeviceFirmwareResponse parseFirmwareResponse(TLVReader parser, byte[] data) throws Exception {
+    private static DeviceFirmwareResponse parseFirmwareResponse(TLVReader reader, byte[] data) throws Exception {
 
         int partsCount = 0;
         int partNumber = 0;
         long firmwareVersion = 0;
         byte[] firmwareData = new byte[0];
 
-        for (TLVItem record : parser.read(data)) {
+        for (TLVItem item : reader.read(data)) {
 
-            if (record.getId() == 8219)
-                firmwareVersion = record.toInt();
+            if (item.getId() == 8219)
+                firmwareVersion = item.toInt();
 
-            if (record.getId() == 8220)
-                partNumber = (int) record.toInt();
+            if (item.getId() == 8220)
+                partNumber = (int) item.toInt();
 
-            if (record.getId() == 8221)
-                partsCount = (int) record.toInt();
+            if (item.getId() == 8221)
+                partsCount = (int) item.toInt();
 
-            if (record.getId() == 8222)
-                firmwareData = record.getData();
+            if (item.getId() == 8222)
+                firmwareData = item.getData();
         }
 
         return new DeviceFirmwareResponse(firmwareVersion, partsCount, partNumber, firmwareData);

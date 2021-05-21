@@ -73,9 +73,9 @@ public class CommandInputStream {
         return readBytes(stream.available());
     }
 
-    public FSDateTime readFSDateTime() throws Exception
+    public PrinterDateTime readFSDateTime() throws Exception
     {
-        return new FSDateTime(readBytes(FSDateTime.BodyLength));
+        return new PrinterDateTime(readBytes(PrinterDateTime.BodyLength));
     }
 
     public int byteToInt(int B) {

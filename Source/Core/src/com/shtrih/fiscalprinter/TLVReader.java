@@ -4,7 +4,6 @@ import com.shtrih.fiscalprinter.command.CommandInputStream;
 import java.util.List;
 import java.util.ArrayList;
 
-
 public class TLVReader {
 
     public TLVReader() {
@@ -27,12 +26,12 @@ public class TLVReader {
             byte[] adata = stream.readBytes(len);
 
             TLVTag tag = tags.find(tagId);
-            TLVItem item = new TLVItem(tagId, adata, tag);
+            TLVItem item = new TLVItem(tagId, tag);
             items.add(item);
-            if (tag != null) {
-                if (tag.getType() == TLVTag.TLVType.itSTLV) {
-                    parse(item.getItems(), adata);
-                }
+            if (item.isSTLV()) {
+                parse(item.getItems(), adata);
+            } else {
+                item.setData(adata);
             }
         }
     }

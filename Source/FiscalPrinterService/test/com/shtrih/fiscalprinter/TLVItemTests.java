@@ -7,8 +7,10 @@ import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Date;
+import java.util.List;
 
 import static com.shtrih.util.ByteUtils.byteArray;
+import com.shtrih.util.Hex;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -41,7 +43,6 @@ public class TLVItemTests {
 
         TLVItem item = new TLVItem(1, data, new TLVTag(666, TLVTag.TLVType.itVLN));
         assertEquals(132, item.toInt());
-        assertEquals(BigDecimal.valueOf(132, 2), item.toVLN());
         assertEquals("1.32", item.getText());
     }
 
@@ -51,7 +52,6 @@ public class TLVItemTests {
 
         TLVItem item = new TLVItem(1, data, new TLVTag(666, TLVTag.TLVType.itVLN));
         assertEquals(132, item.toInt());
-        assertEquals(BigDecimal.valueOf(132, 2), item.toVLN());
         assertEquals("1.32", item.getText());
     }
 
@@ -61,7 +61,6 @@ public class TLVItemTests {
 
         TLVItem item = new TLVItem(1, data, new TLVTag(666, TLVTag.TLVType.itVLN));
         assertEquals(132, item.toInt());
-        assertEquals(BigDecimal.valueOf(132, 2), item.toVLN());
         assertEquals("1.32", item.getText());
     }
 
@@ -70,7 +69,6 @@ public class TLVItemTests {
         byte[] data = byteArray(0x60, 0x73, 0xC2, 0x5A);
 
         TLVItem item = new TLVItem(1, data, new TLVTag(666, TLVTag.TLVType.itUnixTime));
-        assertEquals(new Date(2018 - 1900, 4 - 1, 2, 18, 16, 0), item.toDate());
         assertEquals("02.04.2018 18:16:00", item.getText());
     }
 
@@ -79,8 +77,6 @@ public class TLVItemTests {
         byte[] data = byteArray(0x06, 0x40, 0x42, 0x0F);
 
         TLVItem item = new TLVItem(1, data, new TLVTag(666, TLVTag.TLVType.itFVLN));
-
-        assertEquals(new BigDecimal(1000000).divide(new BigDecimal(1000000), 6, RoundingMode.HALF_UP), item.toFVLN());
         assertEquals("1.000000", item.getText());
     }
 
@@ -89,7 +85,6 @@ public class TLVItemTests {
         byte[] data = byteArray(0x06, 0x15, 0xCD, 0x5B, 0x07);
 
         TLVItem item = new TLVItem(1, data, new TLVTag(666, TLVTag.TLVType.itFVLN));
-        assertEquals(BigDecimal.valueOf(123456789, 6), item.toFVLN());
         assertEquals("123.456789", item.getText());
     }
 
@@ -101,5 +96,80 @@ public class TLVItemTests {
         buffer.putInt(data);
 
         return buffer.array();
+    }
+    
+    @Test
+    public void testTLVWriter() throws Exception 
+    {
+        TLVItem item;
+        TLVWriter writer = new TLVWriter();
+        writer.add(1085, "наименование дополнительного реквизита пользователя");
+        writer.add(1086, "значение дополнительного реквизита пользователя");
+        byte[] data = writer.getBytes();
+        writer.clear();
+        writer.add(1084, data);
+        data = writer.getBytes();
+        
+        TLVReader reader = new TLVReader();
+        List<TLVItem> items = reader.read(data);
+        
+        assertEquals(1, items.size());
+        assertEquals(1084, items.get(0).getId());
+        assertEquals(true, items.get(0).isSTLV());
+        assertEquals(null, items.get(0).getData());
+        
+        List<TLVItem> items2 = items.get(0).getItems();
+        assertEquals(2, items2.size());
+        
+        item = items2.get(0);
+        assertEquals(1085, item.getId());
+        assertEquals(false, item.isSTLV());
+        assertEquals("наименование дополнительного реквизита пользователя", item.getText());
+        
+        item = items2.get(1);
+        assertEquals(1086, item.getId());
+        assertEquals(false, item.isSTLV());
+        assertEquals("значение дополнительного реквизита пользователя", item.getText());
+        
+        writer.clear();
+        writer.add(items);
+        
+        String dataHex1 = Hex.toHex(data);
+        String dataHex2 = Hex.toHex(writer.getBytes());
+        assertEquals(dataHex1, dataHex2);
+    }
+    
+    @Test
+    public void testTLVWriter2() throws Exception 
+    {
+        TLVItem item;
+        TLVWriter writer = new TLVWriter();
+        writer.add(1085, "наименование дополнительного реквизита пользователя");
+        writer.add(1086, "значение дополнительного реквизита пользователя");
+        byte[] data = writer.getBytes();
+        writer.clear();
+        writer.add(1084, data);
+        data = writer.getBytes();
+        
+        TLVReader reader = new TLVReader();
+        List<TLVItem> items = reader.read(data);
+        items.get(0).getItems().get(0).setText("123");
+        items.get(0).getItems().get(1).setText("234");
+        
+        writer.clear();
+        writer.add(items);
+        
+        reader = new TLVReader();
+        items = reader.read(writer.getBytes());
+        
+        item = items.get(0).getItems().get(0);
+        assertEquals(1085, item.getId());
+        assertEquals(false, item.isSTLV());
+        assertEquals("123", item.getText());
+        
+        item = items.get(0).getItems().get(1);
+        assertEquals(1086, item.getId());
+        assertEquals(false, item.isSTLV());
+        assertEquals("234", item.getText());
     }
 }
