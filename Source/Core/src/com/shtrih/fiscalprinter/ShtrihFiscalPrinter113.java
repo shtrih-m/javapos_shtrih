@@ -2311,6 +2311,10 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_ADD_ITEM_CODE, null, new Object[]{data});
     }
 
+    public void mcClearBuffer() throws JposException {
+        directIO(SmFptrConst.SMFPTR_DIO_MC_CLEAR_BUFFER, null, null);
+    }
+    
     public void sendItemCode(String barcode) throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_SEND_ITEM_CODE, null, new String[]{barcode});
     }

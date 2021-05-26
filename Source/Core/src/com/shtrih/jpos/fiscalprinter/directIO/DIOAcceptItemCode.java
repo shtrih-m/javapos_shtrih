@@ -26,7 +26,7 @@ public class DIOAcceptItemCode extends DIOItem {
         Object[] params = (Object[])object;
         DIOUtils.checkObjectMinLength(params, 2);
         
-        int action = (Integer)params[0];
+        int action = (int)params[0];
         FSAcceptMC command = new FSAcceptMC();
         command.setAction(action);
         int rc = getPrinter().fsAcceptMC(command);

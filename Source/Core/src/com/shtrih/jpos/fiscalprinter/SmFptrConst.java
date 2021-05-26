@@ -702,6 +702,9 @@ public interface SmFptrConst {
     // Add item marking code
     public static final int SMFPTR_DIO_ADD_ITEM_CODE = 0x88;
     
+    // Clear marking codes buffer
+    public static final int SMFPTR_DIO_MC_CLEAR_BUFFER = 0x89;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

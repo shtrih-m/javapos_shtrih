@@ -880,8 +880,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void stopPoll() throws Exception {
-        if (deviceThread != null)
-        {
+        if (deviceThread != null) {
             deviceThread.interrupt();
             deviceThread.join();
             deviceThread = null;
@@ -1210,8 +1209,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void stopEventThread() throws Exception {
-        if (eventThread != null)
-        {
+        if (eventThread != null) {
             synchronized (events) {
                 events.notifyAll();
             }
@@ -2222,15 +2220,16 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         setFreezeEvents(false);
     }
 
-    private class PortEventsNotifier implements PrinterPort.IPortEvents
-    {
-        public PortEventsNotifier(){}
+    private class PortEventsNotifier implements PrinterPort.IPortEvents {
 
-        public void onConnect(){
+        public PortEventsNotifier() {
+        }
+
+        public void onConnect() {
             setPowerState(JPOS_PS_ONLINE);
         }
 
-        public void onDisconnect(){
+        public void onDisconnect() {
             setPowerState(JPOS_PS_OFFLINE);
         }
 
@@ -2406,8 +2405,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         getPrinter().printLine(SMFP_STATION_REC, line, params.font);
     }
 
-    public void printEndFiscal() throws Exception 
-    {
+    public void printEndFiscal() throws Exception {
         if (disablePrintOnce) {
             getPrinter().enablePrint();
             disablePrintOnce = false;
@@ -2428,14 +2426,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public void printEndNonFiscal() throws Exception 
-    {
+    public void printEndNonFiscal() throws Exception {
         if (disablePrintOnce) {
             getPrinter().enablePrint();
             disablePrintOnce = false;
             return;
         }
-        
+
         if (!docEndEnabled && params.canDisableNonFiscalEnding) {
             docEndEnabled = true;
             return;
@@ -3555,7 +3552,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             quantity = 1000;
         }
 
-        receipt.printRecVoidItem(description, amount, convertQuantity(quantity), 
+        receipt.printRecVoidItem(description, amount, convertQuantity(quantity),
                 adjustmentType, adjustment, vatInfo);
     }
 
@@ -4107,7 +4104,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkVatInfo(vatInfo);
 
         description = updateDescription(description);
-        receipt.printRecItemVoid(description, price, convertQuantity(quantity), 
+        receipt.printRecItemVoid(description, price, convertQuantity(quantity),
                 vatInfo, unitPrice, unitName);
     }
 
@@ -4336,8 +4333,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void deviceProc() {
         try {
-            while (!Thread.currentThread().isInterrupted())
-            {
+            while (!Thread.currentThread().isInterrupted()) {
                 checkDeviceStatus();
                 Thread.sleep(params.pollInterval);
             }
@@ -4388,7 +4384,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkVatInfo(vatInfo);
 
         description = updateDescription(description);
-        receipt.printRecItemRefund(description, amount, convertQuantity(quantity), 
+        receipt.printRecItemRefund(description, amount, convertQuantity(quantity),
                 vatInfo, unitAmount, unitName);
     }
 
@@ -4418,7 +4414,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkVatInfo(vatInfo);
 
         description = updateDescription(description);
-        receipt.printRecItemRefundVoid(description, amount, 
+        receipt.printRecItemRefundVoid(description, amount,
                 convertQuantity(quantity), vatInfo, unitAmount, unitName);
     }
 
@@ -4692,11 +4688,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void disablePrint() throws Exception {
         getPrinter().disablePrint();
     }
-    
+
     public void enablePrint() throws Exception {
         getPrinter().enablePrint();
     }
-    
+
     public void fsPrintCalcReport() throws Exception {
         printDocStart();
         FSPrintCalcReport command = new FSPrintCalcReport(printer.getSysPassword());
@@ -4732,16 +4728,20 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void setItemBarcode(String barcode) throws Exception {
         receipt.setItemBarcode(barcode);
     }
-    
+
     public void addItemCode(byte[] mcdata) throws Exception {
         receipt.addItemCode(mcdata);
     }
-    
-    public void saveMCNotifications(String fileName) throws Exception
-    {
+
+    public void saveMCNotifications(String fileName) throws Exception {
         MCNotifications items = printer.readNotifications();
         MCNotificationsReport report = new MCNotificationsReport();
         report.save(items, fileName);
         printer.confirmNotifications(items);
     }
+
+    public int mcClearBuffer() throws Exception {
+        return printer.mcClearBuffer();
+    }
+
 }

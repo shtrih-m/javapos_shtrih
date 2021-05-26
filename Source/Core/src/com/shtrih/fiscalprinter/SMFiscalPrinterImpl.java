@@ -1228,7 +1228,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             List<TLVItem> items = new ArrayList<TLVItem>();
             items.add(new TLVItem(1023, String.valueOf(request.getQuantity())));
             items.add(new TLVItem(2108, String.valueOf(request.getUnit())));
-            TLVItem item = new TLVItem(1291);
+            TLVItem item = new TLVItem(1291); 
             items.add(item);
             item.getItems().add(new TLVItem(1293, String.valueOf(request.getNumerator())));
             item.getItems().add(new TLVItem(1294, String.valueOf(request.getDenominator())));
@@ -5033,5 +5033,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public int fsReadMCStatus(FSReadMCStatus command) throws Exception {
         command.setPassword(sysPassword);
         return executeCommand(command);
+    }
+    
+    public int mcClearBuffer() throws Exception {
+        FSAcceptMC command = new FSAcceptMC();
+        command.setAction(FSAcceptMC.ActionClearBuffer);
+        return fsAcceptMC(command);
     }
 }

@@ -28,6 +28,11 @@ package com.shtrih.fiscalprinter.command;
  */
 public final class FSAcceptMC extends PrinterCommand {
 
+    // Action values
+    public static final int ActionDeny = 0;
+    public static final int ActionAccept = 1;
+    public static final int ActionClearBuffer = 2;
+    
     // in
     private int password;
     private int action;

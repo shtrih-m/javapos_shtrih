@@ -547,6 +547,10 @@ public class DirectIOHandler2 {
                 new DIOAddItemCode(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_MC_CLEAR_BUFFER:
+                new DIOMCClearBuffer(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL, Localizer.getString(Localizer.invalidParameterValue) + ", command");
         }

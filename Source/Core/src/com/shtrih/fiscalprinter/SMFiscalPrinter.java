@@ -705,4 +705,6 @@ public interface SMFiscalPrinter {
     public int fsAuthorize(FSAuthorize command) throws Exception;
     
     public int fsReadMCStatus(FSReadMCStatus command) throws Exception;
+    
+    public int mcClearBuffer() throws Exception;
 }
