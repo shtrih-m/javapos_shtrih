@@ -13,6 +13,7 @@ import com.shtrih.jpos.DIOUtils;
 import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
+import com.shtrih.fiscalprinter.request.CheckCodeRequest;
 
 public class DIOCheckItemCode extends DIOItem {
 
@@ -23,15 +24,20 @@ public class DIOCheckItemCode extends DIOItem {
     public void execute(int[] data, Object object) throws Exception {
 
         String[] lines = (String[])object;
-        String barcode = lines[0];
-        long quantity = 1000;
-        boolean isSale = true;
-        if (lines.length > 3)
+        CheckCodeRequest request = new CheckCodeRequest();
+        request.setData(lines[0].getBytes());
+        request.setQuantity(1);
+        request.setIsSale(true);
+        request.setUnit(10); // gramms
+        if (lines.length > 5)
         {
-            isSale = !(lines[1].equalsIgnoreCase("0"));
-            quantity = Long.parseLong(lines[2]);
+            request.setIsSale(!(lines[1].equalsIgnoreCase("0")));
+            request.setQuantity(Long.parseLong(lines[2]) / 1000000.0);
+            request.setUnit(Integer.parseInt(lines[3]));
+            request.setNumerator(Long.parseLong(lines[4]));
+            request.setDenominator(Long.parseLong(lines[5]));
         }
-        getPrinter().checkItemCode(barcode.getBytes(), isSale, quantity / 1000.0);
+        getPrinter().checkItemCode(request);
     }
 
 }

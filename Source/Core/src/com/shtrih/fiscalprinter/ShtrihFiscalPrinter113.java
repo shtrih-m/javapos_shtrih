@@ -18,15 +18,14 @@ import java.util.Vector;
 import jpos.events.ErrorListener;
 import jpos.events.DirectIOListener;
 import jpos.events.StatusUpdateListener;
-
-import com.shtrih.barcode.PrinterBarcode;
-import com.shtrih.fiscalprinter.command.*;
-import com.shtrih.jpos.DIOUtils;
-import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
-
 import jpos.events.OutputCompleteListener;
 
+import com.shtrih.jpos.DIOUtils;
+import com.shtrih.util.StringUtils;
+import com.shtrih.barcode.PrinterBarcode;
+import com.shtrih.fiscalprinter.command.*;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
+import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import com.shtrih.jpos.fiscalprinter.directIO.DIOReadMCNotificationStatus;
 
 /**
@@ -1597,10 +1596,9 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     /**
      * Начать отчет о регистрации
      *
-     * @param reportType Тип отчета:
-     * 00 – Отчет о регистрации КТТ
-     * 01 – Отчет об изменении параметров регистрации ККТ, в связи с заменой ФН
-     * 02 – Отчет об изменении параметров регистрации ККТ без замены ФН
+     * @param reportType Тип отчета: 00 – Отчет о регистрации КТТ 01 – Отчет об
+     * изменении параметров регистрации ККТ, в связи с заменой ФН 02 – Отчет об
+     * изменении параметров регистрации ККТ без замены ФН
      */
     public void fsStartFiscalization(int reportType) throws Exception {
         FSStartFiscalization command = new FSStartFiscalization(getSysPassword(), reportType);
@@ -1612,22 +1610,15 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
      *
      * @param inn ИНН 1018
      * @param rnm Регистрационный номер ККТ 1037
-     * @param taxSystemCode Код системы налогообложения 1062, битовое поле:
-     * 0 Общая
-     * 1 Упрощенная доход
-     * 2 Упрощенная доход минус расход
-     * 3 Единый налог на вмененный доход
-     * 4 Единый сельскохозяйственный налог
-     * 5 Патентная система налогообложения
-     * @param operationMode Режим работы, битовое поле,
-     * определяет какие тэги признаков режимов работы будут переданы в документ
-     * регистрации:
-     * 0 признак шифрования 1056
-     * 1 признак автономного режима 1002
-     * 2 признак автоматического режима 1001
-     * 3 признак расчетов за услуги 1109
-     * 4 признак АС БСО 1110
-     * 5 признак ККТ для расчетов только в Интернет 1108
+     * @param taxSystemCode Код системы налогообложения 1062, битовое поле: 0
+     * Общая 1 Упрощенная доход 2 Упрощенная доход минус расход 3 Единый налог
+     * на вмененный доход 4 Единый сельскохозяйственный налог 5 Патентная
+     * система налогообложения
+     * @param operationMode Режим работы, битовое поле, определяет какие тэги
+     * признаков режимов работы будут переданы в документ регистрации: 0 признак
+     * шифрования 1056 1 признак автономного режима 1002 2 признак
+     * автоматического режима 1001 3 признак расчетов за услуги 1109 4 признак
+     * АС БСО 1110 5 признак ККТ для расчетов только в Интернет 1108
      */
     public void fsFiscalization(String inn, String rnm, int taxSystemCode, int operationMode) throws JposException {
         FSFiscalization command = new FSFiscalization(getSysPassword(), inn, rnm, taxSystemCode, operationMode);
@@ -1639,27 +1630,17 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
      *
      * @param inn ИНН 1018
      * @param rnm Регистрационный номер ККТ 1037
-     * @param taxSystemCode Код системы налогообложения 1062, битовое поле:
-     * 0 Общая
-     * 1 Упрощенная доход
-     * 2 Упрощенная доход минус расход
-     * 3 Единый налог на вмененный доход
-     * 4 Единый сельскохозяйственный налог
-     * 5 Патентная система налогообложения
-     * @param operationMode Режим работы, битовое поле,
-     * определяет какие тэги признаков режимов работы будут переданы в документ
-     * перерегистрации:
-     * 0 признак шифрования 1056
-     * 1 признак автономного режима 1002
-     * 2 признак автоматического режима 1001
-     * 3 признак расчетов за услуги 1109
-     * 4 признак АС БСО 1110
-     * 5 признак ККТ для расчетов только в Интернет 1108
-     * @param reasonCode Код причины перерегистрации 1101:
-     * 1 Замена ФН
-     * 2 Замена ОФД
-     * 3 Изменение реквизитов
-     * 4 Изменение настроек ККТ
+     * @param taxSystemCode Код системы налогообложения 1062, битовое поле: 0
+     * Общая 1 Упрощенная доход 2 Упрощенная доход минус расход 3 Единый налог
+     * на вмененный доход 4 Единый сельскохозяйственный налог 5 Патентная
+     * система налогообложения
+     * @param operationMode Режим работы, битовое поле, определяет какие тэги
+     * признаков режимов работы будут переданы в документ перерегистрации: 0
+     * признак шифрования 1056 1 признак автономного режима 1002 2 признак
+     * автоматического режима 1001 3 признак расчетов за услуги 1109 4 признак
+     * АС БСО 1110 5 признак ККТ для расчетов только в Интернет 1108
+     * @param reasonCode Код причины перерегистрации 1101: 1 Замена ФН 2 Замена
+     * ОФД 3 Изменение реквизитов 4 Изменение настроек ККТ
      */
     public void fsReFiscalization(String inn, String rnm, int taxSystemCode, int operationMode, int reasonCode) throws JposException {
         FSReFiscalization command = new FSReFiscalization(getSysPassword(), inn, rnm, taxSystemCode, operationMode, reasonCode);
@@ -1909,22 +1890,25 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void fsWriteCustomerEmail(String email, boolean print) throws JposException {
         int[] data = new int[1];
         data[0] = 0;
-        if (print) data[0] = 1;
+        if (print) {
+            data[0] = 1;
+        }
         directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_CUSTOMER_EMAIL, data, email);
     }
-    
+
     public void fsWriteCustomerPhone(String data) throws JposException {
         fsWriteCustomerPhone(data, true);
     }
 
-    public void fsWriteCustomerPhone(String phone, boolean print) throws JposException 
-    {
+    public void fsWriteCustomerPhone(String phone, boolean print) throws JposException {
         int[] data = new int[1];
         data[0] = 0;
-        if (print) data[0] = 1;
+        if (print) {
+            data[0] = 1;
+        }
         directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_CUSTOMER_PHONE, data, phone);
     }
-    
+
     public void fsWriteTLV(byte[] data) throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_TLV, null, data);
     }
@@ -1955,19 +1939,19 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         fsWriteOperationTLV(tlvdata, true);
     }
 
-    public void fsWriteOperationTLV(byte[] tlvdata, boolean print) throws JposException 
-    {
+    public void fsWriteOperationTLV(byte[] tlvdata, boolean print) throws JposException {
         int[] data = new int[1];
         data[0] = 0;
-        if (print) data[0] = 1;
+        if (print) {
+            data[0] = 1;
+        }
         directIO(SmFptrConst.SMFPTR_DIO_FS_WRITE_OPERATION_TLV, data, tlvdata);
     }
-    
-    
+
     public void fsWriteOperationTag(int tagId, String tagValue) throws Exception {
         fsWriteOperationTag(tagId, tagValue, true);
     }
-    
+
     public void fsWriteOperationTag(int tagId, String tagValue, boolean print) throws Exception {
         TLVWriter tlv = new TLVWriter();
         tlv.add(tagId, tagValue);
@@ -1977,7 +1961,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void fsWriteOperationTag(int tagId, byte[] value) throws Exception {
         fsWriteOperationTag(tagId, value, true);
     }
-    
+
     public void fsWriteOperationTag(int tagId, byte[] value, boolean print) throws Exception {
         TLVWriter tlv = new TLVWriter();
         tlv.add(tagId, value);
@@ -1987,7 +1971,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void fsWriteOperationTag(int tagId, boolean value) throws Exception {
         fsWriteOperationTag(tagId, value, true);
     }
-    
+
     public void fsWriteOperationTag(int tagId, boolean value, boolean print) throws Exception {
         fsWriteOperationTag(tagId, value ? 1 : 0, 1, print);
     }
@@ -1995,7 +1979,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void fsWriteOperationTag(int tagId, long value, int length) throws Exception {
         fsWriteOperationTag(tagId, value, length, true);
     }
-    
+
     public void fsWriteOperationTag(int tagId, long value, int length, boolean print) throws Exception {
         TLVWriter tlv = new TLVWriter();
         tlv.add(tagId, value, length);
@@ -2017,11 +2001,11 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void disablePrint() throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_FS_DISABLE_PRINT, null, null);
     }
-    
+
     public void enablePrint() throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_FS_ENABLE_PRINT, null, null);
     }
-    
+
     public void disableDocEnd() throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_FS_DISABLE_DOCEND, null, null);
     }
@@ -2326,13 +2310,27 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void addItemCode(byte[] data) throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_ADD_ITEM_CODE, null, new Object[]{data});
     }
-    
+
     public void sendItemCode(String barcode) throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_SEND_ITEM_CODE, null, new String[]{barcode});
     }
 
     public void checkItemCode(String barcode) throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_CHECK_ITEM_CODE, null, new String[]{barcode});
+    }
+
+    public void checkItemCode(String barcode, boolean isSale, 
+            long quantity, int units, long numerator, long denominator)
+            throws JposException {
+        String[] lines = new String[6];
+        lines[0] = barcode;
+        lines[1] = StringUtils.boolToStr(isSale);
+        lines[2] = String.valueOf(quantity);
+        lines[3] = String.valueOf(units);
+        lines[4] = String.valueOf(numerator);
+        lines[5] = String.valueOf(denominator);
+      
+        directIO(SmFptrConst.SMFPTR_DIO_CHECK_ITEM_CODE, null, lines);
     }
 
     public void bindItemCode(String barcode) throws JposException {
@@ -2374,11 +2372,10 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         String s = getParameter(SmFptrConst.SMFPTR_DIO_PARAM_PROTOCOL_TYPE);
         return Integer.decode(s);
     }
-    
+
     /**
      * Set receipt field value. Field defined in receipt template
      */
-    
     public void setReceiptField(String fieldName, String fieldValue) throws JposException {
         String[] lines = new String[2];
         lines[0] = fieldName;
@@ -2389,23 +2386,20 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     /**
      * Get receipt field value. Field defined in receipt template
      */
-    
     public String getReceiptField(String fieldName) throws JposException {
         String[] lines = new String[2];
         lines[0] = fieldName;
         directIO(SmFptrConst.SMFPTR_DIO_SET_RECEIPT_FIELD, null, lines);
         return lines[1];
     }
-    
-    public void saveNotifications(String fileName) throws JposException
-    {
+
+    public void saveNotifications(String fileName) throws JposException {
         String[] lines = new String[1];
         lines[0] = fileName;
         directIO(SmFptrConst.SMFPTR_DIO_SAVE_MC_NOTIFICATIONS, null, lines);
-   }
+    }
 
-    public String[] readKMServerStatus() throws JposException
-    {
+    public String[] readKMServerStatus() throws JposException {
         String[] lines = new String[6];
         directIO(SmFptrConst.SMFPTR_DIO_READ_MC_NOTIFICATION_STATUS, null, lines);
         return lines;

@@ -80,7 +80,9 @@ public class CommandOutputStream {
         return stream.size();
     }
 
-    public void writeBytes(byte[] data) throws Exception {
+    public void writeBytes(byte[] data) throws Exception 
+    {
+        if (data == null) return;
         stream.write(data);
     }
 

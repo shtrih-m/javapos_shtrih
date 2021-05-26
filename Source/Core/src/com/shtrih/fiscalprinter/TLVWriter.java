@@ -1,5 +1,6 @@
 package com.shtrih.fiscalprinter;
 
+import com.shtrih.fiscalprinter.command.CommandInputStream;
 import com.shtrih.util.encoding.IBM866;
 
 import java.util.List;
@@ -108,6 +109,13 @@ public class TLVWriter {
         return this;
     }
 
+    public void addTag(int tagId, String value) throws Exception
+    {
+        TLVTags tags = TLVTags.getInstance();
+        TLVTag tag = tags.find(tagId);
+        add(tagId, tag.textToBin(value));
+    }
+    
     public byte[] getData(List<TLVItem> items) throws Exception {
         ByteArrayOutputStream stm = new ByteArrayOutputStream();
         for (int i = 0; i < items.size(); i++) {

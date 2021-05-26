@@ -22,6 +22,11 @@ public class TLVItem {
     private byte[] data = null;
     private final List<TLVItem> items = new ArrayList<TLVItem>();
 
+    public TLVItem(int tagId) {
+        this.id = tagId;
+        tag = TLVTags.getInstance().find(tagId);
+    }
+
     public TLVItem(int tagId, TLVTag tag) {
         this.id = tagId;
         this.tag = tag;
@@ -32,7 +37,13 @@ public class TLVItem {
         this.tag = tag;
         this.data = data;
     }
-    
+
+    public TLVItem(int tagId, String text) throws Exception {
+        this.id = tagId;
+        tag = TLVTags.getInstance().find(tagId);
+        data = tag.textToBin(text);
+    }
+
     public int getId() {
         return id;
     }

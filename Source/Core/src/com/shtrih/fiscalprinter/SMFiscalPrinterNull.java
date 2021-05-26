@@ -6,6 +6,7 @@ package com.shtrih.fiscalprinter;
 
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.command.*;
+import com.shtrih.fiscalprinter.request.*;
 import com.shtrih.fiscalprinter.model.PrinterModel;
 import com.shtrih.fiscalprinter.model.PrinterModels;
 import com.shtrih.fiscalprinter.port.PrinterPort;
@@ -1152,7 +1153,7 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
-    public void checkItemCode(byte[] data, boolean isSale, double quantity) throws Exception {
+    public void checkItemCode(CheckCodeRequest request) throws Exception {
     }
 
     public int fsBindMC(FSBindMC command) throws Exception {

@@ -1013,7 +1013,8 @@ class PrinterTest implements FiscalPrinterConst {
             //printFiscalReceiptWithTag1225();
             //fsReadParameters();
             //printFiscalReceipt11();
-            printFiscalReceipt145_5();
+            // printFiscalReceipt145_5();
+            checkItemBarcode();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3774,7 +3775,8 @@ class PrinterTest implements FiscalPrinterConst {
             char GS = 0x1D;
             //String barcode = "018123456789123421000000000005L"+ GS +"2401234"+ GS +"100123456789ABCDEF1234"+ GS +"17170911911129"+ GS +"92E+NEWqvUuQ8CKBk4Rbk0JxKoFeGDo1Ay+9yyVf839Qt++pjSbsMLJbF2ZlFyzf+B8a+JcszhFHpuGpEu1gAlfA==";
             String barcode = "018123456789123421000000000005M" + GS + "2401234" + GS + "100123456789ABCDEF1234" + GS + "17170911911129" + GS + "92uZoDVpzZRuXoSs79Q54WhebeXNJa1oZ9kTyi09N4vW5E31B7vM3uwo17FIx9fd2T5g9tbVxhR1Wlmt9r3ivSvg==";
-            printer.checkItemCode(barcode);
+            
+            printer.checkItemCode(barcode, true, 12345789, 11, 1, 2);
         } catch (Exception e) {
             e.printStackTrace();
         }

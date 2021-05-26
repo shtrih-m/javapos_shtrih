@@ -26,6 +26,7 @@ import com.shtrih.barcode.SmBarcode;
 import com.shtrih.barcode.SmBarcodeEncoder;
 import com.shtrih.barcode.ZXingEncoder;
 import com.shtrih.fiscalprinter.command.*;
+import com.shtrih.fiscalprinter.request.*;
 import com.shtrih.fiscalprinter.model.PrinterModel;
 import com.shtrih.fiscalprinter.model.PrinterModels;
 import com.shtrih.fiscalprinter.model.XmlModelsWriter;
@@ -1195,18 +1196,22 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return rc;
     }
 
-    public void checkItemCode(byte[] data, boolean isSale,
-            double quantity) throws Exception {
-        if (data == null) {
+    public boolean isPeaceQuantity(double quantity) {
+        return (long) ((quantity - (long) quantity) * 1000000) == 0;
+    }
+
+    public void checkItemCode(CheckCodeRequest request) throws Exception 
+    {
+        if (request.getData() == null) {
             return;
         }
         if (getFDVersion() != PrinterConst.FS_FORMAT_FFD_1_2) {
             return;
         }
 
-        boolean isPeace = (((long) (quantity * 1000)) == 0);
+        boolean isPeace = isPeaceQuantity(request.getQuantity());
         int itemStatus = FSCheckMC.FS_ITEM_STATUS_NOCHANGE;
-        if (isSale) {
+        if (request.isSale()) {
             if (isPeace) {
                 itemStatus = FSCheckMC.FS_ITEM_STATUS_PIECE_SELL;
             } else {
@@ -1217,13 +1222,29 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         } else {
             itemStatus = FSCheckMC.FS_ITEM_STATUS_WEIGHT_RETURN;
         }
+        byte[] tlv = new byte[0];
+        if (!isPeace)
+        {
+            List<TLVItem> items = new ArrayList<TLVItem>();
+            items.add(new TLVItem(1023, String.valueOf(request.getQuantity())));
+            items.add(new TLVItem(2108, String.valueOf(request.getUnit())));
+            TLVItem item = new TLVItem(1291);
+            items.add(item);
+            item.getItems().add(new TLVItem(1293, String.valueOf(request.getNumerator())));
+            item.getItems().add(new TLVItem(1294, String.valueOf(request.getDenominator())));
+                    
+            TLVWriter writer = new TLVWriter();
+            writer.add(items);
+            tlv = writer.getBytes();
+        }
 
         FSCheckMC command = new FSCheckMC();
         command.password = sysPassword;
         command.itemStatus = itemStatus;
         command.checkMode = 0;
-        command.mcData = data;
-        command.tlv = null;
+        command.mcData = request.getData();
+        command.tlv = tlv;
+        
         execute(command);
         if (command.localCheckStatus == 0) {
             if (command.localErrorCode == FSCheckMC.FS_LEC_FS_HAS_NO_KEY) {

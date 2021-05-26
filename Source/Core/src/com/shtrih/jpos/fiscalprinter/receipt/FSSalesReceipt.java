@@ -7,6 +7,7 @@ import com.shtrih.fiscalprinter.PrinterGraphics;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.TLVItem;
 import com.shtrih.fiscalprinter.TLVReader;
+import com.shtrih.fiscalprinter.request.CheckCodeRequest;
 import com.shtrih.fiscalprinter.command.AmountItem;
 import com.shtrih.fiscalprinter.command.CloseRecParams;
 import com.shtrih.fiscalprinter.command.EndFiscalReceipt;
@@ -1172,8 +1173,16 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             // check MC
             if (getParams().checkItemCodeEnabled) {
                 Vector<byte[]> codes = item.getItemCodes();
-                for (int i = 0; i < codes.size(); i++) {
-                    getDevice().checkItemCode(codes.get(i), isSaleReceipt(), item.getQuantity());
+                for (int i = 0; i < codes.size(); i++) 
+                {
+                    CheckCodeRequest request = new CheckCodeRequest();
+                    request.setData(codes.get(i));
+                    request.setIsSale(isSaleReceipt());
+                    request.setQuantity(item.getQuantity());
+                    request.setUnit(10);
+                    request.setNumerator(0);
+                    request.setDenominator(0);
+                    getDevice().checkItemCode(request);
                 }
             }
 

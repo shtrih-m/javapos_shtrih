@@ -12,6 +12,7 @@ package com.shtrih.fiscalprinter;
  * @author V.Kravtsov
  */
 import com.shtrih.barcode.PrinterBarcode;
+import com.shtrih.fiscalprinter.request.*;
 import com.shtrih.fiscalprinter.command.AmountItem;
 import com.shtrih.fiscalprinter.command.Beep;
 import com.shtrih.fiscalprinter.command.BeginTest;
@@ -653,7 +654,7 @@ public interface SMFiscalPrinter {
 
     public int sendItemCode(byte[] data) throws Exception;
 
-    public void checkItemCode(byte[] data, boolean isSale, double quantity) throws Exception;
+    public void checkItemCode(CheckCodeRequest request) throws Exception;
     
     public int fsBindMC(FSBindMC command) throws Exception;
 
