@@ -88,6 +88,12 @@ public class TLVItemTests {
         assertEquals("123.456789", item.getText());
     }
 
+    @Test
+    public void Should_decode_fvln3() throws Exception {
+        TLVItem item = new TLVItem(1023, "123.456789");
+        assertEquals("123.456789", item.getText());
+    }
+    
     private byte[] fsWriteTag(final int data) throws Exception {
         ByteBuffer buffer = ByteBuffer.allocate(8);
 

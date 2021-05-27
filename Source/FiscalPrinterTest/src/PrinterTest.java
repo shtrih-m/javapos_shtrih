@@ -3773,10 +3773,11 @@ class PrinterTest implements FiscalPrinterConst {
         try {
             printer.resetPrinter();
             char GS = 0x1D;
-            //String barcode = "018123456789123421000000000005L"+ GS +"2401234"+ GS +"100123456789ABCDEF1234"+ GS +"17170911911129"+ GS +"92E+NEWqvUuQ8CKBk4Rbk0JxKoFeGDo1Ay+9yyVf839Qt++pjSbsMLJbF2ZlFyzf+B8a+JcszhFHpuGpEu1gAlfA==";
-            String barcode = "018123456789123421000000000005M" + GS + "2401234" + GS + "100123456789ABCDEF1234" + GS + "17170911911129" + GS + "92uZoDVpzZRuXoSs79Q54WhebeXNJa1oZ9kTyi09N4vW5E31B7vM3uwo17FIx9fd2T5g9tbVxhR1Wlmt9r3ivSvg==";
-            
+            String barcode = "010464007801637221u(gcWfRTx_XcL" + GS + 
+                    "91FFD0" + GS + 
+                    "92dGVzdAhR5wF1wnfPcPcqorLAd0N7MoHkUlWu7wkjY/8=";
             printer.checkItemCode(barcode, true, 12345789, 11, 1, 2);
+            printer.mcClearBuffer();
         } catch (Exception e) {
             e.printStackTrace();
         }

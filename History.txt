@@ -11,7 +11,9 @@
   deviceServiceVersion = 1013621
 
   [-] Fixed error with tags 1085 and 1086 printing
-  [+] Added tag 2108 processing
+  [+] Added tag 2108 processing directIO SMFPTR_DIO_CHECK_ITEM_CODE
+  [+] Added directIO command SMFPTR_DIO_MC_CLEAR_BUFFER to clear 
+      code check results buffer in fiscal storage
 
 ********************************************************************************
 

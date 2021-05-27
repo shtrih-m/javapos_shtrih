@@ -1258,4 +1258,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public int fsReadMCStatus(FSReadMCStatus command) throws Exception {
         return 0;
     }
+    
+    public int mcClearBuffer() throws Exception{
+        return 0;
+    }
 }

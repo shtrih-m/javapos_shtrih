@@ -2343,12 +2343,15 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_BIND_ITEM_CODE, null, params);
     }
 
-    public void acceptItemCode(boolean accept) throws JposException {
-        String action = "0";
+    public int acceptItemCode(boolean accept) throws JposException {
+        Object[] params = new Object[2];
+        params[0] = new Integer(0);
         if (accept) {
-            action = "1";
+            params[0] = new Integer(1);
         }
-        directIO(SmFptrConst.SMFPTR_DIO_ACCEPT_ITEM_CODE, null, new String[]{action});
+        directIO(SmFptrConst.SMFPTR_DIO_ACCEPT_ITEM_CODE, null, params);
+        int errorCode = (Integer)params[1];
+        return errorCode;
     }
 
     /**

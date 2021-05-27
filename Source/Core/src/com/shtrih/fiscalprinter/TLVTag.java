@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.text.DecimalFormatSymbols;
 
 /**
  *
@@ -77,19 +78,10 @@ public class TLVTag {
 
     public byte[] fvlnToTLV(double v) throws Exception {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        int k = 0;
-        double c = v;
-        long l = Math.round(v);
-        for (int i = 0; i <= 4; i++) {
-            if (c == l) {
-                break;
-            }
-            c = v * 10;
-            l = Math.round(c);
-            k++;
-        }
+        String s = String.valueOf(v);
+        int k = s.length() - s.indexOf(".") -1;
         stream.write(k);
-        stream.write(vlnToTLV(l));
+        stream.write(vlnToTLV((long)(v * Math.pow(10, k))));
         return stream.toByteArray();
     }
 
