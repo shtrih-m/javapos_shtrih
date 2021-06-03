@@ -539,7 +539,7 @@ public class MainActivity extends AppCompatActivity
                 HashMap<String, String> props = new HashMap<>();
                 props.put("portName", address);
                 props.put("portType", "3");
-                props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothLEPort");
+                props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothPort");
                 props.put("protocolType", selectedProtocol);
                 props.put("fastConnect", fastConnect ? "1" : "0");
                 props.put("capScocUpdateFirmware", scocFirmwareAutoupdate ? "1" : "0");

@@ -90,7 +90,7 @@
         <!-- 0 - command 10h, short status request  -->
         <!-- 1 - command 11h, long status request  -->
         <!-- 2 - status command selected by driver -->
-        <prop name="statusCommand" type="String" value="2"/>
+        <prop name="statusCommand" type="String" value="0"/>
         <!-- Localization file name -->
         <prop name="messagesFileName" type="String" value="shtrihjavapos_ru.properties"/>
         <!-- Wrap text enabled -->
@@ -258,8 +258,9 @@
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- Receipt template -->
 		<prop name="FSCombineItemAdjustments" type="String" value="0"/>
-		<prop name="ReceiptTemplateEnabled" type="String" value="0"/>
+		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
 		<prop name="FieldSeparator" type="String" value=":"/>
+		<prop name="QuantityFormat" type="String" value="0.000000"/>
 		<prop name="ItemTableHeader" type="String"  value="-------------------HEADER-----------------"/>
 		<prop name="ItemTableTrailer" type="String" value="-------------------TRAILER----------------"/>
 		<prop name="ItemRowFormat" type="String" value="%3lFIELD0%%36lTITLE%%3FIELD1%%22SUM% X %10lQUAN%%=$10TOTAL_TAX%

@@ -16,6 +16,9 @@ import jpos.config.RS232Const;
 
 import static com.shtrih.jpos.fiscalprinter.SmFptrConst.SMFPTR_HEADER_MODE_DRIVER;
 import static com.shtrih.jpos.fiscalprinter.SmFptrConst.SMFPTR_HEADER_MODE_DRIVER2;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 public class FptrParameters {
 
@@ -193,6 +196,7 @@ public class FptrParameters {
     public boolean rebootBeforeDayOpen = false;
     public int markingType = SmFptrConst.MARKING_TYPE_PRINTER;
     public int validTimeDiffInSecs = 0;
+    public String quantityFormat = "0.000";
 
 
     public FptrParameters() throws Exception {
@@ -435,6 +439,7 @@ public class FptrParameters {
         rebootBeforeDayOpen = reader.readBoolean("rebootBeforeDayOpen", false);
         markingType = reader.readInteger("markingType", SmFptrConst.MARKING_TYPE_PRINTER);
         validTimeDiffInSecs = reader.readInteger("validTimeDiffInSecs", 0);
+        quantityFormat = reader.readString("QuantityFormat", "0.000");
 
         // paymentNames
         String paymentName;
@@ -589,7 +594,11 @@ public class FptrParameters {
     }
 
     public String quantityToStr(double value, String unitName) throws Exception {
-        return StringUtils.quantityToString(Math.abs(value));
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(
+                Locale.getDefault());
+        symbols.setDecimalSeparator('.');
+        DecimalFormat formatter = new DecimalFormat(quantityFormat, symbols);
+        return formatter.format(Math.abs(value));
     }
 
     public boolean isDriverHeader() {

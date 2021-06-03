@@ -1468,27 +1468,3 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         itemCodes.add(mcdata);
     }
 }
-
-/*
- private void fsWriteTag2(int tagId, String tagValue) throws Exception {
- fsWriteTLV(getDevice().getTLVData(tagId, tagValue));
- }
-
- public void fsWriteTag(int tagId, String tagValue) throws Exception {
- fsWriteTag2(tagId, tagValue);
- }
-
- public void fsWriteCustomerEmail(String text) throws Exception {
- if (!text.isEmpty()) {
- fsWriteTag2(1008, text);
- }
- }
-
- public void fsWriteCustomerPhone(String text) throws Exception {
- if (!text.isEmpty()) {
- fsWriteTag2(1008, text);
- }
- }
-
-
- */

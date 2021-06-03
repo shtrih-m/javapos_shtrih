@@ -1200,8 +1200,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return (long) ((quantity - (long) quantity) * 1000000) == 0;
     }
 
-    public void checkItemCode(CheckCodeRequest request) throws Exception 
-    {
+    public void checkItemCode(CheckCodeRequest request) throws Exception {
         if (request.getData() == null) {
             return;
         }
@@ -1223,16 +1222,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             itemStatus = FSCheckMC.FS_ITEM_STATUS_WEIGHT_RETURN;
         }
         byte[] tlv = new byte[0];
-        if (!isPeace)
-        {
+        if (!isPeace) {
             List<TLVItem> items = new ArrayList<TLVItem>();
             items.add(new TLVItem(2108, String.valueOf(request.getUnit())));
             items.add(new TLVItem(1023, String.valueOf(request.getQuantity())));
-            TLVItem item = new TLVItem(1291); 
+            TLVItem item = new TLVItem(1291);
             items.add(item);
             item.getItems().add(new TLVItem(1293, String.valueOf(request.getNumerator())));
             item.getItems().add(new TLVItem(1294, String.valueOf(request.getDenominator())));
-                    
+
             TLVWriter writer = new TLVWriter();
             writer.add(items);
             tlv = writer.getBytes();
@@ -1244,7 +1242,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.checkMode = 0;
         command.mcData = request.getData();
         command.tlv = tlv;
-        
+
         execute(command);
         if (command.localCheckStatus == 0) {
             if (command.localErrorCode == FSCheckMC.FS_LEC_FS_HAS_NO_KEY) {
@@ -3546,24 +3544,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public byte[] getTLVData(int tagId, String tagValue) throws Exception {
-        TLVList list = new TLVList();
+        TLVWriter writer = new TLVWriter();
         switch (tagId) {
             case 15001:
             case 15002: {
-                list.add(tagId, Integer.valueOf(tagValue), 4);
+                writer.add(tagId, Integer.valueOf(tagValue), 4);
                 break;
             }
             default:
-                TLVTags tags = TLVTags.getInstance();
-                TLVTag tag = tags.find(tagId);
-                if (tag != null) {
-                    return tag.textToBin(tagValue);
-                } else {
-                    list.add(tagId, tagValue);
-                }
-
+                writer.addTag(tagId, tagValue);
         }
-        return list.getData();
+        return writer.getBytes();
     }
 
     public void fsWriteTag(int tagId, String tagValue) throws Exception {
@@ -5034,7 +5025,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setPassword(sysPassword);
         return executeCommand(command);
     }
-    
+
     public int mcClearBuffer() throws Exception {
         FSAcceptMC command = new FSAcceptMC();
         command.setAction(FSAcceptMC.ActionClearBuffer);

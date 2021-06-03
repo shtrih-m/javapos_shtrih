@@ -1003,18 +1003,20 @@ class PrinterTest implements FiscalPrinterConst {
             // System.out.println("FFD version: " + printer.readFFDVersion());
             //printSalesReceipt99(5,5);
 
-            //printFiscalReceipt145_9();
+            printFiscalReceipt145_9();
             //printer.saveNotifications("notifications.txt");
             //readKMServerStatus();
             //testGetTextLength();
             //printFiscalReceipt145_4();
             //printFiscalReceiptWithTag1222();
-            
             //printFiscalReceiptWithTag1225();
             //fsReadParameters();
             //printFiscalReceipt11();
-            // printFiscalReceipt145_5();
-            checkItemBarcode();
+            //checkItemBarcode();
+            //printFiscalReceipt145_5();
+            //printFiscalReceipt136();
+            //printFiscalReceipt11();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1025,7 +1027,7 @@ class PrinterTest implements FiscalPrinterConst {
 
             System.out.println("Read text length");
             System.out.println("Font number: " + printer.getFontNumber());
-            
+
             for (int i = 1; i < 7; i++) {
                 int len = printer.getTextLength(i);
                 System.out.println("Font " + i + ": " + len);
@@ -1385,7 +1387,7 @@ class PrinterTest implements FiscalPrinterConst {
 
             TLVList list = new TLVList();
             list.add(1008, "+79168191324");
-            list.add(1008, "kravtsov@shtrih-m.ru");
+            //list.add(1008, "kravtsov@shtrih-m.ru");
             printer.fsWriteTLV(list.getData());
 
             printer.endFiscalReceipt(true);
@@ -3773,9 +3775,9 @@ class PrinterTest implements FiscalPrinterConst {
         try {
             printer.resetPrinter();
             char GS = 0x1D;
-            String barcode = "010464007801637221u(gcWfRTx_XcL" + GS + 
-                    "91FFD0" + GS + 
-                    "92dGVzdAhR5wF1wnfPcPcqorLAd0N7MoHkUlWu7wkjY/8=";
+            String barcode = "010464007801637221u(gcWfRTx_XcL" + GS
+                    + "91FFD0" + GS
+                    + "92dGVzdAhR5wF1wnfPcPcqorLAd0N7MoHkUlWu7wkjY/8=";
             printer.checkItemCode(barcode, true, 12345789, 11, 1, 2);
             printer.mcClearBuffer();
         } catch (Exception e) {
@@ -3787,7 +3789,7 @@ class PrinterTest implements FiscalPrinterConst {
         try {
             char GS = 0x1D;
             String barcode;
-            
+
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
@@ -3814,7 +3816,7 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceiptWithTag1222() {
         try {
-            
+
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(false);
@@ -3826,28 +3828,28 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
+
     public void printFiscalReceiptWithTag1225() {
         try {
-            
+
             printer.resetPrinter();
             printer.setFiscalReceiptType(FPTR_RT_SALES);
             printer.beginFiscalReceipt(true);
-            
+
             printer.printRecItem("Позиция1", 0, 1234567, 1, 123456, "0");
             TLVWriter writer = new TLVWriter();
             writer.add(1171, "+79616195832");
             writer.add(1225, "ТестТест");
             printer.fsWriteOperationTag(1224, writer.getBytes());
             printer.fsWriteOperationTag(1226, "3664069397  ", false);
-            
+
             printer.printRecTotal(999999, 999999, "REC_TOTAL_CASH_DESCRIPTION");
-            printer.endFiscalReceipt(true);    
+            printer.endFiscalReceipt(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     public void printFiscalReceipt145_5() {
         try {
             printer.resetPrinter();
@@ -3856,7 +3858,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.beginFiscalReceipt(false);
             printer.printRecItem("Item1", 1, 1000, 1, 1, "");
             printer.printRecTotal(1, 1, "0");
-           
+
             TLVWriter writer = new TLVWriter();
             writer.add(1085, "Tag 1085 \r\n Tag 1085.1");
             writer.add(1086, "Tag 1086 \r\n Tag 1086.1");
@@ -4200,19 +4202,50 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-  
+
     public void printFiscalReceipt11() {
         try {
-            printer.resetPrinter();
-            printer.setFiscalReceiptType(FPTR_RT_SALES);
-            printer.beginFiscalReceipt(false);
-            printer.printRecItem("3300573 Пакет ПЯТЕРОЧКА 65х40см", 550, 1000, 1, 550, "ST");
-            printer.printRecSubtotalAdjustment(1, "", 50);
-            printer.printRecTotal(500, 500, "payTypeName1");
-            printer.endFiscalReceipt(false);
+            printSalesReceipt(2, 3);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void printSalesReceipt(int positions, int strings) throws Exception {
+        if (positions <= 0) {
+            positions = 1;
+        }
+        if (strings < 0) {
+            strings = 0;
+        }
+
+        printer.resetPrinter();
+        final int fiscalReceiptType = FiscalPrinterConst.FPTR_RT_SALES;
+        printer.setFiscalReceiptType(fiscalReceiptType);
+        printer.beginFiscalReceipt(true);
+        //Развернул сожержимое метода, чтобы было понятно, какие теги передаём
+        printer.fsWriteTag(1016, "2225031594  ");
+        printer.fsWriteTag(1073, "+78001000000");
+        //printer.fsWriteTag(1057, "1");
+        printer.fsWriteTag(1005, "НОВОСИБИРСК,КИРОВА,86");
+        printer.fsWriteTag(1075, "+73833358088");
+        printer.fsWriteTag(1171, "+73833399242");
+        printer.fsWriteTag(1044, "Прием денежных средств");
+        printer.fsWriteTag(1026, "РНКО \"ПЛАТЕЖНЫЙ ЦЕНТР\"");
+
+        // receipt items
+        for (int i = 0; i < positions; i++) {
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE, 4);
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 4);
+            printer.printRecItem("Приём платежа", 123, 0, 0, 0, "Оплата");
+        }
+        // text lines
+        for (int i = 0; i < strings; i++) {
+            printer.printNormal(FiscalPrinterConst.FPTR_S_RECEIPT, "Text line " + i);
+        }
+        long total = positions * 123;
+        printer.printRecTotal(total, total, "0");
+        printer.endFiscalReceipt(false);
     }
 
 }

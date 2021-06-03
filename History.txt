@@ -7,6 +7,14 @@
     
 ********************************************************************************
 
+  03.06.2021
+  deviceServiceVersion = 1013622
+
+  [+] Added parameter "quantityFormat" to define format in receipt template
+      Default value is "0.000000". For 3 digits format must be "0.000"
+
+********************************************************************************
+
   26.05.2021
   deviceServiceVersion = 1013621
 
