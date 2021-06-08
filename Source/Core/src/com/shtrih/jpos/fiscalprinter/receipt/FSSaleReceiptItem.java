@@ -11,6 +11,7 @@ import com.shtrih.util.MethodParameter;
 import com.shtrih.fiscalprinter.receipt.*;
 import com.shtrih.fiscalprinter.command.PriceItem;
 import com.shtrih.fiscalprinter.command.AmountItem;
+import java.util.List;
 
 /**
  * @author V.Kravtsov
@@ -40,11 +41,11 @@ public class FSSaleReceiptItem {
     private Long taxAmount = null;
     private int paymentType = 4;
     private int subjectType = 1;
-    private Vector tags = new Vector();
     private HashMap receiptFields = new HashMap();
     private double taxRate = 0;
     private Integer unit;
-    private Vector<byte[]> itemCodes = new Vector<byte[]>();
+    private final List tags = new Vector();
+    private final List<byte[]> itemCodes = new Vector<byte[]>();
 
     public FSSaleReceiptItem() {
     }
@@ -72,19 +73,18 @@ public class FSSaleReceiptItem {
         item.taxAmount = taxAmount;
         item.paymentType = paymentType;
         item.subjectType = subjectType;
-        item.itemCodes = itemCodes;
+        item.itemCodes.clear();
+        item.itemCodes.addAll(itemCodes);
+        item.tags.clear();
+        item.tags.addAll(tags);
         item.taxRate = taxRate;
         return item;
     }
 
-    public Vector getTags() {
+    public List getTags() {
         return tags;
     }
 
-    public void setTags(Vector tags) {
-        this.tags = tags;
-    }
-    
     public PriceItem getPriceItem() throws Exception {
         PriceItem item = new PriceItem();
         item.setDepartment(department);
@@ -386,11 +386,7 @@ public class FSSaleReceiptItem {
         this.unit = unit;
     }
 
-    public Vector<byte[]> getItemCodes(){
+    public List<byte[]> getItemCodes(){
         return itemCodes;
-    }
-    
-    public void setItemCodes(Vector<byte[]> itemCodes){
-        this.itemCodes = itemCodes;
     }
 }

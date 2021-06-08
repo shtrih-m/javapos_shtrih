@@ -55,7 +55,8 @@ public class CommandInputStream {
         int b = stream.read();
 
         if(b == -1)
-            throw new Exception("No data available");
+            throw new Exception("" +
+                    "No data available");
 
         return byteToInt(b);
     }

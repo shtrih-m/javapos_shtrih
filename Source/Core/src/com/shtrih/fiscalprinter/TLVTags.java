@@ -161,7 +161,7 @@ public class TLVTags {
         add(1155, "сумма коррекций с НДС по ставке 0%", "СУММА КОРРЕКЦИЙ НДС 0%", TLVTag.TLVType.itVLN, 8);
         add(1157, "счетчики итогов ФН", "СЧЕТЧИКИ ИТОГОВ ФН", TLVTag.TLVType.itSTLV, 708);
         add(1158, "счетчики итогов непереданных ФД", "СЧЕТЧ ИТОГОВ НЕПЕРЕД. ФД", TLVTag.TLVType.itSTLV, 708);
-        add(1162, "код товарной номенклатуры", "КТН", TLVTag.TLVType.itByteArray, 32);
+        add(1162, "код товарной номенклатуры", "КТН", TLVTag.TLVType.itASCII, 32);
         add(1171, "телефон поставщика", "ТЛФ. ПОСТ.", TLVTag.TLVType.itASCII, 19);
         add(1173, "тип коррекции", "ТИП КОРРЕКЦИИ", TLVTag.TLVType.itByte, 1);
         add(1174, "основание для коррекции", "ОСНОВАНИЕ ДЛЯ КООРЕКЦИИ", TLVTag.TLVType.itSTLV, 292);

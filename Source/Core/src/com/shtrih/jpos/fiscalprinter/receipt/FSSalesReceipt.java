@@ -53,7 +53,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private Vector<String> messages = new Vector<String>();
     private final ReceiptTemplate receiptTemplate;
     private static CompositeLogger logger = CompositeLogger.getLogger(FSSalesReceipt.class);
-    private Vector<byte[]> itemCodes = new Vector<byte[]>();
+    private List<byte[]> itemCodes = new Vector<byte[]>();
     private Vector itemTags = new Vector();
 
     public FSSalesReceipt(ReceiptContext context, int receiptType) throws Exception {
@@ -641,9 +641,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             sendItemCodes(item.getItemCodes());
         }
         printOperationTLV(item);
+        //printItemCodes(item.getItemCodes()); !!!
     }
 
-    public void sendItemCodes(Vector<byte[]> codes) throws Exception {
+    public void sendItemCodes(List<byte[]> codes) throws Exception {
         for (int i = 0; i < codes.size(); i++) {
             getDevice().sendItemCode(codes.get(i));
         }
@@ -733,6 +734,22 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
+    public void printItemCodes(List<byte[]> codes) throws Exception {
+        if (!getParams().FSPrintTags) {
+            return;
+        }
+        for (int i = 0; i < codes.size(); i++) {
+            byte[] code = (byte[]) codes.get(i);
+
+            TLVItem item = new TLVItem(1162);
+            item.setData(code);
+            
+            getDevice().printText(SMFP_STATION_REC, item.getText(), 
+                getDevice().getParams().getFont());
+            
+        }
+    }
+    
     public void templatePrintTextItem(FSSaleReceiptItem item) throws Exception {
         if (!receiptTemplate.hasPreLine()) {
             String preLine = item.getPreLine();
@@ -1143,8 +1160,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             item.setPostLine(getPostLine());
             item.setUnitName(unitName);
             item.setIsStorno(isStorno);
-            item.setItemCodes(itemCodes);
-            item.setTags(itemTags);
+            item.getItemCodes().clear();
+            item.getItemCodes().addAll(itemCodes);
+            item.getTags().clear();
+            item.getTags().addAll(itemTags);
             double taxRate = getDevice().getTaxRate(vatInfo) / 10000.0;
             item.setTaxRate(taxRate);
             item.getReceiptFields().clear();
@@ -1172,9 +1191,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             }
             // check MC
             if (getParams().checkItemCodeEnabled) {
-                Vector<byte[]> codes = item.getItemCodes();
-                for (int i = 0; i < codes.size(); i++) 
-                {
+                List<byte[]> codes = item.getItemCodes();
+                for (int i = 0; i < codes.size(); i++) {
                     CheckCodeRequest request = new CheckCodeRequest();
                     request.setData(codes.get(i));
                     request.setIsSale(isSaleReceipt());
@@ -1352,18 +1370,14 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public class FSTLVItem {
 
-        private byte[] data;
-        private FontNumber font;
-        private boolean print;
+        private final byte[] data;
+        private final boolean print;
+        private final FontNumber font;
 
         public FSTLVItem(byte[] data, FontNumber font, boolean print) {
             this.data = data;
             this.font = font;
             this.print = print;
-        }
-
-        public void setData(byte[] data) {
-            this.data = data;
         }
 
         public byte[] getData() {
