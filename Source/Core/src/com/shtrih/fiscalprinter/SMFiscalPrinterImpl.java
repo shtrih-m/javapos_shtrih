@@ -4264,7 +4264,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 return;
             }
 
-            if ((params.getPortType() == 0) && FirmwareUpdater.capXModemUpdate() && (status.getPortNumber() == PrinterConst.SMFP_IF_PC_RS232)) {
+            if ((params.getPortType() == SmFptrConst.PORT_TYPE_SERIAL) && 
+                    FirmwareUpdater.capXModemUpdate() && (status.getPortNumber() == PrinterConst.SMFP_IF_PC_RS232)) {
                 tables = readTables();
                 updateFirmwareXModem(firmwareFileName);
                 waitFirmwareUpdate();
@@ -4551,8 +4552,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public LongPrinterStatus searchDevice() throws Exception {
         logger.debug("searchDevice");
-        synchronized (port.getSyncObject()) {
-            if (params.searchByBaudRateEnabled || params.searchByPortEnabled) {
+        synchronized (port.getSyncObject()) 
+        {
+            boolean isSerial = params.getPortType() == SmFptrConst.PORT_TYPE_SERIAL;
+            if (isSerial && (params.searchByBaudRateEnabled || params.searchByPortEnabled)) {
                 searchSerialDevice();
                 return readLongStatus();
             } else {
