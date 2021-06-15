@@ -851,10 +851,11 @@ public interface SmFptrConst {
 
     // ///////////////////////////////////////////////////////////////////
     // PortType constants
-    public static final int PORT_TYPE_SERIAL = 0;
-    public static final int PORT_TYPE_BLUETOOTH = 1;
-    public static final int PORT_TYPE_SOCKET = 2;
-    public static final int PORT_TYPE_FROMCLASS = 3;
+    public static final int PORT_TYPE_SERIAL        = 0;
+    public static final int PORT_TYPE_BLUETOOTH     = 1;
+    public static final int PORT_TYPE_SOCKET        = 2;
+    public static final int PORT_TYPE_FROMCLASS     = 3;
+    public static final int PORT_TYPE_BLUETOOTH_LE  = 4;
 
     public static final int PORT_TYPE_MIN = 0;
     public static final int PORT_TYPE_MAX = 3;

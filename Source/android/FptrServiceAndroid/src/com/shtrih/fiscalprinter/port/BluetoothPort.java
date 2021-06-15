@@ -84,63 +84,94 @@ public class BluetoothPort implements PrinterPort {
     @Override
     public void open(int timeout) throws Exception {
         if (isClosed()) {
-            BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-            if (adapter == null) {
-                throw new Exception("Bluetooth not supported");
-            }
+            BluetoothAdapter adapter = getBluetoothAdapter();
+            if (BluetoothAdapter.checkBluetoothAddress(portName)) {
+                // portName is valid MAC address
+                BluetoothDevice device = adapter.getRemoteDevice(portName);
+                connectDevice(device);
+            } else {
+                // portName is deviceName prefix, for example "SHTRIH-NANO-F"
 
-            if (!adapter.isEnabled()) {
-                throw new Exception("Bluetooth is not enabled");
-            }
-
-            if (adapter.isDiscovering()) {
-                adapter.cancelDiscovery();
-            }
-            switch (adapter.getState()) {
-                case BluetoothAdapter.STATE_TURNING_ON: {
-                    waitBluetoothAdapterStateOn(adapter, openTimeout);
-                    break;
-
+                Set<BluetoothDevice> devices = adapter.getBondedDevices();
+                for (BluetoothDevice device : devices) {
+                    if (device.getName().startsWith(portName))
+                    {
+                        try {
+                            connectDevice(device);
+                            return;
+                        }
+                        catch(Exception e){
+                            logger.error("Failed to connect device " +
+                                device.getName() + ", " + device.getAddress());
+                        }
+                    }
                 }
-                case BluetoothAdapter.STATE_TURNING_OFF: {
-                    throw new Exception("Bluetooth is turning off");
-                }
-            }
-
-            BluetoothDevice device = adapter.getRemoteDevice(portName);
-            if (device == null) {
-                throw new Exception("Failed to get BluetoothDevice by address");
-            }
-            try {
-
-                socket = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);
-                if (socket == null) {
-                    throw new Exception("Failed to get bluetooth device socket");
-                }
-
-                socket.connect();
-                inputStream = socket.getInputStream();
-                outputStream = socket.getOutputStream();
-                return;
-            } catch (IOException e) {
-                close();
-            }
-            try {
-                // IOException - create new socket
-                socket = (BluetoothSocket) device.getClass()
-                        .getMethod("createRfcommSocket", new Class[]{int.class})
-                        .invoke(device, 1);
-                if (socket == null) {
-                    throw new Exception("Failed to get bluetooth device socket");
-                }
-                socket.connect();
-                inputStream = socket.getInputStream();
-                outputStream = socket.getOutputStream();
-            } catch (Exception e) {
-                close();
-                throw e;
+                throw new Exception("Failed to connect any bonded devices");
             }
         }
+    }
+
+    private void connectDevice(BluetoothDevice device) throws Exception
+    {
+        if (device == null) {
+            throw new Exception("Failed to get BluetoothDevice by address");
+        }
+
+        try {
+
+            socket = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);
+            if (socket == null) {
+                throw new Exception("Failed to get bluetooth device socket");
+            }
+
+            socket.connect();
+            inputStream = socket.getInputStream();
+            outputStream = socket.getOutputStream();
+            return;
+        } catch (IOException e) {
+            close();
+        }
+        try {
+            // IOException - create new socket
+            socket = (BluetoothSocket) device.getClass()
+                    .getMethod("createRfcommSocket", new Class[]{int.class})
+                    .invoke(device, 1);
+            if (socket == null) {
+                throw new Exception("Failed to get bluetooth device socket");
+            }
+            socket.connect();
+            inputStream = socket.getInputStream();
+            outputStream = socket.getOutputStream();
+        } catch (Exception e) {
+            close();
+            throw e;
+        }
+    }
+
+    private BluetoothAdapter getBluetoothAdapter() throws Exception {
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        if (adapter == null) {
+            throw new Exception("Bluetooth not supported");
+        }
+
+        if (!adapter.isEnabled()) {
+            throw new Exception("Bluetooth is not enabled");
+        }
+
+        if (adapter.isDiscovering()) {
+            adapter.cancelDiscovery();
+        }
+        switch (adapter.getState()) {
+            case BluetoothAdapter.STATE_TURNING_ON: {
+                waitBluetoothAdapterStateOn(adapter, openTimeout);
+                break;
+
+            }
+            case BluetoothAdapter.STATE_TURNING_OFF: {
+                throw new Exception("Bluetooth is turning off");
+            }
+        }
+        return adapter;
     }
 
     private void waitBluetoothAdapterStateOn(BluetoothAdapter adapter,

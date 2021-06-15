@@ -417,7 +417,6 @@ public class BluetoothLEPort implements PrinterPort {
                 // portName is valid MAC address
                 device = adapter.getRemoteDevice(portName);
                 connectDevice(device);
-                
             } else {
                 // portName is deviceName prefix, for example "SHTRIH-NANO-F"
                 device = scanSingle(portName, 10000);

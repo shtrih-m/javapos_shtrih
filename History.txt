@@ -7,6 +7,18 @@
     
 ********************************************************************************
 
+  15.06.2021
+  deviceServiceVersion = 1013624
+
+  [-] Device search available for portType=0 only
+
+  [-] Changed Bluetooth device connection to support portName as device prefix
+      Now portName can hold device MAC address or device name prefix
+      Example: portName="30:AE:A4:96:14:1E"
+      Example: portName="SHTRIH-NANO-F"
+
+********************************************************************************
+
   08.06.2021
   deviceServiceVersion = 1013623
 
