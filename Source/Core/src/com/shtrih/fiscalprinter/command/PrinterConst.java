@@ -15,6 +15,7 @@
 package com.shtrih.fiscalprinter.command;
 
 public interface PrinterConst {
+    
     // ///////////////////////////////////////////////////////////////////
     // Field types
 

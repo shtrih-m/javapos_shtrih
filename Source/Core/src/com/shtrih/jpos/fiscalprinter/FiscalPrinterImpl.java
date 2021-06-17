@@ -3099,6 +3099,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void beginFiscalReceipt(boolean printHeader) throws Exception {
         checkEnabled();
         checkPrinterState(FPTR_PS_MONITOR);
+        stopFSService();
 
         try {
 
@@ -3178,6 +3179,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 // ignore print errors because cashin is succeeded
                 logger.error("endFiscalReceipt: " + e.getMessage());
             }
+            startFSService();
             setPrinterState(FPTR_PS_MONITOR);
             receipt = new NullReceipt(createReceiptContext());
             params.nonFiscalDocNumber++;
@@ -3737,6 +3739,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         receiptType = 0;
         isReceiptOpened = false;
         disablePrintOnce = false;
+        startFSService();
     }
 
     public void setDate(String date) throws Exception {

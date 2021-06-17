@@ -7,7 +7,7 @@
     
 ********************************************************************************
 
-  15.06.2021
+  17.06.2021
   deviceServiceVersion = 1013624
 
   [-] Device search available for portType=0 only
@@ -16,6 +16,9 @@
       Now portName can hold device MAC address or device name prefix
       Example: portName="30:AE:A4:96:14:1E"
       Example: portName="SHTRIH-NANO-F"
+
+  [+] Added stopping FS data sending thread in method beginFiscalReceipt
+      and starting it back in endFiscalRecepit and ResetPrinter
 
 ********************************************************************************
 
