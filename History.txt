@@ -8,6 +8,13 @@
 ********************************************************************************
 
   17.06.2021
+  deviceServiceVersion = 1013625
+
+  [+] Added parameter tags tagsBeforeItem, default value true.
+
+********************************************************************************
+
+  17.06.2021
   deviceServiceVersion = 1013624
 
   [-] Device search available for portType=0 only

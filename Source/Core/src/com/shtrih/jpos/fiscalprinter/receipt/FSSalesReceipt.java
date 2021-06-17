@@ -1399,7 +1399,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void fsWriteOperationTLV(byte[] data, boolean print) throws Exception {
         FSTLVItem item = new FSTLVItem(data, getParams().getFont(), print);
-        if (getDevice().getCapOperationTagsFirst()) {
+        if (getParams().tagsBeforeItem){
             itemTags.add(item);
         } else {
             getLastItem().getTags().add(item);
