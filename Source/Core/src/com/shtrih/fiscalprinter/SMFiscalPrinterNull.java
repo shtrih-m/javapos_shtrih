@@ -262,8 +262,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return new PrintCashOut();
     }
 
-    public ContinuePrint continuePrint() throws Exception {
-        return new ContinuePrint();
+    public int continuePrint() throws Exception {
+        return 0;
     }
 
     public BeginTest startTest(int runningPeriod) throws Exception {
@@ -1258,8 +1258,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public int fsReadMCStatus(FSReadMCStatus command) throws Exception {
         return 0;
     }
-    
-    public int mcClearBuffer() throws Exception{
+
+    public int mcClearBuffer() throws Exception {
         return 0;
     }
 }

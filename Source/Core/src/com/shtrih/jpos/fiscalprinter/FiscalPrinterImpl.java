@@ -558,10 +558,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
 
         if (status.getPrinterFlags().isRecPresent()) {
-            if (status.getSubmode() == ECR_SUBMODE_AFTER) {
-                getPrinter().continuePrint();
-                getPrinter().waitForPrinting();
-            }
+            getPrinter().waitForPrinting();
 
             if (isInReceiptTrailer) {
                 printEndNonFiscal();

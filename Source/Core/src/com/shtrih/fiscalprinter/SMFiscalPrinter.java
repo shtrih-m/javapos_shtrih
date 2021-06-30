@@ -201,7 +201,7 @@ public interface SMFiscalPrinter {
 
     public PrintCashOut printCashOut(long sum) throws Exception;
 
-    public ContinuePrint continuePrint() throws Exception;
+    public int continuePrint() throws Exception;
 
     public BeginTest startTest(int runningPeriod) throws Exception;
 

@@ -222,7 +222,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 case 0x85:
                 // close receipt 2
                 case 0xFF45:
-
                     correctDate();
             }
 
@@ -239,32 +238,34 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void correctDate() {
         logger.debug("correctDate");
         try {
-            if (params.validTimeDiffInSecs <= 0) {
-                return;
-            }
+            synchronized (port.getSyncObject()) {
+                if (params.validTimeDiffInSecs <= 0) {
+                    return;
+                }
 
-            checkEcrMode();
+                checkEcrMode();
 
-            LongPrinterStatus status = readLongStatus();
-            Calendar currentDate = Calendar.getInstance();
-            Calendar printerDate = Calendar.getInstance();
-            printerDate.set(
-                    status.getDate().getYear(),
-                    status.getDate().getMonth(),
-                    status.getDate().getDay(),
-                    status.getTime().getHour(),
-                    status.getTime().getMin(),
-                    status.getTime().getSec());
+                LongPrinterStatus status = readLongStatus();
+                Calendar currentDate = Calendar.getInstance();
+                Calendar printerDate = Calendar.getInstance();
+                printerDate.set(
+                        status.getDate().getYear(),
+                        status.getDate().getMonth(),
+                        status.getDate().getDay(),
+                        status.getTime().getHour(),
+                        status.getTime().getMin(),
+                        status.getTime().getSec());
 
-            long timeDiffInSecs = Math.abs(currentDate.getTimeInMillis()
-                    - printerDate.getTimeInMillis()) / 1000;
-            if (timeDiffInSecs > params.validTimeDiffInSecs) {
-                PrinterDate date = new PrinterDate();
-                PrinterTime time = new PrinterTime();
+                long timeDiffInSecs = Math.abs(currentDate.getTimeInMillis()
+                        - printerDate.getTimeInMillis()) / 1000;
+                if (timeDiffInSecs > params.validTimeDiffInSecs) {
+                    PrinterDate date = new PrinterDate();
+                    PrinterTime time = new PrinterTime();
 
-                check(writeDate(date));
-                check(confirmDate(date));
-                check(writeTime(time));
+                    check(writeDate(date));
+                    check(confirmDate(date));
+                    check(writeTime(time));
+                }
             }
         } catch (Exception e) {
             logger.error("Correct date failed: " + e.getMessage());
@@ -896,12 +897,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command;
     }
 
-    public ContinuePrint continuePrint() throws Exception {
+    public int continuePrint() throws Exception {
         logger.debug("continuePrint");
         ContinuePrint command = new ContinuePrint();
         command.setPassword(usrPassword);
-        execute(command);
-        return command;
+        return executeCommand(command);
     }
 
     public BeginTest startTest(int periodInMinutes) throws Exception {
@@ -1747,39 +1747,41 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public PrinterStatus waitForPrinting() throws Exception {
         logger.debug("waitForPrinting");
-        PrinterStatus status = null;
-        for (;;) {
-            status = readPrinterStatus();
-            switch (status.getSubmode()) {
-                case ECR_SUBMODE_IDLE: {
-                    if (checkEcrMode(status.getMode())) {
+
+        synchronized (port.getSyncObject()) {
+            for (;;) {
+                PrinterStatus status = readPrinterStatus();
+                switch (status.getSubmode()) {
+                    case ECR_SUBMODE_IDLE: {
+                        if (checkEcrMode(status.getMode())) {
+                            return status;
+                        }
+                        break;
+                    }
+
+                    case ECR_SUBMODE_PASSIVE:
+                    case ECR_SUBMODE_ACTIVE: {
+                        checkPaper(status);
+                        // Flags can be ok, but status not
+                        throw new SmFiscalPrinterException(SMFP_EFPTR_PAPER_OR_COVER,
+                                getErrorText(SMFP_EFPTR_PAPER_OR_COVER));
+                    }
+
+                    case ECR_SUBMODE_AFTER: {
+                        continuePrint();
+                        break;
+                    }
+
+                    case ECR_SUBMODE_REPORT:
+                    case ECR_SUBMODE_PRINT: {
+                        Time.delay(TimeToSleep);
+                        break;
+                    }
+
+                    default: {
+                        logger.debug("Unknown submode");
                         return status;
                     }
-                    break;
-                }
-
-                case ECR_SUBMODE_PASSIVE:
-                case ECR_SUBMODE_ACTIVE: {
-                    checkPaper(status);
-                    // Flags can be ok, but status not
-                    throw new SmFiscalPrinterException(SMFP_EFPTR_PAPER_OR_COVER,
-                            getErrorText(SMFP_EFPTR_PAPER_OR_COVER));
-                }
-
-                case ECR_SUBMODE_AFTER: {
-                    continuePrint();
-                    break;
-                }
-
-                case ECR_SUBMODE_REPORT:
-                case ECR_SUBMODE_PRINT: {
-                    Time.delay(TimeToSleep);
-                    break;
-                }
-
-                default: {
-                    logger.debug("Unknown submode");
-                    return status;
                 }
             }
         }
@@ -4264,8 +4266,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 return;
             }
 
-            if ((params.getPortType() == SmFptrConst.PORT_TYPE_SERIAL) && 
-                    FirmwareUpdater.capXModemUpdate() && (status.getPortNumber() == PrinterConst.SMFP_IF_PC_RS232)) {
+            if ((params.getPortType() == SmFptrConst.PORT_TYPE_SERIAL)
+                    && FirmwareUpdater.capXModemUpdate() && (status.getPortNumber() == PrinterConst.SMFP_IF_PC_RS232)) {
                 tables = readTables();
                 updateFirmwareXModem(firmwareFileName);
                 waitFirmwareUpdate();
@@ -4344,113 +4346,115 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     private LongPrinterStatus checkEcrMode() throws Exception {
         logger.debug("checkEcrMode");
-        int endDumpCount = 0;
-        int confirmDateCount = 0;
-        int writePointCount = 0;
-        int stopTestCount = 0;
+        synchronized (port.getSyncObject()) {
+            int endDumpCount = 0;
+            int confirmDateCount = 0;
+            int writePointCount = 0;
+            int stopTestCount = 0;
 
-        for (;;) {
-            ReadLongStatus command = new ReadLongStatus();
-            command.setPassword(getUsrPassword());
-            int rc = executeCommand(command);
+            for (;;) {
+                ReadLongStatus command = new ReadLongStatus();
+                command.setPassword(getUsrPassword());
+                int rc = executeCommand(command);
 
-            if ((rc == 0x74) || (rc == 0x78) || (rc == 0x79)) {
-                deviceReset();
-                continue;
-            } else {
-                check(rc);
-            }
-
-            LongPrinterStatus status = command.getStatus();
-
-            switch (status.getSubmode()) {
-                case ECR_SUBMODE_IDLE:
-                    break;
-
-                case ECR_SUBMODE_PASSIVE:
-                case ECR_SUBMODE_ACTIVE:
-                    return status;
-
-                case ECR_SUBMODE_AFTER: {
-                    continuePrint();
-                    continue;
-                }
-
-                case ECR_SUBMODE_REPORT:
-                case ECR_SUBMODE_PRINT: {
-                    Time.delay(TimeToSleep);
-                    continue;
-                }
-
-                default: {
-                    logger.debug("Unknown submode " + status.getSubmode());
-                    break;
-                }
-            }
-
-            switch (status.getPrinterMode().getLoMode()) {
-                case MODE_DUMPMODE:
-                    try {
-                        endDump();
-                    } catch (SmFiscalPrinterException ignored) {
-                        // При чтении докмента из ФН десктопные ФР переходят в режим 1, при этом
-                        // прервать этот режим старым методом нельзя только дочитать документ до
-                        // конца
-                        readDocumentTLVToEnd();
-                    }
-
-                    endDumpCount++;
-                    if (endDumpCount >= MaxStateCount) {
-                        throw new Exception(
-                                Localizer.getString(Localizer.endDumpFailed));
-                    }
-                    break;
-
-                case MODE_LOCKED:
-                    throw new Exception(
-                            Localizer.getString(Localizer.LockedTaxPassword));
-
-                case MODE_WAITDATE:
-                    PrinterDate date = readLongStatus().getDate();
-                    confirmDate(date);
-                    confirmDateCount++;
-                    if (confirmDateCount >= MaxStateCount) {
-                        throw new Exception(
-                                Localizer.getString(Localizer.ConfirmDateFailed));
-                    }
-                    break;
-
-                case MODE_POINTPOS:
-                    writeDecimalPoint(SMFP_POINT_POSITION_2);
-                    writePointCount++;
-                    if (writePointCount >= MaxStateCount) {
-                        throw new Exception(
-                                Localizer
-                                .getString(Localizer.WriteDecimalPointFailed));
-                    }
-                    break;
-
-                case MODE_TECH:
+                if ((rc == 0x74) || (rc == 0x78) || (rc == 0x79)) {
                     deviceReset();
-                    break;
+                    continue;
+                } else {
+                    check(rc);
+                }
 
-                case MODE_TEST:
-                    stopTest();
-                    stopTestCount++;
-                    if (stopTestCount >= MaxStateCount) {
-                        throw new Exception(
-                                Localizer.getString(Localizer.StopTestFailed));
+                LongPrinterStatus status = command.getStatus();
+
+                switch (status.getSubmode()) {
+                    case ECR_SUBMODE_IDLE:
+                        break;
+
+                    case ECR_SUBMODE_PASSIVE:
+                    case ECR_SUBMODE_ACTIVE:
+                        return status;
+
+                    case ECR_SUBMODE_AFTER: {
+                        continuePrint();
+                        continue;
                     }
-                    break;
 
-                case MODE_FULLREPORT:
-                case MODE_EJREPORT:
-                case MODE_SLPPRINT:
-                    Time.delay(TimeToSleep);
-                    break;
+                    case ECR_SUBMODE_REPORT:
+                    case ECR_SUBMODE_PRINT: {
+                        Time.delay(TimeToSleep);
+                        continue;
+                    }
 
-                default:
-                    return status;
+                    default: {
+                        logger.debug("Unknown submode " + status.getSubmode());
+                        break;
+                    }
+                }
+
+                switch (status.getPrinterMode().getLoMode()) {
+                    case MODE_DUMPMODE:
+                        try {
+                            endDump();
+                        } catch (SmFiscalPrinterException ignored) {
+                            // При чтении докмента из ФН десктопные ФР переходят в режим 1, при этом
+                            // прервать этот режим старым методом нельзя только дочитать документ до
+                            // конца
+                            readDocumentTLVToEnd();
+                        }
+
+                        endDumpCount++;
+                        if (endDumpCount >= MaxStateCount) {
+                            throw new Exception(
+                                    Localizer.getString(Localizer.endDumpFailed));
+                        }
+                        break;
+
+                    case MODE_LOCKED:
+                        throw new Exception(
+                                Localizer.getString(Localizer.LockedTaxPassword));
+
+                    case MODE_WAITDATE:
+                        PrinterDate date = readLongStatus().getDate();
+                        confirmDate(date);
+                        confirmDateCount++;
+                        if (confirmDateCount >= MaxStateCount) {
+                            throw new Exception(
+                                    Localizer.getString(Localizer.ConfirmDateFailed));
+                        }
+                        break;
+
+                    case MODE_POINTPOS:
+                        writeDecimalPoint(SMFP_POINT_POSITION_2);
+                        writePointCount++;
+                        if (writePointCount >= MaxStateCount) {
+                            throw new Exception(
+                                    Localizer
+                                    .getString(Localizer.WriteDecimalPointFailed));
+                        }
+                        break;
+
+                    case MODE_TECH:
+                        deviceReset();
+                        break;
+
+                    case MODE_TEST:
+                        stopTest();
+                        stopTestCount++;
+                        if (stopTestCount >= MaxStateCount) {
+                            throw new Exception(
+                                    Localizer.getString(Localizer.StopTestFailed));
+                        }
+                        break;
+
+                    case MODE_FULLREPORT:
+                    case MODE_EJREPORT:
+                    case MODE_SLPPRINT:
+                        Time.delay(TimeToSleep);
+                        break;
+
+                    default:
+                        return status;
+                }
             }
         }
     }
@@ -4466,6 +4470,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     private void deviceReset() throws Exception {
+
         PrinterDate date = new PrinterDate();
         PrinterTime time = new PrinterTime();
 
@@ -4552,8 +4557,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public LongPrinterStatus searchDevice() throws Exception {
         logger.debug("searchDevice");
-        synchronized (port.getSyncObject()) 
-        {
+        synchronized (port.getSyncObject()) {
             boolean isSerial = params.getPortType() == SmFptrConst.PORT_TYPE_SERIAL;
             if (isSerial && (params.searchByBaudRateEnabled || params.searchByPortEnabled)) {
                 searchSerialDevice();
