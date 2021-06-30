@@ -16,8 +16,11 @@ import static jpos.FiscalPrinterConst.FPTR_RT_SIMPLE_INVOICE;
 /**
  * @author V.Kravtsov
  */
-public interface SmFptrConst {
+public class SmFptrConst {
 
+    private SmFptrConst(){
+    }
+    
     ///////////////////////////////////////////////////////////////////////////
     // How to make 1162 tag, from driver or from fiscal printer
     public static final int MARKING_TYPE_PRINTER = 0;
@@ -449,8 +452,7 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_FS_DISABLE_PRINT_ONCE = 0x37;
 
     /**
-     * Print non fiscal document
-     * If receipt is opened - it will be cancelled
+     * Print non fiscal document If receipt is opened - it will be cancelled
      */
     public static final int SMFPTR_DIO_PRINT_NON_FISCAL = 0x38;
 
@@ -475,8 +477,7 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_PRINT_JOURNAL = 0x3C;
 
     /**
-     * Set receipt discount amount
-     * For receipt discount from 1 to 99 kopeks
+     * Set receipt discount amount For receipt discount from 1 to 99 kopeks
      */
     public static final int SMFPTR_DIO_SET_DISCOUNT_AMOUNT = 0x3D;
 
@@ -654,16 +655,17 @@ public interface SmFptrConst {
      */
     public static final int SMFPTR_DIO_SET_ITEM_CODE = 0x78;
 
-    /**-
+    /**
+     * -
      * Receipt field value for receipt template
      */
     public static final int SMFPTR_DIO_GET_RECEIPT_FIELD = 0x79;
     public static final int SMFPTR_DIO_SET_RECEIPT_FIELD = 0x7A;
 
-    public static final int SMFPTR_DIO_FS_ENABLE_PRINT  = 0x7B;
-    
+    public static final int SMFPTR_DIO_FS_ENABLE_PRINT = 0x7B;
+
     public static final int SMFPTR_DIO_FS_DISABLE_PRINT = 0x7C;
-    
+
     /**
      * Read journal report
      */
@@ -671,40 +673,40 @@ public interface SmFptrConst {
 
     // Save marking codes notification
     public static final int SMFPTR_DIO_SAVE_MC_NOTIFICATIONS = 0x7E;
-    
+
     // Check item barcode
     public static final int SMFPTR_DIO_CHECK_ITEM_CODE2 = 0x7F;
-    
+
     // Synchronize registers
     public static final int SMFPTR_DIO_SYNC_REGISTERS = 0x80;
-    
+
     // FS read memory size
     public static final int SMFPTR_DIO_FS_READ_MEM_SIZE = 0x81;
-    
+
     // FS write TLV buffer
     public static final int SMFPTR_DIO_FS_WRITE_TLV_BUFFER = 0x82;
-    
+
     // FS read random data
     public static final int SMFPTR_DIO_FS_READ_RANDOM_DATA = 0x83;
-    
+
     // FS authorize
     public static final int SMFPTR_DIO_FS_AUTHORIZE = 0x84;
-    
+
     // FS read MC status
     public static final int SMFPTR_DIO_FS_READ_MC_STATUS = 0x85;
-    
+
     // FS start read MC notifications
     public static final int SMFPTR_DIO_FS_START_READ_MC_NOTIFICATIONS = 0x86;
-    
+
     // FS read MC notifications
     public static final int SMFPTR_DIO_FS_READ_MC_NOTIFICATION = 0x87;
-    
+
     // Add item marking code
     public static final int SMFPTR_DIO_ADD_ITEM_CODE = 0x88;
-    
+
     // Clear marking codes buffer
     public static final int SMFPTR_DIO_MC_CLEAR_BUFFER = 0x89;
-    
+
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,
@@ -774,7 +776,7 @@ public interface SmFptrConst {
     public static final int SMFPTR_DIO_PARAM_PROTOCOL_TYPE = 27;
 
     public static final int SMFPTR_DIO_PARAM_DOC_DATETIME = 28;
-    
+
     public static final int SMFPTR_DIO_PARAM_DOC_TOTAL = 29;
 
     public static final int SMFPTR_DIO_PARAM_ITEM_UNIT = 30;
@@ -851,11 +853,11 @@ public interface SmFptrConst {
 
     // ///////////////////////////////////////////////////////////////////
     // PortType constants
-    public static final int PORT_TYPE_SERIAL        = 0;
-    public static final int PORT_TYPE_BLUETOOTH     = 1;
-    public static final int PORT_TYPE_SOCKET        = 2;
-    public static final int PORT_TYPE_FROMCLASS     = 3;
-    public static final int PORT_TYPE_BLUETOOTH_LE  = 4;
+    public static final int PORT_TYPE_SERIAL = 0;
+    public static final int PORT_TYPE_BLUETOOTH = 1;
+    public static final int PORT_TYPE_SOCKET = 2;
+    public static final int PORT_TYPE_FROMCLASS = 3;
+    public static final int PORT_TYPE_BLUETOOTH_LE = 4;
 
     public static final int PORT_TYPE_MIN = 0;
     public static final int PORT_TYPE_MAX = 3;
@@ -906,15 +908,14 @@ public interface SmFptrConst {
     // KTN types
     // КН Код неопределенного идентификатора товара 00h 00h
     public static final int KTN_UNKNOWN = 0;
-    
+
     public static final int KTN_LOTTERY_UNUSED = 1;
     public static final int KTN_FURS = 2;
     public static final int KTN_DRUGS = 3;
     public static final int KTN_RESERVED = 4;
     public static final int KTN_TOBACCO = 5;
     public static final int KTN_FOOTWEAR = 0x1520;
-    
-    
+
     // EAN-8, UPC-E (E8) Идентификатор товара по формату EAN-8 45h 08h
     public static final int KTN_EAN8 = 0x4508;
     // EAN-13, UPC-A (E13) Идентификатор товара по формату EAN-13 45h 0Dh
@@ -937,5 +938,78 @@ public interface SmFptrConst {
     // Код товара в формате ТН ВЭД Идентификатор товара по формату классификатора ТН
     // ВЭД для групп товаров моторного топлива (газообразногои жидкого). 45h 41h
     public static final int KTN_FUEL = 0x4541;
-    
+
+    public static String getParameterName(int id) {
+        switch (id) {
+            case SmFptrConst.SMFPTR_DIO_PARAM_REPORT_DEVICE:
+                return "SMFPTR_DIO_PARAM_REPORT_DEVICE";
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_REPORT_TYPE:
+                return "SMFPTR_DIO_PARAM_REPORT_TYPE";
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_NUMHEADERLINES:
+                return "SMFPTR_DIO_PARAM_NUMHEADERLINES";
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_NUMTRAILERLINES:
+                return "SMFPTR_DIO_PARAM_NUMTRAILERLINES";
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_POLL_ENABLED:
+                return "SMFPTR_DIO_PARAM_POLL_ENABLED";
+            case SmFptrConst.SMFPTR_DIO_PARAM_CUT_MODE:
+                return "SMFPTR_DIO_PARAM_CUT_MODE";
+            case SmFptrConst.SMFPTR_DIO_PARAM_FONT_NUMBER:
+                return "SMFPTR_DIO_PARAM_FONT_NUMBER";
+            case SmFptrConst.SMFPTR_DIO_PARAM_USR_PASSWORD:
+                return "SMFPTR_DIO_PARAM_USR_PASSWORD";
+            case SmFptrConst.SMFPTR_DIO_PARAM_SYS_PASSWORD:
+                return "SMFPTR_DIO_PARAM_SYS_PASSWORD";
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_PASSWORD:
+                return "SMFPTR_DIO_PARAM_TAX_PASSWORD";
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0:
+                return "SMFPTR_DIO_PARAM_TAX_VALUE_0";
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_1:
+                return "SMFPTR_DIO_PARAM_TAX_VALUE_1";
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_2:
+                return "SMFPTR_DIO_PARAM_TAX_VALUE_2";
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_3:
+                return "SMFPTR_DIO_PARAM_TAX_VALUE_3";
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_4:
+                return "SMFPTR_DIO_PARAM_TAX_VALUE_4";
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_5:
+                return "SMFPTR_DIO_PARAM_TAX_VALUE_5";
+            case SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM:
+                return "SMFPTR_DIO_PARAM_TAX_SYSTEM";
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT:
+                return "SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT";
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE:
+                return "SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE";
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE:
+                return "SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE";
+            case SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER:
+                return "SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER";
+            case SmFptrConst.SMFPTR_DIO_PARAM_NEW_ITEM_STATUS:
+                return "SMFPTR_DIO_PARAM_NEW_ITEM_STATUS";
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_CHECK_MODE:
+                return "SMFPTR_DIO_PARAM_ITEM_CHECK_MODE";
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE:
+                return "SMFPTR_DIO_PARAM_ITEM_MARK_TYPE";
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT:
+                return "SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT";
+            case SmFptrConst.SMFPTR_DIO_PARAM_DOC_NUM:
+                return "SMFPTR_DIO_PARAM_DOC_NUM";
+            case SmFptrConst.SMFPTR_DIO_PARAM_DOC_MAC:
+                return "SMFPTR_DIO_PARAM_DOC_MAC";
+            case SmFptrConst.SMFPTR_DIO_PARAM_PROTOCOL_TYPE:
+                return "SMFPTR_DIO_PARAM_PROTOCOL_TYPE";
+            case SmFptrConst.SMFPTR_DIO_PARAM_DOC_DATETIME:
+                return "SMFPTR_DIO_PARAM_DOC_DATETIME";
+            case SmFptrConst.SMFPTR_DIO_PARAM_DOC_TOTAL:
+                return "SMFPTR_DIO_PARAM_DOC_TOTAL";
+            case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_UNIT:
+                return "SMFPTR_DIO_PARAM_ITEM_UNIT";
+
+            default:
+                return String.valueOf(id);
+        }
+    }
 }

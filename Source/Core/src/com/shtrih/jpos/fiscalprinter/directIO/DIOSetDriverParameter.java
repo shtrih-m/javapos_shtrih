@@ -24,9 +24,13 @@ public class DIOSetDriverParameter extends DIOItem {
 
     public void execute(int[] data, Object object) throws Exception {
         DIOUtils.checkDataMinLength(data, 1);
-
-        logger.debug("directIo(SMFPTR_DIO_SET_DRIVER_PARAMETER, " + data[0] + ")");
-        switch (data[0]) {
+        int paramId = data[0];
+        
+        logger.debug("directIo(SMFPTR_DIO_SET_DRIVER_PARAMETER, " + 
+            SmFptrConst.getParameterName(paramId) + ", '" + 
+                object.toString() + "')");
+        
+        switch (paramId) {
             case SmFptrConst.SMFPTR_DIO_PARAM_REPORT_DEVICE:
                 service.getParams().reportDevice = ((int[]) object)[0];
                 break;

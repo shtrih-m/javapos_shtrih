@@ -125,12 +125,12 @@ import jpos.events.StatusUpdateEvent;
 import jpos.services.EventCallbacks;
 
 public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
-        JposConst, JposEntryConst, FiscalPrinterConst, SmFptrConst,
+        JposConst, JposEntryConst, FiscalPrinterConst,
         IPrinterEvents {
 
     private CompositeLogger logger = CompositeLogger.getLogger(FiscalPrinterImpl.class);
 
-    public int logoPosition = SMFPTR_LOGO_PRINT;
+    public int logoPosition = SmFptrConst.SMFPTR_LOGO_PRINT;
     private final FptrParameters params;
     private boolean freezeEvents = true;
     private final FiscalPrinterFilters filters = new FiscalPrinterFilters();
@@ -2237,16 +2237,16 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     private PrinterHeader createHeader() {
         switch (params.headerMode) {
-            case SMFPTR_HEADER_MODE_PRINTER:
+            case SmFptrConst.SMFPTR_HEADER_MODE_PRINTER:
                 return new DeviceHeader(printer);
 
-            case SMFPTR_HEADER_MODE_DRIVER:
+            case SmFptrConst.SMFPTR_HEADER_MODE_DRIVER:
                 return new DriverHeader(printer);
 
-            case SMFPTR_HEADER_MODE_DRIVER2:
+            case SmFptrConst.SMFPTR_HEADER_MODE_DRIVER2:
                 return new DriverHeader2(printer);
 
-            case SMFPTR_HEADER_MODE_NULL:
+            case SmFptrConst.SMFPTR_HEADER_MODE_NULL:
                 return new NullHeader(printer);
 
             default:
@@ -2381,7 +2381,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void printNormalAsync(int station, String data) throws Exception {
         checkEnabled();
         data = decodeText(data);
-        logoPosition = SMFPTR_LOGO_PRINT;
+        logoPosition = SmFptrConst.SMFPTR_LOGO_PRINT;
         receipt.printNormal(station, data);
     }
 
@@ -2808,7 +2808,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             case FPTR_GD_DAILY_TOTAL:
                 long amount = 0;
                 if ((optArgs == null) || (optArgs.length < 1)) {
-                    amount = getDailyTotal(SMFPTR_DAILY_TOTAL_ALL);
+                    amount = getDailyTotal(SmFptrConst.SMFPTR_DAILY_TOTAL_ALL);
                 } else {
                     amount = getDailyTotal(optArgs[0]);
                 }
@@ -3228,7 +3228,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
         printDocStart();
 
-        if (params.reportDevice == SMFPTR_REPORT_DEVICE_EJ) {
+        if (params.reportDevice == SmFptrConst.SMFPTR_REPORT_DEVICE_EJ) {
             getPrinter().printEJDayReportOnDates(printerDate1, printerDate2, params.reportType);
         } else {
             getPrinter().printFMReportDates(printerDate1, printerDate2,
@@ -3582,7 +3582,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
                 printDocStart();
 
-                if (params.reportDevice == SMFPTR_REPORT_DEVICE_EJ) {
+                if (params.reportDevice == SmFptrConst.SMFPTR_REPORT_DEVICE_EJ) {
                     getPrinter().printEJReportDays(day1, day2, params.reportType);
                 } else {
                     getPrinter().printFMReportDays(day1, day2, params.reportType);
@@ -3600,7 +3600,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 // print report
                 printDocStart();
 
-                if (params.reportDevice == SMFPTR_REPORT_DEVICE_EJ) {
+                if (params.reportDevice == SmFptrConst.SMFPTR_REPORT_DEVICE_EJ) {
                     getPrinter().printEJDayReportOnDates(date1, date2, params.reportType);
                 } else {
                     getPrinter().printFMReportDates(date1, date2, params.reportType);
@@ -3810,7 +3810,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         text = StringUtils.trimRight(text);
         header.setHeaderLine(lineNumber, text, doubleWidth);
         saveProperties();
-        logoPosition = SMFPTR_LOGO_PRINT;
+        logoPosition = SmFptrConst.SMFPTR_LOGO_PRINT;
     }
 
     public void setPOSID(String POSID, String cashierID) throws Exception {
@@ -3842,7 +3842,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         text = StringUtils.trimRight(text);
         header.setTrailerLine(lineNumber, text, doubleWidth);
         saveProperties();
-        logoPosition = SMFPTR_LOGO_PRINT;
+        logoPosition = SmFptrConst.SMFPTR_LOGO_PRINT;
     }
 
     /**
@@ -4583,7 +4583,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         FiscalReceipt result;
         if (printer.getCapFiscalStorage()) {
             result = new FSSalesReceipt(createReceiptContext(), receiptType);
-        } else if (params.salesReceiptType == SMFPTR_RECEIPT_NORMAL) {
+        } else if (params.salesReceiptType == SmFptrConst.SMFPTR_RECEIPT_NORMAL) {
             result = new SalesReceipt(createReceiptContext(), receiptType);
         } else {
             if (!isTablesRead) {
@@ -4653,7 +4653,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public int loadLogo(String fileName, int logoPosition) throws Exception {
         int imageIndex = -1;
         PrinterImage image = new PrinterImage(fileName);
-        if (logoPosition < SMFPTR_LOGO_NONE) {
+        if (logoPosition < SmFptrConst.SMFPTR_LOGO_NONE) {
             printer.loadImage(image, true);
             imageIndex = getPrinterImages().getIndex(image);
             ReceiptImage receiptImage = new ReceiptImage(imageIndex, logoPosition);
@@ -4662,7 +4662,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         } else {
             printer.loadImage(image, false);
         }
-        if (logoPosition == SMFPTR_LOGO_PRINT) {
+        if (logoPosition == SmFptrConst.SMFPTR_LOGO_PRINT) {
             printer.printImage(image);
         }
         return imageIndex;

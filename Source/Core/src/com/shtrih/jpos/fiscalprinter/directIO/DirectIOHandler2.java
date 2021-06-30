@@ -30,12 +30,15 @@ import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_STATION_REC;
 
 import com.shtrih.jpos.DIOUtils;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
+import com.shtrih.util.CompositeLogger;
 
 /**
  * @author V.Kravtsov
  */
 public class DirectIOHandler2 {
 
+    private CompositeLogger logger = CompositeLogger.getLogger(DirectIOHandler2.class);
+    
     private final FiscalPrinterImpl service;
 
     public DirectIOHandler2(FiscalPrinterImpl service) {
@@ -734,17 +737,21 @@ public class DirectIOHandler2 {
         ((String[]) object)[0] = paramValue;
     }
 
-    public void dioSetDriverParameter(int[] data, Object object) throws Exception {
+    public void dioSetDriverParameter(int[] data, Object object) throws Exception 
+    {
         DIOUtils.checkDataMinLength(data, 1);
-        int paramID = data[0];
+        int paramId = data[0];
 
-        if (paramID == SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER) {
+        if (paramId == SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER) {
             service.setFirmwareUpdateObserver((FirmwareUpdateObserver) object);
             return;
         }
 
         long value = Long.parseLong(((String[]) object)[0]);
-        switch (paramID) {
+        logger.debug("directIo(SMFPTR_DIO_SET_DRIVER_PARAMETER, " + 
+                SmFptrConst.getParameterName(paramId) + ", '" + value + "')");
+        
+        switch (paramId) {
             case SmFptrConst.SMFPTR_DIO_PARAM_REPORT_DEVICE:
                 service.getParams().reportDevice = (int) value;
                 break;
