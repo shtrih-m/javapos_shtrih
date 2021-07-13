@@ -261,6 +261,20 @@ public class ReceiptTemplate {
         if (f.tag.equals("MULT_NE_ONE")) {
             return item.getQuantity() == 1000 ? " " : "*";
         }
+        /*
+        if (f.tag.equals("TAG_NAME")) 
+        {
+            int tagId = Integer.parseInt(f.tag.substring(8));
+            FSSalesReceipt.FSTLVItem tag = (FSSalesReceipt.FSTLVItem) item.getTag(tagId);
+            String tagName = "";
+            if (tag != null){
+                if (tag.getPrint()){
+                    tagName = tag.getName();
+                }
+            }
+            return tagName;
+        }
+        */
         String fieldValue = item.getReceiptField(f.tag);
         return fieldValue;
     }

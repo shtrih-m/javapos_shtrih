@@ -640,7 +640,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             writeOperationTLV(item);
             sendItemCodes(item.getItemCodes());
         }
-        printOperationTLV(item);
         //printItemCodes(item.getItemCodes()); !!!
     }
 
@@ -691,6 +690,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
 
         printReceiptItem(item);
+        printOperationTLV(item);
 
         long discountTotal = item.getDiscounts().getTotal();
         if (discountTotal != 0) {
@@ -766,6 +766,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 getDevice().printText(lines[i]);
             }
         }
+        printOperationTLV(item);
 
         if (!receiptTemplate.hasPostLine()) {
             String postLine = item.getPostLine();

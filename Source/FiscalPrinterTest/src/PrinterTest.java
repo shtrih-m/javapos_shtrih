@@ -3931,8 +3931,13 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setItemCode(barcode, "");
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE, SmFptrConst.MARK_TYPE_TOBACCO);
 
+            TLVWriter writer = new TLVWriter();
+            writer.add(1171, "+79616195832");
+            writer.add(1225, "ТестТест");
+            printer.fsWriteOperationTag(1224, writer.getBytes());
+            printer.fsWriteOperationTag(1226, "3664069397  ", false);
+            
             printer.printRecItem("Item 1", 10099, 1000, 1, 10099, "");
-            //printer.fsWriteOperationTag(1197, "KG");
 
             printer.printRecItem("Item 2", 20000, 1000, 2, 20000, "");
             printer.printRecItem("Item 3", 30000, 1000, 3, 30000, "");
