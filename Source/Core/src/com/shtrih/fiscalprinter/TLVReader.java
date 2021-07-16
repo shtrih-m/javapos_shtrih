@@ -9,13 +9,13 @@ public class TLVReader {
     public TLVReader() {
     }
 
-    public List<TLVItem> read(byte[] data) throws Exception {
-        List<TLVItem> items = new ArrayList<TLVItem>();
+    public TLVItems read(byte[] data) throws Exception {
+        TLVItems items = new TLVItems();
         parse(items, data);
         return items;
     }
 
-    private void parse(List<TLVItem> items, byte[] data) throws Exception {
+    private void parse(TLVItems items, byte[] data) throws Exception {
         TLVTags tags = TLVTags.getInstance();
         CommandInputStream stream = new CommandInputStream("");
         stream.setData(data);

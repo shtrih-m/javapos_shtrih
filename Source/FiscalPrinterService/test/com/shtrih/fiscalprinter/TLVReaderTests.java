@@ -20,7 +20,7 @@ public class TLVReaderTests {
         byte[] data = fsWriteTag(1011, 12345);
 
         TLVReader reader = new TLVReader();
-        List<TLVItem> items = reader.read(data);
+        TLVItems items = reader.read(data);
 
         assertEquals(1, items.size());
 

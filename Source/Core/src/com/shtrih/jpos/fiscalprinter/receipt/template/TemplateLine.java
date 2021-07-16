@@ -2,7 +2,8 @@ package com.shtrih.jpos.fiscalprinter.receipt.template;
 
 import java.util.Vector;
 
-public class TemplateLine {
+public class TemplateLine 
+{
     private final int m_font_num;
     private final String m_source_contents;
 

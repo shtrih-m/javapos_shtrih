@@ -17,9 +17,9 @@ import java.util.*;
  */
 public class TLVTextWriter {
 
-    private final List<TLVItem> items;
+    private final TLVItems items;
 
-    public TLVTextWriter(List<TLVItem> items) {
+    public TLVTextWriter(TLVItems items) {
         this.items = items;
     }
 

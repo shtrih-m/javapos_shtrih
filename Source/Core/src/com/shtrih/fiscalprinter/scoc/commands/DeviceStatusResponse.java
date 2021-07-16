@@ -1,7 +1,8 @@
 package com.shtrih.fiscalprinter.scoc.commands;
 
-import com.shtrih.fiscalprinter.TLVReader;
 import com.shtrih.fiscalprinter.TLVItem;
+import com.shtrih.fiscalprinter.TLVItems;
+import com.shtrih.fiscalprinter.TLVReader;
 
 public class DeviceStatusResponse {
 
@@ -9,12 +10,11 @@ public class DeviceStatusResponse {
 
         TLVReader reader = new TLVReader();
 
-        for (TLVItem item : reader.read(data)) {
-            if (item.getId() == 8101) {
-                return parseStatusResponse(reader, item.getData());
-            }
+        TLVItems items = reader.read(data);
+        TLVItem item = items.find(8101);
+        if (item != null) {
+            return parseStatusResponse(reader, item.getData());
         }
-
         throw new Exception("Tag 8101 was not found");
     }
 
@@ -24,17 +24,22 @@ public class DeviceStatusResponse {
         int flags = 0;
         long documentNumber = 0;
 
-        for (TLVItem item : parser.read(data)) {
-            if (item.getId() == 8213)
+        TLVItems items = parser.read(data);
+        for (int i = 0; i < items.size(); i++) {
+            TLVItem item = items.get(i);
+
+            if (item.getId() == 8213) {
                 resultCode = (int) item.toInt();
+            }
 
-            if (item.getId() == 8215)
+            if (item.getId() == 8215) {
                 flags = (int) item.toInt();
+            }
 
-            if (item.getId() == 8200)
+            if (item.getId() == 8200) {
                 documentNumber = item.toInt();
+            }
         }
-
         return new DeviceStatusResponse(resultCode, flags, documentNumber);
     }
 
@@ -61,4 +66,3 @@ public class DeviceStatusResponse {
         this.documentNumber = documentNumber;
     }
 }
-

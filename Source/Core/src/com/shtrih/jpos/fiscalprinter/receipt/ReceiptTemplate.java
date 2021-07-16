@@ -6,7 +6,11 @@
 package com.shtrih.jpos.fiscalprinter.receipt;
 
 import com.shtrih.fiscalprinter.FontNumber;
+import com.shtrih.fiscalprinter.TLVItem;
+import com.shtrih.fiscalprinter.TLVItems;
+import com.shtrih.fiscalprinter.TLVReader;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
+import com.shtrih.jpos.fiscalprinter.receipt.FSTLVItem;
 import com.shtrih.jpos.fiscalprinter.receipt.template.Field;
 import com.shtrih.jpos.fiscalprinter.receipt.template.FormatLineParser;
 import com.shtrih.jpos.fiscalprinter.receipt.template.ParsingException;
@@ -102,7 +106,9 @@ public class ReceiptTemplate {
         }
         for (TemplateLine templateLine : itemTemplate) {
             String line = getReceiptItemLine(templateLine, item);
-            lines.add(line);
+            if (!line.trim().isEmpty()){
+                lines.add(line);
+            }
         }
         return lines.toArray(new String[0]);
     }
@@ -261,22 +267,58 @@ public class ReceiptTemplate {
         if (f.tag.equals("MULT_NE_ONE")) {
             return item.getQuantity() == 1000 ? " " : "*";
         }
-        /*
-        if (f.tag.equals("TAG_NAME")) 
-        {
-            int tagId = Integer.parseInt(f.tag.substring(8));
-            FSSalesReceipt.FSTLVItem tag = (FSSalesReceipt.FSTLVItem) item.getTag(tagId);
-            String tagName = "";
-            if (tag != null){
-                if (tag.getPrint()){
-                    tagName = tag.getName();
-                }
-            }
+        // TAG_NAME
+        String tagName = getTagName(f, item);
+        if (tagName != null) {
             return tagName;
         }
-        */
+        // TAG_VALUE
+        String tagText = getTagText(f, item);
+        if (tagText != null) {
+            return tagText;
+        }
+
         String fieldValue = item.getReceiptField(f.tag);
         return fieldValue;
+    }
+
+    private String getTagName(Field f, FSSaleReceiptItem item) throws Exception {
+        String tagText = "TAG_NAME";
+        if (f.tag.startsWith(tagText)) {
+            int tagId = Integer.parseInt(f.tag.substring(tagText.length()));
+            TLVReader reader = new TLVReader();
+            for (FSTLVItem fsTLVItem : item.getTags()) {
+                if (fsTLVItem.getPrint()) {
+                    TLVItems items = reader.read(fsTLVItem.getData());
+                    TLVItem tlvItem = items.find(tagId);
+                    if (tlvItem != null)
+                    {
+                        return tlvItem.getTag().getPrintName(tlvItem.getText());
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private String getTagText(Field f, FSSaleReceiptItem item) throws Exception {
+        String tagText = "TAG_VALUE";
+        if (f.tag.startsWith(tagText)) {
+            int tagId = Integer.parseInt(f.tag.substring(tagText.length()));
+            TLVReader reader = new TLVReader();
+            for (FSTLVItem fsTLVItem : item.getTags()) {
+                if (fsTLVItem.getPrint()) 
+                {
+                    TLVItems items = reader.read(fsTLVItem.getData());
+                    TLVItem tlvItem = items.find(tagId);
+                    if (tlvItem != null)
+                    {
+                        return tlvItem.getText();
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     static String taxLetters = "АБВГДЕ";

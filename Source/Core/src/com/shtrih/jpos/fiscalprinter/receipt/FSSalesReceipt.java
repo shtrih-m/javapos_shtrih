@@ -6,6 +6,7 @@ import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.PrinterGraphics;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.TLVItem;
+import com.shtrih.fiscalprinter.TLVItems;
 import com.shtrih.fiscalprinter.TLVReader;
 import com.shtrih.fiscalprinter.request.CheckCodeRequest;
 import com.shtrih.fiscalprinter.command.AmountItem;
@@ -244,7 +245,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             if (getParams().FSPrintTags && tlvItem.getPrint()) {
 
                 TLVReader reader = new TLVReader();
-                List<TLVItem> items = reader.read(tlvItem.getData());
+                TLVItems items = reader.read(tlvItem.getData());
                 TLVTextWriter writer = new TLVTextWriter(items);
                 List<String> lines = new Vector<String>();
                 writer.getPrintText(lines);
@@ -723,7 +724,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
             if (tag.getPrint()) {
                 TLVReader reader = new TLVReader();
-                List<TLVItem> items = reader.read(tag.getData());
+                TLVItems items = reader.read(tag.getData());
                 TLVTextWriter writer = new TLVTextWriter(items);
                 List<String> lines = new Vector<String>();
                 writer.getPrintText(lines);
@@ -766,7 +767,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 getDevice().printText(lines[i]);
             }
         }
-        printOperationTLV(item);
 
         if (!receiptTemplate.hasPostLine()) {
             String postLine = item.getPostLine();
@@ -1366,31 +1366,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             adjustment = adjustments.getItem(i);
             checkAdjustment(adjustmentType, adjustment.amount);
 
-        }
-    }
-
-    public class FSTLVItem {
-
-        private final byte[] data;
-        private final boolean print;
-        private final FontNumber font;
-
-        public FSTLVItem(byte[] data, FontNumber font, boolean print) {
-            this.data = data;
-            this.font = font;
-            this.print = print;
-        }
-
-        public byte[] getData() {
-            return data;
-        }
-
-        public FontNumber getFont() {
-            return font;
-        }
-
-        public boolean getPrint() {
-            return print;
         }
     }
 

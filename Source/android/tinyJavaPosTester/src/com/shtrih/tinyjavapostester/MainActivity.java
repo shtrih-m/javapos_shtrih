@@ -44,6 +44,7 @@ import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
 import com.shtrih.fiscalprinter.SmFiscalPrinterException;
 import com.shtrih.fiscalprinter.TLVTag;
 import com.shtrih.fiscalprinter.TLVItem;
+import com.shtrih.fiscalprinter.TLVItems;
 import com.shtrih.fiscalprinter.TLVReader;
 import com.shtrih.fiscalprinter.command.BeginNonFiscalDocument;
 import com.shtrih.fiscalprinter.command.CloseNonFiscal;
@@ -2140,7 +2141,7 @@ public class MainActivity extends AppCompatActivity
     private void renderTLV(StringBuilder sb, String indent, byte[] tlv) throws Exception {
 
         TLVReader reader = new TLVReader();
-        List<TLVItem> items = reader.read(tlv);
+        TLVItems items = reader.read(tlv);
 
         for (int i = 0; i < items.size(); i++) {
             TLVItem item = items.get(i);

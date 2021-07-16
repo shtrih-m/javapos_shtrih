@@ -1223,7 +1223,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
         byte[] tlv = new byte[0];
         if (!isPeace) {
-            List<TLVItem> items = new ArrayList<TLVItem>();
+            TLVItems items = new TLVItems();
             items.add(new TLVItem(2108, String.valueOf(request.getUnit())));
             items.add(new TLVItem(1023, String.valueOf(request.getQuantity())));
             TLVItem item = new TLVItem(1291);
@@ -3397,11 +3397,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
 
         TLVReader reader = new TLVReader();
-        List<TLVItem> items = reader.read(tlv);
+        TLVItems items = reader.read(tlv);
         processTLVBeforeReceipt2(items);
     }
 
-    public void processTLVBeforeReceipt2(List<TLVItem> items) throws Exception {
+    public void processTLVBeforeReceipt2(TLVItems items) throws Exception {
         for (int i = items.size() - 1; i >= 0; i--) {
             TLVItem item = items.get(i);
             int tagId = item.getId();
@@ -3417,23 +3417,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         tlvItems.add(tlv);
     }
 
-    public TLVItem itemById(List<TLVItem> items, int id) throws Exception {
-        for (int i = items.size() - 1; i >= 0; i--) {
-            TLVItem item = items.get(i);
-            if (item.getId() == id) {
-                return item;
-            }
-            item = itemById(item.getItems(), id);
-            if (item != null) {
-                return item;
-            }
-        }
-        return null;
-    }
-
     public byte[] filterTLV(byte[] tlv) throws Exception {
         TLVReader reader = new TLVReader();
-        List<TLVItem> items = reader.read(tlv);
+        TLVItems items = reader.read(tlv);
         if (params.userExtendedTagPrintMode
                 == SmFptrConst.USER_EXTENDED_TAG_PRINT_MODE_DRIVER) {
             filterTLVItemsDriver(items);
@@ -3451,15 +3437,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return writer.getBytes();
     }
 
-    public void filterTLVItemsDriver(List<TLVItem> items) throws Exception {
+    public void filterTLVItemsDriver(TLVItems items) throws Exception {
         for (int i = items.size() - 1; i >= 0; i--) {
             TLVItem item = items.get(i);
-            int tagId = item.getTag().getId();
-            if (tagId == 1085) {
+            if (item.getId() == 1085) {
                 printText(item.getText());
                 items.remove(item);
             }
-            if (tagId == 1086) {
+            if (item.getId() == 1086) {
                 printText(item.getText());
                 String text = item.getText().replace("\r\n", "  ");
                 fsWriteTLVData(15000, text);
@@ -3469,7 +3454,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public void filterTLVItemsPrinter(List<TLVItem> items) throws Exception {
+    public void filterTLVItemsPrinter(TLVItems items) throws Exception {
         for (int i = items.size() - 1; i >= 0; i--) {
             TLVItem item = items.get(i);
             int tagId = item.getTag().getId();

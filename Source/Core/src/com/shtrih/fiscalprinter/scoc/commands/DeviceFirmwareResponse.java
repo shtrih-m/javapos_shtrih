@@ -1,21 +1,19 @@
 package com.shtrih.fiscalprinter.scoc.commands;
 
-import com.shtrih.fiscalprinter.TLVReader;
 import com.shtrih.fiscalprinter.TLVItem;
+import com.shtrih.fiscalprinter.TLVItems;
+import com.shtrih.fiscalprinter.TLVReader;
 
 public class DeviceFirmwareResponse {
 
     public static DeviceFirmwareResponse read(byte[] data) throws Exception {
 
         TLVReader parser = new TLVReader();
-
-        for (TLVItem record : parser.read(data)) {
-
-            if (record.getId() == 8103) {
-                return parseFirmwareResponse(parser, record.getData());
-            }
+        TLVItems items = parser.read(data);
+        TLVItem item = items.find(8103);
+        if (item != null) {
+            return parseFirmwareResponse(parser, item.getData());
         }
-
         throw new Exception("Tag 8103 was not found");
     }
 
@@ -26,21 +24,22 @@ public class DeviceFirmwareResponse {
         long firmwareVersion = 0;
         byte[] firmwareData = new byte[0];
 
-        for (TLVItem item : reader.read(data)) {
-
-            if (item.getId() == 8219)
+        TLVItems items = reader.read(data);
+        for (int i = 0; i < items.size(); i++) {
+            TLVItem item = items.get(i);
+            if (item.getId() == 8219) {
                 firmwareVersion = item.toInt();
-
-            if (item.getId() == 8220)
+            }
+            if (item.getId() == 8220) {
                 partNumber = (int) item.toInt();
-
-            if (item.getId() == 8221)
+            }
+            if (item.getId() == 8221) {
                 partsCount = (int) item.toInt();
-
-            if (item.getId() == 8222)
+            }
+            if (item.getId() == 8222) {
                 firmwareData = item.getData();
+            }
         }
-
         return new DeviceFirmwareResponse(firmwareVersion, partsCount, partNumber, firmwareData);
     }
 

@@ -20,7 +20,7 @@
         <!--<prop name="portClass" type="String" value="com.shtrih.bluetooth.BTPrinterPort"/>-->
         <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
         <!-- ProtocolType, 0 - protocol 1, 1 - protocol 2 -->
-        <prop name="protocolType" type="String" value="0"/>
+        <prop name="protocolType" type="String" value="1"/>
         <!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter portClass -->
         <prop name="portType" type="String" value="0"/>
         <prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.PPPSerialPort"/>
@@ -258,13 +258,13 @@
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- Receipt template -->
 		<prop name="FSCombineItemAdjustments" type="String" value="0"/>
-		<prop name="ReceiptTemplateEnabled" type="String" value="0"/>
+		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
 		<prop name="FieldSeparator" type="String" value=":"/>
-		<prop name="QuantityFormat" type="String" value="0.000000"/>
-		<prop name="ItemTableHeader" type="String"  value="-------------------HEADER-----------------"/>
-		<prop name="ItemTableTrailer" type="String" value="-------------------TRAILER----------------"/>
-		<prop name="ItemRowFormat" type="String" value="%3lFIELD0%%36lTITLE%%3FIELD1%%22SUM% X %10lQUAN%%=$10TOTAL_TAX%
-		%TAX_NAME% = %TAX_AMOUNT%"/>
+		<prop name="QuantityFormat" type="String" value="0.000"/>
+		<prop name="ItemTableHeader" type="String"  value="------------HEADER--------------"/>
+		<prop name="ItemTableTrailer" type="String" value="------------TRAILER-------------"/>
+		<prop name="ItemRowFormat" type="String" value="%32lTITLE%:%10SUM% X %6lQUAN%%=$10TOTAL_TAX%:
+		%TAX_NAME% = %TAX_AMOUNT%:%TAG_NAME1171% %TAG_VALUE1171%:%TAG_NAME1225% %TAG_VALUE1225%:%TAG_NAME1224% %TAG_VALUE1224%"/>
 		<!-- <prop name="DiscountFormat" type="String" value="    СКИДКА  %29lTITLE%%=$10TOTAL%"/> -->
 		<prop name="DiscountFormat" type="String" value=""/>
 		<!-- <prop name="ChargeFormat" type="String"   value="    НАДБАВКА  %29lTITLE%%=$10TOTAL%"/> -->

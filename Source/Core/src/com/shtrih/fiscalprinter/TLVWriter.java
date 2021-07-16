@@ -124,6 +124,14 @@ public class TLVWriter {
         return stm.toByteArray();
     }
 
+    public byte[] getData(TLVItems items) throws Exception {
+        ByteArrayOutputStream stm = new ByteArrayOutputStream();
+        for (int i = 0; i < items.size(); i++) {
+            stm.write(getData(items.get(i)));
+        }
+        return stm.toByteArray();
+    }
+    
     public byte[] getData(TLVItem item) throws Exception {
         ByteArrayOutputStream stm = new ByteArrayOutputStream();
         byte[] data;
@@ -145,6 +153,12 @@ public class TLVWriter {
     }
 
     public void add(List<TLVItem> items) throws Exception {
+        for (int i = 0; i < items.size(); i++) {
+            add(items.get(i));
+        }
+    }
+    
+    public void add(TLVItems items) throws Exception {
         for (int i = 0; i < items.size(); i++) {
             add(items.get(i));
         }

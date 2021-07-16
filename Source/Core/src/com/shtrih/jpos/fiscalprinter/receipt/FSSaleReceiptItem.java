@@ -4,6 +4,8 @@
  */
 package com.shtrih.jpos.fiscalprinter.receipt;
 
+import com.shtrih.fiscalprinter.FontNumber;
+import com.shtrih.fiscalprinter.TLVItems;
 import java.util.Vector;
 import java.util.HashMap;
 
@@ -44,7 +46,7 @@ public class FSSaleReceiptItem {
     private HashMap receiptFields = new HashMap();
     private double taxRate = 0;
     private Integer unit;
-    private final List tags = new Vector();
+    private final List<FSTLVItem> tags = new Vector<FSTLVItem>();
     private final List<byte[]> itemCodes = new Vector<byte[]>();
 
     public FSSaleReceiptItem() {
@@ -81,7 +83,7 @@ public class FSSaleReceiptItem {
         return item;
     }
 
-    public List getTags() {
+    public List<FSTLVItem> getTags() {
         return tags;
     }
 

@@ -117,14 +117,14 @@ public class TLVItemTests {
         data = writer.getBytes();
         
         TLVReader reader = new TLVReader();
-        List<TLVItem> items = reader.read(data);
+        TLVItems items = reader.read(data);
         
         assertEquals(1, items.size());
         assertEquals(1084, items.get(0).getId());
         assertEquals(true, items.get(0).isSTLV());
         assertEquals(null, items.get(0).getData());
         
-        List<TLVItem> items2 = items.get(0).getItems();
+        TLVItems items2 = items.get(0).getItems();
         assertEquals(2, items2.size());
         
         item = items2.get(0);
@@ -158,7 +158,7 @@ public class TLVItemTests {
         data = writer.getBytes();
         
         TLVReader reader = new TLVReader();
-        List<TLVItem> items = reader.read(data);
+        TLVItems items = reader.read(data);
         items.get(0).getItems().get(0).setText("123");
         items.get(0).getItems().get(1).setText("234");
         

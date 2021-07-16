@@ -20,7 +20,7 @@ public class TLVItem {
     private final int id;
     private final TLVTag tag;
     private byte[] data = null;
-    private final List<TLVItem> items = new ArrayList<TLVItem>();
+    private final TLVItems items = new TLVItems();
 
     public TLVItem(int tagId) {
         this.id = tagId;
@@ -70,7 +70,7 @@ public class TLVItem {
         }
     }
 
-    public List<TLVItem> getItems() {
+    public TLVItems getItems() {
         return items;
     }
 
@@ -97,5 +97,12 @@ public class TLVItem {
 
     public boolean isSTLV() {
         return (tag != null) && (tag.isSTLV());
+    }
+
+    public TLVItem find(int tagId) {
+        if (this.id == tagId) {
+            return this;
+        }
+        return items.find(tagId);
     }
 }
