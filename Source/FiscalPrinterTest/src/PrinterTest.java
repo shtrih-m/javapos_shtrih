@@ -3936,7 +3936,8 @@ class PrinterTest implements FiscalPrinterConst {
             writer.add(1225, "ТестТест");
             printer.fsWriteOperationTag(1224, writer.getBytes());
             printer.fsWriteOperationTag(1226, "3664069397  ", false);
-            
+            printer.fsWriteOperationTag(2108, 11, 1);
+           
             printer.printRecItem("Item 1", 10099, 1000, 1, 10099, "");
 
             printer.printRecItem("Item 2", 20000, 1000, 2, 20000, "");

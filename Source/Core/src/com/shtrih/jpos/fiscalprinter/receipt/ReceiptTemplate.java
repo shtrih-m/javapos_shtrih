@@ -9,6 +9,9 @@ import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.TLVItem;
 import com.shtrih.fiscalprinter.TLVItems;
 import com.shtrih.fiscalprinter.TLVReader;
+import com.shtrih.fiscalprinter.TLVTags;
+import com.shtrih.fiscalprinter.TLVTag;
+import com.shtrih.fiscalprinter.Tag2115;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.jpos.fiscalprinter.receipt.FSTLVItem;
 import com.shtrih.jpos.fiscalprinter.receipt.template.Field;
@@ -106,7 +109,7 @@ public class ReceiptTemplate {
         }
         for (TemplateLine templateLine : itemTemplate) {
             String line = getReceiptItemLine(templateLine, item);
-            if (!line.trim().isEmpty()){
+            if (!line.trim().isEmpty()) {
                 lines.add(line);
             }
         }
@@ -286,13 +289,24 @@ public class ReceiptTemplate {
         String tagText = "TAG_NAME";
         if (f.tag.startsWith(tagText)) {
             int tagId = Integer.parseInt(f.tag.substring(tagText.length()));
+            if (tagId == 2115) {
+                if (item.getItemCodes().isEmpty()) {
+                    return null;
+                }
+                TLVTags tags = TLVTags.getInstance();
+                TLVTag tag = tags.find(2115);
+                if (tag != null) {
+                    return tag.getPrintName();
+                }
+                return null;
+            }
+
             TLVReader reader = new TLVReader();
             for (FSTLVItem fsTLVItem : item.getTags()) {
                 if (fsTLVItem.getPrint()) {
                     TLVItems items = reader.read(fsTLVItem.getData());
                     TLVItem tlvItem = items.find(tagId);
-                    if (tlvItem != null)
-                    {
+                    if (tlvItem != null) {
                         return tlvItem.getTag().getPrintName(tlvItem.getText());
                     }
                 }
@@ -305,14 +319,20 @@ public class ReceiptTemplate {
         String tagText = "TAG_VALUE";
         if (f.tag.startsWith(tagText)) {
             int tagId = Integer.parseInt(f.tag.substring(tagText.length()));
+            if (tagId == 2115) {
+                if (item.getItemCodes().size() == 0) {
+                    return null;
+                }
+                byte[] mc = item.getItemCodes().get(0);
+                return Tag2115.getValue(mc);
+            }
+
             TLVReader reader = new TLVReader();
             for (FSTLVItem fsTLVItem : item.getTags()) {
-                if (fsTLVItem.getPrint()) 
-                {
+                if (fsTLVItem.getPrint()) {
                     TLVItems items = reader.read(fsTLVItem.getData());
                     TLVItem tlvItem = items.find(tagId);
-                    if (tlvItem != null)
-                    {
+                    if (tlvItem != null) {
                         return tlvItem.getText();
                     }
                 }

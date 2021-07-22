@@ -5,7 +5,6 @@
  */
 package com.shtrih.fiscalprinter;
 
-import java.util.Vector;
 import java.io.ByteArrayOutputStream;
 import com.shtrih.fiscalprinter.command.CommandOutputStream;
 import com.shtrih.fiscalprinter.command.PrinterDate;
@@ -24,6 +23,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.List;
+import java.util.ArrayList;
 import java.text.DecimalFormatSymbols;
 
 /**
@@ -38,12 +39,12 @@ public class TLVTag {
     private final TLVType type;
     private final String displayName;
     private final String printName;
-    private final Vector<TLVBit> bits = new Vector<TLVBit>();
+    private final List<TLVIntValue> bits = new ArrayList<TLVIntValue>();
 
     public enum TLVType {
 
         itByte, itUInt16, itUInt32, itVLN, itFVLN, itBitMask,
-        itUnixTime, itASCII, itSTLV, itByteArray
+        itUnixTime, itASCII, itSTLV, itByteArray, itIntList
     }
 
     public byte[] strToTLV(String text) throws Exception {
@@ -79,9 +80,9 @@ public class TLVTag {
     public byte[] fvlnToTLV(double v) throws Exception {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         String s = String.valueOf(v);
-        int k = s.length() - s.indexOf(".") -1;
+        int k = s.length() - s.indexOf(".") - 1;
         stream.write(k);
-        stream.write(vlnToTLV((long)(v * Math.pow(10, k))));
+        stream.write(vlnToTLV((long) (v * Math.pow(10, k))));
         return stream.toByteArray();
     }
 
@@ -104,6 +105,7 @@ public class TLVTag {
             case itASCII:
                 return strToTLV(value);
             case itBitMask:
+            case itIntList:
                 return intToTLV(Integer.parseInt(value), size);
             case itVLN:
                 return vlnToTLV(Integer.parseInt(value));
@@ -136,6 +138,8 @@ public class TLVTag {
                 return toASCII(data).trim();
             case itBitMask:
                 return toBitMask(data);
+            case itIntList:
+                return toIntList(data);
             case itSTLV:
                 return "";
 
@@ -192,10 +196,10 @@ public class TLVTag {
     public String toBitMask(byte[] data) {
         int value = (int) toInt(data);
         String text = "";
-        Vector<TLVBit> bits = getBits();
+        List<TLVIntValue> bits = getBits();
         for (int i = 0; i < bits.size(); i++) {
-            TLVBit bit = bits.get(i);
-            if (BitUtils.testBit(value, bit.getBit())) {
+            TLVIntValue bit = bits.get(i);
+            if (BitUtils.testBit(value, bit.getValue())) {
                 if (!text.isEmpty()) {
                     text += " ";
                 }
@@ -203,6 +207,18 @@ public class TLVTag {
             }
         }
         return text;
+    }
+
+    public String toIntList(byte[] data) {
+        int value = (int) toInt(data);
+        List<TLVIntValue> bits = getBits();
+        for (int i = 0; i < bits.size(); i++) {
+            TLVIntValue bit = bits.get(i);
+            if (bit.getValue() == value) {
+                return bit.getPrintName();
+            }
+        }
+        return "";
     }
 
     private String format(Date date) {
@@ -271,6 +287,10 @@ public class TLVTag {
         return displayName;
     }
 
+    public String getPrintName() {
+        return printName;
+    }
+    
     public String getPrintName(String text) {
         // При выводе e-mail в приказе ФНС прописано, что строка должна начинаться с "ЭЛ. АДР. ПОКУПАТЕЛЯ".
         // При выводе телефона - строка начинается с "ТЕЛ. ПОКУПАТЕЛЯ".
@@ -280,18 +300,18 @@ public class TLVTag {
         return printName;
     }
 
-    public Vector<TLVBit> getBits() {
+    public List<TLVIntValue> getBits() {
         return bits;
     }
 
-    public TLVBit addBit(int bit, String name) {
-        TLVBit item = new TLVBit(bit, name, "");
+    public TLVIntValue addIntValue(int bit, String name) {
+        TLVIntValue item = new TLVIntValue(bit, name, "");
         bits.add(item);
         return item;
     }
 
-    public TLVBit addBit(int bit, String name, String printName) {
-        TLVBit item = new TLVBit(bit, name, printName);
+    public TLVIntValue addIntValue(int bit, String name, String printName) {
+        TLVIntValue item = new TLVIntValue(bit, name, printName);
         bits.add(item);
         return item;
     }

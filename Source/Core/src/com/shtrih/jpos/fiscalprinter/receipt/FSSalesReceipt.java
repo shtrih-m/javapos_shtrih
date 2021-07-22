@@ -711,7 +711,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void writeOperationTLV(FSSaleReceiptItem item) throws Exception {
         for (int i = 0; i < item.getTags().size(); i++) {
             FSTLVItem tag = (FSTLVItem) item.getTags().get(i);
-            getDevice().check(getDevice().fsWriteOperationTLV(tag.getData()));
+            //getDevice().check(getDevice().fsWriteOperationTLV(tag.getData()));
+            getDevice().fsWriteOperationTLV(tag.getData());
         }
     }
 

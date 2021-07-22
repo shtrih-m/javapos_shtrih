@@ -9,14 +9,14 @@ package com.shtrih.fiscalprinter;
  *
  * @author V.Kravtsov
  */
-public class TLVBit {
+public class TLVIntValue {
     
-    private final int bit;
+    private final int value;
     private final String name;
     private final String printName;
     
-    public TLVBit(int bit, String name, String printName){
-        this.bit = bit;
+    public TLVIntValue(int value, String name, String printName){
+        this.value = value;
         this.name = name;
         this.printName = printName;
     }
@@ -24,8 +24,8 @@ public class TLVBit {
     /**
      * @return the number
      */
-    public int getBit() {
-        return bit;
+    public int getValue() {
+        return value;
     }
 
     /**
