@@ -2402,45 +2402,53 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         getPrinter().printLine(SMFP_STATION_REC, line, params.font);
     }
 
-    public void printEndFiscal() throws Exception {
-        if (disablePrintOnce) {
-            getPrinter().enablePrint();
-            disablePrintOnce = false;
-            return;
-        }
+    public void printEndFiscal() {
+        try {
+            if (disablePrintOnce) {
+                getPrinter().enablePrint();
+                disablePrintOnce = false;
+                return;
+            }
 
-        if (!docEndEnabled) {
-            docEndEnabled = true;
-            return;
-        }
+            if (!docEndEnabled) {
+                docEndEnabled = true;
+                return;
+            }
 
-        synchronized (printer) {
-            docEndEnabled = true;
-            isInReceiptTrailer = true;
-            getPrinter().waitForPrinting();
-            header.endFiscal(additionalTrailer);
-            isInReceiptTrailer = false;
+            synchronized (printer) {
+                docEndEnabled = true;
+                isInReceiptTrailer = true;
+                getPrinter().waitForPrinting();
+                header.endFiscal(additionalTrailer);
+                isInReceiptTrailer = false;
+            }
+        } catch (Exception e) {
+            logger.error(e.toString());
         }
     }
 
-    public void printEndNonFiscal() throws Exception {
-        if (disablePrintOnce) {
-            getPrinter().enablePrint();
-            disablePrintOnce = false;
-            return;
-        }
+    public void printEndNonFiscal() {
+        try {
+            if (disablePrintOnce) {
+                getPrinter().enablePrint();
+                disablePrintOnce = false;
+                return;
+            }
 
-        if (!docEndEnabled && params.canDisableNonFiscalEnding) {
-            docEndEnabled = true;
-            return;
-        }
+            if (!docEndEnabled && params.canDisableNonFiscalEnding) {
+                docEndEnabled = true;
+                return;
+            }
 
-        synchronized (printer) {
-            docEndEnabled = true;
-            isInReceiptTrailer = true;
-            getPrinter().waitForPrinting();
-            header.endNonFiscal(additionalTrailer);
-            isInReceiptTrailer = false;
+            synchronized (printer) {
+                docEndEnabled = true;
+                isInReceiptTrailer = true;
+                getPrinter().waitForPrinting();
+                header.endNonFiscal(additionalTrailer);
+                isInReceiptTrailer = false;
+            }
+        } catch (Exception e) {
+            logger.error(e.toString());
         }
     }
 
