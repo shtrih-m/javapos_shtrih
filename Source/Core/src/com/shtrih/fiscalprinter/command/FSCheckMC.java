@@ -86,8 +86,8 @@ public class FSCheckMC extends PrinterCommand {
     }
 
     public final void encode(CommandOutputStream out) throws Exception {
-        MethodParameter.checkRange(itemStatus, 1, 15, "itemStatus");
-        MethodParameter.checkRange(checkMode, 0, 2, "checkMode");
+        MethodParameter.checkRange(itemStatus, 0, 0xFF, "itemStatus");
+        MethodParameter.checkRange(checkMode, 0, 0xFF, "checkMode");
 
         out.writeInt(password);
         out.writeByte(itemStatus);

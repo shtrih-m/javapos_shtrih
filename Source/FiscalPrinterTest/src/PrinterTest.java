@@ -1000,10 +1000,13 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
+            
+            printZeroFiscalReceipt();
+            //printFiscalReceipt145_9();
+            
             // System.out.println("FFD version: " + printer.readFFDVersion());
             //printSalesReceipt99(5,5);
 
-            printFiscalReceipt145_9();
             //printer.saveNotifications("notifications.txt");
             //readKMServerStatus();
             //testGetTextLength();
@@ -1280,8 +1283,8 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(FPTR_RT_SALES);
             printer.beginFiscalReceipt(false);
-            printer.printRecItem("ITEM 1", 0, 1234, 0, 0, "");
-            printer.printRecTotal(1000, 1000, "payTypeName1");
+            printer.printRecItem("ITEM 1", 0, 0, 0, 0, "");
+            printer.printRecTotal(0, 0, "payTypeName1");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
