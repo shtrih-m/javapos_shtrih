@@ -1000,8 +1000,9 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
+            printCorrectionReceipt2();
             
-            printZeroFiscalReceipt();
+            //printZeroFiscalReceipt();
             //printFiscalReceipt145_9();
             
             // System.out.println("FFD version: " + printer.readFFDVersion());

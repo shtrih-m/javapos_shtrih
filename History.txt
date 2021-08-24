@@ -7,6 +7,14 @@
     
 ********************************************************************************
 
+  24.08.2021
+  deviceServiceVersion = 1013631
+
+  [-] Fixed error with correction receipt tags, 
+      directIO command SMFPTR_DIO_PRINT_CORRECTION2
+
+********************************************************************************
+
   19.08.2021
   deviceServiceVersion = 1013630
 

@@ -59,7 +59,7 @@ public class DIOPrintCorrectionReceipt2 extends DIOItem {
         if(getParams().autoOpenShift)
             getPrinter().openFiscalDay();
 
-        getPrinter().execute(command);
+        getPrinter().check(getPrinter().fsPrintCorrectionReceipt2(command));
 
         service.printEndFiscal();
 
