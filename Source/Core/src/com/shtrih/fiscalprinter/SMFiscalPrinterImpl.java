@@ -3169,7 +3169,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             return;
         }
 
-        image.render(getMaxGraphicsWidth(), getMaxGraphicsHeight(), getParams().centerImage);
+        image.render(getMaxGraphicsLineWidth(), getMaxGraphicsHeight(), getParams().centerImage);
         image.setStartPos(getPrinterImages().getTotalSize() + 1);
         // check max image width
         if (image.getWidth() > getMaxGraphicsWidth()) {

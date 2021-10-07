@@ -592,7 +592,7 @@ public class MainDialog extends javax.swing.JDialog
         });
         pnlReceiptImage.add(btnLoadImages, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 30, 110, 26));
 
-        btnPrintImage.setText("Print images");
+        btnPrintImage.setText("Print image");
         btnPrintImage.setName("btnPrintImages"); // NOI18N
         btnPrintImage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -923,8 +923,7 @@ public class MainDialog extends javax.swing.JDialog
         {
             int index;
             printer.clearImages();
-            
-            index = printer.loadImage("Logo.bmp");
+            index = printer.loadImage(edtImageFile.getText());
             printer.printImage(index);
             
         } catch (Exception e) {
