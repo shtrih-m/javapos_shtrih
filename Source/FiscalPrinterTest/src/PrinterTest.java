@@ -104,8 +104,6 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void setHeaderLines3() {
         try {
-            //String text = getHeaderLine(1) + getLoadImageCommand("Logo.bmp");
-            //printer.setHeaderLine(1, text, false);
             int count = printer.getNumHeaderLines();
             for (int i = 1; i <= count; i++) {
                 printer.setHeaderLine(i, getHeaderLine(i), false);
@@ -1000,7 +998,10 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
-            printCorrectionReceipt2();
+            String text = getHeaderLine(1) + getLoadImageCommand("Logo.bmp");
+            printer.setHeaderLine(1, text, false);
+            
+            //printCorrectionReceipt2();
             
             //printZeroFiscalReceipt();
             //printFiscalReceipt145_9();

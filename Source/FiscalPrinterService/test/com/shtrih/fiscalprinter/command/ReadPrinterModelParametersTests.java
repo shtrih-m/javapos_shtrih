@@ -5,6 +5,12 @@ import org.junit.Test;
 import static com.shtrih.util.ByteUtils.byteArray;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author P.Zhirkov
@@ -39,7 +45,7 @@ public class ReadPrinterModelParametersTests {
         PrinterModelParameters status = cmd.getParameters();
 
         assertEquals(true, status.isGraphics512Supported());
-        assertEquals(256, status.getGraphicsWidth());
+        assertEquals(256, status.getGraphicsLineWidthInDots());
         assertEquals(256, status.getGraphics512Width());
     }
 
@@ -59,7 +65,7 @@ public class ReadPrinterModelParametersTests {
         PrinterModelParameters status = cmd.getParameters();
 
         assertEquals(true, status.isGraphics512Supported());
-        assertEquals(512, status.getGraphicsWidth());
+        assertEquals(512, status.getGraphicsLineWidthInDots());
         assertEquals(512, status.getGraphics512Width());
         assertEquals(false, status.capFsTableNumber());
         assertEquals(false, status.capOfdTableNumber());

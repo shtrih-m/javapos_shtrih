@@ -2689,7 +2689,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void printBarcode1D(PrinterBarcode barcode) throws Exception {
         SmBarcodeEncoder encoder = new ZXingEncoder(
-                getMaxGraphicsWidth(), barcode.getBarWidth(), barcode.getHeight());
+                getMaxGraphicsLineWidth(), barcode.getBarWidth(), barcode.getHeight());
         SmBarcode bc = encoder.encode(barcode);
         if (bc == null) {
             throw new Exception("Barcode type is not supported");
@@ -2709,7 +2709,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             bc.setFirstLine(getImageFirstLine());
             bc.setHScale(1);
             bc.setVScale(1);
-            bc.centerBarcode(getMaxGraphicsWidth());
+            bc.centerBarcode(getMaxGraphicsLineWidth());
             printSmBarcode(bc);
         }
     }
@@ -2891,18 +2891,20 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
         return height - 1;
     }
-
+    
     public int getMaxGraphicsWidth() throws Exception {
         if (capModelParameters()) {
-            return modelParameters.getGraphicsWidth();
+            return modelParameters.getGraphics512Width();
+        } else if (getCapLoadGraphics3()) {
+            return 512;
         } else {
-            return getModel().getFonts().itemByNumber(FontNumber.getNormalFont()).getPaperWidth();
+            return 320;
         }
     }
 
     public int getMaxGraphicsLineWidth() throws Exception {
         if (capModelParameters()) {
-            return modelParameters.getGraphicsWidth();
+            return modelParameters.getGraphicsLineWidthInDots();
         } else if (getCapLoadGraphics3()) {
             return 512;
         } else {
@@ -3169,7 +3171,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             return;
         }
 
-        image.render(getMaxGraphicsLineWidth(), getMaxGraphicsHeight(), getParams().centerImage);
+        image.render(getMaxGraphicsWidth(), getMaxGraphicsHeight(), getParams().centerImage);
         image.setStartPos(getPrinterImages().getTotalSize() + 1);
         // check max image width
         if (image.getWidth() > getMaxGraphicsWidth()) {

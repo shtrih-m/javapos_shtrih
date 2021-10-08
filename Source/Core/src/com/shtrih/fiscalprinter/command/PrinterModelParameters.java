@@ -134,7 +134,7 @@ public class PrinterModelParameters implements PrinterConst {
     private final int maxCommandLength;
 
     // Ширина произвольной графической линии в байтах (печать одномерного штрих-кода) (1 байт)
-    private final int graphicsWidthBytes;
+    private final int graphicsLineWidthBytes;
 
     // Ширина графической линии в буфере графики-512 (1 байт)
     private final int graphics512WidthBytes;
@@ -216,20 +216,25 @@ public class PrinterModelParameters implements PrinterConst {
         bluethoothSettingsTableNumber = in.readByte();
         taxModeFieldNumber = in.readByte();
         maxCommandLength = in.readShort();
-        graphicsWidthBytes = in.readByte();
+        graphicsLineWidthBytes = in.readByte();
         graphics512WidthBytes = readByteIfAvailable(in);
-
-        if (in.size() >= 2) {
+        if (in.size() >= 2) 
+        {
             maxGraphics512Height = in.readShort();
+            fsTableNumber = readByteIfAvailable(in);
+            ofdTableNumber = readByteIfAvailable(in);
+            embeddableAndInternetDeviceTableNumber = readByteIfAvailable(in);
+            ffdTableNumber = readByteIfAvailable(in);
+            ffdColumnNumber = readByteIfAvailable(in);
+          
         } else {
             maxGraphics512Height = 0;
+            fsTableNumber = 0;
+            ofdTableNumber = 0;
+            embeddableAndInternetDeviceTableNumber = 0;
+            ffdTableNumber = 0;
+            ffdColumnNumber = 0;
         }
-
-        fsTableNumber = readByteIfAvailable(in);
-        ofdTableNumber = readByteIfAvailable(in);
-        embeddableAndInternetDeviceTableNumber = readByteIfAvailable(in);
-        ffdTableNumber = readByteIfAvailable(in);
-        ffdColumnNumber = readByteIfAvailable(in);
     }
 
     private int readByteIfAvailable(CommandInputStream in) throws Exception {
@@ -240,8 +245,8 @@ public class PrinterModelParameters implements PrinterConst {
         }
     }
 
-    public int getGraphicsWidth() {
-        return getGraphicsWidthBytes() * 8;
+    public int getGraphicsLineWidthInDots() {
+        return getGraphicsLineWidthBytes() * 8;
     }
 
     public boolean isGraphics512Supported() {
@@ -348,10 +353,10 @@ public class PrinterModelParameters implements PrinterConst {
     }
 
     /**
-     * @return the graphicsWidthBytes
+     * @return the graphicsLineWidthBytes
      */
-    public int getGraphicsWidthBytes() {
-        return graphicsWidthBytes;
+    public int getGraphicsLineWidthBytes() {
+        return graphicsLineWidthBytes;
     }
 
     /**
