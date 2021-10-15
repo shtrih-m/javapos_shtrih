@@ -445,7 +445,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         if (taxRate == 0) {
             result = amount;
         } else {
-            double taxAmount = ((double) amount) * taxRate / (10000 + taxRate);
+            double taxAmount = ((double) amount) * taxRate / (double)(10000.0 + taxRate);
             result = Math.round(taxAmount);
         }
         return result;
@@ -1084,8 +1084,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
 
         long amount = Math.round(unitPrice * quantity);
-        if (amount != price) {
-            quantity = amount / unitPrice;
+        if (Math.abs(amount - price) > 1) {
+            quantity = (double)amount / (double)unitPrice;
         }
         return quantity;
     }

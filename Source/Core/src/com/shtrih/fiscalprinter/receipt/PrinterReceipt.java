@@ -146,7 +146,7 @@ public class PrinterReceipt {
     }
 
     public long getItemPercentAdjustmentAmount(long amount) {
-        return lastAmount * amount / 10000;
+        return Math.round(lastAmount * amount / 10000.0);
     }
 
     public void addPayment(long payment, long payType) throws Exception {

@@ -413,12 +413,12 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_DISCOUNT:
-                summ = roundAmount(getReceipt().getTotal() * amount / 100);
+                summ = roundAmount(getReceipt().getTotal() * amount / 100.0);
                 subtotalDiscount(description, summ);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_SURCHARGE:
-                summ = roundAmount(getReceipt().getTotal() * amount / 100);
+                summ = roundAmount(getReceipt().getTotal() * amount / 100.0);
                 subtotalCharge(description, summ);
                 break;
             default:

@@ -13,6 +13,6 @@ public class SysUtils {
     }
 
     public static double round2(double value) {
-        return Math.round(value * 100) / 100;
+        return ((double)Math.round(value * 100)) / 100.0;
     }
 }

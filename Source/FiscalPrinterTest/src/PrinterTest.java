@@ -998,17 +998,14 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt() {
         try {
-            String text = getHeaderLine(1) + getLoadImageCommand("Logo.bmp");
-            printer.setHeaderLine(1, text, false);
-            
+            //String text = getHeaderLine(1) + getLoadImageCommand("Logo.bmp");
+            //printer.setHeaderLine(1, text, false);
+
             //printCorrectionReceipt2();
-            
             //printZeroFiscalReceipt();
             //printFiscalReceipt145_9();
-            
             // System.out.println("FFD version: " + printer.readFFDVersion());
             //printSalesReceipt99(5,5);
-
             //printer.saveNotifications("notifications.txt");
             //readKMServerStatus();
             //testGetTextLength();
@@ -1021,6 +1018,9 @@ class PrinterTest implements FiscalPrinterConst {
             //printFiscalReceipt145_5();
             //printFiscalReceipt136();
             //printFiscalReceipt11();
+            //printSalesReceipt1234();
+            
+            printSalesReceipt1235();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -3942,7 +3942,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.fsWriteOperationTag(1224, writer.getBytes());
             printer.fsWriteOperationTag(1226, "3664069397  ", false);
             printer.fsWriteOperationTag(2108, 11, 1);
-           
+
             printer.printRecItem("Item 1", 10099, 1000, 1, 10099, "");
 
             printer.printRecItem("Item 2", 20000, 1000, 2, 20000, "");
@@ -4257,6 +4257,129 @@ class PrinterTest implements FiscalPrinterConst {
         long total = positions * 123;
         printer.printRecTotal(total, total, "0");
         printer.endFiscalReceipt(false);
+    }
+
+    private void printSalesReceipt1234() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("ЯЙЦО СЕЙМА СТОЛОВ 1 КАТ. 10ШТ", 4890, 1000, 2, 4890, "");
+            printer.printRecItem("РАГУ ВТОР БЛ СВИН ЗАМ 1КГ СЛОВО МЯС", 12147, 1075, 2, 11300, "");
+            printer.printRecItem("КАРТОФЕЛЬ РАННИЙ 1 КГ", 6544, 2164, 2, 3024, "");
+            printer.printRecItem("ТОМАТЫ ТЕПЛИЧНЫЕ 1 КГ 1 СОРТ", 6805, 1136, 2, 8100, "");
+            printer.printRecItem("ВОДА ОШТЕН НЕГАЗ 5 Л ПЭТ", 5500, 1000, 1, 5500, "");
+            printer.printRecItem("НАПОЛН. ТУАЛ-В ГОШКА КОМКУЮЩ. 8 ЛИТ", 9200, 1000, 1, 9200, "");
+            printer.printRecItem("ХРУМПИЛСЫ КУР ОРИГИНАЛ 250Г МИРАТОР", 9700, 1000, 2, 9700, "");
+            printer.printRecItem("ИРИС КИС-КИС 1/250 КРАСНЫЙ ОКТЯБРЬ", 5389, 1000, 1, 6600, "");
+            printer.printRecItem("КЕФИР КНЯГИНИНО 2,5 1/430 ПЭТ", 3200, 1000, 2, 3200, "");
+            printer.printRecItem("ПЕЧ.ОРЕО 12*228ГР", 10400, 1000, 1, 10400, "");
+            printer.printRecItem("СЫР ПЛ.ХОХЛАНД ВЕТЧ 55 1/200 ПЛ/К", 11113, 1000, 2, 11113, "");
+            printer.printRecItem("КОЛБАСА ДОКТОРСКАЯ ГОСТ ВАР.1/500 ДЭМКА", 18700, 1000, 2, 18700, "");
+            printer.printRecItem("БИОЛАН АПЕЛЬСИН И ЛИМОН 450 МЛ", 3251, 1000, 1, 5500, "");
+            printer.printRecItem("ОТБЕЛИВАТЕЛЬ УРАЛЬСКИЙ 300ГР", 2200, 1000, 1, 2200, "");
+            printer.printRecItem("ЖИДКОЕ СР-ВО КРУТ Д/КАНАЛИЗ ТРУБ 1Л", 4400, 1000, 1, 4400, "");
+            printer.printRecItem("МОЛОКО ЦЕЛЬНОЕ 3,4-4П/П 1Л ГОРОДЕЦ", 5600, 1000, 2, 5600, "");
+            printer.printRecItem("ВОДА МИНЕР. СТОЛОВАЯ Я 1,5Л ГАЗ", 5000, 2000, 1, 2500, "");
+            printer.printRecItem("СМЕТАНА ДВД 20 1/180", 5000, 1000, 2, 5000, "");
+            printer.printRecItem("КРЕКЕР ЗАБАВ.ЖИВОТ.SMART 1/400", 5990, 1000, 1, 5990, "");
+            printer.printRecItem("АКТИВИА 150 МЮСЛИ-КИВИ", 11440, 4000, 2, 3900, "");
+            printer.printRecItem("КАРБОНАД ПО-ЕГОРЬЕВСК В/К НАР 1/115 ЕГОР", 9800, 1000, 1, 9800, "");
+            printer.printRecTotal(156269, 156269, "13");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void printSalesReceipt1235() {
+        try {
+            printer.resetPrinter();
+
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(true);
+            printer.printRecMessage("Кассовый чек 2902 0407/003/002 14.10.21 12:47 AC-04");
+            printer.printRecItem("82 ДОМАШНЯЯ КУХНЯ", 1341200, 280000, 4, 4790000, " ");
+            printer.printRecItem("82 ДОМАШНЯЯ КУХНЯ", 1365200, 285000, 4, 4790000, " ");
+            printer.printRecItem("2342828000007 КОРЕЙКА СВИНАЯ ЗАПЕЧ", 1233100, 190000, 4, 6490000, " ");
+            printer.printRecItem("2361429000001 САЛАТ МОРСКАЯ КАПУСТ", 478800, 178000, 4, 2690000, " ");
+            printer.printRecItem("4607078111360 МОЛОКО НАША КОРОВА 2", 499000, 1000000, 4, 499000, " ");
+            printer.printRecItem("1128 БАТОН НАРЕЗНОЙ 330г", 349000, 1000000, 4, 349000, " ");
+            printer.printRecMessage("---------------------------------------------------");
+            printer.printRecMessage("ИТОГ ЧЕКА БЕЗ СКИДОК:                        526,63");
+            printer.printRecTotal(5266300, 5266300, "12");
+            printer.printRecMessage(" ЧЕК НОМ.           0005                  ");
+            printer.printRecMessage("");
+            printer.printRecMessage(" Ваша карта Спар-клуб                     ");
+            printer.printRecMessage(" Номер карты: **** **** **** 8431         ");
+            printer.printRecMessage(" Начислено бонусов: 4.42                  ");
+            printer.printRecMessage(" На сумму покупки 526.63                  ");
+            printer.printRecMessage(" Баланс бонусов: 9.76                     ");
+            printer.printRecMessage("                                          ");
+            printer.printRecMessage("         Уважаемый покупатель!            ");
+            printer.printRecMessage("     На товары, участвующие в акции,      ");
+            printer.printRecMessage(" бонусы на сумму покупки не начисляются!  ");
+            printer.printRecMessage("         Супермаркет SPAR                 ");
+            printer.printRecMessage(" Чебоксары, Чувашская республика          ");
+            printer.printRecMessage("     пр-кт Московский, дом 40             ");
+            printer.printRecMessage("          т. 79278602031                  ");
+            printer.printRecMessage(" 14.10.21     12:47    ЧЕК   0005         ");
+            printer.printRecMessage(" ПАО СБЕРБАНК              Оплата         ");
+            printer.printRecMessage(" Терминал:               24037024         ");
+            printer.printRecMessage(" Мерчант:            751000028974         ");
+            printer.printRecMessage(" MasterCard        A0000000041010         ");
+            printer.printRecMessage(" Карта:(E1) * * * * * * * * * * * * 5160  ");
+            printer.printRecMessage(" Клиент:                                  ");
+            printer.printRecMessage(" Сумма (Руб):                             ");
+
+            printer.printRecMessage("           526.63                         ");
+            printer.printRecMessage(" Комиссия за операцию - 0 Руб.            ");
+            printer.printRecMessage("             ОДОБРЕНО                     ");
+            printer.printRecMessage(" Код авторизации:          233525         ");
+            printer.printRecMessage(" Номер ссылки:       128752546414         ");
+            printer.printRecMessage("  Подпись клиента не требуется            ");
+            printer.printRecMessage(" 181858AF0F6791D8525CC0B4D0F96D2E         ");
+            printer.printRecMessage(" ================================         ");
+            printer.printRecMessage("                                          ");
+            printer.printRecMessage("                                          ");
+            printer.printRecMessage("                                          ");
+            printer.printRecMessage(" ~S        Супермаркет SPAR               ");
+            printer.printRecMessage(" Чебоксары, Чувашская республика          ");
+            printer.printRecMessage("     пр-кт Московский, дом 40             ");
+            printer.printRecMessage("          т. 79278602031                  ");
+            printer.printRecMessage(" Копия 1                                  ");
+            printer.printRecMessage(" 14.10.21     12:47    ЧЕК   0005         ");
+            printer.printRecMessage(" ПАО СБЕРБАНК              Оплата         ");
+            printer.printRecMessage(" Терминал:               24037024         ");
+            printer.printRecMessage(" Мерчант:            751000028974         ");
+            printer.printRecMessage(" MasterCard        A0000000041010         ");
+            printer.printRecMessage(" Карта:(E1) * * * * * * * * * * * * 5160  ");
+            printer.printRecMessage(" Клиент:                                  ");
+            printer.printRecMessage(" Сумма (Руб)                              ");
+            printer.printRecMessage("           526.63                         ");
+            printer.printRecMessage(" Комиссия за операцию - 0 Руб.            ");
+            printer.printRecMessage("             ОДОБРЕНО                     ");
+            printer.printRecMessage(" Код авторизации:          233525         ");
+            printer.printRecMessage(" Номер ссылки:       128752546414         ");
+            printer.printRecMessage("  Подпись клиента не требуется            ");
+            printer.printRecMessage(" 181858AF0F6791D8525CC0B4D0F96D2E         ");
+            printer.printRecMessage(" ================================         ");
+            printer.printRecMessage("                                          ");
+            printer.printRecMessage("                                          ");
+            printer.printRecMessage("                                          ");
+            printer.printRecMessage(" ~S                                       ");
+            printer.printRecMessage(" *****************************************");
+            printer.printRecMessage("         ****** СПАСИБО ЗА ПОКУПКУ ****** ");
+            printer.printRecMessage("           Служба клиентской поддержки    ");
+            printer.printRecMessage("                 8-800-500-13-29          ");
+            printer.printRecMessage("            Ежедневно с 8-00 до 23-00     ");
+            printer.printRecMessage(" -----------------------------------------");
+            printer.printRecMessage("                                          ");
+            printer.endFiscalReceipt(false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -1814,10 +1814,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 return 0;
             }
 
-            if (params.rebootBeforeDayOpen) {
-                rebootAndWait();
-            }
-
             if (!tlvItems.isEmpty()) {
                 if (fsReadStatus().getDocType().isDocClosed()) {
                     check(fsStartDayOpen());
