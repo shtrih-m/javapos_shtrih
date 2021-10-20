@@ -41,7 +41,7 @@ import com.google.zxing.pdf417.encoder.Dimensions;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
-import com.shtrih.fiscalprinter.SmFiscalPrinterException;
+import com.shtrih.fiscalprinter.DeviceException;
 import com.shtrih.fiscalprinter.TLVTag;
 import com.shtrih.fiscalprinter.TLVItem;
 import com.shtrih.fiscalprinter.TLVItems;
@@ -2376,8 +2376,8 @@ public class MainActivity extends AppCompatActivity
 
                     } catch (JposException e) {
                         Throwable cause = e.getCause();
-                        if (cause instanceof SmFiscalPrinterException) {
-                            if (((SmFiscalPrinterException) cause).getCode() == SMFP_EFPTR_INVALID_TABLE) {
+                        if (cause instanceof DeviceException) {
+                            if (((DeviceException) cause).getErrorCode() == SMFP_EFPTR_INVALID_TABLE) {
                                 break;
                             } else {
                                 log.error("Table " + i + " info reading failed", e);

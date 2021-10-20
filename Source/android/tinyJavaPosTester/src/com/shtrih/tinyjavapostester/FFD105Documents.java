@@ -3,7 +3,7 @@ package com.shtrih.tinyjavapostester;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.GCNGenerator;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
-import com.shtrih.fiscalprinter.SmFiscalPrinterException;
+import com.shtrih.fiscalprinter.DeviceException;
 import com.shtrih.fiscalprinter.TLVWriter;
 import com.shtrih.fiscalprinter.command.DeviceMetrics;
 import com.shtrih.fiscalprinter.command.FSDocType;
@@ -44,7 +44,7 @@ public class FFD105Documents {
 
         if (printerStatus.getPrinterMode().isDayOpened()) {
             throw JposExceptionHandler.getJposException(
-                    new SmFiscalPrinterException(2, "Открытая смена, операция невозможна"));
+                    new DeviceException(2, "Открытая смена, операция невозможна"));
         }
 
         // 1021, кассир
@@ -74,7 +74,7 @@ public class FFD105Documents {
 
         if (printerStatus.getPrinterMode().isDayClosed()) {
             throw JposExceptionHandler.getJposException(
-                    new SmFiscalPrinterException(2, "Закрытая смена, операция невозможна"));
+                    new DeviceException(2, "Закрытая смена, операция невозможна"));
         }
 
         // 1021, кассир
@@ -120,7 +120,7 @@ public class FFD105Documents {
 
         if (printerStatus.getPrinterMode().isDayClosed()) {
             throw JposExceptionHandler.getJposException(
-                    new SmFiscalPrinterException(2, "Закрытая смена, операция невозможна"));
+                    new DeviceException(2, "Закрытая смена, операция невозможна"));
         }
 
         printer.fsStartCorrectionReceipt();
@@ -183,7 +183,7 @@ public class FFD105Documents {
         // в открытие смены не будет передан ИНН кассира
         if (printerStatus.getPrinterMode().isDayClosed()) {
             throw JposExceptionHandler.getJposException(
-                    new SmFiscalPrinterException(2, "Закрытая смена, операция невозможна"));
+                    new DeviceException(2, "Закрытая смена, операция невозможна"));
         }
 
         if (isCashCore(printer)) {
@@ -492,7 +492,7 @@ public class FFD105Documents {
         if (status.getSubmode() == 1 || status.getSubmode() == 2) {
             final int errorCodeNoPaper = 107;
             throw JposExceptionHandler.getJposException(
-                    new SmFiscalPrinterException(errorCodeNoPaper, "Отсутствует бумага"));
+                    new DeviceException(errorCodeNoPaper, "Отсутствует бумага"));
         }
 
         // проверяем, есть ли открытый документ в ФН
