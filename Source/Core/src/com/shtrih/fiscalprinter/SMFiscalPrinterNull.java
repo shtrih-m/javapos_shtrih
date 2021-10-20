@@ -1021,7 +1021,12 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     }
 
     @Override
-    public FSReadFiscalizationTag fsReadFiscalizationTag(int fiscalizationNumber, int tagNumber) throws Exception {
+    public FSRequestFiscalizationTag fsRequestFiscalizationTag(int fiscId, int tagId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public byte[] fsReadFiscalizationTag(int fiscId, int tagId) throws Exception {
         return null;
     }
 
@@ -1262,8 +1267,13 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public int mcClearBuffer() throws Exception {
         return 0;
     }
-    
-    public byte[] fsReadDocumentTLVToEnd() throws Exception{
+
+    public byte[] fsReadDocumentTLVToEnd() throws Exception {
         return null;
     }
+
+    public Object getSyncObject() throws Exception {
+        return null;
+    }
+
 }

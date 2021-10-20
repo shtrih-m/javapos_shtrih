@@ -12,7 +12,7 @@ public class FSReadFiscalizationTagTests {
 
     @Test
     public void should_serialize_request() throws Exception {
-        FSReadFiscalizationTag cmd = new FSReadFiscalizationTag(30, 240, 1041);
+        FSRequestFiscalizationTag cmd = new FSRequestFiscalizationTag(30, 240, 1041);
 
         byte[] data = cmd.encodeData();
 
@@ -25,7 +25,7 @@ public class FSReadFiscalizationTagTests {
 
     @Test
     public void should_deserialize_response() throws Exception {
-        FSReadFiscalizationTag cmd = new FSReadFiscalizationTag(30, 240, 144);
+        FSRequestFiscalizationTag cmd = new FSRequestFiscalizationTag(30, 240, 144);
 
         byte[] responseData = byteArray(
                 0xFF, 0x0E, 0x00, 0x11, 0x04, 0x10, 0x00, 0x39, 0x39, 0x39,

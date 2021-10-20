@@ -14,13 +14,10 @@ public class DIOReadFiscalizationTLV extends DIOItem {
     public void execute(int[] data, Object object) throws Exception {
 
         DIOUtils.checkDataMinLength(data, 1);
-        int fiscalizationNumber = data[0];
+        int fiscId = data[0];
+        byte[] docdata = getPrinter().fsReadFiscalizationTag(fiscId, 0xFFFF);
 
-        getPrinter().fsReadFiscalizationTag(fiscalizationNumber, 0xFFFF);
-        byte[] docdata = getPrinter().fsReadDocumentTLVToEnd();
-        
         Object[] outParams = (Object[]) object;
         outParams[0] = docdata;
     }
 }
-

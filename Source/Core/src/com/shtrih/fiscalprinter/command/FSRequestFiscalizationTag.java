@@ -13,7 +13,7 @@ package com.shtrih.fiscalprinter.command;
  * 1 - длина ответного сообщения зависит от TLV структуры, возвращаемой ФН на заданный номер тега (кроме FFFFh);
  * 2 - при запросе всех тегов TLV структура не возвращается (X=0).
  */
-public class FSReadFiscalizationTag extends PrinterCommand {
+public class FSRequestFiscalizationTag extends PrinterCommand {
 
     private final int sysPassword;
     private final int fiscalizationNumber;
@@ -22,7 +22,7 @@ public class FSReadFiscalizationTag extends PrinterCommand {
     // out
     private byte[] tagData;
 
-    public FSReadFiscalizationTag(int sysPassword, int fiscalizationNumber, int tagNumber) {
+    public FSRequestFiscalizationTag(int sysPassword, int fiscalizationNumber, int tagNumber) {
         this.sysPassword = sysPassword;
         this.fiscalizationNumber = fiscalizationNumber;
         this.tagNumber = tagNumber;

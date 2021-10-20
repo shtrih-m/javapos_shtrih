@@ -209,6 +209,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         events.remove(item);
     }
 
+    public Object getSyncObject() throws Exception {
+        return port.getSyncObject();
+    }
+
     public void deviceExecute(PrinterCommand command) throws Exception {
         synchronized (port.getSyncObject()) {
             Time.delay(params.commandDelayInMs);
@@ -224,12 +228,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 case 0xFF45:
                     correctDate();
             }
-            
-            if (Thread.currentThread().isInterrupted()){
+
+            if (Thread.currentThread().isInterrupted()) {
                 throw new InterruptedException();
             }
             //Thread.sleep(0); // to interrupt 
-            
+
             device.send(command);
             if (command.isFailed()) {
                 String text = getErrorText(command.getResultCode());
@@ -570,12 +574,23 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     @Override
-    public FSReadFiscalizationTag fsReadFiscalizationTag(int fiscalizationNumber, int tagNumber) throws Exception {
-        logger.debug("fsReadFiscalizationTag(" + fiscalizationNumber + ", " + tagNumber + ")");
-
-        FSReadFiscalizationTag command = new FSReadFiscalizationTag(getSysPassword(), fiscalizationNumber, tagNumber);
+    public FSRequestFiscalizationTag fsRequestFiscalizationTag(int fiscId, int tagId) throws Exception {
+        logger.debug("fsRequestFiscalizationTag(" + fiscId + ", " + tagId + ")");
+        FSRequestFiscalizationTag command = new FSRequestFiscalizationTag(
+                getSysPassword(), fiscId, tagId);
         execute(command);
         return command;
+    }
+
+    public byte[] fsReadFiscalizationTag(int fiscId, int tagId) throws Exception {
+        synchronized (getSyncObject()) {
+            FSRequestFiscalizationTag readDocument = fsRequestFiscalizationTag(fiscId, tagId);
+            byte[] tagData = readDocument.getTagData();
+            if (tagId == 0xFFFF) {
+                tagData = fsReadDocumentTLVToEnd();
+            }
+            return tagData;
+        }
     }
 
     public ShortPrinterStatus getShortStatus() {
@@ -2892,7 +2907,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
         return height - 1;
     }
-    
+
     public int getMaxGraphicsWidth() throws Exception {
         if (capModelParameters()) {
             return modelParameters.getGraphics512Width();
@@ -3641,21 +3656,26 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public DocumentTLV fsReadDocumentTLV(int docNumber) throws Exception {
-        FSReadDocument readDocument = fsRequestDocumentTLV(docNumber);
-        byte[] docData = fsReadDocumentTLVToEnd();
-        return new DocumentTLV(docNumber, readDocument.getDocType(), docData);
+        synchronized (getSyncObject()) {
+            FSReadDocument readDocument = fsRequestDocumentTLV(docNumber);
+            byte[] docData = fsReadDocumentTLVToEnd();
+            return new DocumentTLV(docNumber, readDocument.getDocType(), docData);
+        }
     }
 
-    public byte[] fsReadDocumentTLVToEnd() throws Exception
-    {
+    public byte[] fsReadDocumentTLVToEnd() throws Exception {
         FSReadDocumentBlock command = new FSReadDocumentBlock(sysPassword);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         try {
             while (true) {
                 executeCommand(command);
-                if (command.getResultCode() == 8) break;
+                if (command.getResultCode() == 8) {
+                    break;
+                }
                 check(command.getResultCode());
-                if (command.getData().length == 0) break;
+                if (command.getData().length == 0) {
+                    break;
+                }
                 stream.write(command.getData());
             }
             return stream.toByteArray();
@@ -3663,7 +3683,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             stream.close();
         }
     }
-    
+
     public FSReadDocument fsRequestDocumentTLV(int documentNumber) throws Exception {
         FSReadDocument readDocument = new FSReadDocument(sysPassword, documentNumber);
         execute(readDocument);

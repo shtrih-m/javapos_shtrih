@@ -27,6 +27,10 @@ public class DeviceException extends Exception {
         return errorCode;
     }
 
+    public boolean isConnectionError() {
+        return errorCode < 0;
+    }
+    
     public static DeviceException readAnswerError() throws Exception {
         return new DeviceException(PrinterConst.SMFPTR_E_READ_ANSWER,
                 Localizer.getString(Localizer.NoConnection));

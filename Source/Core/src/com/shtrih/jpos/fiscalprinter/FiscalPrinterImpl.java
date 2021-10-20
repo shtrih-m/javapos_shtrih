@@ -4342,10 +4342,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 PrinterStatus status = getPrinter().readPrinterStatus();
                 checkPaperStatus(status);
             }
-        } catch (IOException e) 
+        } catch (DeviceException e) 
         {
-            logger.error(e.getMessage());
-            setPowerState(JPOS_PS_OFFLINE);
+            if (e.isConnectionError()){
+                setPowerState(JPOS_PS_OFFLINE);
+            }
+            logger.error("checkDeviceStatus: " + e.getMessage());
         }
     }
 
@@ -4358,7 +4360,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 Thread.sleep(params.pollInterval);
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("DeviceProc: " + e.getMessage());
         }
         logger.debug("Poll thread stopped");
     }

@@ -1,6 +1,6 @@
 package com.shtrih.jpos.fiscalprinter.directIO;
 
-import com.shtrih.fiscalprinter.command.FSReadFiscalizationTag;
+import com.shtrih.fiscalprinter.command.FSRequestFiscalizationTag;
 import com.shtrih.jpos.DIOUtils;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 
@@ -15,12 +15,7 @@ public class DIOReadFiscalizationTag extends DIOItem {
         DIOUtils.checkDataMinLength(data, 2);
         int fiscalizationNumber = data[0];
         int tagNumber = data[1];
-
-        FSReadFiscalizationTag readDocument = getPrinter().fsReadFiscalizationTag(fiscalizationNumber, tagNumber);
-        byte[] tagData = readDocument.getTagData();
-        if (tagNumber == 0xFFFF){
-            tagData = getPrinter().fsReadDocumentTLVToEnd();
-        }
+        byte[] tagData = getPrinter().fsReadFiscalizationTag(fiscalizationNumber, tagNumber);
         Object[] outParams = (Object[]) object;
         outParams[0] = tagData;
     }

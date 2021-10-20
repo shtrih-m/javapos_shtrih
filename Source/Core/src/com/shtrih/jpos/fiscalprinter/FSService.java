@@ -56,9 +56,8 @@ public class FSService implements Runnable {
         }
     }
 
-    public void stop() throws Exception 
-    {
-        
+    public void stop() throws Exception {
+
         if (isStarted()) {
             logger.debug("FSService stopping");
             thread.interrupt();
@@ -71,11 +70,13 @@ public class FSService implements Runnable {
         try {
             logger.debug("FSService started");
             logger.debug(String.format("OFD %s:%d, connection timeout %d ms, poll period %d ms",
-                parameters.getHost(), parameters.getPort(), connectTimeout,
-                parameters.getPollPeriodSeconds() * 1000));
+                    parameters.getHost(), parameters.getPort(), connectTimeout,
+                    parameters.getPollPeriodSeconds() * 1000));
 
             while (!Thread.currentThread().isInterrupted()) {
-                checkData();
+                synchronized (printer.getSyncObject()) {
+                    checkData();
+                }
                 Time.delay(parameters.getPollPeriodSeconds() * 1000);
             }
         } catch (InterruptedException e) {
@@ -86,8 +87,7 @@ public class FSService implements Runnable {
         logger.debug("FSService stopped");
     }
 
-    private void checkData() throws Exception
-    {
+    private void checkData() throws Exception {
         try {
             byte[] data = printer.fsReadBlockData();
             if (data.length == 0) {

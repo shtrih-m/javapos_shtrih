@@ -38,7 +38,7 @@ import com.shtrih.fiscalprinter.command.FSReadDayParameters;
 import com.shtrih.fiscalprinter.command.FSReadDocument;
 import com.shtrih.fiscalprinter.command.FSReadExpDate;
 import com.shtrih.fiscalprinter.command.FSReadFiscalization;
-import com.shtrih.fiscalprinter.command.FSReadFiscalizationTag;
+import com.shtrih.fiscalprinter.command.FSRequestFiscalizationTag;
 import com.shtrih.fiscalprinter.command.FSReadMCNotificationStatus;
 import com.shtrih.fiscalprinter.command.FSReadMCStatus;
 import com.shtrih.fiscalprinter.command.FSReadMemorySize;
@@ -594,8 +594,10 @@ public interface SMFiscalPrinter {
 
     PrinterModelParameters readPrinterModelParameters() throws Exception;
 
-    FSReadFiscalizationTag fsReadFiscalizationTag(int fiscalizationNumber, int tagNumber) throws Exception;
+    FSRequestFiscalizationTag fsRequestFiscalizationTag(int fiscId, int tagId) throws Exception;
 
+    public byte[] fsReadFiscalizationTag(int fiscId, int tagId) throws Exception;
+        
     boolean getCapSetVatTable();
 
     void clearTableText() throws Exception;
@@ -709,4 +711,6 @@ public interface SMFiscalPrinter {
     public int fsReadMCStatus(FSReadMCStatus command) throws Exception;
     
     public int mcClearBuffer() throws Exception;
+    
+    public Object getSyncObject() throws Exception;
 }
