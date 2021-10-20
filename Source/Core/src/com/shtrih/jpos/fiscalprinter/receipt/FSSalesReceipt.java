@@ -555,7 +555,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                         getDevice().printText(messages.get(i));
                     }
                 } catch (Exception e) {
-                    logger.error("Receipt messages printing failed", e);
+                    logger.error("Receipt messages printing failed: ", e);
                 }
             }
         }
@@ -1118,7 +1118,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
 
         quantity = correctQuantity(price, quantity, unitPrice);
-
         doPrintSale(price, quantity, unitPrice, department, vatInfo, description, unitName, false);
     }
 
@@ -1143,12 +1142,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 item.setItemAmount(item.getItemAmount() + price);
             }
         }
-        if (price > amount) {
-            price = amount;
-        }
         if (item == null) {
             item = new FSSaleReceiptItem();
             item.setItemAmount(price);
+            item.setTotalAmount(price);
             item.setPrice(unitPrice);
             item.setUnitPrice(unitPrice);
             item.setQuantity(quantity);
@@ -1179,6 +1176,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 item.setTotalAmount(getParams().itemTotalAmount);
                 getParams().itemTotalAmount = null;
             }
+            
             if (getParams().itemTaxAmount != null) {
                 item.setTaxAmount(getParams().itemTaxAmount);
                 getParams().itemTaxAmount = null;

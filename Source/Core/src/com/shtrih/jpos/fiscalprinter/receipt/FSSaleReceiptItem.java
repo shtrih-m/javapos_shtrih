@@ -171,7 +171,7 @@ public class FSSaleReceiptItem {
     }
 
     public long getTotal() {
-        return getAmount();
+        return getItemAmount();
     }
 
     public void addDiscount(AmountItem discount) {

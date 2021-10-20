@@ -31,7 +31,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="COM3"/>
+        <prop name="portName" type="String" value="COM6"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="0"/>
@@ -46,9 +46,9 @@
 		<!-- Subtotal font -->
         <prop name="subtotalFont" type="String" value="1"/>
         <!-- Driver byte receive timeout -->
-        <prop name="byteTimeout" type="String" value="200"/>
+        <prop name="byteTimeout" type="String" value="500"/>
         <!-- Device byte receive timeout -->
-        <prop name="deviceByteTimeout" type="String" value="200"/>
+        <prop name="deviceByteTimeout" type="String" value="500"/>
         <!-- Device search enabled for all serial ports -->
         <prop name="searchByPortEnabled" type="String" value="0"/>
         <!-- Device search enabled for all baud rates -->
@@ -255,7 +255,7 @@
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- Receipt template -->
 		<prop name="FSCombineItemAdjustments" type="String" value="0"/>
-		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
+		<prop name="ReceiptTemplateEnabled" type="String" value="0"/>
 		<prop name="FieldSeparator" type="String" value=":"/>
 		<prop name="ItemTableHeader" type="String"  value="-------------------HEADER-----------------"/>
 		<prop name="ItemTableTrailer" type="String" value="-------------------TRAILER----------------"/>
@@ -322,7 +322,7 @@
 		<prop name="FSServiceEnabled" type="String" value="1"/>
         <!-- device state polling enabled -->
         <prop name="pollEnabled" type="String" value="1"/>
-        <prop name="fastConnect" type="String" value="1"/>
+        <prop name="fastConnect" type="String" value="0"/>
     </JposEntry> 
 	
     <JposEntry logicalName="ShtrihCashDrawer">

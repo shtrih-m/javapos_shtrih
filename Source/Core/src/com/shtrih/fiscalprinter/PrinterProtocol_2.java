@@ -9,6 +9,7 @@ import com.shtrih.util.Localizer;
 import com.shtrih.util.Logger2;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * @author V.Kravtsov

@@ -232,9 +232,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             if (Thread.currentThread().isInterrupted()) {
                 throw new InterruptedException();
             }
-            //Thread.sleep(0); // to interrupt 
 
-            device.send(command);
+            try {
+                device.send(command);
+            } catch (IOException e) {
+                throw new DeviceException(
+                        PrinterConst.SMFPTR_E_NOCONNECTION,
+                        e.getMessage());
+            }
+
             if (command.isFailed()) {
                 String text = getErrorText(command.getResultCode());
                 logger.error(text + ", " + command.getParametersText(commands));
@@ -3840,89 +3846,97 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public byte[] fsReadBlockData() throws Exception {
-        byte[] result = new byte[0];
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        FSReadBufferStatus status = fsReadBufferStatus();
+        synchronized (getSyncObject()) {
+            byte[] result = new byte[0];
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            FSReadBufferStatus status = fsReadBufferStatus();
 
-        if (status.getDataSize() == 0) {
-            return result;
-        }
-        if (status.getBlockSize() == 0) {
-            return result;
-        }
-
-        int count = (status.getDataSize() + status.getBlockSize() - 1)
-                / status.getBlockSize();
-        for (int i = 0; i < count; i++) {
-            int offset = i * status.getBlockSize();
-            int dataSize = status.getDataSize() - offset;
-            if (dataSize > status.getBlockSize()) {
-                dataSize = status.getBlockSize();
+            if (status.getDataSize() == 0) {
+                return result;
             }
-            FSReadBlock block = fsReadBlock(offset, dataSize);
+            if (status.getBlockSize() == 0) {
+                return result;
+            }
 
-            stream.write(block.getData());
+            int count = (status.getDataSize() + status.getBlockSize() - 1)
+                    / status.getBlockSize();
+            for (int i = 0; i < count; i++) {
+                int offset = i * status.getBlockSize();
+                int dataSize = status.getDataSize() - offset;
+                if (dataSize > status.getBlockSize()) {
+                    dataSize = status.getBlockSize();
+                }
+                FSReadBlock block = fsReadBlock(offset, dataSize);
+
+                stream.write(block.getData());
+            }
+            return stream.toByteArray();
         }
-        return stream.toByteArray();
     }
 
     public void fsWriteBlockData(byte[] data) throws Exception {
-        FSStartWriteBlock command = fsStartWriteBlock(data.length);
+        synchronized (getSyncObject()) {
+            FSStartWriteBlock command = fsStartWriteBlock(data.length);
 
-        int blockSize = command.getBlockSize();
-        if (blockSize == 0) {
-            throw new Exception("blockSize = 0");
-        }
-        int count = (data.length + blockSize - 1) / blockSize;
-        for (int i = 0; i < count; i++) {
-            int offset = i * blockSize;
-            int dataSize = data.length - i * blockSize;
-            if (dataSize > blockSize) {
-                dataSize = blockSize;
+            int blockSize = command.getBlockSize();
+            if (blockSize == 0) {
+                throw new Exception("blockSize = 0");
             }
-            byte[] blockData = new byte[dataSize];
-            System.arraycopy(data, offset, blockData, 0, dataSize);
-            fsWriteBlock(offset, blockData);
+            int count = (data.length + blockSize - 1) / blockSize;
+            for (int i = 0; i < count; i++) {
+                int offset = i * blockSize;
+                int dataSize = data.length - i * blockSize;
+                if (dataSize > blockSize) {
+                    dataSize = blockSize;
+                }
+                byte[] blockData = new byte[dataSize];
+                System.arraycopy(data, offset, blockData, 0, dataSize);
+                fsWriteBlock(offset, blockData);
+            }
         }
     }
 
     public List<FSTicket> fsReadTickets(int[] fsDocumentNumbers) throws Exception {
-        Vector<FSTicket> tickets = new Vector<FSTicket>();
-        for (int i = 0; i < fsDocumentNumbers.length; i++) {
-            FSReadDocTicket command = new FSReadDocTicket();
-            command.setSysPassword(getSysPassword());
-            command.setDocNumber(fsDocumentNumbers[i]);
-            int rc = executeCommand(command);
-            byte[] ticket = command.getTicket();
-            tickets.add(new FSTicket(rc, ticket));
-            if (rc != 0) {
-                break;
+        synchronized (getSyncObject()) {
+            Vector<FSTicket> tickets = new Vector<FSTicket>();
+            for (int i = 0; i < fsDocumentNumbers.length; i++) {
+                FSReadDocTicket command = new FSReadDocTicket();
+                command.setSysPassword(getSysPassword());
+                command.setDocNumber(fsDocumentNumbers[i]);
+                int rc = executeCommand(command);
+                byte[] ticket = command.getTicket();
+                tickets.add(new FSTicket(rc, ticket));
+                if (rc != 0) {
+                    break;
+                }
             }
+            return tickets;
         }
-        return tickets;
     }
 
     public List<FSTicket> fsReadTickets(int firstFSDocumentNumber,
             int documentCount) throws Exception {
-        Vector<FSTicket> tickets = new Vector<FSTicket>();
-        FSReadStatus status = fsReadStatus();
-        long lastFSDocumentNumber = status.getDocNumber();
-        if ((documentCount > 0) && (firstFSDocumentNumber + documentCount < lastFSDocumentNumber)) {
-            lastFSDocumentNumber = firstFSDocumentNumber + documentCount;
-        }
-
-        for (int i = firstFSDocumentNumber; i <= lastFSDocumentNumber; i++) {
-            FSReadDocTicket command = new FSReadDocTicket();
-            command.setSysPassword(getSysPassword());
-            command.setDocNumber(i);
-            int rc = executeCommand(command);
-            byte[] ticket = command.getTicket();
-            tickets.add(new FSTicket(rc, ticket));
-            if (rc != 0) {
-                break;
+        synchronized (getSyncObject()) {
+            Vector<FSTicket> tickets = new Vector<FSTicket>();
+            FSReadStatus status = fsReadStatus();
+            long lastFSDocumentNumber = status.getDocNumber();
+            if ((documentCount > 0) && (firstFSDocumentNumber + documentCount < lastFSDocumentNumber)) {
+                lastFSDocumentNumber = firstFSDocumentNumber + documentCount;
             }
+
+            for (int i = firstFSDocumentNumber; i <= lastFSDocumentNumber; i++) {
+                FSReadDocTicket command = new FSReadDocTicket();
+                command.setSysPassword(getSysPassword());
+                command.setDocNumber(i);
+                int rc = executeCommand(command);
+                byte[] ticket = command.getTicket();
+                tickets.add(new FSTicket(rc, ticket));
+                if (rc != 0) {
+                    break;
+                }
+            }
+            return tickets;
         }
-        return tickets;
     }
 
     public boolean isDiscountInHeader() throws Exception {
@@ -4511,9 +4525,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             port.setPortName(searchPortName);
             port.setBaudRate(searchBaudRate);
             port.open(0);
-            connect();
+            LongPrinterStatus status = connect();
 
-            LongPrinterStatus status = readLongStatus();
             // always set port parameters to update byte
             // receive timeout in fiscal printer
             int baudRateIndex = getBaudRateIndex(params.getBaudRate());
@@ -4571,7 +4584,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 port.setPortName(params.portName);
                 port.setBaudRate(params.getBaudRate());
                 port.open(0);
-                return connect();
+                LongPrinterStatus status = connect();
+                // always set port parameters to update byte
+                // receive timeout in fiscal printer
+                int baudRateIndex = getBaudRateIndex(params.getBaudRate());
+                writePortParams(status.getPortNumber(), baudRateIndex, params.getDeviceByteTimeout());
+                return status;
             }
         }
     }

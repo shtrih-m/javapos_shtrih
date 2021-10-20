@@ -12,6 +12,7 @@
 
   [-] Fixed error with quantityCorrectionEnabled parameter
   [-] Fixed error with read TLV document to the end
+  [-] Fixed error with receipt item price
   
 ********************************************************************************
 

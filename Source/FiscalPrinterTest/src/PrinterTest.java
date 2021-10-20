@@ -1020,10 +1020,11 @@ class PrinterTest implements FiscalPrinterConst {
             //printFiscalReceipt11();
             
             //printSalesReceipt1234();
-            //printSalesReceipt1235();
             
-            printer.readFiscalizationTag(1, 0xFFFF);
-            printer.readFiscalizationTLV(1);
+            //printer.readFiscalizationTag(1, 0xFFFF);
+            //printer.readFiscalizationTLV(1);
+            
+            printSalesReceipt1235();
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -4318,6 +4319,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecMessage(" Начислено бонусов: 4.42                  ");
             printer.printRecMessage(" На сумму покупки 526.63                  ");
             printer.printRecMessage(" Баланс бонусов: 9.76                     ");
+            /*
             printer.printRecMessage("                                          ");
             printer.printRecMessage("         Уважаемый покупатель!            ");
             printer.printRecMessage("     На товары, участвующие в акции,      ");
@@ -4378,6 +4380,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecMessage("            Ежедневно с 8-00 до 23-00     ");
             printer.printRecMessage(" -----------------------------------------");
             printer.printRecMessage("                                          ");
+            */
             printer.endFiscalReceipt(false);
 
         } catch (Exception e) {

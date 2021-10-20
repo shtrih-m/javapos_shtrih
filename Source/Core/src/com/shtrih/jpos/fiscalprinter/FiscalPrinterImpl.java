@@ -888,8 +888,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public void setDeviceEnabled(boolean deviceEnabled) throws Exception 
-    {
+    public void setDeviceEnabled(boolean deviceEnabled) throws Exception {
         logger.debug("setDeviceEnabled(" + deviceEnabled + ")");
         checkClaimed();
         vatValues = null;
@@ -2052,8 +2051,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public void close() throws Exception 
-    {
+    public void close() throws Exception {
         checkOpened();
         setEventCallbacks(null);
         setFreezeEvents(true);
@@ -4335,30 +4333,29 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         throw new DeviceException(0x71, "Cutter failure");
     }
 
-    public void checkDeviceStatus() throws Exception
-    {
+    public void checkDeviceStatus() throws Exception {
         try {
             synchronized (printer) {
                 PrinterStatus status = getPrinter().readPrinterStatus();
                 checkPaperStatus(status);
             }
-        } catch (DeviceException e) 
-        {
-            if (e.isConnectionError()){
+        } catch (DeviceException e) {
+            if (e.isConnectionError()) {
                 setPowerState(JPOS_PS_OFFLINE);
             }
             logger.error("checkDeviceStatus: " + e.getMessage());
         }
     }
 
-    public void deviceProc() 
-    {
+    public void deviceProc() {
         logger.debug("Poll thread started");
         try {
             while (!Thread.currentThread().isInterrupted()) {
                 checkDeviceStatus();
                 Thread.sleep(params.pollInterval);
             }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         } catch (Exception e) {
             logger.error("DeviceProc: " + e.getMessage());
         }
