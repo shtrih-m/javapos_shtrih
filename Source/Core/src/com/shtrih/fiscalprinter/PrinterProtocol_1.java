@@ -277,31 +277,12 @@ public class PrinterProtocol_1 implements PrinterProtocol {
     }
 
     private void sendCommand(PrinterCommand command) throws Exception {
-        int repeatCount = 0;
-        while (true) {
-            try {
-                logger.debug("sendCommand: " + command.getText() + ", " + command.getIsRepeatable());
+        logger.debug("sendCommand: " + command.getText() + ", " + command.getIsRepeatable());
 
-                if (repeatCount > 0) {
-                    logger.debug("retry " + repeatCount + "...");
-                }
-                repeatCount++;
-                byte[] tx = command.encodeData();
-                int timeout = command.getTimeout();
-                byte[] rx = sendCommand(tx, timeout);
-                command.decodeData(rx);
-                break;
-
-            } catch (AnswerCodeException e)
-            {
-                // !!! Thread.sleep(100) ???
-                try {
-                    port.readBytes(0xFF);
-                } catch (Exception e1) {
-                }
-                throw e;
-            }
-        }
+        byte[] tx = command.encodeData();
+        int timeout = command.getTimeout();
+        byte[] rx = sendCommand(tx, timeout);
+        command.decodeData(rx);
     }
 
     public void setMaxEnqNumber(int value) {
@@ -364,8 +345,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
             return crc;
         }
 
-        public byte[] encode(byte[] data) throws Exception
-        {
+        public byte[] encode(byte[] data) throws Exception {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
             if (data.length > 0xFF) {

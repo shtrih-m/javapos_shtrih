@@ -69,7 +69,8 @@ public class FileLogger {
             }
             Date date = Calendar.getInstance().getTime();
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS");
-            String line = sdf.format(date) + " " + prefix + " " + className + " - " + text;
+            String ThreadId = String.format("%08d", Thread.currentThread().getId());
+            String line = sdf.format(date) + " " + prefix + " " + ThreadId + " " + className + " - " + text;
             writer.write(line);
             writer.newLine();
             writer.flush();

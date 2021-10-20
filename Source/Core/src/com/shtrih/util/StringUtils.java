@@ -28,16 +28,11 @@ public class StringUtils {
     }
 
     public static int stringToInt(String value, int index, int len, String text)
-            throws Exception {
-        String substring = "";
-        try {
-            substring = value.substring(index, index + len);
-            return Integer.parseInt(substring);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+            throws NumberFormatException {
+        String substring = value.substring(index, index + len);
+        return Integer.parseInt(substring);
     }
-    
+
     public static String[] split(String text, char c) {
         String data = "";
         Vector result = new Vector();
@@ -140,12 +135,13 @@ public class StringUtils {
         symbols.setDecimalSeparator('.');
         DecimalFormat formatter = new DecimalFormat("0.00", symbols);
 
-         String result = formatter.format(Math.abs(value) / 100.0);
+        String result = formatter.format(Math.abs(value) / 100.0);
 
-         if(value < 0)
-             result = "-" + result;
+        if (value < 0) {
+            result = "-" + result;
+        }
 
-         return result;
+        return result;
     }
 
     public static String quantityToStr2(double value) throws Exception {

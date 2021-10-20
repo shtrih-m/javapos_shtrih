@@ -7,10 +7,11 @@
     
 ********************************************************************************
 
-  15.10.2021
+  19.10.2021
   deviceServiceVersion = 1013634
 
   [-] Fixed error with quantityCorrectionEnabled parameter
+  [-] Fixed error with read TLV document to the end
   
 ********************************************************************************
 

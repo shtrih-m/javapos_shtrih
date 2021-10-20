@@ -24,7 +24,7 @@ import com.shtrih.util.CompositeLogger;
 public class MonitoringServerX5 implements Runnable {
 
     private int port = 0;
-    private boolean isStarted = false;
+    private Thread thread = null;
     private final FiscalPrinterImpl service;
     private static CompositeLogger logger = CompositeLogger.getLogger(MonitoringServerX5.class);
 
@@ -36,33 +36,31 @@ public class MonitoringServerX5 implements Runnable {
     }
 
     public boolean isStarted() {
-        return isStarted;
+        return thread != null;
     }
 
-    public void start(int port) {
-        try {
-            this.port = port;
-            Thread thread = new Thread(this);
-            thread.start();
-            isStarted = true;
-        } catch (Exception e) {
-            logger.error(e);
+    public void start(int port) throws Exception {
+        if (isStarted()) {
+            return;
+        }
+
+        this.port = port;
+        Thread thread = new Thread(this);
+        thread.start();
+    }
+
+    public void stop() throws Exception {
+        if (isStarted()) {
+            thread.interrupt();
+            thread.join();
+            thread = null;
         }
     }
 
-    public void stop() {
-        try {
-            isStarted = false;
-        } catch (Exception e) {
-            logger.error(e);
-        }
-    }
-
-    
     public void run() {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
-            while (isStarted) {
+            while (!thread.isInterrupted()) {
                 try {
                     serverSocket.setSoTimeout(AcceptTimeout);
                     Socket socket = serverSocket.accept();
@@ -75,8 +73,9 @@ public class MonitoringServerX5 implements Runnable {
                         BufferedWriter writer = new BufferedWriter(
                                 new OutputStreamWriter(sout));
                         String command = reader.readLine();
-                        if (command == null)
+                        if (command == null) {
                             continue;
+                        }
                         String answer = MonitoringCommands.runCommand(command, service);
                         if (answer.length() > 0) {
                             writer.write(answer);

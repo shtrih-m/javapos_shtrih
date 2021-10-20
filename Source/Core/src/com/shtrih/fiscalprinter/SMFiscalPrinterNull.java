@@ -1262,4 +1262,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public int mcClearBuffer() throws Exception {
         return 0;
     }
+    
+    public byte[] fsReadDocumentTLVToEnd() throws Exception{
+        return null;
+    }
 }

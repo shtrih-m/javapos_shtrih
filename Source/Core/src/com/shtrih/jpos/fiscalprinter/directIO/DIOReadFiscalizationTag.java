@@ -17,8 +17,11 @@ public class DIOReadFiscalizationTag extends DIOItem {
         int tagNumber = data[1];
 
         FSReadFiscalizationTag readDocument = getPrinter().fsReadFiscalizationTag(fiscalizationNumber, tagNumber);
-
+        byte[] tagData = readDocument.getTagData();
+        if (tagNumber == 0xFFFF){
+            tagData = getPrinter().fsReadDocumentTLVToEnd();
+        }
         Object[] outParams = (Object[]) object;
-        outParams[0] = readDocument.getTagData();
+        outParams[0] = tagData;
     }
 }

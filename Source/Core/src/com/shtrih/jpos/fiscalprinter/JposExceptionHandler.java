@@ -16,7 +16,7 @@ import jpos.JposException;
 
 import com.shtrih.util.CompositeLogger;
 
-import com.shtrih.fiscalprinter.SmFiscalPrinterException;
+import com.shtrih.fiscalprinter.DeviceException;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 
 /**
@@ -61,9 +61,9 @@ public class JposExceptionHandler implements JposConst, FiscalPrinterConst,
         if (e instanceof JposException) {
             return (JposException) e;
         }
-        if (e instanceof SmFiscalPrinterException) {
-            SmFiscalPrinterException p = (SmFiscalPrinterException) e;
-            int errorCode = p.getCode();
+        if (e instanceof DeviceException) {
+            DeviceException p = (DeviceException) e;
+            int errorCode = p.getErrorCode();
             String text = p.getMessage();
 
             switch (errorCode) {

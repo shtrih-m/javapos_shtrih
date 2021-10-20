@@ -32,8 +32,7 @@ public class JsonUpdateService implements Runnable {
     private boolean ecrHasKeys;
     private PrinterDate firmwareDate;
     private String firmwareFileName = "";
-    private Thread thread = null;
-    private boolean stopFlag = false;
+    private volatile Thread thread = null;
     private final SMFiscalPrinter printer;
     private boolean updateAvailable = false;
     public static CompositeLogger logger = CompositeLogger.getLogger(JsonUpdateService.class);
@@ -46,49 +45,31 @@ public class JsonUpdateService implements Runnable {
         return thread != null;
     }
 
-    public void stop() throws Exception {
-        if (isStarted()) {
-            stopFlag = true;
-            try {
-                thread.join();
-                thread = null;
-            } catch (InterruptedException e) {
-
-			}
-        }
-    }
-
     public void start() throws Exception {
         if (!isStarted()) {
-            firmwareDate = printer.readLongStatus().getFirmwareDate();
-            ecrHasKeys = !printer.readTable(23, 1, 11).contains("-");
-
-            stopFlag = false;
             thread = new Thread(this);
             thread.start();
         }
     }
 
-    public void run() {
-
-        while (!stopFlag) {
-            try {
-                checkForUpdates();
-                sleep(printer.getParams().jsonUpdatePeriodInMinutes * 60000);
-            } catch (Exception e) {
-                logger.error(e);
-            }
+    public void stop() throws Exception {
+        if (isStarted()) {
+            thread.interrupt();
+            thread.join();
+            thread = null;
         }
     }
 
-    public void sleep(long timeToSleepInMs) throws Exception {
-        long time = System.currentTimeMillis();
-        while (System.currentTimeMillis() < (time + timeToSleepInMs)) {
-
-            Thread.sleep(20);
-            if (stopFlag) {
-                break;
+    public void run() {
+        try {
+            firmwareDate = printer.readLongStatus().getFirmwareDate();
+            ecrHasKeys = !printer.readTable(23, 1, 11).contains("-");
+            while (!thread.isInterrupted()) {
+                checkForUpdates();
+                Thread.sleep(printer.getParams().jsonUpdatePeriodInMinutes * 60000);
             }
+        } catch (Exception e) {
+            logger.error(e);
         }
     }
 
@@ -101,7 +82,7 @@ public class JsonUpdateService implements Runnable {
 
     public void checkForUpdates() throws Exception {
         logger.debug("checkForUpdates: " + printer.getParams().jsonUpdateServerURL);
-        
+
         if (updateAvailable) {
             updateFirmware();
             return;
@@ -244,14 +225,14 @@ public class JsonUpdateService implements Runnable {
     }
 
     /*    
-{
-    "update_available": true,
-    "critical": true,
-    "version": 20180116,
-    "description": "version before 20180116 may die anytime",
-    "url": "http://127.0.0.1:8888/firmware/20180116/upd_app.bin",
-    "url_old_frs": "http://127.0.0.1:8888/firmware/20180116/upd_app_for_old_frs.bin",
-}
+     {
+     "update_available": true,
+     "critical": true,
+     "version": 20180116,
+     "description": "version before 20180116 may die anytime",
+     "url": "http://127.0.0.1:8888/firmware/20180116/upd_app.bin",
+     "url_old_frs": "http://127.0.0.1:8888/firmware/20180116/upd_app_for_old_frs.bin",
+     }
      */
     public class UpdateServerResult {
 

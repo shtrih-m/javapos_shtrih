@@ -218,8 +218,7 @@ public class CashDrawerImpl extends DeviceService implements
 
     public void deviceProc() {
         try {
-            Thread thisThread = Thread.currentThread();
-            while (deviceThread == thisThread) {
+            while (!deviceThread.isInterrupted()) {
                 synchronized (printer) {
                     try {
                         connect();
@@ -277,7 +276,10 @@ public class CashDrawerImpl extends DeviceService implements
                         deviceThread = new Thread(new DeviceTarget(this));
                         deviceThread.start();
                     }
-                } else {
+                } else 
+                {
+                    deviceThread.interrupt();
+                    deviceThread.join();
                     deviceThread = null;
                     setPowerState(JPOS_PS_UNKNOWN);
                 }

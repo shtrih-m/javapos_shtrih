@@ -729,7 +729,7 @@ class PrinterTest implements FiscalPrinterConst {
              System.out.println("Unsent documents: " + fsCommunicationStatus.getUnsentDocumentsCount());
              System.out.println("Cash in drawer: " + printer.readCashRegister(241).getValue() / 100.0d);
              */
-            testTotalizers();
+            //testTotalizers();
             //printer.fsReadDocumentTLVText(1);
             //printer.fsReadDocumentTLVText(2);
         } catch (Exception e) {
@@ -1018,10 +1018,13 @@ class PrinterTest implements FiscalPrinterConst {
             //printFiscalReceipt145_5();
             //printFiscalReceipt136();
             //printFiscalReceipt11();
-            //printSalesReceipt1234();
             
-            printSalesReceipt1235();
-
+            //printSalesReceipt1234();
+            //printSalesReceipt1235();
+            
+            printer.readFiscalizationTag(1, 0xFFFF);
+            printer.readFiscalizationTLV(1);
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

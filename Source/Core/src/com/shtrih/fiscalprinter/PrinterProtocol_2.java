@@ -114,11 +114,9 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         }
     }
 
-    private int readAnswer() throws Exception 
-    {
+    private int readAnswer() throws Exception {
         int b = readByte();
-        while (b != Frame.STX) 
-        {
+        while (b != Frame.STX) {
             b = readByte();
             Logger2.logRx(logger, (byte) b);
         }
@@ -138,9 +136,7 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         stream.writeBytes(rx);
         int frameCrc = frame.getCRC(stream.getData());
         if (crc != frameCrc) {
-            String text = "Invalid CRC (" + String.valueOf(crc) + " <> "
-                    + String.valueOf(frameCrc) + ")";
-            throw new Exception(text);
+            throw DeviceException.readAnswerError();
         }
         return num;
 

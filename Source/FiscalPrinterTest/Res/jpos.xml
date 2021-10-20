@@ -31,7 +31,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="COM8"/>
+        <prop name="portName" type="String" value="COM3"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="0"/>
@@ -59,10 +59,8 @@
         <prop name="operatorPassword" type="String" value="1"/>
         <!-- System administrator password -->
         <prop name="sysAdminPassword" type="String" value="30"/>
-        <!-- device state polling enabled -->
-        <prop name="pollEnabled" type="String" value="1"/>
         <!-- device state polling interval in milliseconds -->
-        <prop name="pollInterval" type="String" value="5000"/>
+        <prop name="pollInterval" type="String" value="500"/>
         <!-- Amount coefficient -->
         <prop name="amountFactor" type="String" value="0.01"/>
         <!-- Quantity coefficient -->
@@ -321,6 +319,10 @@
 		<prop name="markingType" type="String" value="1"/>
 		
 		<prop name="quantityCorrectionEnabled" type="String" value="1"/>
+		<prop name="FSServiceEnabled" type="String" value="1"/>
+        <!-- device state polling enabled -->
+        <prop name="pollEnabled" type="String" value="1"/>
+        <prop name="fastConnect" type="String" value="1"/>
     </JposEntry> 
 	
     <JposEntry logicalName="ShtrihCashDrawer">

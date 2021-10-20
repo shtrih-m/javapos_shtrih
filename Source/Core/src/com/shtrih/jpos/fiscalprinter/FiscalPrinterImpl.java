@@ -11,8 +11,8 @@ import com.shtrih.fiscalprinter.PrinterGraphics;
 import com.shtrih.fiscalprinter.PrinterProtocol;
 import com.shtrih.fiscalprinter.ProtocolFactory;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
+import com.shtrih.fiscalprinter.DeviceException;
 import com.shtrih.fiscalprinter.SMFiscalPrinterImpl;
-import com.shtrih.fiscalprinter.SmFiscalPrinterException;
 import com.shtrih.fiscalprinter.command.DeviceMetrics;
 import com.shtrih.fiscalprinter.command.FDOParameters;
 import com.shtrih.fiscalprinter.command.FMTotals;
@@ -872,23 +872,27 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void startPoll() throws Exception {
-        deviceThread = new Thread(new DeviceTarget(this));
-        deviceThread.start();
+        if (deviceThread == null) {
+            logger.debug("Poll thread starting...");
+            deviceThread = new Thread(new DeviceTarget(this));
+            deviceThread.start();
+        }
     }
 
     private void stopPoll() throws Exception {
         if (deviceThread != null) {
+            logger.debug("Poll thread stopping...");
             deviceThread.interrupt();
             deviceThread.join();
             deviceThread = null;
         }
     }
 
-    public void setDeviceEnabled(boolean deviceEnabled) throws Exception {
+    public void setDeviceEnabled(boolean deviceEnabled) throws Exception 
+    {
+        logger.debug("setDeviceEnabled(" + deviceEnabled + ")");
         checkClaimed();
-
         vatValues = null;
-
         if (this.deviceEnabled != deviceEnabled) {
             if (deviceEnabled) {
                 physicalDeviceDescription = null;
@@ -932,35 +936,28 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     startFSService();
                 } catch (Exception e) {
                     logger.error("Failed to start FSService", e);
-                    return;
                 }
                 try {
                     startFirmwareUpdaterService();
                 } catch (Exception e) {
                     logger.error("Failed to start FirmwareUpdaterService", e);
-                    return;
                 }
                 // JSON update service
                 try {
                     startJsonUpdateService();
                 } catch (Exception e) {
                     logger.error("Failed to start JsonUpdateService", e);
-                    return;
                 }
             } else {
                 stopPoll();
+                stopFSService();
+                stopJsonUpdateService();
+                stopFirmwareUpdaterService();
                 connected = false;
                 setPowerState(JPOS_PS_UNKNOWN);
-                try {
-                    stopFSService();
-                    stopFirmwareUpdaterService();
-                    stopJsonUpdateService();
-                } catch (Exception e) {
-                    logger.error("Failed to stop FSService", e);
-                }
             }
-
             this.deviceEnabled = deviceEnabled;
+            logger.debug("setDeviceEnabled: OK");
         }
     }
 
@@ -1037,32 +1034,44 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         jsonUpdateService.start();
     }
 
-    public void stopJsonUpdateService() throws Exception {
+    public void stopJsonUpdateService() {
         if (jsonUpdateService == null) {
             return;
         }
 
-        jsonUpdateService.stop();
-        jsonUpdateService = null;
+        try {
+            jsonUpdateService.stop();
+            jsonUpdateService = null;
+        } catch (Exception e) {
+            logger.error("Failed to stop jsonUpdateService", e);
+        }
     }
 
-    public void stopFSService() throws Exception {
+    public void stopFSService() {
         if (fsSenderService == null) {
             return;
         }
 
-        fsSenderService.stop();
-        fsSenderService = null;
+        try {
+            fsSenderService.stop();
+            fsSenderService = null;
+        } catch (Exception e) {
+            logger.error("Failed to stop fsSenderService", e);
+        }
     }
 
-    public void stopFirmwareUpdaterService() throws Exception {
+    public void stopFirmwareUpdaterService() {
         if (firmwareUpdaterService == null) {
             return;
         }
 
         //printer.removeEvents(firmwareUpdaterService);
-        firmwareUpdaterService.stop();
-        firmwareUpdaterService = null;
+        try {
+            firmwareUpdaterService.stop();
+            firmwareUpdaterService = null;
+        } catch (Exception e) {
+            logger.error("Failed to stop firmwareUpdaterService", e);
+        }
     }
 
     public boolean isFSServiceRunning() {
@@ -2043,10 +2052,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public void close() throws Exception {
+    public void close() throws Exception 
+    {
         checkOpened();
         setEventCallbacks(null);
         setFreezeEvents(true);
+
         if (claimed) {
             release();
         }
@@ -4321,33 +4332,35 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void throwTestError() throws Exception {
-        throw new SmFiscalPrinterException(0x71, "Cutter failure");
+        throw new DeviceException(0x71, "Cutter failure");
     }
 
-    public void checkDeviceStatus() {
+    public void checkDeviceStatus() throws Exception
+    {
         try {
             synchronized (printer) {
                 PrinterStatus status = getPrinter().readPrinterStatus();
                 checkPaperStatus(status);
             }
-
-        } catch (Exception e) {
-            logger.error(e);
-            if (e instanceof IOException) {
-                setPowerState(JPOS_PS_OFFLINE);
-            }
+        } catch (IOException e) 
+        {
+            logger.error(e.getMessage());
+            setPowerState(JPOS_PS_OFFLINE);
         }
     }
 
-    public void deviceProc() {
+    public void deviceProc() 
+    {
+        logger.debug("Poll thread started");
         try {
             while (!Thread.currentThread().isInterrupted()) {
                 checkDeviceStatus();
                 Thread.sleep(params.pollInterval);
             }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
+        logger.debug("Poll thread stopped");
     }
 
     public DeviceMetrics getDeviceMetrics() throws Exception {

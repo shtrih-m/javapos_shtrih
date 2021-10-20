@@ -1,6 +1,5 @@
 package com.shtrih.jpos.fiscalprinter.directIO;
 
-import com.shtrih.fiscalprinter.SmFiscalPrinterException;
 import com.shtrih.jpos.DIOUtils;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 
@@ -18,25 +17,10 @@ public class DIOReadFiscalizationTLV extends DIOItem {
         int fiscalizationNumber = data[0];
 
         getPrinter().fsReadFiscalizationTag(fiscalizationNumber, 0xFFFF);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        try {
-            while (true) {
-                byte[] tlvBlock = getPrinter().fsReadDocumentTLVBlock();
-                stream.write(tlvBlock);
-            }
-        }
-        catch (SmFiscalPrinterException e){
-            if(e.getCode() == 8){
-                Object[] outParams = (Object[]) object;
-                outParams[0] = stream.toByteArray();
-                return;
-            }
-
-            throw e;
-        }
-        finally {
-            stream.close();
-        }
+        byte[] docdata = getPrinter().fsReadDocumentTLVToEnd();
+        
+        Object[] outParams = (Object[]) object;
+        outParams[0] = docdata;
     }
 }
 

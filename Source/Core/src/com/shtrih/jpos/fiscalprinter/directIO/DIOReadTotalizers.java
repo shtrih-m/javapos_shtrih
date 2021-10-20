@@ -1,8 +1,7 @@
 package com.shtrih.jpos.fiscalprinter.directIO;
 
-import com.shtrih.fiscalprinter.SMFiscalPrinter;
-import com.shtrih.fiscalprinter.SmFiscalPrinterException;
 import com.shtrih.jpos.DIOUtils;
+import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 
 import java.io.ByteArrayOutputStream;

@@ -224,7 +224,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 case 0xFF45:
                     correctDate();
             }
-
+            
+            if (Thread.currentThread().isInterrupted()){
+                throw new InterruptedException();
+            }
+            //Thread.sleep(0); // to interrupt 
+            
             device.send(command);
             if (command.isFailed()) {
                 String text = getErrorText(command.getResultCode());
@@ -313,7 +318,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void check(int errorCode) throws Exception {
         if (errorCode != 0) {
             String text = getErrorText(errorCode);
-            throw new SmFiscalPrinterException(errorCode, text);
+            throw new DeviceException(errorCode, text);
         }
     }
 
@@ -744,7 +749,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             return;
         }
 
-        int tableNumber = 1;
+        int tableNumber = SMFP_TABLE_SETUP;
         while (true) {
             ReadTableInfo command = new ReadTableInfo();
             command.setPassword(sysPassword);
@@ -1763,7 +1768,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     case ECR_SUBMODE_ACTIVE: {
                         checkPaper(status);
                         // Flags can be ok, but status not
-                        throw new SmFiscalPrinterException(SMFP_EFPTR_PAPER_OR_COVER,
+                        throw new DeviceException(SMFP_EFPTR_PAPER_OR_COVER,
                                 getErrorText(SMFP_EFPTR_PAPER_OR_COVER));
                     }
 
@@ -1965,7 +1970,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public PrinterTables readTables() throws Exception {
         logger.debug("readTables");
         PrinterTables tables = new PrinterTables();
-        int tableNumber = 1;
+        int tableNumber = SMFP_TABLE_SETUP;
         while (true) {
             ReadTableInfo command = new ReadTableInfo();
             command.setPassword(sysPassword);
@@ -2375,18 +2380,18 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (getModel().getCapRecPresent()
                 && status.getPrinterFlags().isRecEmpty()) {
             resultCode = SMFP_EFPTR_NO_REC_PAPER;
-            throw new SmFiscalPrinterException(resultCode,
+            throw new DeviceException(resultCode,
                     getErrorText(resultCode));
         }
         if (getModel().getCapJrnPresent()
                 && status.getPrinterFlags().isJrnEmpty()) {
             resultCode = SMFP_EFPTR_NO_JRN_PAPER;
-            throw new SmFiscalPrinterException(resultCode,
+            throw new DeviceException(resultCode,
                     getErrorText(resultCode));
         }
         if (getModel().getCapCoverSensor() && status.getPrinterFlags().isCoverOpened()) {
             resultCode = SMFP_EFPTR_COVER_OPENED;
-            throw new SmFiscalPrinterException(resultCode,
+            throw new DeviceException(resultCode,
                     getErrorText(resultCode));
         }
     }
@@ -3637,21 +3642,28 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public DocumentTLV fsReadDocumentTLV(int docNumber) throws Exception {
         FSReadDocument readDocument = fsRequestDocumentTLV(docNumber);
+        byte[] docData = fsReadDocumentTLVToEnd();
+        return new DocumentTLV(docNumber, readDocument.getDocType(), docData);
+    }
+
+    public byte[] fsReadDocumentTLVToEnd() throws Exception
+    {
+        FSReadDocumentBlock command = new FSReadDocumentBlock(sysPassword);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         try {
-            while (stream.size() < readDocument.getDocSize()) {
-                byte[] tlvBlock = fsReadDocumentTLVBlock();
-                stream.write(tlvBlock);
+            while (true) {
+                executeCommand(command);
+                if (command.getResultCode() == 8) break;
+                check(command.getResultCode());
+                if (command.getData().length == 0) break;
+                stream.write(command.getData());
             }
-
-            FSReadDocumentBlock command = new FSReadDocumentBlock(sysPassword);
-            executeCommand(command);
+            return stream.toByteArray();
         } finally {
             stream.close();
         }
-        return new DocumentTLV(docNumber, readDocument.getDocType(), stream.toByteArray());
     }
-
+    
     public FSReadDocument fsRequestDocumentTLV(int documentNumber) throws Exception {
         FSReadDocument readDocument = new FSReadDocument(sysPassword, documentNumber);
         execute(readDocument);
@@ -4378,11 +4390,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     case MODE_DUMPMODE:
                         try {
                             endDump();
-                        } catch (SmFiscalPrinterException ignored) {
+                        } catch (DeviceException ignored) {
                             // При чтении докмента из ФН десктопные ФР переходят в режим 1, при этом
                             // прервать этот режим старым методом нельзя только дочитать документ до
                             // конца
-                            readDocumentTLVToEnd();
+                            fsReadDocumentTLVToEnd();
                         }
 
                         endDumpCount++;
@@ -4438,16 +4450,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     default:
                         return status;
                 }
-            }
-        }
-    }
-
-    private void readDocumentTLVToEnd() throws Exception {
-        FSReadDocumentBlock readDocumentBlock = new FSReadDocumentBlock(getSysPassword());
-        while (true) {
-            int result = executeCommand(readDocumentBlock);
-            if (result != 0) {
-                break;
             }
         }
     }
