@@ -78,6 +78,7 @@ public class CashDrawerImpl extends DeviceService implements
     private boolean deviceEnabled = false;
     // internal classes
     private Thread deviceThread = null; // device poll thread
+    private volatile boolean deviceStopFlag = false;
     private Thread eventThread = null; // event delivery thread
     private final Vector events = new Vector();
     private PrinterPort port;
@@ -218,7 +219,7 @@ public class CashDrawerImpl extends DeviceService implements
 
     public void deviceProc() {
         try {
-            while (!deviceThread.isInterrupted()) {
+            while (!deviceStopFlag) {
                 synchronized (printer) {
                     try {
                         connect();
@@ -273,11 +274,13 @@ public class CashDrawerImpl extends DeviceService implements
                     connect();
 
                     if (fptrParams.pollEnabled) {
+                        deviceStopFlag = false;
                         deviceThread = new Thread(new DeviceTarget(this));
                         deviceThread.start();
                     }
                 } else 
                 {
+                    deviceStopFlag = true;
                     deviceThread.interrupt();
                     deviceThread.join();
                     deviceThread = null;

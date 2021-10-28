@@ -713,4 +713,7 @@ public interface SMFiscalPrinter {
     public int mcClearBuffer() throws Exception;
     
     public Object getSyncObject() throws Exception;
+    
+    public String getFullSerial();
+
 }

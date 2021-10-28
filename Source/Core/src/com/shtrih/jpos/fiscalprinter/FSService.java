@@ -27,6 +27,7 @@ public class FSService implements Runnable {
     private final int connectTimeout;
     private final SMFiscalPrinter printer;
     private volatile Thread thread = null;
+    private volatile boolean stopFlag = false;
 
     public FSService(SMFiscalPrinter printer, FptrParameters parameters, FDOParameters ofdParameters) {
         if (printer == null) {
@@ -51,6 +52,7 @@ public class FSService implements Runnable {
     public void start() throws Exception {
         if (!isStarted()) {
             logger.debug("FSService starting");
+            stopFlag = false;
             thread = new Thread(this);
             thread.start();
         }
@@ -60,6 +62,7 @@ public class FSService implements Runnable {
 
         if (isStarted()) {
             logger.debug("FSService stopping");
+            stopFlag = true;
             thread.interrupt();
             thread.join();
             thread = null;
@@ -73,10 +76,8 @@ public class FSService implements Runnable {
                     parameters.getHost(), parameters.getPort(), connectTimeout,
                     parameters.getPollPeriodSeconds() * 1000));
 
-            while (!Thread.currentThread().isInterrupted()) {
-                synchronized (printer.getSyncObject()) {
-                    checkData();
-                }
+            while (!stopFlag) {
+                checkData();
                 Time.delay(parameters.getPollPeriodSeconds() * 1000);
             }
         } catch (InterruptedException e) {
@@ -94,7 +95,7 @@ public class FSService implements Runnable {
                 return;
             }
             // System.out.println("FS -> OFD: " + Hex.toHex(data));
-            if (thread.isInterrupted()) {
+            if (stopFlag) {
                 return;
             }
             byte[] answer = sendData(data);
@@ -102,7 +103,7 @@ public class FSService implements Runnable {
                 return;
             }
             // System.out.println("FS <- OFD: " + Hex.toHex(answer));
-            if (thread.isInterrupted()) {
+            if (stopFlag) {
                 return;
             }
             printer.fsWriteBlockData(answer);

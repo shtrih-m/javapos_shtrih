@@ -29,11 +29,11 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
     private final SMFiscalPrinter printer;
 
-    private volatile Thread thread = null;
     private long oldFirmwareVersion;
     private long newFirmwareVersion;
     private byte[] firmware;
-
+    private volatile Thread thread = null;
+    private volatile boolean stopFlag = false;
     private FirmwareUpdateObserver listener = new FirmwareUpdateObserver();
 
     public FirmwareUpdaterService(SMFiscalPrinter printer) {
@@ -54,12 +54,12 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
             Time.delay(5 * 1000);
 
             logger.debug("Starting FirmwareUpdaterService");
-            while (!Thread.currentThread().isInterrupted())
+            while (!stopFlag)
             {
                 if (firmware == null) {
                     checkData();
                 }
-                if (thread.isInterrupted()) break;
+                if (stopFlag) break;
 
                 updateFirmware();
                 Time.delay(pollPeriodSeconds * 1000);
@@ -76,7 +76,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
     
     private void checkData() {
         try {
-            if (thread.isInterrupted()) return;
+            if (stopFlag) return;
 
             logger.debug("Checking for firmware update");
             listener.OnCheckingForUpdate();
@@ -102,7 +102,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
                 firmwareVersion = printer.getDeviceMetrics().getModel() * 1000000 + printer.readLongStatus().getFirmwareBuild();
             }
 
-            if (thread.isInterrupted()) return;
+            if (stopFlag) return;
 
             ScocClient client = new ScocClient(serialNumber, uin.longValue());
 
@@ -124,7 +124,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
             out.write(firstResponse.getData());
 
-            if (thread.isInterrupted()) return;
+            if (stopFlag) return;
 
             long newVersion = firstResponse.getFirmwareVersion();
 
@@ -137,7 +137,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
             for (int i = 2; i <= firstResponse.getPartsCount(); i++) {
 
-                if (thread.isInterrupted()) return;
+                if (stopFlag) return;
 
                 DeviceFirmwareResponse nextPart = client.readFirmware(newVersion, i);
 
@@ -166,6 +166,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
     public void start() {
         if (!isStarted()) {
             firmware = null;
+            stopFlag = false;
             thread = new Thread(this);
             thread.start();
         }
@@ -174,6 +175,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
     public void stop() throws Exception {
         if (isStarted()) {
             printer.cancelWait();
+            stopFlag = true;
             thread.interrupt();
             thread.join();
             thread = null;
@@ -225,7 +227,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
         writeFirmware();
 
-        if (thread.isInterrupted()) return;
+        if (stopFlag) return;
 
         long doneAt = System.currentTimeMillis();
 
@@ -259,7 +261,7 @@ public class FirmwareUpdaterService implements Runnable, IPrinterEvents {
 
         while (stream.available() > 0) {
 
-            if (thread.isInterrupted()) return;
+            if (stopFlag) return;
 
             stream.read(block, 0, 128);
             printer.writeFirmwareBlockToSDCard(fileType, blockNumber, block);

@@ -6,6 +6,7 @@ import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.fiscalprinter.command.ReadTableInfo;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Localizer;
+import java.util.List;
 
 import java.util.Vector;
 
@@ -15,8 +16,8 @@ import jpos.JposException;
 public class DeviceHeader implements PrinterHeader {
 
     private final SMFiscalPrinter printer;
-    private final Vector<HeaderLine> header = new Vector<HeaderLine>();
-    private final Vector<HeaderLine> trailer = new Vector<HeaderLine>();
+    private final List<HeaderLine> header = new Vector<HeaderLine>();
+    private final List<HeaderLine> trailer = new Vector<HeaderLine>();
     private final CompositeLogger logger = CompositeLogger.getLogger(DeviceHeader.class);
 
     public DeviceHeader(SMFiscalPrinter printer) {
@@ -177,4 +178,13 @@ public class DeviceHeader implements PrinterHeader {
     public void endFiscal(String additionalTrailer)
             throws Exception {
     }
+
+    public List<HeaderLine> getHeaderLines(){
+        return header;
+    }
+    
+    public List<HeaderLine> getTrailerLines(){
+        return trailer;
+    }
+    
 }

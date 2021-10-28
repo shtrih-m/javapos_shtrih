@@ -1,11 +1,16 @@
 package com.shtrih.fiscalprinter.port;
 
+import android.content.Intent;
+import android.content.Context;
+import android.content.IntentFilter;
+import android.content.BroadcastReceiver;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Localizer;
+import com.shtrih.util.StaticContext;
 import com.shtrih.util.Time;
 
 import java.io.IOException;
@@ -26,6 +31,7 @@ public class BluetoothPort implements PrinterPort {
     private int timeout = 5000;
     private int openTimeout = 5000;
     private String portName = "";
+    private BluetoothDevice device = null;
     private BluetoothSocket socket = null;
     private static CompositeLogger logger = CompositeLogger.getLogger(BluetoothPort.class);
 
@@ -78,16 +84,16 @@ public class BluetoothPort implements PrinterPort {
         this.openTimeout = openTimeout;
     }
 
-    private InputStream inputStream;
-    private OutputStream outputStream;
-
     @Override
-    public void open(int timeout) throws Exception {
+    public void open(int timeout) throws Exception
+    {
+        Thread.sleep(0); // check thread interrupted
+
         if (isClosed()) {
             BluetoothAdapter adapter = getBluetoothAdapter();
             if (BluetoothAdapter.checkBluetoothAddress(portName)) {
                 // portName is valid MAC address
-                BluetoothDevice device = adapter.getRemoteDevice(portName);
+                device = adapter.getRemoteDevice(portName);
                 connectDevice(device);
             } else {
                 // portName is deviceName prefix, for example "SHTRIH-NANO-F"
@@ -111,6 +117,29 @@ public class BluetoothPort implements PrinterPort {
         }
     }
 
+    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver()
+    {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            switch (action){
+                case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+                    BluetoothDevice btdevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    if (btdevice.equals(device))
+                    {
+                        try {
+                            socket.close();
+                            socket = null;
+                        }catch(Exception e){
+                            logger.error("ACTION_ACL_DISCONNECTED: ", e);
+                        }
+                    }
+                    break;
+            }
+        }
+    };
+
     private void connectDevice(BluetoothDevice device) throws Exception
     {
         if (device == null) {
@@ -125,12 +154,13 @@ public class BluetoothPort implements PrinterPort {
             }
 
             socket.connect();
-            inputStream = socket.getInputStream();
-            outputStream = socket.getOutputStream();
+            registerReceiver();
             return;
+
         } catch (IOException e) {
             close();
         }
+
         try {
             // IOException - create new socket
             socket = (BluetoothSocket) device.getClass()
@@ -140,11 +170,22 @@ public class BluetoothPort implements PrinterPort {
                 throw new Exception("Failed to get bluetooth device socket");
             }
             socket.connect();
-            inputStream = socket.getInputStream();
-            outputStream = socket.getOutputStream();
+            registerReceiver();
+
         } catch (Exception e) {
             close();
             throw e;
+        }
+    }
+
+    private void registerReceiver() {
+        try {
+            // events
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+            StaticContext.getContext().registerReceiver(mBroadcastReceiver, filter);
+        }catch(Exception e){
+            logger.error("Failed to register receiver, " + e.getMessage());
         }
     }
 
@@ -191,17 +232,16 @@ public class BluetoothPort implements PrinterPort {
     }
 
     @Override
-    public synchronized void close() {
+    public synchronized void close()
+    {
         if (isOpened()) {
             try {
                 socket.close();
+                StaticContext.getContext().unregisterReceiver(mBroadcastReceiver);
             } catch (Exception e) {
                 logger.error("Bluetooth socket close failed", e);
             }
         }
-
-        inputStream = null;
-        outputStream = null;
         socket = null;
     }
 
@@ -210,7 +250,7 @@ public class BluetoothPort implements PrinterPort {
     }
 
     public synchronized boolean isClosed() {
-        return socket == null;
+        return !isOpened();
     }
 
     @Override
@@ -219,7 +259,7 @@ public class BluetoothPort implements PrinterPort {
     }
 
     private void connect() throws Exception {
-        if (socket == null) {
+        if (isClosed()) {
             open(openTimeout);
         }
     }
@@ -227,9 +267,11 @@ public class BluetoothPort implements PrinterPort {
     @Override
     public void write(byte[] b) throws Exception {
         connect();
+        OutputStream os = socket.getOutputStream();
+
         try {
-            outputStream.write(b);
-            outputStream.flush();
+            os.write(b);
+            os.flush();
         } catch (IOException e) {
             close();
             throw e;
@@ -256,7 +298,7 @@ public class BluetoothPort implements PrinterPort {
     public int readByte() throws Exception {
         try {
             int result;
-            InputStream is = inputStream;
+            InputStream is = socket.getInputStream();
             long startTime = System.currentTimeMillis();
             while (true) {
                 if (is.available() == 0) {

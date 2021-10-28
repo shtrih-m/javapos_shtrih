@@ -104,6 +104,9 @@ public class PrinterProtocol_2 implements PrinterProtocol {
     private void sendCommand(byte[] data) throws Exception {
         byte[] tx = frame.encode(data, frameNumber);
         Logger2.logTx(logger, tx);
+        if (Thread.currentThread().isInterrupted()){
+            throw new InterruptedException();
+        }
         port.write(tx);
     }
 

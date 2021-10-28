@@ -93,7 +93,7 @@
 		<prop name="sysAdminPassword" type="String" value="30"/>
 
 		<!-- device state polling enabled -->
-		<prop name="pollEnabled" type="String" value="0"/>
+		<prop name="pollEnabled" type="String" value="1"/>
 		<!-- device state polling interval in milliseconds -->
 		<prop name="pollInterval" type="String" value="5000"/>
 		<!-- Amount coefficient -->

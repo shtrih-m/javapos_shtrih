@@ -2,6 +2,7 @@ package com.shtrih.jpos.fiscalprinter;
 
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.util.Localizer;
+import java.util.List;
 import jpos.JposConst;
 import jpos.JposException;
 
@@ -90,5 +91,13 @@ public class NullHeader implements PrinterHeader {
 	@Override
 	public void endNonFiscal(String additionalTrailer)
 			throws Exception {
-	}
+        }
+        
+        public List<HeaderLine> getHeaderLines(){
+            return null;
+        }
+        
+        public List<HeaderLine> getTrailerLines(){
+            return null;
+        }
 }

@@ -1,5 +1,7 @@
 package com.shtrih.jpos.fiscalprinter;
 
+import java.util.List;
+
 public interface PrinterHeader {
 
 	public void initDevice() throws Exception;
@@ -30,4 +32,8 @@ public interface PrinterHeader {
 
 	public void endNonFiscal(String additionalTrailer)
 			throws Exception;
+        
+        public List<HeaderLine> getHeaderLines();
+        
+        public List<HeaderLine> getTrailerLines();
 }

@@ -148,8 +148,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private PrinterDate lastDocDate = new PrinterDate();
     private PrinterTime lastDocTime = new PrinterTime();
     private long lastDocTotal = 0;
-    private volatile boolean stopFlag = true;
+    private volatile boolean stopFlag = false;
+    private volatile boolean interrupted = false;
     private Integer fdVersion = null;
+    private String fullSerial = "";
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params) {
@@ -229,7 +231,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     correctDate();
             }
 
-            if (Thread.currentThread().isInterrupted()) {
+            if (interrupted || Thread.currentThread().isInterrupted()) {
                 throw new InterruptedException();
             }
 
@@ -301,6 +303,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
             check(readDeviceMetrics());
             model = selectPrinterModel(getDeviceMetrics());
+            fullSerial = readFullSerial();
             return checkEcrMode();
         }
     }
@@ -1470,8 +1473,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 
-    public void resetPrinter() throws Exception {
+    public void resetPrinter() throws Exception
+    {
         tlvItems.clear();
+        interrupted = false;
     }
 
     public void writeTLVItems() throws Exception {
@@ -3341,6 +3346,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     @Override
+    public String getFullSerial(){
+        return fullSerial;
+    }
+            
+    @Override
     public String readFullSerial() throws Exception {
         if (serial.isEmpty()) {
             if (getDeviceMetrics().isElves()) {
@@ -3965,8 +3975,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return rc;
     }
 
+    public void interrupt() {
+        interrupted = true;
+    }
+
     public void cancelWait() {
+
         stopFlag = true;
+
     }
 
     public void rebootAndWait() throws Exception {

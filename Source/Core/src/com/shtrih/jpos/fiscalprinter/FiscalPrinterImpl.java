@@ -270,6 +270,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private boolean docEndEnabled = true;
     private JsonUpdateService jsonUpdateService = null;
     private boolean disablePrintOnce = false;
+    private volatile boolean pollStopFlag = false;
+    private volatile boolean eventStopFlag = false;
 
     public void enableTextDocumentFilter(boolean value) {
         filter.setEnabled(value);
@@ -830,7 +832,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     // event delivery routine
     public void eventProc() {
         try {
-            while (!Thread.currentThread().isInterrupted()) {
+            while (!eventStopFlag) {
                 synchronized (events) {
                     while (!events.isEmpty()) {
                         ((Runnable) events.remove(0)).run();
@@ -874,6 +876,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private void startPoll() throws Exception {
         if (deviceThread == null) {
             logger.debug("Poll thread starting...");
+            pollStopFlag = false;
             deviceThread = new Thread(new DeviceTarget(this));
             deviceThread.start();
         }
@@ -882,6 +885,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private void stopPoll() throws Exception {
         if (deviceThread != null) {
             logger.debug("Poll thread stopping...");
+            pollStopFlag = true;
             deviceThread.interrupt();
             deviceThread.join();
             deviceThread = null;
@@ -1214,10 +1218,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void stopEventThread() throws Exception {
-        if (eventThread != null) {
+        if (eventThread != null)
+        {
             synchronized (events) {
                 events.notifyAll();
             }
+            eventStopFlag = true;
             eventThread.interrupt();
             eventThread.join();
             eventThread = null;
@@ -1226,6 +1232,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     private void startEventThread() throws Exception {
         if (eventThread == null) {
+            eventStopFlag = false;
             eventThread = new Thread(new EventTarget(this));
             eventThread.start();
         }
@@ -4350,7 +4357,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void deviceProc() {
         logger.debug("Poll thread started");
         try {
-            while (!Thread.currentThread().isInterrupted()) {
+            while (!pollStopFlag) {
                 checkDeviceStatus();
                 Thread.sleep(params.pollInterval);
             }
@@ -4493,7 +4500,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
 
         try {
-            String serial = "FiscalPrinter_" + getPrinter().readFullSerial();
+            String serial = "FiscalPrinter_" + getPrinter().getFullSerial();
             XmlPropWriter writer = new XmlPropWriter("FiscalPrinter",
                     serial);
             writer.write(getPrinterImages());

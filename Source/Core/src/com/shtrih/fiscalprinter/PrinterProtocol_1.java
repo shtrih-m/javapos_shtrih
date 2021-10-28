@@ -58,6 +58,9 @@ public class PrinterProtocol_1 implements PrinterProtocol {
 
     private void portWrite(byte[] data) throws Exception {
         Logger2.logTx(logger, data);
+        if (Thread.currentThread().isInterrupted()){
+            throw new InterruptedException();
+        }
         port.write(data);
     }
 

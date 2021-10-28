@@ -1025,6 +1025,7 @@ class PrinterTest implements FiscalPrinterConst {
             //printer.readFiscalizationTLV(1);
             
             printSalesReceipt1235();
+            //printFiscalReceipt145_4();
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -3804,7 +3805,11 @@ class PrinterTest implements FiscalPrinterConst {
             printer.beginFiscalReceipt(false);
 
             barcode = "010304109478744321c_oMk?KrXtola" + GS + "93dGVz";
-            printer.addItemCode(barcode.getBytes());
+            String QRCodeData = "010464007801637221AgqLybqxM9MbR\u001d91FFD0\u001d92dGVzdL31KAYL0YT6592MjmW7a2HkF3IY+muf2pVSKdQ=";
+            byte[] data = QRCodeData.getBytes();
+            System.out.println("Barcode: " + Hex.toHex(data));
+            
+            printer.addItemCode(data);
             printer.printRecItem("1. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
             printer.printRecItemAdjustment(1, "            1206", 320, 2);
 

@@ -24,7 +24,8 @@ import com.shtrih.util.CompositeLogger;
 public class MonitoringServerX5 implements Runnable {
 
     private int port = 0;
-    private Thread thread = null;
+    private volatile Thread thread = null;
+    private volatile boolean stopFlag = false;
     private final FiscalPrinterImpl service;
     private static CompositeLogger logger = CompositeLogger.getLogger(MonitoringServerX5.class);
 
@@ -45,12 +46,14 @@ public class MonitoringServerX5 implements Runnable {
         }
 
         this.port = port;
+        stopFlag = false;
         Thread thread = new Thread(this);
         thread.start();
     }
 
     public void stop() throws Exception {
         if (isStarted()) {
+            stopFlag = true;
             thread.interrupt();
             thread.join();
             thread = null;
