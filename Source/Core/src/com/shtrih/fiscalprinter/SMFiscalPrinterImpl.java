@@ -285,7 +285,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 }
             }
         } catch (Exception e) {
-            logger.error("Correct date failed: " + e.getMessage());
+            logger.error("Correct date failed "+ e.getMessage());
         }
     }
 
@@ -313,7 +313,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             try {
                 printerEvents.beforeCommand(command);
             } catch (Exception e) {
-                logger.error(e);
+                logger.error("beforeCommand "+ e.getMessage());
             }
         }
     }
@@ -323,7 +323,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             try {
                 printerEvents.afterCommand(command);
             } catch (Exception e) {
-                logger.error(e);
+                logger.error("afterCommand " + e.getMessage());
             }
         }
     }
@@ -1314,7 +1314,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         item.setText(text);
 
         if (capFSPrintItem) {
-            int rc = fsPrintRecItem2(1, item);
+            int rc = fsPrintRecItem2(PrinterConst.SMFP_OPERATION_SALE, item);
             if (isCommandSupported(rc)) {
                 check(rc);
                 return;
@@ -1330,7 +1330,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         item.setText(text);
 
         if (capFSPrintItem) {
-            int rc = fsPrintRecItem2(2, item);
+            int rc = fsPrintRecItem2(PrinterConst.SMFP_OPERATION_RETSALE, item);
             if (isCommandSupported(rc)) {
                 check(rc);
                 return;
@@ -1347,7 +1347,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         item.setText(text);
 
         if (capFSPrintItem) {
-            int rc = fsPrintRecItem2(3, item);
+            int rc = fsPrintRecItem2(PrinterConst.SMFP_OPERATION_BUY, item);
             if (isCommandSupported(rc)) {
                 check(rc);
                 return;
@@ -1364,7 +1364,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         item.setText(text);
 
         if (capFSPrintItem) {
-            int rc = fsPrintRecItem2(4, item);
+            int rc = fsPrintRecItem2(PrinterConst.SMFP_OPERATION_RETBUY, item);
             if (isCommandSupported(rc)) {
                 check(rc);
                 return;
@@ -1473,8 +1473,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 
-    public void resetPrinter() throws Exception
-    {
+    public void resetPrinter() throws Exception {
         tlvItems.clear();
         interrupted = false;
     }
@@ -3157,7 +3156,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             writer.save(SysUtils.getFilesPath() + "models2.xml");
 
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("updateModels "+ e.getMessage());
         }
     }
 
@@ -3346,10 +3345,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     @Override
-    public String getFullSerial(){
+    public String getFullSerial() {
         return fullSerial;
     }
-            
+
     @Override
     public String readFullSerial() throws Exception {
         if (serial.isEmpty()) {
@@ -3559,7 +3558,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             try {
                 waitForPrinting();
             } catch (Exception e) {
-                logger.error("openFiscalDay wait for printing failed", e);
+                logger.error("openFiscalDay wait for printing failed"+ e.getMessage());
             }
         }
     }
@@ -3737,7 +3736,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             try {
                 item.print(this);
             } catch (Exception e) {
-                logger.error(e.getMessage());
+                logger.error("printItems "+ e.getMessage());
             }
         }
         items.clear();
@@ -3815,11 +3814,25 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     };
 
     public String getReceiptName(int receiptType) {
-        if (getCapFiscalStorage()) {
-            return "КАССОВЫЙ ЧЕК/" + fsDocNames[receiptType];
-        } else {
-            return docNames[receiptType];
+        String receiptName = "";
+        boolean isCorrection = (receiptType & 0xF0) == 0x80;
+        receiptType = receiptType & 0x0F;
+        
+        if ((receiptType < 0) || (receiptType > 3)) {
+            return receiptName;
         }
+
+        if (getCapFiscalStorage()) 
+        {
+            receiptName = "КАССОВЫЙ ЧЕК";
+            if (isCorrection){
+                receiptName = "ЧЕК КОРРЕКЦИИ";
+            }
+            receiptName = receiptName + "/" + fsDocNames[receiptType];
+        } else {
+            receiptName = docNames[receiptType];
+        }
+        return receiptName;
     }
 
     public FSReadBlock fsReadBlock(int offset, int size) throws Exception {
@@ -4274,7 +4287,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
             logger.debug("updateFirmware(): OK");
         } catch (Exception e) {
-            logger.error("updateFirmware", e);
+            logger.error("updateFirmware "+ e.getMessage());
         }
     }
 
@@ -4557,7 +4570,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
             return true;
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("connectDevice "+ e.getMessage());
             return false;
         }
     }

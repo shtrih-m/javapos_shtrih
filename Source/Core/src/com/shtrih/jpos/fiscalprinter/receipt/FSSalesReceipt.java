@@ -64,7 +64,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public boolean isSaleReceipt() {
-        return receiptType == PrinterConst.SMFP_RECTYPE_SALE;
+        return ((receiptType & 0x0F) == PrinterConst.SMFP_RECTYPE_SALE);
     }
 
     public void printRecMessage(int station, FontNumber font, String message)
@@ -114,9 +114,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void openReceipt(boolean isSale) throws Exception {
         if (!isOpened) {
-            if (!isSale) {
-                if (receiptType == PrinterConst.SMFP_RECTYPE_SALE) {
-                    receiptType = PrinterConst.SMFP_RECTYPE_RETSALE;
+            if (!isSale) 
+            {
+                if ((receiptType & 0x0F) == PrinterConst.SMFP_RECTYPE_SALE)
+                {
+                    receiptType = (receiptType & 0xF0) + PrinterConst.SMFP_RECTYPE_RETSALE;
                 }
             }
             getPrinter().openReceipt(receiptType);
@@ -617,18 +619,22 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         if (!item.getIsStorno()) {
             switch (receiptType) {
                 case PrinterConst.SMFP_RECTYPE_SALE:
+                case PrinterConst.SMFP_RECTYPE_CORRECTION_SALE:
                     getDevice().printSale(priceItem);
                     break;
 
                 case PrinterConst.SMFP_RECTYPE_RETSALE:
+                case PrinterConst.SMFP_RECTYPE_CORRECTION_RETSALE:
                     getDevice().printVoidSale(priceItem);
                     break;
 
                 case PrinterConst.SMFP_RECTYPE_BUY:
+                case PrinterConst.SMFP_RECTYPE_CORRECTION_BUY:
                     getDevice().printRefund(priceItem);
                     break;
 
                 case PrinterConst.SMFP_RECTYPE_RETBUY:
+                case PrinterConst.SMFP_RECTYPE_CORRECTION_RETBUY:
                     getDevice().printVoidRefund(priceItem);
                     break;
                 default:

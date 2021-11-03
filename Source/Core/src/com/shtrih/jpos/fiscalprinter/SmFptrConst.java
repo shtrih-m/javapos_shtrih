@@ -899,11 +899,17 @@ public class SmFptrConst {
 
     // ///////////////////////////////////////////////////////////////////
     // Receipt type constants
-    public static final int SMFPTR_RT_SALE = 100;
-    public static final int SMFPTR_RT_BUY = 101;
-    public static final int SMFPTR_RT_RETSALE = 102;
-    public static final int SMFPTR_RT_RETBUY = 103;
+    public static final int SMFPTR_RT_SALE                  = 100;
+    public static final int SMFPTR_RT_BUY                   = 101;
+    public static final int SMFPTR_RT_RETSALE               = 102;
+    public static final int SMFPTR_RT_RETBUY                = 103;
 
+    public static final int SMFPTR_RT_CORRECTION            = 104;
+    public static final int SMFPTR_RT_CORRECTION_SALE       = 105;
+    public static final int SMFPTR_RT_CORRECTION_BUY        = 106;
+    public static final int SMFPTR_RT_CORRECTION_RETSALE    = 107;
+    public static final int SMFPTR_RT_CORRECTION_RETBUY     = 108;
+    
     // ///////////////////////////////////////////////////////////////////
     // KTN types
     // КН Код неопределенного идентификатора товара 00h 00h

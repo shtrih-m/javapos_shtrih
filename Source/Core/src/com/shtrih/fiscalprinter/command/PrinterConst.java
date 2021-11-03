@@ -348,15 +348,29 @@ public interface PrinterConst {
 
     // Sale receipt
     public static final int SMFP_RECTYPE_SALE = 0;
-
     // Buy receipt
     public static final int SMFP_RECTYPE_BUY = 1;
-
     // Sale return receipt
     public static final int SMFP_RECTYPE_RETSALE = 2;
-
     // Buy return receipt
     public static final int SMFP_RECTYPE_RETBUY = 3;
+    // Correction sale receipt
+    public static final int SMFP_RECTYPE_CORRECTION_SALE = 0x80;
+    // Correction buy receipt
+    public static final int SMFP_RECTYPE_CORRECTION_BUY = 0x81;
+    // Correction sale return receipt
+    public static final int SMFP_RECTYPE_CORRECTION_RETSALE = 0x82;
+    // Correction buy return receipt
+    public static final int SMFP_RECTYPE_CORRECTION_RETBUY = 0x83;
+    
+    //////////////////////////////////////////////////////////////////////
+    // Operation types
+    //////////////////////////////////////////////////////////////////////
+    
+    public static final int SMFP_OPERATION_SALE     = 1;
+    public static final int SMFP_OPERATION_RETSALE  = 2;
+    public static final int SMFP_OPERATION_BUY      = 3;
+    public static final int SMFP_OPERATION_RETBUY   = 4;
 
     // ###################################################################
     // #### Fiscal printer error codes

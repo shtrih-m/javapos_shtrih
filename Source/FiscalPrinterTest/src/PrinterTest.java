@@ -1024,8 +1024,10 @@ class PrinterTest implements FiscalPrinterConst {
             //printer.readFiscalizationTag(1, 0xFFFF);
             //printer.readFiscalizationTLV(1);
             
-            printSalesReceipt1235();
+            //printSalesReceipt1235();
             //printFiscalReceipt145_4();
+            
+            printCorrectionReceipts();
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -4393,4 +4395,25 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    public void printCorrectionReceipts() {
+        try {
+            int[] recTypes = {
+                SmFptrConst.SMFPTR_RT_CORRECTION, 
+                SmFptrConst.SMFPTR_RT_CORRECTION_SALE,
+                SmFptrConst.SMFPTR_RT_CORRECTION_RETSALE,
+                SmFptrConst.SMFPTR_RT_CORRECTION_BUY,
+                SmFptrConst.SMFPTR_RT_CORRECTION_RETBUY
+            };
+            for (int i = 0; i < recTypes.length; i++) {
+                printer.resetPrinter();
+                printer.setFiscalReceiptType(recTypes[i]);
+                printer.beginFiscalReceipt(false);
+                printer.printRecItem("", 100, 1000000, 1, 100, "");
+                printer.printRecTotal(106, 106, "30");
+                printer.endFiscalReceipt(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

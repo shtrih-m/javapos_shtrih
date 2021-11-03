@@ -4595,6 +4595,21 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             case SmFptrConst.SMFPTR_RT_RETBUY:
                 return createSalesReceipt(PrinterConst.SMFP_RECTYPE_RETBUY);
 
+            case SmFptrConst.SMFPTR_RT_CORRECTION:
+                return createSalesReceipt(PrinterConst.SMFP_RECTYPE_CORRECTION_SALE);
+                
+            case SmFptrConst.SMFPTR_RT_CORRECTION_SALE:
+                return createSalesReceipt(PrinterConst.SMFP_RECTYPE_CORRECTION_SALE);
+                
+            case SmFptrConst.SMFPTR_RT_CORRECTION_BUY:
+                return createSalesReceipt(PrinterConst.SMFP_RECTYPE_CORRECTION_BUY);
+                
+            case SmFptrConst.SMFPTR_RT_CORRECTION_RETSALE:
+                return createSalesReceipt(PrinterConst.SMFP_RECTYPE_CORRECTION_RETSALE);
+                
+            case SmFptrConst.SMFPTR_RT_CORRECTION_RETBUY:
+                return createSalesReceipt(PrinterConst.SMFP_RECTYPE_CORRECTION_RETBUY);
+                
             default:
                 throw new JposException(JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue));

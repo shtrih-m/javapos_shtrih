@@ -198,7 +198,8 @@ public class TextDocumentFilter implements IPrinterEvents {
             isDocumentPrinted = false;
             beginDocument();
             long recNumber = getNextRecNumber(getRecNumber(receiptType));
-            add(docNames[receiptType], String.format("№%04d", recNumber));
+            String docName = printer.getReceiptName(receiptType);
+            add(docName, String.format("№%04d", recNumber));
         }
     }
 
