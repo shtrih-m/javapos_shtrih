@@ -63,6 +63,7 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -219,17 +220,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         synchronized (port.getSyncObject()) {
             Time.delay(params.commandDelayInMs);
             beforeCommand(command);
-            switch (command.getCode()) {
-                // correct date before day open
-                case 0xE0:
-                // check status before receipt open
-                case 0x8D:
-                // close receipt 1
-                case 0x85:
-                // close receipt 2
-                case 0xFF45:
-                    correctDate();
-            }
+            correctDateTime(command);
 
             if (interrupted || Thread.currentThread().isInterrupted()) {
                 throw new InterruptedException();
@@ -251,44 +242,132 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    // correct date
-    public void correctDate() {
-        logger.debug("correctDate");
-        try {
-            synchronized (port.getSyncObject()) {
-                if (params.validTimeDiffInSecs <= 0) {
-                    return;
-                }
-
-                checkEcrMode();
-
-                LongPrinterStatus status = readLongStatus();
-                Calendar currentDate = Calendar.getInstance();
-                Calendar printerDate = Calendar.getInstance();
-                printerDate.set(
-                        status.getDate().getYear(),
-                        status.getDate().getMonth(),
-                        status.getDate().getDay(),
-                        status.getTime().getHour(),
-                        status.getTime().getMin(),
-                        status.getTime().getSec());
-
-                long timeDiffInSecs = Math.abs(currentDate.getTimeInMillis()
-                        - printerDate.getTimeInMillis()) / 1000;
-                if (timeDiffInSecs > params.validTimeDiffInSecs) {
-                    PrinterDate date = new PrinterDate();
-                    PrinterTime time = new PrinterTime();
-
-                    check(writeDate(date));
-                    check(confirmDate(date));
-                    check(writeTime(time));
-                }
+    public void correctDateTime(PrinterCommand command) {
+        // all models
+        switch (command.getCode()) {
+            case 0xFF41: // start open fiscal day 
+            case 0xE0:   // open fiscal day
+                setCurrentDateTime();
+        }
+        // SHTRIH-NANO-F
+        if (getDeviceMetrics().isShtrihNano()) {
+            switch (command.getCode()) {
+                case 0x8D:   // open receipt 
+                case 0x85:   // close receipt 1
+                case 0xFF05: // start registration report
+                case 0xFF06: // print registration report
+                case 0xFF0B: // start fiscal day in FS
+                case 0xFF34: // print reregistration report
+                case 0xFF35: // start correction receipt
+                case 0xFF36: // print correction receipt
+                case 0xFF37: // start payments report
+                case 0xFF38: // print payments report
+                case 0xFF42: // start day close
+                case 0xFF43: // close day in FS
+                case 0xFF45: // close receipt 2
+                case 0xFF4A: // print correction receipt 2
+                    setCurrentDateTime();
             }
-        } catch (Exception e) {
-            logger.error("Correct date failed "+ e.getMessage());
         }
     }
 
+    // correct date
+    public void setCurrentDateTime() {
+        logger.debug("setCurrentDateTime");
+        if (params.validTimeDiffInSecs <= 0) {
+            return;
+        }
+        if (!getCapFiscalStorage()) {
+            return;
+        }
+        try {
+
+            synchronized (port.getSyncObject()) {
+                // wait to complete print operations
+                checkEcrMode();
+                // write current date
+                // if fiscal mode opened, last doc date must be less then date
+                PrinterDate currentDate = new PrinterDate();
+                PrinterTime currentTime = new PrinterTime();
+                LongPrinterStatus status = readLongStatus();
+                FSReadStatus fsStatus = fsReadStatus();
+
+                if (!status.getDate().isEqual(currentDate)) {
+                    if ((fsStatus.getDocNumber() == 0) || (fsStatus.getDate().before(currentDate))) {
+                        check(writeDate(currentDate));
+                        check(confirmDate(currentDate));
+                    }
+                }
+                // write time
+                int timeDiffInSecs = status.getTime().getDiff(currentTime);
+                if (timeDiffInSecs > params.validTimeDiffInSecs) {
+                    logger.debug(
+                            String.format("FP time: %s, system time: %s",
+                                    status.getTime().toString(), 
+                                    currentTime.toString()));
+
+                    if ((fsStatus.getDocNumber() == 0)
+                            || (fsStatus.getDate().before(currentDate))
+                            || (fsStatus.getDate().isEqual(currentDate) && (fsStatus.getTime().before(currentTime)))) {
+                        check(writeTime(currentTime));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Correct date failed " + e.getMessage());
+
+        }
+    }
+
+    /*    
+     // correct date
+     public void setCurrentDateTime2() {
+     logger.debug("correctDate");
+     if (!getCapFiscalStorage()) {
+     return;
+     }
+
+     try {
+     synchronized (port.getSyncObject()) {
+     if (params.validTimeDiffInSecs <= 0) {
+     return;
+     }
+     // check ECR mode to complete print operations
+     checkEcrMode();
+     // set date only if needed
+     Calendar currentDate = new GregorianCalendar();
+     currentDate.set(Calendar.HOUR_OF_DAY, 0);
+     currentDate.set(Calendar.MINUTE, 0);
+     currentDate.set(Calendar.SECOND, 0);
+     currentDate.set(Calendar.MILLISECOND, 0);
+
+     Calendar printerDate = readCurrentDate();
+     if (printerDate.before(currentDate)) {
+     PrinterDate date = new PrinterDate();
+     check(writeDate(date));
+     check(confirmDate(date));
+     }
+     if (printerDate.before(currentDate) || printerDate.equals(currentDate)) {
+     // set time only if needed
+     Calendar currentDateTime = new GregorianCalendar();
+     Calendar printerDateTime = readCurrentDateTime();
+
+     long timeDiffInSecs = Math.abs(currentDateTime.getTimeInMillis()
+     - printerDateTime.getTimeInMillis()) / 1000;
+     if (timeDiffInSecs > params.validTimeDiffInSecs) {
+     Calendar fsDateTime = readFsDateTime();
+     if (fsDateTime.before(currentDateTime)) {
+     PrinterTime time = new PrinterTime();
+     check(writeTime(time));
+     }
+     }
+     }
+     }
+     } catch (Exception e) {
+     logger.error("Correct date failed " + e.getMessage());
+     }
+     }
+     */
     public LongPrinterStatus connect() throws Exception {
         logger.debug("connect");
         synchronized (port.getSyncObject()) {
@@ -313,7 +392,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             try {
                 printerEvents.beforeCommand(command);
             } catch (Exception e) {
-                logger.error("beforeCommand "+ e.getMessage());
+                logger.error("beforeCommand " + e.getMessage());
             }
         }
     }
@@ -3156,7 +3235,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             writer.save(SysUtils.getFilesPath() + "models2.xml");
 
         } catch (Exception e) {
-            logger.error("updateModels "+ e.getMessage());
+            logger.error("updateModels " + e.getMessage());
         }
     }
 
@@ -3558,7 +3637,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             try {
                 waitForPrinting();
             } catch (Exception e) {
-                logger.error("openFiscalDay wait for printing failed"+ e.getMessage());
+                logger.error("openFiscalDay wait for printing failed" + e.getMessage());
             }
         }
     }
@@ -3736,7 +3815,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             try {
                 item.print(this);
             } catch (Exception e) {
-                logger.error("printItems "+ e.getMessage());
+                logger.error("printItems " + e.getMessage());
             }
         }
         items.clear();
@@ -3817,15 +3896,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         String receiptName = "";
         boolean isCorrection = (receiptType & 0xF0) == 0x80;
         receiptType = receiptType & 0x0F;
-        
+
         if ((receiptType < 0) || (receiptType > 3)) {
             return receiptName;
         }
 
-        if (getCapFiscalStorage()) 
-        {
+        if (getCapFiscalStorage()) {
             receiptName = "КАССОВЫЙ ЧЕК";
-            if (isCorrection){
+            if (isCorrection) {
                 receiptName = "ЧЕК КОРРЕКЦИИ";
             }
             receiptName = receiptName + "/" + fsDocNames[receiptType];
@@ -4287,7 +4365,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
             logger.debug("updateFirmware(): OK");
         } catch (Exception e) {
-            logger.error("updateFirmware "+ e.getMessage());
+            logger.error("updateFirmware " + e.getMessage());
         }
     }
 
@@ -4570,7 +4648,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
             return true;
         } catch (Exception e) {
-            logger.error("connectDevice "+ e.getMessage());
+            logger.error("connectDevice " + e.getMessage());
             return false;
         }
     }

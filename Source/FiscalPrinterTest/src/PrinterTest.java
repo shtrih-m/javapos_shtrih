@@ -1027,7 +1027,10 @@ class PrinterTest implements FiscalPrinterConst {
             //printSalesReceipt1235();
             //printFiscalReceipt145_4();
             
-            printCorrectionReceipts();
+            //printCorrectionReceipts();
+            //printSalesReceipt1237();
+            
+            printSalesReceipt1236();
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -4416,4 +4419,69 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
+    
+    private void printSalesReceipt1236() {
+        try {
+            printer.resetPrinter();
+
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("АИ-95-К5 N 1", 1799000, 4020000, 1, 447500, "");
+            printer.printRecSubtotal(1799000);
+            printer.printRecTotal(1799000, 1799000, "0");
+            printer.endFiscalReceipt(true);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void printSalesReceipt1237() {
+        try {
+            printer.resetPrinter();
+            
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(true);
+            printer.printRecMessage("Кассовый чек 3777 0003/019/041 02.11.21 22:58 AC-00");
+            printer.printRecItem("2317357000002 САЛАТ ФИНСКИЙ", 16433400, 4336000, 1, 3790000, "");
+            printer.printRecItem("2359930000009 САЛАТ С ВЕТЧИНОЙ И С", 17908060, 4274000, 1, 4190000, "");
+            //printer.printRecItem("2359930000009 САЛАТ С ВЕТЧИНОЙ И С", 17908100, 4274000, 1, 4190000, "");
+            printer.printRecItem("2359781000005 САЛАТ ЦЕЗАРЬ С ТОМАТ", 17111500, 3728000, 1, 4590000, "");
+            printer.printRecItem("2314723000000 САЛАТ ИЗ КРАБОВЫХ ПА", 17773500, 6150000, 1, 2890000, "");
+            printer.printRecItem("2359781000005 САЛАТ ЦЕЗАРЬ С ТОМАТ", 17111500, 3728000, 1, 4590000, "");
+            printer.printRecItem("100246657 ДОМАШНЯЯ КУХНЯ", 6965600, 1396000, 1, 4989700, "");
+            printer.printRecMessage("Цена без скидки: 1,396 X 499,00             =696,60");
+            printer.printRecMessage("Скидка составила:                             -0,04");
+            printer.printRecItem("100808939 МОРС SPAR КЛЮКВЕННЫЙ", 22954000, 46000000, 1, 499000, "");
+            printer.printRecItem("100808912 МОРС SPAR ИЗ ЧЕРНОЙ", 45409000, 91000000, 1, 499000, "");
+            printer.printRecItem("4620749723419 ИНДИВИДУАЛЬНЫЙ СТОЛО", 30000000, 214748364, 1, 139700, "");
+            printer.printRecItem("1128 БАТОН НАРЕЗНОЙ 330г", 11517000, 33000000, 2, 349000, "");
+            printer.printRecItem("1150 ХЛЕБ СЕРГЕЕВСКИЙ 500", 7018000, 22000000, 2, 319000, "");
+            printer.printRecItem("4680000239103 ВОДА ПИТЬЕВАЯ SPAR Н", 46644000, 214748364, 2, 217200, "");
+            printer.printRecItem("4640001070853 ЧАЙ ЗЕЛЕНЫЙ SMART СО", 3588000, 12000000, 1, 299000, "");
+            printer.printRecItem("4640001070693 ЧАЙ SMART СО ВКУСОМ", 3588000, 12000000, 1, 299000, "");
+            printer.printRecItem("4607023735375 БАТОН НАРЕЗНОЙ ПОЛОВ", 5378400, 18000000, 2, 298800, "");
+            printer.printRecMessage("Цена без скидки: 18 X 29,90                 =538,20");
+            printer.printRecMessage("Скидка составила:                             -0,36");
+            printer.printRecMessage("---------------------------------------------------");
+            printer.printRecMessage("ИТОГ ЧЕКА БЕЗ СКИДОК:                      26940,40");
+            printer.printRecMessage("ОБЩАЯ СУММА СКИДКИ:                           -0,40");
+            printer.printRecTotal(269400000, 269400000, "1");
+            printer.printRecMessage("");
+            printer.printRecMessage(" **************************************************");
+            printer.printRecMessage("         ****** СПАСИБО ЗА ПОКУПКУ ******          ");
+            printer.printRecMessage("           Служба клиентской поддержки             ");
+            printer.printRecMessage("                 8-800-500-13-29                   ");
+            printer.printRecMessage("            Ежедневно с 8-00 до 23-00              ");
+            printer.printRecMessage(" --------------------------------------------------");
+            printer.printRecMessage("                                                   ");
+            printer.printRecMessage("                        ");
+            printer.endFiscalReceipt(false);
+    
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
 }
+

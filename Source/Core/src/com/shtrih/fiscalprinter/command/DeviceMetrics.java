@@ -8,6 +8,8 @@
  */
 package com.shtrih.fiscalprinter.command;
 
+import static com.shtrih.fiscalprinter.command.PrinterConst.PRINTER_MODEL_SHTRIH_NANO_F;
+
 /**
  * @author V.Kravtsov
  */
@@ -116,20 +118,20 @@ public class DeviceMetrics {
      * Устройство Штрих-MOBILE-Ф
      */
     public boolean isShtrihMobile() {
-        return getModel() == 19;
+        return getModel() == PrinterConst.PRINTER_MODEL_SHTRIH_MOBILE_F;
     }
 
     /**
      * Устройство Штрих-NANO-Ф
      */
     public boolean isShtrihNano() {
-        return getModel() == 152;
+        return getModel() == PrinterConst.PRINTER_MODEL_SHTRIH_NANO_F;
     }
 
     /**
      * ШТРИХ-ЭЛВЕС-МФ
      */
     public boolean isElves() {
-        return getModel() == 153;
+        return getModel() == PrinterConst.PRINTER_MODEL_SHTRIH_ELVES_MF;
     }
 }

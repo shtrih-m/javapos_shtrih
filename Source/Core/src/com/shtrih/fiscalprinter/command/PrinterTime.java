@@ -103,4 +103,20 @@ public class PrinterTime {
     public boolean isEqual(PrinterTime time) {
         return compare(time) == 0;
     }
+
+    public boolean before(PrinterTime time) {
+        return compare(time) < 0;
+    }
+
+    public boolean after(PrinterTime time) {
+        return compare(time) > 0;
+    }
+
+    public int getTimeInSeconds() {
+        return hour * 60 * 60 + min * 60 + sec;
+    }
+
+    public int getDiff(PrinterTime time) {
+        return Math.abs(getTimeInSeconds() - time.getTimeInSeconds());
+    }
 }

@@ -107,6 +107,11 @@ public interface PrinterConst {
     // SHTRIH-LIGHT-FR-K
     public static final int PRINTER_MODEL_SHTRIH_LIGHT_FRK = 251;
     public static final int PRINTER_MODEL_SHTRIH_LIGHT_FRK2 = 252;
+    // ШТРИХ-НАНО-Ф
+    public static final int PRINTER_MODEL_SHTRIH_NANO_F = 152;
+    // ШТРИХ-ЭЛВЕС-МФ
+    public static final int PRINTER_MODEL_SHTRIH_ELVES_MF = 153;
+    
 
     // ///////////////////////////////////////////////////////////////////
     // "ecrMode" Constants

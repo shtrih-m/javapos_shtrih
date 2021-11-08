@@ -5,6 +5,9 @@
  */
 package com.shtrih.fiscalprinter.command;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 /**
  *
  * @author V.Kravtsov
@@ -223,5 +226,11 @@ public class FSReadStatus extends PrinterCommand {
         this.docNumber = docNumber;
     }
 
+    public Calendar getDateTime(){
+        Calendar dateTime = new GregorianCalendar();
+        dateTime.set(date.getYear(), date.getMonth() - 1, date.getDay(),
+            time.getHour(), time.getMin(), time.getSec());
+        return dateTime;
+    }
     
 }

@@ -9,6 +9,8 @@
 package com.shtrih.fiscalprinter.command;
 
 import com.shtrih.util.CompositeLogger;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * @author V.Kravtsov
@@ -426,4 +428,13 @@ public class LongPrinterStatus implements PrinterConst {
 
         return dayNumber;
     }
+    
+    public Calendar getDateTime() throws Exception 
+    {
+        Calendar printerDate = GregorianCalendar.getInstance();
+        printerDate.set(date.getYear(), date.getMonth() - 1, date.getDay(),
+            time.getHour(), time.getMin(), time.getSec());
+        return printerDate;
+    }
+
 }

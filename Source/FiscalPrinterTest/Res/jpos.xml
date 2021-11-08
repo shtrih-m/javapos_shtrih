@@ -62,7 +62,7 @@
         <!-- device state polling interval in milliseconds -->
         <prop name="pollInterval" type="String" value="500"/>
         <!-- Amount coefficient -->
-        <prop name="amountFactor" type="String" value="1"/>
+        <prop name="amountFactor" type="String" value="0.01"/>
         <!-- Quantity coefficient -->
         <prop name="quantityFactor" type="String" value="1"/>
         <!-- Strings encoding -->
@@ -323,6 +323,7 @@
         <!-- device state polling enabled -->
         <prop name="pollEnabled" type="String" value="0"/>
         <prop name="fastConnect" type="String" value="0"/>
+        <prop name="validTimeDiffInSecs" type="String" value="1"/>
     </JposEntry> 
 	
     <JposEntry logicalName="ShtrihCashDrawer">

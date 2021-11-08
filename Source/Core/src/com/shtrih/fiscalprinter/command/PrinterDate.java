@@ -70,7 +70,7 @@ public class PrinterDate {
     public String toStringShort() {
         return StringUtils.intToStr(day, 2) + "."
                 + StringUtils.intToStr(month, 2) + "."
-                + StringUtils.intToStr(year %100, 2);
+                + StringUtils.intToStr(year % 100, 2);
     }
 
     // 01.02.09
@@ -97,10 +97,6 @@ public class PrinterDate {
         return compare(date) <= 0;
     }
 
-    public boolean isOlder(PrinterDate date) {
-        return compare(date) == -1;
-    }
-
     public int compare(PrinterDate date) {
         int rc = MathUtils.compare(year, date.getYear());
         if (rc != 0) {
@@ -112,5 +108,13 @@ public class PrinterDate {
         }
         rc = MathUtils.compare(day, date.getDay());
         return rc;
+    }
+
+    public boolean before(PrinterDate date){
+        return compare(date) < 0;
+    }
+    
+    public boolean after(PrinterDate date){
+        return compare(date) > 0;
     }
 }

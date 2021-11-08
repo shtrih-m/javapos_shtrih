@@ -1,6 +1,7 @@
 package com.shtrih.fiscalprinter.command;
 
 import com.shtrih.util.StringUtils;
+import java.util.Calendar;
 
 public class PrinterDateTime {
     public static final int BodyLength = 5;
@@ -35,6 +36,14 @@ public class PrinterDateTime {
         minutes = time.getMin();
     }
 
+    public Calendar getCalendar()
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(getYear(), getMonth(), getDay(),
+            getHours(), getMinutes(), 0);
+        return calendar;
+    }
+    
     public boolean IsZero() {
         return year == 2000 && month == 0 && day == 0 && hours == 0 && minutes == 0;
     }
