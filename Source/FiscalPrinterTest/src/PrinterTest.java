@@ -1027,10 +1027,10 @@ class PrinterTest implements FiscalPrinterConst {
             //printSalesReceipt1235();
             //printFiscalReceipt145_4();
             
-            //printCorrectionReceipts();
+            printCorrectionReceipts();
+            //printSalesReceipt1236();
             //printSalesReceipt1237();
             
-            printSalesReceipt1236();
             
         } catch (Exception e) {
             e.printStackTrace();

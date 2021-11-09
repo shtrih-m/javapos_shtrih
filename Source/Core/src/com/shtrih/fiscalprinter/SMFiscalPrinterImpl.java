@@ -284,15 +284,19 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
             synchronized (port.getSyncObject()) {
                 // wait to complete print operations
-                checkEcrMode();
+                waitForPrinting();
                 // write current date
                 // if fiscal mode opened, last doc date must be less then date
                 PrinterDate currentDate = new PrinterDate();
                 PrinterTime currentTime = new PrinterTime();
                 LongPrinterStatus status = readLongStatus();
-                FSReadStatus fsStatus = fsReadStatus();
+                FSReadStatus fsStatus = null;
 
-                if (!status.getDate().isEqual(currentDate)) {
+                if (!status.getDate().isEqual(currentDate)) 
+                {
+                    if (fsStatus == null){ 
+                        fsStatus = fsReadStatus();
+                    }
                     if ((fsStatus.getDocNumber() == 0) || (fsStatus.getDate().before(currentDate))) {
                         check(writeDate(currentDate));
                         check(confirmDate(currentDate));
@@ -306,6 +310,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                                     status.getTime().toString(), 
                                     currentTime.toString()));
 
+                    if (fsStatus == null){ 
+                        fsStatus = fsReadStatus();
+                    }
                     if ((fsStatus.getDocNumber() == 0)
                             || (fsStatus.getDate().before(currentDate))
                             || (fsStatus.getDate().isEqual(currentDate) && (fsStatus.getTime().before(currentTime)))) {
@@ -319,55 +326,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    /*    
-     // correct date
-     public void setCurrentDateTime2() {
-     logger.debug("correctDate");
-     if (!getCapFiscalStorage()) {
-     return;
-     }
-
-     try {
-     synchronized (port.getSyncObject()) {
-     if (params.validTimeDiffInSecs <= 0) {
-     return;
-     }
-     // check ECR mode to complete print operations
-     checkEcrMode();
-     // set date only if needed
-     Calendar currentDate = new GregorianCalendar();
-     currentDate.set(Calendar.HOUR_OF_DAY, 0);
-     currentDate.set(Calendar.MINUTE, 0);
-     currentDate.set(Calendar.SECOND, 0);
-     currentDate.set(Calendar.MILLISECOND, 0);
-
-     Calendar printerDate = readCurrentDate();
-     if (printerDate.before(currentDate)) {
-     PrinterDate date = new PrinterDate();
-     check(writeDate(date));
-     check(confirmDate(date));
-     }
-     if (printerDate.before(currentDate) || printerDate.equals(currentDate)) {
-     // set time only if needed
-     Calendar currentDateTime = new GregorianCalendar();
-     Calendar printerDateTime = readCurrentDateTime();
-
-     long timeDiffInSecs = Math.abs(currentDateTime.getTimeInMillis()
-     - printerDateTime.getTimeInMillis()) / 1000;
-     if (timeDiffInSecs > params.validTimeDiffInSecs) {
-     Calendar fsDateTime = readFsDateTime();
-     if (fsDateTime.before(currentDateTime)) {
-     PrinterTime time = new PrinterTime();
-     check(writeTime(time));
-     }
-     }
-     }
-     }
-     } catch (Exception e) {
-     logger.error("Correct date failed " + e.getMessage());
-     }
-     }
-     */
     public LongPrinterStatus connect() throws Exception {
         logger.debug("connect");
         synchronized (port.getSyncObject()) {
