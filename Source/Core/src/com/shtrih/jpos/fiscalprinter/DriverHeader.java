@@ -23,7 +23,7 @@ import java.util.Vector;
 import jpos.JposConst;
 import jpos.JposException;
 
-public class DriverHeader implements JposConst, PrinterHeader {
+public class DriverHeader implements PrinterHeader {
 
     private int lineNumber = 0;
     private int numHeaderLines = 0;

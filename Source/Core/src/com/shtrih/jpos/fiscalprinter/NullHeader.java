@@ -11,8 +11,8 @@ import java.util.Vector;
 public class NullHeader implements PrinterHeader {
 
 	private final SMFiscalPrinter printer;
-	private final Vector<HeaderLine> header = new Vector<HeaderLine>();
-	private final Vector<HeaderLine> trailer = new Vector<HeaderLine>();
+	private final List<HeaderLine> header = new Vector<HeaderLine>();
+	private final List<HeaderLine> trailer = new Vector<HeaderLine>();
 
 	public NullHeader(SMFiscalPrinter printer) {
 		this.printer = printer;
@@ -93,11 +93,13 @@ public class NullHeader implements PrinterHeader {
 			throws Exception {
         }
         
+	@Override
         public List<HeaderLine> getHeaderLines(){
-            return null;
+            return header;
         }
         
+	@Override
         public List<HeaderLine> getTrailerLines(){
-            return null;
+            return trailer;
         }
 }
