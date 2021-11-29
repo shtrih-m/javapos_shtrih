@@ -104,8 +104,8 @@ public class FSCheckMC extends PrinterCommand {
         symbolicType = in.readByte();
         int paramLen = in.readByte();
         if (paramLen > 0) {
-            serverErrorCode = in.readByte();
             serverCheckStatus = in.readByte();
+            serverErrorCode = in.readByte();
             serverTLVData = in.readBytesToEnd();
         }
     }

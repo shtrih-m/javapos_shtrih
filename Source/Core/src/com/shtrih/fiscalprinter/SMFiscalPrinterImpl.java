@@ -1327,24 +1327,29 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (command.serverCheckStatus == 0x20) {
             throw new Exception(command.getServerErrorCodeText());
         }
+        checkTag2106(command.serverErrorCode);
         // accept
         FSAcceptMC acceptCommand = new FSAcceptMC();
         acceptCommand.setPassword(sysPassword);
         acceptCommand.setAction(1);
         execute(acceptCommand);
-        int ErrorCode = acceptCommand.getErrorCode();
-        boolean isFSChecked = BitUtils.testBit(ErrorCode, 0);
-        boolean isFSCheckStatusOK = BitUtils.testBit(ErrorCode, 1);
-        boolean isMSChecked = BitUtils.testBit(ErrorCode, 2);
-        boolean isMSCheckStatusOK = BitUtils.testBit(ErrorCode, 3);
-        if (isFSChecked && (!isFSCheckStatusOK)) {
+        checkTag2106(acceptCommand.getErrorCode());
+    }
+
+    private void checkTag2106(int errorCode) throws Exception
+    {
+        boolean isMCChecked = BitUtils.testBit(errorCode, 0);
+        boolean isMCCRCChecked = BitUtils.testBit(errorCode, 1);
+        boolean isMSChecked = BitUtils.testBit(errorCode, 2);
+        boolean isMSItemStatusOK = BitUtils.testBit(errorCode, 3);
+        if (isMCChecked && (!isMCCRCChecked)) {
             throw new Exception("Результат проверки КП КМ отрицательный");
         }
-        if (isMSChecked && (!isMSCheckStatusOK)) {
+        if (isMSChecked && (!isMSItemStatusOK)) {
             throw new Exception("Планируемый статус товара некорректен");
         }
     }
-
+   
     public void printSale(PriceItem item) throws Exception {
         logger.debug("printSale");
         String text = getRecItemText(item.getText());

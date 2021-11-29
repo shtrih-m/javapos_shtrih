@@ -29,6 +29,9 @@ public class DIOCheckItemCode extends DIOItem {
         request.setQuantity(1);
         request.setIsSale(true);
         request.setUnit(10); // gramms
+        request.setNumerator(0);
+        request.setDenominator(0);
+        
         if (lines.length > 5)
         {
             request.setIsSale(!(lines[1].equalsIgnoreCase("0")));

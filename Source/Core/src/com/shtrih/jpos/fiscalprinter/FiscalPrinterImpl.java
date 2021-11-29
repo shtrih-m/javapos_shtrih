@@ -272,6 +272,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private boolean disablePrintOnce = false;
     private volatile boolean pollStopFlag = false;
     private volatile boolean eventStopFlag = false;
+    private boolean isFSServiceWasStopped = false;
 
     public void enableTextDocumentFilter(boolean value) {
         filter.setEnabled(value);
@@ -964,6 +965,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
+    public void updateFSService() throws Exception {
+        if (isFSServiceWasStopped) {
+            isFSServiceWasStopped = false;
+            startFSService();
+        }
+    }
+
     public void startFSService() throws Exception {
         if (fsSenderService != null) {
             return;
@@ -1218,8 +1226,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void stopEventThread() throws Exception {
-        if (eventThread != null)
-        {
+        if (eventThread != null) {
             synchronized (events) {
                 events.notifyAll();
             }
@@ -3120,7 +3127,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void beginFiscalReceipt(boolean printHeader) throws Exception {
         checkEnabled();
         checkPrinterState(FPTR_PS_MONITOR);
+        
+        if (fsSenderService != null) {
+            isFSServiceWasStopped = true;
+        }
         stopFSService();
+        
+        
 
         try {
 
@@ -3200,7 +3213,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 // ignore print errors because cashin is succeeded
                 logger.error("endFiscalReceipt: " + e.getMessage());
             }
-            startFSService();
+            updateFSService();
             setPrinterState(FPTR_PS_MONITOR);
             receipt = new NullReceipt(createReceiptContext());
             params.nonFiscalDocNumber++;
@@ -3760,7 +3773,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         receiptType = 0;
         isReceiptOpened = false;
         disablePrintOnce = false;
-        startFSService();
+        updateFSService();
     }
 
     public void setDate(String date) throws Exception {
@@ -4597,19 +4610,19 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
             case SmFptrConst.SMFPTR_RT_CORRECTION:
                 return createSalesReceipt(PrinterConst.SMFP_RECTYPE_CORRECTION_SALE);
-                
+
             case SmFptrConst.SMFPTR_RT_CORRECTION_SALE:
                 return createSalesReceipt(PrinterConst.SMFP_RECTYPE_CORRECTION_SALE);
-                
+
             case SmFptrConst.SMFPTR_RT_CORRECTION_BUY:
                 return createSalesReceipt(PrinterConst.SMFP_RECTYPE_CORRECTION_BUY);
-                
+
             case SmFptrConst.SMFPTR_RT_CORRECTION_RETSALE:
                 return createSalesReceipt(PrinterConst.SMFP_RECTYPE_CORRECTION_RETSALE);
-                
+
             case SmFptrConst.SMFPTR_RT_CORRECTION_RETBUY:
                 return createSalesReceipt(PrinterConst.SMFP_RECTYPE_CORRECTION_RETBUY);
-                
+
             default:
                 throw new JposException(JPOS_E_ILLEGAL,
                         Localizer.getString(Localizer.invalidParameterValue));

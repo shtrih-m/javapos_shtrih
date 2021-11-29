@@ -1018,20 +1018,16 @@ class PrinterTest implements FiscalPrinterConst {
             //printFiscalReceipt145_5();
             //printFiscalReceipt136();
             //printFiscalReceipt11();
-            
             //printSalesReceipt1234();
-            
             //printer.readFiscalizationTag(1, 0xFFFF);
             //printer.readFiscalizationTLV(1);
-            
             //printSalesReceipt1235();
             //printFiscalReceipt145_4();
-            
-            printCorrectionReceipts();
             //printSalesReceipt1236();
             //printSalesReceipt1237();
-            
-            
+            // printSalesReceipt1238();
+            printCorrectionReceipts();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3813,7 +3809,7 @@ class PrinterTest implements FiscalPrinterConst {
             String QRCodeData = "010464007801637221AgqLybqxM9MbR\u001d91FFD0\u001d92dGVzdL31KAYL0YT6592MjmW7a2HkF3IY+muf2pVSKdQ=";
             byte[] data = QRCodeData.getBytes();
             System.out.println("Barcode: " + Hex.toHex(data));
-            
+
             printer.addItemCode(data);
             printer.printRecItem("1. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
             printer.printRecItemAdjustment(1, "            1206", 320, 2);
@@ -4330,67 +4326,67 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecMessage(" На сумму покупки 526.63                  ");
             printer.printRecMessage(" Баланс бонусов: 9.76                     ");
             /*
-            printer.printRecMessage("                                          ");
-            printer.printRecMessage("         Уважаемый покупатель!            ");
-            printer.printRecMessage("     На товары, участвующие в акции,      ");
-            printer.printRecMessage(" бонусы на сумму покупки не начисляются!  ");
-            printer.printRecMessage("         Супермаркет SPAR                 ");
-            printer.printRecMessage(" Чебоксары, Чувашская республика          ");
-            printer.printRecMessage("     пр-кт Московский, дом 40             ");
-            printer.printRecMessage("          т. 79278602031                  ");
-            printer.printRecMessage(" 14.10.21     12:47    ЧЕК   0005         ");
-            printer.printRecMessage(" ПАО СБЕРБАНК              Оплата         ");
-            printer.printRecMessage(" Терминал:               24037024         ");
-            printer.printRecMessage(" Мерчант:            751000028974         ");
-            printer.printRecMessage(" MasterCard        A0000000041010         ");
-            printer.printRecMessage(" Карта:(E1) * * * * * * * * * * * * 5160  ");
-            printer.printRecMessage(" Клиент:                                  ");
-            printer.printRecMessage(" Сумма (Руб):                             ");
+             printer.printRecMessage("                                          ");
+             printer.printRecMessage("         Уважаемый покупатель!            ");
+             printer.printRecMessage("     На товары, участвующие в акции,      ");
+             printer.printRecMessage(" бонусы на сумму покупки не начисляются!  ");
+             printer.printRecMessage("         Супермаркет SPAR                 ");
+             printer.printRecMessage(" Чебоксары, Чувашская республика          ");
+             printer.printRecMessage("     пр-кт Московский, дом 40             ");
+             printer.printRecMessage("          т. 79278602031                  ");
+             printer.printRecMessage(" 14.10.21     12:47    ЧЕК   0005         ");
+             printer.printRecMessage(" ПАО СБЕРБАНК              Оплата         ");
+             printer.printRecMessage(" Терминал:               24037024         ");
+             printer.printRecMessage(" Мерчант:            751000028974         ");
+             printer.printRecMessage(" MasterCard        A0000000041010         ");
+             printer.printRecMessage(" Карта:(E1) * * * * * * * * * * * * 5160  ");
+             printer.printRecMessage(" Клиент:                                  ");
+             printer.printRecMessage(" Сумма (Руб):                             ");
 
-            printer.printRecMessage("           526.63                         ");
-            printer.printRecMessage(" Комиссия за операцию - 0 Руб.            ");
-            printer.printRecMessage("             ОДОБРЕНО                     ");
-            printer.printRecMessage(" Код авторизации:          233525         ");
-            printer.printRecMessage(" Номер ссылки:       128752546414         ");
-            printer.printRecMessage("  Подпись клиента не требуется            ");
-            printer.printRecMessage(" 181858AF0F6791D8525CC0B4D0F96D2E         ");
-            printer.printRecMessage(" ================================         ");
-            printer.printRecMessage("                                          ");
-            printer.printRecMessage("                                          ");
-            printer.printRecMessage("                                          ");
-            printer.printRecMessage(" ~S        Супермаркет SPAR               ");
-            printer.printRecMessage(" Чебоксары, Чувашская республика          ");
-            printer.printRecMessage("     пр-кт Московский, дом 40             ");
-            printer.printRecMessage("          т. 79278602031                  ");
-            printer.printRecMessage(" Копия 1                                  ");
-            printer.printRecMessage(" 14.10.21     12:47    ЧЕК   0005         ");
-            printer.printRecMessage(" ПАО СБЕРБАНК              Оплата         ");
-            printer.printRecMessage(" Терминал:               24037024         ");
-            printer.printRecMessage(" Мерчант:            751000028974         ");
-            printer.printRecMessage(" MasterCard        A0000000041010         ");
-            printer.printRecMessage(" Карта:(E1) * * * * * * * * * * * * 5160  ");
-            printer.printRecMessage(" Клиент:                                  ");
-            printer.printRecMessage(" Сумма (Руб)                              ");
-            printer.printRecMessage("           526.63                         ");
-            printer.printRecMessage(" Комиссия за операцию - 0 Руб.            ");
-            printer.printRecMessage("             ОДОБРЕНО                     ");
-            printer.printRecMessage(" Код авторизации:          233525         ");
-            printer.printRecMessage(" Номер ссылки:       128752546414         ");
-            printer.printRecMessage("  Подпись клиента не требуется            ");
-            printer.printRecMessage(" 181858AF0F6791D8525CC0B4D0F96D2E         ");
-            printer.printRecMessage(" ================================         ");
-            printer.printRecMessage("                                          ");
-            printer.printRecMessage("                                          ");
-            printer.printRecMessage("                                          ");
-            printer.printRecMessage(" ~S                                       ");
-            printer.printRecMessage(" *****************************************");
-            printer.printRecMessage("         ****** СПАСИБО ЗА ПОКУПКУ ****** ");
-            printer.printRecMessage("           Служба клиентской поддержки    ");
-            printer.printRecMessage("                 8-800-500-13-29          ");
-            printer.printRecMessage("            Ежедневно с 8-00 до 23-00     ");
-            printer.printRecMessage(" -----------------------------------------");
-            printer.printRecMessage("                                          ");
-            */
+             printer.printRecMessage("           526.63                         ");
+             printer.printRecMessage(" Комиссия за операцию - 0 Руб.            ");
+             printer.printRecMessage("             ОДОБРЕНО                     ");
+             printer.printRecMessage(" Код авторизации:          233525         ");
+             printer.printRecMessage(" Номер ссылки:       128752546414         ");
+             printer.printRecMessage("  Подпись клиента не требуется            ");
+             printer.printRecMessage(" 181858AF0F6791D8525CC0B4D0F96D2E         ");
+             printer.printRecMessage(" ================================         ");
+             printer.printRecMessage("                                          ");
+             printer.printRecMessage("                                          ");
+             printer.printRecMessage("                                          ");
+             printer.printRecMessage(" ~S        Супермаркет SPAR               ");
+             printer.printRecMessage(" Чебоксары, Чувашская республика          ");
+             printer.printRecMessage("     пр-кт Московский, дом 40             ");
+             printer.printRecMessage("          т. 79278602031                  ");
+             printer.printRecMessage(" Копия 1                                  ");
+             printer.printRecMessage(" 14.10.21     12:47    ЧЕК   0005         ");
+             printer.printRecMessage(" ПАО СБЕРБАНК              Оплата         ");
+             printer.printRecMessage(" Терминал:               24037024         ");
+             printer.printRecMessage(" Мерчант:            751000028974         ");
+             printer.printRecMessage(" MasterCard        A0000000041010         ");
+             printer.printRecMessage(" Карта:(E1) * * * * * * * * * * * * 5160  ");
+             printer.printRecMessage(" Клиент:                                  ");
+             printer.printRecMessage(" Сумма (Руб)                              ");
+             printer.printRecMessage("           526.63                         ");
+             printer.printRecMessage(" Комиссия за операцию - 0 Руб.            ");
+             printer.printRecMessage("             ОДОБРЕНО                     ");
+             printer.printRecMessage(" Код авторизации:          233525         ");
+             printer.printRecMessage(" Номер ссылки:       128752546414         ");
+             printer.printRecMessage("  Подпись клиента не требуется            ");
+             printer.printRecMessage(" 181858AF0F6791D8525CC0B4D0F96D2E         ");
+             printer.printRecMessage(" ================================         ");
+             printer.printRecMessage("                                          ");
+             printer.printRecMessage("                                          ");
+             printer.printRecMessage("                                          ");
+             printer.printRecMessage(" ~S                                       ");
+             printer.printRecMessage(" *****************************************");
+             printer.printRecMessage("         ****** СПАСИБО ЗА ПОКУПКУ ****** ");
+             printer.printRecMessage("           Служба клиентской поддержки    ");
+             printer.printRecMessage("                 8-800-500-13-29          ");
+             printer.printRecMessage("            Ежедневно с 8-00 до 23-00     ");
+             printer.printRecMessage(" -----------------------------------------");
+             printer.printRecMessage("                                          ");
+             */
             printer.endFiscalReceipt(false);
 
         } catch (Exception e) {
@@ -4398,19 +4394,33 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    private static final char GS = 0x1D;
+                
     public void printCorrectionReceipts() {
         try {
+            String barcode = "010464007801637221_X.g!8xnpuiFV" + GS + 
+                "91FFD0" + GS + "92dGVzdIzSWNqFlCZrv+e0GSXQd6Qnar28rNj+8v2D+j0=";
+            printer.mcClearBuffer();
+            
             int[] recTypes = {
-                SmFptrConst.SMFPTR_RT_CORRECTION, 
+                SmFptrConst.SMFPTR_RT_CORRECTION,
                 SmFptrConst.SMFPTR_RT_CORRECTION_SALE,
                 SmFptrConst.SMFPTR_RT_CORRECTION_RETSALE,
                 SmFptrConst.SMFPTR_RT_CORRECTION_BUY,
                 SmFptrConst.SMFPTR_RT_CORRECTION_RETBUY
             };
-            for (int i = 0; i < recTypes.length; i++) {
+            for (int i = 0; i < recTypes.length; i++) 
+            {
+                int recType = recTypes[i];
+                boolean isSale = 
+                        (recType == SmFptrConst.SMFPTR_RT_CORRECTION_SALE) ||
+                        (recType == SmFptrConst.SMFPTR_RT_CORRECTION_RETBUY);
+                printer.checkItemCode(barcode, isSale, 1000000, 10, 1, 1);
+                
                 printer.resetPrinter();
                 printer.setFiscalReceiptType(recTypes[i]);
                 printer.beginFiscalReceipt(false);
+                printer.addItemCode(barcode.getBytes());
                 printer.printRecItem("", 100, 1000000, 1, 100, "");
                 printer.printRecTotal(106, 106, "30");
                 printer.endFiscalReceipt(false);
@@ -4419,7 +4429,7 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
+
     private void printSalesReceipt1236() {
         try {
             printer.resetPrinter();
@@ -4430,16 +4440,16 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecSubtotal(1799000);
             printer.printRecTotal(1799000, 1799000, "0");
             printer.endFiscalReceipt(true);
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     private void printSalesReceipt1237() {
         try {
             printer.resetPrinter();
-            
+
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(true);
             printer.printRecMessage("Кассовый чек 3777 0003/019/041 02.11.21 22:58 AC-00");
@@ -4477,11 +4487,27 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecMessage("                                                   ");
             printer.printRecMessage("                        ");
             printer.endFiscalReceipt(false);
-    
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
-}
 
+    private void printSalesReceipt1238() {
+        try {
+            printer.resetPrinter();
+
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(true);
+            
+            printer.printRecItem("BVLGARI PARFUMS EAU PARFUMEE AU THE BLEU 150 ML",
+                    1063500, 1000000, 1, 1063500, "");
+            printer.printRecTotal(1063500, 1063500, "10");
+            printer.endFiscalReceipt(false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}
