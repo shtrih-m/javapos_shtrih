@@ -1025,8 +1025,8 @@ class PrinterTest implements FiscalPrinterConst {
             //printFiscalReceipt145_4();
             //printSalesReceipt1236();
             //printSalesReceipt1237();
-            // printSalesReceipt1238();
-            printCorrectionReceipts();
+            printSalesReceipt1238();
+            //printCorrectionReceipts();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -4499,10 +4499,13 @@ class PrinterTest implements FiscalPrinterConst {
 
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(true);
+            //printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_QUANTITY_FACTOR, 1);
             
-            printer.printRecItem("BVLGARI PARFUMS EAU PARFUMEE AU THE BLEU 150 ML",
-                    1063500, 1000000, 1, 1063500, "");
-            printer.printRecTotal(1063500, 1063500, "10");
+            printer.printRecItem("Test",
+                99999999, 99999999, 1, 1, "");
+            
+                   
+            printer.printRecTotal(99999999, 99999999, "10");
             printer.endFiscalReceipt(false);
 
         } catch (Exception e) {

@@ -143,6 +143,14 @@ public class DIOGetDriverParameter extends DIOItem {
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_UNIT:
                 ((int[]) object)[0] = service.getParams().itemUnit;
                 break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_AMOUNT_FACTOR:
+                 ((double[]) object)[0] = service.getParams().amountFactor;
+                break;
+   
+            case SmFptrConst.SMFPTR_DIO_PARAM_QUANTITY_FACTOR:
+                 ((double[]) object)[0] = service.getParams().quantityFactor;
+                break;
         }
     }
 }

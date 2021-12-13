@@ -707,6 +707,9 @@ public class SmFptrConst {
     // Clear marking codes buffer
     public static final int SMFPTR_DIO_MC_CLEAR_BUFFER = 0x89;
 
+    // Set item quantity
+    public static final int SMFPTR_DIO_SET_ITEM_QUANTITY = 0x8A;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,
@@ -781,6 +784,10 @@ public class SmFptrConst {
 
     public static final int SMFPTR_DIO_PARAM_ITEM_UNIT = 30;
 
+    public static final int SMFPTR_DIO_PARAM_AMOUNT_FACTOR = 31;
+    
+    public static final int SMFPTR_DIO_PARAM_QUANTITY_FACTOR = 32;
+    
     // ///////////////////////////////////////////////////////////////////
     // TableMode
     public static final int SMFPTR_TABLE_MODE_AUTO = 0;

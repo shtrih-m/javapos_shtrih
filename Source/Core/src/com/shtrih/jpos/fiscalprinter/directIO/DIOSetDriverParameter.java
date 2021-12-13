@@ -134,6 +134,15 @@ public class DIOSetDriverParameter extends DIOItem {
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_UNIT:
                 service.getParams().itemUnit = ((int[]) object)[0];
                 break;
+                
+            case SmFptrConst.SMFPTR_DIO_PARAM_AMOUNT_FACTOR:
+                service.getParams().amountFactor = ((double[]) object)[0];
+                break;
+   
+            case SmFptrConst.SMFPTR_DIO_PARAM_QUANTITY_FACTOR:
+                service.getParams().quantityFactor = ((double[]) object)[0];
+                break;
+                
         }
     }
 }
