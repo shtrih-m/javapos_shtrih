@@ -26,7 +26,9 @@ import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.command.*;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
+import com.shtrih.jpos.fiscalprinter.directIO.DIOGetCommandTimeout;
 import com.shtrih.jpos.fiscalprinter.directIO.DIOReadMCNotificationStatus;
+import com.shtrih.jpos.fiscalprinter.directIO.DIOSetCommandTimeout;
 
 /**
  * Wrapper class to help using directIO codes *
@@ -2314,7 +2316,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void mcClearBuffer() throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_MC_CLEAR_BUFFER, null, null);
     }
-    
+
     public void sendItemCode(String barcode) throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_SEND_ITEM_CODE, null, new String[]{barcode});
     }
@@ -2323,7 +2325,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_CHECK_ITEM_CODE, null, new String[]{barcode});
     }
 
-    public void checkItemCode(String barcode, boolean isSale, 
+    public void checkItemCode(String barcode, boolean isSale,
             long quantity, int units, long numerator, long denominator)
             throws JposException {
         String[] lines = new String[6];
@@ -2333,7 +2335,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         lines[3] = String.valueOf(units);
         lines[4] = String.valueOf(numerator);
         lines[5] = String.valueOf(denominator);
-      
+
         directIO(SmFptrConst.SMFPTR_DIO_CHECK_ITEM_CODE, null, lines);
     }
 
@@ -2350,7 +2352,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
             params[0] = new Integer(1);
         }
         directIO(SmFptrConst.SMFPTR_DIO_ACCEPT_ITEM_CODE, null, params);
-        int errorCode = (Integer)params[1];
+        int errorCode = (Integer) params[1];
         return errorCode;
     }
 
@@ -2410,5 +2412,20 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         String[] lines = new String[6];
         directIO(SmFptrConst.SMFPTR_DIO_READ_MC_NOTIFICATION_STATUS, null, lines);
         return lines;
+    }
+
+    public int getCommandTimeout(int code) throws JposException {
+        int[] data = new int[1];
+        int[] out = new int[1];
+        data[0] = code;
+        directIO(SmFptrConst.SMFPTR_DIO_GET_COMMAND_TIMEOUT, data, out);
+        return out[0];
+    }
+
+    public void setCommandTimeout(int code, int timeout) throws JposException {
+        int[] data = new int[2];
+        data[0] = code;
+        data[1] = timeout;
+        directIO(SmFptrConst.SMFPTR_DIO_SET_COMMAND_TIMEOUT, data, null);
     }
 }

@@ -11,6 +11,7 @@
  */
 package com.shtrih.fiscalprinter;
 
+import java.util.Map;
 import java.util.HashMap;
 import java.nio.ByteOrder;
 import java.nio.ByteBuffer;
@@ -3073,10 +3074,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return commands;
     }
 
-    private int getCommandTimeout(int code) {
-        return PrinterCommand.getDefaultTimeout(code);
-    }
-
     public ReadEJActivationReport readEJActivationReport() throws Exception {
         ReadEJActivationReport command = new ReadEJActivationReport();
         command.setPassword(sysPassword);
@@ -5130,5 +5127,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         FSAcceptMC command = new FSAcceptMC();
         command.setAction(FSAcceptMC.ActionClearBuffer);
         return fsAcceptMC(command);
+    }
+
+    public int getCommandTimeout(int code)
+    {
+        Integer timeout = getParams().commandTimeouts.get(code);
+        if (timeout != null) return timeout;
+        return PrinterCommand.getDefaultTimeout(code);
+    }
+    
+    public void setCommandTimeout(int code, int timeout)
+    {
+        getParams().commandTimeouts.put(code, timeout);
     }
 }

@@ -7,9 +7,12 @@
     
 ********************************************************************************
 
-  13.12.2021
+  15.12.2021
   deviceServiceVersion = 1013638
 
+  [+] Added directIO commands to set command timeout
+  [+] Added command timeout parameter to jpos.xml. Example:
+      <prop name="commandTimeoutFF61" type="String" value="12345"/>
   [+] Added directIO commands to change amount factor and quantity factor
   
 ********************************************************************************

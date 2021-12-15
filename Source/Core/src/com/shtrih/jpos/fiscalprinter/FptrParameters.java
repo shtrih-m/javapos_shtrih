@@ -198,6 +198,7 @@ public class FptrParameters {
     public int validTimeDiffInSecs = 0;
     public String quantityFormat = "0.000";
     public boolean tagsBeforeItem = true;
+    public HashMap<Integer, Integer> commandTimeouts = new HashMap<Integer, Integer>();
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -227,6 +228,7 @@ public class FptrParameters {
             return;
         }
         loadPayTypes(entry);
+        loadCommandTimeouts(entry);
 
         JposPropertyReader reader = new JposPropertyReader(entry);
 
@@ -467,9 +469,39 @@ public class FptrParameters {
         return paymentNames;
     }
 
+    public void loadCommandTimeouts(JposEntry jposEntry) throws Exception {
+        try {
+            String tag = "commandTimeout";
+            commandTimeouts.clear();
+            JposPropertyReader reader = new JposPropertyReader(jposEntry);
+
+            Enumeration props = jposEntry.getPropertyNames();
+            while (props.hasMoreElements()) {
+                String propertyName = (String) props.nextElement();
+                if (propertyName.indexOf(tag) != -1) 
+                {
+                    try {
+                        String propertyValue = reader.readString(propertyName, "");
+                        String scode = propertyName.substring(tag.length());
+                        int code = Integer.parseInt(scode, 16);
+                        int timeout = Integer.parseInt(propertyValue);
+
+                        commandTimeouts.put(code, timeout);
+                    } catch (Exception e) {
+                        logger.error(e);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e);
+        }
+    }
+
     public void loadPayTypes(JposEntry jposEntry) throws Exception {
         try {
             payTypes.clear();
+            JposPropertyReader reader = new JposPropertyReader(jposEntry);
+            
             String payTypeID = "";
             String payTypeValue = "";
             String propertyName = "";
@@ -479,7 +511,7 @@ public class FptrParameters {
                 propertyName = (String) props.nextElement();
                 if (propertyName.indexOf("payType") != -1) {
                     try {
-                        payTypeValue = (String) jposEntry.getPropertyValue(propertyName);
+                        payTypeValue = reader.readString(propertyName, "");
                         payTypeID = propertyName.substring(propertyName.indexOf("payType") + 7);
                         int payTypeValueInt = Integer.parseInt(payTypeValue);
                         PayType payType = new PayType(payTypeValueInt);

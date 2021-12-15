@@ -689,10 +689,6 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return new FlexCommands();
     }
 
-    public int getCommandTimeout(int code) throws Exception {
-        return 0;
-    }
-
     public int getResultCode() {
         return 0;
     }
@@ -1278,6 +1274,13 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
 
     public String getFullSerial(){
         return "";
+    }
+    
+    public int getCommandTimeout(int code){
+        return 0;
+    }
+    
+    public void setCommandTimeout(int code, int timeout){
     }
     
 }

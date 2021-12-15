@@ -599,6 +599,14 @@ public class DirectIOHandler {
                 new DIOMCClearBuffer(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_GET_COMMAND_TIMEOUT:
+                new DIOGetCommandTimeout(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_SET_COMMAND_TIMEOUT:
+                new DIOSetCommandTimeout(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL, Localizer.getString(Localizer.invalidParameterValue) + ", command");
         }

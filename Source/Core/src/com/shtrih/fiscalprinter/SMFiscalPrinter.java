@@ -716,4 +716,8 @@ public interface SMFiscalPrinter {
     
     public String getFullSerial();
 
+    public int getCommandTimeout(int code);
+    
+    public void setCommandTimeout(int code, int timeout);
+    
 }

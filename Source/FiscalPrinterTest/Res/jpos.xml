@@ -324,6 +324,7 @@
         <prop name="pollEnabled" type="String" value="0"/>
         <prop name="fastConnect" type="String" value="0"/>
         <prop name="validTimeDiffInSecs" type="String" value="1"/>
+        <prop name="commandTimeoutFF61" type="String" value="12345"/>
     </JposEntry> 
 	
     <JposEntry logicalName="ShtrihCashDrawer">

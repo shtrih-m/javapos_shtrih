@@ -710,6 +710,12 @@ public class SmFptrConst {
     // Set item quantity
     public static final int SMFPTR_DIO_SET_ITEM_QUANTITY = 0x8A;
     
+    // Get comand timeout
+    public static final int SMFPTR_DIO_GET_COMMAND_TIMEOUT = 0x8B;
+    
+    // Set comand timeout
+    public static final int SMFPTR_DIO_SET_COMMAND_TIMEOUT = 0x8C;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,
