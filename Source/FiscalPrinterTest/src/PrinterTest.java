@@ -4518,7 +4518,7 @@ class PrinterTest implements FiscalPrinterConst {
         try {
             int timeout = printer.getCommandTimeout(0xFF61);
             System.out.println("Command timeout 1: " + timeout);
-            printer.setCommandTimeout(0xFF61, 20000);
+            printer.setCommandTimeout(0xFF61, 23456);
             timeout = printer.getCommandTimeout(0xFF61);
             System.out.println("Command timeout 2: " + timeout);
 
