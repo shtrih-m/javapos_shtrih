@@ -1025,10 +1025,11 @@ class PrinterTest implements FiscalPrinterConst {
             //printFiscalReceipt145_4();
             //printSalesReceipt1236();
             //printSalesReceipt1237();
-            //printSalesReceipt1238();
             //printCorrectionReceipts();
-            testCommandTimeout();
+            //testCommandTimeout();
 
+            printSalesReceiptZeroPrice();
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -4521,6 +4522,21 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setCommandTimeout(0xFF61, 23456);
             timeout = printer.getCommandTimeout(0xFF61);
             System.out.println("Command timeout 2: " + timeout);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void printSalesReceiptZeroPrice() {
+        try {
+            printer.resetPrinter();
+
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("Test", 0, 1000000, 1, 100, "");
+            printer.printRecTotal(100, 100, "10");
+            printer.endFiscalReceipt(false);
 
         } catch (Exception e) {
             e.printStackTrace();

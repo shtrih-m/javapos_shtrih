@@ -1148,6 +1148,9 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 item.setItemAmount(item.getItemAmount() + price);
             }
         }
+        if (Math.abs(price - amount) > 1) {
+            price = amount;
+        }
         if (item == null) {
             item = new FSSaleReceiptItem();
             item.setItemAmount(price);
