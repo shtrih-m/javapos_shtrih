@@ -1028,7 +1028,7 @@ class PrinterTest implements FiscalPrinterConst {
             //printCorrectionReceipts();
             //testCommandTimeout();
 
-            printSalesReceiptZeroPrice();
+            printFiscalReceiptLogoBeforeHeader();
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -4542,4 +4542,34 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
+    
+    public void printFiscalReceiptLogoBeforeHeader() {
+        try {
+            printer.resetPrinter();
+
+            printer.clearLogo();
+            printer.clearImages();
+            printer.loadLogo(SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER, "logo.bmp");
+            int numHeaderLines = printer.getNumHeaderLines();
+            for (int i = 1; i <= numHeaderLines; i++) {
+                printer.setHeaderLine(i, "Header line " + i, false);
+            }
+
+            long payment = 0;
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(jpos.FiscalPrinterConst.FPTR_RT_SALES);
+            printer.beginFiscalReceipt(false);
+            printer.printRecItem("Item 1", 0, 1000000, 4, 100, "");
+            printer.printRecTotal(100, 100, "1");
+            printer.printRecMessage("printRecMessage 1");
+            printer.printRecMessage("printRecMessage 2");
+            printer.printRecMessage("printRecMessage 3");
+            printer.endFiscalReceipt(false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
 }

@@ -31,7 +31,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="COM3"/>
+        <prop name="portName" type="String" value="COM8"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="0"/>
@@ -165,7 +165,7 @@
         <!-- Table mode, 0 - auto, 1 - disabled -->
         <prop name="tableMode" type="String" value="0"/>
         <!-- Logo mode, 0 - feed paper, 1 - split image -->
-        <prop name="logoMode" type="String" value="1"/>
+        <prop name="logoMode" type="String" value="0"/>
         <!-- SearchMode, 0 - none, 1 - search on error -->
         <prop name="searchMode" type="String" value="0"/>
         <!-- stringEncoding -->
