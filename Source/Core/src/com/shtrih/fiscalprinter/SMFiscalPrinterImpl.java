@@ -293,9 +293,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 LongPrinterStatus status = readLongStatus();
                 FSReadStatus fsStatus = null;
 
-                if (!status.getDate().isEqual(currentDate)) 
-                {
-                    if (fsStatus == null){ 
+                if (!status.getDate().isEqual(currentDate)) {
+                    if (fsStatus == null) {
                         fsStatus = fsReadStatus();
                     }
                     if ((fsStatus.getDocNumber() == 0) || (fsStatus.getDate().before(currentDate))) {
@@ -308,10 +307,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 if (timeDiffInSecs > params.validTimeDiffInSecs) {
                     logger.debug(
                             String.format("FP time: %s, system time: %s",
-                                    status.getTime().toString(), 
+                                    status.getTime().toString(),
                                     currentTime.toString()));
 
-                    if (fsStatus == null){ 
+                    if (fsStatus == null) {
                         fsStatus = fsReadStatus();
                     }
                     if ((fsStatus.getDocNumber() == 0)
@@ -1337,8 +1336,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         checkTag2106(acceptCommand.getErrorCode());
     }
 
-    private void checkTag2106(int errorCode) throws Exception
-    {
+    private void checkTag2106(int errorCode) throws Exception {
         boolean isMCChecked = BitUtils.testBit(errorCode, 0);
         boolean isMCCRCChecked = BitUtils.testBit(errorCode, 1);
         boolean isMSChecked = BitUtils.testBit(errorCode, 2);
@@ -1350,7 +1348,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             throw new Exception("Планируемый статус товара некорректен");
         }
     }
-   
+
     public void printSale(PriceItem item) throws Exception {
         logger.debug("printSale");
         String text = getRecItemText(item.getText());
@@ -2962,6 +2960,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public int getMaxGraphicsWidth() throws Exception {
+        int width = Math.min(getPaperWidth(), getMaxGraphicCommandWidth());
+        return width;
+    }
+
+    public int getMaxGraphicCommandWidth() throws Exception {
         if (capModelParameters()) {
             return modelParameters.getGraphics512Width();
         } else if (getCapLoadGraphics3()) {
@@ -2969,6 +2972,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         } else {
             return 320;
         }
+    }
+
+    public int getPaperWidth() throws Exception {
+        return getModel().getFonts().itemByNumber(FontNumber.getNormalFont()).getPaperWidth();
     }
 
     public int getMaxGraphicsLineWidth() throws Exception {
@@ -5129,15 +5136,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return fsAcceptMC(command);
     }
 
-    public int getCommandTimeout(int code)
-    {
+    public int getCommandTimeout(int code) {
         Integer timeout = getParams().commandTimeouts.get(code);
-        if (timeout != null) return timeout;
+        if (timeout != null) {
+            return timeout;
+        }
         return PrinterCommand.getDefaultTimeout(code);
     }
-    
-    public void setCommandTimeout(int code, int timeout)
-    {
+
+    public void setCommandTimeout(int code, int timeout) {
         getParams().commandTimeouts.put(code, timeout);
     }
 }

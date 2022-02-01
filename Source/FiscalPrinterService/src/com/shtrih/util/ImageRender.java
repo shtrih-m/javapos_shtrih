@@ -1,6 +1,7 @@
 package com.shtrih.util;
 
 import com.shtrih.jpos.fiscalprinter.PrinterImage;
+import java.awt.RenderingHints;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
@@ -51,10 +52,19 @@ public class ImageRender {
         if (height > maxHeight){
             height = maxHeight;
         }
-
+        double scaleX = ((double) width) / (double)image.getWidth();
+        double scaleY = ((double) height) / (double)image.getHeight();
+        double scale = Math.min(scaleX, scaleY);
+        width = (int) (scale * image.getWidth());
+        height = (int) (scale * image.getHeight());
+        
         BufferedImage img = new BufferedImage(width, height,
                 BufferedImage.TYPE_BYTE_BINARY);
         Graphics2D g2 = img.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);        
+        
         try {
             g2.drawImage(image, 0, 0, width, height, Color.WHITE, null);
         } finally {
