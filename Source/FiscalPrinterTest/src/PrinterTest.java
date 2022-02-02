@@ -1027,9 +1027,9 @@ class PrinterTest implements FiscalPrinterConst {
             //printSalesReceipt1237();
             //printCorrectionReceipts();
             //testCommandTimeout();
+            //printFiscalReceiptLogoBeforeHeader();
+            printFiscalReceiptWithSupplier();
 
-            printFiscalReceiptLogoBeforeHeader();
-            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3855,10 +3855,10 @@ class PrinterTest implements FiscalPrinterConst {
 
             printer.printRecItem("Позиция1", 0, 1234567, 1, 123456, "0");
             TLVWriter writer = new TLVWriter();
-            writer.add(1171, "+79616195832");
-            writer.add(1225, "ТестТест");
+            writer.addTag(1171, "+79616195832");
+            writer.addTag(1225, "ТестТест");
             printer.fsWriteOperationTag(1224, writer.getBytes());
-            printer.fsWriteOperationTag(1226, "3664069397  ", false);
+            printer.fsWriteOperationTag(1226, "3664069397", false);
 
             printer.printRecTotal(999999, 999999, "REC_TOTAL_CASH_DESCRIPTION");
             printer.endFiscalReceipt(true);
@@ -4397,13 +4397,13 @@ class PrinterTest implements FiscalPrinterConst {
     }
 
     private static final char GS = 0x1D;
-                
+
     public void printCorrectionReceipts() {
         try {
-            String barcode = "010464007801637221_X.g!8xnpuiFV" + GS + 
-                "91FFD0" + GS + "92dGVzdIzSWNqFlCZrv+e0GSXQd6Qnar28rNj+8v2D+j0=";
+            String barcode = "010464007801637221_X.g!8xnpuiFV" + GS
+                    + "91FFD0" + GS + "92dGVzdIzSWNqFlCZrv+e0GSXQd6Qnar28rNj+8v2D+j0=";
             printer.mcClearBuffer();
-            
+
             int[] recTypes = {
                 SmFptrConst.SMFPTR_RT_CORRECTION,
                 SmFptrConst.SMFPTR_RT_CORRECTION_SALE,
@@ -4411,14 +4411,13 @@ class PrinterTest implements FiscalPrinterConst {
                 SmFptrConst.SMFPTR_RT_CORRECTION_BUY,
                 SmFptrConst.SMFPTR_RT_CORRECTION_RETBUY
             };
-            for (int i = 0; i < recTypes.length; i++) 
-            {
+            for (int i = 0; i < recTypes.length; i++) {
                 int recType = recTypes[i];
-                boolean isSale = 
-                        (recType == SmFptrConst.SMFPTR_RT_CORRECTION_SALE) ||
-                        (recType == SmFptrConst.SMFPTR_RT_CORRECTION_RETBUY);
+                boolean isSale
+                        = (recType == SmFptrConst.SMFPTR_RT_CORRECTION_SALE)
+                        || (recType == SmFptrConst.SMFPTR_RT_CORRECTION_RETBUY);
                 printer.checkItemCode(barcode, isSale, 1000000, 10, 1, 1);
-                
+
                 printer.resetPrinter();
                 printer.setFiscalReceiptType(recTypes[i]);
                 printer.beginFiscalReceipt(false);
@@ -4502,11 +4501,10 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(true);
             //printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_QUANTITY_FACTOR, 1);
-            
+
             printer.printRecItem("Test",
-                99999999, 99999999, 1, 1, "");
-            
-                   
+                    99999999, 99999999, 1, 1, "");
+
             printer.printRecTotal(99999999, 99999999, "10");
             printer.endFiscalReceipt(false);
 
@@ -4527,7 +4525,7 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
+
     private void printSalesReceiptZeroPrice() {
         try {
             printer.resetPrinter();
@@ -4542,7 +4540,7 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
+
     public void printFiscalReceiptLogoBeforeHeader() {
         try {
             printer.resetPrinter();
@@ -4570,6 +4568,33 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
-    
+
+    public void printFiscalReceiptWithSupplier() {
+        try {
+            printer.resetPrinter();
+
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(jpos.FiscalPrinterConst.FPTR_RT_SALES);
+            printer.beginFiscalReceipt(false);
+
+            TLVWriter writer = new TLVWriter();
+            writer.addTag(1171, "+79136195732");
+            writer.addTag(1225, "Тест");
+            printer.fsWriteOperationTag(1224, writer.getBytes());
+            printer.fsWriteOperationTag(1226, "5448100656");
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 4);
+            printer.printRecItem("Товар 1", 100, 1000000, 1, 100, "0");
+
+            printer.fsWriteOperationTag(1224, writer.getBytes());
+            printer.fsWriteOperationTag(1226, "5448100656");
+            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 4);
+            printer.printRecItem("Товар 2", 100, 1000000, 1, 100, "0");
+
+            printer.printRecTotal(1000, 1000, "1");
+            printer.endFiscalReceipt(false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

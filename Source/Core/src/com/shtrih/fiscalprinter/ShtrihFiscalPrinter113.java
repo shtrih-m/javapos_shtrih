@@ -1954,9 +1954,15 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         fsWriteOperationTag(tagId, tagValue, true);
     }
 
+    public void fsWriteOperationTag(TLVItem item) throws Exception {
+        TLVWriter tlv = new TLVWriter();
+        tlv.add(item);
+        fsWriteOperationTLV(tlv.getBytes(), true);
+    }
+    
     public void fsWriteOperationTag(int tagId, String tagValue, boolean print) throws Exception {
         TLVWriter tlv = new TLVWriter();
-        tlv.add(tagId, tagValue);
+        tlv.addTag(tagId, tagValue);
         fsWriteOperationTLV(tlv.getBytes(), print);
     }
 

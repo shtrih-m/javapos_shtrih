@@ -38,10 +38,16 @@ public class TLVItem {
         this.data = data;
     }
 
+    public TLVItem(int tagId, byte[] data) {
+        this.id = tagId;
+        this.tag = TLVTags.getInstance().find(tagId);
+        this.data = data;
+    }
+    
     public TLVItem(int tagId, String text) throws Exception {
         this.id = tagId;
-        tag = TLVTags.getInstance().find(tagId);
-        data = tag.textToBin(text);
+        this.tag = TLVTags.getInstance().find(tagId);
+        this.data = tag.textToBin(text);
     }
 
     public int getId() {

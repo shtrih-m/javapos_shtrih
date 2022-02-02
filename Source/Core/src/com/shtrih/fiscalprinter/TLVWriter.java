@@ -14,7 +14,7 @@ public class TLVWriter {
 
     private final ByteArrayOutputStream stream;
 
-    public TLVWriter() {
+     public TLVWriter() {
         stream = new ByteArrayOutputStream();
     }
 
