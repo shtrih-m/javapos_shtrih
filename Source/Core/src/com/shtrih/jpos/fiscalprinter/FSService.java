@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.io.FileOutputStream;
 
 /**
  * @author V.Kravtsov
@@ -23,6 +24,7 @@ public class FSService implements Runnable {
 
     private CompositeLogger logger = CompositeLogger.getLogger(FSService.class);
 
+    private long packetNumber = 0;
     private final FDOParameters parameters;
     private final int connectTimeout;
     private final SMFiscalPrinter printer;
@@ -98,10 +100,21 @@ public class FSService implements Runnable {
             if (stopFlag) {
                 return;
             }
+            //packetNumber++;
+            //saveToFile(data, String.format("FSDocument_%04d.bin", packetNumber));
+
+            // P-protocol version 0x0102 -> 0x0120
+            if ((data.length >= 30) && (data[6] == 0x01) && (data[7] == 0x02)
+                    && (data[28] == 0) && (data[29] == 0)) {
+                data[7] = 0x20;
+            }
+            //saveToFile(data, String.format("OFDDocument_%04d.bin", packetNumber));
+
             byte[] answer = sendData(data);
             if (answer.length == 0) {
                 return;
             }
+            //saveToFile(answer, String.format("OFDTicket_%04d.bin", packetNumber));
             // System.out.println("FS <- OFD: " + Hex.toHex(answer));
             if (stopFlag) {
                 return;
@@ -115,28 +128,45 @@ public class FSService implements Runnable {
         }
     }
 
+    private void saveToFile(byte[] data, String fileName) {
+        try {
+            FileOutputStream os = new FileOutputStream(fileName);
+            os.write(data);
+            os.close();
+        } catch (Exception e) {
+            logger.error("Failed to save data", e);
+        }
+    }
+
     private byte[] sendData(byte[] data) throws Exception {
         Socket socket = new Socket();
-        socket.setTcpNoDelay(true);
-        socket.setSoTimeout(connectTimeout);
-        socket.connect(new InetSocketAddress(parameters.getHost(), parameters.getPort()));
-        socket.getOutputStream().write(data);
-        InputStream in = socket.getInputStream();
+        try {
+            socket.setTcpNoDelay(true);
+            socket.setSoTimeout(connectTimeout);
+            socket.connect(new InetSocketAddress(parameters.getHost(), parameters.getPort()));
+            socket.getOutputStream().write(data);
+            InputStream in = socket.getInputStream();
 
-        int headerSize = 30;
-        byte[] header = new byte[headerSize];
+            int headerSize = 30;
+            byte[] header = new byte[headerSize];
 
-        Read(in, header, headerSize);
+            Read(in, header, headerSize);
 
-        int size = ((header[25] << 8)) | (header[24] & 0xFF);
+            int size = ((header[25] << 8)) | (header[24] & 0xFF);
 
-        byte[] answer = new byte[headerSize + size];
-        System.arraycopy(header, 0, answer, 0, headerSize);
-        if (size > 0) {
-            Read(in, answer, headerSize, size);
+            byte[] answer = new byte[headerSize + size];
+            System.arraycopy(header, 0, answer, 0, headerSize);
+            if (size > 0) {
+                Read(in, answer, headerSize, size);
+            }
+            return answer;
+        } finally {
+            try {
+                socket.close();
+            } catch (Exception e) {
+                logger.error("Socket close failed", e);
+            }
         }
-        socket.close();
-        return answer;
     }
 
     private void Read(InputStream in, byte[] buffer, int count) throws IOException {

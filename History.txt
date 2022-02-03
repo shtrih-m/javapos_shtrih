@@ -7,6 +7,15 @@
     
 ********************************************************************************
 
+  03.02.2022
+  deviceServiceVersion = 1013641
+
+  [-] Added fix for fiscal storage message header, 
+      field "P-protocol version" changed from 0x0102 to 0x0120 
+      if header has no checksum
+  
+********************************************************************************
+
   01.02.2022
   deviceServiceVersion = 1013640
 
