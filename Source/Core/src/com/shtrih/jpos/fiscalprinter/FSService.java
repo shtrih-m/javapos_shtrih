@@ -104,9 +104,14 @@ public class FSService implements Runnable {
             //saveToFile(data, String.format("FSDocument_%04d.bin", packetNumber));
 
             // P-protocol version 0x0102 -> 0x0120
-            if ((data.length >= 30) && (data[6] == 0x01) && (data[7] == 0x02)
+            if ((data.length >= 30) && (data[6] == 0x01)
                     && (data[28] == 0) && (data[29] == 0)) {
-                data[7] = 0x20;
+                if (data[7] == 0x01) {
+                    data[7] = 0x10;
+                }
+                if (data[7] == 0x02) {
+                    data[7] = 0x20;
+                }
             }
             //saveToFile(data, String.format("OFDDocument_%04d.bin", packetNumber));
 
