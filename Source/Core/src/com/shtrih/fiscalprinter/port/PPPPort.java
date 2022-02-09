@@ -45,7 +45,7 @@ public class PPPPort implements PrinterPort {
         thread = new PPPThread(portName);
         thread.start();
 
-        Socket socket = new Socket();
+        socket = new Socket();
         socket.setTcpNoDelay(true);
         socket.setSoTimeout(connectTimeout);
         socket.connect(new InetSocketAddress("127.0.0.1", 7778));
@@ -57,15 +57,15 @@ public class PPPPort implements PrinterPort {
             return;
         }
 
-        thread.stop();
-        thread = null;
-
         try {
             socket.close();
         } catch (Exception e) {
             logger.error(e);
         }
         socket = null;
+        
+        thread.stop();
+        thread = null;
     }
 
     public void open() throws Exception {

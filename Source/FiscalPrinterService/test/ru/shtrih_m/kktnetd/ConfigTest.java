@@ -11,6 +11,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import com.shtrih.util.StringUtils;
 
 /**
  *
@@ -21,28 +22,20 @@ public class ConfigTest {
     public ConfigTest() {
     }
 
-    public String InputStreamToString(InputStream inputStream) throws Exception
-    {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        for (int data = inputStream.read(); data != -1; data = inputStream.read()) {
-            byteArrayOutputStream.write(data);
-        }
-        return byteArrayOutputStream.toString();
-    }
-
     /**
      * 
      * Test of toJson method, of class Config.
-     */
+     *
     @Test
     public void testToJson() throws Exception {
         System.out.println("toJson");
         Config instance = new Config();
-        String expResult = InputStreamToString(getClass().getResourceAsStream("Config.json"));
+        String expResult = StringUtils.InputStreamToString(getClass().getResourceAsStream("Config.json"));
         String result = instance.toJson();
         assertEquals(expResult, result);
     }
 
+*/
     /**
      * Test of fromJson method, of class Config.
      */
