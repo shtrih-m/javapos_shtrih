@@ -1,0 +1,18 @@
+{
+  "handle_signals": true,
+  "resender": {
+    "host": "localhost",
+    "port": 7778,
+    "remote_port": 7778,
+    "socks_port": 1080
+  },
+  "transport": {
+    "type": "forwarder",
+    "path": "17778"
+  },
+  "ppp": {
+    "our_ip": "192.168.1.169",
+    "peer_ip": "192.168.1.168",
+    "peer_dns": "8.8.8.8"
+  }
+}

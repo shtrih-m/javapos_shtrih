@@ -1,0 +1,58 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ru.shtrih_m.kktnetd;
+
+import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
+import org.junit.Test;
+import static org.junit.Assert.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+/**
+ *
+ * @author Виталий
+ */
+public class ConfigTest {
+
+    public ConfigTest() {
+    }
+
+    public String InputStreamToString(InputStream inputStream) throws Exception
+    {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        for (int data = inputStream.read(); data != -1; data = inputStream.read()) {
+            byteArrayOutputStream.write(data);
+        }
+        return byteArrayOutputStream.toString();
+    }
+
+    /**
+     * 
+     * Test of toJson method, of class Config.
+     */
+    @Test
+    public void testToJson() throws Exception {
+        System.out.println("toJson");
+        Config instance = new Config();
+        String expResult = InputStreamToString(getClass().getResourceAsStream("Config.json"));
+        String result = instance.toJson();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of fromJson method, of class Config.
+     */
+    @Test
+    public void testFromJson() throws Exception {
+        System.out.println("fromJson");
+        String jsonText = "{\"handle_signals\":false}";
+        Config instance = new Config();
+        Config result = instance.fromJson(jsonText);
+        assertEquals(false, result.handle_signals);
+    }
+
+}

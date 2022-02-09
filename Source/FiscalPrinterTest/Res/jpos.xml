@@ -22,8 +22,8 @@
         <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
         <!-- ProtocolType, 0 - protocol 1, 1 - protocol 2 -->
         <prop name="protocolType" type="String" value="0"/>
-        <!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass -->
-        <prop name="portType" type="String" value="0"/>
+        <!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass, 5 - PPP over serial -->
+        <prop name="portType" type="String" value="5"/>
         <!--Port name-->
         <!--For serial ports - COM1, for TCP ports: host:port - "10.11.7.210:12345" -->
         <!--<prop name="portName" type="String" value="10.11.7.210:12345"/> -->

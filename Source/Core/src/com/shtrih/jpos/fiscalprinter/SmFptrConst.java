@@ -18,9 +18,9 @@ import static jpos.FiscalPrinterConst.FPTR_RT_SIMPLE_INVOICE;
  */
 public class SmFptrConst {
 
-    private SmFptrConst(){
+    private SmFptrConst() {
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
     // How to make 1162 tag, from driver or from fiscal printer
     public static final int MARKING_TYPE_PRINTER = 0;
@@ -709,13 +709,13 @@ public class SmFptrConst {
 
     // Set item quantity
     public static final int SMFPTR_DIO_SET_ITEM_QUANTITY = 0x8A;
-    
+
     // Get comand timeout
     public static final int SMFPTR_DIO_GET_COMMAND_TIMEOUT = 0x8B;
-    
+
     // Set comand timeout
     public static final int SMFPTR_DIO_SET_COMMAND_TIMEOUT = 0x8C;
-    
+
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,
@@ -791,9 +791,9 @@ public class SmFptrConst {
     public static final int SMFPTR_DIO_PARAM_ITEM_UNIT = 30;
 
     public static final int SMFPTR_DIO_PARAM_AMOUNT_FACTOR = 31;
-    
+
     public static final int SMFPTR_DIO_PARAM_QUANTITY_FACTOR = 32;
-    
+
     // ///////////////////////////////////////////////////////////////////
     // TableMode
     public static final int SMFPTR_TABLE_MODE_AUTO = 0;
@@ -871,9 +871,10 @@ public class SmFptrConst {
     public static final int PORT_TYPE_SOCKET = 2;
     public static final int PORT_TYPE_FROMCLASS = 3;
     public static final int PORT_TYPE_BLUETOOTH_LE = 4;
+    public static final int PORT_TYPE_PPP = 5;
 
     public static final int PORT_TYPE_MIN = 0;
-    public static final int PORT_TYPE_MAX = 3;
+    public static final int PORT_TYPE_MAX = 5;
 
     /////////////////////////////////////////////////////////////////////
     // Header mode constants
@@ -912,17 +913,17 @@ public class SmFptrConst {
 
     // ///////////////////////////////////////////////////////////////////
     // Receipt type constants
-    public static final int SMFPTR_RT_SALE                  = 100;
-    public static final int SMFPTR_RT_BUY                   = 101;
-    public static final int SMFPTR_RT_RETSALE               = 102;
-    public static final int SMFPTR_RT_RETBUY                = 103;
+    public static final int SMFPTR_RT_SALE = 100;
+    public static final int SMFPTR_RT_BUY = 101;
+    public static final int SMFPTR_RT_RETSALE = 102;
+    public static final int SMFPTR_RT_RETBUY = 103;
 
-    public static final int SMFPTR_RT_CORRECTION            = 104;
-    public static final int SMFPTR_RT_CORRECTION_SALE       = 105;
-    public static final int SMFPTR_RT_CORRECTION_BUY        = 106;
-    public static final int SMFPTR_RT_CORRECTION_RETSALE    = 107;
-    public static final int SMFPTR_RT_CORRECTION_RETBUY     = 108;
-    
+    public static final int SMFPTR_RT_CORRECTION = 104;
+    public static final int SMFPTR_RT_CORRECTION_SALE = 105;
+    public static final int SMFPTR_RT_CORRECTION_BUY = 106;
+    public static final int SMFPTR_RT_CORRECTION_RETSALE = 107;
+    public static final int SMFPTR_RT_CORRECTION_RETBUY = 108;
+
     // ///////////////////////////////////////////////////////////////////
     // KTN types
     // КН Код неопределенного идентификатора товара 00h 00h
