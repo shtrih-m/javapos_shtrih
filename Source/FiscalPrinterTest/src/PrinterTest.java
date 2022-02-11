@@ -4583,12 +4583,12 @@ class PrinterTest implements FiscalPrinterConst {
             printer.fsWriteOperationTag(1224, writer.getBytes());
             printer.fsWriteOperationTag(1226, "5448100656");
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 4);
-            printer.printRecItem("Товар 1", 100, 1000000, 1, 100, "0");
+            printer.printRecItem("Товар 1", 1, 1000000, 1, 1, "0");
 
             printer.fsWriteOperationTag(1224, writer.getBytes());
             printer.fsWriteOperationTag(1226, "5448100656");
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE, 4);
-            printer.printRecItem("Товар 2", 100, 1000000, 1, 100, "0");
+            printer.printRecItem("Товар 2", 1, 1000000, 1, 1, "0");
 
             printer.printRecTotal(1000, 1000, "1");
             printer.endFiscalReceipt(false);

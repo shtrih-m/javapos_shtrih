@@ -197,7 +197,7 @@ public class FptrParameters {
     public int markingType = SmFptrConst.MARKING_TYPE_PRINTER;
     public int validTimeDiffInSecs = 0;
     public String quantityFormat = "0.000";
-    public boolean tagsBeforeItem = true;
+    public boolean tagsBeforeItem = false;
     public HashMap<Integer, Integer> commandTimeouts = new HashMap<Integer, Integer>();
     public String pppConfigFile = "";
     public boolean pppStartService = true;
@@ -444,7 +444,7 @@ public class FptrParameters {
         markingType = reader.readInteger("markingType", SmFptrConst.MARKING_TYPE_PRINTER);
         validTimeDiffInSecs = reader.readInteger("validTimeDiffInSecs", 0);
         quantityFormat = reader.readString("QuantityFormat", "0.000");
-        tagsBeforeItem = reader.readBoolean("tagsBeforeItem", true);
+        tagsBeforeItem = reader.readBoolean("tagsBeforeItem", false);
         pppConfigFile = reader.readString("pppConfigFile", "");
         pppStartService = reader.readBoolean("pppStartService", true);
 

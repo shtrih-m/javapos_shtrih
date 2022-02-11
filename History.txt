@@ -7,6 +7,14 @@
     
 ********************************************************************************
 
+  11.02.2022
+  deviceServiceVersion = 1013642
+
+  [-] Added result check for operation tags 
+  [-] Changed defaut value of parameter tagsBeforeItem to false
+  
+********************************************************************************
+
   03.02.2022
   deviceServiceVersion = 1013641
 
