@@ -199,6 +199,8 @@ public class FptrParameters {
     public String quantityFormat = "0.000";
     public boolean tagsBeforeItem = true;
     public HashMap<Integer, Integer> commandTimeouts = new HashMap<Integer, Integer>();
+    public String pppConfigFile = "";
+    public boolean pppStartService = true;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -443,6 +445,8 @@ public class FptrParameters {
         validTimeDiffInSecs = reader.readInteger("validTimeDiffInSecs", 0);
         quantityFormat = reader.readString("QuantityFormat", "0.000");
         tagsBeforeItem = reader.readBoolean("tagsBeforeItem", true);
+        pppConfigFile = reader.readString("pppConfigFile", "");
+        pppStartService = reader.readBoolean("pppStartService", true);
 
         // paymentNames
         String paymentName;

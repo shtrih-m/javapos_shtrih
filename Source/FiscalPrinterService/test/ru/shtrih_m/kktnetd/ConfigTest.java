@@ -37,14 +37,14 @@ public class ConfigTest {
 
 */
     /**
-     * Test of fromJson method, of class Config.
+     * Test of fromJson method, of class PPPConfig.
      */
     @Test
     public void testFromJson() throws Exception {
         System.out.println("fromJson");
         String jsonText = "{\"handle_signals\":false}";
-        Config instance = new Config();
-        Config result = instance.fromJson(jsonText);
+        PPPConfig instance = new PPPConfig();
+        PPPConfig result = instance.fromJson(jsonText);
         assertEquals(false, result.handle_signals);
     }
 

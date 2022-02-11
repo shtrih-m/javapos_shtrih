@@ -8,7 +8,7 @@
   },
   "transport": {
     "type": "serial",
-    "path": "COM3"
+    "path": "COM7"
   },
   "ppp": {
     "our_ip": "192.168.1.169",

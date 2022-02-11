@@ -14,6 +14,7 @@ package com.shtrih.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -273,5 +274,4 @@ public class StringUtils {
         }
         return byteArrayOutputStream.toString();
     }
-
 }

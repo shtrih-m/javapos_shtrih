@@ -34,7 +34,7 @@ public class PrinterPortFactory {
                 break;
 
             case SmFptrConst.PORT_TYPE_PPP:
-                result = new PPPPort(params.portName, params.getByteTimeout());
+                result = new PPPPort(params);
                 break;
                 
             case SmFptrConst.PORT_TYPE_FROMCLASS:

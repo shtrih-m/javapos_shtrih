@@ -7,13 +7,16 @@ package com.shtrih.fiscalprinter.port;
 
 import com.shtrih.fiscalprinter.scoc.commands.DeviceStatusCommand;
 import com.shtrih.fiscalprinter.scoc.commands.ScocCommand;
-import ru.shtrih_m.kktnetd.Api;
+import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Localizer;
+import com.shtrih.util.StringUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import ru.shtrih_m.kktnetd.Api;
+import ru.shtrih_m.kktnetd.PPPConfig;
 
 /**
  *
@@ -24,17 +27,19 @@ public class PPPPort implements PrinterPort {
     private Socket socket = null;
     private PPPThread thread = null;
     private int connectTimeout = 3000;
-    private final String portName;
-    private int readTimeout = 100;
+    private int readTimeout = 3000;
+    private String portName = "";
+    private final FptrParameters params;
     private static CompositeLogger logger = CompositeLogger.getLogger(PPPPort.class);
 
-    public PPPPort(String portName, int readTimeout) {
-        this.portName = portName;
-        this.readTimeout = readTimeout;
+    public PPPPort(FptrParameters params) {
+        this.params = params;
+        portName = params.portName;
+        readTimeout = params.getByteTimeout();
     }
 
     public boolean isOpened() {
-        return (thread != null);
+        return (socket != null) && (socket.isConnected());
     }
 
     public void open(int timeout) throws Exception {
@@ -42,8 +47,17 @@ public class PPPPort implements PrinterPort {
             return;
         }
 
-        thread = new PPPThread(portName);
-        thread.start();
+        if (params.pppStartService) {
+            PPPConfig config = new PPPConfig();
+            config.transport.path = portName;
+            config.transport.type = PPPConfig.TRANSPORT_TYPE_SERIAL;
+            if (!params.pppConfigFile.isEmpty()) {
+                config.load(params.pppConfigFile);
+            }
+            thread = new PPPThread(config);
+            thread.start();
+            //Thread.sleep(10000);
+        }
 
         socket = new Socket();
         socket.setTcpNoDelay(true);
@@ -63,9 +77,10 @@ public class PPPPort implements PrinterPort {
             logger.error(e);
         }
         socket = null;
-        
-        thread.stop();
-        thread = null;
+        if (thread != null) {
+            thread.stop();
+            thread = null;
+        }
     }
 
     public void open() throws Exception {
@@ -86,7 +101,7 @@ public class PPPPort implements PrinterPort {
 
         return b;
     }
-    
+
     public byte[] readBytes(int len) throws Exception {
         open();
 
@@ -129,8 +144,7 @@ public class PPPPort implements PrinterPort {
     public void setBaudRate(int baudRate) throws Exception {
     }
 
-    public void setTimeout(int timeout) throws Exception 
-    {
+    public void setTimeout(int timeout) throws Exception {
         this.readTimeout = timeout;
 
         if (isOpened()) {
@@ -143,7 +157,7 @@ public class PPPPort implements PrinterPort {
     }
 
     public void setPortName(String portName) throws Exception {
-
+        this.portName = portName;
     }
 
     public Object getSyncObject() throws Exception {

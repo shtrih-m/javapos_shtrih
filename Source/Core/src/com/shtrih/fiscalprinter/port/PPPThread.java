@@ -7,7 +7,7 @@ package com.shtrih.fiscalprinter.port;
 
 import com.shtrih.util.CompositeLogger;
 import ru.shtrih_m.kktnetd.Api;
-import ru.shtrih_m.kktnetd.Config;
+import ru.shtrih_m.kktnetd.PPPConfig;
 import com.shtrih.util.StringUtils;
 
 /**
@@ -15,16 +15,16 @@ import com.shtrih.util.StringUtils;
  * @author Виталий
  */
 public class PPPThread implements Runnable {
-    
+
     private long ctx = 0;
     private Thread thread = null;
-    private final String portName;
+    private final PPPConfig config;
     private static CompositeLogger logger = CompositeLogger.getLogger(PPPThread.class);
 
-    public PPPThread(String portName){
-        this.portName = portName;
+    public PPPThread(PPPConfig config) {
+        this.config = config;
     }
-            
+
     public boolean isStarted() {
         return (thread != null);
     }
@@ -42,15 +42,14 @@ public class PPPThread implements Runnable {
     public void run() {
         try {
             logger.debug("PPP thread started");
-            String configText = null;
-            //configText = new Config().toJson();
-            configText = StringUtils.InputStreamToString(getClass().getResourceAsStream("PPPConfig.json"));
-            
-            ctx = Api.api_init(configText);
+            ctx = Api.api_init(config.toJson());
             logger.debug(String.format("api_init returned %d", ctx));
-            
+
             long rc = Api.api_run(ctx);
-            Api.api_deinit(ctx);
+            synchronized (this) {
+                Api.api_deinit(ctx);
+                ctx = 0;
+            }
             logger.debug(String.format("PPP thread exited with code %d", rc));
         } catch (Exception e) {
             logger.error(e);
@@ -64,12 +63,16 @@ public class PPPThread implements Runnable {
 
         logger.debug("PPP thread stopping...");
         try {
-            Api.api_stop(ctx);
+            synchronized (this) {
+                if (ctx != 0) {
+                    Api.api_stop(ctx);
+                }
+            }
             thread.join();
             thread = null;
         } catch (Exception e) {
             logger.error(e);
         }
     }
-    
+
 }

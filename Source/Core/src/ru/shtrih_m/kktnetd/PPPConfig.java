@@ -7,12 +7,19 @@ package ru.shtrih_m.kktnetd;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import com.shtrih.util.StringUtils;
 
 /**
  *
  * @author Виталий
  */
-public class Config {
+public class PPPConfig {
+
+    // Constants
+    public static final String TRANSPORT_TYPE_SERIAL = "serial";
+    public static final String TRANSPORT_TYPE_FORWARDER = "forwarder";
 
     public class Resender {
 
@@ -46,7 +53,17 @@ public class Config {
     public Transport transport = new Transport();
     public PPP ppp = new PPP();
 
-    public Config() {
+    public PPPConfig() {
+    }
+
+    public void load(String fileName) throws Exception {
+        FileInputStream in = new FileInputStream(fileName);
+        fromJson(StringUtils.InputStreamToString(in));
+    }
+
+    public void save(String fileName) throws Exception {
+        FileOutputStream os = new FileOutputStream(fileName);
+        os.write(toJson().getBytes());
     }
 
     public String toJson() throws Exception {
@@ -54,8 +71,8 @@ public class Config {
         return gson.toJson(this);
     }
 
-    public Config fromJson(String jsonText) throws Exception {
+    public PPPConfig fromJson(String jsonText) throws Exception {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return (Config) gson.fromJson(jsonText, Config.class);
+        return (PPPConfig) gson.fromJson(jsonText, PPPConfig.class);
     }
 }

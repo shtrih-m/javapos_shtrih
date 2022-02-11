@@ -31,7 +31,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="COM8"/>
+        <prop name="portName" type="String" value="COM7"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="0"/>
@@ -101,15 +101,15 @@
         <!-- Cut mode, 0 - auto, 1 - disabled -->
         <prop name="cutMode" type="String" value="0"/>
         <!-- maxEnqNumber -->
-        <prop name="maxEnqNumber" type="String" value="3"/>
+        <prop name="maxEnqNumber" type="String" value="100"/>
         <!-- maxNakCommandNumber -->
-        <prop name="maxNakCommandNumber" type="String" value="3"/>
+        <prop name="maxNakCommandNumber" type="String" value="100"/>
         <!-- maxNakAnswerNumber -->
         <prop name="maxNakAnswerNumber" type="String" value="3"/>
         <!-- maxAckNumber -->
         <prop name="maxAckNumber" type="String" value="3"/>
         <!-- maxRepeatCount -->
-        <prop name="maxRepeatCount" type="String" value="3"/>
+        <prop name="maxRepeatCount" type="String" value="100"/>
         <!-- Payment types -->
         <!-- Payment types -->
         <prop name="payType0" type="String" value="0"/>
@@ -319,13 +319,18 @@
 		<prop name="markingType" type="String" value="1"/>
 		
 		<prop name="quantityCorrectionEnabled" type="String" value="1"/>
-		<prop name="FSServiceEnabled" type="String" value="1"/>
+		<prop name="FSServiceEnabled" type="String" value="0"/>
         <!-- device state polling enabled -->
         <prop name="pollEnabled" type="String" value="0"/>
         <prop name="fastConnect" type="String" value="0"/>
         <prop name="validTimeDiffInSecs" type="String" value="1"/>
         <prop name="commandTimeoutFF61" type="String" value="12345"/>
         <prop name="FSConnectTimeout" type="String" value="30000"/>
+		
+        <!-- PPP start service -->
+        <prop name="PPPStartService" type="String" value="1"/>
+        <!-- PPP start service -->
+        <prop name="PPPStartService" type="String" value="1"/>
     </JposEntry> 
 	
     <JposEntry logicalName="ShtrihCashDrawer">
