@@ -5,11 +5,12 @@
  */
 package ru.shtrih_m.kktnetd;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import com.shtrih.util.StringUtils;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.shtrih.util.FileUtils;
 
 /**
  *
@@ -57,13 +58,11 @@ public class PPPConfig {
     }
 
     public void load(String fileName) throws Exception {
-        FileInputStream in = new FileInputStream(fileName);
-        fromJson(StringUtils.InputStreamToString(in));
+        fromJson(FileUtils.load(fileName));
     }
 
     public void save(String fileName) throws Exception {
-        FileOutputStream os = new FileOutputStream(fileName);
-        os.write(toJson().getBytes());
+        FileUtils.save(fileName, toJson());
     }
 
     public String toJson() throws Exception {

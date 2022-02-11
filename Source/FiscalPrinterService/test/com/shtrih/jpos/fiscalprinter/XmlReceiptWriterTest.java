@@ -61,8 +61,8 @@ public class XmlReceiptWriterTest extends TestCase {
         instance.save(report, fileName);
 
         try {
-            String fileData = FileUtils.read(fileName);
-            String fileData1 = FileUtils.read(fileName1);
+            String fileData = FileUtils.load(fileName);
+            String fileData1 = FileUtils.load(fileName1);
             assertEquals("fileData <> fileData1", fileData, fileData1);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -74,8 +74,8 @@ public class XmlReceiptWriterTest extends TestCase {
         }
         instance.save(report, fileName);
         try {
-            String fileData = FileUtils.read(fileName);
-            String fileData1 = FileUtils.read(fileName2);
+            String fileData = FileUtils.load(fileName);
+            String fileData1 = FileUtils.load(fileName2);
             assertEquals("fileData <> fileData1", fileData, fileData1);
         } catch (Exception e) {
             fail(e.getMessage());

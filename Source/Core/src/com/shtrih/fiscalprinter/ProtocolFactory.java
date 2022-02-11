@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.shtrih.fiscalprinter;
 
 import com.shtrih.fiscalprinter.port.PrinterPort;
@@ -19,22 +18,38 @@ public final class ProtocolFactory {
     }
 
     public static PrinterProtocol getProtocol(FptrParameters params,
-            PrinterPort port) {
+            PrinterPort port) throws Exception
+    {
         PrinterProtocol result;
-        if (params.protocolType == SmFptrConst.SMFPTR_PROTOCOL_1) {
-            PrinterProtocol_1 protocol1 = new PrinterProtocol_1(port);
-            protocol1.setByteTimeout(params.getByteTimeout());
-            protocol1.setMaxEnqNumber(params.maxEnqNumber);
-            protocol1.setMaxNakCommandNumber(params.maxNakCommandNumber);
-            protocol1.setMaxNakAnswerNumber(params.maxNakAnswerNumber);
-            protocol1.setMaxAckNumber(params.maxAckNumber);
-            protocol1.setMaxRepeatCount(params.maxRepeatCount);
-            return protocol1;
-        } else {
-            PrinterProtocol_2 protocol2 = new PrinterProtocol_2(port);
-            protocol2.setByteTimeout(params.getByteTimeout());
-            protocol2.setMaxRepeatCount(params.maxRepeatCount);
-            return protocol2;
+
+        switch (params.protocolType) {
+            case SmFptrConst.SMFPTR_PROTOCOL_1: {
+                PrinterProtocol_1 protocol1 = new PrinterProtocol_1(port);
+                protocol1.setByteTimeout(params.getByteTimeout());
+                protocol1.setMaxEnqNumber(params.maxEnqNumber);
+                protocol1.setMaxNakCommandNumber(params.maxNakCommandNumber);
+                protocol1.setMaxNakAnswerNumber(params.maxNakAnswerNumber);
+                protocol1.setMaxAckNumber(params.maxAckNumber);
+                protocol1.setMaxRepeatCount(params.maxRepeatCount);
+                return protocol1;
+            }
+
+            case SmFptrConst.SMFPTR_PROTOCOL_1_1: {
+                PrinterProtocol_1_1 protocol11 = new PrinterProtocol_1_1(port);
+                protocol11.setByteTimeout(params.getByteTimeout());
+                return protocol11;
+            }
+
+            case SmFptrConst.SMFPTR_PROTOCOL_2: {
+                PrinterProtocol_2 protocol2 = new PrinterProtocol_2(port);
+                protocol2.setByteTimeout(params.getByteTimeout());
+                protocol2.setMaxRepeatCount(params.maxRepeatCount);
+                return protocol2;
+            }
+
+            default: {
+                throw new Exception("Invalid protocolType parameter value");
+            }
         }
     }
 

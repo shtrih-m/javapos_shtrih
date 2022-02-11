@@ -97,6 +97,7 @@ android {
                 from "${rootDir}/lib/d2xx.jar"
                 from "${rootDir}/lib/jpos113.jar"
                 from "${rootDir}/lib/zxing-3.2.2.jar"
+                from "${rootDir}/lib/gson-2.8.9.jar"
                 from "${rootDir}/lib/slf4j-api-1.7.25.jar"
                 from "${rootDir}/lib/slf4j-log4j12-1.7.25.jar"
                 from "${rootDir}/lib/log4j-1.2.16.jar"
@@ -144,11 +145,14 @@ dependencies {
 
     api 'jpos:jpos113:1.13'
     api 'zxing:zxing:3.2.2'
+    api 'gson:gson-2.8.9:2.8.9'
 
     implementation 'd2xx:d2xx:1.0',
             'org.slf4j:slf4j-api:1.7.25',
-            'xerces4android:xerces4android:1.0'
-    implementation 'com.android.support:appcompat-v7:25.0.0'
+            'xerces4android:xerces4android:1.0',
+    	    'com.android.support:appcompat-v7:25.0.0'
+
+
 
     androidTestImplementation 'com.android.support:support-annotations:25.0.0'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'

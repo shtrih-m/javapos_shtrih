@@ -11,6 +11,7 @@ package com.shtrih.util;
  */
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 public class FileUtils {
 
@@ -37,7 +38,16 @@ public class FileUtils {
         return result;
     }
 
-    public static String read(String fileName) throws Exception {
+    public static void save(String fileName, String text) throws Exception {
+        FileOutputStream os = new FileOutputStream(fileName);
+        try {
+            os.write(text.getBytes());
+        } finally {
+            os.close();
+        }
+    }
+
+    public static String load(String fileName) throws Exception {
         File file = new File(fileName);
         FileInputStream stream = new FileInputStream(file);
         try {

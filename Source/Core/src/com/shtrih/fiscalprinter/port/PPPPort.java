@@ -56,7 +56,6 @@ public class PPPPort implements PrinterPort {
             }
             thread = new PPPThread(config);
             thread.start();
-            //Thread.sleep(10000);
         }
 
         socket = new Socket();

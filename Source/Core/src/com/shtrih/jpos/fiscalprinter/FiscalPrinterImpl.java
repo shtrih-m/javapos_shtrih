@@ -2057,7 +2057,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     
     public void readTables() {
         try {
-            // read tax names
+            // load tax names
             String[] fieldValue = new String[1];
             for (int i = 0; i < 4; i++) {
                 fieldValue[0] = "";

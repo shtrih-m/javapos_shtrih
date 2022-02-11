@@ -863,6 +863,8 @@ public class SmFptrConst {
     // Protocol type constants
     public static final int SMFPTR_PROTOCOL_1 = 0;
     public static final int SMFPTR_PROTOCOL_2 = 1;
+    public static final int SMFPTR_PROTOCOL_1_1 = 2;
+    public static final int SMFPTR_PROTOCOL_AUTO = 100;
 
     // ///////////////////////////////////////////////////////////////////
     // PortType constants
