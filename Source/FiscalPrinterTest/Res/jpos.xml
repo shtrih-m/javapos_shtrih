@@ -331,6 +331,7 @@
         <prop name="PPPStartService" type="String" value="1"/>
         <!-- PPP start service -->
         <prop name="PPPStartService" type="String" value="1"/>
+        <prop name="tagsBeforeItem" type="String" value="0"/>
     </JposEntry> 
 	
     <JposEntry logicalName="ShtrihCashDrawer">
