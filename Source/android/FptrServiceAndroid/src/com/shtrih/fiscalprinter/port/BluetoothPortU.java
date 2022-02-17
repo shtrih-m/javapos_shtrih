@@ -1,16 +1,10 @@
 package com.shtrih.fiscalprinter.port;
 
-import com.shtrih.jpos.fiscalprinter.XmlPropWriter;
 import com.shtrih.util.CompositeLogger;
-import com.shtrih.util.SysUtils;
-import com.shtrih.util.XmlUtils;
 
 import java.io.IOException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
-public class BluetoothPort2 implements PrinterPort
+public class BluetoothPortU implements PrinterPort
 {
     int timeout;
     int openTimeout;
@@ -18,9 +12,9 @@ public class BluetoothPort2 implements PrinterPort
     private boolean useBLE = false;
     private PrinterPort port = null;
     private PrinterPort.IPortEvents events;
-    private static CompositeLogger logger = CompositeLogger.getLogger(BluetoothPort2.class);
+    private static CompositeLogger logger = CompositeLogger.getLogger(BluetoothPortU.class);
 
-    public BluetoothPort2(){
+    public BluetoothPortU(){
 
     }
 

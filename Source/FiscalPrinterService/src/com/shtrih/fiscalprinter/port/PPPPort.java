@@ -51,7 +51,7 @@ public class PPPPort implements PrinterPort {
         if (params.pppStartService) {
             PPPConfig config = new PPPConfig();
             config.transport.path = portName;
-            config.transport.type = PPPConfig.TRANSPORT_TYPE_FORWARDER;
+            config.transport.type = PPPConfig.TRANSPORT_TYPE_SERIAL;
             if (!params.pppConfigFile.isEmpty()) {
                 config.load(params.pppConfigFile);
             }

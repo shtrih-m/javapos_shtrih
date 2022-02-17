@@ -6,6 +6,8 @@
 package com.shtrih.fiscalprinter.port;
 
 import com.shtrih.util.CompositeLogger;
+
+import gnu.io.LibManager;
 import ru.shtrih_m.kktnetd.Api;
 import ru.shtrih_m.kktnetd.PPPConfig;
 import com.shtrih.util.StringUtils;
@@ -34,15 +36,18 @@ public class PPPThread implements Runnable {
             return;
         }
 
+        LibManager.getInstance();
         logger.debug("PPP thread starting...");
         thread = new Thread(this);
         thread.start();
     }
 
     public void run() {
-        try {
+        try
+        {
             logger.debug("PPP thread started");
-            ctx = Api.api_init(config.toJson());
+            String configText = config.toJson();
+            ctx = Api.api_init(configText);
             logger.debug(String.format("api_init returned %d", ctx));
 
             long rc = Api.api_run(ctx);

@@ -13,13 +13,17 @@ import com.shtrih.util.Localizer;
 import com.shtrih.util.StringUtils;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+
+import gnu.io.LibManager;
 import ru.shtrih_m.kktnetd.Api;
 import ru.shtrih_m.kktnetd.PPPConfig;
 
 import java.util.UUID;
 import android.net.LocalSocket;
+import android.bluetooth.BluetoothSocket;
 import android.net.LocalSocketAddress;
 
 /**
@@ -30,6 +34,8 @@ public class PPPPort implements PrinterPort {
 
     private Socket socket = null;
     private LocalSocket localSocket = null;
+    private BluetoothPort bluetoothPort = null;
+    private Thread bluetoothThread = null;
     private PPPThread thread = null;
     private int connectTimeout = 3000;
     private int readTimeout = 3000;
@@ -53,8 +59,26 @@ public class PPPPort implements PrinterPort {
             return;
         }
 
-        localSocket = new LocalSocket();
-        localSocket.bind(new LocalSocketAddress(localSocketName));
+        /*
+        bluetoothPort = new BluetoothPort();
+        bluetoothPort.setPortName(portName);
+        bluetoothPort.setTimeout(params.byteTimeout);
+        bluetoothPort.setOpenTimeout(timeout);
+        bluetoothPort.open(timeout);
+
+        bluetoothThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                bluetoothProc();
+            }
+        });
+        bluetoothThread.start();
+
+         */
+
+        logger.debug("LibManager.getInstance.0");
+        LibManager.getInstance();
+        logger.debug("LibManager.getInstance.1");
 
         PPPConfig config = new PPPConfig();
         config.transport.path = localSocketName;
@@ -70,6 +94,9 @@ public class PPPPort implements PrinterPort {
         socket.setSoTimeout(connectTimeout);
         socket.connect(new InetSocketAddress("127.0.0.1", 7778));
         socket.setSoTimeout(readTimeout);
+
+        localSocket = new LocalSocket();
+        localSocket.connect(new LocalSocketAddress(localSocketName));
     }
 
     public void close() {
@@ -77,22 +104,76 @@ public class PPPPort implements PrinterPort {
             return;
         }
 
-        try {
-            localSocket.close();
-        } catch (Exception e) {
-            logger.error(e);
+        if (localSocket != null) {
+            try {
+                localSocket.close();
+            } catch (Exception e) {
+                logger.error(e);
+            }
+            localSocket = null;
         }
-        localSocket = null;
 
-        try {
-            socket.close();
-        } catch (Exception e) {
-            logger.error(e);
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (Exception e) {
+                logger.error(e);
+            }
+            socket = null;
         }
-        socket = null;
+
         if (thread != null) {
             thread.stop();
             thread = null;
+        }
+
+        if (bluetoothPort != null) {
+            bluetoothPort.close();
+            bluetoothPort = null;
+        }
+    }
+
+    public void bluetoothProc()
+    {
+        try
+        {
+            int count;
+            byte[] data;
+            BluetoothSocket bluetoothSocket = bluetoothPort.getPort();
+
+            while (true)
+            {
+                open();
+
+                // read bluetoothSocket
+                count = bluetoothSocket.getInputStream().available();
+                if (count > 0)
+                {
+                    data = new byte[count];
+                    count = bluetoothSocket.getInputStream().read(data);
+                    if (count > 0){
+                        localSocket.getOutputStream().write(data);
+                    }
+                    if (count == -1) {
+                        bluetoothPort.close();
+                    }
+                }
+                // read localSocket
+                count = localSocket.getInputStream().available();
+                if (count > 0) {
+                    data = new byte[count];
+                    count = localSocket.getInputStream().read(data);
+                    if (count > 0){
+                        bluetoothSocket.getOutputStream().write(data);
+                    }
+                    if (count == -1) {
+                        localSocket.close();
+                    }
+                }
+            }
+        }
+        catch(Exception e){
+            logger.error(e);
         }
     }
 
