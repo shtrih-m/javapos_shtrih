@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.9.4
+Created-By: 1.8.0_65-b17 (Oracle Corporation)
+Bundle-Name: kktnetd
+Bundle-Version: 1.0.1
+Bundle-Date: 2022-02-17 19:26:02 MSK
+Implementation-Title: kktnetd
+Implementation-Version: 1.0.1
+Implementation-URL: http://www.shtrih-m.com
+Private-Package: native.freebsd.x86_32  ,native.freebsd.x86_64,native.
+ linux.ARM_32,native.linux.ARM_64,native  .linux.PPC,native.linux.x86_
+ 32,native.linux.x86_64,native.osx,native.  windows.x86_32,native.wind
+ ows.x86_64
+

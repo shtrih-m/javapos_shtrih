@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<root>
+    <FiscalPrinter>
+        <FiscalPrinter_>
+            <Images/>
+            <ReceiptImages/>
+            <Header/>
+            <Trailer/>
+            <NonFiscal DocumentNumber="1"/>
+        </FiscalPrinter_>
+    </FiscalPrinter>
+</root>
