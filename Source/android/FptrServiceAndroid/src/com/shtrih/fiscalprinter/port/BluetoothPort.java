@@ -38,14 +38,7 @@ public class BluetoothPort implements PrinterPort {
     public BluetoothPort() {
     }
 
-    private void checkOpened() throws Exception {
-        if (socket == null) {
-            throw new Exception("Port is not opened");
-        }
-    }
-
     public BluetoothSocket getPort() throws Exception {
-        checkOpened();
         return socket;
     }
 
@@ -63,7 +56,6 @@ public class BluetoothPort implements PrinterPort {
 
     @Override
     public Object getSyncObject() throws Exception {
-        //checkOpened();
         return this;
     }
 

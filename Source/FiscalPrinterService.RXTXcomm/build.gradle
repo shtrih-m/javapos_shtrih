@@ -33,13 +33,15 @@ dependencies {
             'RXTXcomm:RXTXcomm:1.0',
             'xerces:xerces:1.0',
             'zxing:zxing:2.2',
-	    'org.usb4java:usb4java:1.2.0',
-	    'net.sourceforge.argparse4j:argparse4j:0.9.0',
-	    'json:json-1.8:1.8',
+			'org.usb4java:usb4java:1.2.0',
+			'net.sourceforge.argparse4j:argparse4j:0.9.0',
+			'json:json-1.8:1.8',
             'gson:gson-2.8.9:2.8.9'
+			
             
 	compile files('../lib/commons-lang3-3.2.1.jar')
 	compile files('../lib/flop-programmer-0.1.0.jar')
+	compile files('../lib/kktnetd.jar')
 	
 	
     testCompile group: 'org.hamcrest', name: 'hamcrest-core', version: '1.3'

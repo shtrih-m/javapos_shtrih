@@ -1,2 +1,2 @@
 rootProject.name = 'shtrihjavapos'
-include "FiscalPrinterService", "FiscalPrinterTest", "FiscalPrinterService.RXTXcomm"
+include "kktnetd", "FiscalPrinterService", "FiscalPrinterTest", "FiscalPrinterService.RXTXcomm"

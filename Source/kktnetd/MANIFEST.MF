@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Ant-Version: Apache Ant 1.9.4
-Created-By: 1.8.0_65-b17 (Oracle Corporation)
+Created-By: 1.8.0_202-b08 (Oracle Corporation)
 Bundle-Name: kktnetd
 Bundle-Version: 1.0.1
-Bundle-Date: 2022-02-17 19:26:02 MSK
+Bundle-Date: 2022-02-22 13:43:04 MSK
 Implementation-Title: kktnetd
 Implementation-Version: 1.0.1
 Implementation-URL: http://www.shtrih-m.com

@@ -49,7 +49,6 @@ public class PPPThread implements Runnable {
             String configText = config.toJson();
             ctx = Api.api_init(configText);
             logger.debug(String.format("api_init returned %d", ctx));
-
             long rc = Api.api_run(ctx);
             synchronized (this) {
                 Api.api_deinit(ctx);

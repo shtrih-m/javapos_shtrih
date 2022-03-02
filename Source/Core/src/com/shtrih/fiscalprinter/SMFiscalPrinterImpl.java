@@ -4657,7 +4657,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             } else {
                 port.setPortName(params.portName);
                 port.setBaudRate(params.getBaudRate());
-                port.open(0);
+                port.open(params.portOpenTimeout);
                 LongPrinterStatus status = connect();
                 // always set port parameters to update byte
                 // receive timeout in fiscal printer

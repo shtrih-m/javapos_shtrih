@@ -153,7 +153,6 @@ dependencies {
     	    'com.android.support:appcompat-v7:25.0.0'
 
 
-
     androidTestImplementation 'com.android.support:support-annotations:25.0.0'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test:rules:1.0.1'

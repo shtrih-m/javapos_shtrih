@@ -37,11 +37,4 @@ public class CalendarTest extends TestCase {
         }
     }
 
-    public void testCalendarEquals() {
-        System.out.println("testCalendarEquals");
-
-        Calendar calendar1 = new GregorianCalendar();
-        Calendar calendar2 = new GregorianCalendar();
-        assertEquals(true, calendar1.equals(calendar2));
-    }
 }
