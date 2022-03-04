@@ -23,8 +23,9 @@ import java.util.Locale;
 public class FptrParameters {
 
     public static final int defaultGraphicsLineDelay = 200;
+    public static final int defPortOpenTimeout = 100000; // 10 sec
 
-    public int portOpenTimeout = 3000;
+    public int portOpenTimeout = defPortOpenTimeout; // 10 sec
     public int byteTimeout = 3000;
     private int deviceByteTimeout = 3000;
     private int statusCommand = PrinterConst.SMFP_STATUS_COMMAND_DS;
@@ -448,7 +449,7 @@ public class FptrParameters {
         tagsBeforeItem = reader.readBoolean("tagsBeforeItem", false);
         pppConfigFile = reader.readString("pppConfigFile", "");
         pppStartService = reader.readBoolean("pppStartService", true);
-        portOpenTimeout = reader.readInteger("portOpenTimeout", 3000);
+        portOpenTimeout = reader.readInteger("portOpenTimeout", defPortOpenTimeout);
 
         // paymentNames
         String paymentName;

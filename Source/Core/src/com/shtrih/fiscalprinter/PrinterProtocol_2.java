@@ -60,7 +60,7 @@ public class PrinterProtocol_2 implements PrinterProtocol {
     private boolean sendCmd(PrinterCommand command, int retryNum) throws Exception {
 
         try {
-            synchronizeFrames(byteTimeout);
+            //synchronizeFrames(byteTimeout); !!!
 
             int timeout = command.getTimeout();
             port.setTimeout(timeout + byteTimeout);

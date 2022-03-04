@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
+import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.StaticContext;
@@ -38,7 +39,9 @@ public class BluetoothPort implements PrinterPort {
     public BluetoothPort() {
     }
 
-    public BluetoothSocket getPort() throws Exception {
+    public BluetoothSocket getSocket() throws Exception
+    {
+        open(openTimeout);
         return socket;
     }
 
@@ -120,12 +123,15 @@ public class BluetoothPort implements PrinterPort {
                     BluetoothDevice btdevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     if (btdevice.equals(device))
                     {
+                        logger.debug("BluetoothDevice.ACTION_ACL_DISCONNECTED");
+                        /*
                         try {
                             socket.close();
                             socket = null;
                         }catch(Exception e){
-                            logger.error("ACTION_ACL_DISCONNECTED: ", e);
+                            logger.error("BluetoothDevice.ACTION_ACL_DISCONNECTED: ", e);
                         }
+                        */
                     }
                     break;
             }
@@ -226,10 +232,12 @@ public class BluetoothPort implements PrinterPort {
     @Override
     public synchronized void close()
     {
-        if (isOpened()) {
+        if (isOpened())
+        {
+            logger.debug("close()");
             try {
-                socket.close();
                 StaticContext.getContext().unregisterReceiver(mBroadcastReceiver);
+                socket.close();
             } catch (Exception e) {
                 logger.error("Bluetooth socket close failed", e);
             }

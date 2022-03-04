@@ -158,7 +158,7 @@ public abstract class PrinterCommand {
             case 0x67:
                 return 20000;
             case 0xE0:
-                return 35000;
+                return 200000;
             default:
                 return DefaultTimeout;
         }

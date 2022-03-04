@@ -5,21 +5,15 @@
  */
 package com.shtrih.fiscalprinter.port;
 
-import com.shtrih.fiscalprinter.scoc.commands.DeviceStatusCommand;
-import com.shtrih.fiscalprinter.scoc.commands.ScocCommand;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.util.CompositeLogger;
-import com.shtrih.util.Hex;
 import com.shtrih.util.Localizer;
-import com.shtrih.util.StringUtils;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import gnu.io.LibManager;
-import ru.shtrih_m.kktnetd.Api;
 import ru.shtrih_m.kktnetd.PPPConfig;
 
 import java.util.Calendar;
@@ -43,6 +37,7 @@ public class PPPPort implements PrinterPort {
     private int connectTimeout = 3000;
     private int readTimeout = 3000;
     private String portName = "";
+    private boolean firstCommand = true;
     private final FptrParameters params;
     private String localSocketName = null;
     private static CompositeLogger logger = CompositeLogger.getLogger(PPPPort.class);
@@ -62,6 +57,7 @@ public class PPPPort implements PrinterPort {
             return;
         }
 
+        firstCommand = true;
         openTimeout = timeout;
         localSocketName = UUID.randomUUID().toString();
 
@@ -127,7 +123,6 @@ public class PPPPort implements PrinterPort {
                     Thread.sleep(100);
                 }
             }
-            localSocket.setSoTimeout(readTimeout);
         }
     }
 
@@ -137,29 +132,26 @@ public class PPPPort implements PrinterPort {
             return;
         }
 
-        logger.debug("close");
         // stop dispatch thread
+        bluetoothThread.interrupt();
         try {
-            bluetoothThread.interrupt();
             bluetoothThread.join();
-            bluetoothThread = null;
+        }catch(InterruptedException e){
         }
-        catch(InterruptedException e){
-
-        }
+        bluetoothThread = null;
 
         if (thread != null) {
             thread.stop();
             thread = null;
         }
 
+        logger.debug("close");
         if (localSocket != null) {
             try {
                 localSocket.close();
             } catch (Exception e) {
                 logger.error(e);
             }
-            localSocket = null;
         }
 
         if (socket != null) {
@@ -168,72 +160,79 @@ public class PPPPort implements PrinterPort {
             } catch (Exception e) {
                 logger.error(e);
             }
-            socket = null;
         }
 
         if (bluetoothPort != null) {
             bluetoothPort.close();
-            bluetoothPort = null;
         }
+
+
+        socket = null;
+        localSocket = null;
+        bluetoothPort = null;
     }
 
     public void bluetoothProc()
     {
-        while (true)
-        {
-            try
+        try {
+            while (true)
             {
-                int count;
-                byte[] data;
-                BluetoothSocket bluetoothSocket = bluetoothPort.getPort();
-
                 Thread.sleep(0);
-                //openLocalSocket(openTimeout);
-                //openBluetoothPort(openTimeout);
-
-                // read bluetoothSocket
-                count = bluetoothSocket.getInputStream().available();
-                if (count > 0)
-                {
-                    data = new byte[count];
-                    count = bluetoothSocket.getInputStream().read(data);
-                    if (count > 0){
-                        //logger.debug("BT <- " + Hex.toHex(data));
-                        localSocket.getOutputStream().write(data);
-                    }
-                    /*
-                    if (count == -1) {
-                        logger.debug("bluetoothPort.close");
-                        bluetoothPort.close();
-                        bluetoothPort = null;
-                        continue;
-                    }
-                     */
+                try {
+                    dispatchPackets();
+                } catch (Exception e) {
+                    logger.error("bluetoothProc: " + e.getMessage());
                 }
-                // read localSocket
-                count = localSocket.getInputStream().available();
-                if (count > 0) {
-                    data = new byte[count];
-                    count = localSocket.getInputStream().read(data);
-                    if (count > 0){
-                        //logger.debug("BT -> " + Hex.toHex(data));
-                        bluetoothSocket.getOutputStream().write(data);
-                    }
-                    /*
-                    if (count == -1) {
-                        logger.debug("localSocket.close");
-                        localSocket.close();
-                        localSocket = null;
-                        continue;
-                    }
-                     */
-                }
-            }
-            catch(Exception e){
-                logger.error(e);
             }
         }
+        catch(InterruptedException e)
+        {
+            logger.error("bluetoothProc interrupted");
+        }
     }
+
+    public void dispatchPackets() throws Exception
+        {
+            int count;
+            byte[] data;
+            BluetoothSocket bluetoothSocket = bluetoothPort.getSocket();
+
+            //openLocalSocket(openTimeout);
+            //openBluetoothPort(openTimeout);
+
+            // read bluetoothSocket
+            count = bluetoothSocket.getInputStream().available();
+            if (count > 0) {
+                data = new byte[count];
+                count = bluetoothSocket.getInputStream().read(data);
+                if (count > 0) {
+                    //logger.debug("BT <- " + Hex.toHex(data));
+                    localSocket.getOutputStream().write(data);
+                }
+                if (count == -1) {
+                    logger.debug("bluetoothSocket.getInputStream().read(data) = -1");
+                    //bluetoothPort.close();
+                    //bluetoothPort = null;
+                    return;
+                }
+            }
+            // read localSocket
+            count = localSocket.getInputStream().available();
+            if (count > 0) {
+                data = new byte[count];
+                count = localSocket.getInputStream().read(data);
+                if (count > 0) {
+                    //logger.debug("BT -> " + Hex.toHex(data));
+                    bluetoothSocket.getOutputStream().write(data);
+                }
+                if (count == -1) {
+                    logger.debug("localSocket.getInputStream().read(data) = -1");
+                    //localSocket.close();
+                    //localSocket = null;
+                    return;
+                }
+            }
+        }
 
     public void open() throws Exception {
         open(connectTimeout);
@@ -245,23 +244,49 @@ public class PPPPort implements PrinterPort {
 
     public int readByte() throws Exception {
         open();
-
-        int b = socket.getInputStream().read();
-        if (b == -1) {
-            noConnectionError();
-        }
-
-        return b;
+        return readBytes(1)[0];
     }
+
+    /*
+    public byte[] readBytes2(int len) throws Exception {
+        open();
+
+        long time = Calendar.getInstance().getTimeInMillis() + readTimeout;
+
+        firstCommand = false;
+        byte[] data = new byte[len];
+        int offset = 0;
+        while (len > 0)
+        {
+            int count = Math.min(len, socket.getInputStream().available());
+            if (count > 0) {
+                count = socket.getInputStream().read(data, offset, count);
+                if (count == -1) {
+                    noConnectionError();
+                }
+                len -= count;
+                offset += count;
+            }
+            if (Calendar.getInstance().getTimeInMillis() > time){
+                noConnectionError();
+            }
+            Thread.sleep(0);
+        }
+        return data;
+    }
+
+     */
 
     public byte[] readBytes(int len) throws Exception {
         open();
 
+        firstCommand = false;
         byte[] data = new byte[len];
         int offset = 0;
-        while (len > 0) {
+        while (len > 0)
+        {
             int count = socket.getInputStream().read(data, offset, len);
-            if (count == -1) {
+            if (count < 0) {
                 noConnectionError();
             }
             len -= count;
@@ -296,10 +321,16 @@ public class PPPPort implements PrinterPort {
     public void setBaudRate(int baudRate) throws Exception {
     }
 
-    public void setTimeout(int timeout) throws Exception {
-        this.readTimeout = timeout;
 
-        if (isOpened()) {
+    public void setTimeout(int timeout) throws Exception {
+        readTimeout = timeout;
+        if (firstCommand){
+            readTimeout = timeout + 100000;
+        }
+
+        if (isOpened())
+        {
+            logger.debug("socket.setSoTimeout(" + readTimeout + ")");
             socket.setSoTimeout(readTimeout);
         }
     }

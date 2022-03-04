@@ -93,7 +93,7 @@
 		<prop name="sysAdminPassword" type="String" value="30"/>
 
 		<!-- device state polling enabled -->
-		<prop name="pollEnabled" type="String" value="1"/>
+		<prop name="pollEnabled" type="String" value="0"/>
 		<!-- device state polling interval in milliseconds -->
 		<prop name="pollInterval" type="String" value="5000"/>
 		<!-- Amount coefficient -->
@@ -260,7 +260,7 @@
              1 - вкл.
 
              Значение по умолчанию - 0. -->
-		<prop name="FSServiceEnabled" type="String" value="1"/>
+		<prop name="FSServiceEnabled" type="String" value="0"/>
 
 		<!-- Таймаут ожидания ответа от ОФД в мс. Используется при включенной отпции
 		     FSServiceEnabled.
@@ -354,7 +354,8 @@
 		<prop name="waitForBarcodePrinting" type="String" value="1"/>
 
 		<!-- validTimeDiffInSecs -->
-		<prop name="validTimeDiffInSecs" type="String" value="1"/>
+		<prop name="validTimeDiffInSecs" type="String" value="0"/>
 
+		<prop name="commandTimeout0E" type="String" value="200000"/>
 	</JposEntry>
 </JposEntries>
