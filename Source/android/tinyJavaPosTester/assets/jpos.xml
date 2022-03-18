@@ -142,7 +142,7 @@
 		<!-- maxAckNumber -->
 		<prop name="maxAckNumber" type="String" value="3"/>
 		<!-- maxRepeatCount -->
-		<prop name="maxRepeatCount" type="String" value="1"/>
+		<prop name="maxRepeatCount" type="String" value="10"/>
 		<!-- Payment types -->
 		<prop name="payType0" type="String" value="0"/>
 		<prop name="payType1" type="String" value="1"/>
@@ -356,6 +356,6 @@
 		<!-- validTimeDiffInSecs -->
 		<prop name="validTimeDiffInSecs" type="String" value="0"/>
 
-		<prop name="commandTimeout0E" type="String" value="200000"/>
+		<prop name="commandTimeoutE0" type="String" value="80000"/>
 	</JposEntry>
 </JposEntries>

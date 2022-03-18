@@ -31,12 +31,13 @@ public class PPPPort implements PrinterPort {
     private Socket socket = null;
     private LocalSocket localSocket = null;
     private BluetoothPort bluetoothPort = null;
-    private Thread bluetoothThread = null;
-    private PPPThread thread = null;
+    private Thread dispatchThread = null;
+    private PPPThread pppThread = null;
     private int openTimeout = 3000;
     private int connectTimeout = 3000;
     private int readTimeout = 3000;
     private String portName = "";
+    private boolean opened = false;
     private boolean firstCommand = true;
     private final FptrParameters params;
     private String localSocketName = null;
@@ -49,7 +50,7 @@ public class PPPPort implements PrinterPort {
     }
 
     public boolean isOpened() {
-        return (socket != null) && (socket.isConnected());
+        return opened;
     }
 
     public void open(int timeout) throws Exception {
@@ -62,36 +63,47 @@ public class PPPPort implements PrinterPort {
         localSocketName = UUID.randomUUID().toString();
 
         openBluetoothPort(timeout);
+        startPPPThread();
+        openLocalSocket(timeout);
+        openSocket();
 
-        logger.debug("LibManager.getInstance.0");
+        dispatchThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                bluetoothProc();
+            }
+        });
+        dispatchThread.start();
+        opened = true;
+    }
+
+    public void openSocket() throws Exception
+    {
+        if (socket != null){
+            return;
+        }
+        socket = new Socket();
+        socket.setTcpNoDelay(true);
+        socket.setSoTimeout(connectTimeout);
+        socket.connect(new InetSocketAddress("127.0.0.1", 7778));
+        socket.setSoTimeout(readTimeout);
+    }
+
+    public void startPPPThread() throws Exception
+    {
+        if (pppThread != null) {
+            return;
+        }
         LibManager.getInstance();
-        logger.debug("LibManager.getInstance.1");
-
         PPPConfig config = new PPPConfig();
         config.transport.path = localSocketName;
         config.transport.type = PPPConfig.TRANSPORT_TYPE_FORWARDER;
         if (!params.pppConfigFile.isEmpty()) {
             config.load(params.pppConfigFile);
         }
-        thread = new PPPThread(config);
-        thread.start();
-        Thread.sleep(100);
-
-        openLocalSocket(timeout);
-
-        socket = new Socket();
-        socket.setTcpNoDelay(true);
-        socket.setSoTimeout(connectTimeout);
-        socket.connect(new InetSocketAddress("127.0.0.1", 7778));
-        socket.setSoTimeout(readTimeout);
-
-        bluetoothThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                bluetoothProc();
-            }
-        });
-        bluetoothThread.start();
+        pppThread = new PPPThread(config);
+        pppThread.start();
+        pppThread.waitForStatus("\"status\":\"RUNNING\"", 5000);
     }
 
     public void openBluetoothPort(int timeout) throws Exception
@@ -107,23 +119,26 @@ public class PPPPort implements PrinterPort {
 
     public void openLocalSocket(int timeout) throws Exception
     {
-        if (localSocket == null) {
-            localSocket = new LocalSocket();
+        if (localSocket != null) {
+            return;
+        }
+        logger.debug("localSocket.connect");
+        localSocket = new LocalSocket();
 
-            long time = Calendar.getInstance().getTimeInMillis() + timeout;
-            for (;;) {
-                try {
-                    localSocket.connect(new LocalSocketAddress(localSocketName));
-                    break;
-                } catch (IOException e) {
-                    logger.error(e);
-                    if (Calendar.getInstance().getTimeInMillis() > time){
-                        throw e;
-                    }
-                    Thread.sleep(100);
+        long time = Calendar.getInstance().getTimeInMillis() + timeout;
+        for (;;) {
+            try {
+                localSocket.connect(new LocalSocketAddress(localSocketName));
+                break;
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+                if (Calendar.getInstance().getTimeInMillis() > time){
+                    throw e;
                 }
+                Thread.sleep(100);
             }
         }
+        logger.debug("LocalSocket connected!");
     }
 
     public void close()
@@ -132,44 +147,62 @@ public class PPPPort implements PrinterPort {
             return;
         }
 
-        // stop dispatch thread
-        bluetoothThread.interrupt();
-        try {
-            bluetoothThread.join();
-        }catch(InterruptedException e){
-        }
-        bluetoothThread = null;
-
-        if (thread != null) {
-            thread.stop();
-            thread = null;
-        }
-
         logger.debug("close");
-        if (localSocket != null) {
-            try {
-                localSocket.close();
-            } catch (Exception e) {
-                logger.error(e);
-            }
-        }
-
-        if (socket != null) {
-            try {
-                socket.close();
-            } catch (Exception e) {
-                logger.error(e);
-            }
-        }
+        stopDispatchThread();
+        stopPPPThread();
+        closeLocalSocket();
+        closeSocket();
 
         if (bluetoothPort != null) {
             bluetoothPort.close();
         }
-
-
-        socket = null;
-        localSocket = null;
         bluetoothPort = null;
+
+        opened = false;
+    }
+
+    public void closeLocalSocket(){
+        if (localSocket == null) return;
+
+        try {
+            localSocket.close();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        localSocket = null;
+    }
+
+    public void stopPPPThread()
+    {
+        if (pppThread == null)  return;
+
+        pppThread.stop();
+        pppThread = null;
+    }
+
+
+    public void stopDispatchThread() {
+        if (dispatchThread == null) return;
+
+        dispatchThread.interrupt();
+        try {
+            dispatchThread.join();
+        } catch (InterruptedException e) {
+        }
+        dispatchThread = null;
+    }
+
+    public void closeSocket()
+    {
+        if (socket == null) {
+            return;
+        }
+
+        try {
+            socket.close();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
     }
 
     public void bluetoothProc()
@@ -208,6 +241,7 @@ public class PPPPort implements PrinterPort {
                 if (count > 0) {
                     //logger.debug("BT <- " + Hex.toHex(data));
                     localSocket.getOutputStream().write(data);
+                    localSocket.getOutputStream().flush();
                 }
                 if (count == -1) {
                     logger.debug("bluetoothSocket.getInputStream().read(data) = -1");
@@ -224,6 +258,7 @@ public class PPPPort implements PrinterPort {
                 if (count > 0) {
                     //logger.debug("BT -> " + Hex.toHex(data));
                     bluetoothSocket.getOutputStream().write(data);
+                    bluetoothSocket.getOutputStream().flush();
                 }
                 if (count == -1) {
                     logger.debug("localSocket.getInputStream().read(data) = -1");
@@ -242,10 +277,107 @@ public class PPPPort implements PrinterPort {
         throw new IOException(Localizer.getString(Localizer.NoConnection));
     }
 
-    public int readByte() throws Exception {
-        open();
-        return readBytes(1)[0];
+    public int byteToInt(int B) {
+        if (B < 0) {
+            B = (int) (256 + B);
+        }
+        return B;
     }
+
+    public int readByte() throws Exception
+    {
+        return byteToInt(readBytes(1)[0]);
+    }
+
+    public byte[] readBytes(int len) throws Exception
+    {
+        openSocket();
+        try {
+            firstCommand = false;
+            byte[] data = new byte[len];
+            int offset = 0;
+            while (len > 0) {
+                int count = socket.getInputStream().read(data, offset, len);
+                if (count < 0) {
+                    closeSocket();
+                    noConnectionError();
+                }
+                len -= count;
+                offset += count;
+            }
+            return data;
+        }
+        catch(Exception e){
+            logger.error("readBytes: " + e.getMessage());
+            closeSocket();
+            throw e;
+        }
+    }
+
+    public void write(byte[] b) throws Exception {
+        for (int i = 0; i < 2; i++) {
+            try {
+                openSocket();
+                socket.getOutputStream().write(b);
+                socket.getOutputStream().flush();
+                return;
+            } catch (Exception e) {
+                closeSocket();
+                if (i == 1) {
+                    throw e;
+                }
+            }
+        }
+    }
+
+    public void write(int b) throws Exception {
+        open();
+        byte[] data = new byte[1];
+        data[0] = (byte) b;
+        write(data);
+    }
+
+    public void setBaudRate(int baudRate) throws Exception {
+    }
+
+
+    public void setTimeout(int timeout) throws Exception {
+        readTimeout = timeout;
+        if (firstCommand){
+            readTimeout = timeout + 100000; // !!!
+        }
+
+        if (socket != null)
+        {
+            logger.debug("socket.setSoTimeout(" + readTimeout + ")");
+            socket.setSoTimeout(readTimeout);
+        }
+    }
+
+    public String getPortName() {
+        return portName;
+    }
+
+    public void setPortName(String portName) throws Exception {
+        this.portName = portName;
+    }
+
+    public Object getSyncObject() throws Exception {
+        return this;
+    }
+
+    public boolean isSearchByBaudRateEnabled() {
+        return false;
+    }
+
+    public String[] getPortNames() {
+        return new String[]{portName};
+    }
+
+    public void setPortEvents(IPortEvents events) {
+
+    }
+}
 
     /*
     public byte[] readBytes2(int len) throws Exception {
@@ -277,85 +409,3 @@ public class PPPPort implements PrinterPort {
 
      */
 
-    public byte[] readBytes(int len) throws Exception {
-        open();
-
-        firstCommand = false;
-        byte[] data = new byte[len];
-        int offset = 0;
-        while (len > 0)
-        {
-            int count = socket.getInputStream().read(data, offset, len);
-            if (count < 0) {
-                noConnectionError();
-            }
-            len -= count;
-            offset += count;
-        }
-        return data;
-    }
-
-    public void write(byte[] b) throws Exception {
-        for (int i = 0; i < 2; i++) {
-            try {
-                open();
-                socket.getOutputStream().write(b);
-                socket.getOutputStream().flush();
-                return;
-            } catch (Exception e) {
-                close();
-                if (i == 1) {
-                    throw e;
-                }
-            }
-        }
-    }
-
-    public void write(int b) throws Exception {
-        open();
-        byte[] data = new byte[1];
-        data[0] = (byte) b;
-        write(data);
-    }
-
-    public void setBaudRate(int baudRate) throws Exception {
-    }
-
-
-    public void setTimeout(int timeout) throws Exception {
-        readTimeout = timeout;
-        if (firstCommand){
-            readTimeout = timeout + 100000;
-        }
-
-        if (isOpened())
-        {
-            logger.debug("socket.setSoTimeout(" + readTimeout + ")");
-            socket.setSoTimeout(readTimeout);
-        }
-    }
-
-    public String getPortName() {
-        return portName;
-    }
-
-    public void setPortName(String portName) throws Exception {
-        this.portName = portName;
-    }
-
-    public Object getSyncObject() throws Exception {
-        return this;
-    }
-
-    public boolean isSearchByBaudRateEnabled() {
-        return false;
-    }
-
-    public String[] getPortNames() {
-        return new String[]{portName};
-    }
-
-    public void setPortEvents(IPortEvents events) {
-
-    }
-}

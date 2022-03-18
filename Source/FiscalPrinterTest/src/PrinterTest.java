@@ -1028,7 +1028,10 @@ class PrinterTest implements FiscalPrinterConst {
             //printCorrectionReceipts();
             //testCommandTimeout();
             //printFiscalReceiptLogoBeforeHeader();
-            printFiscalReceiptWithSupplier();
+            //printFiscalReceiptWithSupplier();
+            
+            printFiscalReceiptType1();
+            //printFiscalReceiptType2();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -3935,52 +3938,6 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void printFiscalReceipt145_9() {
-        try {
-            printer.resetPrinter();
-            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
-            printer.beginFiscalReceipt(true);
-
-            char GS = 0x1D;
-            String barcode
-                    = "010405104227920221TB6qQHbmOTZBf" + GS + "2406402" + GS + "91ffd0" + GS
-                    + "92DbZgaQm2x0uA5+8/AzMM9hVq6apGvtM3bJzejjpHan2pvK4O+XbYcVgFRR5I4HmCLQvZ74KgKkIhVADd==";
-            printer.setItemCode(barcode, "");
-            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE, SmFptrConst.MARK_TYPE_TOBACCO);
-
-            TLVWriter writer = new TLVWriter();
-            writer.add(1171, "+79616195832");
-            writer.add(1225, "ТестТест");
-            printer.fsWriteOperationTag(1224, writer.getBytes());
-            printer.fsWriteOperationTag(1226, "3664069397  ", false);
-            printer.fsWriteOperationTag(2108, 11, 1);
-
-            printer.printRecItem("Item 1", 10099, 1000, 1, 10099, "");
-
-            printer.printRecItem("Item 2", 20000, 1000, 2, 20000, "");
-            printer.printRecItem("Item 3", 30000, 1000, 3, 30000, "");
-            printer.printRecItem("Item 4", 40000, 1000, 4, 40000, "");
-            printer.printRecItem("Item 5", 50000, 1000, 5, 50000, "");
-            printer.printRecItem("Item 6", 60000, 1000, 6, 60000, "");
-            printer.printRecSubtotal(210099);
-
-            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 1);
-            printer.printRecSubtotalAdjustment(1, "", 99);
-            printer.printRecTotal(210000, 210000, "1");
-            printer.printText("After printRecTotal.0");
-            printer.printText("After printRecTotal.1");
-            printer.printText("After printRecTotal.2");
-
-            printer.printNormal(FPTR_S_RECEIPT, "printNormal.0");
-            printer.printNormal(FPTR_S_RECEIPT, "printNormal.1");
-            printer.printNormal(FPTR_S_RECEIPT, "printNormal.2");
-
-            printer.endFiscalReceipt(false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void printFiscalReceipt145_10() {
         try {
             printer.resetPrinter();
@@ -4597,4 +4554,53 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
+    
+    public void printFiscalReceiptType1() 
+    {
+        char GS = 0x1D;
+        String barcode
+                = "010405104227920221TB6qQHbmOTZBf" + GS + "2406402" + GS + "91ffd0" + GS
+                + "92DbZgaQm2x0uA5+8/AzMM9hVq6apGvtM3bJzejjpHan2pvK4O+XbYcVgFRR5I4HmCLQvZ74KgKkIhVADd==";
+            
+        try {
+            printer.resetPrinter();
+            
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+            printer.beginFiscalReceipt(true);
+
+            printer.mcClearBuffer();
+            printer.checkItemCode(barcode, true, 1000000, 10, 1, 1);
+            
+            printer.printRecItem("Item 1", 10099, 1000, 1, 10099, "");
+            printer.setItemCode(barcode);
+            printer.printRecItem("Item 2", 20000, 1000, 2, 20000, "");
+            printer.printRecTotal(210000, 210000, "1");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void printFiscalReceiptType2() 
+    {
+        char GS = 0x1D;
+        String barcode
+                = "010405104227920221TB6qQHbmOTZBf" + GS + "2406402" + GS + "91ffd0" + GS
+                + "92DbZgaQm2x0uA5+8/AzMM9hVq6apGvtM3bJzejjpHan2pvK4O+XbYcVgFRR5I4HmCLQvZ74KgKkIhVADd==";
+            
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+            printer.beginFiscalReceipt(true);
+
+            printer.printRecItem("Item 1", 10099, 1000, 1, 10099, "");
+            printer.setItemCode(barcode);
+            printer.printRecItem("Item 2", 20000, 1000, 2, 20000, "");
+            printer.printRecTotal(210000, 210000, "1");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+   
 }

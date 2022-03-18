@@ -1902,7 +1902,7 @@ public class MainActivity extends AppCompatActivity
         props.put("protocolType", "1");
         props.put("fastConnect", "1");
         props.put("capScocUpdateFirmware", "0");
-        props.put("byteTimeout", "10000");
+        props.put("byteTimeout", "300");
         JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
 
         if (printer.getState() != JposConst.JPOS_S_CLOSED) {

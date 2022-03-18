@@ -5130,7 +5130,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 
-    public int mcClearBuffer() throws Exception {
+    public int mcClearBuffer() throws Exception 
+    {
         FSAcceptMC command = new FSAcceptMC();
         command.setAction(FSAcceptMC.ActionClearBuffer);
         return fsAcceptMC(command);
