@@ -336,15 +336,7 @@ public class FSSaleReceiptItem {
                 priceWithDiscount = calcPriceWithDiscount();
             }
         }
-        if (discounts.getTotal() == 0) {
-            if (totalAmount == null) {
-                if (itemAmount != 0) {
-                    totalAmount = new Long(itemAmount);
-                } else {
-                    totalAmount = new Long(getTotal2());
-                }
-            }
-        }
+        totalAmount = new Long(getTotal2());
         priceUpdated = true;
     }
 

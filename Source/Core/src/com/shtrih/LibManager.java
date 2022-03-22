@@ -63,21 +63,17 @@ public class LibManager {
 	
 	private static LibManager instance;
 	private static boolean loaded = false;
-	private LibManager() throws Exception {
+	private LibManager(String name, InputStream stream) throws Exception {
 		if(!loaded) 
                 {
                     loaded = true;
-                    String libName = "libkktnetd";
-                    String fileName = NativeResource.getFileName(libName);
-                    InputStream stream = null;
-                    //InputStream stream = StaticContext.getContext().getAssets().open(fileName); !!!
-                    new NativeResource().load(libName, stream);
+                    new NativeResource().load(name, stream);
 		}
 	}
 	
-	public static LibManager getInstance() throws Exception {
+	public static LibManager getInstance(String name, InputStream stream) throws Exception {
 		if(instance == null) {
-			instance = new LibManager();
+			instance = new LibManager(name, stream);
 		}		
 		return instance;
 	}

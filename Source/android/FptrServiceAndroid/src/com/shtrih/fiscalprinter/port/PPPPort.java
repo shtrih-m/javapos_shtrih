@@ -8,12 +8,12 @@ package com.shtrih.fiscalprinter.port;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Localizer;
+import com.shtrih.util.Hex;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import gnu.io.LibManager;
 import ru.shtrih_m.kktnetd.PPPConfig;
 
 import java.util.Calendar;
@@ -65,8 +65,6 @@ public class PPPPort implements PrinterPort {
         openBluetoothPort(timeout);
         startPPPThread();
         openLocalSocket(timeout);
-        openSocket();
-
         dispatchThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -74,6 +72,7 @@ public class PPPPort implements PrinterPort {
             }
         });
         dispatchThread.start();
+        openSocket();
         opened = true;
     }
 
@@ -94,7 +93,6 @@ public class PPPPort implements PrinterPort {
         if (pppThread != null) {
             return;
         }
-        LibManager.getInstance();
         PPPConfig config = new PPPConfig();
         config.transport.path = localSocketName;
         config.transport.type = PPPConfig.TRANSPORT_TYPE_FORWARDER;
@@ -240,7 +238,7 @@ public class PPPPort implements PrinterPort {
                 count = bluetoothSocket.getInputStream().read(data);
                 if (count > 0) {
                     //logger.debug("BT <- " + Hex.toHex(data));
-                    localSocket.getOutputStream().write(data);
+                    localSocket.getOutputStream().write(data, 0, count);
                     localSocket.getOutputStream().flush();
                 }
                 if (count == -1) {
@@ -257,7 +255,7 @@ public class PPPPort implements PrinterPort {
                 count = localSocket.getInputStream().read(data);
                 if (count > 0) {
                     //logger.debug("BT -> " + Hex.toHex(data));
-                    bluetoothSocket.getOutputStream().write(data);
+                    bluetoothSocket.getOutputStream().write(data, 0, count);
                     bluetoothSocket.getOutputStream().flush();
                 }
                 if (count == -1) {

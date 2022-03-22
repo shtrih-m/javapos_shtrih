@@ -1030,8 +1030,10 @@ class PrinterTest implements FiscalPrinterConst {
             //printFiscalReceiptLogoBeforeHeader();
             //printFiscalReceiptWithSupplier();
             
-            printFiscalReceiptType1();
+            //printFiscalReceiptType1();
             //printFiscalReceiptType2();
+            
+            printFiscalReceiptWithItemDiscount();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -4603,4 +4605,20 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
    
+    public void printFiscalReceiptWithItemDiscount() 
+    {
+        try
+        {
+            printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("1860 Напиток COCA-COLA газ.ПЭТ  2.0л", 12499, 1000, 1, 12499, "ST");
+            printer.printRecItemAdjustment(1, "", 6240, 1);
+            printer.printRecSubtotalAdjustment(1, "", 59);
+            printer.printRecTotal(6200, 20000, "01");
+            printer.endFiscalReceipt(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
 }

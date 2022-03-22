@@ -5,13 +5,16 @@
  */
 package com.shtrih.fiscalprinter.port;
 
+import com.shtrih.NativeResource;
 import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.StaticContext;
 
 import com.shtrih.LibManager;
 import ru.shtrih_m.kktnetd.Api;
 import ru.shtrih_m.kktnetd.PPPConfig;
 import com.shtrih.util.StringUtils;
 
+import java.io.InputStream;
 import java.util.Calendar;
 
 /**
@@ -37,8 +40,11 @@ public class PPPThread implements Runnable {
         if (isStarted()) {
             return;
         }
+        String libName = "libkktnetd";
+        String fileName = NativeResource.getFileName(libName);
+        InputStream stream = StaticContext.getContext().getAssets().open(fileName);
+        LibManager.getInstance(libName, stream);
 
-        LibManager.getInstance();
         logger.debug("PPP thread starting...");
         ctx = 0;
         thread = new Thread(this);
@@ -117,7 +123,7 @@ public class PPPThread implements Runnable {
             if (Calendar.getInstance().getTimeInMillis() > time){
                 return false;
             }
-            Thread.sleep(timeout/10);
+            Thread.sleep(timeout/100);
         }
     }
 
