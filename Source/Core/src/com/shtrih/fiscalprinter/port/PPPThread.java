@@ -7,7 +7,6 @@ package com.shtrih.fiscalprinter.port;
 
 import com.shtrih.NativeResource;
 import com.shtrih.util.CompositeLogger;
-import com.shtrih.util.StaticContext;
 
 import com.shtrih.LibManager;
 import ru.shtrih_m.kktnetd.Api;
@@ -40,10 +39,6 @@ public class PPPThread implements Runnable {
         if (isStarted()) {
             return;
         }
-        String libName = "libkktnetd";
-        String fileName = NativeResource.getFileName(libName);
-        InputStream stream = StaticContext.getContext().getAssets().open(fileName);
-        LibManager.getInstance(libName, stream);
 
         logger.debug("PPP thread starting...");
         ctx = 0;

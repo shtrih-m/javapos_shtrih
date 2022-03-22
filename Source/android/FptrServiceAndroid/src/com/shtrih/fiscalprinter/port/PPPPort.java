@@ -5,12 +5,16 @@
  */
 package com.shtrih.fiscalprinter.port;
 
+import com.shtrih.LibManager;
+import com.shtrih.NativeResource;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.Hex;
+import com.shtrih.util.StaticContext;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -93,6 +97,12 @@ public class PPPPort implements PrinterPort {
         if (pppThread != null) {
             return;
         }
+
+        String libName = "libkktnetd";
+        String fileName = NativeResource.getFileName(libName);
+        InputStream stream = StaticContext.getContext().getAssets().open(fileName);
+        LibManager.getInstance(libName, stream);
+
         PPPConfig config = new PPPConfig();
         config.transport.path = localSocketName;
         config.transport.type = PPPConfig.TRANSPORT_TYPE_FORWARDER;
