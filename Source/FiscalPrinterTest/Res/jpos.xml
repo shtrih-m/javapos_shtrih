@@ -248,7 +248,7 @@
         <!-- Combine item adjustments (enabled by default) -->
 		<prop name="printReceiptItemAsText" type="String" value="0"/>
         <!-- Text report enabled -->
-        <prop name="textReportEnabled" type="String" value="1"/>
+        <prop name="textReportEnabled" type="String" value="0"/>
         <!-- Text report file name -->
         <prop name="textReportFileName" type="String" value="archive.txt"/>
         <!-- Text report empty lines enabled -->

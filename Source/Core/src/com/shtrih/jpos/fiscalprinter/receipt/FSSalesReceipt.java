@@ -114,10 +114,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void openReceipt(boolean isSale) throws Exception {
         if (!isOpened) {
-            if (!isSale) 
-            {
-                if ((receiptType & 0x0F) == PrinterConst.SMFP_RECTYPE_SALE)
-                {
+            if (!isSale) {
+                if ((receiptType & 0x0F) == PrinterConst.SMFP_RECTYPE_SALE) {
                     receiptType = (receiptType & 0xF0) + PrinterConst.SMFP_RECTYPE_RETSALE;
                 }
             }
@@ -168,7 +166,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             if (recItem instanceof FSSaleReceiptItem) {
                 FSSaleReceiptItem item = (FSSaleReceiptItem) recItem;
                 if (item.getTotal() > 0) {
-                    long itemAmount = item.getTotalWithVoids();
+                    long itemAmount = item.getTotal();
                     if (itemAmount > 0) {
                         long dscAmount = itemAmount;
                         if (dscAmount > discountTotal) {
@@ -214,14 +212,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
-    public void updateReceiptItems() throws Exception {
-        for (int i = 0; i < items.size(); i++) {
-            Object object = items.get(i);
-            if (object instanceof FSSaleReceiptItem) {
-                FSSaleReceiptItem item = (FSSaleReceiptItem) object;
-                item.updatePrice();
-            }
-        }
+    public void updateItemPositions() throws Exception {
         int pos = 1;
         for (int i = 0; i < items.size(); i++) {
             Object object = items.get(i);
@@ -383,7 +374,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     }
                     long resultAmount = item.getTotal() - stornoItem.getTotal();
                     item.setQuantity(item.getQuantity() - stornoItem.getQuantity());
-                    item.setItemAmount(item.getItemAmount() - stornoItem.getItemAmount());
 
                     if (item.getQuantity() == 0) {
                         items.remove(item);
@@ -447,7 +437,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         if (taxRate == 0) {
             result = amount;
         } else {
-            double taxAmount = ((double) amount) * taxRate / (double)(10000.0 + taxRate);
+            double taxAmount = ((double) amount) * taxRate / (double) (10000.0 + taxRate);
             result = Math.round(taxAmount);
         }
         return result;
@@ -470,7 +460,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             } else {
                 addItemsDiscounts();
             }
-            updateReceiptItems();
+            updateItemPositions();
             if (getParams().writeTagMode == SmFptrConst.WRITE_TAG_MODE_BEFORE_ITEMS) {
                 printTLVItems();
             }
@@ -750,13 +740,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
             TLVItem item = new TLVItem(1162);
             item.setData(code);
-            
-            getDevice().printText(SMFP_STATION_REC, item.getText(), 
-                getDevice().getParams().getFont());
-            
+
+            getDevice().printText(SMFP_STATION_REC, item.getText(),
+                    getDevice().getParams().getFont());
+
         }
     }
-    
+
     public void templatePrintTextItem(FSSaleReceiptItem item) throws Exception {
         if (!receiptTemplate.hasPreLine()) {
             String preLine = item.getPreLine();
@@ -1090,7 +1080,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
         long amount = Math.round(unitPrice * quantity);
         if (Math.abs(amount - price) > 1) {
-            quantity = (double)amount / (double)unitPrice;
+            quantity = (double) amount / (double) unitPrice;
         }
         return quantity;
     }
@@ -1144,7 +1134,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             item = findItem(unitPrice, description);
             if (item != null) {
                 item.setQuantity(item.getQuantity() + quantity);
-                item.setItemAmount(item.getItemAmount() + price);
             }
         }
         if (Math.abs(price - amount) > 1) {
@@ -1152,7 +1141,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
         if (item == null) {
             item = new FSSaleReceiptItem();
-            item.setItemAmount(price);
             item.setTotalAmount(price);
             item.setPrice(unitPrice);
             item.setUnitPrice(unitPrice);
@@ -1184,7 +1172,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 item.setTotalAmount(getParams().itemTotalAmount);
                 getParams().itemTotalAmount = null;
             }
-            
+
             if (getParams().itemTaxAmount != null) {
                 item.setTaxAmount(getParams().itemTaxAmount);
                 getParams().itemTaxAmount = null;
@@ -1255,56 +1243,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setTax3(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setTax4(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setText(text);
-
-        boolean added = false;
-        for (int i = (items.size() - 1); i >= 0; i--) {
-            Object object = items.get(i);
-            if (object instanceof FSSaleReceiptItem) {
-                FSSaleReceiptItem recitem = (FSSaleReceiptItem) object;
-                if ((recitem.getTax1() == tax1) && (!recitem.getIsStorno())) {
-                    if (amount < 0) {
-                        recitem.addDiscount(item);
-                        added = true;
-                        break;
-                    } else if (recitem.getTotal() >= amount) {
-                        recitem.addDiscount(item);
-                        added = true;
-                        break;
-                    }
-                }
-            }
-        }
-        // split discount
-        long discountAmount = amount;
-        if ((!added) && (discountAmount > 0)) {
-            for (int i = (items.size() - 1); i >= 0; i--) {
-                Object object = items.get(i);
-                if (object instanceof FSSaleReceiptItem) {
-                    FSSaleReceiptItem recitem = (FSSaleReceiptItem) object;
-                    if ((recitem.getTax1() == tax1) && (!recitem.getIsStorno())) {
-                        long itemDiscount = 0;
-                        if (discountAmount > recitem.getTotal()) {
-                            itemDiscount = recitem.getTotal();
-                        } else {
-                            itemDiscount = discountAmount;
-                        }
-
-                        AmountItem discount = new AmountItem();
-                        discount.setAmount(itemDiscount);
-                        discount.setTax1(tax1);
-                        discount.setTax2(PrinterConst.SMFPTR_TAX_NOTAX);
-                        discount.setTax3(PrinterConst.SMFPTR_TAX_NOTAX);
-                        discount.setTax4(PrinterConst.SMFPTR_TAX_NOTAX);
-                        discount.setText(text);
-                        recitem.addDiscount(discount);
-                        discountAmount -= itemDiscount;
-                        if (discountAmount == 0) {
-                            break;
-                        }
-                    }
-                }
-            }
-        }
+        getLastItem().addDiscount(item);
     }
 
     public void printTotalDiscount(long amount, int tax1, String text)
@@ -1382,7 +1321,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void fsWriteOperationTLV(byte[] data, boolean print) throws Exception {
         FSTLVItem item = new FSTLVItem(data, getParams().getFont(), print);
-        if (getParams().tagsBeforeItem){
+        if (getParams().tagsBeforeItem) {
             itemTags.add(item);
         } else {
             getLastItem().getTags().add(item);

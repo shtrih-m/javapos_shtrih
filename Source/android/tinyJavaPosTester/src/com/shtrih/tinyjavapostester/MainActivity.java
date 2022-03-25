@@ -1897,12 +1897,12 @@ public class MainActivity extends AppCompatActivity
     {
         HashMap<String, String> props = new HashMap<>();
         props.put("portName", "30:AE:A4:95:61:5A");
-        props.put("portType", "5");
+        props.put("portType", "1"); // PORT_TYPE_BLUETOOTH = 1
         props.put("portClass", "com.shtrih.fiscalprinter.port.PPPPort");
         props.put("protocolType", "1");
         props.put("fastConnect", "1");
         props.put("capScocUpdateFirmware", "0");
-        props.put("byteTimeout", "300");
+        props.put("byteTimeout", "1000");
         JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
 
         if (printer.getState() != JposConst.JPOS_S_CLOSED) {

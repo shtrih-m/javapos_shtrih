@@ -34,6 +34,7 @@ public class BluetoothPort implements PrinterPort {
     private String portName = "";
     private BluetoothDevice device = null;
     private BluetoothSocket socket = null;
+    private boolean receiverRegistered = false;
     private static CompositeLogger logger = CompositeLogger.getLogger(BluetoothPort.class);
 
     public BluetoothPort() {
@@ -124,14 +125,12 @@ public class BluetoothPort implements PrinterPort {
                     if (btdevice.equals(device))
                     {
                         logger.debug("BluetoothDevice.ACTION_ACL_DISCONNECTED");
-                        /*
                         try {
                             socket.close();
                             socket = null;
                         }catch(Exception e){
                             logger.error("BluetoothDevice.ACTION_ACL_DISCONNECTED: ", e);
                         }
-                        */
                     }
                     break;
             }
@@ -182,6 +181,8 @@ public class BluetoothPort implements PrinterPort {
             IntentFilter filter = new IntentFilter();
             filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
             StaticContext.getContext().registerReceiver(mBroadcastReceiver, filter);
+            receiverRegistered = true;
+
         }catch(Exception e){
             logger.error("Failed to register receiver, " + e.getMessage());
         }
@@ -236,7 +237,10 @@ public class BluetoothPort implements PrinterPort {
         {
             logger.debug("close()");
             try {
-                StaticContext.getContext().unregisterReceiver(mBroadcastReceiver);
+                if (receiverRegistered) {
+                    receiverRegistered = false;
+                    StaticContext.getContext().unregisterReceiver(mBroadcastReceiver);
+                }
                 socket.close();
             } catch (Exception e) {
                 logger.error("Bluetooth socket close failed", e);

@@ -25,7 +25,6 @@ public class FSSaleReceiptItem {
     private long priceWithDiscount;
     private long unitPrice;
     private double quantity;
-    private long itemAmount;
     private int department;
     private int tax1;
     private int tax2;
@@ -35,7 +34,6 @@ public class FSSaleReceiptItem {
     private String preLine = "";
     private String postLine = "";
     private String unitName = "";
-    private long voidAmount = 0;
     private boolean isStorno;
     private boolean priceUpdated = false;
     private final FSDiscounts discounts = new FSDiscounts();
@@ -68,7 +66,6 @@ public class FSSaleReceiptItem {
         item.preLine = preLine;
         item.postLine = postLine;
         item.unitName = unitName;
-        item.voidAmount = voidAmount;
         item.isStorno = isStorno;
         item.priceUpdated = priceUpdated;
         item.totalAmount = totalAmount;
@@ -150,32 +147,13 @@ public class FSSaleReceiptItem {
         pos = value;
     }
 
-    public long getItemAmount() {
-        return itemAmount;
-    }
-
-    public void setItemAmount(long value) {
-        itemAmount = value;
-    }
-
-    public void addVoidAmount(long amount) {
-        voidAmount += amount;
-    }
-
-    public long getVoidAmount() {
-        return voidAmount;
-    }
-
-    public long getTotalWithVoids() {
-        return getTotal() - voidAmount;
-    }
-
     public long getTotal() {
-        return getItemAmount();
+        return Math.abs(PrinterAmount.getAmount(getPriceWithDiscount(), getQuantity()));
     }
 
     public void addDiscount(AmountItem discount) {
         getDiscounts().add(discount);
+        updatePrice();
     }
 
     /**
@@ -201,10 +179,6 @@ public class FSSaleReceiptItem {
 
     public long getPriceDiscount() {
         return price - priceWithDiscount;
-    }
-
-    public long getTotalDiscount() {
-        return discounts.getTotal();
     }
 
     public long getPrice() {
@@ -308,11 +282,6 @@ public class FSSaleReceiptItem {
         return Math.abs(PrinterAmount.getAmount(getPrice(), getQuantity()) - discounts.getTotal());
     }
 
-    public long getTotal2() {
-        
-        return Math.abs(PrinterAmount.getAmount(getPriceWithDiscount(), getQuantity()));
-    }
-
     public long calcPriceWithDiscount() {
         if (quantity == 0) {
             return 0;
@@ -336,7 +305,7 @@ public class FSSaleReceiptItem {
                 priceWithDiscount = calcPriceWithDiscount();
             }
         }
-        totalAmount = new Long(getTotal2());
+        totalAmount = new Long(getTotal());
         priceUpdated = true;
     }
 

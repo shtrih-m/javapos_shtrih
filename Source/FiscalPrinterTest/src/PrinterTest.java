@@ -1034,6 +1034,8 @@ class PrinterTest implements FiscalPrinterConst {
             //printFiscalReceiptType2();
             
             printFiscalReceiptWithItemDiscount();
+            
+            //printCorrectionReceipts();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -4361,7 +4363,7 @@ class PrinterTest implements FiscalPrinterConst {
         try {
             String barcode = "010464007801637221_X.g!8xnpuiFV" + GS
                     + "91FFD0" + GS + "92dGVzdIzSWNqFlCZrv+e0GSXQd6Qnar28rNj+8v2D+j0=";
-            printer.mcClearBuffer();
+            //printer.mcClearBuffer();
 
             int[] recTypes = {
                 SmFptrConst.SMFPTR_RT_CORRECTION,
@@ -4375,13 +4377,13 @@ class PrinterTest implements FiscalPrinterConst {
                 boolean isSale
                         = (recType == SmFptrConst.SMFPTR_RT_CORRECTION_SALE)
                         || (recType == SmFptrConst.SMFPTR_RT_CORRECTION_RETBUY);
-                printer.checkItemCode(barcode, isSale, 1000000, 10, 1, 1);
+                //printer.checkItemCode(barcode, isSale, 1000000, 10, 1, 1);
 
                 printer.resetPrinter();
                 printer.setFiscalReceiptType(recTypes[i]);
                 printer.beginFiscalReceipt(false);
-                printer.addItemCode(barcode.getBytes());
-                printer.printRecItem("", 100, 1000000, 1, 100, "");
+                //printer.addItemCode(barcode.getBytes());
+                printer.printRecItem("", 100, 1000, 1, 100, "");
                 printer.printRecTotal(106, 106, "30");
                 printer.endFiscalReceipt(false);
             }
@@ -4609,12 +4611,13 @@ class PrinterTest implements FiscalPrinterConst {
     {
         try
         {
+            printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(true);
             printer.printRecItem("1860 Напиток COCA-COLA газ.ПЭТ  2.0л", 12499, 1000, 1, 12499, "ST");
             printer.printRecItemAdjustment(1, "", 6240, 1);
             printer.printRecSubtotalAdjustment(1, "", 59);
-            printer.printRecTotal(6200, 20000, "01");
+            printer.printRecTotal(6200, 6200, "01");
             printer.endFiscalReceipt(true);
         } catch (Exception e) {
             e.printStackTrace();
