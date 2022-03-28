@@ -7,7 +7,7 @@
     
 ********************************************************************************
 
-  25.03.2022
+  28.03.2022
   deviceServiceVersion = 1013644
 
   [-] Fixed error with receipt item adjustments
