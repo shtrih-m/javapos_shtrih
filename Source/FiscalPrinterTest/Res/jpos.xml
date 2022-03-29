@@ -64,7 +64,7 @@
         <!-- Amount coefficient -->
         <prop name="amountFactor" type="String" value="1"/>
         <!-- Quantity coefficient -->
-        <prop name="quantityFactor" type="String" value="1000"/>
+        <prop name="quantityFactor" type="String" value="1"/>
         <!-- Strings encoding -->
         <prop name="stringEncoding" type="String" value="Cp866"/>
         <!-- Statistics file name -->

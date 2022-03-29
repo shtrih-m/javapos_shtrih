@@ -3,7 +3,7 @@ Ant-Version: Apache Ant 1.9.4
 Created-By: 1.8.0_65-b17 (Oracle Corporation)
 Bundle-Name: kktnetd
 Bundle-Version: 1.0.1
-Bundle-Date: 2022-03-25 21:22:34 MSK
+Bundle-Date: 2022-03-29 17:22:08 MSK
 Implementation-Title: kktnetd
 Implementation-Version: 1.0.1
 Implementation-URL: http://www.shtrih-m.com

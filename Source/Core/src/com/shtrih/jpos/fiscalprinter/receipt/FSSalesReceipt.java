@@ -1199,7 +1199,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     getDevice().checkItemCode(request);
                 }
             }
-
+            item.updatePrice();
             items.add(item);
 
             getParams().paymentType = 4;

@@ -35,7 +35,6 @@ public class FSSaleReceiptItem {
     private String postLine = "";
     private String unitName = "";
     private boolean isStorno;
-    private boolean priceUpdated = false;
     private final FSDiscounts discounts = new FSDiscounts();
     private Long totalAmount = null;
     private Long taxAmount = null;
@@ -67,7 +66,6 @@ public class FSSaleReceiptItem {
         item.postLine = postLine;
         item.unitName = unitName;
         item.isStorno = isStorno;
-        item.priceUpdated = priceUpdated;
         item.totalAmount = totalAmount;
         item.taxAmount = taxAmount;
         item.paymentType = paymentType;
@@ -294,9 +292,6 @@ public class FSSaleReceiptItem {
     }
 
     public void updatePrice() {
-        if (priceUpdated) {
-            return;
-        }
         priceWithDiscount = price;
         if (discounts.getTotal() != 0) {
             if (quantity == 1.0) {
@@ -306,7 +301,6 @@ public class FSSaleReceiptItem {
             }
         }
         totalAmount = new Long(getTotal());
-        priceUpdated = true;
     }
 
     public void setPaymentType(int paymentType) {
