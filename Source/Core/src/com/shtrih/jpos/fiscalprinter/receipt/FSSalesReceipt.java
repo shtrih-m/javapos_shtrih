@@ -44,7 +44,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     private FSSaleReceiptItem lastItem = null;
     private int receiptType = 0;
-    private int discountAmount = 0;
     private boolean isOpened = false;
     private String voidDescription = "";
     private final Vector items = new Vector();
@@ -85,7 +84,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     private void clearReceipt() throws Exception {
-        discountAmount = 0;
         isOpened = false;
         lastItem = null;
         items.clear();
@@ -453,13 +451,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 for (int i = 0; i < discounts.size(); i++) {
                     items.add(discounts.get(i));
                 }
-                discounts.clear();
-            } else if (discounts.getTotal() < 100) {
-                discountAmount += (int) discounts.getTotal();
-                discounts.clear();
             } else {
-                addItemsDiscounts();
+                if (discounts.getTotal() >= 100) 
+                {
+                    addItemsDiscounts();
+                }
             }
+            
             updateItemPositions();
             if (getParams().writeTagMode == SmFptrConst.WRITE_TAG_MODE_BEFORE_ITEMS) {
                 printTLVItems();
@@ -509,13 +507,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 int taxNumber = (int) getParams().taxAmount[0];
                 if (getParams().taxCalculation == SmFptrConst.TAX_CALCULATION_DRIVER) {
                     for (int i = 0; i < 6; i++) {
-                        getParams().taxAmount[i] = calculateTaxAmount(i, taxNumber, discountAmount);
+                        getParams().taxAmount[i] = calculateTaxAmount(i, taxNumber, (int)discounts.getTotal());
                     }
                 }
                 for (int i = 0; i < 6; i++) {
                     closeReceipt.setTaxValue(i, getParams().taxAmount[i]);
                 }
-                closeReceipt.setDiscount(discountAmount);
+                closeReceipt.setDiscount((int)discounts.getTotal());
                 closeReceipt.setTaxSystem(getParams().taxSystem);
                 closeReceipt.setText(getParams().closeReceiptText);
 
@@ -530,7 +528,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     closeParams.setTax2(0);
                     closeParams.setTax3(0);
                     closeParams.setTax4(0);
-                    closeParams.setDiscount(discountAmount);
+                    closeParams.setDiscount((int)discounts.getTotal());
                     closeParams.setText(getParams().closeReceiptText);
 
                     EndFiscalReceipt command = new EndFiscalReceipt();
@@ -558,6 +556,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 logger.error("Receipt ending items printing failed", e);
             }
         }
+        discounts.clear();
     }
 
     private void printTotalDiscount(AmountItem discount) throws Exception {
@@ -1054,7 +1053,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public boolean isPayed() throws Exception {
-        return getPaymentAmount() >= (getSubtotal() - discountAmount);
+        return getPaymentAmount() >= getSubtotal();
     }
 
     public void clearPrePostLine() {
@@ -1330,7 +1329,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void setDiscountAmount(int amount) throws Exception {
         getDevice().checkDiscountMode(2);
-        discountAmount = amount;
+        printTotalDiscount(amount, 0, "");
     }
 
     public String getTaxLetter(int tax) {
