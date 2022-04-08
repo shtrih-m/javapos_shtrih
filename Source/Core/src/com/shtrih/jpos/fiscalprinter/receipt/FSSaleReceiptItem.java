@@ -93,7 +93,7 @@ public class FSSaleReceiptItem {
         item.setTax4(tax4);
         item.setText(text);
         item.setTaxAmount(taxAmount);
-        item.setTotalAmount(totalAmount);
+        item.setTotalAmount(getTotal());
         item.setPaymentType(paymentType);
         item.setSubjectType(subjectType);
         item.setUnit(getUnit());
@@ -101,7 +101,7 @@ public class FSSaleReceiptItem {
         return item;
     }
 
-    public void setTotalAmount(Long value) {
+    public void setAmount(Long value) {
         totalAmount = value;
     }
 
@@ -146,7 +146,7 @@ public class FSSaleReceiptItem {
     }
 
     public long getTotal() {
-        return Math.abs(PrinterAmount.getAmount(getPriceWithDiscount(), getQuantity()));
+        return totalAmount - discounts.getTotal();
     }
 
     public void addDiscount(AmountItem discount) {
@@ -284,7 +284,7 @@ public class FSSaleReceiptItem {
         if (quantity == 0) {
             return 0;
         }
-        if (discounts.getTotal() == 0) {
+        if ((discounts.getTotal() == 0)||(discounts.getTotal() == 1)) {
             return price;
         }
         long price1 = Math.abs(Math.round((totalAmount - discounts.getTotal()) / (double)quantity));
@@ -296,11 +296,11 @@ public class FSSaleReceiptItem {
         if (discounts.getTotal() != 0) {
             if (quantity == 1.0) {
                 priceWithDiscount = price - discounts.getTotal();
-            } else {
+            } else 
+            {
                 priceWithDiscount = calcPriceWithDiscount();
             }
         }
-        totalAmount = new Long(getTotal());
     }
 
     public void setPaymentType(int paymentType) {

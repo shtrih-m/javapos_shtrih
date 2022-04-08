@@ -154,6 +154,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private volatile boolean interrupted = false;
     private Integer fdVersion = null;
     private String fullSerial = "";
+    private boolean capLastErrorText = true;
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params) {
@@ -235,9 +236,20 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                         e.getMessage());
             }
 
-            if (command.isFailed()) {
-                String text = getErrorText(command.getResultCode());
-                logger.error(text + ", " + command.getParametersText(commands));
+            if (command.isFailed()) 
+            {
+                if (capLastErrorText) {
+                    ReadLastErrorText command2 = readExtendedCode();
+                    if (command2.isSucceeded()) {
+                        logger.error(command2.getErrorText());
+                    } else {
+                        capLastErrorText = false;
+                    }
+
+                } else {
+                    String text = getErrorText(command.getResultCode());
+                    logger.error(text + ", " + command.getParametersText(commands));
+                }
             }
             afterCommand(command);
         }
@@ -334,10 +346,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             ReadPrinterModelParameters command = new ReadPrinterModelParameters();
             if (executeCommand(command) == 0) {
                 modelParameters = command.getParameters();
+                capLastErrorText = capModelParameters() && modelParameters.isCapCommand6B();
             } else {
                 modelParameters = null;
             }
-
             check(readDeviceMetrics());
             model = selectPrinterModel(getDeviceMetrics());
             fullSerial = readFullSerial();
@@ -3592,6 +3604,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command.getErrorDescription();
     }
 
+    private ReadLastErrorText readExtendedCode() throws Exception {
+        ReadLastErrorText command = new ReadLastErrorText();
+        executeCommand(command);
+        return command;
+    }
+
     public void openFiscalDay() throws Exception {
         logger.debug("openFiscalDay");
         if (!capOpenFiscalDay) {
@@ -5130,8 +5148,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 
-    public int mcClearBuffer() throws Exception 
-    {
+    public int mcClearBuffer() throws Exception {
         FSAcceptMC command = new FSAcceptMC();
         command.setAction(FSAcceptMC.ActionClearBuffer);
         return fsAcceptMC(command);

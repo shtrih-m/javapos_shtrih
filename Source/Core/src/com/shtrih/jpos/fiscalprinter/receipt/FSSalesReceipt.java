@@ -1140,7 +1140,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
         if (item == null) {
             item = new FSSaleReceiptItem();
-            item.setTotalAmount(price);
+            item.setAmount(price);
             item.setPrice(unitPrice);
             item.setUnitPrice(unitPrice);
             item.setQuantity(quantity);
@@ -1168,7 +1168,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             itemCodes = new Vector<byte[]>();
 
             if (getParams().itemTotalAmount != null) {
-                item.setTotalAmount(getParams().itemTotalAmount);
+                item.setAmount(getParams().itemTotalAmount);
                 getParams().itemTotalAmount = null;
             }
 

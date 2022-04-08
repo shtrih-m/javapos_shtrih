@@ -1035,9 +1035,10 @@ class PrinterTest implements FiscalPrinterConst {
             
             //printCorrectionReceipts();
             
+            //printFiscalReceiptWithItemDiscount();
+            //printFiscalReceiptWithItemDiscount2();
             //printAdvancePayment();
-            printFiscalReceiptWithItemDiscount();
-            printFiscalReceiptWithItemDiscount2();
+            printAdvancePayment2();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -4629,12 +4630,18 @@ class PrinterTest implements FiscalPrinterConst {
     
     public void printFiscalReceiptWithItemDiscount2() 
     {
+        char GS = 0x1D;
+        String barcode
+                = "010405104227920221TB6qQHbmOTZBf" + GS + "2406402" + GS + "91ffd0" + GS
+                + "92DbZgaQm2x0uA5+8/AzMM9hVq6apGvtM3bJzejjpHan2pvK4O+XbYcVgFRR5I4HmCLQvZ74KgKkIhVADd==";
+        
         try
         {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(true);
             printer.printRecItem("Товар", 19350, 1500, 1, 12900, "");
+            printer.setItemCode(barcode);
             printer.fsWriteOperationTag(2108, 0, 1);
             printer.printRecTotal(20000, 20000, "01");
             printer.endFiscalReceipt(true);
@@ -4695,5 +4702,53 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }    
     }
-    
+
+
+    public void printAdvancePayment2() 
+    {
+        try {
+            printer.resetPrinter();
+            printer.writeCashierName("Гизатуллин Рамис Фаритович  Экспедитор-Кассир");
+            printer.setFiscalReceiptType(FiscalPrinterConst.FPTR_RT_SALES);
+            printer.beginFiscalReceipt(true);
+            
+            /** DsDriverInn **/
+            printer.fsWriteTag(1203, "164807134931");
+
+            printer.printRecMessage("ИНН КАССИРА: DsDriverInn");
+
+            /** NameTagID **/
+            TLVWriter tlvWriter = new TLVWriter();
+            tlvWriter.add(1227, "БЕТА ООО");
+            tlvWriter.add(1228, "9705069985");
+            printer.fsWriteTag(1256, tlvWriter.getBytes());
+            
+            //printer.fsWriteTag(1227, "Test Visit DsName");
+            //printer.fsWriteTag(1228, "9705069985");
+
+            printer.printRecMessage("АДР.РАСЧЕТОВ: " + "Testr Visit DsAddress");
+
+            int modelNo = printer.readDeviceMetrics().getModel();
+
+            if (modelNo >= 152) {
+                String ofdTagValue = printer.readTable(18, 1, 10); //Device'dakini device'a koyuyoruz.
+                printer.printRecMessage("ОФД: " + ofdTagValue);
+            }else{
+                String ofdTagValue = printer.readTable(14, 1, 10); //Device'dakini device'a koyuyoruz.
+                printer.printRecMessage("ОФД: " + ofdTagValue);
+            }
+
+
+            // Cash = 0
+            String printRectPaymentTypeValue = "0";
+
+            printer.printRecItem("Дж7 Нек Грейп Мяк 0.97л ПЗ 12Х ДП", 457380, 3000, 2, 152460, "Case");
+            printer.printRecItem("Лейз Сметана Зелень 225г 14Х ДСП", 507630, 3000, 1, 169210, "Case");
+            printer.printRecItemAdjustment(FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT, "Discount", 1, 1);
+            printer.printRecTotal(965009, 965009, printRectPaymentTypeValue); // Sub total
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }    
 }

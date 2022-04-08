@@ -1896,7 +1896,8 @@ public class MainActivity extends AppCompatActivity
     private void connectToDevice() throws Exception
     {
         HashMap<String, String> props = new HashMap<>();
-        props.put("portName", "30:AE:A4:95:61:5A");
+        //props.put("portName", "30:AE:A4:95:61:5A");
+        props.put("portName", "30:AE:A4:80:70:C2");
         props.put("portType", "1"); // PORT_TYPE_BLUETOOTH = 1
         props.put("portClass", "com.shtrih.fiscalprinter.port.PPPPort");
         props.put("protocolType", "1");
