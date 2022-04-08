@@ -1898,7 +1898,10 @@ public class MainActivity extends AppCompatActivity
         HashMap<String, String> props = new HashMap<>();
         //props.put("portName", "30:AE:A4:95:61:5A");
         props.put("portName", "30:AE:A4:80:70:C2");
-        props.put("portType", "1"); // PORT_TYPE_BLUETOOTH = 1
+        props.put("portType", "5");
+        // PORT_TYPE_BLUETOOTH = 1
+        //PORT_TYPE_BLUETOOTH_LE = 4;
+        // PORT_TYPE_PPP = 5;
         props.put("portClass", "com.shtrih.fiscalprinter.port.PPPPort");
         props.put("protocolType", "1");
         props.put("fastConnect", "1");

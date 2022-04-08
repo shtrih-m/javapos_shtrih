@@ -1038,7 +1038,9 @@ class PrinterTest implements FiscalPrinterConst {
             //printFiscalReceiptWithItemDiscount();
             //printFiscalReceiptWithItemDiscount2();
             //printAdvancePayment();
-            printAdvancePayment2();
+            //printAdvancePayment2();
+            //printReceiptWithError();
+            printFiscalReceiptWithItemDiscount();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -4751,4 +4753,63 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }    
+    
+    public void printReceiptWithError() 
+    {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(FiscalPrinterConst.FPTR_RT_SALES);
+            printer.beginFiscalReceipt(true);
+            printer.printRecMessage("Кассовый чек 2551 0310/003/160 07.04.22 18:38 AC-04");
+            printer.printRecItem("2417288000000 ПАКЕТ МАЙКА SPAR FRE", 70000, 1000000, 1, 70000, "");
+            printer.printRecItem("322 БАНАНЫ", 1173800, 1175000, 1, 999000, "");
+            printer.printRecItem("4604661007284 ВОДКА ТУНДРА СЕВЕРНА", 3999000, 1000000, 1, 3999000, "");
+            printer.printRecItem("4607053473537 МОЛОКО ПРОСТОКВАШИНО", 915000, 1000000, 2, 915000, "");
+            printer.printRecItem("4860001120239 ЛИМОНАД НАТАХТАРИ ГР", 2058000, 2000000, 1, 1029000, "");
+            printer.printRecItem("4607001771555 КОФЕ JACOBS MONARCH", 5999000, 1000000, 1, 5999000, "");
+            printer.printRecItem("4607072012007 ИКРА СЕЛЬДИ РЫБНОЕ Д", 1199000, 1000000, 2, 1199000, "");
+            printer.printRecItem("4620749724577 СТАКАН БУМАЖНЫЙ SPAR", 4194000, 6000000, 1, 699000, "");
+            printer.printRecItem("4640026980281 СОУС СОЕВЫЙ SPAR 30м", 636000, 4000000, 1, 159000, "");
+            printer.printRecItem("2365723000002 САЛАТ ИЗ ГРУЗДЕЙ", 1937900, 252000, 1, 7690000, "");
+            printer.printRecItem("2423181000009 НАБОР ФИЛАДЕЛЬФИЯ МА", 6883800, 1000000, 1, 6883800, "");
+            printer.printRecMessage("Цена без скидки: 1 X 759,00                 =759,00");
+            printer.printRecMessage("Скидка составила:                            -70,62");
+            printer.printRecItem("82 ДОМАШНЯЯ КУХНЯ", 1564700, 285000, 1, 5490000, "");
+            printer.printRecItem("82 ДОМАШНЯЯ КУХНЯ", 1509800, 275000, 1, 5490000, "");
+            printer.printRecItem("46246653 СТИКИ NEO ДЕМИ РУБИ", 1600000, 1000000, 1, 1600000, "");
+            printer.printRecMessage("---------------------------------------------------");
+            printer.printRecMessage("ИТОГ ЧЕКА БЕЗ СКИДОК:                       3444,62");
+            printer.printRecMessage("ОБЩАЯ СУММА СКИДКИ:                          -70,62");
+            printer.printRecTotal(33740000, 50000000, "1");
+            printer.printRecMessage("");
+            printer.printRecMessage(" Ваша карта: **** **** **** 0979                   ");
+            printer.printRecMessage(" Начислено бонусов: 14.10                          ");
+            printer.printRecMessage(" На сумму покупки 3374.00                          ");
+            printer.printRecMessage(" Баланс бонусов: 117.04                            ");
+            printer.printRecMessage("                                                   ");
+            printer.printRecMessage("#*~*#http://check.egais.ru?id=cd928ed5-6bc3-4b74-ac6f-0d94c881c1df&dt=0704221836&cn=030000338513");
+            printer.printRecMessage(" http://check.egais.ru?id=cd928ed5-6bc3-4          ");
+            printer.printRecMessage(" b74-ac6f-0d94c881c1df&dt=0704221836&cn=0          ");
+            printer.printRecMessage(" 30000338513                                       ");
+            printer.printRecMessage("                                                   ");
+            printer.printRecMessage(" 4A7BA653C272EA31D3A387DC293633E8C0FD1413          ");
+            printer.printRecMessage(" 4E5F03C3B44BEB9836EEBD6E6C2323B6E5B39A2B          ");
+            printer.printRecMessage(" 96FAD59429E99C64D1301A85F2849E642C59748F          ");
+            printer.printRecMessage(" 9CD24E83                                          ");
+            printer.printRecMessage("                                                   ");
+            printer.printRecMessage(" **************************************************");
+            printer.printRecMessage("         ****** СПАСИБО ЗА ПОКУПКУ ******          ");
+            printer.printRecMessage("           Служба клиентской поддержки             ");
+            printer.printRecMessage("                 8-800-500-13-29                   ");
+            printer.printRecMessage("            Ежедневно с 8-00 до 23-00              ");
+            printer.printRecMessage(" --------------------------------------------------");
+            printer.printRecMessage("                                                   ");
+            printer.printRecMessage("                        ");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }    
+
+    
 }

@@ -1079,11 +1079,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
         long amount = Math.round(unitPrice * quantity);
         if (Math.abs(amount - price) > 1) {
-            quantity = (double) amount / (double) unitPrice;
+            quantity = (double) price / (double) unitPrice;
         }
         return quantity;
     }
-
+    
     public void printStorno(long price, double quantity, long unitPrice,
             int department, int vatInfo, String description) throws Exception {
         if (unitPrice == 0) {

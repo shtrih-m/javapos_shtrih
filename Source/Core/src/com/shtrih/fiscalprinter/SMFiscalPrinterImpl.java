@@ -346,7 +346,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             ReadPrinterModelParameters command = new ReadPrinterModelParameters();
             if (executeCommand(command) == 0) {
                 modelParameters = command.getParameters();
-                capLastErrorText = capModelParameters() && modelParameters.isCapCommand6B();
+                capLastErrorText = modelParameters.isCapCommand6B();
+                capCutPaper = modelParameters.isCapCutter();
             } else {
                 modelParameters = null;
             }
@@ -2375,7 +2376,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (isShtrihMobile()) {
             capGraphics3Scale = true;
         }
-        capCutPaper = !isShtrihMobile();
         updateFirmware();
     }
 

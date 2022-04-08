@@ -23,7 +23,7 @@
         <!-- ProtocolType, 0 - protocol 1, 1 - protocol 2 -->
         <prop name="protocolType" type="String" value="1"/>
         <!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass, 5 - PPP over serial -->
-        <prop name="portType" type="String" value="2"/>
+        <prop name="portType" type="String" value="0"/>
         <!--Port name-->
         <!--For serial ports - COM1, for TCP ports: host:port - "10.11.7.210:12345" -->
         <!--<prop name="portName" type="String" value="10.11.7.210:12345"/> -->
@@ -31,7 +31,7 @@
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
-        <prop name="portName" type="String" value="192.168.1.133:12345"/>
+        <prop name="portName" type="String" value="COM3"/>
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
         <prop name="department" type="String" value="0"/>
@@ -62,9 +62,9 @@
         <!-- device state polling interval in milliseconds -->
         <prop name="pollInterval" type="String" value="500"/>
         <!-- Amount coefficient -->
-        <prop name="amountFactor" type="String" value="1"/>
+        <prop name="amountFactor" type="String" value="0.01"/>
         <!-- Quantity coefficient -->
-        <prop name="quantityFactor" type="String" value="1000"/>
+        <prop name="quantityFactor" type="String" value="1"/>
         <!-- Strings encoding -->
         <prop name="stringEncoding" type="String" value="Cp866"/>
         <!-- Statistics file name -->
@@ -76,9 +76,9 @@
         <!-- fieldsFilesPath to initialize printer tables -->
         <prop name="fieldsFilesPath" type="String" value=""/>
         <!-- Number of header lines -->
-        <prop name="numHeaderLines" type="String" value="5"/>
+        <prop name="numHeaderLines" type="String" value="0"/>
         <!-- Number of trailer lines -->
-        <prop name="numTrailerLines" type="String" value="3"/>
+        <prop name="numTrailerLines" type="String" value="0"/>
         <!-- Device to print report, 0 - fiscal memory (FM), 1 - electronic journal (EJ)  -->
         <prop name="reportDevice" type="String" value="0"/>
         <!-- Report type, 0 - short, 1 - full -->
