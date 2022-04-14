@@ -712,8 +712,6 @@ public interface SMFiscalPrinter {
     
     public Object getSyncObject() throws Exception;
     
-    public String getFullSerial();
-
     public int getCommandTimeout(int code);
     
     public void setCommandTimeout(int code, int timeout);

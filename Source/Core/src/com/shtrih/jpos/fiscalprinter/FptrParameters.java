@@ -174,7 +174,7 @@ public class FptrParameters {
     public boolean capUpdateFirmware = true;
     public boolean capScocUpdateFirmware = false;
     public int printStringDelayInMs = 0;
-    public boolean fastConnect = false;
+    public boolean fastConnect = true;
     public boolean statisticEnabled = true;
     public boolean autoOpenShift = true;
     public boolean forceOpenShiftOnZReport = true;

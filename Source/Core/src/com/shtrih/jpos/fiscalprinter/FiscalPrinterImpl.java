@@ -923,10 +923,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
                 if (!params.fastConnect) {
                     loadProperties();
+                    updateCommandTimeouts();
                 }
                 
-                updateCommandTimeouts();
-                
+
                 isTablesRead = false;
                 capSetVatTable = getPrinter().getCapSetVatTable();
                 capUpdateFirmware = getPrinter().getCapUpdateFirmware();
@@ -4523,7 +4523,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
         
         try {
-            String serial = "FiscalPrinter_" + getPrinter().getFullSerial();
+            String serial = "FiscalPrinter_" + getPrinter().readFullSerial();
             XmlPropWriter writer = new XmlPropWriter("FiscalPrinter",
                     serial);
             writer.write(getPrinterImages());

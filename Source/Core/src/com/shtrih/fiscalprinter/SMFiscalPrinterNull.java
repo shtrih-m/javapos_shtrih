@@ -1272,10 +1272,6 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return null;
     }
 
-    public String getFullSerial(){
-        return "";
-    }
-    
     public int getCommandTimeout(int code){
         return 0;
     }

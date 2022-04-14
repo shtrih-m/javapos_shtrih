@@ -153,7 +153,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private volatile boolean stopFlag = false;
     private volatile boolean interrupted = false;
     private Integer fdVersion = null;
-    private String fullSerial = "";
     private boolean capLastErrorText = true;
     private int[] taxRates = null;
     
@@ -354,7 +353,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
             check(readDeviceMetrics());
             model = selectPrinterModel(getDeviceMetrics());
-            fullSerial = readFullSerial();
             readTaxRates();
 
             return checkEcrMode();
@@ -373,9 +371,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     private void readTaxRates() throws Exception
     {
-        if (params.taxCalculation != SmFptrConst.TAX_CALCULATION_DRIVER){
-            return;
-        }
         ReadTableInfo command = readTableInfo(PrinterConst.SMFP_TABLE_TAX);
         if (command.isSucceeded())
         {
@@ -3414,11 +3409,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     @Override
-    public String getFullSerial() {
-        return fullSerial;
-    }
-
-    @Override
     public String readFullSerial() throws Exception {
         if (serial.isEmpty()) {
             if (getDeviceMetrics().isElves()) {
@@ -4679,20 +4669,29 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public LongPrinterStatus searchDevice() throws Exception {
         logger.debug("searchDevice");
         synchronized (port.getSyncObject()) {
-            boolean isSerial = params.getPortType() == SmFptrConst.PORT_TYPE_SERIAL;
-            if (isSerial && (params.searchByBaudRateEnabled || params.searchByPortEnabled)) {
-                searchSerialDevice();
-                return readLongStatus();
-            } else {
+            if (params.getPortType() == SmFptrConst.PORT_TYPE_SERIAL)
+            {
+                if (params.searchByBaudRateEnabled || params.searchByPortEnabled) {
+                    searchSerialDevice();
+                    return readLongStatus();
+                }
+                else {
+                    port.setPortName(params.portName);
+                    port.setBaudRate(params.getBaudRate());
+                    port.open(params.portOpenTimeout);
+                    LongPrinterStatus status = connect();
+                    // always set port parameters to update byte
+                    // receive timeout in fiscal printer
+                    int baudRateIndex = getBaudRateIndex(params.getBaudRate());
+                    writePortParams(status.getPortNumber(), baudRateIndex, params.getDeviceByteTimeout());
+                    return status;
+                }
+            } else
+            {
                 port.setPortName(params.portName);
                 port.setBaudRate(params.getBaudRate());
                 port.open(params.portOpenTimeout);
-                LongPrinterStatus status = connect();
-                // always set port parameters to update byte
-                // receive timeout in fiscal printer
-                int baudRateIndex = getBaudRateIndex(params.getBaudRate());
-                writePortParams(status.getPortNumber(), baudRateIndex, params.getDeviceByteTimeout());
-                return status;
+                return connect();
             }
         }
     }

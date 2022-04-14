@@ -24,9 +24,10 @@ import java.util.UUID;
  * @author V.Kravtsov
  */
 public class BluetoothPort implements PrinterPort {
-    private static final UUID SPP_UUID = UUID
-            .fromString("00001101-0000-1000-8000-00805F9B34FB");
+    private static final UUID SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    //private static final UUID RFCOMM_UUID = UUID.fromString("00000003-0000-1000-8000-00805f9b34fb");
 
+    private IPortEvents events;
     private int timeout = 5000;
     private int openTimeout = 5000;
     private String portName = "";
@@ -116,22 +117,37 @@ public class BluetoothPort implements PrinterPort {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             switch (action){
-                case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+                case BluetoothDevice.ACTION_ACL_CONNECTED:
+                {
                     BluetoothDevice btdevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    if (btdevice.equals(device))
-                    {
+                    if (btdevice.equals(device)) {
+                        logger.debug("BluetoothDevice.ACTION_ACL_CONNECTED");
+                        if (events != null) {
+                            events.onConnect();
+                        }
+                    }
+                    break;
+                }
+
+                case BluetoothDevice.ACTION_ACL_DISCONNECTED: {
+                    BluetoothDevice btdevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    if (btdevice.equals(device)) {
                         logger.debug("BluetoothDevice.ACTION_ACL_DISCONNECTED");
-                        if (isOpened())
-                        {
+                        if (events != null) {
+                            events.onDisconnect();
+                        }
+
+                        if (isOpened()) {
                             try {
                                 socket.close();
                                 socket = null;
-                            }catch(Exception e){
+                            } catch (Exception e) {
                                 logger.error("BluetoothDevice.ACTION_ACL_DISCONNECTED: ", e);
                             }
                         }
                     }
                     break;
+                }
             }
         }
     };
@@ -143,7 +159,6 @@ public class BluetoothPort implements PrinterPort {
         }
 
         try {
-
             socket = device.createInsecureRfcommSocketToServiceRecord(SPP_UUID);
             if (socket == null) {
                 throw new Exception("Failed to get bluetooth device socket");
@@ -154,21 +169,6 @@ public class BluetoothPort implements PrinterPort {
             return;
 
         } catch (IOException e) {
-            close();
-        }
-
-        try {
-            // IOException - create new socket
-            socket = (BluetoothSocket) device.getClass()
-                    .getMethod("createRfcommSocket", new Class[]{int.class})
-                    .invoke(device, 1);
-            if (socket == null) {
-                throw new Exception("Failed to get bluetooth device socket");
-            }
-            socket.connect();
-            registerReceiver();
-
-        } catch (Exception e) {
             close();
             throw e;
         }
@@ -348,7 +348,8 @@ public class BluetoothPort implements PrinterPort {
 
         return ports.toArray(new String[0]);
     }
-    public void setPortEvents(IPortEvents events){
 
+    public void setPortEvents(IPortEvents events){
+        this.events = events;
     }
 }
