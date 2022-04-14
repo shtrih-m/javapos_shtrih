@@ -3,6 +3,7 @@ package com.shtrih.fiscalprinter.model;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 
 public class PrinterModelShtrihMFRK extends PrinterModelDefault {
+    
     public PrinterModelShtrihMFRK() throws Exception {
         setName("SHTRIH-M-FR-K");
         setId(20);

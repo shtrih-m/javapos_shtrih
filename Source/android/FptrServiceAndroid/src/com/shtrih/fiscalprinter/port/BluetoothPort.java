@@ -8,7 +8,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
-import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.StaticContext;
@@ -17,7 +16,6 @@ import com.shtrih.util.Time;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -26,7 +24,7 @@ import java.util.UUID;
  * @author V.Kravtsov
  */
 public class BluetoothPort implements PrinterPort {
-    private static final UUID MY_UUID = UUID
+    private static final UUID SPP_UUID = UUID
             .fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     private int timeout = 5000;
@@ -83,33 +81,31 @@ public class BluetoothPort implements PrinterPort {
     @Override
     public void open(int timeout) throws Exception
     {
+        if (isOpened()) return;
+
         Thread.sleep(0); // check thread interrupted
-
-        if (isClosed()) {
-            BluetoothAdapter adapter = getBluetoothAdapter();
-            if (BluetoothAdapter.checkBluetoothAddress(portName)) {
-                // portName is valid MAC address
-                device = adapter.getRemoteDevice(portName);
-                connectDevice(device);
-            } else {
-                // portName is deviceName prefix, for example "SHTRIH-NANO-F"
-
-                Set<BluetoothDevice> devices = adapter.getBondedDevices();
-                for (BluetoothDevice device : devices) {
-                    if (device.getName().startsWith(portName))
-                    {
-                        try {
-                            connectDevice(device);
-                            return;
-                        }
-                        catch(Exception e){
-                            logger.error("Failed to connect device " +
-                                device.getName() + ", " + device.getAddress());
-                        }
+        BluetoothAdapter adapter = getBluetoothAdapter();
+        if (BluetoothAdapter.checkBluetoothAddress(portName)) {
+            // portName is valid MAC address
+            device = adapter.getRemoteDevice(portName);
+            connectDevice(device);
+        } else {
+            // portName is deviceName prefix, for example "SHTRIH-NANO-F"
+            Set<BluetoothDevice> devices = adapter.getBondedDevices();
+            for (BluetoothDevice device : devices) {
+                if (device.getName().startsWith(portName))
+                {
+                    try {
+                        connectDevice(device);
+                        return;
+                    }
+                    catch(Exception e){
+                        logger.error("Failed to connect device " +
+                            device.getName() + ", " + device.getAddress());
                     }
                 }
-                throw new Exception("Failed to connect any bonded devices");
             }
+            throw new Exception("Failed to connect any bonded devices");
         }
     }
 
@@ -125,11 +121,14 @@ public class BluetoothPort implements PrinterPort {
                     if (btdevice.equals(device))
                     {
                         logger.debug("BluetoothDevice.ACTION_ACL_DISCONNECTED");
-                        try {
-                            socket.close();
-                            socket = null;
-                        }catch(Exception e){
-                            logger.error("BluetoothDevice.ACTION_ACL_DISCONNECTED: ", e);
+                        if (isOpened())
+                        {
+                            try {
+                                socket.close();
+                                socket = null;
+                            }catch(Exception e){
+                                logger.error("BluetoothDevice.ACTION_ACL_DISCONNECTED: ", e);
+                            }
                         }
                     }
                     break;
@@ -145,7 +144,7 @@ public class BluetoothPort implements PrinterPort {
 
         try {
 
-            socket = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);
+            socket = device.createInsecureRfcommSocketToServiceRecord(SPP_UUID);
             if (socket == null) {
                 throw new Exception("Failed to get bluetooth device socket");
             }
@@ -271,7 +270,7 @@ public class BluetoothPort implements PrinterPort {
     @Override
     public void write(byte[] b) throws Exception {
         connect();
-        OutputStream os = socket.getOutputStream();
+        OutputStream os = getSocket().getOutputStream();
 
         try {
             os.write(b);
@@ -302,7 +301,7 @@ public class BluetoothPort implements PrinterPort {
     public int readByte() throws Exception {
         try {
             int result;
-            InputStream is = socket.getInputStream();
+            InputStream is = getSocket().getInputStream();
             long startTime = System.currentTimeMillis();
             while (true) {
                 if (is.available() == 0) {

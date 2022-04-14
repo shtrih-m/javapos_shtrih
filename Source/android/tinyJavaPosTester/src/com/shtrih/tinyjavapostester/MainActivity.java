@@ -539,7 +539,7 @@ public class MainActivity extends AppCompatActivity
             try {
                 HashMap<String, String> props = new HashMap<>();
                 props.put("portName", address);
-                props.put("portType", "3");
+                props.put("portType", "1");
                 props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothPort");
                 props.put("protocolType", selectedProtocol);
                 props.put("fastConnect", fastConnect ? "1" : "0");
@@ -685,8 +685,8 @@ public class MainActivity extends AppCompatActivity
 
                 Map<String, String> props = new HashMap<>();
                 props.put("portName", "SHTRIH");
-                props.put("portType", "3");
-                props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothLEPort");
+                props.put("portType", "1");
+                props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothPort");
                 props.put("protocolType", selectedProtocol);
                 props.put("fastConnect", fastConnect ? "1" : "0");
                 props.put("capScocUpdateFirmware", scocFirmwareAutoupdate ? "1" : "0");
@@ -1898,7 +1898,7 @@ public class MainActivity extends AppCompatActivity
         HashMap<String, String> props = new HashMap<>();
         //props.put("portName", "30:AE:A4:95:61:5A");
         props.put("portName", "30:AE:A4:80:70:C2");
-        props.put("portType", "5");
+        props.put("portType", "1");
         // PORT_TYPE_BLUETOOTH = 1
         //PORT_TYPE_BLUETOOTH_LE = 4;
         // PORT_TYPE_PPP = 5;

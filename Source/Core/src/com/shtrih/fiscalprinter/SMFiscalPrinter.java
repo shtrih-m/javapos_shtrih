@@ -193,8 +193,6 @@ public interface SMFiscalPrinter {
     public int readTable(int tableNumber, int rowNumber, int fieldNumber,
             String[] fieldValue) throws Exception;
 
-    public int readTableInfo(int tableNumber, Object[] out) throws Exception;
-
     public ReadTableInfo readTableInfo(int tableNumber) throws Exception;
 
     public PrintCashIn printCashIn(long sum) throws Exception;

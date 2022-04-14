@@ -1013,8 +1013,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             return;
         }
         
-        FDOParameters ofdParameters = printer.readFDOParameters();
-        fsSenderService = new FSService(printer, params, ofdParameters);
+        fsSenderService = new FSService(printer, params);
         fsSenderService.start();
     }
     

@@ -25,26 +25,21 @@ public class FSService implements Runnable {
     private CompositeLogger logger = CompositeLogger.getLogger(FSService.class);
 
     private long packetNumber = 0;
-    private final FDOParameters parameters;
+    private FDOParameters parameters;
     private final int connectTimeout;
     private final SMFiscalPrinter printer;
     private volatile Thread thread = null;
     private volatile boolean stopFlag = false;
 
-    public FSService(SMFiscalPrinter printer, FptrParameters parameters, FDOParameters ofdParameters) {
+    public FSService(SMFiscalPrinter printer, FptrParameters parameters) {
         if (printer == null) {
             throw new IllegalArgumentException("printer is null");
         }
         if (parameters == null) {
             throw new IllegalArgumentException("parameters is null");
         }
-        if (ofdParameters == null) {
-            throw new IllegalArgumentException("ofdParameters is null");
-        }
-
         this.printer = printer;
         this.connectTimeout = parameters.FSConnectTimeout;
-        this.parameters = ofdParameters;
     }
 
     private boolean isStarted() {
@@ -74,6 +69,8 @@ public class FSService implements Runnable {
     public void run() {
         try {
             logger.debug("FSService started");
+            
+            parameters = printer.readFDOParameters();
             logger.debug(String.format("OFD %s:%d, connection timeout %d ms, poll period %d ms",
                     parameters.getHost(), parameters.getPort(), connectTimeout,
                     parameters.getPollPeriodSeconds() * 1000));

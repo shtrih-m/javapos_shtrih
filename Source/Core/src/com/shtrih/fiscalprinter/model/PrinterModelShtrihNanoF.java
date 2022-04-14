@@ -71,5 +71,9 @@ public class PrinterModelShtrihNanoF extends PrinterModelDefault {
         addParameter("FDOServerHost", 19, 1, 1);
         addParameter("FDOServerPort", 19, 1, 2);
         addParameter("FDOServerTimeout", 19, 1, 3);
+        
+        addParameter("DrawerEnabled", 1, 1, 6);
+        addParameter("CutMode", 1, 1, 7);
+        addParameter("LineSpacing", 1, 1, 29);        
     }
 }

@@ -155,7 +155,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private Integer fdVersion = null;
     private String fullSerial = "";
     private boolean capLastErrorText = true;
-
+    private int[] taxRates = null;
+    
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params) {
         this.port = port;
@@ -354,6 +355,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             check(readDeviceMetrics());
             model = selectPrinterModel(getDeviceMetrics());
             fullSerial = readFullSerial();
+            readTaxRates();
+
             return checkEcrMode();
         }
     }
@@ -368,6 +371,23 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
+    private void readTaxRates() throws Exception
+    {
+        if (params.taxCalculation != SmFptrConst.TAX_CALCULATION_DRIVER){
+            return;
+        }
+        ReadTableInfo command = readTableInfo(PrinterConst.SMFP_TABLE_TAX);
+        if (command.isSucceeded())
+        {
+            int rowCount = command.getRowCount();
+            taxRates = new int[rowCount + 1];
+            for (int i=1;i<=rowCount;i++)
+            {
+                taxRates[i] = Integer.parseInt(readTable2(PrinterConst.SMFP_TABLE_TAX, i, 1));
+            }
+        }
+    }
+    
     private void afterCommand(PrinterCommand command) throws Exception {
         for (IPrinterEvents printerEvents : events) {
             try {
@@ -942,20 +962,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return field;
     }
 
-    public int readTableInfo(int tableNumber, Object[] out) throws Exception {
+    public ReadTableInfo readTableInfo(int tableNumber) throws Exception {
         logger.debug("readTableInfo");
         ReadTableInfo command = new ReadTableInfo();
         command.setPassword(sysPassword);
         command.setTableNumber(tableNumber);
-
-        out[0] = command;
-        return executeCommand(command);
-    }
-
-    public ReadTableInfo readTableInfo(int tableNumber) throws Exception {
-        Object[] out = new Object[1];
-        check(readTableInfo(tableNumber, out));
-        return (ReadTableInfo) out[0];
+        executeCommand(command);
+        return command;
     }
 
     public PrintCashIn printCashIn(long amount) throws Exception {
@@ -2334,9 +2347,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 }
             }
         }
-
         capDiscount = !isShtrihMobile() && discountMode == 0;
-
         isCapDiscountInitialized = true;
     }
 
@@ -3708,9 +3719,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return readTable2(PrinterConst.SMFP_TABLE_TAX, number, 2);
     }
 
-    public int getTaxRate(int number) throws Exception {
-        String s = readTable(PrinterConst.SMFP_TABLE_TAX, number, 1);
-        return Integer.parseInt(s);
+    public int getTaxRate(int number) throws Exception 
+    {
+        return taxRates[number];
     }
 
     public int printDocHeader(String title, int number) throws Exception {
