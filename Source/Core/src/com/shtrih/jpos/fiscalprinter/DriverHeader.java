@@ -53,7 +53,6 @@ public class DriverHeader implements PrinterHeader {
     public SMFiscalPrinter getPrinter() {
         return printer;
     }
-    //getParams().numTrailerLines = numTrailerLines;
 
     @Override
     public ReceiptLine getHeaderLine(int number) throws Exception {
@@ -68,9 +67,6 @@ public class DriverHeader implements PrinterHeader {
     @Override
     public void initDevice() throws Exception {
         logger.debug("initDevice");
-
-        setNumHeaderLines(printer.getParams().numHeaderLines);
-        setNumTrailerLines(printer.getParams().numTrailerLines);
         printer.clearTableText();
     }
 

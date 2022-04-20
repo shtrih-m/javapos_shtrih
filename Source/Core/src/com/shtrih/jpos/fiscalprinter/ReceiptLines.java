@@ -19,7 +19,7 @@ import com.shtrih.util.Localizer;
  */
 public class ReceiptLines {
 
-    private final int count;
+    private int count;
     private final Map<Integer, ReceiptLine> lines = new HashMap<Integer, ReceiptLine>();
 
     public ReceiptLines(int count) {
@@ -32,21 +32,7 @@ public class ReceiptLines {
 
     public void setCount(int newCount) throws Exception 
     {
-        if (newCount <= 0) {
-            lines.clear();
-            return;
-        }
-
-        if (newCount > count) {
-            for (int i = count; i < newCount; i++) {
-                lines.put(i, new ReceiptLine());
-            }
-            return;
-        }
-
-        for (int i = count; i > newCount; i--) {
-            lines.remove(i);
-        }
+        this.count = newCount;
     }
 
     public boolean validNumber(int number) {
@@ -54,10 +40,11 @@ public class ReceiptLines {
     }
 
     public ReceiptLine getLine(int number) throws Exception {
-        if (validNumber(number)) {
-            return lines.get(number);
+        ReceiptLine result = lines.get(number);
+        if (result == null){
+            result = new ReceiptLine();
         }
-        return new ReceiptLine();
+        return result;
     }
 
     public void setLine(int number, String text, boolean doubleWidth)
