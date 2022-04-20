@@ -1039,12 +1039,11 @@ class PrinterTest implements FiscalPrinterConst {
             //printAdvancePayment2();
             //printReceiptWithError();
             //printFiscalReceiptWithItemDiscount();
-            setHeaderLines();
-            setTrailerLines();
-            printSpeedTest();
-            
-            //printReceiptWithError2();
+            //setHeaderLines();
+            //setTrailerLines();
+            //printSpeedTest();
 
+            printReceiptWithError3();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -4669,7 +4668,8 @@ class PrinterTest implements FiscalPrinterConst {
             printer.fsWriteTag(1227, "Test Visit DsName");
 
             /**
-             * Address writeTagli basmadığından PrintRecMessage olarak basıldı. *
+             * Address writeTagli basmadığından PrintRecMessage olarak basıldı.
+             * *
              */
             printer.printRecMessage("АДР.РАСЧЕТОВ: " + "Testr Visit DsAddress");
 
@@ -4836,4 +4836,19 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
+
+    public void printReceiptWithError3() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("ДвД МолокоУльтрап 3.2%950г БЗ для Капуч", 387092, 4000, 2, 96773, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 6, 2);
+            printer.printRecTotal(387084, 387084, "0");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -2666,10 +2666,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             // Number of voided item lines.
             case FPTR_LC_ITEM_VOID:
                 return 2;
-            // Number of printDiscount lines.
+            // Number of printItemDiscount lines.
             case FPTR_LC_DISCOUNT:
                 return 2;
-            // Number of voided printDiscount lines.
+            // Number of voided printItemDiscount lines.
             case FPTR_LC_DISCOUNT_VOID:
                 return 2;
             // Number of surcharge lines.
@@ -2684,10 +2684,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             // Number of voided refund lines.
             case FPTR_LC_REFUND_VOID:
                 return 2;
-            // Number of subtotal printDiscount lines.
+            // Number of subtotal printItemDiscount lines.
             case FPTR_LC_SUBTOTAL_DISCOUNT:
                 return 2;
-            // Number of voided subtotal printDiscount lines.
+            // Number of voided subtotal printItemDiscount lines.
             case FPTR_LC_SUBTOTAL_DISCOUNT_VOID:
                 return 2;
             // Number of subtotal surcharge lines.

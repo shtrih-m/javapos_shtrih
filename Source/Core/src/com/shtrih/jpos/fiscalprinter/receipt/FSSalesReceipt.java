@@ -834,21 +834,21 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         checkDiscountsEnabled();
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
-                printDiscount(amount, vatInfo, description);
+                printItemDiscount(amount, vatInfo, description);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_AMOUNT_SURCHARGE:
-                printDiscount(-amount, vatInfo, description);
+                printItemDiscount(-amount, vatInfo, description);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_DISCOUNT:
                 amount = getItemPercentAdjustmentAmount(amount);
-                printDiscount(amount, vatInfo, description);
+                printItemDiscount(amount, vatInfo, description);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_SURCHARGE:
                 amount = getItemPercentAdjustmentAmount(amount);
-                printDiscount(-amount, vatInfo, description);
+                printItemDiscount(-amount, vatInfo, description);
                 break;
 
             default:
@@ -932,7 +932,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
                 for (int i = 0; i < adjustments.size(); i++) {
                     adjustment = adjustments.getItem(i);
-                    printDiscount(-adjustment.amount * factor, adjustment.vat, "");
+                    printItemDiscount(-adjustment.amount * factor, adjustment.vat, "");
                 }
                 break;
 
@@ -944,7 +944,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
                 for (int i = 0; i < adjustments.size(); i++) {
                     adjustment = adjustments.getItem(i);
-                    printDiscount(adjustment.amount * factor, adjustment.vat, "");
+                    printItemDiscount(adjustment.amount * factor, adjustment.vat, "");
                 }
                 break;
 
@@ -992,21 +992,21 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         checkAdjustment(adjustmentType, amount);
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
-                printDiscount(-amount, vatInfo, description);
+                printItemDiscount(-amount, vatInfo, description);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_AMOUNT_SURCHARGE:
-                printDiscount(amount, vatInfo, description);
+                printItemDiscount(amount, vatInfo, description);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_DISCOUNT:
                 amount = getItemPercentAdjustmentAmount(amount);
-                printDiscount(-amount, vatInfo, description);
+                printItemDiscount(-amount, vatInfo, description);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_SURCHARGE:
                 amount = getItemPercentAdjustmentAmount(amount);
-                printDiscount(amount, vatInfo, description);
+                printItemDiscount(amount, vatInfo, description);
                 break;
 
             default:
@@ -1207,7 +1207,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         lastItem = item;
         clearPrePostLine();
         if ((price > 0) && (amount - price) > 1) {
-            printDiscount(amount - price, vatInfo, "");
+            printItemDiscount(amount - price, vatInfo, "");
         }
     }
 
@@ -1231,10 +1231,15 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         return lastItem;
     }
 
-    public void printDiscount(long amount, int tax1, String text)
+    public void printItemDiscount(long amount, int tax1, String text)
             throws Exception {
         logger.debug("printDiscount: " + amount);
 
+        if ((amount + discounts.getTotal()) < 100){
+            printTotalDiscount(amount, tax1, text);
+            return;
+        }
+        
         AmountItem item = new AmountItem();
         item.setAmount(amount);
         item.setTax1(tax1);
