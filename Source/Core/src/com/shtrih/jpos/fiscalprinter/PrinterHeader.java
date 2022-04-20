@@ -20,9 +20,9 @@ public interface PrinterHeader {
 	public void setTrailerLine(int number, String text, boolean doubleWidth)
 			throws Exception;
 
-	public HeaderLine getHeaderLine(int number) throws Exception;
+	public ReceiptLine getHeaderLine(int number) throws Exception;
 
-	public HeaderLine getTrailerLine(int number) throws Exception;
+	public ReceiptLine getTrailerLine(int number) throws Exception;
 
 	public void beginDocument(String additionalHeader)
 			throws Exception;
@@ -33,7 +33,7 @@ public interface PrinterHeader {
 	public void endNonFiscal(String additionalTrailer)
 			throws Exception;
         
-        public List<HeaderLine> getHeaderLines();
+        public ReceiptLines getHeaderLines();
         
-        public List<HeaderLine> getTrailerLines();
+        public ReceiptLines getTrailerLines();
 }

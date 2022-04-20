@@ -716,4 +716,5 @@ public interface SMFiscalPrinter {
     
     public void setCommandTimeout(int code, int timeout);
     
+    public boolean getCapCutter();
 }

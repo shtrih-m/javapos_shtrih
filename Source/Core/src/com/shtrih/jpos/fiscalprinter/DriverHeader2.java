@@ -3,8 +3,10 @@ package com.shtrih.jpos.fiscalprinter;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.PrinterConst;
 
-public class DriverHeader2 extends DriverHeader {
-	public DriverHeader2(SMFiscalPrinter printer) {
+public class DriverHeader2 extends DriverHeader 
+{
+	public DriverHeader2(SMFiscalPrinter printer) throws Exception 
+        {
 		super(printer);
 	}
 

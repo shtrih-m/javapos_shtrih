@@ -88,19 +88,19 @@ public class XmlPropWriter {
     public void writePrinterHeader(PrinterHeader header) throws Exception {
         node = doc.createElement("Header");
         root.appendChild(node);
-        List<HeaderLine> lines = header.getHeaderLines();
-        for (int i = 0; i < lines.size(); i++) {
-            write(lines.get(i));
+        ReceiptLines lines = header.getHeaderLines();
+        for (int i = 1; i <= lines.getCount(); i++) {
+            write(lines.getLine(i));
         }
         node = doc.createElement("Trailer");
         root.appendChild(node);
         lines = header.getTrailerLines();
-        for (int i = 0; i < lines.size(); i++) {
-            write(lines.get(i));
+        for (int i = 1; i <= lines.getCount(); i++) {
+            write(lines.getLine(i));
         }
     }
 
-    public void write(HeaderLine line) throws Exception {
+    public void write(ReceiptLine line) throws Exception {
         if (line == null) {
             return;
         }

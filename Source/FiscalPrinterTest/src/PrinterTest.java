@@ -80,11 +80,12 @@ class PrinterTest implements FiscalPrinterConst {
             for (int i = 1; i <= numHeaderLines; i++) {
                 printer.setHeaderLine(i, "Header line " + i, false);
             }
-            printer.clearLogo();
-            printer.clearImages();
-            printer.loadImage("Logo.bmp");
-            printer.addLogo(0, SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
-
+            /*
+             printer.clearLogo();
+             printer.clearImages();
+             printer.loadImage("Logo.bmp");
+             printer.addLogo(0, SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
+             */
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1029,18 +1030,20 @@ class PrinterTest implements FiscalPrinterConst {
             //testCommandTimeout();
             //printFiscalReceiptLogoBeforeHeader();
             //printFiscalReceiptWithSupplier();
-            
             //printFiscalReceiptType1();
             //printFiscalReceiptType2();
-            
             //printCorrectionReceipts();
-            
             //printFiscalReceiptWithItemDiscount();
             //printFiscalReceiptWithItemDiscount2();
             //printAdvancePayment();
             //printAdvancePayment2();
             //printReceiptWithError();
-            printFiscalReceiptWithItemDiscount();
+            //printFiscalReceiptWithItemDiscount();
+            setHeaderLines();
+            setTrailerLines();
+            printSpeedTest();
+            
+            //printReceiptWithError2();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2636,7 +2639,7 @@ class PrinterTest implements FiscalPrinterConst {
     public void printSpeedTest() {
         try {
             printer.beginNonFiscal();
-            for (int i = 1; i <= 200; i++) {
+            for (int i = 1; i <= 10; i++) {
                 printer.printNormal(FPTR_S_RECEIPT, "Line " + i);
             }
             printer.endNonFiscal();
@@ -4563,23 +4566,22 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
-    public void printFiscalReceiptType1() 
-    {
+
+    public void printFiscalReceiptType1() {
         char GS = 0x1D;
         String barcode
                 = "010405104227920221TB6qQHbmOTZBf" + GS + "2406402" + GS + "91ffd0" + GS
                 + "92DbZgaQm2x0uA5+8/AzMM9hVq6apGvtM3bJzejjpHan2pvK4O+XbYcVgFRR5I4HmCLQvZ74KgKkIhVADd==";
-            
+
         try {
             printer.resetPrinter();
-            
+
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(true);
 
             printer.mcClearBuffer();
             printer.checkItemCode(barcode, true, 1000000, 10, 1, 1);
-            
+
             printer.printRecItem("Item 1", 10099, 1000, 1, 10099, "");
             printer.setItemCode(barcode);
             printer.printRecItem("Item 2", 20000, 1000, 2, 20000, "");
@@ -4589,14 +4591,13 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
-    public void printFiscalReceiptType2() 
-    {
+
+    public void printFiscalReceiptType2() {
         char GS = 0x1D;
         String barcode
                 = "010405104227920221TB6qQHbmOTZBf" + GS + "2406402" + GS + "91ffd0" + GS
                 + "92DbZgaQm2x0uA5+8/AzMM9hVq6apGvtM3bJzejjpHan2pvK4O+XbYcVgFRR5I4HmCLQvZ74KgKkIhVADd==";
-            
+
         try {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
@@ -4611,11 +4612,9 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-   
-    public void printFiscalReceiptWithItemDiscount() 
-    {
-        try
-        {
+
+    public void printFiscalReceiptWithItemDiscount() {
+        try {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(true);
@@ -4629,16 +4628,14 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
-    public void printFiscalReceiptWithItemDiscount2() 
-    {
+
+    public void printFiscalReceiptWithItemDiscount2() {
         char GS = 0x1D;
         String barcode
                 = "010405104227920221TB6qQHbmOTZBf" + GS + "2406402" + GS + "91ffd0" + GS
                 + "92DbZgaQm2x0uA5+8/AzMM9hVq6apGvtM3bJzejjpHan2pvK4O+XbYcVgFRR5I4HmCLQvZ74KgKkIhVADd==";
-        
-        try
-        {
+
+        try {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(true);
@@ -4652,23 +4649,28 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    public void printAdvancePayment() 
-    {
+    public void printAdvancePayment() {
         try {
             printer.resetPrinter();
             printer.writeCashierName("Гизатуллин Рамис Фаритович  Экспедитор-Кассир");
             printer.setFiscalReceiptType(FiscalPrinterConst.FPTR_RT_SALES);
             printer.beginFiscalReceipt(true);
 
-            /** DsDriverInn **/
+            /**
+             * DsDriverInn *
+             */
             printer.fsWriteTag(1203, "164807134931");
 
             printer.printRecMessage("ИНН КАССИРА: DsDriverInn");
 
-            /** NameTagID **/
+            /**
+             * NameTagID *
+             */
             printer.fsWriteTag(1227, "Test Visit DsName");
 
-            /** Address writeTagli basmadığından PrintRecMessage olarak basıldı. **/
+            /**
+             * Address writeTagli basmadığından PrintRecMessage olarak basıldı. *
+             */
             printer.printRecMessage("АДР.РАСЧЕТОВ: " + "Testr Visit DsAddress");
 
             int modelNo = printer.readDeviceMetrics().getModel();
@@ -4676,11 +4678,10 @@ class PrinterTest implements FiscalPrinterConst {
             if (modelNo >= 152) {
                 String ofdTagValue = printer.readTable(18, 1, 10); //Device'dakini device'a koyuyoruz.
                 printer.printRecMessage("ОФД: " + ofdTagValue);
-            }else{
+            } else {
                 String ofdTagValue = printer.readTable(14, 1, 10); //Device'dakini device'a koyuyoruz.
                 printer.printRecMessage("ОФД: " + ofdTagValue);
             }
-
 
             // Cash = 0
             String printRectPaymentTypeValue = "0";
@@ -4690,7 +4691,6 @@ class PrinterTest implements FiscalPrinterConst {
 
             printer.printRecItem("Лейз Микс Краб_СмЗел_Лук 80г 24X ДСП", 171604, 2000, 1, 85802, "Case");
             printer.printRecItemAdjustment(FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT, "Discount", 2, 1);
-           
 
             //Advance Payment
             printer.printRecTotal(0, 100000, "13");
@@ -4699,35 +4699,35 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecTotal(415982, 315982, printRectPaymentTypeValue); // Sub total,
             printer.endFiscalReceipt(false);
 
-
         } catch (Exception e) {
             e.printStackTrace();
-        }    
+        }
     }
 
-
-    public void printAdvancePayment2() 
-    {
+    public void printAdvancePayment2() {
         try {
             printer.resetPrinter();
             printer.writeCashierName("Гизатуллин Рамис Фаритович  Экспедитор-Кассир");
             printer.setFiscalReceiptType(FiscalPrinterConst.FPTR_RT_SALES);
             printer.beginFiscalReceipt(true);
-            
-            /** DsDriverInn **/
+
+            /**
+             * DsDriverInn *
+             */
             printer.fsWriteTag(1203, "164807134931");
 
             printer.printRecMessage("ИНН КАССИРА: DsDriverInn");
 
-            /** NameTagID **/
+            /**
+             * NameTagID *
+             */
             TLVWriter tlvWriter = new TLVWriter();
             tlvWriter.add(1227, "БЕТА ООО");
             tlvWriter.add(1228, "9705069985");
             printer.fsWriteTag(1256, tlvWriter.getBytes());
-            
+
             //printer.fsWriteTag(1227, "Test Visit DsName");
             //printer.fsWriteTag(1228, "9705069985");
-
             printer.printRecMessage("АДР.РАСЧЕТОВ: " + "Testr Visit DsAddress");
 
             int modelNo = printer.readDeviceMetrics().getModel();
@@ -4735,11 +4735,10 @@ class PrinterTest implements FiscalPrinterConst {
             if (modelNo >= 152) {
                 String ofdTagValue = printer.readTable(18, 1, 10); //Device'dakini device'a koyuyoruz.
                 printer.printRecMessage("ОФД: " + ofdTagValue);
-            }else{
+            } else {
                 String ofdTagValue = printer.readTable(14, 1, 10); //Device'dakini device'a koyuyoruz.
                 printer.printRecMessage("ОФД: " + ofdTagValue);
             }
-
 
             // Cash = 0
             String printRectPaymentTypeValue = "0";
@@ -4752,10 +4751,9 @@ class PrinterTest implements FiscalPrinterConst {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }    
-    
-    public void printReceiptWithError() 
-    {
+    }
+
+    public void printReceiptWithError() {
         try {
             printer.resetPrinter();
             printer.setFiscalReceiptType(FiscalPrinterConst.FPTR_RT_SALES);
@@ -4809,7 +4807,33 @@ class PrinterTest implements FiscalPrinterConst {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }    
+    }
 
-    
+    public void printReceiptWithError2() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(FiscalPrinterConst.FPTR_RT_SALES);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("Аква Минер Лимон Без Газ 0.5л ПЭТ 12Х", 45068, 1000, 1, 45068, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Аква Минер Мята Лайм Без Газ 0.5л ПЭТ12Х", 45068, 1000, 1, 45068, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Аква Минер Яблоко Газ 0.5л ПЭТ 12Х", 45068, 1000, 1, 45068, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Аква Минер Акт Малина 0.5л ПЭТ 12Х", 45068, 1000, 1, 45068, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Аква Минер Акт Цитрус 0.5л ПЭТ 12Х", 45068, 1000, 1, 45068, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Адреналин Раш 0.449Л БАН 12Х", 334761, 3000, 1, 111587, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Пепси Кола 0.33л БАН 12Х", 46333, 1000, 1, 46333, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Адреналин Раш 0.25л БАН 12Х", 141530, 2000, 1, 70765, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 2, 1);
+            printer.printRecTotal(747955, 747955, "0");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

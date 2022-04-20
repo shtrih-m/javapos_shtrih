@@ -1,5 +1,5 @@
 /*
- * HeaderLine.java
+ * ReceiptLine.java
  *
  * Created on 23 Ноябрь 2009 г., 20:39
  *
@@ -11,7 +11,7 @@ package com.shtrih.jpos.fiscalprinter;
 /**
  * @author V.Kravtsov
  */
-public class HeaderLine {
+public class ReceiptLine {
 
     private String text = "";
     private boolean doubleWidth = false;
@@ -19,10 +19,10 @@ public class HeaderLine {
     /**
      * Creates a new instance of HeaderLine
      */
-    public HeaderLine() {
+    public ReceiptLine() {
     }
 
-    public HeaderLine(String text, boolean doubleWidth) {
+    public ReceiptLine(String text, boolean doubleWidth) {
         this.text = text;
         this.doubleWidth = doubleWidth;
     }

@@ -919,6 +919,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     writeTables();
                 }
                 
+                header = createHeader();
                 header.initDevice(); // TODO: make lazy
 
                 if (!params.fastConnect) {
@@ -1615,10 +1616,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
     
     public int getNumHeaderLines() throws Exception {
+        checkEnabled();
         return header.getNumHeaderLines();
     }
     
     public int getNumTrailerLines() throws Exception {
+        checkEnabled();
         return header.getNumTrailerLines();
     }
     
@@ -2241,8 +2244,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         
         receipt = new NullReceipt(createReceiptContext());
         
-        header = createHeader();
-        
         if (params.textReportEnabled) {
             filter = new TextDocumentFilter(getPrinter(), header);
             getPrinter().addEvents(filter);
@@ -2267,7 +2268,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         
     }
     
-    private PrinterHeader createHeader() {
+    private PrinterHeader createHeader() throws Exception {
         switch (params.headerMode) {
             case SmFptrConst.SMFPTR_HEADER_MODE_PRINTER:
                 return new DeviceHeader(printer);

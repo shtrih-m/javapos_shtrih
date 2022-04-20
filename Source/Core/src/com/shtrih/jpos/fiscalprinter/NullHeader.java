@@ -10,96 +10,84 @@ import java.util.Vector;
 
 public class NullHeader implements PrinterHeader {
 
-	private final SMFiscalPrinter printer;
-	private final List<HeaderLine> header = new Vector<HeaderLine>();
-	private final List<HeaderLine> trailer = new Vector<HeaderLine>();
+    private final SMFiscalPrinter printer;
+    private final ReceiptLines header = new ReceiptLines(4);
+    private final ReceiptLines trailer = new ReceiptLines(3);
 
-	public NullHeader(SMFiscalPrinter printer) {
-		this.printer = printer;
-	}
+    public NullHeader(SMFiscalPrinter printer) {
+        this.printer = printer;
+    }
 
-	@Override
-	public int getNumHeaderLines() throws Exception {
-		return 0;
-	}
+    @Override
+    public int getNumHeaderLines() throws Exception {
+        return header.getCount();
+    }
 
-	@Override
-	public int getNumTrailerLines() throws Exception {
-		return 0;
-	}
+    @Override
+    public int getNumTrailerLines() throws Exception {
+        return trailer.getCount();
+    }
 
-	// numHeaderLines for device cannot be changed
-	@Override
-	public void setNumHeaderLines(int numHeaderLines) throws Exception {
-	}
+    // numHeaderLines for device cannot be changed
+    @Override
+    public void setNumHeaderLines(int numHeaderLines) throws Exception {
+        header.setCount(numHeaderLines);
+    }
 
-	// numTrailerLines for device cannot be changed
-	@Override
-	public void setNumTrailerLines(int numTrailerLines) throws Exception {
-	}
+    // numTrailerLines for device cannot be changed
+    @Override
+    public void setNumTrailerLines(int numTrailerLines) throws Exception {
+        trailer.setCount(numTrailerLines);
+    }
 
-	@Override
-	public void initDevice() throws Exception {
-	}
+    @Override
+    public void initDevice() throws Exception {
+    }
 
-	@Override
-	public HeaderLine getHeaderLine(int number) throws Exception {
-		checkHeaderLineNumber(number);
-		return  header.get(number - 1);
-	}
+    @Override
+    public ReceiptLine getHeaderLine(int number) throws Exception {
+        return header.getLine(number);
+    }
 
-	@Override
-	public HeaderLine getTrailerLine(int number) throws Exception {
-		checkTrailerLineNumber(number);
-		return  trailer.get(number - 1);
-	}
+    @Override
+    public ReceiptLine getTrailerLine(int number) throws Exception {
+        return trailer.getLine(number);
+    }
 
-	private void checkHeaderLineNumber(int number) throws Exception {
-		if ((number < 1) || (number > getNumHeaderLines())) {
-			throw new JposException(JposConst.JPOS_E_ILLEGAL,
-					Localizer.getString(Localizer.InvalidLineNumber));
-		}
-	}
+    @Override
+    public void setHeaderLine(int number, String text, boolean doubleWidth)
+            throws Exception {
+        header.setLine(number, text, doubleWidth);
+    }
 
-	private void checkTrailerLineNumber(int number) throws Exception {
-		if ((number < 1) || (number > getNumTrailerLines())) {
-			throw new JposException(JposConst.JPOS_E_ILLEGAL,
-					Localizer.getString(Localizer.InvalidLineNumber));
-		}
-	}
+    @Override
+    public void setTrailerLine(int number, String text, boolean doubleWidth)
+            throws Exception {
+        trailer.setLine(number, text, doubleWidth);
+    }
 
-	@Override
-	public void setHeaderLine(int number, String text, boolean doubleWidth)
-			throws Exception {
-	}
+    @Override
+    public void beginDocument(String additionalHeader)
+            throws Exception {
+    }
 
-	@Override
-	public void setTrailerLine(int number, String text, boolean doubleWidth)
-			throws Exception {
-	}
+    @Override
+    public void endFiscal(String additionalTrailer)
+            throws Exception {
+    }
 
-	@Override
-	public void beginDocument(String additionalHeader)
-			throws Exception {
-	}
+    @Override
+    public void endNonFiscal(String additionalTrailer)
+            throws Exception {
+    }
 
-	@Override
-	public void endFiscal(String additionalTrailer)
-			throws Exception {
-	}
-        
-	@Override
-	public void endNonFiscal(String additionalTrailer)
-			throws Exception {
-        }
-        
-	@Override
-        public List<HeaderLine> getHeaderLines(){
-            return header;
-        }
-        
-	@Override
-        public List<HeaderLine> getTrailerLines(){
-            return trailer;
-        }
+    @Override
+    public ReceiptLines getHeaderLines() {
+        return header;
+    }
+
+    @Override
+    public ReceiptLines getTrailerLines() {
+        return trailer;
+    }
 }

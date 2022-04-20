@@ -1279,4 +1279,9 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void setCommandTimeout(int code, int timeout){
     }
     
+    public boolean getCapCutter(){
+        return true;
+    }
+    
+    
 }

@@ -129,7 +129,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private Boolean capPrintBarcode2 = Boolean.NOTDEFINED;
     private Boolean capPrintBarcode3 = Boolean.NOTDEFINED;
     private boolean capFSPrintItem = true;
-    private boolean capCutPaper = true;
+    private boolean capCutter = true;
     private String fsUser = "";
     private String fsAddress = "";
 
@@ -155,7 +155,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private Integer fdVersion = null;
     private boolean capLastErrorText = true;
     private int[] taxRates = null;
-    
+
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params) {
         this.port = port;
@@ -236,8 +236,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                         e.getMessage());
             }
 
-            if (command.isFailed()) 
-            {
+            if (command.isFailed()) {
                 if (capLastErrorText) {
                     ReadLastErrorText command2 = readExtendedCode();
                     if (command2.isSucceeded()) {
@@ -347,7 +346,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             if (executeCommand(command) == 0) {
                 modelParameters = command.getParameters();
                 capLastErrorText = modelParameters.isCapCommand6B();
-                capCutPaper = modelParameters.isCapCutter();
+                capCutter = modelParameters.isCapCutter();
             } else {
                 modelParameters = null;
             }
@@ -369,20 +368,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    private void readTaxRates() throws Exception
-    {
+    private void readTaxRates() throws Exception {
         ReadTableInfo command = readTableInfo(PrinterConst.SMFP_TABLE_TAX);
-        if (command.isSucceeded())
-        {
+        if (command.isSucceeded()) {
             int rowCount = command.getRowCount();
             taxRates = new int[rowCount + 1];
-            for (int i=1;i<=rowCount;i++)
-            {
+            for (int i = 1; i <= rowCount; i++) {
                 taxRates[i] = Integer.parseInt(readTable2(PrinterConst.SMFP_TABLE_TAX, i, 1));
             }
         }
     }
-    
+
     private void afterCommand(PrinterCommand command) throws Exception {
         for (IPrinterEvents printerEvents : events) {
             try {
@@ -3377,13 +3373,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
+    public boolean getCapCutter() {
+        return (capCutter && (params.cutMode == SmFptrConst.SMFPTR_CUT_MODE_AUTO));
+    }
+
     public void cutPaper() throws Exception {
-        if (capCutPaper && (params.cutMode == SmFptrConst.SMFPTR_CUT_MODE_AUTO)) {
+        if (getCapCutter()) {
             if (params.cutPaperDelay != 0) {
                 Time.delay(params.cutPaperDelay);
             }
             int rc = cutPaper(params.cutType);
-            capCutPaper = isCommandSupported(rc);
+            capCutter = isCommandSupported(rc);
         }
     }
 
@@ -3709,8 +3709,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return readTable2(PrinterConst.SMFP_TABLE_TAX, number, 2);
     }
 
-    public int getTaxRate(int number) throws Exception 
-    {
+    public int getTaxRate(int number) throws Exception {
         return taxRates[number];
     }
 
@@ -4669,13 +4668,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public LongPrinterStatus searchDevice() throws Exception {
         logger.debug("searchDevice");
         synchronized (port.getSyncObject()) {
-            if (params.getPortType() == SmFptrConst.PORT_TYPE_SERIAL)
-            {
+            if (params.getPortType() == SmFptrConst.PORT_TYPE_SERIAL) {
                 if (params.searchByBaudRateEnabled || params.searchByPortEnabled) {
                     searchSerialDevice();
                     return readLongStatus();
-                }
-                else {
+                } else {
                     port.setPortName(params.portName);
                     port.setBaudRate(params.getBaudRate());
                     port.open(params.portOpenTimeout);
@@ -4686,8 +4683,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     writePortParams(status.getPortNumber(), baudRateIndex, params.getDeviceByteTimeout());
                     return status;
                 }
-            } else
-            {
+            } else {
                 port.setPortName(params.portName);
                 port.setBaudRate(params.getBaudRate());
                 port.open(params.portOpenTimeout);
