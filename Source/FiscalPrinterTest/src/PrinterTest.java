@@ -4843,8 +4843,8 @@ class PrinterTest implements FiscalPrinterConst {
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(true);
             printer.printRecItem("ДвД МолокоУльтрап 3.2%950г БЗ для Капуч", 387092, 4000, 2, 96773, "УПК");
-            printer.printRecItemAdjustment(1, "Discount", 6, 2);
-            printer.printRecTotal(387084, 387084, "0");
+            printer.printRecItemAdjustment(1, "Discount", 102, 2);
+            printer.printRecTotal(386990, 386990, "0");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();

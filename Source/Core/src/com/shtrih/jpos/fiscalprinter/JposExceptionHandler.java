@@ -88,8 +88,12 @@ public class JposExceptionHandler implements JposConst, FiscalPrinterConst,
                             JPOS_EFPTR_SLP_EMPTY, text);
 
                 default:
-                    return new JposException(JPOS_E_EXTENDED, errorCode + 300,
-                            text);
+                    if (errorCode < 0) {
+                        return new JposException(JPOS_E_TIMEOUT, text);
+                    } else {
+                        return new JposException(JPOS_E_EXTENDED, errorCode + 300,
+                                text);
+                    }
             }
         }
         if (e instanceof IOException) {
