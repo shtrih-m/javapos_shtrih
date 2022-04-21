@@ -11,6 +11,7 @@
   deviceServiceVersion = 1013648
 
   [-] Fixed error header printing
+  [-] Fixed error with receipt item discount
   [-] Fixed extended error code 299 to JPOS_E_TIMEOUT
 
 ********************************************************************************

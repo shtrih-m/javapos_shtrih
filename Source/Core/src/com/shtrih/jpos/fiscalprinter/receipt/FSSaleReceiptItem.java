@@ -151,7 +151,6 @@ public class FSSaleReceiptItem {
 
     public void addDiscount(AmountItem discount) {
         getDiscounts().add(discount);
-        updatePrice();
     }
 
     /**
@@ -291,7 +290,7 @@ public class FSSaleReceiptItem {
         return price1;
     }
 
-    public void updatePrice() {
+    public void applyDiscounts() {
         priceWithDiscount = price;
         if (discounts.getTotal() != 0) {
             if (quantity == 1.0) {
