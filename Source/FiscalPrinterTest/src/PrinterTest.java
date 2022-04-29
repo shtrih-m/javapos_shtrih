@@ -1042,9 +1042,9 @@ class PrinterTest implements FiscalPrinterConst {
             //setHeaderLines();
             //setTrailerLines();
             //printSpeedTest();
-
-            printReceiptWithError4();
+            //printReceiptWithError4();
             //printReceiptWithError5();
+            printReceiptWithError7();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -4895,22 +4895,22 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecItemAdjustment(1, "Discount", 2, 2);
             printer.printRecItem("Любимый Нап ТропМикс Обг 0.95л СЛ12ХДПНР", 345590, 5000, 2, 69118, "УПК");
             printer.printRecItemAdjustment(1, "Discount", 3, 2);
-           
+
             printer.printRecItem("Любимый Нап АпМангоМанд 0.95л СЛ 12Х ДП", 345590, 5000, 2, 69118, "УПК");
             printer.printRecItemAdjustment(1, "Discount", 3, 2);
-            
+
             printer.printRecItem("Любимый Нап ЯблКлубЧРяб 0.95л СЛ 12ХДПНР", 345590, 5000, 2, 69118, "УПК");
             printer.printRecItemAdjustment(1, "Discount", 3, 2);
             printer.printRecItem("Любимый Нек Ябл Осв 0.485л СЛ 24Х ДП НР", 192548, 2000, 2, 96274, "УПК");
             printer.printRecItemAdjustment(1, "Discount", 2, 2);
-            
+
             printer.printRecTotal(8504619, 8504619, "0");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     public void printReceiptWithError5() {
         try {
             printer.resetPrinter();
@@ -4928,6 +4928,48 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
-    
+
+    public void printReceiptWithError6() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("5051 AHM.Чай EARL GREY 25х2г", 113397, 3000, 1, 37799, "ST");
+            printer.printRecItemAdjustment(1, "", 34020, 1);
+            printer.printRecSubtotalAdjustment(1, "", 77);
+            printer.printRecTotal(79300, 79300, "01");
+            printer.endFiscalReceipt(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printReceiptWithError7() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("Аква Минер Лимон Без Газ 0.5л ПЭТ 12Х", 45068, 1000, 1, 45068, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Аква Минер Мята Лайм Без Газ 0.5л ПЭТ12Х", 45068, 1000, 1, 45068, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Аква Минер Яблоко Газ 0.5л ПЭТ 12Х", 45068, 1000, 1, 45068, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Аква Минер Акт Малина 0.5л ПЭТ 12Х", 45068, 1000, 1, 45068, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Аква Минер Акт Цитрус 0.5л ПЭТ 12Х", 45068, 1000, 1, 45068, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Адреналин Раш 0.449Л БАН 12Х", 334761, 3000, 1, 111587, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Пепси Кола 0.33л БАН 12Х", 46333, 1000, 1, 46333, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Адреналин Раш 0.25л БАН 12Х", 141530, 2000, 1, 70765, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 2, 1);
+            printer.printRecTotal(747955, 747955, "0");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

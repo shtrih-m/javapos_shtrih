@@ -139,5 +139,57 @@ public class FSSalesReceiptTest {
         assertEquals(true, receipt.isPayed());
     }
     
+    /**
+     * Test of applyDiscounts3 method, of class FSSalesReceipt.
+     */
+    @Test
+    public void testApplyDiscounts3() throws Exception 
+    {
+        System.out.println("applyDiscounts2");
+    
+        FSSalesReceipt receipt = createReceipt();
+        receipt.beginFiscalReceipt(true);
+        receipt.printRecItem("Аква Минер Лимон Без Газ 0.5л ПЭТ 12Х", 45068, 1.0, 1, 45068, "УПК");
+        receipt.printRecItemAdjustment(1, "Discount", 1, 1);
+        receipt.printRecItem("Аква Минер Мята Лайм Без Газ 0.5л ПЭТ12Х", 45068, 1.0, 1, 45068, "УПК");
+        receipt.printRecItemAdjustment(1, "Discount", 1, 1);
+        receipt.printRecItem("Аква Минер Яблоко Газ 0.5л ПЭТ 12Х", 45068, 1.0, 1, 45068, "УПК");
+        receipt.printRecItemAdjustment(1, "Discount", 1, 1);
+        receipt.printRecItem("Аква Минер Акт Малина 0.5л ПЭТ 12Х", 45068, 1.0, 1, 45068, "УПК");
+        receipt.printRecItemAdjustment(1, "Discount", 1, 1);
+        receipt.printRecItem("Аква Минер Акт Цитрус 0.5л ПЭТ 12Х", 45068, 1.0, 1, 45068, "УПК");
+        receipt.printRecItemAdjustment(1, "Discount", 1, 1);
+        receipt.printRecItem("Адреналин Раш 0.449Л БАН 12Х", 334761, 3.0, 1, 111587, "УПК");
+        receipt.printRecItemAdjustment(1, "Discount", 1, 1);
+        receipt.printRecItem("Пепси Кола 0.33л БАН 12Х", 46333, 1.0, 1, 46333, "УПК");
+        receipt.printRecItemAdjustment(1, "Discount", 1, 1);
+        receipt.printRecItem("Адреналин Раш 0.25л БАН 12Х", 141530, 2.0, 1, 70765, "УПК");
+        receipt.printRecItemAdjustment(1, "Discount", 2, 1);
+        receipt.printRecTotal(747955, 747955, 0, "0");
+        
+        assertEquals(0, receipt.discounts.getTotal());
+        assertEquals(747955, receipt.getSubtotal());
+        assertEquals(true, receipt.isPayed());
+    }
 
+    /**
+     * Test of applyDiscounts4 method, of class FSSalesReceipt.
+     */
+    @Test
+    public void testApplyDiscounts4() throws Exception 
+    {
+        System.out.println("applyDiscounts2");
+    
+        FSSalesReceipt receipt = createReceipt();
+        receipt.beginFiscalReceipt(true);
+        receipt.printRecItem("Адреналин Раш 0.449Л БАН 12Х", 334761, 3.0, 1, 111587, "УПК");
+        receipt.printRecItemAdjustment(1, "Discount", 1, 1);
+        receipt.printRecTotal(334760, 334760, 0, "0");
+        
+        assertEquals(0, receipt.discounts.getTotal());
+        assertEquals(334760, receipt.getSubtotal());
+        assertEquals(true, receipt.isPayed());
+    }
+    
+    
 }

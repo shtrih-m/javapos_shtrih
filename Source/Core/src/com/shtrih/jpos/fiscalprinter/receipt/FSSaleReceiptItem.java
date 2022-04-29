@@ -91,7 +91,7 @@ public class FSSaleReceiptItem {
         item.setTax4(tax4);
         item.setText(text);
         item.setTaxAmount(taxAmount);
-        item.setTotalAmount(Math.round(price * quantity)); 
+        item.setTotalAmount(totalAmount); 
         item.setPaymentType(paymentType);
         item.setSubjectType(subjectType);
         item.setUnit(getUnit());

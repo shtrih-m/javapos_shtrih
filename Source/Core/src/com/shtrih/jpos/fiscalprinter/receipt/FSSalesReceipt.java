@@ -1449,9 +1449,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
         if (discount == 1) 
         {
-            item.setTotal(total);
-            fpItems.add(item);
-            return;
+            if (Math.abs(total + discount - Math.round(quantity * price))==0)
+            {
+                item.setTotal(total);
+                fpItems.add(item);
+                return;
+            }
         }
         
         long priceWithDiscount = (long) Math.abs(Math.floor(total / quantity));
