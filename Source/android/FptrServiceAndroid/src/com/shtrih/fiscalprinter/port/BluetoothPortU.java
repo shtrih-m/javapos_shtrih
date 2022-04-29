@@ -49,7 +49,7 @@ public class BluetoothPortU implements PrinterPort
         return connect(new BluetoothPort());
     }
 
-    private boolean connectBluetoothLE() {
+    private boolean connectBluetoothLE() throws Exception {
         return connect(new BluetoothLEPort());
     }
 

@@ -1043,7 +1043,8 @@ class PrinterTest implements FiscalPrinterConst {
             //setTrailerLines();
             //printSpeedTest();
 
-            printReceiptWithError3();
+            printReceiptWithError4();
+            //printReceiptWithError5();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -4851,4 +4852,82 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    public void printReceiptWithError4() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("Липтон Чай Хол Зеленый 0.5л ПЭТ 12Х", 819510, 15000, 1, 54634, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 6, 1);
+            printer.printRecItem("Драйв Ми Нитро Буст 0.449л БАН 6Х", 898400, 40000, 1, 22460, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 32, 1);
+            printer.printRecItem("Драйв Ми Яблоко Карамбола 0.449л БАН 6Х", 898400, 40000, 1, 22460, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 32, 1);
+            printer.printRecItem("Любимый Нек Ябл Осв 1.93л СЛ 6ХДП СТДНР", 368705, 5000, 2, 73741, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 2);
+            printer.printRecItem("Любимый Нап ЦитрусМикс 1.93л СЛ 6Х ДПСТД", 221223, 3000, 2, 73741, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 2);
+            printer.printRecItem("Любимый Нап ВинДуэт 1.93л СЛ 6Х ДПСТД НР", 368705, 5000, 2, 73741, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 2);
+            printer.printRecItem("ЛюбимыйНапЯблВишЧереш 1.93л СЛ 6ХДПСТДНР", 368705, 5000, 2, 73741, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 2);
+            printer.printRecItem("Любимый Нап ТропМикОбг 1.93лСЛ 6ХДПСТДНР", 368705, 5000, 2, 73741, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 2);
+            printer.printRecItem("Любимый Нап АпМангоМанд 1.93 СЛ 6ХДП СТД", 368705, 5000, 2, 73741, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 2);
+            printer.printRecItem("ЛюбимыйНапЯблГранЧРяб 1.93л СЛ 6ХДПСТДНР", 221223, 3000, 2, 73741, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 2);
+            printer.printRecItem("Любимый НапЯбЧРябКлубЗем1.93лСЛ6ХДПСТДНР", 368705, 5000, 2, 73741, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 2);
+            printer.printRecItem("Любимый Нек Ябл Осв 0.95л СЛ 12Х ДПНР", 345590, 5000, 2, 69118, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 3, 2);
+            printer.printRecItem("Любимый Нек Ябл Перс Нект 0.95лСЛ12ХДПНР", 345590, 5000, 2, 69118, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 3, 2);
+            printer.printRecItem("Любимый Нек ТоматМорскСоль 0.95л СЛ12ХДП", 345590, 5000, 2, 69118, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 3, 2);
+            printer.printRecItem("Любимый Нап ЦитрусМикс 0.95л СЛ 12Х ДП", 207354, 3000, 2, 69118, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 2, 2);
+            printer.printRecItem("Любимый Нап ВинДуэт 0.95л СЛ 12Х ДП НР", 345590, 5000, 2, 69118, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 3, 2);
+            printer.printRecItem("Любимый Нап Ябл АбрГруша0.95лСЛ12Х ДП НР", 207354, 3000, 2, 69118, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 2, 2);
+            printer.printRecItem("Любим Нап ЯблБанГрушКиви 0.95лСЛ12ХДПНД", 207354, 3000, 2, 69118, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 2, 2);
+            printer.printRecItem("Любимый Нап ТропМикс Обг 0.95л СЛ12ХДПНР", 345590, 5000, 2, 69118, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 3, 2);
+           
+            printer.printRecItem("Любимый Нап АпМангоМанд 0.95л СЛ 12Х ДП", 345590, 5000, 2, 69118, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 3, 2);
+            
+            printer.printRecItem("Любимый Нап ЯблКлубЧРяб 0.95л СЛ 12ХДПНР", 345590, 5000, 2, 69118, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 3, 2);
+            printer.printRecItem("Любимый Нек Ябл Осв 0.485л СЛ 24Х ДП НР", 192548, 2000, 2, 96274, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 2, 2);
+            
+            printer.printRecTotal(8504619, 8504619, "0");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void printReceiptWithError5() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("Русский Дар Квас 2л ПЭТ 6Х", 47697, 1000, 1, 47697, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Драйв Ми Яблоко Карамбола 0.449л БАН 6Х", 3868480, 160000, 1, 24178, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 64, 1);
+            printer.printRecItem("Драйв Ми Ориджинал 0.449л БАН 12X", 3868480, 80000, 1, 48356, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 64, 1);
+            printer.printRecTotal(7784528, 7784528, "0");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
 }

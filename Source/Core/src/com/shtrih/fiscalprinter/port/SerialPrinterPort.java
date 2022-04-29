@@ -15,7 +15,7 @@ import java.util.Vector;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 
-public class SerialPrinterPort implements PrinterPort {
+public class SerialPrinterPort implements PrinterPort2 {
 
     public SerialPrinterPortSingle port = null;
 
@@ -83,5 +83,13 @@ public class SerialPrinterPort implements PrinterPort {
 
     public void setPortEvents(IPortEvents events){
 
+    }
+
+    public InputStream getInputStream() throws Exception{
+        return port.getInputStream();
+    }
+
+    public OutputStream getOutputStream() throws Exception{
+        return port.getOutputStream();
     }
 }

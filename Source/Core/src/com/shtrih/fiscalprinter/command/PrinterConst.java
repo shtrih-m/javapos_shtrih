@@ -418,8 +418,8 @@ public interface PrinterConst {
     public static final int SMFP_EFPTR_FM_DAYOPENED = 0x15;
     // Day is not opened
     public static final int SMFP_EFPTR_FM_DAYNOTOPENED = 0x16;
-    // First day number more then last day number
-    public static final int SMFP_EFPTR_FM_DAYNUMBER = 0x17;
+    // FS: Invalid time difference of 2 operations
+    public static final int SMFP_EFPTR_FS_DATE_TIME = 0x17;
     // First day date more then last day date
     public static final int SMFP_EFPTR_FM_DAYDATE = 0x18;
     // Command is not supported by this version of FP

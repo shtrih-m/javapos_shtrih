@@ -560,6 +560,8 @@ public interface SMFiscalPrinter {
 
     public int reboot() throws Exception;
 
+    public FDOParameters getFDOParameters() throws Exception;
+
     public FDOParameters readFDOParameters() throws Exception;
 
     public String readRnm() throws Exception;

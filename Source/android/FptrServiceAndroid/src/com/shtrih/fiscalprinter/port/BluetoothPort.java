@@ -23,7 +23,7 @@ import java.util.UUID;
 /**
  * @author V.Kravtsov
  */
-public class BluetoothPort implements PrinterPort {
+public class BluetoothPort implements PrinterPort2 {
     private static final UUID SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     //private static final UUID RFCOMM_UUID = UUID.fromString("00000003-0000-1000-8000-00805f9b34fb");
 
@@ -265,6 +265,16 @@ public class BluetoothPort implements PrinterPort {
         if (isClosed()) {
             open(openTimeout);
         }
+    }
+
+    @Override
+    public InputStream getInputStream() throws Exception{
+        return getSocket().getInputStream();
+    }
+
+    @Override
+    public OutputStream getOutputStream() throws Exception{
+        return getSocket().getOutputStream();
     }
 
     @Override

@@ -963,6 +963,10 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return null;
     }
 
+    public FDOParameters getFDOParameters() throws Exception {
+        return null;
+    }
+
     public int getHeaderHeight() throws Exception {
         return 88;
     }

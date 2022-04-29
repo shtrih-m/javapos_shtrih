@@ -607,6 +607,10 @@ public class DirectIOHandler {
                 new DIOSetCommandTimeout(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_READ_FDO_PARAMS:
+                new DIOReadFDOParams(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL, Localizer.getString(Localizer.invalidParameterValue) + ", command");
         }

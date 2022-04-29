@@ -207,4 +207,12 @@ public class SerialPrinterPortSingle {
     public boolean isSearchByBaudRateEnabled() {
         return true;
     }
+
+    public InputStream getInputStream() throws Exception{
+        return getPort().getInputStream();
+    }
+
+    public OutputStream getOutputStream() throws Exception{
+        return getPort().getOutputStream();
+    }
 }

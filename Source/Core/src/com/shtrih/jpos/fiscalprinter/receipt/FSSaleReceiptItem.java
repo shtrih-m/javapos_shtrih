@@ -22,7 +22,6 @@ public class FSSaleReceiptItem {
 
     private int pos = 0;
     private long price;
-    private long priceWithDiscount;
     private long unitPrice;
     private double quantity;
     private int department;
@@ -35,7 +34,6 @@ public class FSSaleReceiptItem {
     private String postLine = "";
     private String unitName = "";
     private boolean isStorno;
-    private final FSDiscounts discounts = new FSDiscounts();
     private Long totalAmount = null;
     private Long taxAmount = null;
     private int paymentType = 4;
@@ -43,6 +41,7 @@ public class FSSaleReceiptItem {
     private HashMap receiptFields = new HashMap();
     private double taxRate = 0;
     private Integer unit;
+    private final FSDiscounts discounts = new FSDiscounts();
     private final List<FSTLVItem> tags = new Vector<FSTLVItem>();
     private final List<byte[]> itemCodes = new Vector<byte[]>();
 
@@ -53,7 +52,6 @@ public class FSSaleReceiptItem {
         FSSaleReceiptItem item = new FSSaleReceiptItem();
         item.pos = pos;
         item.price = price;
-        item.priceWithDiscount = priceWithDiscount;
         item.unitPrice = unitPrice;
         item.quantity = quantity;
         item.department = department;
@@ -85,7 +83,7 @@ public class FSSaleReceiptItem {
     public PriceItem getPriceItem() throws Exception {
         PriceItem item = new PriceItem();
         item.setDepartment(department);
-        item.setPrice(getPriceWithDiscount());
+        item.setPrice(price);
         item.setQuantity(quantity);
         item.setTax1(tax1);
         item.setTax2(tax2);
@@ -93,7 +91,7 @@ public class FSSaleReceiptItem {
         item.setTax4(tax4);
         item.setText(text);
         item.setTaxAmount(taxAmount);
-        item.setTotalAmount(getTotal());
+        item.setTotalAmount(Math.round(price * quantity)); 
         item.setPaymentType(paymentType);
         item.setSubjectType(subjectType);
         item.setUnit(getUnit());
@@ -101,7 +99,7 @@ public class FSSaleReceiptItem {
         return item;
     }
 
-    public void setAmount(Long value) {
+    public void setTotal(Long value) {
         totalAmount = value;
     }
 
@@ -145,10 +143,10 @@ public class FSSaleReceiptItem {
         pos = value;
     }
 
-    public long getTotal() {
-        return totalAmount - discounts.getTotal();
+    public long getDiscount(){
+        return getDiscounts().getTotal();
     }
-
+    
     public void addDiscount(AmountItem discount) {
         getDiscounts().add(discount);
     }
@@ -172,10 +170,6 @@ public class FSSaleReceiptItem {
      */
     public FSDiscounts getDiscounts() {
         return discounts;
-    }
-
-    public long getPriceDiscount() {
-        return price - priceWithDiscount;
     }
 
     public long getPrice() {
@@ -271,35 +265,8 @@ public class FSSaleReceiptItem {
         this.text = text;
     }
 
-    public long getPriceWithDiscount() {
-        return priceWithDiscount;
-    }
-
-    public long getAmount() {
-        return Math.abs(PrinterAmount.getAmount(getPrice(), getQuantity()) - discounts.getTotal());
-    }
-
-    public long calcPriceWithDiscount() {
-        if (quantity == 0) {
-            return 0;
-        }
-        if ((discounts.getTotal() == 0)||(discounts.getTotal() == 1)) {
-            return price;
-        }
-        long price1 = Math.abs(Math.round((totalAmount - discounts.getTotal()) / (double)quantity));
-        return price1;
-    }
-
-    public void applyDiscounts() {
-        priceWithDiscount = price;
-        if (discounts.getTotal() != 0) {
-            if (quantity == 1.0) {
-                priceWithDiscount = price - discounts.getTotal();
-            } else 
-            {
-                priceWithDiscount = calcPriceWithDiscount();
-            }
-        }
+    public long getTotal() {
+        return totalAmount;
     }
 
     public void setPaymentType(int paymentType) {
@@ -330,10 +297,6 @@ public class FSSaleReceiptItem {
         return taxRate;
     }
 
-    public long getTaxAmount() throws Exception {
-        return Math.round((getTotal()) * taxRate / (double)(1 + taxRate));
-    }
-
     public Integer getUnit() {
         return unit;
     }
@@ -344,5 +307,9 @@ public class FSSaleReceiptItem {
 
     public List<byte[]> getItemCodes(){
         return itemCodes;
+    }
+    
+    public long getTaxAmount() throws Exception {
+        return Math.round((getTotal()) * taxRate / (double)(1 + taxRate));
     }
 }

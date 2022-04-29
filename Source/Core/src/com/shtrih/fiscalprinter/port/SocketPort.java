@@ -9,7 +9,7 @@ import com.shtrih.util.*;
 /**
  * @author V.Kravtsov
  */
-public class SocketPort implements PrinterPort {
+public class SocketPort implements PrinterPort2 {
     private static CompositeLogger logger = CompositeLogger.getLogger(SocketPort.class);
     private static Map<String, SocketPort> items = new HashMap<String, SocketPort>();
 
@@ -17,8 +17,6 @@ public class SocketPort implements PrinterPort {
     private final String portName;
     private int readTimeout;
     private int openTimeout;
-    private InputStream inputStream = null;
-    private OutputStream outputStream = null;
 
     public static synchronized SocketPort getInstance(String portName, int openTimeout) {
         SocketPort item = items.get(portName);
@@ -58,10 +56,6 @@ public class SocketPort implements PrinterPort {
         String host = tokenizer.nextToken();
         int port = Integer.parseInt(tokenizer.nextToken());
         socket.connect(new InetSocketAddress(host, port), openTimeout);
-
-
-        inputStream = socket.getInputStream();
-        outputStream = socket.getOutputStream();
     }
 
     public void close() {
@@ -69,12 +63,6 @@ public class SocketPort implements PrinterPort {
             return;
         }
         try {
-            if (inputStream != null) {
-                inputStream.close();
-            }
-            if (outputStream != null) {
-                outputStream.close();
-            }
             if (socket != null) {
                 socket.close();
             }
@@ -82,14 +70,12 @@ public class SocketPort implements PrinterPort {
         } catch (Exception e) {
         }
         socket = null;
-        inputStream = null;
-        outputStream = null;
     }
 
     public int readByte() throws Exception {
         open();
 
-        int b = inputStream.read();
+        int b = socket.getInputStream().read();
         if (b == -1) {
             noConnectionError();
         }
@@ -107,7 +93,7 @@ public class SocketPort implements PrinterPort {
         byte[] data = new byte[len];
         int offset = 0;
         while (len > 0) {
-            int count = inputStream.read(data, offset, len);
+            int count = socket.getInputStream().read(data, offset, len);
             if (count == -1) {
                 noConnectionError();
             }
@@ -121,8 +107,8 @@ public class SocketPort implements PrinterPort {
         for (int i = 0; i < 2; i++) {
             try {
                 open();
-                outputStream.write(b);
-                outputStream.flush();
+                socket.getOutputStream().write(b);
+                socket.getOutputStream().flush();
                 return;
             } catch (Exception e) {
                 close();
@@ -173,5 +159,15 @@ public class SocketPort implements PrinterPort {
 
     public void setPortEvents(IPortEvents events){
 
+    }
+
+    public InputStream getInputStream() throws Exception{
+        open();
+        return socket.getInputStream();
+    }
+
+    public OutputStream getOutputStream() throws Exception{
+        open();
+        return socket.getOutputStream();
     }
 }

@@ -54,12 +54,14 @@ public class ReceiptTemplate {
         return getParams().ItemRowFormat.contains("%POSTLINE%");
     }
 
-    /**
+        /**
      * Parsing format lines, create format string and determine fields
      *
      * @throws Exception
      */
-    private void parseFormatLines() throws Exception {
+    private void parseFormatLines() throws Exception 
+    {
+        if (getParams().ItemTableHeader == null) return;
         String fieldSeparator = getParams().fieldSeparator;
         if (!getParams().ItemTableHeader.isEmpty()) {
             headerLines = getParams().ItemTableHeader.split(fieldSeparator);
@@ -231,11 +233,11 @@ public class ReceiptTemplate {
             return getParams().quantityToStr(item.getQuantity(), item.getUnitName());
         }
         if (f.tag.equals("SUM")) {
-            return StringUtils.amountToString(item.getPriceWithDiscount());
+            return StringUtils.amountToString(item.getPrice());
         }
 
         if (f.tag.equals("DISCOUNT")) {
-            long amount = item.getPriceDiscount();
+            long amount = item.getDiscount();
             if (amount == 0) {
                 return "";
             }

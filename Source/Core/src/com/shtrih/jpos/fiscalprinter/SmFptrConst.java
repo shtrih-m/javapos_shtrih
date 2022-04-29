@@ -716,6 +716,9 @@ public class SmFptrConst {
     // Set comand timeout
     public static final int SMFPTR_DIO_SET_COMMAND_TIMEOUT = 0x8C;
 
+    // Read FDO parameters
+    public static final int SMFPTR_DIO_READ_FDO_PARAMS = 0x8D;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

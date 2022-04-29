@@ -265,15 +265,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private boolean filterEnabled = true;
     private boolean isInReceiptTrailer = false;
     private TextDocumentFilter filter = null;
-    private FSService fsSenderService;
+    private FSService fsService;
     private FirmwareUpdaterService firmwareUpdaterService;
     private boolean docEndEnabled = true;
     private JsonUpdateService jsonUpdateService = null;
     private boolean disablePrintOnce = false;
     private volatile boolean pollStopFlag = false;
     private volatile boolean eventStopFlag = false;
-    private boolean isFSServiceWasStopped = false;
-    
+
     public void enableTextDocumentFilter(boolean value) {
         filter.setEnabled(value);
     }
@@ -636,6 +635,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     command.setRepeatNeeded(true);
                     break;
                 
+                case SMFP_EFPTR_FS_DATE_TIME:
+                    FSReadStatus fsStatus = printer.fsReadStatus();
+                    logger.debug("FS document date: " + fsStatus.getDate().toString());
+                    logger.debug("FS document time: " + fsStatus.getTime().toString());
+                    break;
+                    
                 case SMFP_EFPTR_PREVCOMMAND:
                     printer.waitForPrinting();
                     command.setRepeatNeeded(true);
@@ -978,18 +983,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
     
-    public void updateFSService() throws Exception {
-        if (isFSServiceWasStopped) {
-            isFSServiceWasStopped = false;
-            startFSService();
-        }
-    }
-    
-    public void startFSService() throws Exception {
-        if (fsSenderService != null) {
-            return;
-        }
-        
+    public void startFSService() throws Exception
+    {
+        if (fsService != null) return;
+
         if (!params.FSServiceEnabled) {
             return;
         }
@@ -1013,9 +1010,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             logger.debug("FSService stopped, EoD disabled");
             return;
         }
-        
-        fsSenderService = new FSService(printer, params);
-        fsSenderService.start();
+
+        fsService = new FSService(printer, params);
+        fsService.start();
     }
     
     public void startFirmwareUpdaterService() throws Exception {
@@ -1070,14 +1067,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
     
-    public void stopFSService() {
-        if (fsSenderService == null) {
-            return;
-        }
-        
+    public void stopFSService()
+    {
+        if (fsService == null) return;
+
         try {
-            fsSenderService.stop();
-            fsSenderService = null;
+            fsService.stop();
+            fsService = null;
         } catch (Exception e) {
             logger.error("Failed to stop fsSenderService", e);
         }
@@ -1098,7 +1094,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
     
     public boolean isFSServiceRunning() {
-        return fsSenderService != null;
+        return (fsService != null) && (fsService.isStarted());
     }
     
     public boolean isFirmwareUpdaterServiceRunning() {
@@ -3126,11 +3122,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 "Day end required");
     }
     
-    public void openFiscalDay() throws Exception {
+    public void openFiscalDay() throws Exception
+    {
         if (printer.getCapOpenFiscalDay() && printer.isDayClosed()) {
+            stopFSService();
             printDocStart();
             getPrinter().openFiscalDay();
             printEndFiscal();
+            startFSService();
         }
     }
 
@@ -3141,11 +3140,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkEnabled();
         checkPrinterState(FPTR_PS_MONITOR);
         
-        if (fsSenderService != null) {
-            isFSServiceWasStopped = true;
-        }
         stopFSService();
-        
         try {
             
             Vector<TextLine> messages = null;
@@ -3224,7 +3219,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 // ignore print errors because cashin is succeeded
                 logger.error("endFiscalReceipt: " + e.getMessage());
             }
-            updateFSService();
+            startFSService();
             setPrinterState(FPTR_PS_MONITOR);
             receipt = new NullReceipt(createReceiptContext());
             params.nonFiscalDocNumber++;
@@ -3673,7 +3668,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkEnabled();
         checkStateBusy();
         checkPrinterState(FPTR_PS_MONITOR);
-        
+
+        stopFSService();
         if (getParams().forceOpenShiftOnZReport) {
             openFiscalDay();
         }
@@ -3688,11 +3684,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             fiscalDay.close();
             try {
                 printCalcReport();
-                
                 printEndFiscal();
             } catch (Exception e) {
                 logger.error("printZReport: " + e.getMessage());
             }
+            startFSService();
         } else {
             throw new JposException(JPOS_E_ILLEGAL);
         }
@@ -3784,7 +3780,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         receiptType = 0;
         isReceiptOpened = false;
         disablePrintOnce = false;
-        updateFSService();
+        startFSService();
     }
     
     public void setDate(String date) throws Exception {

@@ -24,6 +24,7 @@ public class FSService implements Runnable {
 
     private CompositeLogger logger = CompositeLogger.getLogger(FSService.class);
 
+    private boolean started = false;
     private long packetNumber = 0;
     private FDOParameters parameters;
     private final int connectTimeout;
@@ -42,14 +43,15 @@ public class FSService implements Runnable {
         this.connectTimeout = parameters.FSConnectTimeout;
     }
 
-    private boolean isStarted() {
-        return thread != null;
+    public boolean isStarted() {
+        return started;
     }
 
     public void start() throws Exception {
         if (!isStarted()) {
             logger.debug("FSService starting");
             stopFlag = false;
+            started = true;
             thread = new Thread(this);
             thread.start();
         }
@@ -70,20 +72,18 @@ public class FSService implements Runnable {
         try {
             logger.debug("FSService started");
             
-            parameters = printer.readFDOParameters();
+            parameters = printer.getFDOParameters();
             logger.debug(String.format("OFD %s:%d, connection timeout %d ms, poll period %d ms",
                     parameters.getHost(), parameters.getPort(), connectTimeout,
                     parameters.getPollPeriodSeconds() * 1000));
 
-            while (!stopFlag) {
-                checkData();
-                Time.delay(parameters.getPollPeriodSeconds() * 1000);
-            }
+            checkData();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
+        started = false;
         logger.debug("FSService stopped");
     }
 
@@ -93,13 +93,9 @@ public class FSService implements Runnable {
             if (data.length == 0) {
                 return;
             }
-            // System.out.println("FS -> OFD: " + Hex.toHex(data));
             if (stopFlag) {
                 return;
             }
-            //packetNumber++;
-            //saveToFile(data, String.format("FSDocument_%04d.bin", packetNumber));
-
             // P-protocol version 0x0102 -> 0x0120
             if ((data.length >= 30) && (data[6] == 0x01)
                     && (data[28] == 0) && (data[29] == 0)) {
@@ -110,14 +106,11 @@ public class FSService implements Runnable {
                     data[7] = 0x20;
                 }
             }
-            //saveToFile(data, String.format("OFDDocument_%04d.bin", packetNumber));
 
             byte[] answer = sendData(data);
             if (answer.length == 0) {
                 return;
             }
-            //saveToFile(answer, String.format("OFDTicket_%04d.bin", packetNumber));
-            // System.out.println("FS <- OFD: " + Hex.toHex(answer));
             if (stopFlag) {
                 return;
             }

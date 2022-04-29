@@ -46,10 +46,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private int receiptType = 0;
     private boolean isOpened = false;
     private String voidDescription = "";
-    private final Vector items = new Vector();
+    public Vector items = new Vector();
     private final Vector endingItems = new Vector();
     private final long[] payments = new long[16]; // payment amounts
-    private final FSDiscounts discounts = new FSDiscounts();
+    public final FSDiscounts discounts = new FSDiscounts();
     private Vector<String> messages = new Vector<String>();
     private final ReceiptTemplate receiptTemplate;
     private static CompositeLogger logger = CompositeLogger.getLogger(FSSalesReceipt.class);
@@ -794,7 +794,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecTotal(long total, long payment, long payType,
             String description) throws Exception {
-        applyItemDiscounts();
+        applyDiscounts();
         checkTotal(getSubtotal(), total);
         addPayment(payment, payType);
         clearPrePostLine();
@@ -819,7 +819,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public long getItemPercentAdjustmentAmount(long amount) throws Exception {
-        double d = getLastItem().getAmount() * amount;
+        double d = getLastItem().getTotal() * amount;
         return Math.round(d / 10000.0);
     }
 
@@ -1053,8 +1053,11 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         return result;
     }
 
-    public boolean isPayed() throws Exception {
-        return getPaymentAmount() >= getSubtotal();
+    public boolean isPayed() throws Exception 
+    {
+        long subtotal = getSubtotal();
+        long paymentAmount = getPaymentAmount();
+        return paymentAmount >= subtotal;
     }
 
     public void clearPrePostLine() {
@@ -1141,7 +1144,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
         if (item == null) {
             item = new FSSaleReceiptItem();
-            item.setAmount(price);
+            item.setTotal(price);
             item.setPrice(unitPrice);
             item.setUnitPrice(unitPrice);
             item.setQuantity(quantity);
@@ -1169,7 +1172,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             itemCodes = new Vector<byte[]>();
 
             if (getParams().itemTotalAmount != null) {
-                item.setAmount(getParams().itemTotalAmount);
+                item.setTotal(getParams().itemTotalAmount);
                 getParams().itemTotalAmount = null;
             }
 
@@ -1234,11 +1237,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printItemDiscount(long amount, int tax1, String text)
             throws Exception {
         logger.debug("printDiscount: " + amount);
-
-        if ((amount + discounts.getTotal()) < 100) {
-            printTotalDiscount(amount, tax1, text);
-            return;
-        }
 
         AmountItem item = new AmountItem();
         item.setAmount(amount);
@@ -1359,7 +1357,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         line = StringUtils.left(line, 4) + item.getText();
         getDevice().printText(line);
 
-        String amountText = StringUtils.amountToString(item.getAmount()) + getTaxLetter(tax);
+        String amountText = StringUtils.amountToString(item.getTotal()) + getTaxLetter(tax);
         if (item.getIsStorno()) {
             amountText = "-" + amountText;
         }
@@ -1408,25 +1406,121 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         itemCodes.add(mcdata);
     }
 
-    public void applyItemDiscounts() throws Exception 
-    {
-        if (itemDiscountsApplied) return;
-        
+    public void applyDiscounts() throws Exception {
+        if (itemDiscountsApplied) {
+            return;
+        }
+
+        Vector fpItems = new Vector();
         for (int i = 0; i < items.size(); i++) {
-            Object recItem = items.get(i);
-            if (recItem instanceof FSSaleReceiptItem) {
-                FSSaleReceiptItem item = (FSSaleReceiptItem) recItem;
-                item.applyDiscounts();
-                long amount = Math.round(item.getPriceWithDiscount() * item.getQuantity());
-                long discountAmount = amount - item.getTotal();
-                if (discountAmount > 0) 
-                {
-                    printTotalDiscount(discountAmount, 0, "");
-                    item.setAmount(amount);
-                    item.getDiscounts().clear();
-                }
+            Object item = items.get(i);
+            if (item instanceof FSSaleReceiptItem) 
+            {
+                applyItemDiscounts((FSSaleReceiptItem) item, fpItems);
+            } else {
+                fpItems.add(item);
             }
         }
+        items = fpItems;
         itemDiscountsApplied = true;
     }
+
+    public void applyItemDiscounts(FSSaleReceiptItem item, Vector fpItems)
+            throws Exception 
+    {
+        long discount = item.getDiscounts().getTotal();
+        long total = item.getTotal() - discount;
+        long price = item.getPrice();
+        double quantity = item.getQuantity();
+        
+        item.getDiscounts().clear();
+        
+        if (discount == 0) {
+            fpItems.add(item);
+            return;
+        }
+
+        if (quantity == 1.0) {
+            item.setPrice(price - discount);
+            item.setTotal(Math.round(item.getQuantity() * item.getPrice()));
+            fpItems.add(item);
+            return;
+        }
+
+        if (discount == 1) 
+        {
+            item.setTotal(total);
+            fpItems.add(item);
+            return;
+        }
+        
+        long priceWithDiscount = (long) Math.abs(Math.floor(total / quantity));
+        long amount = Math.round(priceWithDiscount * quantity);
+        if (total == amount) {
+            item.setPrice(priceWithDiscount);
+            item.setTotal(total);
+            fpItems.add(item);
+            return;
+        }
+        
+        if (total - amount > 0) {
+            double itemQuantity = getItemQuantity(priceWithDiscount, 
+                    quantity, total, amount);
+
+            // item 1
+            item.setPrice(priceWithDiscount + 1);
+            item.setQuantity(itemQuantity);
+            item.setTotal(Math.round(item.getQuantity() * item.getPrice()));
+            fpItems.add(item);
+            // item 2
+            item = item.getCopy();
+            item.setPrice(priceWithDiscount);
+            item.setQuantity(quantity - itemQuantity);
+            item.setTotal(Math.round(item.getQuantity() * item.getPrice()));
+            fpItems.add(item);
+            return;
+        }
+        fpItems.add(item);
+        return;
 }
+    
+    public double getItemQuantity(long price, double quantity, long total, long amount) {
+        long result;
+        long lquantity = (long)quantity * 1000000;
+        if ((lquantity % 1000000) == 0) {
+            result = (total - amount) * 1000000;
+        } else 
+        {
+            result = lquantity * price + lquantity - total;
+        }
+        return result / 1000000.0;
+    }
+
+}
+
+/*
+ long amount = Math.round(item.getPriceWithDiscount() * item.getQuantity());
+ long discountAmount = amount - item.getTotal();
+ if (discountAmount > 0) 
+ {
+ if ((discounts.getTotal() + discountAmount-1) > 99){
+ throw new Exception("Discount cannot be applied");
+ }
+ printTotalDiscount(discountAmount-1, 0, "");
+ item.setTotal(amount-1);
+ item.getDiscounts().clear();
+ }
+
+ public long calcPriceWithDiscount() {
+ if (quantity == 0) {
+ return 0;
+ }
+ if ((discounts.getTotal() == 0)||(discounts.getTotal() == 1)) {
+ return price;
+ }
+ long price1 = (long)Math.abs((totalAmount - discounts.getTotal()) / (double)quantity);
+ return price1;
+ }
+
+
+ */

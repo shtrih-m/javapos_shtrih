@@ -155,6 +155,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private Integer fdVersion = null;
     private boolean capLastErrorText = true;
     private int[] taxRates = null;
+    private FDOParameters fdoParameters = null;
+
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params) {
@@ -4120,8 +4122,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
             return new FDOParameters(host, portValue, pollPeriod);
         }
-
         return null;
+    }
+
+    public FDOParameters getFDOParameters() throws Exception{
+        if (fdoParameters == null){
+            fdoParameters = readFDOParameters();
+        }
+        return fdoParameters;
     }
 
     private int getOfdTableNumber() throws Exception {

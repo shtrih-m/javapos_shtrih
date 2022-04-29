@@ -43,7 +43,7 @@ public class PrinterPortFactory {
                 return new BluetoothLEPort();
 
             case SmFptrConst.PORT_TYPE_PPP:
-                return new PPPPort(params);
+                return new PPPPort(params, new BluetoothPort());
 
             case SmFptrConst.PORT_TYPE_FROMCLASS:
                 Class portClass = Class.forName(params.portClass);
