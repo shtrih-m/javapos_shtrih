@@ -33,10 +33,6 @@ public class PrinterPortFactory {
                 result = SocketPort.getInstance(params.portName, params.getByteTimeout());
                 break;
 
-            case SmFptrConst.PORT_TYPE_PPP:
-                result = new PPPPort(params);
-                break;
-                
             case SmFptrConst.PORT_TYPE_FROMCLASS:
                 Class portClass = Class.forName(params.portClass);
                 Class[] parameters = new Class[0];

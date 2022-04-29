@@ -8,7 +8,7 @@
 ********************************************************************************
 
   29.04.2022
-  deviceServiceVersion = 1013649
+  deviceServiceVersion = 1013650
 
   [-] Fixed error with receipt item discount
   
