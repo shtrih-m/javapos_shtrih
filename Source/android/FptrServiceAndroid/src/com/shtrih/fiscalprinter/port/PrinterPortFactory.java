@@ -29,6 +29,7 @@ public class PrinterPortFactory {
 
     public static PrinterPort createPort(FptrParameters params) throws Exception
     {
+        PrinterPort2 port;
         switch (params.getPortType()) {
             case SmFptrConst.PORT_TYPE_SERIAL:
                 return new SerialPrinterPort(params.portName);
@@ -36,17 +37,23 @@ public class PrinterPortFactory {
             case SmFptrConst.PORT_TYPE_SOCKET:
                 return SocketPort.getInstance(params.portName, params.getByteTimeout());
 
-            case SmFptrConst.PORT_TYPE_BLUETOOTH:
+            case SmFptrConst.PORT_TYPE_BT:
                 return new BluetoothPort();
 
-            case SmFptrConst.PORT_TYPE_BLUETOOTH_LE:
+            case SmFptrConst.PORT_TYPE_BLE:
                 return new BluetoothLEPort();
 
-            case SmFptrConst.PORT_TYPE_PPP_BT:
-                return new PPPPort(params, new BluetoothPort());
+            case SmFptrConst.PORT_TYPE_BT_PPP:
+                port = new BluetoothPort();
+                return new PPPPort(params, port);
 
-            case SmFptrConst.PORT_TYPE_PPP_BLE:
-                return new PPPPort(params, new BluetoothLEPort());
+            case SmFptrConst.PORT_TYPE_BLE_PPP:
+                port = new BluetoothLEPort();
+                return new PPPPort(params, port);
+
+            case SmFptrConst.PORT_TYPE_SERIAL_PPP:
+                port = new SerialPrinterPort(params.portName);
+                return new PPPPort(params, port);
 
             case SmFptrConst.PORT_TYPE_FROMCLASS:
                 Class portClass = Class.forName(params.portClass);

@@ -15,6 +15,7 @@ import com.shtrih.util.StaticContext;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -30,7 +31,7 @@ import android.net.LocalSocketAddress;
  *
  * @author Виталий
  */
-public class PPPPort implements PrinterPort {
+public class PPPPort implements PrinterPort2 {
 
     private Socket socket = null;
     private LocalSocket localSocket = null;
@@ -371,6 +372,16 @@ public class PPPPort implements PrinterPort {
     public void setPortEvents(IPortEvents events) {
 
     }
+    public InputStream getInputStream() throws Exception{
+        openSocket();
+        return socket.getInputStream();
+    }
+
+    public OutputStream getOutputStream() throws Exception{
+        openSocket();
+        return socket.getOutputStream();
+    }
+
 }
 
     /*

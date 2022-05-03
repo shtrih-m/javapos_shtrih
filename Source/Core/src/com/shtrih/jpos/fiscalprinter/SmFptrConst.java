@@ -872,15 +872,16 @@ public class SmFptrConst {
     // ///////////////////////////////////////////////////////////////////
     // PortType constants
     public static final int PORT_TYPE_SERIAL = 0;
-    public static final int PORT_TYPE_BLUETOOTH = 1;
+    public static final int PORT_TYPE_BT = 1;
     public static final int PORT_TYPE_SOCKET = 2;
     public static final int PORT_TYPE_FROMCLASS = 3;
-    public static final int PORT_TYPE_BLUETOOTH_LE = 4;
-    public static final int PORT_TYPE_PPP_BT = 5;
-    public static final int PORT_TYPE_PPP_BLE = 6;
+    public static final int PORT_TYPE_BLE = 4;
+    public static final int PORT_TYPE_BT_PPP = 5;
+    public static final int PORT_TYPE_BLE_PPP = 6;
+    public static final int PORT_TYPE_SERIAL_PPP = 7;
 
     public static final int PORT_TYPE_MIN = 0;
-    public static final int PORT_TYPE_MAX = 6;
+    public static final int PORT_TYPE_MAX = 7;
 
     /////////////////////////////////////////////////////////////////////
     // Header mode constants
