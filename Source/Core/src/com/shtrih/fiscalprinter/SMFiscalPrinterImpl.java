@@ -80,6 +80,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     enum Boolean {
 
+
         NOTDEFINED, TRUE, FALSE
     }
 
@@ -156,6 +157,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private boolean capLastErrorText = true;
     private int[] taxRates = null;
     private FDOParameters fdoParameters = null;
+    public boolean isTableTextCleared = false;
+
 
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
@@ -370,7 +373,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    private void readTaxRates() throws Exception {
+    private void readTaxRates() throws Exception
+    {
         ReadTableInfo command = readTableInfo(PrinterConst.SMFP_TABLE_TAX);
         if (command.isSucceeded()) {
             int rowCount = command.getRowCount();
@@ -4252,13 +4256,38 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return !getCapFiscalStorage();
     }
 
-    public void clearTableText() throws Exception {
+    public void clearTableText() throws Exception
+    {
+        if (params.isTableTextCleared){
+            return;
+        }
+
         ReadTableInfo tableStructure = readTableInfo(PrinterConst.SMFP_TABLE_TEXT);
         int rowCount = tableStructure.getRowCount();
         for (int row = 1; row <= rowCount; row++) {
             int result = writeTable(PrinterConst.SMFP_TABLE_TEXT, row, 1, "");
             if (failed(result)) {
                 break;
+            }
+        }
+        params.isTableTextCleared = true;
+    }
+
+    public void updateTableText() throws Exception {
+        String[] fieldValue = new String[1];
+        ReadTableInfo tableStructure = readTableInfo(PrinterConst.SMFP_TABLE_TEXT);
+        int rowCount = tableStructure.getRowCount();
+        for (int row = 1; row <= rowCount; row++) {
+            int result = readTable(PrinterConst.SMFP_TABLE_TEXT, row,1, fieldValue);
+            if (failed(result)) {
+                break;
+            }
+            if (fieldValue[0].length() == 0) {
+                result = writeTable(PrinterConst.SMFP_TABLE_TEXT, row,
+                        1, " ");
+                if (failed(result)) {
+                    break;
+                }
             }
         }
     }

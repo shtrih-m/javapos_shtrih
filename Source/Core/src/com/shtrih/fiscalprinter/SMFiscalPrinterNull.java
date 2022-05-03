@@ -1041,6 +1041,9 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void clearTableText() throws Exception {
     }
 
+    public void updateTableText() throws Exception{
+    }
+
     public void updateFirmware(String firmwareFileName) throws Exception {
     }
 

@@ -52,27 +52,7 @@ public class DeviceHeader implements PrinterHeader {
 
         header.setCount(printer.getNumHeaderLines());
         trailer.setCount(printer.getNumTrailerLines());
-
-        String[] fieldValue = new String[1];
-        ReadTableInfo tableStructure = printer
-                .readTableInfo(PrinterConst.SMFP_TABLE_TEXT);
-        int rowCount = tableStructure.getRowCount();
-        for (int row = 1; row <= rowCount; row++) {
-            int result = printer.readTable(PrinterConst.SMFP_TABLE_TEXT, row,
-                    1, fieldValue);
-            if (printer.failed(result)) {
-                break;
-            }
-            if (fieldValue[0].length() == 0) {
-                result = printer.writeTable(PrinterConst.SMFP_TABLE_TEXT, row,
-                        1, " ");
-                if (printer.failed(result)) {
-                    {
-                        break;
-                    }
-                }
-            }
-        }
+        printer.updateTableText();
     }
 
     @Override

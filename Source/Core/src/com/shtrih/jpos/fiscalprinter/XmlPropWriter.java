@@ -17,9 +17,9 @@ import com.shtrih.util.XmlUtils;
  */
 public class XmlPropWriter {
 
-    private final Document doc;
     private Element root;
     private Element node;
+    private final Document doc;
 
     public XmlPropWriter(String className, String deviceName) throws Exception {
         doc = XmlUtils.newDocument();
@@ -108,6 +108,10 @@ public class XmlPropWriter {
         node.appendChild(lineNode);
         addParameter(lineNode, "Text", line.getText());
         addParameter(lineNode, "DoubleWidth", StringUtils.boolToStr(line.isDoubleWidth()));
+    }
+
+    public void writeParameterBool(String name, boolean value) throws Exception{
+        addParameter(root, name, StringUtils.boolToStr(value));
     }
 
 }

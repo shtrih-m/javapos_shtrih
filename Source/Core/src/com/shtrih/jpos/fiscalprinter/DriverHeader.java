@@ -278,12 +278,4 @@ public class DriverHeader implements PrinterHeader {
         return trailer;
     }
 
-    /*
-    
-     if (numHeaderLines == 0) {
-     numHeaderLines = printer.getNumHeaderLines();
-     numHeaderLines = Math.max(getParams().numHeaderLines, numHeaderLines);
-     }
-    
-     */
 }

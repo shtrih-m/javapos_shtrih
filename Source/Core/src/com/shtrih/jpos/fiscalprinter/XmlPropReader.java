@@ -183,7 +183,7 @@ public class XmlPropReader {
         return result;
     }
 
-    private int readParameterInt(Node node, String paramName) throws Exception {
+    public int readParameterInt(Node node, String paramName) throws Exception {
         int result = 0;
         try {
             String s = readParameterStr(node, paramName);
@@ -194,8 +194,7 @@ public class XmlPropReader {
         return result;
     }
 
-    
-    private boolean readParameterBool(Node node, String paramName)
+    public boolean readParameterBool(Node node, String paramName)
             throws Exception {
         String paramValue = readParameterStr(node, paramName);
         if ((paramValue.equals("")) || paramValue.equalsIgnoreCase("0")) {
@@ -203,4 +202,21 @@ public class XmlPropReader {
         }
         return true;
     }
+    public Node getRoot(){
+        return root;
+    }
+
+    private String readParameterStr(String paramName)
+            throws Exception {
+        return readParameterStr(root, paramName);
+    }
+
+    public int readParameterInt(String paramName) throws Exception {
+        return readParameterInt(root, paramName);
+    }
+
+    public boolean readParameterBool(String paramName) throws Exception{
+        return readParameterBool(root, paramName);
+    }
+
 }

@@ -597,10 +597,12 @@ public interface SMFiscalPrinter {
     FSRequestFiscalizationTag fsRequestFiscalizationTag(int fiscId, int tagId) throws Exception;
 
     public byte[] fsReadFiscalizationTag(int fiscId, int tagId) throws Exception;
-        
-    boolean getCapSetVatTable();
 
-    void clearTableText() throws Exception;
+    public boolean getCapSetVatTable();
+
+    public void clearTableText() throws Exception;
+
+    public void updateTableText() throws Exception;
 
     public void updateFirmware(String firmwareFileName) throws Exception;
 
@@ -616,17 +618,17 @@ public interface SMFiscalPrinter {
 
     public String[] readEJDocument(int documentNumber) throws Exception;
 
-    void writeFirmwareBlockToSDCard(int fileType, int blockNumber, byte[] block) throws Exception;
+    public void writeFirmwareBlockToSDCard(int fileType, int blockNumber, byte[] block) throws Exception;
 
-    boolean isDesktop();
+    public boolean isDesktop();
 
-    boolean isCashCore();
+    public boolean isCashCore();
 
-    boolean isShtrihMobile();
+    public boolean isShtrihMobile();
 
-    boolean isShtrihNano();
+    public boolean isShtrihNano();
 
-    boolean isSDCardPresent() throws Exception;
+    public boolean isSDCardPresent() throws Exception;
 
     public int getNumHeaderLines() throws Exception;
 

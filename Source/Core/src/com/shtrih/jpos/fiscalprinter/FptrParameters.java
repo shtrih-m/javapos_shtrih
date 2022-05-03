@@ -203,6 +203,7 @@ public class FptrParameters {
     public HashMap<Integer, Integer> commandTimeouts = new HashMap<Integer, Integer>();
     public String pppConfigFile = "";
     public boolean pppStartService = true;
+    public boolean isTableTextCleared = false;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -224,6 +225,7 @@ public class FptrParameters {
         userExtendedTagPrintMode = SmFptrConst.USER_EXTENDED_TAG_PRINT_MODE_DRIVER;
         commandDelayInMs = 0;
         rebootBeforeDayOpen = false;
+        isTableTextCleared = false;
     }
 
     public void load(JposEntry entry) throws Exception {

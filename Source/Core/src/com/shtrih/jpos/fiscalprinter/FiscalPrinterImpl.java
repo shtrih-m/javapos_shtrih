@@ -4527,7 +4527,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             writer.write(printer.getReceiptImages());
             writer.writePrinterHeader(header);
             writer.writeNonFiscalDocNumber(params.nonFiscalDocNumber);
-            
+            writer.writeParameterBool("isTableTextCleared", params.isTableTextCleared);
+
             writer.save(getPropsFileName());
         } catch (Exception e) {
             logger.error("saveProperties", e);
@@ -4544,10 +4545,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             if (f.exists()) {
                 XmlPropReader reader = new XmlPropReader();
                 reader.load("FiscalPrinter", serial, fileName);
+
                 reader.read(getPrinterImages());
                 reader.read(printer.getReceiptImages());
                 reader.readPrinterHeader(header);
                 params.nonFiscalDocNumber = reader.readNonFiscalDocNumber();
+                params.isTableTextCleared = reader.readParameterBool("isTableTextCleared");
                 logger.debug("loadProperties: OK");
             } else {
                 logger.debug("loadProperties: no file");
