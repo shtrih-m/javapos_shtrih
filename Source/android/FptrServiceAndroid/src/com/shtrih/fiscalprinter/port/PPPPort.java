@@ -40,7 +40,6 @@ public class PPPPort implements PrinterPort2 {
     private int openTimeout = 3000;
     private int connectTimeout = 3000;
     private int readTimeout = 3000;
-    private String portName = "";
     private boolean opened = false;
     private boolean firstCommand = true;
     private String localSocketName = null;
@@ -52,8 +51,6 @@ public class PPPPort implements PrinterPort2 {
     public PPPPort(FptrParameters params, PrinterPort2 printerPort) {
         this.params = params;
         this.printerPort = printerPort;
-
-        portName = params.portName;
         readTimeout = params.getByteTimeout();
     }
 
@@ -70,6 +67,8 @@ public class PPPPort implements PrinterPort2 {
         openTimeout = timeout;
         localSocketName = UUID.randomUUID().toString();
 
+        printerPort.setPortName(params.portName);
+        printerPort.setTimeout(params.byteTimeout);
         printerPort.open(timeout);
         startPPPThread();
         openLocalSocket(timeout);
@@ -350,11 +349,11 @@ public class PPPPort implements PrinterPort2 {
     }
 
     public String getPortName() {
-        return portName;
+        return printerPort.getPortName();
     }
 
     public void setPortName(String portName) throws Exception {
-        this.portName = portName;
+        printerPort.setPortName(portName);
     }
 
     public Object getSyncObject() throws Exception {
@@ -365,13 +364,15 @@ public class PPPPort implements PrinterPort2 {
         return false;
     }
 
-    public String[] getPortNames() {
-        return new String[]{portName};
+    public String[] getPortNames()
+    {
+        return printerPort.getPortNames();
     }
 
     public void setPortEvents(IPortEvents events) {
-
+        printerPort.setPortEvents(events);
     }
+
     public InputStream getInputStream() throws Exception{
         openSocket();
         return socket.getInputStream();

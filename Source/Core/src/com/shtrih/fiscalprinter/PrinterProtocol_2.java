@@ -38,7 +38,7 @@ public class PrinterProtocol_2 implements PrinterProtocol {
     }
 
     public void connect() throws Exception {
-        //synchronizeFrames(byteTimeout);
+        synchronizeFrames(byteTimeout);
     }
 
     private void doSend(PrinterCommand command) throws Exception {

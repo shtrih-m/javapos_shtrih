@@ -178,7 +178,7 @@ public class FptrParameters {
     public boolean statisticEnabled = true;
     public boolean autoOpenShift = true;
     public boolean forceOpenShiftOnZReport = true;
-    public boolean footerFlagEnabled = true;
+    public boolean footerFlagEnabled = false;
     public boolean postLineAsItemTextEnabled = false;
     public boolean canDisableNonFiscalEnding = true;
     public boolean checkItemCodeEnabled = false;
@@ -428,7 +428,7 @@ public class FptrParameters {
         statisticEnabled = reader.readBoolean("statisticEnabled", true);
         autoOpenShift = reader.readBoolean("autoOpenShift", true);
         forceOpenShiftOnZReport = reader.readBoolean("forceOpenShiftOnZReport", true);
-        footerFlagEnabled = reader.readBoolean("footerFlagEnabled", true);
+        footerFlagEnabled = reader.readBoolean("footerFlagEnabled", false);
         postLineAsItemTextEnabled = reader.readBoolean("postLineAsItemTextEnabled", false);
         canDisableNonFiscalEnding = reader.readBoolean("canDisableNonFiscalEnding", true);
         checkItemCodeEnabled = reader.readBoolean("checkItemCodeEnabled", false);

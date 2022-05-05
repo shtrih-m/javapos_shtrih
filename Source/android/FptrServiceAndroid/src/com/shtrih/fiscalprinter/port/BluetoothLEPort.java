@@ -423,7 +423,6 @@ public class BluetoothLEPort implements PrinterPort2 {
         if (state == ConnectState.Disconnected)
         {
             checkPermissions();
-
             if (scanner != null){
                 scanner.stopScan(scanOpenedDeviceCallback);
             }
@@ -477,7 +476,7 @@ public class BluetoothLEPort implements PrinterPort2 {
                     throw new Exception("TxChar CCCD descriptor not supported");
             }
 
-            Time.delay(10);
+            Time.delay(100);
             if ((currentTime - startTime) > timeout) {
                 loggerDebug("waitOpened(): timeout");
                 throw new Exception("Port open timeout");
@@ -569,7 +568,6 @@ public class BluetoothLEPort implements PrinterPort2 {
     {
         loggerDebug("write(" + Hex.toHex(b) + ")");
 
-        rxInput.reset();
         int blockSize = 20;
         if (bluetoothmtu > 0) blockSize = bluetoothmtu;
 

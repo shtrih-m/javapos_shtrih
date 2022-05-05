@@ -226,7 +226,8 @@ public class FSReadStatus extends PrinterCommand {
         this.docNumber = docNumber;
     }
 
-    public Calendar getDateTime(){
+    public Calendar getDateTime()
+    {
         Calendar dateTime = new GregorianCalendar();
         dateTime.set(date.getYear(), date.getMonth() - 1, date.getDay(),
             time.getHour(), time.getMin(), time.getSec());

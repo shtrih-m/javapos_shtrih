@@ -80,7 +80,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     enum Boolean {
 
-
         NOTDEFINED, TRUE, FALSE
     }
 
@@ -158,8 +157,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private int[] taxRates = null;
     private FDOParameters fdoParameters = null;
     public boolean isTableTextCleared = false;
-
-
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params) {
@@ -307,13 +304,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 PrinterDate currentDate = new PrinterDate();
                 PrinterTime currentTime = new PrinterTime();
                 LongPrinterStatus status = readLongStatus();
-                FSReadStatus fsStatus = null;
+                FSReadStatus fsStatus = fsReadStatus();
 
                 if (!status.getDate().isEqual(currentDate)) {
-                    if (fsStatus == null) {
-                        fsStatus = fsReadStatus();
-                    }
-                    if ((fsStatus.getDocNumber() == 0) || (fsStatus.getDate().before(currentDate))) {
+                    if (fsStatus.getDate().after(currentDate)) {
+                        check(writeDate(fsStatus.getDate()));
+                        check(confirmDate(fsStatus.getDate()));
+                        check(writeTime(fsStatus.getTime()));
+                        return;
+                    } else {
                         check(writeDate(currentDate));
                         check(confirmDate(currentDate));
                     }
@@ -321,19 +320,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 // write time
                 int timeDiffInSecs = status.getTime().getDiff(currentTime);
                 if (timeDiffInSecs > params.validTimeDiffInSecs) {
-                    logger.debug(
-                            String.format("FP time: %s, system time: %s",
-                                    status.getTime().toString(),
-                                    currentTime.toString()));
-
-                    if (fsStatus == null) {
-                        fsStatus = fsReadStatus();
-                    }
-                    if ((fsStatus.getDocNumber() == 0)
-                            || (fsStatus.getDate().before(currentDate))
-                            || (fsStatus.getDate().isEqual(currentDate) && (fsStatus.getTime().before(currentTime)))) {
-                        check(writeTime(currentTime));
-                    }
+                    logger.debug(String.format("FP time: %s, system time: %s",
+                            status.getTime().toString(), currentTime.toString()));
+                    check(writeTime(currentTime));
                 }
             }
         } catch (Exception e) {
@@ -373,8 +362,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    private void readTaxRates() throws Exception
-    {
+    private void readTaxRates() throws Exception {
         ReadTableInfo command = readTableInfo(PrinterConst.SMFP_TABLE_TAX);
         if (command.isSucceeded()) {
             int rowCount = command.getRowCount();
@@ -4129,8 +4117,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return null;
     }
 
-    public FDOParameters getFDOParameters() throws Exception{
-        if (fdoParameters == null){
+    public FDOParameters getFDOParameters() throws Exception {
+        if (fdoParameters == null) {
             fdoParameters = readFDOParameters();
         }
         return fdoParameters;
@@ -4256,9 +4244,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return !getCapFiscalStorage();
     }
 
-    public void clearTableText() throws Exception
-    {
-        if (params.isTableTextCleared){
+    public void clearTableText() throws Exception {
+        if (params.isTableTextCleared) {
             return;
         }
 
@@ -4278,7 +4265,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         ReadTableInfo tableStructure = readTableInfo(PrinterConst.SMFP_TABLE_TEXT);
         int rowCount = tableStructure.getRowCount();
         for (int row = 1; row <= rowCount; row++) {
-            int result = readTable(PrinterConst.SMFP_TABLE_TEXT, row,1, fieldValue);
+            int result = readTable(PrinterConst.SMFP_TABLE_TEXT, row, 1, fieldValue);
             if (failed(result)) {
                 break;
             }
