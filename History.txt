@@ -7,10 +7,11 @@
     
 ********************************************************************************
 
-  05.05.2022
+  06.05.2022
   deviceServiceVersion = 1013651
 
   [-] Fixed error date and time correction
+  [-] Fixed error with receipt trailer when footerFlagEnabled=0 in jpos.xml
   
 ********************************************************************************
 

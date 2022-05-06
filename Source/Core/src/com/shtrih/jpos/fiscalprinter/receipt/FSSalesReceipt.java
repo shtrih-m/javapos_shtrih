@@ -98,6 +98,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         itemDiscountsApplied = false;
         getParams().itemTaxAmount = null;
         getParams().itemTotalAmount = null;
+        endingItems.clear();
     }
 
     public void beginFiscalReceipt(boolean printHeader) throws Exception {
@@ -333,7 +334,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 getDevice().printBarcode((PrinterBarcode) item);
             }
         }
-        endingItems.clear();
     }
 
     private void correctPayments() throws Exception {
@@ -549,6 +549,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 }
             }
         }
+        printReceiptEnding();
+        discounts.clear();
+    }
+
+    public void printReceiptEnding() throws Exception
+    {
         if (cancelled || (!getDevice().isCapFooterFlag())) {
             try {
                 printEndingItems();
@@ -556,9 +562,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 logger.error("Receipt ending items printing failed", e);
             }
         }
-        discounts.clear();
     }
-
+    
     private void printTotalDiscount(AmountItem discount) throws Exception {
         if (!getDevice().getCapDiscount()) {
             return;

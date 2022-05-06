@@ -269,4 +269,6 @@ public abstract class CustomReceipt implements FiscalReceipt {
         return total;
     }
 
+    public void printReceiptEnding() throws Exception{
+    }
 }

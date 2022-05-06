@@ -1044,7 +1044,8 @@ class PrinterTest implements FiscalPrinterConst {
             //printSpeedTest();
             //printReceiptWithError4();
             //printReceiptWithError5();
-            printReceiptWithError7();
+            
+            printReceiptWithError9();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -4972,4 +4973,141 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
+    public void printReceiptWithError8() 
+    {
+        try {
+            String LS = System.lineSeparator();
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(true);
+            printer.printRecMessage("ИНН КАССИРА: 502480143606");
+            printer.printRecMessage("АДР.РАСЧЕТОВ: Российская Федерация, 143405, Московская обл., г.Красногорск, ш.Ильинское, д.12");
+            printer.printRecItem("Пепси Кола 1л ПЭТ 12Х", 73009, 1000, 1, 73009, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Липтон Чай Хол Арбуз Мята 1л ПЭТ 12Х", 85179, 1000, 1, 85179, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Пепси Кола 0.5л ПЭТ 12Х", 63651, 1000, 1, 63651, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Липтон Чай Хол Арбуз Мята 0.5л ПЭТ 12Х", 67862, 1000, 1, 67862, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Липтон Чай Хол Зеленый 0.5л ПЭТ 12Х", 67862, 1000, 1, 67862, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Адреналин Раш 0.449Л БАН 12Х", 182754, 2000, 1, 91377, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Пепси Кола 0.33л БАН 12Х", 46333, 1000, 1, 46333, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Адреналин Раш 0.25л БАН 12Х", 119042, 2000, 1, 59521, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 2, 1);
+            printer.printRecItem("ФС Микс 5 Вкусов 0.2л БЗ 27Х ДП НР", 70578, 1000, 2, 70578, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 2);
+            printer.printRecTotal(776260, 776260, "2");
+            printer.printRecMessage("-------------------------------");
+            printer.printRecMessage("        ");
+            printer.printRecMessage("        ");
+            printer.printRecMessage("        ПепсиКо Холдингс" + LS + 
+            " Солнечногорск, Солнечногорский" + LS +
+            "              р-н." + LS +
+            "  тер свободной экономической" + LS +
+            "      зоны Шерризон стр 1" + LS +
+            "         т. 84957976100" + LS +
+            "05.05.22 07:58        Чек   0003" + LS +
+            "             Оплата" + LS +
+            "Терминал:               23073730" + LS +
+            "Мерчант:            781000199333" + LS +
+            "VISA:             A0000000031010" + LS +
+            "Карта(C);:       ************7543" + LS +
+            "Клиент:             VOLODIN/IVAN" + LS +
+            "Сумма(РУБ);:             7 762.60" + LS +
+            "Комиссия за операцию - 0.00 РУБ." + LS +
+            "            ОДОБРЕНО" + LS +
+            "Код авторизации:          266993" + LS +
+            "Номер ссылки:       212551628379" + LS +
+            "    ________________________" + LS +
+            "        подпись клиента" + LS +
+            "207d95b1d35d655a6f287099a4b35aa6" + LS +
+            "================================" + LS +
+            "");
+            printer.printRecMessage("        ");
+            printer.printRecMessage("-------------------------------");
+            printer.printRecMessage("        ");
+            printer.printRecMessage("        ");
+            printer.printRecMessage("        ПепсиКо Холдингс" + LS + 
+            " Солнечногорск, Солнечногорский" + LS +
+            "              р-н." + LS +
+            "  тер свободной экономической" + LS +
+            "      зоны Шерризон стр 1" + LS +
+            "         т. 84957976100" + LS +
+            "05.05.22 07:58        Чек   0003" + LS +
+            "             Оплата" + LS +
+            "Терминал:               23073730" + LS +
+            "Мерчант:            781000199333" + LS +
+            "VISA:             A0000000031010" + LS +
+            "Карта(C);:       ************7543" + LS +
+            "Клиент:             VOLODIN/IVAN" + LS +
+            "Сумма(РУБ);:             7 762.60" + LS +
+            "Комиссия за операцию - 0.00 РУБ." + LS +
+            "            ОДОБРЕНО" + LS +
+            "Код авторизации:          266993" + LS +
+            "Номер ссылки:       212551628379" + LS +
+            "    ________________________" + LS +
+            "        подпись клиента" + LS +
+            "207d95b1d35d655a6f287099a4b35aa6" + LS +
+            "================================" + LS +
+            "");
+            printer.printRecMessage("        ");
+            printer.printRecMessage("Наименование и ИНН клиента: ИП МАММАДОВ РАШАД ЭЛЬДАР ОГЛУ - 502420622308");
+            printer.printRecMessage("Номер смены: 3");
+            printer.printRecMessage("Номер документа: 02/00181788-22");
+            printer.printRecMessage("Серийный номер принтера: 55889");
+            printer.printRecMessage("Имя сотрудника: 80148364 - Ivan Aleksandrovich Volodin");
+            printer.printRecMessage("        ");
+            printer.printRecMessage("-------------------------------");
+            printer.printRecMessage("        ");
+            printer.printRecMessage("        ");
+            printer.endFiscalReceipt(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printReceiptWithError9() 
+    {
+        try {
+            String LS = System.lineSeparator();
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(true);
+            printer.printRecMessage("ИНН КАССИРА: 502480143606");
+            printer.printRecMessage("АДР.РАСЧЕТОВ: Российская Федерация, 143405, Московская обл., г.Красногорск, ш.Ильинское, д.12");
+            printer.printRecItem("Пепси Кола 1л ПЭТ 12Х", 73009, 1000, 1, 73009, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Липтон Чай Хол Арбуз Мята 1л ПЭТ 12Х", 85179, 1000, 1, 85179, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Пепси Кола 0.5л ПЭТ 12Х", 63651, 1000, 1, 63651, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Липтон Чай Хол Арбуз Мята 0.5л ПЭТ 12Х", 67862, 1000, 1, 67862, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Липтон Чай Хол Зеленый 0.5л ПЭТ 12Х", 67862, 1000, 1, 67862, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Адреналин Раш 0.449Л БАН 12Х", 182754, 2000, 1, 91377, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Пепси Кола 0.33л БАН 12Х", 46333, 1000, 1, 46333, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 1);
+            printer.printRecItem("Адреналин Раш 0.25л БАН 12Х", 119042, 2000, 1, 59521, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 2, 1);
+            printer.printRecItem("ФС Микс 5 Вкусов 0.2л БЗ 27Х ДП НР", 70578, 1000, 2, 70578, "УПК");
+            printer.printRecItemAdjustment(1, "Discount", 1, 2);
+            printer.printRecTotal(776260, 776260, "2");
+            printer.printRecMessage("-------------------------------");
+            printer.printRecMessage("Подвал строка 1");
+            printer.printRecMessage("Подвал строка 2");
+            printer.printRecMessage("Подвал строка 3");
+            printer.printRecMessage("-------------------------------");
+            printer.endFiscalReceipt(false);
+            
+            printer.printDuplicateReceipt();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

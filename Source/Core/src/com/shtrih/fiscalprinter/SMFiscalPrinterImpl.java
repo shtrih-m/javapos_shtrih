@@ -267,7 +267,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (getDeviceMetrics().isShtrihNano()) {
             switch (command.getCode()) {
                 case 0x8D:   // open receipt 
-                case 0x85:   // close receipt 1
                 case 0xFF05: // start registration report
                 case 0xFF06: // print registration report
                 case 0xFF0B: // start fiscal day in FS
@@ -278,7 +277,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 case 0xFF38: // print payments report
                 case 0xFF42: // start day close
                 case 0xFF43: // close day in FS
-                case 0xFF45: // close receipt 2
                 case 0xFF4A: // print correction receipt 2
                     setCurrentDateTime();
             }
@@ -4703,8 +4701,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     LongPrinterStatus status = connect();
                     // always set port parameters to update byte
                     // receive timeout in fiscal printer
-                    int baudRateIndex = getBaudRateIndex(params.getBaudRate());
-                    writePortParams(status.getPortNumber(), baudRateIndex, params.getDeviceByteTimeout());
+                    //int baudRateIndex = getBaudRateIndex(params.getBaudRate());
+                    //writePortParams(status.getPortNumber(), baudRateIndex, params.getDeviceByteTimeout());
                     return status;
                 }
             } else {

@@ -232,4 +232,7 @@ public class NullReceipt implements FiscalReceipt {
     public long getSubtotal() throws Exception {
         return 0;
     }
+    
+    public void printReceiptEnding() throws Exception{
+    }
 }
