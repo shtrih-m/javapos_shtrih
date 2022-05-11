@@ -97,6 +97,8 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
+
+
     public boolean getClaimed() throws JposException {
         logger.debug("getClaimed()");
         boolean result = false;

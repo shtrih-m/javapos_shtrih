@@ -204,6 +204,7 @@ public class FptrParameters {
     public String pppConfigFile = "";
     public boolean pppStartService = true;
     public boolean isTableTextCleared = false;
+    public boolean pppConnection = false;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -452,6 +453,7 @@ public class FptrParameters {
         pppConfigFile = reader.readString("pppConfigFile", "");
         pppStartService = reader.readBoolean("pppStartService", true);
         portOpenTimeout = reader.readInteger("portOpenTimeout", defPortOpenTimeout);
+        pppConnection = reader.readBoolean("pppConnection", false);
 
         // paymentNames
         String paymentName;

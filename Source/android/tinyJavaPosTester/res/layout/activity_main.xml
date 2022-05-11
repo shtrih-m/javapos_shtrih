@@ -81,6 +81,15 @@
                 </TableRow>
 
                 <TableRow>
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/chbPPPConnection"
+                        android:layout_span="2"
+                        android:text="@string/chbPPPConnection" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
                     <android.support.v7.widget.AppCompatCheckBox
                         android:id="@+id/chbFastConnect"
@@ -147,11 +156,18 @@
                 android:text="@string/action_connect_to_usb_device" />
 
             <Button
-                android:id="@+id/btnConnectToDevice"
+                android:id="@+id/btnConnectToBTDevice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="connectToDevice"
-                android:text="@string/action_connect_to_device" />
+                android:onClick="connectToBTDevice"
+                android:text="@string/action_connect_to_bt_device" />
+
+            <Button
+                android:id="@+id/btnConnectToBLEDevice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="connectToBLEDevice"
+                android:text="@string/action_connect_to_ble_device" />
 
             <Button
                 android:id="@+id/btnDisconnect"

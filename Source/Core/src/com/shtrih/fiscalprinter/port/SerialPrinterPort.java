@@ -85,11 +85,7 @@ public class SerialPrinterPort implements PrinterPort2 {
 
     }
 
-    public InputStream getInputStream() throws Exception{
-        return port.getInputStream();
-    }
-
-    public OutputStream getOutputStream() throws Exception{
-        return port.getOutputStream();
+    public int available() throws Exception{
+        return port.getInputStream().available();
     }
 }

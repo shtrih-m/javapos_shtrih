@@ -165,6 +165,9 @@ public class BluetoothPort implements PrinterPort2 {
             }
 
             socket.connect();
+            if (events != null) {
+                events.onConnect();
+            }
             registerReceiver();
             return;
 
@@ -178,6 +181,7 @@ public class BluetoothPort implements PrinterPort2 {
         try {
             // events
             IntentFilter filter = new IntentFilter();
+            filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
             filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
             StaticContext.getContext().registerReceiver(mBroadcastReceiver, filter);
             receiverRegistered = true;
@@ -268,13 +272,8 @@ public class BluetoothPort implements PrinterPort2 {
     }
 
     @Override
-    public InputStream getInputStream() throws Exception{
-        return getSocket().getInputStream();
-    }
-
-    @Override
-    public OutputStream getOutputStream() throws Exception{
-        return getSocket().getOutputStream();
+    public int available() throws Exception{
+        return getSocket().getInputStream().available();
     }
 
     @Override

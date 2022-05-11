@@ -32,16 +32,28 @@ public class PrinterPortFactory {
         PrinterPort2 port;
         switch (params.getPortType()) {
             case SmFptrConst.PORT_TYPE_SERIAL:
-                return new SerialPrinterPort(params.portName);
+                port = new SerialPrinterPort(params.portName);
+                if (params.pppConnection){
+                    return new PPPPort(params, port);
+                }
+                return port;
 
             case SmFptrConst.PORT_TYPE_SOCKET:
                 return SocketPort.getInstance(params.portName, params.getByteTimeout());
 
             case SmFptrConst.PORT_TYPE_BT:
-                return new BluetoothPort();
+                port = new BluetoothPort();
+                if (params.pppConnection){
+                    return new PPPPort(params, port);
+                }
+                return port;
 
             case SmFptrConst.PORT_TYPE_BLE:
-                return new BluetoothLEPort();
+                port = new BluetoothLEPort();
+                if (params.pppConnection){
+                    return new PPPPort(params, port);
+                }
+                return port;
 
             case SmFptrConst.PORT_TYPE_BT_PPP:
                 port = new BluetoothPort();

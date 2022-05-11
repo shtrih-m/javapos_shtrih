@@ -161,13 +161,7 @@ public class SocketPort implements PrinterPort2 {
 
     }
 
-    public InputStream getInputStream() throws Exception{
-        open();
-        return socket.getInputStream();
-    }
-
-    public OutputStream getOutputStream() throws Exception{
-        open();
-        return socket.getOutputStream();
+    public int available() throws Exception{
+        return socket.getInputStream().available();
     }
 }

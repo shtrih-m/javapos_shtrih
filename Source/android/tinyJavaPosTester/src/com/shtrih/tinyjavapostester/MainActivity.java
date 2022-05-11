@@ -22,8 +22,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -76,7 +74,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -88,14 +85,26 @@ import jpos.JposConst;
 import jpos.JposException;
 import jpos.events.StatusUpdateEvent;
 import jpos.events.StatusUpdateListener;
-import jpos.events.ErrorListener;
-import jpos.events.DirectIOListener;
-import jpos.events.StatusUpdateListener;
 
 import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_EFPTR_INVALID_TABLE;
 
 public class MainActivity extends AppCompatActivity
 {
+
+    private class ConnectionParameters {
+        AppCompatActivity parent;
+        FirmwareUpdateObserver observer;
+
+        public int portType;
+        public String portName;
+        public String portClass;
+        public int protocolType;
+        public int byteTimeout;
+        public boolean fastConnect;
+        public boolean pppConnection;
+        public boolean capScocUpdateFirmware;
+        public boolean searchByPortEnabled;
+    }
 
     private class EnumViewModel {
         private final String value;
@@ -139,13 +148,17 @@ public class MainActivity extends AppCompatActivity
     private EditText nbTableRow;
     private EditText tbTableCellValue;
     private EditText nbTimeout;
+    private Spinner cbProtocol;
 
+    private AppCompatCheckBox chbPPPConnection;
     private AppCompatCheckBox chbFastConnect;
     private AppCompatCheckBox chbScocFirmwareUpdate;
 
     private String selectedProtocol;
 
     private MainViewModel model;
+    private SharedPreferences pref;
+    private ConnectionParameters params;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,67 +175,32 @@ public class MainActivity extends AppCompatActivity
         binding.setVm(model);
         binding.setActivity(this);
 
-        final SharedPreferences pref = this.getSharedPreferences("MainActivity", Context.MODE_PRIVATE);
+        pref = this.getSharedPreferences("MainActivity", Context.MODE_PRIVATE);
 
         tbNetworkAddress = (EditText)findViewById(R.id.tbNetworkAddress);
-        restoreAndSaveChangesTo(tbNetworkAddress, pref, "NetworkAddress", "127.0.0.1:12345");
-
         nbPositionsCount = (EditText)findViewById(R.id.nbPositionsCount);
-        restoreAndSaveChangesTo(nbPositionsCount, pref, "CheckPositionsCount", "5");
-
         nbTextStringCount = (EditText)findViewById(R.id.nbTextStringsCount);
-        restoreAndSaveChangesTo(nbTextStringCount, pref, "CheckStringsCount", "5");
-
         nbReceiptCount = (EditText)findViewById(R.id.nbReceiptCount);
-        restoreAndSaveChangesTo(nbReceiptCount, pref, "ReceiptCount", "5");
-
         nbReceiptInterval = (EditText)findViewById(R.id.nbReceiptInterval);
-        restoreAndSaveChangesTo(nbReceiptInterval, pref, "ReceiptInterval", "5");
-
         nbFiscalizationNumber = (EditText)findViewById(R.id.nbFiscalizationNumber);
-        restoreAndSaveChangesTo(nbFiscalizationNumber, pref, "FiscalizationNumber", "1");
-
         nbDocumentNumber = (EditText)findViewById(R.id.nbDocumentNumber);
-        restoreAndSaveChangesTo(nbDocumentNumber, pref, "DocumentNumber", "1");
-
         nbTagNumber = (EditText)findViewById(R.id.nbTagNumber);
-        restoreAndSaveChangesTo(nbTagNumber, pref, "TagNumber", "1041");
-
         nbTextLinesCount = (EditText)findViewById(R.id.nbTextLinesCount);
-        restoreAndSaveChangesTo(nbTextLinesCount, pref, "TextLinesCount", "100");
-
         nbTableNumber = (EditText)findViewById(R.id.nbTableNumber);
-        restoreAndSaveChangesTo(nbTableNumber, pref, "TableNumber", "1");
-
         nbTableField = (EditText)findViewById(R.id.nbTableField);
-        restoreAndSaveChangesTo(nbTableField, pref, "TableField", "1");
-
         nbTableRow = (EditText)findViewById(R.id.nbTableRow);
-        restoreAndSaveChangesTo(nbTableRow, pref, "TableRow", "1");
-
         tbTableCellValue = (EditText)findViewById(R.id.tbTableCellValue);
-        restoreAndSaveChangesTo(tbTableCellValue, pref, "TableCellValue", "");
-
         tbMonoToken = (EditText)findViewById(R.id.tbMonoToken);
-        restoreAndSaveChangesTo(tbMonoToken, pref, "MonoToken", "");
-
         tbFFDVersion = (EditText)findViewById(R.id.tbFFDVersion);
-
         nbTimeout = (EditText)findViewById(R.id.nbTimeout);
-        restoreAndSaveChangesTo(nbTimeout, pref, "ByteTimeout", "3000");
-
         chbFastConnect = (AppCompatCheckBox)findViewById(R.id.chbFastConnect);
-        restoreAndSaveChangesTo(chbFastConnect, pref, "FastConnect", true);
-
+        chbPPPConnection = (AppCompatCheckBox)findViewById(R.id.chbPPPConnection);
         chbScocFirmwareUpdate = (AppCompatCheckBox)findViewById(R.id.chbScocFirmwareUpdate);
-        restoreAndSaveChangesTo(chbScocFirmwareUpdate, pref, "ScocFirmwareUpdate", false);
-
-        Spinner cbProtocol = (Spinner)findViewById(R.id.cbProtocol);
+        cbProtocol = (Spinner)findViewById(R.id.cbProtocol);
 
         ArrayList<EnumViewModel> protocols = new ArrayList<>();
         protocols.add(new EnumViewModel("0", "Standard"));
         protocols.add(new EnumViewModel("1", "KKT 2.0"));
-
         ArrayAdapter<EnumViewModel> protocolsAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, protocols);
 
         final String PREFERENCES_PROTOCOL_KEY = "Protocol";
@@ -246,13 +224,68 @@ public class MainActivity extends AppCompatActivity
 
         int savedProtocolIndex = pref.getInt(PREFERENCES_PROTOCOL_KEY, 0);
         cbProtocol.setSelection(savedProtocolIndex);
-
         selectedProtocol = ((EnumViewModel) protocolsAdapter.getItem(savedProtocolIndex)).getValue();
-
         String logPath = "Log path: " + SysUtils.getFilesPath() + LogbackConfig.MainFileName;
-
         TextView lblLogPath = (TextView)findViewById(R.id.lblLogPathValue);
         lblLogPath.setText(logPath);
+
+        getPrefValue(tbNetworkAddress, "NetworkAddress", "127.0.0.1:12345");
+        getPrefValue(nbPositionsCount, "CheckPositionsCount", "5");
+        getPrefValue(nbTextStringCount, "CheckStringsCount", "5");
+        getPrefValue(nbReceiptCount, "ReceiptCount", "5");
+        getPrefValue(nbReceiptInterval, "ReceiptInterval", "5");
+        getPrefValue(nbFiscalizationNumber, "FiscalizationNumber", "1");
+        getPrefValue(nbDocumentNumber, "DocumentNumber", "1");
+        getPrefValue(nbTagNumber, "TagNumber", "1041");
+        getPrefValue(nbTextLinesCount, "TextLinesCount", "100");
+        getPrefValue(nbTableNumber, "TableNumber", "1");
+        getPrefValue(nbTableField, "TableField", "1");
+        getPrefValue(nbTableRow, "TableRow", "1");
+        getPrefValue(tbTableCellValue, "TableCellValue", "");
+        getPrefValue(tbMonoToken, "MonoToken", "");
+        getPrefValue(nbTimeout, "ByteTimeout", "3000");
+        getPrefValue(chbFastConnect, "FastConnect", true);
+        getPrefValue(chbPPPConnection, "PPPConnection", false);
+        getPrefValue(chbScocFirmwareUpdate, "ScocFirmwareUpdate", false);
+    }
+
+    private void updateObject(){
+        setPrefValue(tbNetworkAddress, "NetworkAddress");
+        setPrefValue(nbPositionsCount, "CheckPositionsCount");
+        setPrefValue(nbTextStringCount, "CheckStringsCount");
+        setPrefValue(nbReceiptCount, "ReceiptCount");
+        setPrefValue(nbReceiptInterval, "ReceiptInterval");
+        setPrefValue(nbFiscalizationNumber, "FiscalizationNumber");
+        setPrefValue(nbDocumentNumber, "DocumentNumber");
+        setPrefValue(nbTagNumber, "TagNumber");
+        setPrefValue(nbTextLinesCount, "TextLinesCount");
+        setPrefValue(nbTableNumber, "TableNumber");
+        setPrefValue(nbTableField, "TableField");
+        setPrefValue(nbTableRow, "TableRow");
+        setPrefValue(tbTableCellValue, "TableCellValue");
+        setPrefValue(tbMonoToken, "MonoToken");
+        setPrefValue(nbTimeout, "ByteTimeout");
+        setPrefValue(chbFastConnect, "FastConnect");
+        setPrefValue(chbPPPConnection, "PPPConnection");
+        setPrefValue(chbScocFirmwareUpdate, "ScocFirmwareUpdate");
+    }
+
+    private ConnectionParameters getParams()
+    {
+        ConnectionParameters params = new ConnectionParameters();
+
+        params.parent = this;
+        params.observer = createFirmwareUpdateObserver();
+        params.portType = SmFptrConst.PORT_TYPE_BT;
+        params.portName = tbNetworkAddress.getText().toString();
+        params.portClass = "";
+        params.searchByPortEnabled = false;
+        params.protocolType = cbProtocol.getSelectedItemPosition();
+        params.byteTimeout = Integer.parseInt(nbTimeout.getText().toString());
+        params.pppConnection = chbPPPConnection.isChecked();
+        params.fastConnect = chbFastConnect.isChecked();
+        params.capScocUpdateFirmware = chbScocFirmwareUpdate.isChecked();
+        return params;
     }
 
     @Override
@@ -270,42 +303,29 @@ public class MainActivity extends AppCompatActivity
         unregisterUsbReceiver();
     }
 
-    private void restoreAndSaveChangesTo(final EditText edit, final SharedPreferences pref, final String key, final String defaultValue) {
-        edit.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void onTextChanged(CharSequence c, int start, int before, int count) {
-                SharedPreferences.Editor editor = pref.edit();
-                editor.putString(key, c.toString());
-                editor.apply();
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence c, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable c) {
-            }
-        });
-
-        String savedAddress = pref.getString(key, defaultValue);
-        edit.setText(savedAddress);
+    private void getPrefValue(final EditText edit, final String key, final String defaultValue) 
+    {
+        edit.setText(pref.getString(key, defaultValue));
     }
 
-    private void restoreAndSaveChangesTo(final CompoundButton edit, final SharedPreferences pref, final String key, final boolean defaultValue) {
-        edit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+    private void getPrefValue(final CompoundButton edit, final String key, final boolean defaultValue)
+    {
+        edit.setChecked(pref.getBoolean(key, defaultValue));
+    }
+    
+    private void setPrefValue(final EditText edit, final String key)
+    {
+        String text = edit.getText().toString();
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(key, text);
+        editor.apply();
+    }
 
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                SharedPreferences.Editor editor = pref.edit();
-                editor.putBoolean(key, compoundButton.isChecked());
-                editor.apply();
-            }
-        });
-
-        boolean savedValue = pref.getBoolean(key, defaultValue);
-        edit.setChecked(savedValue);
+    private void setPrefValue(final CompoundButton edit, final String key)
+    {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(key, edit.isChecked());
+        editor.apply();
     }
 
     public static final String ACTION_USB_DISCONNECTED = "com.felhr.usbservice.USB_DISCONNECTED";
@@ -449,9 +469,7 @@ public class MainActivity extends AppCompatActivity
             case DeviceListActivity.REQUEST_CONNECT_BT_DEVICE:
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    verifyBTPermissions();
-
-                    Bundle extras = data.getExtras();
+                   Bundle extras = data.getExtras();
 
                     if (extras == null)
                         return;
@@ -461,13 +479,7 @@ public class MainActivity extends AppCompatActivity
                     if (address == null)
                         return;
 
-                    new ConnectToBluetoothDeviceTask(
-                            this,
-                            address,
-                            createFirmwareUpdateObserver(),
-                            nbTimeout.getText().toString(),
-                            chbFastConnect.isChecked(),
-                            chbScocFirmwareUpdate.isChecked()).execute();
+                    tbNetworkAddress.setText(address);
                 }
             case TcpDeviceSearchActivity.REQUEST_SEARCH_TCP_DEVICE:
                 if (resultCode == Activity.RESULT_OK) {
@@ -495,28 +507,30 @@ public class MainActivity extends AppCompatActivity
         return new FirmwareUpdaterObserverImpl(model);
     }
 
-    private class ConnectToBluetoothDeviceTask extends AsyncTask<Void, Void, String> {
+    private void configureJpos(ConnectionParameters params) throws Exception {
+        HashMap<String, String> props = new HashMap<>();
+        props.put("portName", params.portName);
+        props.put("portClass", params.portClass);
+        props.put("portType", String.valueOf(params.portType));
+        props.put("fastConnect", params.fastConnect ? "1" : "0");
+        props.put("protocolType", String.valueOf(params.protocolType));
+        props.put("capScocUpdateFirmware", params.capScocUpdateFirmware ? "1" : "0");
+        props.put("pppConnection", params.pppConnection ? "1" : "0");
+        props.put("byteTimeout", String.valueOf(params.byteTimeout));
+        props.put("searchByPortEnabled", params.searchByPortEnabled ? "1" : "0");
+        JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
+    }
 
-        private final AppCompatActivity parent;
-        private final String address;
-        private final FirmwareUpdateObserver observer;
-        private final String timeout;
-        private final boolean fastConnect;
-        private final boolean scocFirmwareAutoupdate;
+    private class ConnectDeviceTask extends AsyncTask<Void, Void, String> {
 
+        private final ConnectionParameters params;
         private long startedAt;
         private long doneAt;
 
         private ProgressDialog dialog;
 
-        public ConnectToBluetoothDeviceTask(AppCompatActivity parent, String address, FirmwareUpdateObserver observer, String timeout, boolean fastConnect, boolean scocFirmwareAutoupdate) {
-            this.parent = parent;
-
-            this.address = address;
-            this.observer = observer;
-            this.timeout = timeout;
-            this.fastConnect = fastConnect;
-            this.scocFirmwareAutoupdate = scocFirmwareAutoupdate;
+        public ConnectDeviceTask(ConnectionParameters params) {
+            this.params = params;
         }
 
         private int oldOrientation;
@@ -527,8 +541,7 @@ public class MainActivity extends AppCompatActivity
 
             oldOrientation = getRequestedOrientation();
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
-
-            dialog = ProgressDialog.show(parent, "Connecting to device", "Please wait...", true);
+            dialog = ProgressDialog.show(params.parent, "Connecting to device", "Please wait...", true);
         }
 
         @Override
@@ -537,16 +550,7 @@ public class MainActivity extends AppCompatActivity
             startedAt = System.currentTimeMillis();
 
             try {
-                HashMap<String, String> props = new HashMap<>();
-                props.put("portName", address);
-                props.put("portType", "1");
-                props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothPort");
-                props.put("protocolType", selectedProtocol);
-                props.put("fastConnect", fastConnect ? "1" : "0");
-                props.put("capScocUpdateFirmware", scocFirmwareAutoupdate ? "1" : "0");
-                props.put("byteTimeout", timeout);
-                JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
-
+                configureJpos(this.params);
 
                 // test reconnection
                 if (printer.getState() != JposConst.JPOS_S_CLOSED) {
@@ -557,10 +561,10 @@ public class MainActivity extends AppCompatActivity
                 printer.claim(3000);
                 printer.setDeviceEnabled(true);
                 model.ScocUpdaterStatus.set("");
-                printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, observer);
+                printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, this.params.observer);
                 return null;
             } catch (Exception e) {
-                log.error("Bluetooth device " + address + " connection using protocol " + selectedProtocol + " failed", e);
+                log.error("Device " + this.params.portName + " connection using protocol " + selectedProtocol + " failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();
@@ -623,126 +627,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void autoConnectBluetoothDevice() {
-
-        new AutoConnectBluetoothDeviceTask(
-                this,
-                tbNetworkAddress.getText().toString(),
-                createFirmwareUpdateObserver(),
-                nbTimeout.getText().toString(),
-                chbFastConnect.isChecked(),
-                chbScocFirmwareUpdate.isChecked()).execute();
+        new ConnectDeviceTask(getParams()).execute();
     }
 
-    private class AutoConnectBluetoothDeviceTask extends AsyncTask<Void, Void, String> {
-
-        private final AppCompatActivity parent;
-        private final String address;
-        private final FirmwareUpdateObserver observer;
-        private final String timeout;
-        private final boolean fastConnect;
-        private final boolean scocFirmwareAutoupdate;
-
-        private long startedAt;
-        private long doneAt;
-
-        private String text;
-
-        private ProgressDialog dialog;
-
-        public AutoConnectBluetoothDeviceTask(AppCompatActivity parent, String address, FirmwareUpdateObserver observer, String timeout, boolean fastConnect, boolean scocFirmwareAutoupdate) {
-            this.parent = parent;
-
-            this.address = address;
-            this.observer = observer;
-            this.timeout = timeout;
-            this.fastConnect = fastConnect;
-            this.scocFirmwareAutoupdate = scocFirmwareAutoupdate;
-        }
-
-        private int oldOrientation;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            oldOrientation = getRequestedOrientation();
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
-
-            dialog = ProgressDialog.show(parent, "Connecting to device", "Please wait...", true);
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-
-            try {
-                if (printer.getState() != JposConst.JPOS_S_CLOSED) {
-                    printer.close();
-                }
-
-                startedAt = System.currentTimeMillis();
-
-                log.debug("Generating jpos.xml...");
-
-                Map<String, String> props = new HashMap<>();
-                props.put("portName", "SHTRIH");
-                props.put("portType", "1");
-                props.put("portClass", "com.shtrih.fiscalprinter.port.BluetoothPort");
-                props.put("protocolType", selectedProtocol);
-                props.put("fastConnect", fastConnect ? "1" : "0");
-                props.put("capScocUpdateFirmware", scocFirmwareAutoupdate ? "1" : "0");
-                props.put("byteTimeout", timeout);
-                props.put("searchByPortEnabled", "1");
-
-                JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
-
-                log.debug("Opening...");
-
-                printer.open("ShtrihFptr");
-
-                log.debug("Claiming...");
-
-                printer.claim(3000);
-
-                log.debug("Setting device enabled...");
-
-                printer.setDeviceEnabled(true);
-                model.ScocUpdaterStatus.set("");
-
-                log.debug("Connected!");
-
-                printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, observer);
-
-                doneAt = System.currentTimeMillis();
-
-                String[] lines = new String[1];
-                printer.getData(FiscalPrinterConst.FPTR_GD_PRINTER_ID, null, lines);
-                String serialNumber = lines[0];
-                DeviceMetrics deviceMetrics = printer.readDeviceMetrics();
-
-                text = deviceMetrics.getDeviceName() + " " + serialNumber;
-
-                return null;
-
-            } catch (Exception e) {
-                log.error("Connection to Wi-Fi device " + address + " using protocol " + selectedProtocol + " failed", e);
-                return e.getMessage();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            dialog.dismiss();
-
-            if (result == null)
-                showMessage(text + "\nSuccess " + (doneAt - startedAt) + " ms");
-            else
-                showMessage(result);
-
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        }
-    }
 
     private void shareLogFile() {
         try {
@@ -1651,124 +1538,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void connectToDeviceDirect(View view) {
-
-        new ConnectToWiFiDeviceTask(
-                this,
-                tbNetworkAddress.getText().toString(),
-                createFirmwareUpdateObserver(),
-                nbTimeout.getText().toString(),
-                chbFastConnect.isChecked(),
-                chbScocFirmwareUpdate.isChecked()).execute();
-    }
-
-    private class ConnectToWiFiDeviceTask extends AsyncTask<Void, Void, String> {
-
-        private final AppCompatActivity parent;
-        private final String address;
-        private final FirmwareUpdateObserver observer;
-        private final String timeout;
-        private final boolean fastConnect;
-        private final boolean scocFirmwareAutoupdate;
-
-        private long startedAt;
-        private long doneAt;
-
-        private String text;
-
-        private ProgressDialog dialog;
-
-        public ConnectToWiFiDeviceTask(AppCompatActivity parent, String address, FirmwareUpdateObserver observer, String timeout, boolean fastConnect, boolean scocFirmwareAutoupdate) {
-            this.parent = parent;
-
-            this.address = address;
-            this.observer = observer;
-            this.timeout = timeout;
-            this.fastConnect = fastConnect;
-            this.scocFirmwareAutoupdate = scocFirmwareAutoupdate;
-        }
-
-        private int oldOrientation;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            oldOrientation = getRequestedOrientation();
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
-
-            dialog = ProgressDialog.show(parent, "Connecting to device", "Please wait...", true);
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-
-            try {
-                if (printer.getState() != JposConst.JPOS_S_CLOSED) {
-                    printer.close();
-                }
-
-                startedAt = System.currentTimeMillis();
-
-                log.debug("Generating jpos.xml...");
-
-                Map<String, String> props = new HashMap<>();
-                props.put("portName", address);
-                props.put("portType", "2");
-                props.put("protocolType", selectedProtocol);
-                props.put("fastConnect", fastConnect ? "1" : "0");
-                props.put("capScocUpdateFirmware", scocFirmwareAutoupdate ? "1" : "0");
-                props.put("byteTimeout", timeout);
-
-                JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
-
-                log.debug("Opening...");
-
-                printer.open("ShtrihFptr");
-
-                log.debug("Claiming...");
-
-                printer.claim(3000);
-
-                log.debug("Setting device enabled...");
-
-                printer.setDeviceEnabled(true);
-                model.ScocUpdaterStatus.set("");
-
-                log.debug("Connected!");
-
-                printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, observer);
-
-                doneAt = System.currentTimeMillis();
-
-                String[] lines = new String[1];
-                printer.getData(FiscalPrinterConst.FPTR_GD_PRINTER_ID, null, lines);
-                String serialNumber = lines[0];
-                DeviceMetrics deviceMetrics = printer.readDeviceMetrics();
-
-                text = deviceMetrics.getDeviceName() + " " + serialNumber;
-
-                return null;
-
-            } catch (Exception e) {
-                log.error("Connection to Wi-Fi device " + address + " using protocol " + selectedProtocol + " failed", e);
-                return e.getMessage();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            dialog.dismiss();
-
-            if (result == null)
-                showMessage(text + "\nSuccess " + (doneAt - startedAt) + " ms");
-            else
-                showMessage(result);
-
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        }
+    public void connectToDeviceDirect(View view)
+    {
+        ConnectionParameters params = getParams();
+        params.portType = SmFptrConst.PORT_TYPE_SOCKET;
+        new ConnectDeviceTask(params).execute();
     }
 
     public void searchDeviceDirect(View view) {
@@ -1779,145 +1553,39 @@ public class MainActivity extends AppCompatActivity
 
     public void connectToUSBDevice(View view) {
 
-        try {
-            UsbManager usbManager = (UsbManager) getApplicationContext().getSystemService(Context.USB_SERVICE);
-            List<UsbSerialDriver> usbs = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager);
+        UsbManager usbManager = (UsbManager) getApplicationContext().getSystemService(Context.USB_SERVICE);
+        List<UsbSerialDriver> usbs = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager);
 
-            if (usbs.size() == 0) {
-                showMessage("No USB device found");
-                return;
-            }
-
-            log.debug("Found " + usbs.size() + " USB devices");
-
-            int deviceId = usbs.get(0).getDevice().getDeviceId();
-
-            HashMap<String, String> props = new HashMap<>();
-            props.put("portName", String.format(Locale.ENGLISH, "%d", deviceId));
-            props.put("protocolType", "0");
-            props.put("portType", "3");
-            props.put("portClass", "com.shtrih.fiscalprinter.port.UsbPrinterPort");
-            props.put("fastConnect", chbFastConnect.isChecked() ? "1" : "0");
-            props.put("capScocUpdateFirmware", chbScocFirmwareUpdate.isChecked() ? "1" : "0");
-
-            JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
-        } catch (Exception e) {
-            log.error("USB device connection failed", e);
-            showMessage("Configuration error: " + e.getMessage());
+        if (usbs.size() == 0) {
+            showMessage("No USB device found");
             return;
         }
 
-        try {
+        log.debug("Found " + usbs.size() + " USB devices");
 
-            if (printer.getState() != JposConst.JPOS_S_CLOSED) {
-                printer.close();
-            }
-
-            UsbPrinterPort.Context = getApplicationContext();
-
-            try {
-                printer.open("ShtrihFptr");
-            } finally {
-                UsbPrinterPort.Context = null;
-            }
-
-            printer.claim(3000);
-            printer.setDeviceEnabled(true);
-            printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, createFirmwareUpdateObserver());
-
-            String[] lines = new String[1];
-            printer.getData(FiscalPrinterConst.FPTR_GD_PRINTER_ID, null, lines);
-            String serialNumber = lines[0];
-            DeviceMetrics deviceMetrics = printer.readDeviceMetrics();
-
-            showMessage(deviceMetrics.getDeviceName() + " " + serialNumber);
-
-        } catch (Exception e) {
-            log.debug("USB device connection failed", e);
-            showMessage(e.getMessage());
-        }
+        int deviceId = usbs.get(0).getDevice().getDeviceId();
+        ConnectionParameters params = getParams();
+        params.portName = String.format(Locale.ENGLISH, "%d", deviceId);
+        params.portType = SmFptrConst.PORT_TYPE_FROMCLASS;
+        params.portClass = "com.shtrih.fiscalprinter.port.UsbPrinterPort";
+        new ConnectDeviceTask(params).execute();
     }
 
-    public void connectToDevice(View view)
+    public void connectToBTDevice(View view)
     {
-        (new ConnectToDeviceTask(this)).execute();
+        verifyBTPermissions();
+        ConnectionParameters params = getParams();
+        params.portType = SmFptrConst.PORT_TYPE_BT;
+        new ConnectDeviceTask(params).execute();
     }
 
-
-    private class ConnectToDeviceTask extends AsyncTask<Void, Void, String>
+    public void connectToBLEDevice(View view)
     {
-        private long startedAt;
-        private long doneAt;
-        private final AppCompatActivity parent;
-        private ProgressDialog dialog;
-
-        public ConnectToDeviceTask(AppCompatActivity parent) {
-            this.parent = parent;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            dialog = ProgressDialog.show(parent, "Connecting to device", "Please wait...", true);
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-
-            startedAt = System.currentTimeMillis();
-
-            try {
-                connectToDevice();
-                return null;
-            } catch (Exception e) {
-                log.error("Connect to device failed", e);
-                return e.getMessage();
-            } finally {
-                doneAt = System.currentTimeMillis();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            dialog.dismiss();
-
-            if (result == null)
-                showMessage("Success " + (doneAt - startedAt) + " ms");
-            else
-                showMessage(result);
-
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        }
-
+        verifyBTPermissions();
+        ConnectionParameters params = getParams();
+        params.portType = SmFptrConst.PORT_TYPE_BLE;
+        new ConnectDeviceTask(params).execute();
     }
-
-    private void connectToDevice() throws Exception
-    {
-        HashMap<String, String> props = new HashMap<>();
-        //props.put("portName", "30:AE:A4:95:61:5A");
-        props.put("portName", "30:AE:A4:80:70:C2");
-        props.put("portType", "6");
-        // PORT_TYPE_BT = 1
-        // PORT_TYPE_BLE = 4;
-        // PORT_TYPE_BT_PPP = 5;
-        // PORT_TYPE_BLE_PPP = 6;
-        //props.put("portClass", "com.shtrih.fiscalprinter.port.PPPPort");
-        props.put("protocolType", "1");
-        props.put("fastConnect", "1");
-        props.put("capScocUpdateFirmware", "0");
-        props.put("byteTimeout", "1000");
-        JposConfig.configure("ShtrihFptr", getApplicationContext(), props);
-
-        if (printer.getState() != JposConst.JPOS_S_CLOSED) {
-            printer.close();
-        }
-        printer.open("ShtrihFptr");
-        printer.claim(3000);
-        printer.setDeviceEnabled(true);
-    }
-
 
     public void readFiscalizationTag(View view) {
 

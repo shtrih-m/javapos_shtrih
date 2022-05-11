@@ -10,7 +10,8 @@ import com.shtrih.util.SysUtils;
 
 import jpos.FiscalPrinter;
 
-public class MainViewModel extends AndroidViewModel {
+public class MainViewModel extends AndroidViewModel
+{
     private ShtrihFiscalPrinter printer;
 
     public final ObservableField<String> ScocUpdaterStatus = new ObservableField<>();
