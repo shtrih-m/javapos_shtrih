@@ -6,12 +6,12 @@
     <item
         android:id="@+id/action_connect_ptk"
         android:orderInCategory="100"
-        android:title="@string/action_connect_ptk"
+        android:title="@string/action_select_bt_device"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_auto_connect_bluetooth"
         android:orderInCategory="100"
-        android:title="@string/action_auto_connect_bluetooth"
+        android:title="@string/action_select_bt_device_prefix"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_share_log"

@@ -613,7 +613,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         if(id == R.id.action_auto_connect_bluetooth){
-            autoConnectBluetoothDevice();
+            tbNetworkAddress.setText("SHTRIH");
             return true;
         }
 
@@ -625,11 +625,6 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
-
-    private void autoConnectBluetoothDevice() {
-        new ConnectDeviceTask(getParams()).execute();
-    }
-
 
     private void shareLogFile() {
         try {

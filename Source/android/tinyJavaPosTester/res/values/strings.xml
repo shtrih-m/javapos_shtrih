@@ -2,8 +2,8 @@
 <resources>
 
     <string name="app_name">tinyJavaPosTester</string>
-    <string name="action_connect_ptk">Connect bluetooth device</string>
-    <string name="action_auto_connect_bluetooth">Auto connect bluetooth device</string>
+    <string name="action_select_bt_device">Select bluetooth device</string>
+    <string name="action_select_bt_device_prefix">Select bluetooth device prefix</string>
     <string name="action_share_log">Share log</string>
     <string name="scanning">scanning…</string>
     <string name="scan">scan</string>

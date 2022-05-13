@@ -1289,6 +1289,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public boolean getCapCutter(){
         return true;
     }
-    
-    
+
+    public long getTaxAmount(int tax, long amount) throws Exception{
+        return 0;
+    }
 }

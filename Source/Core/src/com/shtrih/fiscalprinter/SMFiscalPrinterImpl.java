@@ -261,27 +261,22 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         switch (command.getCode()) {
             case 0xFF41: // start open fiscal day 
             case 0xE0:   // open fiscal day
+            case 0x8D:   // open receipt
+            case 0xFF05: // start registration report
+            case 0xFF06: // print registration report
+            case 0xFF0B: // start fiscal day in FS
+            case 0xFF34: // print reregistration report
+            case 0xFF35: // start correction receipt
+            case 0xFF36: // print correction receipt
+            case 0xFF37: // start payments report
+            case 0xFF38: // print payments report
+            case 0xFF42: // start day close
+            case 0xFF43: // close day in FS
+            case 0xFF4A: // print correction receipt 2
                 setCurrentDateTime();
         }
-        // SHTRIH-NANO-F
-        if (getDeviceMetrics().isShtrihNano()) {
-            switch (command.getCode()) {
-                case 0x8D:   // open receipt 
-                case 0xFF05: // start registration report
-                case 0xFF06: // print registration report
-                case 0xFF0B: // start fiscal day in FS
-                case 0xFF34: // print reregistration report
-                case 0xFF35: // start correction receipt
-                case 0xFF36: // print correction receipt
-                case 0xFF37: // start payments report
-                case 0xFF38: // print payments report
-                case 0xFF42: // start day close
-                case 0xFF43: // close day in FS
-                case 0xFF4A: // print correction receipt 2
-                    setCurrentDateTime();
-            }
-        }
     }
+
 
     // correct date
     public void setCurrentDateTime() {
@@ -296,12 +291,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
             synchronized (port.getSyncObject()) {
                 // wait to complete print operations
-                waitForPrinting();
+                LongPrinterStatus status = waitForPrintingLong();
                 // write current date
                 // if fiscal mode opened, last doc date must be less then date
                 PrinterDate currentDate = new PrinterDate();
                 PrinterTime currentTime = new PrinterTime();
-                LongPrinterStatus status = readLongStatus();
                 FSReadStatus fsStatus = fsReadStatus();
 
                 if (!status.getDate().isEqual(currentDate)) {
@@ -344,8 +338,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
             check(readDeviceMetrics());
             model = selectPrinterModel(getDeviceMetrics());
-            readTaxRates();
-
             return checkEcrMode();
         }
     }
@@ -360,7 +352,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    private void readTaxRates() throws Exception {
+    private void readTaxRates() throws Exception
+    {
+        if (taxRates != null){
+            return;
+        }
+
         ReadTableInfo command = readTableInfo(PrinterConst.SMFP_TABLE_TAX);
         if (command.isSucceeded()) {
             int rowCount = command.getRowCount();
@@ -1831,40 +1828,59 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         synchronized (port.getSyncObject()) {
             for (;;) {
                 PrinterStatus status = readPrinterStatus();
-                switch (status.getSubmode()) {
-                    case ECR_SUBMODE_IDLE: {
-                        if (checkEcrMode(status.getMode())) {
-                            return status;
-                        }
-                        break;
-                    }
-
-                    case ECR_SUBMODE_PASSIVE:
-                    case ECR_SUBMODE_ACTIVE: {
-                        checkPaper(status);
-                        // Flags can be ok, but status not
-                        throw new DeviceException(SMFP_EFPTR_PAPER_OR_COVER,
-                                getErrorText(SMFP_EFPTR_PAPER_OR_COVER));
-                    }
-
-                    case ECR_SUBMODE_AFTER: {
-                        continuePrint();
-                        break;
-                    }
-
-                    case ECR_SUBMODE_REPORT:
-                    case ECR_SUBMODE_PRINT: {
-                        Time.delay(TimeToSleep);
-                        break;
-                    }
-
-                    default: {
-                        logger.debug("Unknown submode");
-                        return status;
-                    }
+                if (checkPrinterStatus(status)){
+                    return status;
                 }
             }
         }
+    }
+
+    public LongPrinterStatus waitForPrintingLong() throws Exception {
+        logger.debug("waitForPrintingLong");
+        synchronized (port.getSyncObject()) {
+            for (;;) {
+                LongPrinterStatus status = readLongStatus();
+                if (checkPrinterStatus(status.getPrinterStatus())){
+                    return status;
+                }
+            }
+        }
+    }
+
+    private boolean checkPrinterStatus(PrinterStatus status) throws Exception {
+        switch (status.getSubmode()) {
+            case ECR_SUBMODE_IDLE: {
+                if (checkEcrMode(status.getMode())) {
+                    return true;
+                }
+                break;
+            }
+
+            case ECR_SUBMODE_PASSIVE:
+            case ECR_SUBMODE_ACTIVE: {
+                checkPaper(status);
+                // Flags can be ok, but status not
+                throw new DeviceException(SMFP_EFPTR_PAPER_OR_COVER,
+                        getErrorText(SMFP_EFPTR_PAPER_OR_COVER));
+            }
+
+            case ECR_SUBMODE_AFTER: {
+                continuePrint();
+                break;
+            }
+
+            case ECR_SUBMODE_REPORT:
+            case ECR_SUBMODE_PRINT: {
+                Time.delay(TimeToSleep);
+                break;
+            }
+
+            default: {
+                logger.debug("Unknown submode");
+                return true;
+            }
+        }
+        return false;
     }
 
     public int[] getSupportedBaudRates() throws Exception {
@@ -3703,6 +3719,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public int getTaxRate(int number) throws Exception {
         return taxRates[number];
+    }
+
+    public long getTaxAmount(int tax, long amount) throws Exception
+    {
+        readTaxRates();
+        double taxRate = getTaxRate(tax) / 10000.0;
+        return Math.round(amount * taxRate / (1 + taxRate));
     }
 
     public int printDocHeader(String title, int number) throws Exception {

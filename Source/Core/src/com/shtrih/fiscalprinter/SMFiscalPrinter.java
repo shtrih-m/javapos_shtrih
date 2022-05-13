@@ -721,4 +721,6 @@ public interface SMFiscalPrinter {
     public void setCommandTimeout(int code, int timeout);
     
     public boolean getCapCutter();
+
+    public long getTaxAmount(int tax, long amount) throws Exception;
 }

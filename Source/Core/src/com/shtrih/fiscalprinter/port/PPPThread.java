@@ -71,6 +71,7 @@ public class PPPThread implements Runnable {
         if (isStarted() && (ctx != 0))
         {
             result = Api.api_status(ctx);
+            logger.debug("PPP status =" + result);
         }
         return result;
     }

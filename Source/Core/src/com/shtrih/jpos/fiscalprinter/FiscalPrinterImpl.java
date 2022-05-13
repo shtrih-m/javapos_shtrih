@@ -3151,23 +3151,26 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             receipt = createReceipt(fiscalReceiptType);
 
             PrinterStatus status = getPrinter().waitForPrinting();
-
             // Cancel receipt if it opened
             if (status.getPrinterMode().isReceiptOpened()) {
                 cancelReceipt();
             }
 
-            if (status.getPrinterMode().isDayClosed() && getParams().autoOpenShift) {
-                openFiscalDay();
-            }
-
             // check end of day
-            if (isSalesReceipt()) {
-                if (status.getPrinterMode().isDayEndRequired()) {
+            if (status.getPrinterMode().isDayEndRequired())
+            {
+                if (params.autoPrintZReport)
+                {
+                    printZReport();
+                    openFiscalDay();
+                } else{
                     dayEndRequiredError();
                 }
+            } else {
+                if (status.getPrinterMode().isDayClosed() && getParams().autoOpenShift) {
+                    openFiscalDay();
+                }
             }
-
             setPrinterState(FPTR_PS_FISCAL_RECEIPT);
             getPrinter().startSaveCommands();
             printDocStart();

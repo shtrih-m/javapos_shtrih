@@ -39,7 +39,6 @@ public class FSSaleReceiptItem {
     private int paymentType = 4;
     private int subjectType = 1;
     private HashMap receiptFields = new HashMap();
-    private double taxRate = 0;
     private Integer unit;
     private final FSDiscounts discounts = new FSDiscounts();
     private final List<FSTLVItem> tags = new Vector<FSTLVItem>();
@@ -72,7 +71,6 @@ public class FSSaleReceiptItem {
         item.itemCodes.addAll(itemCodes);
         item.tags.clear();
         item.tags.addAll(tags);
-        item.taxRate = taxRate;
         return item;
     }
 
@@ -289,14 +287,6 @@ public class FSSaleReceiptItem {
         return fieldValue;
     }
 
-    public void setTaxRate(double taxRate) {
-        this.taxRate = taxRate;
-    }
-
-    public double getTaxRate() {
-        return taxRate;
-    }
-
     public Integer getUnit() {
         return unit;
     }
@@ -307,9 +297,5 @@ public class FSSaleReceiptItem {
 
     public List<byte[]> getItemCodes(){
         return itemCodes;
-    }
-    
-    public long getTaxAmount() throws Exception {
-        return Math.round((getTotal()) * taxRate / (double)(1 + taxRate));
     }
 }

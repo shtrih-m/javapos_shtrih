@@ -142,7 +142,7 @@
 		<!-- maxAckNumber -->
 		<prop name="maxAckNumber" type="String" value="3"/>
 		<!-- maxRepeatCount -->
-		<prop name="maxRepeatCount" type="String" value="10"/>
+		<prop name="maxRepeatCount" type="String" value="1"/>
 		<!-- Payment types -->
 		<prop name="payType0" type="String" value="0"/>
 		<prop name="payType1" type="String" value="1"/>
@@ -331,6 +331,9 @@
              Значение по умолчанию - 1. -->
 		<prop name="forceOpenShiftOnZReport" type="String" value="0"/>
 
+		<!-- Automatic Z report printing -->
+		<prop name="autoPrintZReport" type="String" value="0"/>
+
         <!-- Разрешить коррекцию суммы оплаты.
              При закрытии чека в случае если указанная сумма безналичным типом оплаты больше итога чека,
              она будет скорректирована и станет равна итогу чека, что б избежать ошибки ККМ
@@ -354,7 +357,7 @@
 		<prop name="waitForBarcodePrinting" type="String" value="1"/>
 
 		<!-- validTimeDiffInSecs -->
-		<prop name="validTimeDiffInSecs" type="String" value="0"/>
+		<prop name="validTimeDiffInSecs" type="String" value="5"/>
 
 		<prop name="commandTimeoutE0" type="String" value="80000"/>
 	</JposEntry>

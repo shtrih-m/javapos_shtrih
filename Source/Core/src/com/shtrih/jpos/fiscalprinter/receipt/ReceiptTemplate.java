@@ -350,7 +350,8 @@ public class ReceiptTemplate {
     }
 
     private String getTaxAmount(FSSaleReceiptItem item) throws Exception {
-        return StringUtils.amountToString(item.getTaxAmount());
+        long taxAmount = context.getPrinter().getPrinter().getTaxAmount(item.getTax1(), item.getTotal());
+        return StringUtils.amountToString(taxAmount);
     }
 
     private String getTaxLetter(int tax) {

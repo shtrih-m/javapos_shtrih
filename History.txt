@@ -7,6 +7,14 @@
     
 ********************************************************************************
 
+  13.05.2022
+  deviceServiceVersion = 1013652
+
+  [+] Added parameter autoPrintZReport to jpos.xml to automatically print 
+      Z report in beginFiscalReceipt method
+  
+********************************************************************************
+
   06.05.2022
   deviceServiceVersion = 1013651
 
