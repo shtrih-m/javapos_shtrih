@@ -166,7 +166,7 @@ public class FSSaleReceiptItem {
     /**
      * @return the discounts
      */
-    public FSDiscounts getDiscounts() {
+    private FSDiscounts getDiscounts() {
         return discounts;
     }
 

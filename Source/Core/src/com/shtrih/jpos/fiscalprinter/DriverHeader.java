@@ -38,15 +38,8 @@ public class DriverHeader implements PrinterHeader {
         this.printer = printer;
         
         int numHeaderLines = printer.getParams().numHeaderLines;
-        if (numHeaderLines < printer.getNumHeaderLines()){
-            numHeaderLines = printer.getNumHeaderLines();
-        }
         header = new ReceiptLines(numHeaderLines);
-        
         int numTrailerLines = printer.getParams().numTrailerLines;
-        if (numTrailerLines < printer.getNumTrailerLines()){
-            numTrailerLines = printer.getNumTrailerLines();
-        }
         trailer = new ReceiptLines(numTrailerLines);
     }
 

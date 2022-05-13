@@ -12,6 +12,8 @@
 
   [+] Added parameter autoPrintZReport to jpos.xml to automatically print 
       Z report in beginFiscalReceipt method
+  [-] Fixed error with header and trailer print
+  [-] Fixed error with discount in receipt template
   
 ********************************************************************************
 

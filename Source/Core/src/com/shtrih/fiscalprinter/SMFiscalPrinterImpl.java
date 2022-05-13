@@ -154,9 +154,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private volatile boolean interrupted = false;
     private Integer fdVersion = null;
     private boolean capLastErrorText = true;
-    private int[] taxRates = null;
     private FDOParameters fdoParameters = null;
     public boolean isTableTextCleared = false;
+    private final Map<Integer, Integer> taxRates = new HashMap<Integer, Integer>();
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params) {
@@ -348,22 +348,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 printerEvents.beforeCommand(command);
             } catch (Exception e) {
                 logger.error("beforeCommand " + e.getMessage());
-            }
-        }
-    }
-
-    private void readTaxRates() throws Exception
-    {
-        if (taxRates != null){
-            return;
-        }
-
-        ReadTableInfo command = readTableInfo(PrinterConst.SMFP_TABLE_TAX);
-        if (command.isSucceeded()) {
-            int rowCount = command.getRowCount();
-            taxRates = new int[rowCount + 1];
-            for (int i = 1; i <= rowCount; i++) {
-                taxRates[i] = Integer.parseInt(readTable2(PrinterConst.SMFP_TABLE_TAX, i, 1));
             }
         }
     }
@@ -3717,13 +3701,19 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return readTable2(PrinterConst.SMFP_TABLE_TAX, number, 2);
     }
 
-    public int getTaxRate(int number) throws Exception {
-        return taxRates[number];
+    public int getTaxRate(int number) throws Exception 
+    {
+        Integer taxRate = taxRates.get(number);
+        if (taxRate == null)
+        {
+            taxRate = Integer.parseInt(readTable2(PrinterConst.SMFP_TABLE_TAX, number, 1));
+            taxRates.put(number, taxRate);
+        }
+        return taxRate;
     }
 
     public long getTaxAmount(int tax, long amount) throws Exception
     {
-        readTaxRates();
         double taxRate = getTaxRate(tax) / 10000.0;
         return Math.round(amount * taxRate / (1 + taxRate));
     }

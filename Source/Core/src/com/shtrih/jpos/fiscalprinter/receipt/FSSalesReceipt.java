@@ -693,7 +693,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         printReceiptItem(item);
         printOperationTLV(item);
 
-        long discountTotal = item.getDiscounts().getTotal();
+        long discountTotal = item.getDiscount();
         if (discountTotal != 0) {
             String text = "=" + StringUtils.amountToString(discountTotal);
             getDevice().printLines("СКИДКА", text);
@@ -1432,12 +1432,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void applyItemDiscounts(FSSaleReceiptItem item, Vector fpItems)
             throws Exception 
     {
-        long discount = item.getDiscounts().getTotal();
+        long discount = item.getDiscount();
         long total = item.getTotal() - discount;
         long price = item.getPrice();
         double quantity = item.getQuantity();
-        
-        item.getDiscounts().clear();
         
         if (discount == 0) {
             fpItems.add(item);

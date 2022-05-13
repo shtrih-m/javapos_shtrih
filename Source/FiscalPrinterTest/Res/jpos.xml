@@ -87,7 +87,7 @@
         <!-- 0 - command 10h, short status request  -->
         <!-- 1 - command 11h, long status request  -->
         <!-- 2 - status command selected by driver -->
-        <prop name="statusCommand" type="String" value="2"/>
+        <prop name="statusCommand" type="String" value="1"/>
         <!-- Localization file name -->
         <prop name="messagesFileName" type="String" value="shtrihjavapos_ru.properties"/>
         <!-- Wrap text enabled -->
@@ -255,13 +255,11 @@
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- Receipt template -->
 		<prop name="FSCombineItemAdjustments" type="String" value="0"/>
-		<prop name="ReceiptTemplateEnabled" type="String" value="0"/>
+		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
 		<prop name="FieldSeparator" type="String" value=":"/>
 		<prop name="ItemTableHeader" type="String"  value="-------------------HEADER-----------------"/>
 		<prop name="ItemTableTrailer" type="String" value="-------------------TRAILER----------------"/>
-		<prop name="ItemRowFormat" type="String" value="%3lFIELD0%%36lTITLE%%3FIELD1%%22SUM% X %5lQUAN%%=$10TOTAL_TAX%:
-		%TAG_NAME2108% %TAG_VALUE2108%:
-		%TAG_NAME2115% %TAG_VALUE2115%"/>
+		<prop name="ItemRowFormat" type="String"      value="%TAG_VALUE2115%%38lTITLE% %8SUBJECT_TYPE%:%7lTAX_NAME% %8PRICE% %8DISCOUNT% %8SUM%*%6lQUAN%%2lTAG_VALUE2108%%8TOTAL%:%5TAG_VALUE1222%:%TAG_VALUE1225%:%TAG_NAME1226% %TAG_VALUE1226%:%TAG_NAME1171% %TAG_VALUE1171%"/>
 		<!-- <prop name="DiscountFormat" type="String" value="    СКИДКА  %29lTITLE%%=$10TOTAL%"/> -->
 		<prop name="DiscountFormat" type="String" value=""/>
 		<!-- <prop name="ChargeFormat" type="String"   value="    НАДБАВКА  %29lTITLE%%=$10TOTAL%"/> -->
