@@ -237,7 +237,7 @@ public class ReceiptTemplate {
         }
 
         if (f.tag.equals("DISCOUNT")) {
-            long amount = item.getDiscount();
+            long amount = item.getPriceDiscount();
             if (amount == 0) {
                 return "";
             }

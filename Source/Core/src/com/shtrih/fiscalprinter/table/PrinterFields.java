@@ -69,4 +69,9 @@ public class PrinterFields {
     public void setModelName(String value) {
         modelName = value;
     }
+
+    public boolean validModelName(String deviceName)
+    {
+        return modelName.isEmpty() || modelName.toUpperCase().contains(deviceName.toUpperCase());
+    }
 }

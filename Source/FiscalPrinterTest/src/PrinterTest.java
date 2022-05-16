@@ -1045,8 +1045,9 @@ class PrinterTest implements FiscalPrinterConst {
             //printReceiptWithError4();
             //printReceiptWithError5();
             
-            printReceiptWithError9();
+            //printReceiptWithError9();
             //printFiscalReceipt666();
+            printReceiptWithError5();
         } catch (Exception e) {
             e.printStackTrace();
         }

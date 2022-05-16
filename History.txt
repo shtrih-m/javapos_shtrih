@@ -7,6 +7,15 @@
     
 ********************************************************************************
 
+  16.05.2022
+  deviceServiceVersion = 1013653
+
+  [-] Changed csv file name compare
+  [-] Changed discount in receipt template
+  [+] Added time correction in device connection
+  
+********************************************************************************
+
   13.05.2022
   deviceServiceVersion = 1013652
 

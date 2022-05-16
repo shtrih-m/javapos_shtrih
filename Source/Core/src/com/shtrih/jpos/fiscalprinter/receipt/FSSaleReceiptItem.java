@@ -145,6 +145,10 @@ public class FSSaleReceiptItem {
         return getDiscounts().getTotal();
     }
     
+    public long getPriceDiscount(){
+        return unitPrice - price;
+    }
+    
     public void addDiscount(AmountItem discount) {
         getDiscounts().add(discount);
     }

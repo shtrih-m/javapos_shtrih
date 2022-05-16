@@ -919,10 +919,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
                 getPrinterImages().setMaxSize(getMaxGraphicsHeight());
 
+                cancelReceipt();
                 getPrinter().initialize();
 
                 if (!params.fastConnect) {
-                    cancelReceipt();
                     writeTables();
                 }
 
@@ -1990,9 +1990,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     CsvTablesReader reader = new CsvTablesReader();
                     reader.load(file.getAbsolutePath(), fields);
 
-                    String fileModelName = fields.getModelName();
-                    String deviceModelName = getPrinter().getDeviceMetrics().getDeviceName();
-                    if (fileModelName.equalsIgnoreCase(deviceModelName)) {
+                    if (fields.validModelName(getPrinter().getDeviceMetrics().getDeviceName()))
+                    {
                         logger.debug("Write fields values from file '" + file.getAbsolutePath() + "')");
                         // set font for driver text
                         PrinterField field = fields.find(8, 1, 1);
@@ -2003,8 +2002,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                         }
                         writeTables(fields);
                         break;
-                    } else {
-                        logger.debug("fileModelName <> deviceModelName, " + fileModelName + " <> " + deviceModelName);
                     }
                 }
 
@@ -2022,14 +2019,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         CsvTablesReader reader = new CsvTablesReader();
         reader.load(file.getAbsolutePath(), fields);
 
-        String fileModelName = fields.getModelName();
         String deviceModelName = getPrinter().getDeviceMetrics().getDeviceName();
-        if (fileModelName.length() > 0) {
-            if (!fileModelName.equalsIgnoreCase(deviceModelName)) {
-                logger.error("File model name does not match device name");
-                logger.error("'" + fileModelName + "' <> '" + deviceModelName + "'");
-                return;
-            }
+        if (fields.validModelName(deviceModelName))
+        {
+            logger.error("File model name does not match device name");
+            logger.error("'" + fields.getModelName() + "' <> '" + deviceModelName + "'");
+            return;
+
         }
         logger.debug("Write fields values from file '" + file.getAbsolutePath() + "')");
         writeTables(fields);

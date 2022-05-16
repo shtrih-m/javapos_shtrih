@@ -2371,6 +2371,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             capGraphics3Scale = true;
         }
         updateFirmware();
+        setCurrentDateTime();
     }
 
     /**
