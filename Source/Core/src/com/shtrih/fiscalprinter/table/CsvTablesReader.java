@@ -98,15 +98,10 @@ public class CsvTablesReader {
             line = line.toUpperCase();
             if (fields.getModelName().isEmpty())
             {
-                String modelName = "";
-                /// Модель: ЯРУС-01К; №00001000
-                if (line.startsWith("МОДЕЛЬ:")){
-                    modelName = line.substring(7).trim();
+                String modelName = getModelName(line);
+                if (!modelName.isEmpty()){
+                    fields.setModelName(modelName);
                 }
-                if (line.startsWith("MODEL:")){
-                    modelName = line.substring(6).trim();
-                }
-                fields.setModelName(modelName);
             }
         } else {
             int table = getParamInt(line, 0);
@@ -124,6 +119,22 @@ public class CsvTablesReader {
             field.setValue(fieldValue);
             fields.add(field);
         }
+    }
+    
+    /// Модель: ЯРУС-01К; №00001000
+    public static String getModelName(String line)
+    {
+        line = line.toUpperCase();
+        int index = line.indexOf("МОДЕЛЬ:");
+        if (index != -1)
+        {
+            return line.substring(index + 7).trim();
+        }
+        index = line.indexOf("MODEL:");
+        if (index != -1){
+            return line.substring(index + 6).trim();
+        }
+        return "";
     }
 
 }
