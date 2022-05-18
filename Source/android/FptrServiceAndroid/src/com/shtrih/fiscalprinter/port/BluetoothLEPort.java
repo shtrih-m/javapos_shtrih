@@ -20,6 +20,8 @@ import android.bluetooth.le.ScanSettings;
 import android.bluetooth.le.BluetoothLeScanner;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.Set;
@@ -27,12 +29,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 import java.util.ArrayList;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Hex;
 import com.shtrih.util.StaticContext;
 import com.shtrih.util.Time;
-import com.shtrih.util.CircularBuffer;
 
 public class BluetoothLEPort implements PrinterPort2 {
 
@@ -52,7 +55,8 @@ public class BluetoothLEPort implements PrinterPort2 {
     private BluetoothDevice device = null;
     private BluetoothGatt bluetoothGatt = null;
     private BluetoothGattCharacteristic TxChar = null;
-    private final CircularBuffer rxBuffer = new CircularBuffer(1024);
+    private final PipedOutputStream rxOutputStream;
+    private final PipedInputStream rxInputStream;
     private static CompositeLogger logger = CompositeLogger.getLogger(BluetoothLEPort.class);
     private enum ConnectState {Disconnected, ConnectGatt, FailedToConnectGatt, RequestMtu,
         DiscoverServices, DiscoverServicesFailed, UartServiceNotSupported,
@@ -71,6 +75,12 @@ public class BluetoothLEPort implements PrinterPort2 {
 
     private static final String ACCESS_FINE_LOCATION = "android.permission.ACCESS_FINE_LOCATION";
     private static final String ACCESS_BACKGROUND_LOCATION = "android.permission.ACCESS_BACKGROUND_LOCATION";
+
+    public BluetoothLEPort() throws Exception
+    {
+        rxOutputStream = new PipedOutputStream();
+        rxInputStream = new PipedInputStream(rxOutputStream);
+    }
 
     private void loggerDebug(String text) {
         //logger.debug(text);
@@ -321,7 +331,7 @@ public class BluetoothLEPort implements PrinterPort2 {
 
             if (characteristic.getUuid().equals(TX_CHAR_UUID)) {
                 //loggerDebug("Received: " + Hex.toHex(characteristic.getValue()));
-                rxBuffer.write(characteristic.getValue());
+                rxOutputStream.write(characteristic.getValue());
             }
         }
         catch(Exception e){
@@ -520,7 +530,7 @@ public class BluetoothLEPort implements PrinterPort2 {
         for (;;)
         {
             checkPortState();
-            if (rxBuffer.available() >= len) break;
+            if (rxInputStream.available() >= len) break;
 
             Time.delay(1);
             long currentTime = System.currentTimeMillis();
@@ -528,7 +538,8 @@ public class BluetoothLEPort implements PrinterPort2 {
                 throw new IOException("Data read timeout");
             }
         }
-        byte[] data = rxBuffer.read(len);
+        byte[] data = new byte[len];
+        rxInputStream.read(data);
         //loggerDebug("read(" + Hex.toHex(data) + ")");
         return data;
     }
@@ -549,8 +560,6 @@ public class BluetoothLEPort implements PrinterPort2 {
     public void write(byte[] b) throws Exception
     {
         loggerDebug("write(" + Hex.toHex(b) + ")");
-
-        rxBuffer.clear();
 
         int blockSize = 20;
         if (bluetoothmtu > 0) blockSize = bluetoothmtu;
@@ -774,8 +783,8 @@ public class BluetoothLEPort implements PrinterPort2 {
 
     };
 
-    public int available() throws Exception{
-        return rxBuffer.available();
+    public InputStream getInputStream() throws Exception{
+        return rxInputStream;
     }
 
     public void setPortEvents(IPortEvents events){

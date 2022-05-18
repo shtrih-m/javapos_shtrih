@@ -560,6 +560,12 @@ public class MainActivity extends AppCompatActivity
                 //printer.addStatusUpdateListener(new FptrEventListener());
                 printer.claim(3000);
                 printer.setDeviceEnabled(true);
+                /*
+                String pppMode = printer.readTable(21, 1, 1);
+                log.debug("PPP mode: " + pppMode);
+                printer.writeTable(21, 1, 1, "0");
+                */
+
                 model.ScocUpdaterStatus.set("");
                 printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, this.params.observer);
                 return null;

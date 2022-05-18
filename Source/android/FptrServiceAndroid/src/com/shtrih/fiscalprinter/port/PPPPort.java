@@ -223,9 +223,11 @@ public class PPPPort implements PrinterPort2 {
         {
             byte[] data;
             // read bluetoothSocket
-            int count = printerPort.available();
-            if (count > 0) {
-                data = printerPort.readBytes(count);
+            int count = printerPort.getInputStream().available();
+            if (count > 0)
+            {
+                data = new byte[count];
+                count = printerPort.getInputStream().read(data);
                 if (count > 0) {
                     //logger.debug("BT <- " + Hex.toHex(data));
                     localSocket.getOutputStream().write(data, 0, count);
@@ -366,8 +368,8 @@ public class PPPPort implements PrinterPort2 {
         printerPort.setPortEvents(events);
     }
 
-    public int available() throws Exception{
-        return socket.getInputStream().available();
+    public InputStream getInputStream() throws Exception{
+        return socket.getInputStream();
     }
 }
 

@@ -9,5 +9,5 @@ import java.io.OutputStream;
 
 public interface PrinterPort2 extends PrinterPort
 {
-    int available() throws Exception;
+    InputStream getInputStream() throws Exception;
 }

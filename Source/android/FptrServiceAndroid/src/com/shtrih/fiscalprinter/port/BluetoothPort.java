@@ -272,8 +272,8 @@ public class BluetoothPort implements PrinterPort2 {
     }
 
     @Override
-    public int available() throws Exception{
-        return getSocket().getInputStream().available();
+    public InputStream getInputStream() throws Exception{
+        return getSocket().getInputStream();
     }
 
     @Override
