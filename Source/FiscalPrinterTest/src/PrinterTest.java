@@ -1047,7 +1047,8 @@ class PrinterTest implements FiscalPrinterConst {
             
             //printReceiptWithError9();
             //printFiscalReceipt666();
-            printReceiptWithError5();
+            //printReceiptWithError5();
+            printReceiptWithError10();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -5112,4 +5113,22 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
+    
+    public void printReceiptWithError10() 
+    {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(4);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItem("4064518 Миндаль 1кг", 666156, 4444, 1, 149900, "г.");
+            printer.printRecItemAdjustment(1, "", 66616, 1);
+            printer.printRecSubtotalAdjustment(1, "", 40);
+            printer.printRecTotal(599500, 599500, "01");
+            printer.endFiscalReceipt(true);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
 }

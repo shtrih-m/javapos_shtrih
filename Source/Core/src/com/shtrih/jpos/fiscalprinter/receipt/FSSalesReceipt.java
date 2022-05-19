@@ -1459,15 +1459,23 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             }
         }
         
-        long priceWithDiscount = (long) Math.abs(Math.floor(total / quantity));
+        long priceWithDiscount = (long) Math.abs(Math.round(total / quantity));
         long amount = Math.round(priceWithDiscount * quantity);
-        if (total == amount) {
+        if (Math.abs(total - amount) <= 1) {
             item.setPrice(priceWithDiscount);
             item.setTotal(total);
             fpItems.add(item);
             return;
         }
         
+        priceWithDiscount = (long) Math.abs(Math.floor(total / quantity));
+        amount = Math.round(priceWithDiscount * quantity);
+        if (Math.abs(total - amount) <= 1) {
+            item.setPrice(priceWithDiscount);
+            item.setTotal(total);
+            fpItems.add(item);
+            return;
+        }
         if (total - amount > 0) {
             double itemQuantity = getItemQuantity(priceWithDiscount, 
                     quantity, total, amount);
