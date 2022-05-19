@@ -359,6 +359,6 @@
 		<!-- validTimeDiffInSecs -->
 		<prop name="validTimeDiffInSecs" type="String" value="5"/>
 
-		<prop name="commandTimeoutE0" type="String" value="80000"/>
+		<prop name="commandTimeoutE0" type="String" value="100000"/>
 	</JposEntry>
 </JposEntries>

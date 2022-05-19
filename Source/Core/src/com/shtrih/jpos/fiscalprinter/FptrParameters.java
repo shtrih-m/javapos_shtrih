@@ -206,6 +206,7 @@ public class FptrParameters {
     public boolean isTableTextCleared = false;
     public boolean pppConnection = false;
     public boolean autoPrintZReport = false;
+    public boolean printItemDiscount = false;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -456,6 +457,7 @@ public class FptrParameters {
         portOpenTimeout = reader.readInteger("portOpenTimeout", defPortOpenTimeout);
         pppConnection = reader.readBoolean("pppConnection", false);
         autoPrintZReport = reader.readBoolean("autoPrintZReport", false);
+        printItemDiscount = reader.readBoolean("printItemDiscount", false);
 
         // paymentNames
         String paymentName;

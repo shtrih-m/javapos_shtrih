@@ -693,10 +693,13 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         printReceiptItem(item);
         printOperationTLV(item);
 
-        long discountTotal = item.getDiscount();
-        if (discountTotal != 0) {
-            String text = "=" + StringUtils.amountToString(discountTotal);
-            getDevice().printLines("СКИДКА", text);
+        if (getParams().printItemDiscount)
+        {
+            long discountTotal = item.getDiscount();
+            if (discountTotal != 0) {
+                String text = "=" + StringUtils.amountToString(discountTotal);
+                getDevice().printLines("СКИДКА", text);
+            }
         }
 
         if (!receiptTemplate.hasPostLine()) {
