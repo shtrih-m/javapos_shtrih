@@ -55,8 +55,8 @@ public class BluetoothLEPort implements PrinterPort2 {
     private BluetoothDevice device = null;
     private BluetoothGatt bluetoothGatt = null;
     private BluetoothGattCharacteristic TxChar = null;
-    private final PipedOutputStream rxOutputStream;
-    private final PipedInputStream rxInputStream;
+    private PipedOutputStream rxOutputStream = null;
+    private PipedInputStream rxInputStream = null;
     private static CompositeLogger logger = CompositeLogger.getLogger(BluetoothLEPort.class);
     private enum ConnectState {Disconnected, ConnectGatt, FailedToConnectGatt, RequestMtu,
         DiscoverServices, DiscoverServicesFailed, UartServiceNotSupported,
@@ -76,10 +76,8 @@ public class BluetoothLEPort implements PrinterPort2 {
     private static final String ACCESS_FINE_LOCATION = "android.permission.ACCESS_FINE_LOCATION";
     private static final String ACCESS_BACKGROUND_LOCATION = "android.permission.ACCESS_BACKGROUND_LOCATION";
 
-    public BluetoothLEPort() throws Exception
+    public BluetoothLEPort()
     {
-        rxOutputStream = new PipedOutputStream();
-        rxInputStream = new PipedInputStream(rxOutputStream);
     }
 
     private void loggerDebug(String text) {
@@ -414,6 +412,9 @@ public class BluetoothLEPort implements PrinterPort2 {
     public void doOpen(int timeout) throws Exception
     {
         if (isOpened()) return;
+
+        rxOutputStream = new PipedOutputStream();
+        rxInputStream = new PipedInputStream(rxOutputStream);
         if (state == ConnectState.Disconnected)
         {
             checkPermissions();
@@ -502,6 +503,16 @@ public class BluetoothLEPort implements PrinterPort2 {
         if (events != null) {
             events.onDisconnect();
         }
+        try {
+            rxOutputStream.close();
+        }
+        catch(Exception e){}
+        try {
+            rxInputStream.close();
+        }
+        catch(Exception e){}
+        rxOutputStream = null;
+        rxInputStream = null;
     }
 
     public int byteToInt(int B) {
@@ -783,7 +794,15 @@ public class BluetoothLEPort implements PrinterPort2 {
 
     };
 
-    public InputStream getInputStream() throws Exception{
+    public void checkOpened() throws Exception{
+        if (!isOpened()) {
+            throw new Exception("Port is not opened");
+        }
+    }
+
+    public InputStream getInputStream() throws Exception
+    {
+        checkOpened();
         return rxInputStream;
     }
 
