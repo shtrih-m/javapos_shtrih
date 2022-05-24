@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity
         getPrefValue(nbTableRow, "TableRow", "1");
         getPrefValue(tbTableCellValue, "TableCellValue", "");
         getPrefValue(tbMonoToken, "MonoToken", "");
-        getPrefValue(nbTimeout, "ByteTimeout", "3000");
+        getPrefValue(nbTimeout, "ByteTimeout", "500");
         getPrefValue(chbFastConnect, "FastConnect", true);
         getPrefValue(chbPPPConnection, "PPPConnection", false);
         getPrefValue(chbScocFirmwareUpdate, "ScocFirmwareUpdate", false);
@@ -561,9 +561,12 @@ public class MainActivity extends AppCompatActivity
                 printer.claim(3000);
                 printer.setDeviceEnabled(true);
                 /*
-                String pppMode = printer.readTable(21, 1, 1);
+                // correct PPP mode
+                int pppMode = Integer.parseInt(printer.readTable(21, 1, 1));
                 log.debug("PPP mode: " + pppMode);
-                printer.writeTable(21, 1, 1, "0");
+                if ((pppMode == 1)||(pppMode == 2)) {
+                    printer.writeTable(21, 1, 1, "0");
+                }
                 */
 
                 model.ScocUpdaterStatus.set("");
@@ -1106,23 +1109,13 @@ public class MainActivity extends AppCompatActivity
 
             try {
                 startedAt = System.currentTimeMillis();
-                for (int i=1;i<=receipts;i++)
-                {
+                for (int i=1;i<=receipts;i++) {
                     if (isCancelled()) break;
 
-                    try
-                    {
-                        String title = String.format("Printing receipt %d...", i);
-                        publishProgress(title);
-                        printSalesReceipt(positions, strings);
-                    }
-                    catch(Exception e)
-                    {
-                        log.error("Receipt printing failed " + i + e.getMessage());
-                    }
-                    //Thread.sleep(interval * 1000);
+                    String title = String.format("Printing receipt %d...", i);
+                    publishProgress(title);
+                    printSalesReceipt(positions, strings);
                 }
-
                 return null;
 
             } catch (Exception e) {

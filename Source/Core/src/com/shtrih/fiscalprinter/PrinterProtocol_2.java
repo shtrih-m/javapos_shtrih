@@ -9,7 +9,6 @@ import com.shtrih.util.Localizer;
 import com.shtrih.util.Logger2;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 /**
  * @author V.Kravtsov
@@ -23,10 +22,12 @@ public class PrinterProtocol_2 implements PrinterProtocol {
     byte[] rx = {};
     private int byteTimeout = 100;
     private int maxRepeatCount = 3;
+    private final boolean isReliable;
     private static CompositeLogger logger = CompositeLogger.getLogger(PrinterProtocol_2.class);
 
     public PrinterProtocol_2(PrinterPort port) {
         this.port = port;
+        isReliable = port.readParameter(PrinterPort.PARAMID_IS_RELIABLE).equalsIgnoreCase("1");
     }
 
     public void setByteTimeout(int value) {
@@ -37,56 +38,73 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         this.maxRepeatCount = value;
     }
 
-    public void connect() throws Exception {
+    public void connect() throws Exception
+    {
         synchronizeFrames(byteTimeout);
     }
 
-    private void doSend(PrinterCommand command) throws Exception {
-        for (int i = 0; i < maxRepeatCount; i++) {
-            if (sendCmd(command, i + 1)) {
-                return;
+    public void send(PrinterCommand command) throws Exception
+    {
+        synchronized (port.getSyncObject())
+        {
+            for (int i = 0; i < maxRepeatCount; i++)
+            {
+                if (i > 0){
+                    logger.debug(String.format("Retry %d/%d", i ,maxRepeatCount));
+                }
+                if (sendCommand(command, i + 1)) {
+                    return;
+                }
             }
-        }
-        throw new DeviceException(PrinterConst.SMFPTR_E_NOCONNECTION,
-                Localizer.getString(Localizer.NoConnection));
-    }
-
-    public void send(PrinterCommand command) throws Exception {
-        synchronized (port.getSyncObject()) {
-            doSend(command);
+            throw new DeviceException(PrinterConst.SMFPTR_E_NOCONNECTION,
+                    Localizer.getString(Localizer.NoConnection));
         }
     }
 
-    private boolean sendCmd(PrinterCommand command, int retryNum) throws Exception {
+    private boolean sendCommand(PrinterCommand command, int retryNum) throws Exception {
 
         try {
-            //synchronizeFrames(byteTimeout); !!!
+            connect();
 
             int timeout = command.getTimeout();
             port.setTimeout(timeout + byteTimeout);
 
-            sendCommand(command.encodeData());
+            writeCommand(command.encodeData());
             int frameNum = readAnswer();
-            if (frameNum != frameNumber) {
-                if ((retryNum != 1) && (frameNum == (frameNumber - 1))) {
-                    frameNumber = frameNum;
-                    stepFrameNumber();
-                    command.decodeData(rx);
-                    return true;
+            if (frameNum != frameNumber)
+            {
+                logger.error("Incorrect frame number");
+                if (isReliable)
+                {
+                    for (;;) {
+                        frameNum = readAnswer();
+                        if (frameNum == frameNumber){
+                            break;
+                        }
+                    }
                 } else {
-                    frameNumber = frameNum;
-                    stepFrameNumber();
-                    return false;
+                    if ((retryNum != 1) && (frameNum == (frameNumber - 1))) {
+                        frameNumber = frameNum;
+                        stepFrameNumber();
+                        command.decodeData(rx);
+                        return true;
+                    } else {
+                        frameNumber = frameNum;
+                        stepFrameNumber();
+                        return false;
+                    }
                 }
             }
             stepFrameNumber();
             command.decodeData(rx);
             return true;
 
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
+            logger.error(e.getMessage());
             isSynchronized = false;
-            //throw e;
             return false;
+            //throw e;
         }
     }
 
@@ -96,13 +114,16 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         }
 
         port.setTimeout(timeout);
-        sendCommand(null);
-        frameNumber = readAnswer();
+        writeCommand(null);
+        for(;;) {
+            frameNumber = readAnswer();
+            if (rx.length == 0) break;
+        }
         isSynchronized = true;
         stepFrameNumber();
     }
 
-    private void sendCommand(byte[] data) throws Exception {
+    private void writeCommand(byte[] data) throws Exception {
         byte[] tx = frame.encode(data, frameNumber);
         Logger2.logTx(logger, tx);
         if (Thread.currentThread().isInterrupted()){
@@ -280,5 +301,4 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         }
 
     }
-
 }

@@ -797,6 +797,8 @@ public class SmFptrConst {
 
     public static final int SMFPTR_DIO_PARAM_QUANTITY_FACTOR = 32;
 
+    public static final int SMFPTR_DIO_PARAM_CONTEXT = 33;
+
     // ///////////////////////////////////////////////////////////////////
     // TableMode
     public static final int SMFPTR_TABLE_MODE_AUTO = 0;

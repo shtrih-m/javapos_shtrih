@@ -126,7 +126,11 @@ public abstract class PrinterCommand {
 
     public static int getDefaultTimeout(int code) {
 
-        switch (code) {
+        switch (code)
+        {
+            case 0x10:
+            case 0x11:
+                return 1000;
             case 0x16:
                 return 60000;
             case 0xB2:

@@ -9,8 +9,8 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
 import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.LibraryContext;
 import com.shtrih.util.Localizer;
-import com.shtrih.util.StaticContext;
 import com.shtrih.util.Time;
 
 import java.io.IOException;
@@ -39,8 +39,7 @@ public class BluetoothPort implements PrinterPort2 {
     public BluetoothPort() {
     }
 
-    public BluetoothSocket getSocket() throws Exception
-    {
+    public BluetoothSocket getSocket() throws Exception {
         open(openTimeout);
         return socket;
     }
@@ -80,8 +79,7 @@ public class BluetoothPort implements PrinterPort2 {
     }
 
     @Override
-    public void open(int timeout) throws Exception
-    {
+    public void open(int timeout) throws Exception {
         if (isOpened()) return;
 
         Thread.sleep(0); // check thread interrupted
@@ -94,15 +92,13 @@ public class BluetoothPort implements PrinterPort2 {
             // portName is deviceName prefix, for example "SHTRIH-NANO-F"
             Set<BluetoothDevice> devices = adapter.getBondedDevices();
             for (BluetoothDevice device : devices) {
-                if (device.getName().startsWith(portName))
-                {
+                if (device.getName().startsWith(portName)) {
                     try {
                         connectDevice(device);
                         return;
-                    }
-                    catch(Exception e){
+                    } catch (Exception e) {
                         logger.error("Failed to connect device " +
-                            device.getName() + ", " + device.getAddress());
+                                device.getName() + ", " + device.getAddress());
                     }
                 }
             }
@@ -110,15 +106,13 @@ public class BluetoothPort implements PrinterPort2 {
         }
     }
 
-    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver()
-    {
+    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            switch (action){
-                case BluetoothDevice.ACTION_ACL_CONNECTED:
-                {
+            switch (action) {
+                case BluetoothDevice.ACTION_ACL_CONNECTED: {
                     BluetoothDevice btdevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     if (btdevice.equals(device)) {
                         logger.debug("BluetoothDevice.ACTION_ACL_CONNECTED");
@@ -152,8 +146,7 @@ public class BluetoothPort implements PrinterPort2 {
         }
     };
 
-    private void connectDevice(BluetoothDevice device) throws Exception
-    {
+    private void connectDevice(BluetoothDevice device) throws Exception {
         if (device == null) {
             throw new Exception("Failed to get BluetoothDevice by address");
         }
@@ -183,10 +176,12 @@ public class BluetoothPort implements PrinterPort2 {
             IntentFilter filter = new IntentFilter();
             filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
             filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-            StaticContext.getContext().registerReceiver(mBroadcastReceiver, filter);
-            receiverRegistered = true;
-
-        }catch(Exception e){
+            Context context = LibraryContext.getContext();
+            if (context != null) {
+                context.registerReceiver(mBroadcastReceiver, filter);
+                receiverRegistered = true;
+            }
+        } catch (Exception e) {
             logger.error("Failed to register receiver, " + e.getMessage());
         }
     }
@@ -234,15 +229,16 @@ public class BluetoothPort implements PrinterPort2 {
     }
 
     @Override
-    public synchronized void close()
-    {
-        if (isOpened())
-        {
+    public synchronized void close() {
+        if (isOpened()) {
             logger.debug("close()");
             try {
                 if (receiverRegistered) {
                     receiverRegistered = false;
-                    StaticContext.getContext().unregisterReceiver(mBroadcastReceiver);
+                    Context context = LibraryContext.getContext();
+                    if (context != null) {
+                        context.unregisterReceiver(mBroadcastReceiver);
+                    }
                 }
                 socket.close();
             } catch (Exception e) {
@@ -269,11 +265,6 @@ public class BluetoothPort implements PrinterPort2 {
         if (isClosed()) {
             open(openTimeout);
         }
-    }
-
-    @Override
-    public InputStream getInputStream() throws Exception{
-        return getSocket().getInputStream();
     }
 
     @Override
@@ -358,7 +349,35 @@ public class BluetoothPort implements PrinterPort2 {
         return ports.toArray(new String[0]);
     }
 
-    public void setPortEvents(IPortEvents events){
+    public void setPortEvents(IPortEvents events) {
         this.events = events;
     }
+
+    // PrinterPort2
+
+    public void checkOpened() throws Exception {
+        if (!isOpened()) {
+            throw new Exception("Port is not opened");
+        }
+    }
+
+    public int available() throws Exception {
+        checkOpened();
+        return socket.getInputStream().available();
+    }
+
+    public byte[] read(int len) throws Exception {
+        checkOpened();
+        byte[] buffer = new byte[len];
+        socket.getInputStream().read(buffer, 0, len);
+        return buffer;
+    }
+
+    public String readParameter(int parameterID){
+        switch (parameterID){
+            case PrinterPort.PARAMID_IS_RELIABLE: return "1";
+            default: return null;
+        }
+    }
+
 }

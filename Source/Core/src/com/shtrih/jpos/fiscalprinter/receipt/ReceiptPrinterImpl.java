@@ -87,7 +87,7 @@ public class ReceiptPrinterImpl implements ReceiptPrinter {
     }
 
 
-    public SMFiscalPrinter getPrinter() throws Exception {
+    public SMFiscalPrinter getPrinter() {
         return printer;
     }
 

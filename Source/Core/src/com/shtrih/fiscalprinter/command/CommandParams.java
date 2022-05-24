@@ -35,6 +35,10 @@ public class CommandParams {
         return (CommandParam) list.get(index);
     }
 
+    public void remove(int index) {
+        list.remove(index);
+    }
+    
     public void add(CommandParam item) {
         list.add(item);
     }

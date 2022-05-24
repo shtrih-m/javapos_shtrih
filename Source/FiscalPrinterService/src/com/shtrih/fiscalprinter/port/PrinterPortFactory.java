@@ -22,12 +22,16 @@ public class PrinterPortFactory {
     }
 
     public static PrinterPort createInstance(FptrParameters params)
-            throws Exception {
+            throws Exception 
+    {
         PrinterPort result = null;
         switch (params.getPortType()) {
             case SmFptrConst.PORT_TYPE_SERIAL:
-                result = new SerialPrinterPort(params.portName);
-                break;
+                PrinterPort2 port = new SerialPrinterPort(params.portName);
+                if (params.pppConnection){
+                    return new PPPPort(params, port);
+                }
+                return port;                
 
             case SmFptrConst.PORT_TYPE_SOCKET:
                 result = SocketPort.getInstance(params.portName, params.getByteTimeout());

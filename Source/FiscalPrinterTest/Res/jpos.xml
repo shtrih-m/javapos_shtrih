@@ -76,9 +76,9 @@
         <!-- fieldsFilesPath to initialize printer tables -->
         <prop name="fieldsFilesPath" type="String" value=""/>
         <!-- Number of header lines -->
-        <prop name="numHeaderLines" type="String" value="0"/>
+        <prop name="numHeaderLines" type="String" value="5"/>
         <!-- Number of trailer lines -->
-        <prop name="numTrailerLines" type="String" value="0"/>
+        <prop name="numTrailerLines" type="String" value="5"/>
         <!-- Device to print report, 0 - fiscal memory (FM), 1 - electronic journal (EJ)  -->
         <prop name="reportDevice" type="String" value="0"/>
         <!-- Report type, 0 - short, 1 - full -->
@@ -145,7 +145,7 @@
         <prop name="ZeroPriceFilterTime2" type="String" value="16:00"/>
         <prop name="ZeroPriceFilterErrorText" type="String" value="Продажа спиртного запрещена"/>
         <!-- create Z-report in XML format -->
-        <prop name="XmlZReportEnabled" type="String" value="1"/>
+        <prop name="XmlZReportEnabled" type="String" value="0"/>
         <!-- Add day number to Z report filename - ZReport_0001.xml -->
         <prop name="ZReportDayNumber" type="String" value="1"/>
         <!-- XML Z-report file name -->

@@ -12,6 +12,7 @@ import java.util.Arrays;
 import jpos.JposException;
 
 import com.shtrih.jpos.fiscalprinter.FirmwareUpdateObserver;
+import com.shtrih.util.LibraryContext;
 import com.shtrih.util.Localizer;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.FontNumber;
@@ -872,7 +873,10 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_PARAM_QUANTITY_FACTOR:
                 service.getParams().quantityFactor = Double.parseDouble(paramValue);
                 break;
-                
+
+            case SmFptrConst.SMFPTR_DIO_PARAM_CONTEXT:
+                LibraryContext.setContext(((Object[]) object)[0]);
+                break;
         }
     }
 

@@ -11,6 +11,8 @@ import java.io.OutputStream;
 
 public interface PrinterPort 
 {
+    public static final int PARAMID_IS_RELIABLE = 1;
+
     void open(int timeout) throws Exception;
 
     void close();
@@ -38,6 +40,9 @@ public interface PrinterPort
     String[] getPortNames();
 
     void setPortEvents(IPortEvents events);
+
+    String readParameter(int parameterID);
+
 
     public interface IPortEvents
     {

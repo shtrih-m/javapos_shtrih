@@ -157,6 +157,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private FDOParameters fdoParameters = null;
     public boolean isTableTextCleared = false;
     private final Map<Integer, Integer> taxRates = new HashMap<Integer, Integer>();
+    private int printMode = PrinterConst.PRINT_MODE_ENABLED;
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params) {
@@ -238,7 +239,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                         e.getMessage());
             }
 
-            if (command.isFailed()) {
+            if (command.isSucceeded()) {
+                commandSucceeded(command);
+            } else {
                 if (capLastErrorText) {
                     ReadLastErrorText command2 = readExtendedCode();
                     if (command2.isSucceeded()) {
@@ -246,14 +249,40 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     } else {
                         capLastErrorText = false;
                     }
-
-                } else {
+                } else{
                     String text = getErrorText(command.getResultCode());
                     logger.error(text + ", " + command.getParametersText(commands));
                 }
             }
             afterCommand(command);
         }
+    }
+
+    private void commandSucceeded(PrinterCommand command) {
+        try {
+            switch (command.getCode()) {
+                case 0x1E: {
+                    if (isRegionalTable17Exists()) {
+                        CommandInputStream in = new CommandInputStream(charsetName);
+                        in.setData(command.getTxData());
+                        in.readInt(); // password
+                        int table = in.readByte();
+                        int row = in.readShort();
+                        int field = in.readByte();
+                        if ((table == 17) && (row == 1) && (field == 7)) {
+                            printMode = in.readByte();
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private boolean isRegionalTable17Exists() throws Exception {
+        PrinterTable printerTable = getTable(17);
+        return ((printerTable != null) && (printerTable.getName().equalsIgnoreCase("Региональные настройки")));
     }
 
     public void correctDateTime(PrinterCommand command) {
@@ -276,7 +305,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 setCurrentDateTime();
         }
     }
-
 
     // correct date
     public void setCurrentDateTime() {
@@ -1812,7 +1840,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         synchronized (port.getSyncObject()) {
             for (;;) {
                 PrinterStatus status = readPrinterStatus();
-                if (checkPrinterStatus(status)){
+                if (checkPrinterStatus(status)) {
                     return status;
                 }
             }
@@ -1824,7 +1852,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         synchronized (port.getSyncObject()) {
             for (;;) {
                 LongPrinterStatus status = readLongStatus();
-                if (checkPrinterStatus(status.getPrinterStatus())){
+                if (checkPrinterStatus(status.getPrinterStatus())) {
                     return status;
                 }
             }
@@ -1998,8 +2026,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public PrinterTable getTable(int tableNumber) throws Exception {
         PrinterTable table = tables.find(tableNumber);
         if (table == null) {
-            table = readTableInfo(tableNumber).getTable();
-            tables.add(table);
+            ReadTableInfo command = readTableInfo(tableNumber);
+            if (command.isSucceeded()) {
+                table = command.getTable();
+                tables.add(table);
+            }
         }
         return table;
     }
@@ -2372,6 +2403,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
         updateFirmware();
         setCurrentDateTime();
+        if (isRegionalTable17Exists()) {
+            printMode = Integer.parseInt(readTable(17, 1, 7));
+        }
     }
 
     /**
@@ -3582,8 +3616,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         } else {
             key += Hex.toHex((short) code);
         }
-        if ((capFiscalStorage) && ((code < 0x20) || ((code >= 0xA0) && (code <= 0xB2)))) {
-            key = "FSPrinterError" + Hex.toHex((byte) code);
+        if (code != 0) {
+            if ((capFiscalStorage) && ((code < 0x20) || ((code >= 0xA0) && (code <= 0xB2)))) {
+                key = "FSPrinterError" + Hex.toHex((byte) code);
+            }
         }
         String result = Localizer.getString(key);
         if (result.equals(key)) {
@@ -3685,6 +3721,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         writeTable(17, 1, 7, "2");
     }
 
+    public void disablePrintOnce() throws Exception {
+        // !!! write table and by name
+        writeTable(17, 1, 7, "1");
+    }
+
     public void enablePrint() throws Exception {
         // !!! write table and by name
         writeTable(17, 1, 7, "0");
@@ -3702,19 +3743,16 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return readTable2(PrinterConst.SMFP_TABLE_TAX, number, 2);
     }
 
-    public int getTaxRate(int number) throws Exception 
-    {
+    public int getTaxRate(int number) throws Exception {
         Integer taxRate = taxRates.get(number);
-        if (taxRate == null)
-        {
+        if (taxRate == null) {
             taxRate = Integer.parseInt(readTable2(PrinterConst.SMFP_TABLE_TAX, number, 1));
             taxRates.put(number, taxRate);
         }
         return taxRate;
     }
 
-    public long getTaxAmount(int tax, long amount) throws Exception
-    {
+    public long getTaxAmount(int tax, long amount) throws Exception {
         double taxRate = getTaxRate(tax) / 10000.0;
         return Math.round(amount * taxRate / (1 + taxRate));
     }
@@ -5206,5 +5244,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void setCommandTimeout(int code, int timeout) {
         getParams().commandTimeouts.put(code, timeout);
+    }
+
+    public int getPrintMode() {
+        return printMode;
+    }
+
+    public void setPrintMode(int value) {
+        this.printMode = value;
     }
 }

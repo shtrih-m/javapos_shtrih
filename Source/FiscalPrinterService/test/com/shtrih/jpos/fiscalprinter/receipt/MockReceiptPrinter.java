@@ -25,8 +25,7 @@ public class MockReceiptPrinter implements ReceiptPrinter {
             throws Exception {
     }
 
-    public SMFiscalPrinter getPrinter()
-            throws Exception {
+    public SMFiscalPrinter getPrinter(){
         return null;
     }
 

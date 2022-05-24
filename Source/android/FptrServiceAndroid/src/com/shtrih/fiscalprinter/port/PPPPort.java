@@ -10,12 +10,10 @@ import com.shtrih.NativeResource;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Localizer;
-import com.shtrih.util.Hex;
-import com.shtrih.util.StaticContext;
+import com.shtrih.util.LibraryContext;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -24,14 +22,13 @@ import ru.shtrih_m.kktnetd.PPPConfig;
 import java.util.Calendar;
 import java.util.UUID;
 import android.net.LocalSocket;
-import android.bluetooth.BluetoothSocket;
 import android.net.LocalSocketAddress;
 
 /**
  *
  * @author Виталий
  */
-public class PPPPort implements PrinterPort2 {
+public class PPPPort implements PrinterPort {
 
     private Socket socket = null;
     private LocalSocket localSocket = null;
@@ -103,7 +100,7 @@ public class PPPPort implements PrinterPort2 {
 
         String libName = "libkktnetd";
         String fileName = NativeResource.getFileName(libName);
-        InputStream stream = StaticContext.getContext().getAssets().open(fileName);
+        InputStream stream = LibraryContext.checkContext().getAssets().open(fileName);
         LibManager.getInstance(libName, stream);
 
         PPPConfig config = new PPPConfig();
@@ -223,11 +220,10 @@ public class PPPPort implements PrinterPort2 {
         {
             byte[] data;
             // read bluetoothSocket
-            int count = printerPort.getInputStream().available();
+            int count = printerPort.available();
             if (count > 0)
             {
-                data = new byte[count];
-                count = printerPort.getInputStream().read(data);
+                data = printerPort.read(count);
                 if (count > 0) {
                     //logger.debug("BT <- " + Hex.toHex(data));
                     localSocket.getOutputStream().write(data, 0, count);
@@ -281,26 +277,20 @@ public class PPPPort implements PrinterPort2 {
     public byte[] readBytes(int len) throws Exception
     {
         openSocket();
-        try {
-            firstCommand = false;
-            byte[] data = new byte[len];
-            int offset = 0;
-            while (len > 0) {
-                int count = socket.getInputStream().read(data, offset, len);
-                if (count < 0) {
-                    closeSocket();
-                    noConnectionError();
-                }
-                len -= count;
-                offset += count;
+
+        firstCommand = false;
+        byte[] data = new byte[len];
+        int offset = 0;
+        while (len > 0) {
+            int count = socket.getInputStream().read(data, offset, len);
+            if (count < 0) {
+                closeSocket();
+                noConnectionError();
             }
-            return data;
+            len -= count;
+            offset += count;
         }
-        catch(Exception e){
-            logger.error("readBytes: " + e.getMessage());
-            closeSocket();
-            throw e;
-        }
+        return data;
     }
 
     public void write(byte[] b) throws Exception {
@@ -368,8 +358,11 @@ public class PPPPort implements PrinterPort2 {
         printerPort.setPortEvents(events);
     }
 
-    public InputStream getInputStream() throws Exception{
-        return socket.getInputStream();
+    public String readParameter(int parameterID){
+        switch (parameterID){
+            case PrinterPort.PARAMID_IS_RELIABLE: return "1";
+            default: return null;
+        }
     }
 }
 
@@ -400,19 +393,6 @@ public class PPPPort implements PrinterPort2 {
         }
         return data;
     }
-
-    public void openPrinterPort(int timeout) throws Exception
-    {
-        if (printerPort == null) {
-            printerPort = new PrinterPort();
-            printerPort.setPortName(portName);
-            printerPort.setTimeout(params.byteTimeout);
-            printerPort.setOpenTimeout(timeout);
-            printerPort.open(timeout);
-        }
-    }
-
-
 
      */
 

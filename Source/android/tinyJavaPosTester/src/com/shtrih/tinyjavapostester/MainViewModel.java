@@ -5,8 +5,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.databinding.ObservableField;
 
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
-import com.shtrih.util.StaticContext;
-import com.shtrih.util.SysUtils;
+import com.shtrih.util.LibraryContext;
 
 import jpos.FiscalPrinter;
 
@@ -19,7 +18,7 @@ public class MainViewModel extends AndroidViewModel
     public MainViewModel(Application app){
         super(app);
 
-        StaticContext.setContext(this.getApplication());
+        LibraryContext.setContext(this.getApplication());
         printer = new ShtrihFiscalPrinter(new FiscalPrinter());
     }
 

@@ -5,18 +5,22 @@
  */
 package com.shtrih.fiscalprinter.port;
 
-import com.shtrih.fiscalprinter.scoc.commands.DeviceStatusCommand;
-import com.shtrih.fiscalprinter.scoc.commands.ScocCommand;
+import com.shtrih.LibManager;
+import com.shtrih.NativeResource;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Localizer;
-import com.shtrih.util.StringUtils;
+import com.shtrih.util.LibraryContext;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import ru.shtrih_m.kktnetd.Api;
+
 import ru.shtrih_m.kktnetd.PPPConfig;
+
+import java.util.Calendar;
+import java.util.UUID;
 
 /**
  *
@@ -25,22 +29,27 @@ import ru.shtrih_m.kktnetd.PPPConfig;
 public class PPPPort implements PrinterPort {
 
     private Socket socket = null;
-
-    private PPPThread thread = null;
+    private Thread dispatchThread = null;
+    private PPPThread pppThread = null;
+    private int openTimeout = 3000;
     private int connectTimeout = 3000;
     private int readTimeout = 3000;
-    private String portName = "";
-    private final FptrParameters params;
+    private boolean opened = false;
+    private boolean firstCommand = true;
+    private String localSocketName = null;
     private static CompositeLogger logger = CompositeLogger.getLogger(PPPPort.class);
 
-    public PPPPort(FptrParameters params) {
+    private final FptrParameters params;
+    private final PrinterPort2 printerPort;
+
+    public PPPPort(FptrParameters params, PrinterPort2 printerPort) {
         this.params = params;
-        portName = params.portName;
+        this.printerPort = printerPort;
         readTimeout = params.getByteTimeout();
     }
 
     public boolean isOpened() {
-        return (socket != null) && (socket.isConnected());
+        return opened;
     }
 
     public void open(int timeout) throws Exception {
@@ -48,17 +57,23 @@ public class PPPPort implements PrinterPort {
             return;
         }
 
-        if (params.pppStartService) {
-            PPPConfig config = new PPPConfig();
-            config.transport.path = portName;
-            config.transport.type = PPPConfig.TRANSPORT_TYPE_SERIAL;
-            if (!params.pppConfigFile.isEmpty()) {
-                config.load(params.pppConfigFile);
-            }
-            thread = new PPPThread(config);
-            thread.start();
-        }
+        firstCommand = true;
+        openTimeout = timeout;
+        localSocketName = UUID.randomUUID().toString();
 
+        printerPort.setPortName(params.portName);
+        printerPort.setTimeout(params.byteTimeout);
+        printerPort.open(timeout);
+        startPPPThread();
+        openSocket();
+        opened = true;
+    }
+
+    public void openSocket() throws Exception
+    {
+        if (socket != null){
+            return;
+        }
         socket = new Socket();
         socket.setTcpNoDelay(true);
         socket.setSoTimeout(connectTimeout);
@@ -66,20 +81,72 @@ public class PPPPort implements PrinterPort {
         socket.setSoTimeout(readTimeout);
     }
 
-    public void close() {
+    public void startPPPThread() throws Exception
+    {
+        if (pppThread != null) {
+            return;
+        }
+
+        String libName = "libkktnetd";
+        String fileName = NativeResource.getFileName(libName);
+        InputStream stream = LibraryContext.openResource(fileName);
+        LibManager.getInstance(libName, stream);
+
+        PPPConfig config = new PPPConfig();
+        config.transport.path = params.portName;
+        config.transport.type = PPPConfig.TRANSPORT_TYPE_SERIAL;
+        if (!params.pppConfigFile.isEmpty()) {
+            config.load(params.pppConfigFile);
+        }
+        pppThread = new PPPThread(config);
+        pppThread.start();
+        pppThread.waitForStatus("\"status\":\"RUNNING\"", 5000);
+    }
+
+    public void close()
+    {
         if (!isOpened()) {
+            return;
+        }
+
+        logger.debug("close");
+        stopDispatchThread();
+        stopPPPThread();
+        closeSocket();
+        printerPort.close();
+        opened = false;
+    }
+
+    public void stopPPPThread()
+    {
+        if (pppThread == null)  return;
+
+        pppThread.stop();
+        pppThread = null;
+    }
+
+
+    public void stopDispatchThread() {
+        if (dispatchThread == null) return;
+
+        dispatchThread.interrupt();
+        try {
+            dispatchThread.join();
+        } catch (InterruptedException e) {
+        }
+        dispatchThread = null;
+    }
+
+    public void closeSocket()
+    {
+        if (socket == null) {
             return;
         }
 
         try {
             socket.close();
         } catch (Exception e) {
-            logger.error(e);
-        }
-        socket = null;
-        if (thread != null) {
-            thread.stop();
-            thread = null;
+            logger.error(e.getMessage());
         }
     }
 
@@ -91,25 +158,29 @@ public class PPPPort implements PrinterPort {
         throw new IOException(Localizer.getString(Localizer.NoConnection));
     }
 
-    public int readByte() throws Exception {
-        open();
-
-        int b = socket.getInputStream().read();
-        if (b == -1) {
-            noConnectionError();
+    public int byteToInt(int B) {
+        if (B < 0) {
+            B = (int) (256 + B);
         }
-
-        return b;
+        return B;
     }
 
-    public byte[] readBytes(int len) throws Exception {
-        open();
+    public int readByte() throws Exception
+    {
+        return byteToInt(readBytes(1)[0]);
+    }
 
+    public byte[] readBytes(int len) throws Exception
+    {
+        openSocket();
+
+        firstCommand = false;
         byte[] data = new byte[len];
         int offset = 0;
         while (len > 0) {
             int count = socket.getInputStream().read(data, offset, len);
-            if (count == -1) {
+            if (count < 0) {
+                closeSocket();
                 noConnectionError();
             }
             len -= count;
@@ -121,12 +192,12 @@ public class PPPPort implements PrinterPort {
     public void write(byte[] b) throws Exception {
         for (int i = 0; i < 2; i++) {
             try {
-                open();
+                openSocket();
                 socket.getOutputStream().write(b);
                 socket.getOutputStream().flush();
                 return;
             } catch (Exception e) {
-                close();
+                closeSocket();
                 if (i == 1) {
                     throw e;
                 }
@@ -144,20 +215,26 @@ public class PPPPort implements PrinterPort {
     public void setBaudRate(int baudRate) throws Exception {
     }
 
-    public void setTimeout(int timeout) throws Exception {
-        this.readTimeout = timeout;
 
-        if (isOpened()) {
+    public void setTimeout(int timeout) throws Exception {
+        readTimeout = timeout;
+        if (firstCommand){
+            readTimeout = timeout + 100000; // !!!
+        }
+
+        if (socket != null)
+        {
+            logger.debug("socket.setSoTimeout(" + readTimeout + ")");
             socket.setSoTimeout(readTimeout);
         }
     }
 
     public String getPortName() {
-        return portName;
+        return printerPort.getPortName();
     }
 
     public void setPortName(String portName) throws Exception {
-        this.portName = portName;
+        printerPort.setPortName(portName);
     }
 
     public Object getSyncObject() throws Exception {
@@ -168,11 +245,20 @@ public class PPPPort implements PrinterPort {
         return false;
     }
 
-    public String[] getPortNames() {
-        return new String[]{portName};
+    public String[] getPortNames()
+    {
+        return printerPort.getPortNames();
     }
 
     public void setPortEvents(IPortEvents events) {
+        printerPort.setPortEvents(events);
+    }
 
+    public String readParameter(int parameterID){
+        switch (parameterID){
+            case PrinterPort.PARAMID_IS_RELIABLE: return "1";
+            default: return null;
+        }
     }
 }
+

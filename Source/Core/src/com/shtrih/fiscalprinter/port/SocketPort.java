@@ -161,7 +161,20 @@ public class SocketPort implements PrinterPort2 {
 
     }
 
-    public InputStream getInputStream() throws Exception{
-        return socket.getInputStream();
+    public int available() throws Exception{
+        return socket.getInputStream().available();
+    }
+
+    public byte[] read(int len) throws Exception{
+        byte[] buffer = new byte[len];
+        socket.getInputStream().read(buffer, 0, len);
+        return buffer;
+    }
+
+    public String readParameter(int parameterID){
+        switch (parameterID){
+            case PrinterPort.PARAMID_IS_RELIABLE: return "1";
+            default: return null;
+        }
     }
 }

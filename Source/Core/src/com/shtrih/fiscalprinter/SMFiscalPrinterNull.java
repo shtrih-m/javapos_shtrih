@@ -826,6 +826,9 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void disablePrint() throws Exception {
     }
 
+    public void disablePrintOnce() throws Exception {
+    }
+    
     public void enablePrint() throws Exception {
     }
 
@@ -1292,5 +1295,12 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
 
     public long getTaxAmount(int tax, long amount) throws Exception{
         return 0;
+    }
+    
+    public int getPrintMode(){
+        return 0;
+    }
+    
+    public void setPrintMode(int value){
     }
 }

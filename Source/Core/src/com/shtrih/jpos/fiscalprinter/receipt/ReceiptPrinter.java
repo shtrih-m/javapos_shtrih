@@ -33,7 +33,7 @@ public interface ReceiptPrinter {
 
     public void printStrings(String line1, String line2) throws Exception;
 
-    public SMFiscalPrinter getPrinter() throws Exception;
+    public SMFiscalPrinter getPrinter();
 
     public int getTextLength() throws Exception;
 

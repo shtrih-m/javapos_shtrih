@@ -17,6 +17,13 @@ package com.shtrih.fiscalprinter.command;
 public interface PrinterConst {
     
     // ///////////////////////////////////////////////////////////////////
+    // Print mode
+
+    public static final int PRINT_MODE_ENABLED          = 0;
+    public static final int PRINT_MODE_DISABLE_ONCE     = 1;
+    public static final int PRINT_MODE_DISABLED         = 2;
+    
+    // ///////////////////////////////////////////////////////////////////
     // Field types
 
     public static final int FIELD_TYPE_INT = 0;
@@ -507,6 +514,9 @@ public interface PrinterConst {
     // Receipt format table
     public static final int SMFP_TABLE_RECFORMAT = 9;
 
+    // Regional parameters table
+    public static final int SMFP_TABLE_REGIONAL = 17;
+    
     // ////////////////////////////////////////////////////////////////////////
     // tables values
     // ////////////////////////////////////////////////////////////////////////

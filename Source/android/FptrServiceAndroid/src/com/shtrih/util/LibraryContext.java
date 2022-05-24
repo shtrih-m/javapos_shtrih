@@ -4,21 +4,25 @@ import android.content.Context;
 
 import java.io.File;
 
-public class StaticContext 
+public class LibraryContext
 {
 	private static Context context = null;
 
 	public static Context getContext() throws Exception {
+		return context;
+	}
+
+	public static Context checkContext() throws Exception {
 		if (context == null) {
 			throw new Exception("Context is not set");
 		}
 		return context;
 	}
 
-	public static void setContext(Context value)
+	public static void setContext(Object value)
 	{
-		context = value;
-		SysUtils.setFilesPath(getFilesPath(value));
+		context = (Context)value;
+		SysUtils.setFilesPath(getFilesPath(context));
 	}
 
 	private static String getFilesPath(Context context)

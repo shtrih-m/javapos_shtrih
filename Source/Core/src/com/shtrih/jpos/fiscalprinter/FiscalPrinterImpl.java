@@ -270,7 +270,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private FirmwareUpdaterService firmwareUpdaterService;
     private boolean docEndEnabled = true;
     private JsonUpdateService jsonUpdateService = null;
-    private boolean disablePrintOnce = false;
     private volatile boolean pollStopFlag = false;
     private volatile boolean eventStopFlag = false;
     private ReceiptContext receiptContext = null;
@@ -2435,9 +2434,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void printEndFiscal() {
         try {
-            if (disablePrintOnce) {
+            if (getPrinter().getPrintMode() == PrinterConst.PRINT_MODE_DISABLE_ONCE) 
+            {
                 getPrinter().enablePrint();
-                disablePrintOnce = false;
                 return;
             }
 
@@ -2460,9 +2459,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void printEndNonFiscal() {
         try {
-            if (disablePrintOnce) {
+            if (getPrinter().getPrintMode() == PrinterConst.PRINT_MODE_DISABLE_ONCE) 
+            {
                 getPrinter().enablePrint();
-                disablePrintOnce = false;
                 return;
             }
 
@@ -3779,7 +3778,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         printer.resetPrinter();
         receiptType = 0;
         isReceiptOpened = false;
-        disablePrintOnce = false;
         startFSService();
     }
 
@@ -4747,10 +4745,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void disablePrintOnce() throws Exception {
-        if (!disablePrintOnce) {
-            getPrinter().disablePrint();
-            disablePrintOnce = true;
-        }
+        getPrinter().disablePrintOnce();
     }
 
     public void disablePrint() throws Exception {

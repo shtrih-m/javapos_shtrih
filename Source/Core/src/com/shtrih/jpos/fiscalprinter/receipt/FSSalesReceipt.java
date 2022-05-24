@@ -76,7 +76,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         addTextItem(data);
     }
 
-    public SMFiscalPrinter getDevice() throws Exception {
+    public SMFiscalPrinter getDevice() {
         return getPrinter().getPrinter();
     }
 
@@ -553,14 +553,14 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         discounts.clear();
     }
 
-    public void printReceiptEnding() throws Exception
+    public void printReceiptEnding()
     {
-        if (cancelled || (!getDevice().isCapFooterFlag())) {
-            try {
+        try {
+            if (cancelled || (!getDevice().isCapFooterFlag())) {
                 printEndingItems();
-            } catch (Exception e) {
-                logger.error("Receipt ending items printing failed", e);
             }
+        } catch (Exception e) {
+            logger.error("Receipt ending items printing failed", e);
         }
     }
     

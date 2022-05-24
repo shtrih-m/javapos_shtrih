@@ -87,4 +87,9 @@ public class CancellablePrinterPort implements PrinterPort
     public void setPortEvents(IPortEvents events){
         port.setPortEvents(events);
     }
+
+    public String readParameter(int parameterID){
+        return port.readParameter(parameterID);
+    }
+
 }

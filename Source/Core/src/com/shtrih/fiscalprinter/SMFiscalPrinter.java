@@ -494,6 +494,8 @@ public interface SMFiscalPrinter {
 
     public void disablePrint() throws Exception;
 
+    public void disablePrintOnce() throws Exception;
+    
     public void enablePrint() throws Exception;
 
     public FSReadFiscalization fsReadFiscalization() throws Exception;
@@ -723,4 +725,8 @@ public interface SMFiscalPrinter {
     public boolean getCapCutter();
 
     public long getTaxAmount(int tax, long amount) throws Exception;
+    
+    public int getPrintMode();
+    
+    public void setPrintMode(int value);
 }

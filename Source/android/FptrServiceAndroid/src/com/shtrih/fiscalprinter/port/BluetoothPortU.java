@@ -125,4 +125,10 @@ public class BluetoothPortU implements PrinterPort
         this.events = events;
     }
 
+    public String readParameter(int parameterID){
+        switch (parameterID){
+            case PrinterPort.PARAMID_IS_RELIABLE: return "1";
+            default: return null;
+        }
+    }
 }

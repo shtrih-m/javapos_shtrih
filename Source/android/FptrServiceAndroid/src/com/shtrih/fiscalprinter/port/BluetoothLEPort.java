@@ -32,10 +32,11 @@ import java.util.ArrayList;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
-import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Hex;
-import com.shtrih.util.StaticContext;
 import com.shtrih.util.Time;
+import com.shtrih.util.CircularBuffer;
+import com.shtrih.util.LibraryContext;
+import com.shtrih.util.CompositeLogger;
 
 public class BluetoothLEPort implements PrinterPort2 {
 
@@ -55,8 +56,7 @@ public class BluetoothLEPort implements PrinterPort2 {
     private BluetoothDevice device = null;
     private BluetoothGatt bluetoothGatt = null;
     private BluetoothGattCharacteristic TxChar = null;
-    private PipedOutputStream rxOutputStream = null;
-    private PipedInputStream rxInputStream = null;
+    private CircularBuffer rxBuffer = new CircularBuffer(1024);
     private static CompositeLogger logger = CompositeLogger.getLogger(BluetoothLEPort.class);
     private enum ConnectState {Disconnected, ConnectGatt, FailedToConnectGatt, RequestMtu,
         DiscoverServices, DiscoverServicesFailed, UartServiceNotSupported,
@@ -85,7 +85,6 @@ public class BluetoothLEPort implements PrinterPort2 {
     }
 
     private void loggerError(String text) {
-
         logger.error(text);
     }
 
@@ -328,8 +327,8 @@ public class BluetoothLEPort implements PrinterPort2 {
             if (characteristic == null) return;
 
             if (characteristic.getUuid().equals(TX_CHAR_UUID)) {
-                //loggerDebug("Received: " + Hex.toHex(characteristic.getValue()));
-                rxOutputStream.write(characteristic.getValue());
+                loggerDebug("Received: " + Hex.toHex(characteristic.getValue()));
+                rxBuffer.write(characteristic.getValue());
             }
         }
         catch(Exception e){
@@ -409,12 +408,10 @@ public class BluetoothLEPort implements PrinterPort2 {
         doOpen(0);
     }
 
-    public void doOpen(int timeout) throws Exception
+    public synchronized void doOpen(int timeout) throws Exception
     {
         if (isOpened()) return;
 
-        rxOutputStream = new PipedOutputStream();
-        rxInputStream = new PipedInputStream(rxOutputStream);
         if (state == ConnectState.Disconnected)
         {
             checkPermissions();
@@ -439,8 +436,10 @@ public class BluetoothLEPort implements PrinterPort2 {
 
     private void connectDevice(BluetoothDevice device) throws Exception
     {
+        rxBuffer.clear();
         setState(ConnectState.ConnectGatt);
-        bluetoothGatt = device.connectGatt(StaticContext.getContext(), false, new BluetoothGattCallbackImpl());
+        Context context = LibraryContext.checkContext();
+        bluetoothGatt = device.connectGatt(context, false, new BluetoothGattCallbackImpl());
         if (bluetoothGatt == null) {
             throw new Exception("ConnectGatt returns null");
         }
@@ -488,7 +487,7 @@ public class BluetoothLEPort implements PrinterPort2 {
         loggerDebug("close: OK");
     }
 
-    public void doClose()
+    public synchronized void doClose()
     {
         if (!isOpened()) return;
 
@@ -503,16 +502,7 @@ public class BluetoothLEPort implements PrinterPort2 {
         if (events != null) {
             events.onDisconnect();
         }
-        try {
-            rxOutputStream.close();
-        }
-        catch(Exception e){}
-        try {
-            rxInputStream.close();
-        }
-        catch(Exception e){}
-        rxOutputStream = null;
-        rxInputStream = null;
+        rxBuffer.clear();
     }
 
     public int byteToInt(int B) {
@@ -528,9 +518,9 @@ public class BluetoothLEPort implements PrinterPort2 {
     }
 
     public byte[] readBytes(int len) throws Exception{
-        //loggerDebug("readBytes: " + len);
         openPort();
 
+        loggerDebug("readBytes: " + len);
         if (len <= 0)
         {
             throw new Exception("Data length <= 0");
@@ -541,17 +531,16 @@ public class BluetoothLEPort implements PrinterPort2 {
         for (;;)
         {
             checkPortState();
-            if (rxInputStream.available() >= len) break;
-
+            if (rxBuffer.available() >= len) break;
             Time.delay(1);
             long currentTime = System.currentTimeMillis();
-            if ((currentTime - startTime) > timeout) {
-                throw new IOException("Data read timeout");
+            if ((currentTime - startTime) > timeout)
+            {
+                throw new IOException("Read timed out");
             }
         }
-        byte[] data = new byte[len];
-        rxInputStream.read(data);
-        //loggerDebug("read(" + Hex.toHex(data) + ")");
+        byte[] data = rxBuffer.read(len);
+        loggerDebug("read(" + Hex.toHex(data) + ")");
         return data;
     }
 
@@ -671,7 +660,8 @@ public class BluetoothLEPort implements PrinterPort2 {
     public void setBaudRate(int baudRate) throws Exception{
     }
 
-    public synchronized void setTimeout(int timeout) {
+    public synchronized void setTimeout(int timeout)
+    {
         this.timeout = timeout;
     }
 
@@ -800,13 +790,26 @@ public class BluetoothLEPort implements PrinterPort2 {
         }
     }
 
-    public InputStream getInputStream() throws Exception
-    {
-        checkOpened();
-        return rxInputStream;
-    }
-
     public void setPortEvents(IPortEvents events){
         this.events = events;
+    }
+
+    // PrinterPort2
+
+    public int available() throws Exception{
+        openPort();
+        return rxBuffer.available();
+    }
+
+    public byte[] read(int len) throws Exception{
+        openPort();
+        return rxBuffer.read(len);
+    }
+
+    public String readParameter(int parameterID){
+        switch (parameterID){
+            case PrinterPort.PARAMID_IS_RELIABLE: return "1";
+            default: return null;
+        }
     }
 }

@@ -13,12 +13,11 @@ package com.shtrih.fiscalprinter.port;
 
 import java.io.IOException;
 import java.util.Properties;
-import java.util.Vector;
 
 import com.shtrih.util.Localizer;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.hoho.android.usbserial.driver.*;
-import com.shtrih.util.StaticContext;
+import com.shtrih.util.LibraryContext;
 
 import android.hardware.usb.UsbDeviceConnection;
 import android.content.Context;
@@ -41,12 +40,6 @@ public class HohoSerialPort implements PrinterPort {
      * Creates a new instance of PrinterPort
      */
     public HohoSerialPort() {
-    }
-
-    private Context getContext() throws Exception {
-        Context context = StaticContext.getContext();
-        if (context == null) throw new Exception("Context not defined");
-        return context;
     }
 
     public void checkOpened() throws Exception {
@@ -83,7 +76,8 @@ public class HohoSerialPort implements PrinterPort {
         if (isClosed()) {
             logger.debug("open");
 
-            UsbManager usbManager = (UsbManager) getContext().getSystemService(Context.USB_SERVICE);
+            Context context = LibraryContext.checkContext();
+            UsbManager usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
             List<UsbSerialDriver> drivers = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager);
             logger.debug("drivers.size: " + drivers.size());
 
@@ -208,6 +202,13 @@ public class HohoSerialPort implements PrinterPort {
 
     public void setPortEvents(IPortEvents events){
 
+    }
+
+    public String readParameter(int parameterID){
+        switch (parameterID){
+            case PrinterPort.PARAMID_IS_RELIABLE: return "0";
+            default: return null;
+        }
     }
 }
 

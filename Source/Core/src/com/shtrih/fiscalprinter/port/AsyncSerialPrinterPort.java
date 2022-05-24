@@ -238,4 +238,11 @@ public class AsyncSerialPrinterPort implements Runnable, PrinterPort
 
     public void setPortEvents(IPortEvents events){
     }
+
+    public String readParameter(int parameterID){
+        switch (parameterID){
+            case PrinterPort.PARAMID_IS_RELIABLE: return "0";
+            default: return null;
+        }
+    }
 }

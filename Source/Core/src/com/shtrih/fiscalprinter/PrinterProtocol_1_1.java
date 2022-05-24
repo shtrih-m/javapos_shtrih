@@ -55,7 +55,8 @@ public class PrinterProtocol_1_1 implements PrinterProtocol
         return portReadBytes(1)[0];
     }
 
-    private byte[] readAnswer(int timeout) throws Exception {
+    private byte[] readAnswer(int timeout) throws Exception
+    {
         port.setTimeout(timeout + byteTimeout);
         // STX
         while (portReadByte() != STX) {

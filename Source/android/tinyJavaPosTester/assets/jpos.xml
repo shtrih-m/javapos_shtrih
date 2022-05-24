@@ -66,7 +66,7 @@
 		<prop name="subtotalText" type="String" value="ПОДИТОГ:"/>
 
 		<!-- Таймаут чтения данных, мс -->
-		<prop name="byteTimeout" type="String" value="3000"/>
+		<prop name="byteTimeout" type="String" value="500"/>
 
 		<!-- Device byte receive timeout -->
 		<prop name="deviceByteTimeout" type="String" value="5000"/>
@@ -142,7 +142,7 @@
 		<!-- maxAckNumber -->
 		<prop name="maxAckNumber" type="String" value="3"/>
 		<!-- maxRepeatCount -->
-		<prop name="maxRepeatCount" type="String" value="1"/>
+		<prop name="maxRepeatCount" type="String" value="3"/>
 		<!-- Payment types -->
 		<prop name="payType0" type="String" value="0"/>
 		<prop name="payType1" type="String" value="1"/>

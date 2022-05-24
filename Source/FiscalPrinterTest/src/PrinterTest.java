@@ -1039,8 +1039,6 @@ class PrinterTest implements FiscalPrinterConst {
             //printAdvancePayment2();
             //printReceiptWithError();
             //printFiscalReceiptWithItemDiscount();
-            //setHeaderLines();
-            //setTrailerLines();
             //printSpeedTest();
             //printReceiptWithError4();
             //printReceiptWithError5();
@@ -1050,7 +1048,11 @@ class PrinterTest implements FiscalPrinterConst {
             //printReceiptWithError5();
             //printReceiptWithError10();
             
+            setHeaderLines();
+            setTrailerLines();
             printOpenDayTest();
+            //printer.writeTable(17, 1, 7, "1");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1110,16 +1112,14 @@ class PrinterTest implements FiscalPrinterConst {
     public void printOpenDayTest() throws Exception {
         printer.resetPrinter();
 
-        printer.disablePrint();
+        printer.writeTable(17, 1, 7, "1");
         printer.openFiscalDay();
-        printer.enablePrint();
-        printer.enablePrint();
+        printer.writeTable(17, 1, 7, "0");
         printFiscalReceipt14();
 
-        printer.disablePrint();
+        printer.writeTable(17, 1, 7, "1");
         printer.printZReport();
-        printer.enablePrint();
-
+        printer.writeTable(17, 1, 7, "0");
     }
 
     public void testSetDate() throws Exception {
