@@ -3,6 +3,7 @@ package com.shtrih.util;
 import android.content.Context;
 
 import java.io.File;
+import java.io.InputStream;
 
 public class LibraryContext
 {
@@ -22,22 +23,11 @@ public class LibraryContext
 	public static void setContext(Object value)
 	{
 		context = (Context)value;
-		SysUtils.setFilesPath(getFilesPath(context));
+		SysUtils.setFilesPath(SysUtils.getFilesPath(context));
 	}
 
-	private static String getFilesPath(Context context)
-	{
-		File downloads = context.getExternalFilesDir(null);
-
-		if (downloads != null) {
-
-			if (downloads.exists())
-				return downloads.getAbsolutePath() + File.separator;
-
-			if (downloads.mkdirs())
-				return downloads.getAbsolutePath() + File.separator;
-		}
-
-		return context.getFilesDir().getAbsolutePath() + File.separator;
+	public static InputStream openResource(String fileName) throws Exception {
+		return checkContext().getAssets().open(fileName);
 	}
+
 }

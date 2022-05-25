@@ -7,11 +7,13 @@
     
 ********************************************************************************
 
-  24.05.2022
+  25.05.2022
   deviceServiceVersion = 1013657
 
   [-] Fixed error BLE connection
-  
+  [+] Added directIO parameter to pass ApplicationContext to Android library
+      public static final int SMFPTR_DIO_PARAM_CONTEXT = 33;
+
 ********************************************************************************
 
   20.05.2022

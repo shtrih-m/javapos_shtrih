@@ -100,7 +100,7 @@ public class PPPPort implements PrinterPort {
 
         String libName = "libkktnetd";
         String fileName = NativeResource.getFileName(libName);
-        InputStream stream = LibraryContext.checkContext().getAssets().open(fileName);
+        InputStream stream = LibraryContext.openResource(fileName);
         LibManager.getInstance(libName, stream);
 
         PPPConfig config = new PPPConfig();

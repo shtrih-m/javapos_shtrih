@@ -6,6 +6,7 @@ import android.databinding.ObservableField;
 
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
 import com.shtrih.util.LibraryContext;
+import com.shtrih.util.SysUtils;
 
 import jpos.FiscalPrinter;
 

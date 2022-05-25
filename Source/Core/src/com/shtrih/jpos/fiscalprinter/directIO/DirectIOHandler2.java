@@ -755,6 +755,11 @@ public class DirectIOHandler2 {
                 paramValue = String.valueOf(service.getParams().quantityFactor);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_PARAM_CONTEXT:
+                ((Object[]) object)[0] = LibraryContext.getContext();
+                return;
+                
+                
         }
         ((String[]) object)[0] = paramValue;
     }

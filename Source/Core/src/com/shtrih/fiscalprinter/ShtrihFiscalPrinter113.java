@@ -2434,4 +2434,18 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         data[1] = timeout;
         directIO(SmFptrConst.SMFPTR_DIO_SET_COMMAND_TIMEOUT, data, null);
     }
+    
+    public void setLibraryContext(Object context)
+            throws JposException {
+        int data[] = new int[]{SmFptrConst.SMFPTR_DIO_PARAM_CONTEXT};
+        directIO(SmFptrConst.SMFPTR_DIO_SET_DRIVER_PARAMETER, data, context);
+    }
+    
+    public Object getLibraryContext() throws JposException {
+        Object object[] = new Object[1];
+        int data[] = new int[]{SmFptrConst.SMFPTR_DIO_PARAM_CONTEXT};
+        directIO(SmFptrConst.SMFPTR_DIO_SET_DRIVER_PARAMETER, data, object);
+        return object[0];
+    }
+    
 }
