@@ -9,7 +9,7 @@ public class LibraryContext
 {
 	private static Context context = null;
 
-	public static Context getContext() throws Exception {
+	public static Context getContext()  {
 		return context;
 	}
 

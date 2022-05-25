@@ -238,9 +238,8 @@ public class BluetoothLEPort implements PrinterPort2 {
     private void gattDisconnected()
     {
         loggerDebug("gattDisconnected");
-
         doClose();
-        setState(ConnectState.FailedToConnectGatt);
+        //setState(ConnectState.FailedToConnectGatt);
         // start wait for device
         if (portOpened)
         {
@@ -264,14 +263,13 @@ public class BluetoothLEPort implements PrinterPort2 {
         public void onScanResult(int callbackType, ScanResult result)
         {
             loggerDebug("scanOpenedDeviceCallback.onScanResult: " + result.toString());
-
             scanner.stopScan(scanOpenedDeviceCallback);
-            setState(ConnectState.ConnectGatt);
+
             device = result.getDevice();
-            bluetoothGatt = device.connectGatt(null, false, new BluetoothGattCallbackImpl());
-            if (bluetoothGatt == null) {
-                loggerError("ConnectGatt returns null");
-            }
+            rxBuffer.clear();
+            setState(ConnectState.ConnectGatt);
+            Context context = LibraryContext.getContext();
+            bluetoothGatt = device.connectGatt(context, false, new BluetoothGattCallbackImpl());
         }
     };
 
@@ -470,7 +468,7 @@ public class BluetoothLEPort implements PrinterPort2 {
                     throw new Exception("TxChar CCCD descriptor not supported");
             }
 
-            Time.delay(10);
+            Time.delay(100);
             if ((currentTime - startTime) > timeout) {
                 loggerDebug("waitOpened(): timeout");
                 throw new Exception("Port open timeout");
@@ -520,7 +518,7 @@ public class BluetoothLEPort implements PrinterPort2 {
     public byte[] readBytes(int len) throws Exception{
         openPort();
 
-        loggerDebug("readBytes: " + len);
+        //loggerDebug("readBytes: " + len);
         if (len <= 0)
         {
             throw new Exception("Data length <= 0");

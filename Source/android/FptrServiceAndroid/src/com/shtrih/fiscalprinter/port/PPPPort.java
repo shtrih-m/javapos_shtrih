@@ -119,9 +119,7 @@ public class PPPPort implements PrinterPort {
         if (localSocket != null) {
             return;
         }
-        logger.debug("localSocket.connect");
         localSocket = new LocalSocket();
-
         long time = Calendar.getInstance().getTimeInMillis() + timeout;
         for (;;) {
             try {
@@ -135,7 +133,6 @@ public class PPPPort implements PrinterPort {
                 Thread.sleep(100);
             }
         }
-        logger.debug("LocalSocket connected!");
     }
 
     public void close()
@@ -328,7 +325,6 @@ public class PPPPort implements PrinterPort {
 
         if (socket != null)
         {
-            logger.debug("socket.setSoTimeout(" + readTimeout + ")");
             socket.setSoTimeout(readTimeout);
         }
     }

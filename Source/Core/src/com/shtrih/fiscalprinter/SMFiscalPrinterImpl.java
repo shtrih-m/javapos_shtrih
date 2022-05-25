@@ -233,10 +233,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
             try {
                 device.send(command);
-            } catch (IOException e) {
-                throw new DeviceException(
-                        PrinterConst.SMFPTR_E_NOCONNECTION,
-                        e.getMessage());
+            } catch (IOException e)
+            {
+                port.close();
+                throw new DeviceException(PrinterConst.SMFPTR_E_NOCONNECTION, e.getMessage());
             }
 
             if (command.isSucceeded()) {
