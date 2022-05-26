@@ -9,7 +9,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
 import com.shtrih.util.CompositeLogger;
-import com.shtrih.util.LibraryContext;
+import com.shtrih.util.StaticContext;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.Time;
 
@@ -176,7 +176,7 @@ public class BluetoothPort implements PrinterPort2 {
             IntentFilter filter = new IntentFilter();
             filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
             filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-            Context context = LibraryContext.getContext();
+            Context context = StaticContext.getContext();
             if (context != null) {
                 context.registerReceiver(mBroadcastReceiver, filter);
                 receiverRegistered = true;
@@ -235,7 +235,7 @@ public class BluetoothPort implements PrinterPort2 {
             try {
                 if (receiverRegistered) {
                     receiverRegistered = false;
-                    Context context = LibraryContext.getContext();
+                    Context context = StaticContext.getContext();
                     if (context != null) {
                         context.unregisterReceiver(mBroadcastReceiver);
                     }

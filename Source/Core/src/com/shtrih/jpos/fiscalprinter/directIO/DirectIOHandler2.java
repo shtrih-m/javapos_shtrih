@@ -12,7 +12,7 @@ import java.util.Arrays;
 import jpos.JposException;
 
 import com.shtrih.jpos.fiscalprinter.FirmwareUpdateObserver;
-import com.shtrih.util.LibraryContext;
+import com.shtrih.util.StaticContext;
 import com.shtrih.util.Localizer;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.FontNumber;
@@ -756,7 +756,7 @@ public class DirectIOHandler2 {
                 break;
                 
             case SmFptrConst.SMFPTR_DIO_PARAM_CONTEXT:
-                ((Object[]) object)[0] = LibraryContext.getContext();
+                ((Object[]) object)[0] = StaticContext.getContext();
                 return;
                 
                 
@@ -769,61 +769,72 @@ public class DirectIOHandler2 {
         DIOUtils.checkDataMinLength(data, 1);
         int paramId = data[0];
 
-        if (paramId == SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER) {
-            service.setFirmwareUpdateObserver((FirmwareUpdateObserver) object);
-            return;
-        }
+        logger.debug("directIo(SMFPTR_DIO_SET_DRIVER_PARAMETER, " +
+                SmFptrConst.getParameterName(paramId) + ", '" + object.toString() + "')");
 
-        String paramValue = ((String[]) object)[0];
-        logger.debug("directIo(SMFPTR_DIO_SET_DRIVER_PARAMETER, " + 
-                SmFptrConst.getParameterName(paramId) + ", '" + paramValue + "')");
-        
+        String paramValue = "";
         switch (paramId) {
+            case SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER:
+                service.setFirmwareUpdateObserver((FirmwareUpdateObserver) object);
+                break;
+
             case SmFptrConst.SMFPTR_DIO_PARAM_REPORT_DEVICE:
+                paramValue = ((String[]) object)[0];
                 service.getParams().reportDevice = Integer.parseInt(paramValue);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_REPORT_TYPE:
+                paramValue = ((String[]) object)[0];
                 service.getParams().reportType = Integer.parseInt(paramValue);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_NUMHEADERLINES:
+                paramValue = ((String[]) object)[0];
                 service.setNumHeaderLines(Integer.parseInt(paramValue));
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_NUMTRAILERLINES:
+                paramValue = ((String[]) object)[0];
                 service.setNumTrailerLines(Integer.parseInt(paramValue));
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_POLL_ENABLED:
+                paramValue = ((String[]) object)[0];
                 service.setPollEnabled(Integer.parseInt(paramValue) != 0);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_CUT_MODE:
+                paramValue = ((String[]) object)[0];
                 getParams().cutMode = Integer.parseInt(paramValue);;
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_FONT_NUMBER:
+                paramValue = ((String[]) object)[0];
                 service.setFontNumber(Integer.parseInt(paramValue));
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_SYS_PASSWORD:
+                paramValue = ((String[]) object)[0];
                 service.getPrinter().setSysPassword(Integer.parseInt(paramValue));
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_USR_PASSWORD:
+                paramValue = ((String[]) object)[0];
                 service.getPrinter().setUsrPassword(Integer.parseInt(paramValue));
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_PASSWORD:
+                paramValue = ((String[]) object)[0];
                 service.getPrinter().setTaxPassword(Integer.parseInt(paramValue));
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0:
+                paramValue = ((String[]) object)[0];
                 service.getParams().taxAmount[0] = Long.parseLong(paramValue);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_1:
+                paramValue = ((String[]) object)[0];
                 service.getParams().taxAmount[1] = Long.parseLong(paramValue);
                 break;
 
@@ -832,55 +843,67 @@ public class DirectIOHandler2 {
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_3:
+                paramValue = ((String[]) object)[0];
                 service.getParams().taxAmount[3] = Long.parseLong(paramValue);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_4:
+                paramValue = ((String[]) object)[0];
                 service.getParams().taxAmount[4] = Long.parseLong(paramValue);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_5:
+                paramValue = ((String[]) object)[0];
                 service.getParams().taxAmount[5] = Long.parseLong(paramValue);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM:
+                paramValue = ((String[]) object)[0];
                 service.getParams().taxSystem = Integer.parseInt(paramValue);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TOTAL_AMOUNT:
+                paramValue = ((String[]) object)[0];
                 service.getParams().itemTotalAmount = Long.parseLong(paramValue);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_PAYMENT_TYPE:
+                paramValue = ((String[]) object)[0];
                 service.getParams().paymentType = Byte.parseByte(paramValue);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_SUBJECT_TYPE:
+                paramValue = ((String[]) object)[0];
                 service.getParams().subjectType = Byte.parseByte(paramValue);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE:
+                paramValue = ((String[]) object)[0];
                 service.getParams().itemMarkType = Integer.parseInt(paramValue);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_TAX_AMOUNT:
+                paramValue = ((String[]) object)[0];
                 service.getParams().itemTaxAmount = Long.parseLong(paramValue);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_ITEM_UNIT:
+                paramValue = ((String[]) object)[0];
                 service.getParams().itemUnit = Integer.parseInt(paramValue);
                 break;
                 
             case SmFptrConst.SMFPTR_DIO_PARAM_AMOUNT_FACTOR:
+                paramValue = ((String[]) object)[0];
                 service.getParams().amountFactor = Double.parseDouble(paramValue);
                 break;
    
             case SmFptrConst.SMFPTR_DIO_PARAM_QUANTITY_FACTOR:
+                paramValue = ((String[]) object)[0];
                 service.getParams().quantityFactor = Double.parseDouble(paramValue);
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_CONTEXT:
-                LibraryContext.setContext(((Object[]) object)[0]);
+                StaticContext.setContext(object);
                 break;
         }
     }

@@ -17,7 +17,7 @@ import java.util.Properties;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.hoho.android.usbserial.driver.*;
-import com.shtrih.util.LibraryContext;
+import com.shtrih.util.StaticContext;
 
 import android.hardware.usb.UsbDeviceConnection;
 import android.content.Context;
@@ -76,7 +76,7 @@ public class HohoSerialPort implements PrinterPort {
         if (isClosed()) {
             logger.debug("open");
 
-            Context context = LibraryContext.checkContext();
+            Context context = StaticContext.checkContext();
             UsbManager usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
             List<UsbSerialDriver> drivers = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager);
             logger.debug("drivers.size: " + drivers.size());

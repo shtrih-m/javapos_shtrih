@@ -3,7 +3,7 @@ package com.shtrih.util;
 import java.io.File;
 import java.io.InputStream;
 
-public class LibraryContext
+public class StaticContext
 {
 	private static Object context = null;
 

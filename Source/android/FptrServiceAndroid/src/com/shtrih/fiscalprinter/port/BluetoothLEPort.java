@@ -9,9 +9,6 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.os.Build;
-import android.os.Handler;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.Context;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
@@ -20,8 +17,6 @@ import android.bluetooth.le.ScanSettings;
 import android.bluetooth.le.BluetoothLeScanner;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.Set;
@@ -29,13 +24,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 import java.util.ArrayList;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 
 import com.shtrih.util.Hex;
 import com.shtrih.util.Time;
 import com.shtrih.util.CircularBuffer;
-import com.shtrih.util.LibraryContext;
+import com.shtrih.util.StaticContext;
 import com.shtrih.util.CompositeLogger;
 
 public class BluetoothLEPort implements PrinterPort2 {
@@ -268,7 +261,7 @@ public class BluetoothLEPort implements PrinterPort2 {
             device = result.getDevice();
             rxBuffer.clear();
             setState(ConnectState.ConnectGatt);
-            Context context = LibraryContext.getContext();
+            Context context = StaticContext.getContext();
             bluetoothGatt = device.connectGatt(context, false, new BluetoothGattCallbackImpl());
         }
     };
@@ -436,7 +429,7 @@ public class BluetoothLEPort implements PrinterPort2 {
     {
         rxBuffer.clear();
         setState(ConnectState.ConnectGatt);
-        Context context = LibraryContext.checkContext();
+        Context context = StaticContext.checkContext();
         bluetoothGatt = device.connectGatt(context, false, new BluetoothGattCallbackImpl());
         if (bluetoothGatt == null) {
             throw new Exception("ConnectGatt returns null");

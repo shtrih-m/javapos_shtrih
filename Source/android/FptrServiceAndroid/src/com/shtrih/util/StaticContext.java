@@ -5,7 +5,7 @@ import android.content.Context;
 import java.io.File;
 import java.io.InputStream;
 
-public class LibraryContext
+public class StaticContext
 {
 	private static Context context = null;
 

@@ -13,7 +13,7 @@ import com.shtrih.jpos.fiscalprinter.FirmwareUpdateObserver;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
 import com.shtrih.util.CompositeLogger;
-import com.shtrih.util.LibraryContext;
+import com.shtrih.util.StaticContext;
 
 public class DIOSetDriverParameter extends DIOItem {
 
@@ -145,7 +145,7 @@ public class DIOSetDriverParameter extends DIOItem {
                 break;
                 
             case SmFptrConst.SMFPTR_DIO_PARAM_CONTEXT:
-                LibraryContext.setContext(((Object[]) object)[0]);
+                StaticContext.setContext(object);
                 break;
                 
         }

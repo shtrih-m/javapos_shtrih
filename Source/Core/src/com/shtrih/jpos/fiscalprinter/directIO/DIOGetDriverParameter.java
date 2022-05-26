@@ -11,7 +11,7 @@ package com.shtrih.jpos.fiscalprinter.directIO;
 import com.shtrih.jpos.DIOUtils;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
-import com.shtrih.util.LibraryContext;
+import com.shtrih.util.StaticContext;
 
 public class DIOGetDriverParameter extends DIOItem {
 
@@ -154,7 +154,7 @@ public class DIOGetDriverParameter extends DIOItem {
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_CONTEXT:
-                ((Object[]) object)[0] =LibraryContext.getContext();
+                ((Object[]) object)[0] = StaticContext.getContext();
                 break;
         }
     }

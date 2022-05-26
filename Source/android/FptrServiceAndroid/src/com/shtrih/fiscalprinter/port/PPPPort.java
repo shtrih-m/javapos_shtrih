@@ -10,7 +10,7 @@ import com.shtrih.NativeResource;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Localizer;
-import com.shtrih.util.LibraryContext;
+import com.shtrih.util.StaticContext;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -100,7 +100,7 @@ public class PPPPort implements PrinterPort {
 
         String libName = "libkktnetd";
         String fileName = NativeResource.getFileName(libName);
-        InputStream stream = LibraryContext.openResource(fileName);
+        InputStream stream = StaticContext.openResource(fileName);
         LibManager.getInstance(libName, stream);
 
         PPPConfig config = new PPPConfig();

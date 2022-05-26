@@ -557,7 +557,7 @@ public class MainActivity extends AppCompatActivity
                     printer.close();
                 }
                 printer.open("ShtrihFptr");
-                //printer.setLibraryContext(getApplicationContext());
+                printer.setLibraryContext(getApplicationContext());
                 // printer.addStatusUpdateListener(new FptrEventListener());
                 printer.claim(3000);
                 printer.setDeviceEnabled(true);
