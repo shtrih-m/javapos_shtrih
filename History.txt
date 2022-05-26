@@ -8,7 +8,7 @@
 ********************************************************************************
 
   26.05.2022
-  deviceServiceVersion = 1013657
+  deviceServiceVersion = 1013658
 
   [-] Fixed error BLE connection
   [+] Added directIO parameter to pass ApplicationContext to Android library
