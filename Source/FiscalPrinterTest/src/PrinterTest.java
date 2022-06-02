@@ -1002,7 +1002,6 @@ class PrinterTest implements FiscalPrinterConst {
             //String text = getHeaderLine(1) + getLoadImageCommand("Logo.bmp");
             //printer.setHeaderLine(1, text, false);
 
-            //printCorrectionReceipt2();
             //printZeroFiscalReceipt();
             //printFiscalReceipt145_9();
             // System.out.println("FFD version: " + printer.readFFDVersion());
@@ -1026,13 +1025,11 @@ class PrinterTest implements FiscalPrinterConst {
             //printFiscalReceipt145_4();
             //printSalesReceipt1236();
             //printSalesReceipt1237();
-            //printCorrectionReceipts();
             //testCommandTimeout();
             //printFiscalReceiptLogoBeforeHeader();
             //printFiscalReceiptWithSupplier();
             //printFiscalReceiptType1();
             //printFiscalReceiptType2();
-            //printCorrectionReceipts();
             //printFiscalReceiptWithItemDiscount();
             //printFiscalReceiptWithItemDiscount2();
             //printAdvancePayment();
@@ -1048,11 +1045,15 @@ class PrinterTest implements FiscalPrinterConst {
             //printReceiptWithError5();
             //printReceiptWithError10();
             
-            setHeaderLines();
-            setTrailerLines();
-            printOpenDayTest();
+            //setHeaderLines();
+            //setTrailerLines();
+            //printOpenDayTest();
             //printer.writeTable(17, 1, 7, "1");
 
+            //printCorrectionReceipt2(1);
+            //printCorrectionReceipt2(3);
+            printCorrectionReceipts();
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1188,7 +1189,7 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
 
-    private void printCorrectionReceipt2() {
+    private void printCorrectionReceipt2(int paymentType) {
         try {
             FSStatusInfo fsStatus = printer.fsReadStatus();
             if (fsStatus.getDocType().getValue() == FSDocType.FS_DOCTYPE_CORRECTION_RECEIPT) {
@@ -1210,7 +1211,7 @@ class PrinterTest implements FiscalPrinterConst {
             // 1173, тип коррекции: «0» – самостоятельная операция, «1» – операция по предписанию.
             int correctionType = 1;
             // 1054, признак расчета: «1» - коррекция прихода, «3» - коррекция расхода.
-            int paymentType = 1;
+            //int paymentType = 1;
             // 1020, сумма расчета, указанного в чеке
             long total = 500;
             // 1031, сумма по чеку наличными
@@ -4380,18 +4381,18 @@ class PrinterTest implements FiscalPrinterConst {
             //printer.mcClearBuffer();
 
             int[] recTypes = {
-                SmFptrConst.SMFPTR_RT_CORRECTION,
                 SmFptrConst.SMFPTR_RT_CORRECTION_SALE,
-                SmFptrConst.SMFPTR_RT_CORRECTION_RETSALE,
-                SmFptrConst.SMFPTR_RT_CORRECTION_BUY,
-                SmFptrConst.SMFPTR_RT_CORRECTION_RETBUY
+                SmFptrConst.SMFPTR_RT_CORRECTION_BUY
             };
-            for (int i = 0; i < recTypes.length; i++) {
+            for (int i = 0; i < recTypes.length; i++) 
+            {
                 int recType = recTypes[i];
+                /*
                 boolean isSale
                         = (recType == SmFptrConst.SMFPTR_RT_CORRECTION_SALE)
                         || (recType == SmFptrConst.SMFPTR_RT_CORRECTION_RETBUY);
-                //printer.checkItemCode(barcode, isSale, 1000000, 10, 1, 1);
+                printer.checkItemCode(barcode, isSale, 1000000, 10, 1, 1);
+                */
 
                 printer.resetPrinter();
                 printer.setFiscalReceiptType(recTypes[i]);

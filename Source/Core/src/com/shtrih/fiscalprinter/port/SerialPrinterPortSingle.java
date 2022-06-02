@@ -23,6 +23,7 @@ import java.util.Properties;
 import java.util.Vector;
 
 import gnu.io.CommPortIdentifier;
+import gnu.io.RXTXPort;
 import gnu.io.SerialPort;
 
 public class SerialPrinterPortSingle {
@@ -61,7 +62,7 @@ public class SerialPrinterPortSingle {
         return portName;
     }
 
-    public SerialPort getPort() throws Exception 
+    public SerialPort getPort() throws Exception
     {
         if (port == null){
             open(0);
@@ -85,7 +86,7 @@ public class SerialPrinterPortSingle {
             if (portId == null) {
                 throw new Exception("Port does not exist, " + portName);
             }
-            port = (SerialPort) portId.open(getClass().getName(), timeout);
+            port = (SerialPort)portId.open(getClass().getName(), timeout);
             if (port == null) {
                 throw new Exception("Failed to open port " + portName);
             }
@@ -130,7 +131,10 @@ public class SerialPrinterPortSingle {
         throw new IOException(Localizer.getString(Localizer.NoConnection));
     }
 
-    public void write(byte[] b) throws Exception {
+    
+    public void write(byte[] b) throws Exception 
+    {
+        //getPort().clearCommInput();
         OutputStream out = getPort().getOutputStream();
         if (out == null) {
             throw new Exception("Port open failed");

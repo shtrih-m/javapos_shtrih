@@ -74,26 +74,15 @@ public class PrinterProtocol_2 implements PrinterProtocol {
             if (frameNum != frameNumber)
             {
                 logger.error("Incorrect frame number");
-                if (isReliable)
-                {
-                    for (;;) {
-                        frameNum = readAnswer();
-                        if (frameNum == frameNumber){
-                            break;
-                        }
-                    }
-                } else {
-                    if ((retryNum != 1) && (frameNum == (frameNumber - 1))) {
-                        frameNumber = frameNum;
-                        stepFrameNumber();
-                        command.decodeData(rx);
-                        return true;
-                    } else {
-                        frameNumber = frameNum;
-                        stepFrameNumber();
-                        return false;
+                for (;;) {
+                    frameNum = readAnswer();
+                    if (frameNum == frameNumber){
+                        break;
                     }
                 }
+                stepFrameNumber();
+                command.decodeData(rx);
+                return true;
             }
             stepFrameNumber();
             command.decodeData(rx);
