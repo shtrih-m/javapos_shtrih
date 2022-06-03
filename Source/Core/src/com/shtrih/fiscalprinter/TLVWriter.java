@@ -24,6 +24,10 @@ public class TLVWriter {
         return this;
     }
 
+    public int size() {
+        return stream.size();
+    }
+    
     public byte[] getBytes() {
         return stream.toByteArray();
     }

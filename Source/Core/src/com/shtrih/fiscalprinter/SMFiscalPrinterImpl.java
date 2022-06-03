@@ -1537,10 +1537,23 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         interrupted = false;
     }
 
-    public void writeTLVItems() throws Exception {
+    public void writeTLVItems() throws Exception 
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         for (int i = 0; i < tlvItems.size(); i++) {
-            byte[] tlv = tlvItems.get(i);
-            tlv = filterTLV(tlv);
+            baos.write(tlvItems.get(i));
+        }
+        TLVReader reader = new TLVReader();
+        TLVItems src = reader.read(baos.toByteArray());
+        TLVItems dst = new TLVItems();
+        
+        filterTLV(src, dst, getFDVersion());
+        TLVWriter writer = new TLVWriter();
+        for (int i=0;i < dst.size();i++)
+        {
+            writer.clear();
+            writer.add(dst.get(i));
+            byte[] tlv = writer.getBytes();
             if (tlv.length != 0) {
                 FSWriteTLV command = new FSWriteTLV();
                 command.setSysPassword(sysPassword);
@@ -3536,26 +3549,32 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         tlvItems.add(tlv);
     }
 
-    public byte[] filterTLV(byte[] tlv) throws Exception {
+    public byte[] filterTLV(byte[] tlv) throws Exception 
+    {
         TLVReader reader = new TLVReader();
-        TLVItems items = reader.read(tlv);
-        if (params.userExtendedTagPrintMode
-                == SmFptrConst.USER_EXTENDED_TAG_PRINT_MODE_DRIVER) {
-            filterTLVItemsDriver(items);
-        } else {
-            filterTLVItemsPrinter(items);
-        }
-        boolean isEmptySTLV = ((items.size() == 1)
-                && (items.get(0).isSTLV())
-                && (items.get(0).getItems().size() == 0));
-
+        TLVItems src = reader.read(tlv);
+        TLVItems dst = new TLVItems();
+        
+        filterTLV(src, dst, getFDVersion());
+        
         TLVWriter writer = new TLVWriter();
-        if (!isEmptySTLV) {
-            writer.add(items);
-        }
+        writer.add(dst);
         return writer.getBytes();
     }
 
+        
+    public void filterTLV(TLVItems src, TLVItems dst, int ffd) throws Exception
+    {
+        if (params.userExtendedTagPrintMode
+                == SmFptrConst.USER_EXTENDED_TAG_PRINT_MODE_DRIVER) {
+            filterTLVItemsDriver(src);
+        } else {
+            filterTLVItemsPrinter(src);
+        }
+        src.removeEmptySTLV();
+        TLVFilter.filter(src, dst, ffd);
+    }
+    
     public void filterTLVItemsDriver(TLVItems items) throws Exception {
         for (int i = items.size() - 1; i >= 0; i--) {
             TLVItem item = items.get(i);
@@ -3585,7 +3604,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public int fsWriteOperationTLV(byte[] tlv) throws Exception {
+    public int fsWriteOperationTLV(byte[] tlv) throws Exception 
+    {
         FSWriteOperationTLV command = new FSWriteOperationTLV();
         command.setSysPassword(sysPassword);
         command.setTlv(tlv);

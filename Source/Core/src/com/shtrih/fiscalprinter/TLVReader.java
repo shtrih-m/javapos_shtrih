@@ -15,7 +15,7 @@ public class TLVReader {
         return items;
     }
 
-    private void parse(TLVItems items, byte[] data) throws Exception {
+    public void parse(TLVItems items, byte[] data) throws Exception {
         TLVTags tags = TLVTags.getInstance();
         CommandInputStream stream = new CommandInputStream("");
         stream.setData(data);

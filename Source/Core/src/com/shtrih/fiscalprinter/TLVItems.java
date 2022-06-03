@@ -26,6 +26,13 @@ public class TLVItems {
         items.add(item);
     }
 
+    public TLVItem add(int tagId) 
+    {
+        TLVItem item = new TLVItem(tagId);
+        items.add(item);
+        return item;
+    }
+    
     public void add(TLVItems a) {
         this.items.addAll(a.items);
     }
@@ -41,7 +48,7 @@ public class TLVItems {
     public TLVItem get(int index) {
         return items.get(index);
     }
-
+    
     public TLVItem find(int tagId) {
         for (TLVItem item : items) {
             TLVItem tlvItem = item.find(tagId);
@@ -51,4 +58,32 @@ public class TLVItems {
         }
         return null;
     }
+    
+    public void removeEmptySTLV(){
+        removeEmptySTLV(this);
+    }
+            
+    public static void removeEmptySTLV(TLVItems items)
+    {
+        for (int i=items.size()-1;i>=0;i--) 
+        {
+            TLVItem item = items.get(i);
+            if (item.isSTLV())
+            {
+                if (item.isEmpty()){
+                    items.remove(item);
+                } else
+                {
+                    removeEmptySTLV(item.getItems());
+                }
+            }
+        }
+    }
+    
+    public void copyTo(TLVItems dst){
+        for (TLVItem item : items) {
+            dst.add(item.getCopy());
+        }
+    }
+    
 }

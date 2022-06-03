@@ -1043,7 +1043,6 @@ class PrinterTest implements FiscalPrinterConst {
             //printReceiptWithError9();
             //printFiscalReceipt666();
             //printReceiptWithError5();
-            //printReceiptWithError10();
             
             //setHeaderLines();
             //setTrailerLines();
@@ -1052,7 +1051,8 @@ class PrinterTest implements FiscalPrinterConst {
 
             //printCorrectionReceipt2(1);
             //printCorrectionReceipt2(3);
-            printCorrectionReceipts();
+            //printCorrectionReceipts();
+            printReceiptWithError10();
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -5123,6 +5123,10 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(4);
             printer.beginFiscalReceipt(true);
+            
+            printer.fsWriteTag(1227, "БЕТА ООО");
+            printer.fsWriteTag(1228, "9705069985");
+            
             printer.printRecItem("4064518 Миндаль 1кг", 666156, 4444, 1, 149900, "г.");
             printer.printRecItemAdjustment(1, "", 66616, 1);
             printer.printRecSubtotalAdjustment(1, "", 40);

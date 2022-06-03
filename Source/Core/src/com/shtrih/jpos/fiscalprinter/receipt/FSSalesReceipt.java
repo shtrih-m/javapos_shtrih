@@ -38,6 +38,7 @@ import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_EFPTR_NOT_SUPPO
 import static com.shtrih.fiscalprinter.command.PrinterConst.SMFP_STATION_REC;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.jpos.fiscalprinter.SmFptrConst;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
@@ -224,6 +225,19 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
     }
 
+    public void writeTLVItems() throws Exception 
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        for (int i = 0; i < items.size(); i++) 
+        {
+            if (items.get(i) instanceof FSTLVItem) {
+                FSTLVItem item = (FSTLVItem) items.get(i);
+                baos.write(item.getData());
+            }
+        }
+        getDevice().fsWriteTLV(baos.toByteArray());
+    }
+    
     public void printTLVItems() throws Exception {
         for (int i = 0; i < items.size(); i++) {
             printTLVItem(items.get(i));
@@ -233,8 +247,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printTLVItem(Object item) throws Exception {
         if (item instanceof FSTLVItem) {
             FSTLVItem tlvItem = (FSTLVItem) item;
-            getDevice().fsWriteTLV(tlvItem.getData());
-
+            
             if (getParams().FSPrintTags && tlvItem.getPrint()) {
 
                 TLVReader reader = new TLVReader();
@@ -462,6 +475,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             if (getParams().writeTagMode == SmFptrConst.WRITE_TAG_MODE_BEFORE_ITEMS) {
                 printTLVItems();
             }
+            writeTLVItems();
+
 
             if (getParams().ReceiptTemplateEnabled) {
                 templatePrintReceiptItems();

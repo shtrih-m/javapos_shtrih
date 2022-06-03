@@ -80,6 +80,10 @@ public class TLVItem {
         return items;
     }
 
+    public boolean isEmpty(){
+        return items.size() == 0;
+    }
+
     public void addItem(TLVItem item) {
         items.add(item);
     }
@@ -110,5 +114,12 @@ public class TLVItem {
             return this;
         }
         return items.find(tagId);
+    }
+    
+    public TLVItem getCopy() 
+    {
+        TLVItem item = new TLVItem(id, data, tag);
+        items.copyTo(item.getItems());
+        return item;
     }
 }
