@@ -7,10 +7,18 @@
     
 ********************************************************************************
 
+  06.06.2022
+  deviceServiceVersion = 1013661
+
+  [+] Added check for device bonded state in BLE connection
+      If device bonded, exception will be thrown.
+
+********************************************************************************
+
   03.06.2022
   deviceServiceVersion = 1013660
 
-  [+] Added prcessing of tags 1227, 1228, 1243, 1244, 1245, 1246, 1254
+  [+] Added processing of tags 1227, 1228, 1243, 1244, 1245, 1246, 1254
       to include then in tag 1256 under FFD version 1.2
 
   

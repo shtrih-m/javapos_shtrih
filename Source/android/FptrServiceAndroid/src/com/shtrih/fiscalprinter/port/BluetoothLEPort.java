@@ -89,27 +89,6 @@ public class BluetoothLEPort implements PrinterPort2 {
         }
     }
 
-    private void checkPermissions() throws Exception
-    {
-        if (Build.VERSION.SDK_INT >= 23)
-        {
-            checkPermission(ACCESS_FINE_LOCATION);
-        }
-        if (Build.VERSION.SDK_INT >= 29)
-        {
-            checkPermission(ACCESS_BACKGROUND_LOCATION);
-        }
-    }
-
-    private void checkPermission(String permission) throws Exception
-    {
-        /* !!!
-        if (ContextCompat.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-            throw new Exception("No permission " + permission);
-        }
-         */
-    }
-
     private class BluetoothGattCallbackImpl extends BluetoothGattCallback
     {
         public BluetoothGattCallbackImpl(){
@@ -405,22 +384,26 @@ public class BluetoothLEPort implements PrinterPort2 {
 
         if (state == ConnectState.Disconnected)
         {
-            checkPermissions();
-
             if (scanner != null){
                 scanner.stopScan(scanOpenedDeviceCallback);
             }
 
             adapter = getBluetoothAdapter();
+
+
             if (BluetoothAdapter.checkBluetoothAddress(portName)) {
                 // portName is valid MAC address
                 device = adapter.getRemoteDevice(portName);
-                connectDevice(device);
             } else {
                 // portName is deviceName prefix, for example "SHTRIH-NANO-F"
                 device = scanSingle(portName, 10000);
-                connectDevice(device);
             }
+            if (device.getBondState() == BluetoothDevice.BOND_BONDED)
+            {
+                throw new Exception(String.format("Device %s must be unpaired.",
+                    device.getAddress().toString()));
+            }
+            connectDevice(device);
         }
         waitOpened(openTimeout);
     }
@@ -694,7 +677,6 @@ public class BluetoothLEPort implements PrinterPort2 {
 
     public List<BluetoothDevice> scan(String deviceName, int timeout, boolean singleDevice) throws Exception
     {
-        checkPermissions();
         scanSingle = singleDevice;
         scanDevices.clear();
         scanDeviceName = deviceName;
