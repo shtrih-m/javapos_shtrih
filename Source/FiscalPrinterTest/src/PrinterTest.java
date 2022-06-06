@@ -4684,11 +4684,11 @@ class PrinterTest implements FiscalPrinterConst {
             int modelNo = printer.readDeviceMetrics().getModel();
 
             if (modelNo >= 152) {
-                String ofdTagValue = printer.readTable(18, 1, 10); //Device'dakini device'a koyuyoruz.
-                printer.printRecMessage("ОФД: " + ofdTagValue);
+                String fdoTagValue = printer.readTable(18, 1, 10); //Device'dakini device'a koyuyoruz.
+                printer.printRecMessage("ОФД: " + fdoTagValue);
             } else {
-                String ofdTagValue = printer.readTable(14, 1, 10); //Device'dakini device'a koyuyoruz.
-                printer.printRecMessage("ОФД: " + ofdTagValue);
+                String fdoTagValue = printer.readTable(14, 1, 10); //Device'dakini device'a koyuyoruz.
+                printer.printRecMessage("ОФД: " + fdoTagValue);
             }
 
             // Cash = 0
@@ -4741,11 +4741,11 @@ class PrinterTest implements FiscalPrinterConst {
             int modelNo = printer.readDeviceMetrics().getModel();
 
             if (modelNo >= 152) {
-                String ofdTagValue = printer.readTable(18, 1, 10); //Device'dakini device'a koyuyoruz.
-                printer.printRecMessage("ОФД: " + ofdTagValue);
+                String fdoTagValue = printer.readTable(18, 1, 10); //Device'dakini device'a koyuyoruz.
+                printer.printRecMessage("ОФД: " + fdoTagValue);
             } else {
-                String ofdTagValue = printer.readTable(14, 1, 10); //Device'dakini device'a koyuyoruz.
-                printer.printRecMessage("ОФД: " + ofdTagValue);
+                String fdoTagValue = printer.readTable(14, 1, 10); //Device'dakini device'a koyuyoruz.
+                printer.printRecMessage("ОФД: " + fdoTagValue);
             }
 
             // Cash = 0

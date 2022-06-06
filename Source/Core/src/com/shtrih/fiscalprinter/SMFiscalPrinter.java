@@ -574,7 +574,7 @@ public interface SMFiscalPrinter {
 
     public FSFindDocument fsFindDocument(long docNumber) throws Exception;
 
-    boolean capReadFSBuffer() throws Exception;
+    boolean capFDOSupport() throws Exception;
 
     int getMaxGraphicsLineWidth() throws Exception;
 
@@ -729,4 +729,6 @@ public interface SMFiscalPrinter {
     public int getPrintMode();
     
     public void setPrintMode(int value);
+    
+    public void sendFDODocuments() throws Exception;
 }

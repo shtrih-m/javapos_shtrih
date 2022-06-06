@@ -6,16 +6,16 @@ package com.shtrih.fiscalprinter.command;
 public class FSDocumentInfo {
 
     private final int fsDocType;
-    private final boolean sentToOFD;
+    private final boolean sentToFDO;
     private final byte[] data;
     private final PrinterDateTime dateTime;
     private final long documentNumber;
     private final long fp;
 
-    public FSDocumentInfo(int fsDocType, boolean sentToOFD, byte[] data, PrinterDateTime dateTime, long documentNumber, long fp) {
+    public FSDocumentInfo(int fsDocType, boolean sentToFDO, byte[] data, PrinterDateTime dateTime, long documentNumber, long fp) {
 
         this.fsDocType = fsDocType;
-        this.sentToOFD = sentToOFD;
+        this.sentToFDO = sentToFDO;
         this.data = data;
         this.dateTime = dateTime;
         this.documentNumber = documentNumber;
@@ -26,8 +26,8 @@ public class FSDocumentInfo {
         return fsDocType;
     }
 
-    public boolean getSentToOFD() {
-        return sentToOFD;
+    public boolean getSentToFDO() {
+        return sentToFDO;
     }
 
     public PrinterDateTime getDateTime() {

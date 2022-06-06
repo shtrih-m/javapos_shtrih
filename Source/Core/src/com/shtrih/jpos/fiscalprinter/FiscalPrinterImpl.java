@@ -266,7 +266,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private boolean filterEnabled = true;
     private boolean isInReceiptTrailer = false;
     private TextDocumentFilter filter = null;
-    private FSService fsService;
+    private FDOService fdoService;
     private FirmwareUpdaterService firmwareUpdaterService;
     private boolean docEndEnabled = true;
     private JsonUpdateService jsonUpdateService = null;
@@ -942,7 +942,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     startPoll();
                 }
                 try {
-                    startFSService();
+                    startFDOService();
                 } catch (Exception e) {
                     logger.error("Failed to start FSService", e);
                 }
@@ -959,7 +959,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 }
             } else {
                 stopPoll();
-                stopFSService();
+                stopFDOService();
                 stopJsonUpdateService();
                 stopFirmwareUpdaterService();
                 connected = false;
@@ -983,37 +983,28 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public void startFSService() throws Exception {
-        if (fsService != null) {
+    public void startFDOService() throws Exception {
+        if (fdoService != null) {
             return;
         }
 
-        if (!params.FSServiceEnabled) {
-            return;
+        if (isFDOServiceEnabled()) {
+            fdoService = new FDOService(printer);
+            fdoService.start();
+        }
+    }
+
+    public boolean isFDOServiceEnabled() throws Exception {
+        if (!printer.capFDOSupport()) {
+            logger.error("FDO commands not supported, capFDOSupport=false");
+            return false;
         }
 
-        if (!printer.getCapFiscalStorage()) {
-            return;
+        if (params.fdoMode != SmFptrConst.FDO_MODE_ENABLED) {
+            logger.error("FDO mode not enabled, fdoMode=" + params.fdoMode);
+            return false;
         }
-
-        if (!printer.capReadFSBuffer()) {
-            logger.debug("FSService stopped, buffer reading unsupported");
-            return;
-        }
-
-        if (printer.getDeviceMetrics().isElves()) {
-            logger.debug("FSService stopped, unsupported for Elves");
-            return;
-        }
-
-        PrinterModelParameters modelParams = printer.readPrinterModelParameters();
-        if (!modelParams.isCapEoD()) {
-            logger.debug("FSService stopped, EoD disabled");
-            return;
-        }
-
-        fsService = new FSService(printer, params);
-        fsService.start();
+        return true;
     }
 
     public void startFirmwareUpdaterService() throws Exception {
@@ -1068,14 +1059,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public void stopFSService() {
-        if (fsService == null) {
+    public void stopFDOService() {
+        if (fdoService == null) {
             return;
         }
 
         try {
-            fsService.stop();
-            fsService = null;
+            fdoService.stop();
+            fdoService = null;
         } catch (Exception e) {
             logger.error("Failed to stop fsSenderService", e);
         }
@@ -1096,7 +1087,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public boolean isFSServiceRunning() {
-        return (fsService != null) && (fsService.isStarted());
+        return (fdoService != null) && (fdoService.isStarted());
     }
 
     public boolean isFirmwareUpdaterServiceRunning() {
@@ -1989,8 +1980,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     CsvTablesReader reader = new CsvTablesReader();
                     reader.load(file.getAbsolutePath(), fields);
 
-                    if (fields.validModelName(getPrinter().getDeviceMetrics().getDeviceName()))
-                    {
+                    if (fields.validModelName(getPrinter().getDeviceMetrics().getDeviceName())) {
                         logger.debug("Write fields values from file '" + file.getAbsolutePath() + "')");
                         // set font for driver text
                         PrinterField field = fields.find(8, 1, 1);
@@ -2019,8 +2009,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         reader.load(file.getAbsolutePath(), fields);
 
         String deviceModelName = getPrinter().getDeviceMetrics().getDeviceName();
-        if (fields.validModelName(deviceModelName))
-        {
+        if (fields.validModelName(deviceModelName)) {
             logger.error("File model name does not match device name");
             logger.error("'" + fields.getModelName() + "' <> '" + deviceModelName + "'");
             return;
@@ -2434,8 +2423,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void printEndFiscal() {
         try {
-            if (getPrinter().getPrintMode() == PrinterConst.PRINT_MODE_DISABLE_ONCE) 
-            {
+            if (getPrinter().getPrintMode() == PrinterConst.PRINT_MODE_DISABLE_ONCE) {
                 getPrinter().enablePrint();
                 return;
             }
@@ -2459,8 +2447,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void printEndNonFiscal() {
         try {
-            if (getPrinter().getPrintMode() == PrinterConst.PRINT_MODE_DISABLE_ONCE) 
-            {
+            if (getPrinter().getPrintMode() == PrinterConst.PRINT_MODE_DISABLE_ONCE) {
                 getPrinter().enablePrint();
                 return;
             }
@@ -3121,11 +3108,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void openFiscalDay() throws Exception {
         if (printer.getCapOpenFiscalDay() && printer.isDayClosed()) {
-            stopFSService();
+            stopFDOService();
             printDocStart();
             getPrinter().openFiscalDay();
             printEndFiscal();
-            startFSService();
+            startFDOService();
         }
     }
 
@@ -3136,7 +3123,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkEnabled();
         checkPrinterState(FPTR_PS_MONITOR);
 
-        stopFSService();
+        stopFDOService();
         try {
 
             Vector<TextLine> messages = null;
@@ -3152,13 +3139,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             }
 
             // check end of day
-            if (status.getPrinterMode().isDayEndRequired())
-            {
-                if (params.autoPrintZReport)
-                {
+            if (status.getPrinterMode().isDayEndRequired()) {
+                if (params.autoPrintZReport) {
                     printZReport();
                     openFiscalDay();
-                } else{
+                } else {
                     dayEndRequiredError();
                 }
             } else {
@@ -3218,7 +3203,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 // ignore print errors because cashin is succeeded
                 logger.error("endFiscalReceipt: " + e.getMessage());
             }
-            startFSService();
+            startFDOService();
             setPrinterState(FPTR_PS_MONITOR);
             params.nonFiscalDocNumber++;
             saveProperties();
@@ -3668,7 +3653,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkStateBusy();
         checkPrinterState(FPTR_PS_MONITOR);
 
-        stopFSService();
+        sendDocumentsZReport();
+        stopFDOService();
+
         if (getParams().forceOpenShiftOnZReport) {
             openFiscalDay();
         }
@@ -3687,9 +3674,20 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             } catch (Exception e) {
                 logger.error("printZReport: " + e.getMessage());
             }
-            startFSService();
+            sendDocumentsZReport();
+            startFDOService();
         } else {
             throw new JposException(JPOS_E_ILLEGAL);
+        }
+    }
+
+    private void sendDocumentsZReport() {
+        if (params.fdoMode == SmFptrConst.FDO_MODE_ZREPORT) {
+            try {
+                getPrinter().sendFDODocuments();
+            } catch (Exception e) {
+                logger.debug("sendFDODocuments failed, " + e.getMessage());
+            }
         }
     }
 
@@ -3778,7 +3776,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         printer.resetPrinter();
         receiptType = 0;
         isReceiptOpened = false;
-        startFSService();
+        startFDOService();
     }
 
     public void setDate(String date) throws Exception {

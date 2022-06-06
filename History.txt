@@ -8,10 +8,16 @@
 ********************************************************************************
 
   06.06.2022
-  deviceServiceVersion = 1013661
+  deviceServiceVersion = 1013662
 
   [+] Added check for device bonded state in BLE connection
       If device bonded, exception will be thrown.
+	  
+  [+] Added parameter fdoMode to send documents to OFD before Z report 
+      Valid values are:
+	  0 - FDO data send disabled
+	  1 - send FDO data after each document
+	  2 - send FDO data before and after Z report only
 
 ********************************************************************************
 

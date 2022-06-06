@@ -68,7 +68,7 @@ public class ReadPrinterModelParametersTests {
         assertEquals(512, status.getGraphicsLineWidthInDots());
         assertEquals(512, status.getGraphics512Width());
         assertEquals(false, status.capFsTableNumber());
-        assertEquals(false, status.capOfdTableNumber());
+        assertEquals(false, status.capFDOTableNumber());
         assertEquals(false, status.capFFDTableAndColumnNumber());
     }
 
@@ -90,8 +90,8 @@ public class ReadPrinterModelParametersTests {
         assertEquals(true, status.capFsTableNumber());
         assertEquals(13, status.getFsTableNumber());
 
-        assertEquals(true, status.capOfdTableNumber());
-        assertEquals(14, status.getOfdTableNumber());
+        assertEquals(true, status.capFDOTableNumber());
+        assertEquals(14, status.getFDOTableNumber());
 
         assertEquals(true, status.capFFDTableAndColumnNumber());
         assertEquals(10, status.getFFDTableNumber());

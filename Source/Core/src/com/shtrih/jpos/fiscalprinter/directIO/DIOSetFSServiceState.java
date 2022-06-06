@@ -16,8 +16,8 @@ public class DIOSetFSServiceState extends DIOItem {
         boolean stop = data[0] == 0;
 
         if(stop)
-            service.stopFSService();
+            service.stopFDOService();
         else
-            service.startFSService();
+            service.startFDOService();
     }
 }

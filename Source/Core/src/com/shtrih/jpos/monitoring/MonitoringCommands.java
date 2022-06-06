@@ -74,7 +74,7 @@ public class MonitoringCommands {
                 return getOperRegText(command, service);
             }
             if (command.startsWith("OFD_SETTING")) {
-                return getOFDSettingsText(service);
+                return getFDOSettingsText(service);
             }
         } catch (Exception e) {
         }
@@ -189,7 +189,7 @@ public class MonitoringCommands {
     //Выводит настройки ОФД из таблицы 19, "Параметры ОФД".
     //Пример: connect.ofd-ya.ru:7779 (Формат: сервер:порт)
     
-    private static String getOFDSettingsText(FiscalPrinterImpl service) 
+    private static String getFDOSettingsText(FiscalPrinterImpl service) 
             throws Exception 
     {
         String result = "";

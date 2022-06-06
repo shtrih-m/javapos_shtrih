@@ -146,7 +146,7 @@ public class PrinterModelParameters implements PrinterConst {
     private final int fsTableNumber;
 
     // Номер таблицы параметров ОФД (1 байт) 0 - не поддерживается, 1…255
-    private final int ofdTableNumber;
+    private final int fdoTableNumber;
 
     // Номер таблицы встраиваемой и интернет техники (1 байт) 0 - не поддерживается, 1…255
     private final int embeddableAndInternetDeviceTableNumber;
@@ -222,7 +222,7 @@ public class PrinterModelParameters implements PrinterConst {
         {
             maxGraphics512Height = in.readShort();
             fsTableNumber = readByteIfAvailable(in);
-            ofdTableNumber = readByteIfAvailable(in);
+            fdoTableNumber = readByteIfAvailable(in);
             embeddableAndInternetDeviceTableNumber = readByteIfAvailable(in);
             ffdTableNumber = readByteIfAvailable(in);
             ffdColumnNumber = readByteIfAvailable(in);
@@ -230,7 +230,7 @@ public class PrinterModelParameters implements PrinterConst {
         } else {
             maxGraphics512Height = 0;
             fsTableNumber = 0;
-            ofdTableNumber = 0;
+            fdoTableNumber = 0;
             embeddableAndInternetDeviceTableNumber = 0;
             ffdTableNumber = 0;
             ffdColumnNumber = 0;
@@ -677,12 +677,12 @@ public class PrinterModelParameters implements PrinterConst {
     /**
      * @return Номер таблицы параметров ОФД (1 байт) 0 - не поддерживается, 1…255
      */
-    public int getOfdTableNumber() {
-        return ofdTableNumber;
+    public int getFDOTableNumber() {
+        return fdoTableNumber;
     }
 
-    public boolean capOfdTableNumber() {
-        return ofdTableNumber > 0;
+    public boolean capFDOTableNumber() {
+        return fdoTableNumber > 0;
     }
 
     public boolean capFsTableNumber() {

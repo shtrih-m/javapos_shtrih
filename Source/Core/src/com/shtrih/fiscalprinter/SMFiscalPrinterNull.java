@@ -984,7 +984,7 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     }
 
     @Override
-    public boolean capReadFSBuffer() throws Exception {
+    public boolean capFDOSupport() throws Exception {
         return false;
     }
 
@@ -1303,4 +1303,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     
     public void setPrintMode(int value){
     }
+    
+    public void sendFDODocuments() throws Exception{
+    }
+    
 }

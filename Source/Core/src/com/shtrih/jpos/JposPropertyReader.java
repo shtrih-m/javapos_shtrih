@@ -77,7 +77,7 @@ public class JposPropertyReader implements JposConst {
         return result;
     }
 
-    private boolean propertyExists(String propertyName) {
+    public boolean propertyExists(String propertyName) {
         return jposEntry.hasPropertyWithName(propertyName);
     }
 }

@@ -61,6 +61,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -3985,14 +3988,21 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return command;
     }
 
-    public boolean capReadFSBuffer() throws Exception {
-        if (params.fastConnect) {
-            return capModelParameters() && modelParameters.isCapEoD();
-        }
+    /*
+ШТРИХ-МОБАЙЛ-Ф
+// Таблица 10, Служебная
+// Номер таблицы,Ряд,Поле,Размер поля,Тип поля,Мин. значение, Макс.значение, Название,Значение
+10,1,1,1,0,1,1,'Поддержка eod','1'
 
-        FSReadBufferStatus command = new FSReadBufferStatus(sysPassword);
-        int rc = executeCommand(command);
-        return isCommandSupported(rc) || rc == 53;
+ШТРИХ-НАНО-Ф
+// Таблица 21, Сетевые интерфейсы
+// Номер таблицы,Ряд,Поле,Размер поля,Тип поля,Мин. значение, Макс.значение, Название,Значение
+21,1,2,1,0,0,1,'Режим обмена с офд','0'
+    */
+    
+    
+    public boolean capFDOSupport() throws Exception {
+        return capModelParameters() && modelParameters.isCapEoD() && (!getDeviceMetrics().isElves());
     }
 
     public byte[] fsReadBlockData() throws Exception {
@@ -4170,9 +4180,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public FDOParameters readFDOParameters() throws Exception {
         if (capFiscalStorage) {
 
-            final int tableNumber = getOfdTableNumber();
+            final int tableNumber = getFDOTableNumber();
 
-            //final int tableNumber = c().OFDTable;
             final int hostField = 1;
             final int portField = 2;
             final int pollPeriodField = 3;
@@ -4194,14 +4203,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return fdoParameters;
     }
 
-    private int getOfdTableNumber() throws Exception {
+    private int getFDOTableNumber() throws Exception {
         int result = 19;
         if (isShtrihMobile()) {
             result = 15;
         }
         if (capModelParameters()) {
-            if (modelParameters.capOfdTableNumber()) {
-                result = modelParameters.getOfdTableNumber();
+            if (modelParameters.capFDOTableNumber()) {
+                result = modelParameters.getFDOTableNumber();
             }
         }
         return result;
@@ -5272,5 +5281,79 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public void setPrintMode(int value) {
         this.printMode = value;
+    }
+    
+    public synchronized void sendFDODocuments() throws Exception {
+        byte[] data = fsReadBlockData();
+        if (data.length == 0) {
+            return;
+        }
+        // P-protocol version 0x0102 -> 0x0120
+        if ((data.length >= 30) && (data[6] == 0x01)
+                && (data[28] == 0) && (data[29] == 0)) {
+            if (data[7] == 0x01) {
+                data[7] = 0x10;
+            }
+            if (data[7] == 0x02) {
+                data[7] = 0x20;
+            }
+        }
+
+        byte[] answer = sendFDOData(data);
+        if (answer.length == 0) {
+            return;
+        }
+        fsWriteBlockData(answer);
+
+    }
+    
+    private byte[] sendFDOData(byte[] data) throws Exception 
+    {
+        FDOParameters parameters = getFDOParameters();
+        logger.debug(String.format("FDO %s:%d, connection timeout %d ms, poll period %d ms",
+                parameters.getHost(), parameters.getPort(), params.FSConnectTimeout,
+                parameters.getPollPeriodSeconds() * 1000));
+            
+        Socket socket = new Socket();
+        try {
+            socket.setTcpNoDelay(true);
+            socket.setSoTimeout(params.FSConnectTimeout);
+            socket.connect(new InetSocketAddress(parameters.getHost(), parameters.getPort()));
+            socket.getOutputStream().write(data);
+            InputStream in = socket.getInputStream();
+
+            int headerSize = 30;
+            byte[] header = new byte[headerSize];
+
+            readInputStream(in, header, 0, headerSize);
+
+            int size = ((header[25] << 8)) | (header[24] & 0xFF);
+
+            byte[] answer = new byte[headerSize + size];
+            System.arraycopy(header, 0, answer, 0, headerSize);
+            if (size > 0) {
+                readInputStream(in, answer, headerSize, size);
+            }
+            return answer;
+        } finally {
+            try {
+                socket.close();
+            } catch (Exception e) {
+                logger.error("Socket close failed", e);
+            }
+        }
+    }
+
+    private void readInputStream(InputStream in, byte[] buffer, int offset, int count) throws IOException {
+        int readCount = 0;
+        while (readCount < count) {
+            int newBytes = in.read(buffer, offset + readCount, count - readCount);
+
+            if (newBytes < 0) {
+                throw new IOException("Connection reset by FDO");
+            }
+
+            readCount += newBytes;
+        }
     }
 }
