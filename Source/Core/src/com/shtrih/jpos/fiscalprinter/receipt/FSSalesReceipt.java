@@ -621,6 +621,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printReceiptItem(FSSaleReceiptItem item) throws Exception {
         if (getDevice().getCapOperationTagsFirst()) {
             writeOperationTLV(item);
+            sendItemCodes(item.getItemCodes());
         }
 
         PriceItem priceItem = item.getPriceItem();
@@ -653,8 +654,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         }
         if (!getDevice().getCapOperationTagsFirst()) {
             writeOperationTLV(item);
+            sendItemCodes(item.getItemCodes());
         }
-        sendItemCodes(item.getItemCodes());
         //printItemCodes(item.getItemCodes()); !!!
     }
 
