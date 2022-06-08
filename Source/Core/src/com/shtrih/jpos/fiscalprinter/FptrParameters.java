@@ -208,6 +208,7 @@ public class FptrParameters {
     public boolean autoPrintZReport = false;
     public boolean printItemDiscount = false;
     public boolean fillTextToMinLength = false;
+    public boolean waitPrintComplete = true;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -468,6 +469,7 @@ public class FptrParameters {
         autoPrintZReport = reader.readBoolean("autoPrintZReport", false);
         printItemDiscount = reader.readBoolean("printItemDiscount", false);
         fillTextToMinLength = reader.readBoolean("fillTextToMinLength", false);
+        waitPrintComplete = reader.readBoolean("waitPrintComplete", true);
 
         // paymentNames
         String paymentName;

@@ -997,12 +997,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public boolean isFDOServiceEnabled() {
         if (!printer.capFDOSupport()) {
-            logger.error("FDO commands not supported, capFDOSupport=false");
+            logger.debug("FDO commands not supported, capFDOSupport=false");
             return false;
         }
 
         if (params.fdoMode != SmFptrConst.FDO_MODE_ENABLED) {
-            logger.error("FDO mode not enabled, fdoMode=" + params.fdoMode);
+            logger.debug("FDO mode not enabled, fdoMode=" + params.fdoMode);
             return false;
         }
         return true;

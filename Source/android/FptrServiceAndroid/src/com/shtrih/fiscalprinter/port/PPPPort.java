@@ -8,9 +8,12 @@ package com.shtrih.fiscalprinter.port;
 import com.shtrih.LibManager;
 import com.shtrih.NativeResource;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
+import com.shtrih.util.CircularBuffer;
 import com.shtrih.util.CompositeLogger;
+import com.shtrih.util.Hex;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.StaticContext;
+import com.shtrih.util.Time;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,6 +43,8 @@ public class PPPPort implements PrinterPort {
     private boolean opened = false;
     private boolean firstCommand = true;
     private String localSocketName = null;
+    private Thread rxThread = null;
+    private CircularBuffer rxBuffer = new CircularBuffer(1024);
     private static CompositeLogger logger = CompositeLogger.getLogger(PPPPort.class);
 
     private final FptrParameters params;
@@ -85,11 +90,20 @@ public class PPPPort implements PrinterPort {
         if (socket != null){
             return;
         }
+        logger.debug("openSocket()");
         socket = new Socket();
         socket.setTcpNoDelay(true);
         socket.setSoTimeout(connectTimeout);
         socket.connect(new InetSocketAddress("127.0.0.1", 7778));
-        socket.setSoTimeout(readTimeout);
+        socket.setSoTimeout(0);
+        rxThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                rxProc();
+            }
+        });
+        rxThread.start();
+        logger.debug("openSocket: OK");
     }
 
     public void startPPPThread() throws Exception
@@ -183,6 +197,8 @@ public class PPPPort implements PrinterPort {
 
     public void closeSocket()
     {
+        logger.debug("closeSocket");
+
         if (socket == null) {
             return;
         }
@@ -192,6 +208,33 @@ public class PPPPort implements PrinterPort {
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
+
+        if (rxThread != null) {
+            rxThread.interrupt();
+            try {
+                rxThread.join();
+            } catch (InterruptedException e) {
+            }
+            rxThread = null;
+        }
+    }
+
+    public void rxProc()
+    {
+        try {
+                while (true)
+                {
+                    Thread.sleep(0);
+                    int b = socket.getInputStream().read();
+                    if (b < 0) break;
+                    rxBuffer.write(b);
+                }
+
+        }
+        catch(Exception e)
+        {
+            logger.error("rxProc: ", e);
+        }
     }
 
     public void bluetoothProc()
@@ -200,16 +243,10 @@ public class PPPPort implements PrinterPort {
             while (true)
             {
                 Thread.sleep(0);
-                try {
-                    dispatchPackets();
-                } catch (Exception e) {
-                    logger.error("bluetoothProc: " + e.getMessage());
-                }
+                dispatchPackets();
             }
-        }
-        catch(InterruptedException e)
-        {
-            logger.error("bluetoothProc interrupted");
+        } catch (Exception e) {
+            logger.error("bluetoothProc: " + e.getMessage());
         }
     }
 
@@ -271,33 +308,73 @@ public class PPPPort implements PrinterPort {
         return byteToInt(readBytes(1)[0]);
     }
 
-    public byte[] readBytes(int len) throws Exception
-    {
-        openSocket();
+/*
+    public byte[] readBytes2(int len) throws Exception {
+        open();
+
+        long time = Calendar.getInstance().getTimeInMillis() + readTimeout;
 
         firstCommand = false;
         byte[] data = new byte[len];
         int offset = 0;
-        while (len > 0) {
-            int count = socket.getInputStream().read(data, offset, len);
-            if (count < 0) {
-                closeSocket();
+        while (len > 0)
+        {
+            int count = Math.min(len, socket.getInputStream().available());
+            if (count > 0) {
+                count = socket.getInputStream().read(data, offset, count);
+                if (count == -1) {
+                    noConnectionError();
+                }
+                len -= count;
+                offset += count;
+            }
+            if (Calendar.getInstance().getTimeInMillis() > time){
                 noConnectionError();
             }
-            len -= count;
-            offset += count;
+            Thread.sleep(0);
         }
         return data;
     }
+*/
 
-    public void write(byte[] b) throws Exception {
+    public byte[] readBytes(int len) throws Exception{
+        openSocket();
+
+        //logger.debug("readBytes: " + len);
+        if (len <= 0)
+        {
+            throw new Exception("Data length <= 0");
+        }
+
+        // wait for data available with timaout
+        long startTime = System.currentTimeMillis();
+        for (;;)
+        {
+            if (rxBuffer.available() >= len) break;
+            Time.delay(1);
+            long currentTime = System.currentTimeMillis();
+            if ((currentTime - startTime) > readTimeout)
+            {
+                throw new IOException("Read timed out");
+            }
+        }
+        byte[] data = rxBuffer.read(len);
+        //logger.debug("read(" + Hex.toHex(data) + ")");
+        return data;
+    }
+
+    public void write(byte[] b) throws Exception
+    {
         for (int i = 0; i < 2; i++) {
             try {
                 openSocket();
+                rxBuffer.clear();
                 socket.getOutputStream().write(b);
                 socket.getOutputStream().flush();
                 return;
-            } catch (Exception e) {
+            } catch (Exception e)
+            {
+                logger.error(e.getMessage());
                 closeSocket();
                 if (i == 1) {
                     throw e;
@@ -325,6 +402,7 @@ public class PPPPort implements PrinterPort {
 
         if (socket != null)
         {
+            logger.debug("setTimeout(" + readTimeout + ")");
             socket.setSoTimeout(readTimeout);
         }
     }
@@ -361,34 +439,3 @@ public class PPPPort implements PrinterPort {
         }
     }
 }
-
-    /*
-    public byte[] readBytes2(int len) throws Exception {
-        open();
-
-        long time = Calendar.getInstance().getTimeInMillis() + readTimeout;
-
-        firstCommand = false;
-        byte[] data = new byte[len];
-        int offset = 0;
-        while (len > 0)
-        {
-            int count = Math.min(len, socket.getInputStream().available());
-            if (count > 0) {
-                count = socket.getInputStream().read(data, offset, count);
-                if (count == -1) {
-                    noConnectionError();
-                }
-                len -= count;
-                offset += count;
-            }
-            if (Calendar.getInstance().getTimeInMillis() > time){
-                noConnectionError();
-            }
-            Thread.sleep(0);
-        }
-        return data;
-    }
-
-     */
-

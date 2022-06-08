@@ -496,6 +496,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     getDevice().setIsFooter(false);
                 }
             }
+            printMessages();
 
             if (cancelled) {
                 getPrinter().waitForPrinting();
@@ -553,19 +554,23 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 }
                 getDevice().check(rc);
                 getFiscalDay().closeFiscalRec();
-
-                try {
-                    getDevice().waitForPrinting();
-                    for (int i = 0; i < messages.size(); i++) {
-                        getDevice().printText(messages.get(i));
-                    }
-                } catch (Exception e) {
-                    logger.error("Receipt messages printing failed: ", e);
-                }
             }
         }
-        printReceiptEnding();
         discounts.clear();
+        if (getParams().waitPrintComplete) {
+            printReceiptEnding();
+        }
+    }
+
+    public void printMessages() {
+        try {
+            getDevice().waitForPrinting();
+            for (int i = 0; i < messages.size(); i++) {
+                getDevice().printText(messages.get(i));
+            }
+        } catch (Exception e) {
+            logger.error("Receipt messages printing failed: ", e);
+        }
     }
 
     public void printReceiptEnding()

@@ -770,12 +770,10 @@ public class BluetoothLEPort implements PrinterPort2 {
     // PrinterPort2
 
     public int available() throws Exception{
-        openPort();
         return rxBuffer.available();
     }
 
     public byte[] read(int len) throws Exception{
-        openPort();
         return rxBuffer.read(len);
     }
 
