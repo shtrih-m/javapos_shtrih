@@ -984,7 +984,7 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     }
 
     @Override
-    public boolean capFDOSupport() throws Exception {
+    public boolean capFDOSupport(){
         return false;
     }
 

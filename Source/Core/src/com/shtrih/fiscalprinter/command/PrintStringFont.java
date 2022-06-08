@@ -57,7 +57,7 @@ public class PrintStringFont extends PrinterCommand {
         out.writeInt(password);
         out.writeByte(station);
         out.writeByte(font.getValue());
-        out.writeString(line, PrinterConst.MIN_TEXT_LENGTH);
+        out.writeString(line);
     }
 
     public final void decode(CommandInputStream in) throws Exception {

@@ -25,7 +25,7 @@ public class PrintBoldString extends PrinterCommand {
 
     private int password; // Operator password (4 bytes)
     private int station; // Flags (1 byte)
-    private String text; // String of characters (20 bytes)
+    private byte[] line; // String of characters (20 bytes)
     // out
     private int operator = 0; // Operator index number
 
@@ -47,7 +47,7 @@ public class PrintBoldString extends PrinterCommand {
     public final void encode(CommandOutputStream out) throws Exception {
         out.writeInt(getPassword());
         out.writeByte(getStation());
-        out.writeString(text, 20);
+        out.writeBytes(line);
     }
 
     public final void decode(CommandInputStream in) throws Exception {
@@ -74,8 +74,8 @@ public class PrintBoldString extends PrinterCommand {
         this.station = station;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setLine(byte[] line) {
+        this.line = line;
     }
 
     public void setOperator(int operator) {
@@ -83,7 +83,7 @@ public class PrintBoldString extends PrinterCommand {
     }
 
 
-    public String getLine() {
-        return text;
+    public byte[] getLine() {
+        return line;
     }
 }

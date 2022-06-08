@@ -74,7 +74,7 @@ public class FSPrintRecItem extends PrinterCommand
         out.writeByte(item.getPaymentItem());
         String text = item.getText();
         int len = Math.min(text.length(), 128);
-        out.writeString(text.substring(0, len), PrinterConst.MIN_TEXT_LENGTH);
+        out.writeString(text.substring(0, len));
     }
 
     public final void decode(CommandInputStream in) throws Exception {

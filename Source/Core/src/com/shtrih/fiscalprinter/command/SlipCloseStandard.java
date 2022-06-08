@@ -64,7 +64,7 @@ public final class SlipCloseStandard extends PrinterCommand {
         out.writeByte(params.getTax2());
         out.writeByte(params.getTax3());
         out.writeByte(params.getTax4());
-        out.writeString(params.getText(), PrinterConst.MIN_TEXT_LENGTH);
+        out.writeString(params.getText());
     }
 
     public final void decode(CommandInputStream in) throws Exception {

@@ -52,7 +52,7 @@ public class PrintString extends PrinterCommand {
     public final void encode(CommandOutputStream out) throws Exception {
         out.writeInt(password);
         out.writeByte(station);
-        out.writeString(line, PrinterConst.MIN_TEXT_LENGTH);
+        out.writeString(line);
     }
 
     public final void decode(CommandInputStream in) throws Exception {

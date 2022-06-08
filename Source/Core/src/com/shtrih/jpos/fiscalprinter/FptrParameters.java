@@ -207,6 +207,7 @@ public class FptrParameters {
     public boolean pppConnection = false;
     public boolean autoPrintZReport = false;
     public boolean printItemDiscount = false;
+    public boolean fillTextToMinLength = false;
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -466,6 +467,7 @@ public class FptrParameters {
         pppConnection = reader.readBoolean("pppConnection", false);
         autoPrintZReport = reader.readBoolean("autoPrintZReport", false);
         printItemDiscount = reader.readBoolean("printItemDiscount", false);
+        fillTextToMinLength = reader.readBoolean("fillTextToMinLength", false);
 
         // paymentNames
         String paymentName;

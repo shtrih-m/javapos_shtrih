@@ -50,7 +50,7 @@ public final class SlipSetTextLine extends PrinterCommand {
     public final void encode(CommandOutputStream out) throws Exception {
         out.writeInt(password);
         out.writeByte(line);
-        out.writeString(text, PrinterConst.MIN_TEXT_LENGTH);
+        out.writeString(text);
     }
 
     public final void decode(CommandInputStream in) throws Exception {

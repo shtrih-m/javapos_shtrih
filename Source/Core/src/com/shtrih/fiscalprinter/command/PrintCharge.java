@@ -51,7 +51,7 @@ public final class PrintCharge extends PrinterCommand {
         out.writeByte(getItem().getTax2());
         out.writeByte(getItem().getTax3());
         out.writeByte(getItem().getTax4());
-        out.writeString(getItem().getText(), PrinterConst.MIN_TEXT_LENGTH);
+        out.writeString(getItem().getText());
     }
 
     public final void decode(CommandInputStream in) throws Exception {

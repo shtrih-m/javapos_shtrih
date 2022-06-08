@@ -983,7 +983,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public void startFDOService() throws Exception {
+    public void startFDOService() 
+    {
         if (fdoService != null) {
             return;
         }
@@ -994,7 +995,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public boolean isFDOServiceEnabled() throws Exception {
+    public boolean isFDOServiceEnabled() {
         if (!printer.capFDOSupport()) {
             logger.error("FDO commands not supported, capFDOSupport=false");
             return false;
@@ -4510,7 +4511,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return jposEntry;
     }
 
-    public void saveProperties() throws Exception {
+    public void saveProperties() {
         if (params.fastConnect) {
             return;
         }

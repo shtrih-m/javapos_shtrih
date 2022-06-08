@@ -18,7 +18,7 @@ public final class PrintDocHeader extends PrinterCommand {
 
     // in
     private int password;
-    private String title;
+    private byte[] title;
     private int number;
     // out
     private int operator;
@@ -41,7 +41,7 @@ public final class PrintDocHeader extends PrinterCommand {
 
     public void encode(CommandOutputStream out) throws Exception {
         out.writeInt(getPassword());
-        out.writeString(getTitle(), 30);
+        out.writeBytes(getTitle());
         out.writeShort(getNumber());
     }
 
@@ -54,7 +54,7 @@ public final class PrintDocHeader extends PrinterCommand {
         return password;
     }
 
-    public String getTitle() {
+    public byte[] getTitle() {
         return title;
     }
 
@@ -66,7 +66,7 @@ public final class PrintDocHeader extends PrinterCommand {
         this.password = password;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(byte[] title) {
         this.title = title;
     }
 

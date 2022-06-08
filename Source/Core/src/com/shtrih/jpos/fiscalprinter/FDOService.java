@@ -39,7 +39,7 @@ public class FDOService implements Runnable {
         return started;
     }
 
-    public void start() throws Exception {
+    public void start()  {
         if (!isStarted()) {
             logger.debug("FSService starting");
             started = true;
