@@ -7,6 +7,17 @@
     
 ********************************************************************************
 
+  09.06.2022
+  deviceServiceVersion = 1013664
+
+  [-] Added directIO commands SMFPTR_DIO_REBOOT and SMFPTR_DIO_REBOOT_WAIT.
+	  SMFPTR_DIO_REBOOT reboots fiscal printer, 
+	  SMFPTR_DIO_REBOOT_WAIT reboots and waits for printer to power up.
+	  SMFPTR_DIO_REBOOT = 0x8E;	
+	  SMFPTR_DIO_REBOOT_WAIT = 0x8F;
+  
+********************************************************************************
+
   07.06.2022
   deviceServiceVersion = 1013663
 

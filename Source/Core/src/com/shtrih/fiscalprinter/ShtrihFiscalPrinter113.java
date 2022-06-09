@@ -2447,5 +2447,13 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_SET_DRIVER_PARAMETER, data, object);
         return object[0];
     }
-    
+
+    public void reboot() throws JposException {
+        directIO(SmFptrConst.SMFPTR_DIO_REBOOT, null, null);
+    }
+
+    public void rebootWait() throws JposException {
+        directIO(SmFptrConst.SMFPTR_DIO_REBOOT_WAIT, null, null);
+    }
+
 }

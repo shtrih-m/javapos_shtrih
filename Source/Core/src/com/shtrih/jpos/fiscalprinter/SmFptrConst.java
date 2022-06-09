@@ -725,7 +725,13 @@ public class SmFptrConst {
 
     // Read FDO parameters
     public static final int SMFPTR_DIO_READ_FDO_PARAMS = 0x8D;
-    
+
+    // Reboot device
+    public static final int SMFPTR_DIO_REBOOT = 0x8E;
+
+    // Reboot device and wait for device to power up
+    public static final int SMFPTR_DIO_REBOOT_WAIT = 0x8F;
+
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

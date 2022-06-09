@@ -561,6 +561,10 @@ public class MainActivity extends AppCompatActivity
                 // printer.addStatusUpdateListener(new FptrEventListener());
                 printer.claim(3000);
                 printer.setDeviceEnabled(true);
+
+                model.ScocUpdaterStatus.set("");
+                printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, this.params.observer);
+
                 /*
                 // correct PPP mode
                 int pppMode = Integer.parseInt(printer.readTable(21, 1, 1));
@@ -569,9 +573,11 @@ public class MainActivity extends AppCompatActivity
                     printer.writeTable(21, 1, 1, "0");
                 }
                 */
+                log.debug("Cashier name: " + printer.readCashierName());
+                printer.reboot();
+                log.debug("Cashier name: " + printer.readCashierName());
 
-                model.ScocUpdaterStatus.set("");
-                printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, this.params.observer);
+
                 return null;
             } catch (Exception e) {
                 log.error("Device " + this.params.portName + " connection using protocol " + selectedProtocol + " failed", e);

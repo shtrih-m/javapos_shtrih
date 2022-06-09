@@ -566,7 +566,15 @@ public class DirectIOHandler2 {
             case SmFptrConst.SMFPTR_DIO_READ_FDO_PARAMS:
                 new DIOReadFDOParams(service).execute(data, object);
                 break;
-                
+
+            case SmFptrConst.SMFPTR_DIO_REBOOT:
+                new DIOReboot(service).execute(data, object);
+                break;
+
+            case SmFptrConst.SMFPTR_DIO_REBOOT_WAIT:
+                new DIORebootWait(service).execute(data, object);
+                break;
+
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL, Localizer.getString(Localizer.invalidParameterValue) + ", command");
         }
