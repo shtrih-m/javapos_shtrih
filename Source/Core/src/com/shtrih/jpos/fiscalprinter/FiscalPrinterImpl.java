@@ -3120,11 +3120,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     // ////////////////////////////////////////////////////////////////////////////
     // Fiscal Receipt
     // ////////////////////////////////////////////////////////////////////////////
-    public void beginFiscalReceipt(boolean printHeader) throws Exception {
+    public void beginFiscalReceipt(boolean printHeader) throws Exception
+    {
         checkEnabled();
         checkPrinterState(FPTR_PS_MONITOR);
-
         stopFDOService();
+        logger.debug("DeviceServiceVersion: " + String.valueOf(deviceServiceVersion));
         try {
 
             Vector<TextLine> messages = null;

@@ -4113,6 +4113,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         ServiceCommand command = new ServiceCommand();
         command.setFunctionCode(ServiceCommand.CODE_REBOOT);
         command.setIntData(0);
+        command.readAnswer = false; // do not wait answer
         int rc = executeCommand(command);
         if (succeeded(rc)) {
             port.close();

@@ -31,8 +31,9 @@ import android.net.LocalSocketAddress;
  *
  * @author Виталий
  */
-public class PPPPort implements PrinterPort {
+public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
 
+    private IPortEvents events;
     private Socket socket = null;
     private LocalSocket localSocket = null;
     private Thread dispatchThread = null;
@@ -54,17 +55,18 @@ public class PPPPort implements PrinterPort {
         this.params = params;
         this.printerPort = printerPort;
         readTimeout = params.getByteTimeout();
+        printerPort.setPortEvents(this);
     }
 
     public boolean isOpened() {
         return opened;
     }
 
-    public void open(int timeout) throws Exception {
+    public synchronized void open(int timeout) throws Exception {
         if (isOpened()) {
             return;
         }
-
+        logger.debug("open");
         firstCommand = true;
         openTimeout = timeout;
         localSocketName = UUID.randomUUID().toString();
@@ -83,6 +85,7 @@ public class PPPPort implements PrinterPort {
         dispatchThread.start();
         openSocket();
         opened = true;
+        logger.debug("open: OK");
     }
 
     public void openSocket() throws Exception
@@ -149,7 +152,7 @@ public class PPPPort implements PrinterPort {
         }
     }
 
-    public void close()
+    public synchronized void close()
     {
         if (!isOpened()) {
             return;
@@ -162,6 +165,8 @@ public class PPPPort implements PrinterPort {
         closeSocket();
         printerPort.close();
         opened = false;
+        firstCommand = true;
+        logger.debug("close: OK");
     }
 
     public void closeLocalSocket(){
@@ -225,15 +230,20 @@ public class PPPPort implements PrinterPort {
                 while (true)
                 {
                     Thread.sleep(0);
-                    int b = socket.getInputStream().read();
-                    if (b < 0) break;
-                    rxBuffer.write(b);
+                    try {
+                        int b = socket.getInputStream().read();
+                        if (b < 0) break;
+                        rxBuffer.write(b);
+                    }
+                    catch(Exception e){
+                        logger.error("rxProc: " + e.getMessage());
+                    }
                 }
 
         }
-        catch(Exception e)
+        catch(InterruptedException e)
         {
-            logger.error("rxProc: ", e);
+            logger.error("rxProc InterruptedException: " + e.getMessage());
         }
     }
 
@@ -243,50 +253,42 @@ public class PPPPort implements PrinterPort {
             while (true)
             {
                 Thread.sleep(0);
-                dispatchPackets();
+                try {
+                    dispatchPackets();
+                } catch (Exception e) {
+                    logger.error("bluetoothProc: " + e.getMessage());
+                }
             }
-        } catch (Exception e) {
-            logger.error("bluetoothProc: " + e.getMessage());
+        }
+        catch(InterruptedException e)
+        {
+            logger.error("bluetoothProc interrupted");
         }
     }
 
     public void dispatchPackets() throws Exception
-        {
-            byte[] data;
-            // read bluetoothSocket
-            int count = printerPort.available();
-            if (count > 0)
-            {
-                data = printerPort.read(count);
-                if (count > 0) {
-                    //logger.debug("BT <- " + Hex.toHex(data));
-                    localSocket.getOutputStream().write(data, 0, count);
-                    localSocket.getOutputStream().flush();
-                }
-                if (count == -1) {
-                    logger.debug("bluetoothSocket.getInputStream().read(data) = -1");
-                    //printerPort.close();
-                    //printerPort = null;
-                    return;
-                }
-            }
-            // read localSocket
-            count = localSocket.getInputStream().available();
+    {
+        int count;
+        byte[] data;
+
+        // read bluetoothSocket
+        count = printerPort.available();
+        if (count > 0) {
+            data = printerPort.read(count);
+            localSocket.getOutputStream().write(data, 0, count);
+            localSocket.getOutputStream().flush();
+        }
+        // read localSocket
+        count = localSocket.getInputStream().available();
+        if (count > 0) {
+            data = new byte[count];
+            count = localSocket.getInputStream().read(data);
             if (count > 0) {
-                data = new byte[count];
-                count = localSocket.getInputStream().read(data);
-                if (count > 0) {
-                    //logger.debug("BT -> " + Hex.toHex(data));
-                    printerPort.write(data);
-                }
-                if (count == -1) {
-                    logger.debug("localSocket.getInputStream().read(data) = -1");
-                    //localSocket.close();
-                    //localSocket = null;
-                    return;
-                }
+                printerPort.write(data);
             }
         }
+    }
+
 
     public void open() throws Exception {
         open(connectTimeout);
@@ -338,8 +340,9 @@ public class PPPPort implements PrinterPort {
 */
 
     public byte[] readBytes(int len) throws Exception{
-        openSocket();
+        open();
 
+        firstCommand = false;
         //logger.debug("readBytes: " + len);
         if (len <= 0)
         {
@@ -365,17 +368,19 @@ public class PPPPort implements PrinterPort {
 
     public void write(byte[] b) throws Exception
     {
+        open();
         for (int i = 0; i < 2; i++) {
             try {
-                openSocket();
+                //openSocket();
                 rxBuffer.clear();
                 socket.getOutputStream().write(b);
                 socket.getOutputStream().flush();
                 return;
             } catch (Exception e)
             {
+
                 logger.error(e.getMessage());
-                closeSocket();
+                //closeSocket();
                 if (i == 1) {
                     throw e;
                 }
@@ -397,14 +402,9 @@ public class PPPPort implements PrinterPort {
     public void setTimeout(int timeout) throws Exception {
         readTimeout = timeout;
         if (firstCommand){
-            readTimeout = timeout + 100000; // !!!
+            readTimeout = timeout + 20000; // !!!
         }
-
-        if (socket != null)
-        {
-            logger.debug("setTimeout(" + readTimeout + ")");
-            socket.setSoTimeout(readTimeout);
-        }
+        logger.debug("setTimeout(" + readTimeout + ")");
     }
 
     public String getPortName() {
@@ -428,8 +428,9 @@ public class PPPPort implements PrinterPort {
         return printerPort.getPortNames();
     }
 
-    public void setPortEvents(IPortEvents events) {
-        printerPort.setPortEvents(events);
+    public void setPortEvents(IPortEvents events)
+    {
+        this.events = events;
     }
 
     public String readParameter(int parameterID){
@@ -437,5 +438,25 @@ public class PPPPort implements PrinterPort {
             case PrinterPort.PARAMID_IS_RELIABLE: return "1";
             default: return null;
         }
+    }
+
+    public void onConnect()
+    {
+        try {
+            //open();
+            if (events != null) {
+                events.onConnect();
+            }
+        }
+        catch(Exception e){
+            logger.error("onConnect: " + e.getMessage());
+        }
+    }
+
+    public void onDisconnect(){
+        if (events != null) {
+            events.onDisconnect();
+        }
+        close();
     }
 }

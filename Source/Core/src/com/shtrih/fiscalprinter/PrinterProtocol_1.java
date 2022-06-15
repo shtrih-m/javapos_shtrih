@@ -156,10 +156,12 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         }
     }
 
-    private void writeCommand(byte[] data) throws Exception {
+    private void writeCommand(byte[] data, boolean readAnswer) throws Exception {
         byte nakCommandNumber = 0;
         while (true) {
             portWrite(data);
+            if (!readAnswer) return;
+
             switch (readControlByte()) {
                 case ACK:
                     return;
@@ -178,7 +180,7 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         }
     }
 
-    private byte[] send(byte[] data, int timeout) throws Exception {
+    private byte[] send(byte[] data, int timeout, boolean readAnswer) throws Exception {
         int ackNumber = 0;
         int enqNumber = 0;
 
@@ -211,8 +213,12 @@ public class PrinterProtocol_1 implements PrinterProtocol {
                     break;
 
                 case NAK:
-                    writeCommand(data);
-                    return readAnswer(timeout);
+                    writeCommand(data, readAnswer);
+                    if (readAnswer) {
+                        return readAnswer(timeout);
+                    } else{
+                        return null;
+                    }
 
                 default:
                     Time.delay(100);
@@ -230,14 +236,6 @@ public class PrinterProtocol_1 implements PrinterProtocol {
 
             }
         }
-    }
-
-    private byte[] sendCommand(byte[] data, int timeout)
-            throws Exception {
-        txData = frame.encode(data);
-        byte[] rx = send(txData, timeout);
-        rxData = frame.encode(rx);
-        return rx;
     }
 
     public void connect() throws Exception {
@@ -277,15 +275,6 @@ public class PrinterProtocol_1 implements PrinterProtocol {
                         Localizer.getString(Localizer.NoConnection));
             }
         }
-    }
-
-    private void sendCommand(PrinterCommand command) throws Exception {
-        logger.debug("sendCommand: " + command.getText() + ", " + command.getIsRepeatable());
-
-        byte[] tx = command.encodeData();
-        int timeout = command.getTimeout();
-        byte[] rx = sendCommand(tx, timeout);
-        command.decodeData(rx);
     }
 
     public void setMaxEnqNumber(int value) {
@@ -364,8 +353,15 @@ public class PrinterProtocol_1 implements PrinterProtocol {
     }
 
     public void send(PrinterCommand command) throws Exception {
-        synchronized (port.getSyncObject()) {
-            sendCommand(command);
+        synchronized (port.getSyncObject())
+        {
+            logger.debug("sendCommand: " + command.getText() + ", " + command.getIsRepeatable());
+
+            byte[] tx = frame.encode(command.encodeData());
+            byte[] rx = send(tx, command.getTimeout(), command.readAnswer);
+            if (command.readAnswer) {
+                command.decodeData(rx);
+            }
         }
     }
 

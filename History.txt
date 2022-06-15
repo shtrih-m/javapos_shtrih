@@ -7,6 +7,14 @@
     
 ********************************************************************************
 
+  15.06.2022
+  deviceServiceVersion = 1013665
+
+  [-] Fixed error with receipt ending, that cause receipt duplication
+  [+] Added driver version log report in beginFiscalReceipt method
+  
+********************************************************************************
+
   09.06.2022
   deviceServiceVersion = 1013664
 

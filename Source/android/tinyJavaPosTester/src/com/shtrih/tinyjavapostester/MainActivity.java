@@ -573,9 +573,9 @@ public class MainActivity extends AppCompatActivity
                     printer.writeTable(21, 1, 1, "0");
                 }
                 */
-                log.debug("Cashier name: " + printer.readCashierName());
-                printer.reboot();
-                log.debug("Cashier name: " + printer.readCashierName());
+                //log.debug("Cashier name: " + printer.readCashierName());
+                //printer.reboot();
+                //log.debug("Cashier name: " + printer.readCashierName());
 
 
                 return null;

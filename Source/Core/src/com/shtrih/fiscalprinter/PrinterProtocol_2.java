@@ -70,22 +70,23 @@ public class PrinterProtocol_2 implements PrinterProtocol {
             port.setTimeout(timeout + byteTimeout);
 
             writeCommand(command.encodeData());
-            int frameNum = readAnswer();
-            if (frameNum != frameNumber)
-            {
-                logger.error("Incorrect frame number");
-                for (;;) {
-                    frameNum = readAnswer();
-                    if (frameNum == frameNumber){
-                        break;
+            if (command.readAnswer) {
+                int frameNum = readAnswer();
+                if (frameNum != frameNumber) {
+                    logger.error("Incorrect frame number");
+                    for (; ; ) {
+                        frameNum = readAnswer();
+                        if (frameNum == frameNumber) {
+                            break;
+                        }
                     }
+                    stepFrameNumber();
+                    command.decodeData(rx);
+                    return true;
                 }
-                stepFrameNumber();
                 command.decodeData(rx);
-                return true;
             }
             stepFrameNumber();
-            command.decodeData(rx);
             return true;
 
         } catch (Exception e)
