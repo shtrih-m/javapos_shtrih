@@ -1277,12 +1277,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         fsReceiptItem.setText(item.getText());
         int rc = fsPrintRecItem(fsReceiptItem);
         capFSPrintItem = isCommandSupported(rc);
-        // send item units
-        if (succeeded(rc) && (item.getUnit() != null)) {
-            TLVWriter writer = new TLVWriter();
-            writer.add(2108, item.getUnit());
-            fsWriteOperationTLV(writer.getBytes());
-        }
         return rc;
     }
 
