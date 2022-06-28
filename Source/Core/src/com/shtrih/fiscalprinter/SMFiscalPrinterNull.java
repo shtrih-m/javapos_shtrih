@@ -110,6 +110,9 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return null;
     }
 
+    public void disconnect() {
+    }
+
     public void check(int errorCode) throws Exception {
     }
 
@@ -904,6 +907,11 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     }
 
     public FSReadSerial fsReadSerial() throws Exception {
+        return null;
+    }
+
+    @Override
+    public String getFullSerial(){
         return null;
     }
 

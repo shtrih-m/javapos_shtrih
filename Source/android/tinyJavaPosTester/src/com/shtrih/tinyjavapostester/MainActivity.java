@@ -564,16 +564,8 @@ public class MainActivity extends AppCompatActivity
 
                 model.ScocUpdaterStatus.set("");
                 printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, this.params.observer);
-
-                /*
-                // correct PPP mode
-                int pppMode = Integer.parseInt(printer.readTable(21, 1, 1));
-                log.debug("PPP mode: " + pppMode);
-                if ((pppMode == 1)||(pppMode == 2)) {
-                    printer.writeTable(21, 1, 1, "0");
-                }
-                */
-                //log.debug("Cashier name: " + printer.readCashierName());
+                // test for port reopen
+                log.debug("Cashier name: " + printer.readCashierName());
                 //printer.reboot();
                 //log.debug("Cashier name: " + printer.readCashierName());
 

@@ -962,6 +962,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 stopFDOService();
                 stopJsonUpdateService();
                 stopFirmwareUpdaterService();
+                getPrinter().disconnect();
                 connected = false;
                 setPowerState(JPOS_PS_UNKNOWN);
             }
@@ -4513,12 +4514,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void saveProperties() {
-        if (params.fastConnect) {
-            return;
-        }
-
         try {
-            String serial = "FiscalPrinter_" + getPrinter().readFullSerial();
+            String serial = "FiscalPrinter_" + getPrinter().getFullSerial();
             XmlPropWriter writer = new XmlPropWriter("FiscalPrinter",
                     serial);
             writer.write(getPrinterImages());

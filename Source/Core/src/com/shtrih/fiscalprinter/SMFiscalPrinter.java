@@ -113,6 +113,8 @@ public interface SMFiscalPrinter {
 
     public LongPrinterStatus connect() throws Exception;
 
+    public void disconnect();
+
     public void check(int errorCode) throws Exception;
 
     public void execute(PrinterCommand command) throws Exception;
@@ -533,6 +535,8 @@ public interface SMFiscalPrinter {
     public PrinterModel getModel() throws Exception;
 
     public FSReadSerial fsReadSerial() throws Exception;
+
+    public String getFullSerial();
 
     public String readFullSerial() throws Exception;
 

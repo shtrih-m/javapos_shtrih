@@ -47,8 +47,6 @@ public class CompositeLogger {
     }
 
     public synchronized void error(Throwable e) {
-        // TODO: убрать этот метод, нужно всегда передавать сообщение
-
         if (isEnabled)
             Log.e(className, "", e);
 

@@ -8,6 +8,13 @@
 ********************************************************************************
 
   21.06.2022
+  deviceServiceVersion = 1013667
+  
+  [-] Fixed error with disabling and enabling bluetooth adapter on BLE connection
+  
+********************************************************************************
+
+  21.06.2022
   deviceServiceVersion = 1013666
 
   [-] Removed adding tag 2108

@@ -36,18 +36,20 @@ public class PrinterProtocol_1 implements PrinterProtocol {
     private final static byte ACK = 0x06;
     private final static byte NAK = 0x15;
     // maximum counters
-    private int maxEnqNumber = 3;
-    private int maxNakCommandNumber = 3;
-    private int maxNakAnswerNumber = 3;
-    private int maxAckNumber = 3;
-    private int maxRepeatCount = 3;
+    private int maxEnqNumber = 1;
+    private int maxNakCommandNumber = 1;
+    private int maxNakAnswerNumber = 1;
+    private int maxAckNumber = 1;
+    private int maxRepeatCount = 1;
     private byte[] txData = new byte[0];
     private byte[] rxData = new byte[0];
     private final Frame frame = new Frame();
+    private final boolean isReliable;
     private static CompositeLogger logger = CompositeLogger.getLogger(PrinterProtocol_1.class);
 
     public PrinterProtocol_1(PrinterPort port) {
         this.port = port;
+        isReliable = port.readParameter(PrinterPort.PARAMID_IS_RELIABLE).equalsIgnoreCase("1");
     }
 
     private void portWrite(int b) throws Exception {
@@ -278,7 +280,9 @@ public class PrinterProtocol_1 implements PrinterProtocol {
     }
 
     public void setMaxEnqNumber(int value) {
-        maxEnqNumber = value;
+        if (!isReliable) {
+            maxEnqNumber = value;
+        }
     }
 
     public int getMaxEnqNumber() {
@@ -302,19 +306,27 @@ public class PrinterProtocol_1 implements PrinterProtocol {
     }
 
     public void setMaxNakCommandNumber(int value) {
-        maxNakCommandNumber = value;
+        if (!isReliable) {
+            maxNakCommandNumber = value;
+        }
     }
 
     public void setMaxNakAnswerNumber(int value) {
-        maxNakAnswerNumber = value;
+        if (!isReliable) {
+            maxNakAnswerNumber = value;
+        }
     }
 
     public void setMaxAckNumber(int value) {
-        maxAckNumber = value;
+        if (!isReliable) {
+            maxAckNumber = value;
+        }
     }
 
     public void setMaxRepeatCount(int value) {
-        maxRepeatCount = value;
+        if (!isReliable) {
+            maxRepeatCount = value;
+        }
     }
 
     public byte[] getTxData() {

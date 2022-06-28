@@ -162,6 +162,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public boolean isTableTextCleared = false;
     private final Map<Integer, Integer> taxRates = new HashMap<Integer, Integer>();
     private int printMode = PrinterConst.PRINT_MODE_ENABLED;
+    private boolean connected = false;
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params) {
@@ -236,8 +237,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
 
             try {
+                if (connected){
+                    port.open(getParams().portOpenTimeout);
+                }
                 device.send(command);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 port.close();
                 throw new DeviceException(PrinterConst.SMFPTR_E_NOCONNECTION, e.getMessage());
             }
@@ -369,8 +373,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
             check(readDeviceMetrics());
             model = selectPrinterModel(getDeviceMetrics());
+            readFullSerial();
+            connected = true;
             return checkEcrMode();
         }
+    }
+
+    public void disconnect() {
+        connected = false;
     }
 
     private void beforeCommand(PrinterCommand command) throws Exception {
@@ -3447,6 +3457,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     @Override
+    public String getFullSerial() {
+        return serial;
+    }
+
+    @Override
     public String readFullSerial() throws Exception {
         if (serial.isEmpty()) {
             if (getDeviceMetrics().isElves()) {
@@ -5273,28 +5288,31 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         this.printMode = value;
     }
 
-    public synchronized void sendFDODocuments() throws Exception {
-        byte[] data = fsReadBlockData();
-        if (data.length == 0) {
-            return;
-        }
-        // P-protocol version 0x0102 -> 0x0120
-        if ((data.length >= 30) && (data[6] == 0x01)
-                && (data[28] == 0) && (data[29] == 0)) {
-            if (data[7] == 0x01) {
-                data[7] = 0x10;
+    public synchronized void sendFDODocuments() throws Exception
+    {
+        while (true) {
+            byte[] data = fsReadBlockData();
+            if (data.length == 0) {
+                return;
             }
-            if (data[7] == 0x02) {
-                data[7] = 0x20;
+
+            // P-protocol version 0x0102 -> 0x0120
+            if ((data.length >= 30) && (data[6] == 0x01)
+                    && (data[28] == 0) && (data[29] == 0)) {
+                if (data[7] == 0x01) {
+                    data[7] = 0x10;
+                }
+                if (data[7] == 0x02) {
+                    data[7] = 0x20;
+                }
             }
-        }
 
-        byte[] answer = sendFDOData(data);
-        if (answer.length == 0) {
-            return;
+            byte[] answer = sendFDOData(data);
+            if (answer.length == 0) {
+                return;
+            }
+            fsWriteBlockData(answer);
         }
-        fsWriteBlockData(answer);
-
     }
 
     private byte[] sendFDOData(byte[] data) throws Exception {
