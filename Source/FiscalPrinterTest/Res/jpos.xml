@@ -56,7 +56,7 @@
         <!-- Tax officer password -->
         <prop name="taxPassword" type="String" value="0"/>
         <!-- Operator password -->
-        <prop name="operatorPassword" type="String" value="1"/>
+        <prop name="operatorPassword" type="String" value="30"/>
         <!-- System administrator password -->
         <prop name="sysAdminPassword" type="String" value="30"/>
         <!-- device state polling interval in milliseconds -->

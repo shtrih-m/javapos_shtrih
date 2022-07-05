@@ -49,7 +49,7 @@ public class FptrParameters {
     public FontNumber discountFont;
     public String receiptVoidText = "ЧЕК ОТМЕНЕН";
     public int taxPassword = 0;
-    public int usrPassword = 1;
+    public int usrPassword = 30;
     public int sysPassword = 30;
     public String statisticFileName = "ShtrihFiscalPrinter.xml";
     public int pollInterval = 500;
@@ -257,7 +257,7 @@ public class FptrParameters {
         subtotalText = reader.readString("subtotalText", "SUBTOTAL");
         setByteTimeout(reader.readInteger("byteTimeout", 3000));
         taxPassword = reader.readInteger("taxPassword", 0);
-        usrPassword = reader.readInteger("operatorPassword", 1);
+        usrPassword = reader.readInteger("operatorPassword", 30);
         sysPassword = reader.readInteger("sysAdminPassword", 30);
         searchByPortEnabled = reader.readBoolean("searchByPortEnabled", false);
         waitForBarcodePrinting = reader.readBoolean("waitForBarcodePrinting", true);

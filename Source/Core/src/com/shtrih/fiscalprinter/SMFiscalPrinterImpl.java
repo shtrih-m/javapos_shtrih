@@ -1692,7 +1692,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public void duplicateReceipt() throws Exception {
         logger.debug("duplicateReceipt");
 
-        PrintReceiptCopy command = new PrintReceiptCopy(usrPassword);
+        PrintReceiptCopy command = new PrintReceiptCopy(sysPassword);
         execute(command);
     }
 
