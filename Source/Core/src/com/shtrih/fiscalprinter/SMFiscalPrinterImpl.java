@@ -165,7 +165,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private boolean connected = false;
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
-            FptrParameters params) {
+                               FptrParameters params) {
         this.port = port;
         this.device = device;
         this.params = params;
@@ -237,7 +237,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
 
             try {
-                if (connected){
+                if (connected) {
                     port.open(getParams().portOpenTimeout);
                 }
                 device.send(command);
@@ -511,9 +511,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     private boolean isReceiptCommand(PrinterCommand command) throws Exception {
         int[] codes = {
-            0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89,
-            0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F,
-            0xFF0C, 0xFF0D, 0x12, 0x17, 0x2F
+                0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89,
+                0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F,
+                0xFF0C, 0xFF0D, 0x12, 0x17, 0x2F
         };
         for (int i = 0; i < codes.length; i++) {
             if (command.getCode() == codes[i]) {
@@ -819,7 +819,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public int writeTable(int tableNumber, int rowNumber, int fieldNumber,
-            String fieldValue) throws Exception {
+                          String fieldValue) throws Exception {
         int result = 0;
         logger.debug("writeTable(" + String.valueOf(tableNumber) + ", "
                 + String.valueOf(rowNumber) + ", "
@@ -891,7 +891,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public int readTable(int tableNumber, int rowNumber, int fieldNumber,
-            String[] fieldValue) throws Exception {
+                         String[] fieldValue) throws Exception {
         int result = 0;
         logger.debug("readTable(" + String.valueOf(tableNumber) + ", "
                 + String.valueOf(rowNumber) + ", "
@@ -934,7 +934,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     private PrinterField getPrinterField(int tableNumber, int rowNumber,
-            int fieldNumber) throws Exception {
+                                         int fieldNumber) throws Exception {
         PrinterTable table = getTable(tableNumber);
         PrinterField field = table.getFields().find(tableNumber, rowNumber, fieldNumber);
         if (field == null) {
@@ -1199,7 +1199,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public PrintEJDayReportOnDates printEJDayReportOnDates(PrinterDate date1,
-            PrinterDate date2, int reportType) throws Exception {
+                                                           PrinterDate date2, int reportType) throws Exception {
         logger.debug("printEJDayReportOnDates");
         PrintEJDayReportOnDates command = new PrintEJDayReportOnDates();
         command.setPassword(sysPassword);
@@ -1211,7 +1211,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public PrintFMReportDates printFMReportDates(PrinterDate date1,
-            PrinterDate date2, int reportType) throws Exception {
+                                                 PrinterDate date2, int reportType) throws Exception {
         logger.debug("printFMReportDates");
         PrintFMReportDates command = new PrintFMReportDates();
         command.setPassword(taxPassword);
@@ -1223,7 +1223,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public PrintEJDayReportOnDays printEJReportDays(int day1, int day2,
-            int reportType) throws Exception {
+                                                    int reportType) throws Exception {
         logger.debug("printEJReportDays");
         PrintEJDayReportOnDays command = new PrintEJDayReportOnDays();
         command.setPassword(sysPassword);
@@ -1235,7 +1235,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public PrintFMReportDays printFMReportDays(int day1, int day2,
-            int reportType) throws Exception {
+                                               int reportType) throws Exception {
         logger.debug("printFMReportDays");
         PrintFMReportDays command = new PrintFMReportDays();
         command.setPassword(taxPassword);
@@ -1815,20 +1815,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         execute(command);
     }
 
-    public boolean checkEcrMode(int mode) throws Exception {
-        switch (mode) {
-            case MODE_FULLREPORT:
-            case MODE_EJREPORT:
-            case MODE_SLPPRINT:
-                Time.delay(TimeToSleep);
-                break;
-
-            default:
-                return true;
-        }
-        return false;
-    }
-
     public void waitForFiscalMemory() throws Exception {
         int resultCode = 0;
         for (int i = 0; i < 3; i++) {
@@ -1859,7 +1845,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         logger.debug("waitForPrinting");
 
         synchronized (port.getSyncObject()) {
-            for (;;) {
+            for (; ; ) {
                 PrinterStatus status = readPrinterStatus();
                 if (checkPrinterStatus(status)) {
                     return status;
@@ -1871,7 +1857,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public LongPrinterStatus waitForPrintingLong() throws Exception {
         logger.debug("waitForPrintingLong");
         synchronized (port.getSyncObject()) {
-            for (;;) {
+            for (; ; ) {
                 LongPrinterStatus status = readLongStatus();
                 if (checkPrinterStatus(status.getPrinterStatus())) {
                     return status;
@@ -1882,7 +1868,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     private boolean checkPrinterStatus(PrinterStatus status) throws Exception {
         switch (status.getSubmode()) {
-            case ECR_SUBMODE_IDLE: {
+            case ECR_SUBMODE_IDLE:
+            {
                 if (checkEcrMode(status.getMode())) {
                     return true;
                 }
@@ -2003,7 +1990,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public boolean connectDevice(int baudRate, int deviceBaudRate,
-            int deviceByteTimeout) throws Exception {
+                                 int deviceByteTimeout) throws Exception {
         setBaudRate(baudRate);
         LongPrinterStatus status = readLongStatus();
         writePortParams(status.getPortNumber(),
@@ -2684,7 +2671,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             if (barcode.getType() != SmFptrConst.SMFPTR_BARCODE_EAN13) {
                 throw new Exception(
                         Localizer
-                        .getString(Localizer.PrinterSupportesEAN13Only));
+                                .getString(Localizer.PrinterSupportesEAN13Only));
             }
 
             if (barcode.isTextAbove()) {
@@ -3082,8 +3069,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (imageWidth > maxGraphicsWidth) {
             throw new Exception(
                     Localizer.getString(Localizer.InvalidImageWidth) + ", "
-                    + String.valueOf(imageWidth) + " > "
-                    + String.valueOf(maxGraphicsWidth));
+                            + String.valueOf(imageWidth) + " > "
+                            + String.valueOf(maxGraphicsWidth));
         }
     }
 
@@ -3100,9 +3087,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         byte[] SEPARATOR_PATTERN_BLACK = {(byte) 0xFF};
         byte[] SEPARATOR_PATTERN_WHITE = {0x00};
         byte[] SEPARATOR_PATTERN_DOTTED_1 = {(byte) 0xFF, (byte) 0xFF,
-            (byte) 0xFF, 0x00, 0x00, 0x00};
+                (byte) 0xFF, 0x00, 0x00, 0x00};
         byte[] SEPARATOR_PATTERN_DOTTED_2 = {(byte) 0xFF, (byte) 0xFF,
-            (byte) 0xFF, (byte) 0xFF, 0x00, 0x00, 0x00, 0x00};
+                (byte) 0xFF, (byte) 0xFF, 0x00, 0x00, 0x00, 0x00};
         byte[] pattern;
 
         switch (separatorType) {
@@ -3311,8 +3298,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (image.getWidth() > getMaxGraphicsWidth()) {
             throw new Exception(
                     Localizer.getString(Localizer.InvalidImageWidth) + ", "
-                    + String.valueOf(image.getWidth()) + " > "
-                    + String.valueOf(getMaxGraphicsWidth()));
+                            + String.valueOf(image.getWidth()) + " > "
+                            + String.valueOf(getMaxGraphicsWidth()));
         }
         // write image to device
         if (getCapLoadGraphics3()) {
@@ -3943,11 +3930,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     private static String[] docNames = {
-        "ПРОДАЖА", "ПОКУПКА", "ВОЗВРАТ ПРОДАЖИ", "ВОЗВРАТ ПОКУПКИ"
+            "ПРОДАЖА", "ПОКУПКА", "ВОЗВРАТ ПРОДАЖИ", "ВОЗВРАТ ПОКУПКИ"
     };
 
     private static String[] fsDocNames = {
-        "ПРИХОД", "РАСХОД", "ВОЗВРАТ ПРИХОДА", "ВОЗВРАТ РАСХОДА"
+            "ПРИХОД", "РАСХОД", "ВОЗВРАТ ПРИХОДА", "ВОЗВРАТ РАСХОДА"
     };
 
     public String getReceiptName(int receiptType) {
@@ -4079,7 +4066,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public List<FSTicket> fsReadTickets(int firstFSDocumentNumber,
-            int documentCount) throws Exception {
+                                        int documentCount) throws Exception {
         synchronized (getSyncObject()) {
             Vector<FSTicket> tickets = new Vector<FSTicket>();
             FSReadStatus status = fsReadStatus();
@@ -4581,7 +4568,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             int writePointCount = 0;
             int stopTestCount = 0;
 
-            for (;;) {
+            for (; ; ) {
                 ReadLongStatus command = new ReadLongStatus();
                 command.setPassword(getUsrPassword());
                 int rc = executeCommand(command);
@@ -4619,73 +4606,56 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                         break;
                     }
                 }
-
-                switch (status.getPrinterMode().getLoMode()) {
-                    case MODE_DUMPMODE:
-                        try {
-                            endDump();
-                        } catch (DeviceException ignored) {
-                            // При чтении докмента из ФН десктопные ФР переходят в режим 1, при этом
-                            // прервать этот режим старым методом нельзя только дочитать документ до
-                            // конца
-                            fsReadDocumentTLVToEnd();
-                        }
-
-                        endDumpCount++;
-                        if (endDumpCount >= MaxStateCount) {
-                            throw new Exception(
-                                    Localizer.getString(Localizer.endDumpFailed));
-                        }
-                        break;
-
-                    case MODE_LOCKED:
-                        throw new Exception(
-                                Localizer.getString(Localizer.LockedTaxPassword));
-
-                    case MODE_WAITDATE:
-                        PrinterDate date = readLongStatus().getDate();
-                        confirmDate(date);
-                        confirmDateCount++;
-                        if (confirmDateCount >= MaxStateCount) {
-                            throw new Exception(
-                                    Localizer.getString(Localizer.ConfirmDateFailed));
-                        }
-                        break;
-
-                    case MODE_POINTPOS:
-                        writeDecimalPoint(SMFP_POINT_POSITION_2);
-                        writePointCount++;
-                        if (writePointCount >= MaxStateCount) {
-                            throw new Exception(
-                                    Localizer
-                                    .getString(Localizer.WriteDecimalPointFailed));
-                        }
-                        break;
-
-                    case MODE_TECH:
-                        deviceReset();
-                        break;
-
-                    case MODE_TEST:
-                        stopTest();
-                        stopTestCount++;
-                        if (stopTestCount >= MaxStateCount) {
-                            throw new Exception(
-                                    Localizer.getString(Localizer.StopTestFailed));
-                        }
-                        break;
-
-                    case MODE_FULLREPORT:
-                    case MODE_EJREPORT:
-                    case MODE_SLPPRINT:
-                        Time.delay(TimeToSleep);
-                        break;
-
-                    default:
-                        return status;
-                }
+                checkEcrMode(status.getMode());
             }
         }
+    }
+
+    public boolean checkEcrMode(int mode) throws Exception
+    {
+        switch (mode)
+        {
+            case MODE_DUMPMODE:
+                try {
+                    endDump();
+                } catch (DeviceException ignored) {
+                    // При чтении докмента из ФН десктопные ФР переходят в режим 1, при этом
+                    // прервать этот режим старым методом нельзя только дочитать документ до
+                    // конца
+                    fsReadDocumentTLVToEnd();
+                }
+                break;
+
+            case MODE_LOCKED:
+                throw new Exception(
+                        Localizer.getString(Localizer.LockedTaxPassword));
+
+            case MODE_WAITDATE:
+                PrinterDate date = readLongStatus().getDate();
+                confirmDate(date);
+                break;
+
+            case MODE_POINTPOS:
+                writeDecimalPoint(SMFP_POINT_POSITION_2);
+                break;
+
+            case MODE_TECH:
+                deviceReset();
+                break;
+
+            case MODE_TEST:
+                stopTest();
+                break;
+
+            case MODE_FULLREPORT:
+            case MODE_EJREPORT:
+            case MODE_SLPPRINT:
+                Time.delay(TimeToSleep);
+                break;
+
+            default: return true;
+        }
+        return false;
     }
 
     private void deviceReset() throws Exception {

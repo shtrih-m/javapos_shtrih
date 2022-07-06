@@ -1114,6 +1114,7 @@ public class MainActivity extends AppCompatActivity
                     String title = String.format("Printing receipt %d...", i);
                     publishProgress(title);
                     printSalesReceipt(positions, strings);
+                    //printer.printJournalDocNumber();
                 }
                 return null;
 

@@ -223,7 +223,7 @@
 		<!-- 3 - header will be printed when printer configured to do so -->
 		<prop name="headerMode" type="String" value="3"/>
 		<!-- Text report enabled -->
-		<prop name="textReportEnabled" type="String" value="0"/>
+		<prop name="textReportEnabled" type="String" value="1"/>
 		<!-- Text report file name -->
 		<prop name="textReportFileName" type="String" value="archive.txt"/>
 		<!-- Text report empty lines enabled -->
