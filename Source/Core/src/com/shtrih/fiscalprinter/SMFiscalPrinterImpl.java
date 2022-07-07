@@ -503,7 +503,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             if (failed(result)) {
                 return result;
             }
-
             waitForPrinting();
         }
         return result;
@@ -1866,7 +1865,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    private boolean checkPrinterStatus(PrinterStatus status) throws Exception {
+    private boolean checkPrinterStatus(PrinterStatus status) throws Exception
+    {
         switch (status.getSubmode()) {
             case ECR_SUBMODE_IDLE:
             {
@@ -4563,11 +4563,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     private LongPrinterStatus checkEcrMode() throws Exception {
         synchronized (port.getSyncObject()) {
-            int endDumpCount = 0;
-            int confirmDateCount = 0;
-            int writePointCount = 0;
-            int stopTestCount = 0;
-
             for (; ; ) {
                 ReadLongStatus command = new ReadLongStatus();
                 command.setPassword(getUsrPassword());
@@ -4581,32 +4576,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 }
 
                 LongPrinterStatus status = command.getStatus();
-
-                switch (status.getSubmode()) {
-                    case ECR_SUBMODE_IDLE:
-                        break;
-
-                    case ECR_SUBMODE_PASSIVE:
-                    case ECR_SUBMODE_ACTIVE:
-                        return status;
-
-                    case ECR_SUBMODE_AFTER: {
-                        continuePrint();
-                        continue;
-                    }
-
-                    case ECR_SUBMODE_REPORT:
-                    case ECR_SUBMODE_PRINT: {
-                        Time.delay(TimeToSleep);
-                        continue;
-                    }
-
-                    default: {
-                        logger.debug("Unknown submode " + status.getSubmode());
-                        break;
-                    }
+                if (checkPrinterStatus(status.getPrinterStatus()))
+                {
+                    return status;
                 }
-                checkEcrMode(status.getMode());
             }
         }
     }

@@ -7,11 +7,12 @@
     
 ********************************************************************************
 
-  05.07.2022
+  07.07.2022
   deviceServiceVersion = 1013668
   
   [-] Changed default value for user password, was 01 - now 30 (admin password)
   [-] Changed user password for command "0x8C, print duplicate receipt" to admin password
+  [-] Changed ecr mode check 
   
 ********************************************************************************
 
