@@ -329,23 +329,14 @@ public class BluetoothPort implements PrinterPort2 {
         throw new IOException(Localizer.getString(Localizer.NoConnection));
     }
 
-    public String[] getPortNames() {
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        Set<BluetoothDevice> pairedDevices;
-
-        if (bluetoothAdapter == null)
-            pairedDevices = new HashSet<>();
-        else
-            pairedDevices = bluetoothAdapter.getBondedDevices();
-
+    public String[] getPortNames() throws Exception
+    {
         Set<String> ports = new HashSet<>();
-
-        for (BluetoothDevice device : pairedDevices) {
-            if (device.getName().startsWith(portName))
-                ports.add(device.getAddress());
+        Set<BluetoothDevice> devices = getBluetoothAdapter().getBondedDevices();
+        for (BluetoothDevice device : devices)
+        {
+            ports.add(device.getAddress() + " " + device.getName());
         }
-
         return ports.toArray(new String[0]);
     }
 

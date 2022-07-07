@@ -153,7 +153,7 @@ public class SocketPort implements PrinterPort2 {
         return false;
     }
 
-    public String[] getPortNames() {
+    public String[] getPortNames() throws Exception {
         return new String[] { portName };
     }
 

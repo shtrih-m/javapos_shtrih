@@ -4803,5 +4803,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public int mcClearBuffer() throws Exception {
         return printer.mcClearBuffer();
     }
+    public PrinterPort getPort(){
+        return port;
+    }
 
 }

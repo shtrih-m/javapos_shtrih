@@ -192,7 +192,7 @@ public class SerialPrinterPortSingle {
     public void initialize(Properties properties) throws Exception {
     }
 
-    public String[] getPortNames() {
+    public String[] getPortNames() throws Exception{
         Vector result = new Vector();
         Enumeration e = CommPortIdentifier.getPortIdentifiers();
         while (e.hasMoreElements()) {

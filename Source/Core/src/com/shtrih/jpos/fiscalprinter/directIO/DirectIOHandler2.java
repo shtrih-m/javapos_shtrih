@@ -575,6 +575,10 @@ public class DirectIOHandler2 {
                 new DIORebootWait(service).execute(data, object);
                 break;
 
+            case SmFptrConst.SMFPTR_DIO_READ_PORT_NAMES:
+                new DIOReadPortNames(service).execute(data, object);
+                break;
+
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL, Localizer.getString(Localizer.invalidParameterValue) + ", command");
         }

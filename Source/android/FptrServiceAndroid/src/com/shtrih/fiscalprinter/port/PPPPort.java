@@ -423,7 +423,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         return false;
     }
 
-    public String[] getPortNames()
+    public String[] getPortNames() throws Exception
     {
         return printerPort.getPortNames();
     }

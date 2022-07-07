@@ -188,7 +188,7 @@ public class HohoSerialPort implements PrinterPort {
     public void initialize(Properties properties) throws Exception {
     }
 
-    public String[] getPortNames() {
+    public String[] getPortNames() throws Exception {
         return new String[]{portName};
     }
 

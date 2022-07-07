@@ -37,7 +37,7 @@ public interface PrinterPort
 
     boolean isSearchByBaudRateEnabled();
 
-    String[] getPortNames();
+    String[] getPortNames() throws Exception;
 
     void setPortEvents(IPortEvents events);
 

@@ -216,7 +216,7 @@ public class AsyncSerialPrinterPort implements Runnable, PrinterPort
     public void initialize(Properties properties) throws Exception {
     }
 
-    public String[] getPortNames() {
+    public String[] getPortNames()  throws Exception {
         Vector result = new Vector();
         Enumeration e = CommPortIdentifier.getPortIdentifiers();
         while (e.hasMoreElements()) {

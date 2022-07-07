@@ -77,7 +77,7 @@ public class SerialPrinterPort implements PrinterPort2 {
         return port.isSearchByBaudRateEnabled();
     }
 
-    public String[] getPortNames(){
+    public String[] getPortNames() throws Exception{
         return port.getPortNames();
     }
 

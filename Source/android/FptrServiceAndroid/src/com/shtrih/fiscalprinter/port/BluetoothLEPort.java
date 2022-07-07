@@ -714,21 +714,12 @@ public class BluetoothLEPort implements PrinterPort2 {
         return false;
     }
 
-    public String[] getPortNames(){
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        Set<BluetoothDevice> pairedDevices;
-
-        if (bluetoothAdapter == null)
-            pairedDevices = new HashSet<BluetoothDevice>();
-        else
-            pairedDevices = bluetoothAdapter.getBondedDevices();
-
-        Set<String> ports = new HashSet<String>();
-
-        for (BluetoothDevice device : pairedDevices) {
-            if (device.getName().startsWith(portName))
-                ports.add(device.getAddress());
+    public String[] getPortNames() throws Exception
+    {
+        Set<String> ports = new HashSet<>();
+        List<BluetoothDevice> devices = scan("", 3000);
+        for (BluetoothDevice device : devices) {
+            ports.add(device.getAddress() + " " + device.getName());
         }
         return ports.toArray(new String[0]);
     }

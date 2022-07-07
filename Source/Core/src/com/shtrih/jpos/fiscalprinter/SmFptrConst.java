@@ -732,6 +732,9 @@ public class SmFptrConst {
     // Reboot device and wait for device to power up
     public static final int SMFPTR_DIO_REBOOT_WAIT = 0x8F;
 
+    // Read port names
+    public static final int SMFPTR_DIO_READ_PORT_NAMES = 0x90;
+
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

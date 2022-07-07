@@ -117,7 +117,7 @@ public class BluetoothPortU implements PrinterPort
         return false;
     }
 
-    public String[] getPortNames(){
+    public String[] getPortNames() throws Exception {
        return null;
     }
 

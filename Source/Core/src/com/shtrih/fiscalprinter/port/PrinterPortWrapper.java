@@ -111,7 +111,7 @@ public class PrinterPortWrapper implements PrinterPort {
         return port.isSearchByBaudRateEnabled();
     }
 
-    public String[] getPortNames() {
+    public String[] getPortNames() throws Exception {
         return port.getPortNames();
     }
 
