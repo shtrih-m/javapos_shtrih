@@ -13,6 +13,7 @@
   [+] Added directIO command SMFPTR_DIO_READ_PORT_NAMES to read bluetooth device 
       MAC address and name. Application can use this command to simplify 
       entering device address. 
+  [-] Fixed error with text report and command 0xFF46, print receipt item 2
   
 ********************************************************************************
 

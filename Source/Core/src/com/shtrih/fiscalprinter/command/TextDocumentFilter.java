@@ -438,10 +438,10 @@ public class TextDocumentFilter implements IPrinterEvents {
         String line = "";
         add(item.getText());
 
-        line = String.format("%s X %s", quantityToStr(item.getQuantity()), amountToStr(item.getPrice()));
+        line = String.format("%s X %s", quantityToStr(item.getQuantity()/1000000), amountToStr(item.getPrice()));
         add("", line);
 
-        line = summToStr(item.getPrice(), item.getQuantity())
+        line = summToStr(item.getPrice(), item.getQuantity() / 1000000)
                 + getTaxData(taxBitsToInt(item.getTax()), 0, 0, 0);
         add(String.format("%02d", item.getDepartment()), line);
     }
