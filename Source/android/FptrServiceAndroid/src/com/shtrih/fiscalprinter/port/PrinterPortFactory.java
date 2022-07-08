@@ -49,7 +49,7 @@ public class PrinterPortFactory {
                 return port;
 
             case SmFptrConst.PORT_TYPE_BLE:
-                port = new BluetoothLEPort();
+                port = new BluetoothLEPort(params);
                 if (params.pppConnection){
                     return new PPPPort(params, port);
                 }
@@ -60,7 +60,7 @@ public class PrinterPortFactory {
                 return new PPPPort(params, port);
 
             case SmFptrConst.PORT_TYPE_BLE_PPP:
-                port = new BluetoothLEPort();
+                port = new BluetoothLEPort(params);
                 return new PPPPort(params, port);
 
             case SmFptrConst.PORT_TYPE_SERIAL_PPP:

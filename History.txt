@@ -7,6 +7,15 @@
     
 ********************************************************************************
 
+  08.07.2022
+  deviceServiceVersion = 1013669
+  
+  [+] Added directIO command SMFPTR_DIO_READ_PORT_NAMES to read bluetooth device 
+      MAC address and name. Application can use this command to simplify 
+      entering device address. 
+  
+********************************************************************************
+
   07.07.2022
   deviceServiceVersion = 1013668
   

@@ -1,5 +1,6 @@
 package com.shtrih.fiscalprinter.port;
 
+import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.util.CompositeLogger;
 
 import java.io.IOException;
@@ -12,10 +13,11 @@ public class BluetoothPortU implements PrinterPort
     private boolean useBLE = false;
     private PrinterPort port = null;
     private PrinterPort.IPortEvents events;
+    private final FptrParameters params;
     private static CompositeLogger logger = CompositeLogger.getLogger(BluetoothPortU.class);
 
-    public BluetoothPortU(){
-
+    public BluetoothPortU(FptrParameters params){
+        this.params = params;
     }
 
     private PrinterPort getPort() throws Exception
@@ -50,7 +52,7 @@ public class BluetoothPortU implements PrinterPort
     }
 
     private boolean connectBluetoothLE() throws Exception {
-        return connect(new BluetoothLEPort());
+        return connect(new BluetoothLEPort(params));
     }
 
     private boolean connect(PrinterPort port) {

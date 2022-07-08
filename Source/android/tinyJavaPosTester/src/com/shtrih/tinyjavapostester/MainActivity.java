@@ -557,6 +557,20 @@ public class MainActivity extends AppCompatActivity
                     printer.close();
                 }
                 printer.open("ShtrihFptr");
+                /*
+                // test port names
+                String[] portNames;
+                log.debug("Port names single");
+                portNames = printer.readPortNames("SHTRIH-NANO-F", 3000, true);
+                for (int i=0;i<portNames.length;i++) {
+                    log.debug("Port name: " + portNames[i]);
+                }
+                log.debug("Port names multy");
+                portNames = printer.readPortNames("", 3000, false);
+                for (int i=0;i<portNames.length;i++) {
+                    log.debug("Port name: " + portNames[i]);
+                }
+                */
                 printer.setLibraryContext(getApplicationContext());
                 // printer.addStatusUpdateListener(new FptrEventListener());
                 printer.claim(3000);

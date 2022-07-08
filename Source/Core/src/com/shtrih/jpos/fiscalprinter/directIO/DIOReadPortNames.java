@@ -19,8 +19,14 @@ public class DIOReadPortNames extends DIOItem {
 
     public void execute(int[] data, Object object) throws Exception
     {
-
+        Object[] params = (Object[])object;
+        if (params.length >= 3)
+        {
+            service.getParams().portNamePrefix = (String)params[0];
+            service.getParams().portNameTimeout = (int)params[1];
+            service.getParams().portNameSingle = (boolean)params[2];
+        }
         String[] portNames = service.getPort().getPortNames();
-        ((Object[])object)[0] = portNames;
+        params[0] = portNames;
     }
 }

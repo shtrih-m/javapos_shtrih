@@ -183,4 +183,5 @@ public interface FiscalPrinterFilter113 {
     public void printRecItemRefundVoid(String description, long amount,
             int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception;
+
 }

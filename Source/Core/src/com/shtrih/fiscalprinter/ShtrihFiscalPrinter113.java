@@ -2456,4 +2456,13 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_REBOOT_WAIT, null, null);
     }
 
+    public String[] readPortNames(String portPrefix, int  timeout, boolean isSingle) throws Exception{
+        Object[] params = new Object[3];
+        params[0] = portPrefix;
+        params[1] = timeout;
+        params[2] = isSingle;
+        directIO(SmFptrConst.SMFPTR_DIO_READ_PORT_NAMES, null, params);
+        return (String[])params[0];
+    }
+
 }

@@ -209,6 +209,10 @@ public class FptrParameters {
     public boolean printItemDiscount = false;
     public boolean fillTextToMinLength = false;
     public boolean waitPrintComplete = true;
+    public String portNamePrefix = "";
+    public int portNameTimeout = 3000;
+    public boolean portNameSingle = true;
+
 
     public FptrParameters() throws Exception {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);

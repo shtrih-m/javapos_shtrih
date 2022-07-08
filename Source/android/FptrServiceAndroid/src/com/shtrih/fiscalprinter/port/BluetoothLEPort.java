@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.ArrayList;
 
+import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.util.Hex;
 import com.shtrih.util.Time;
 import com.shtrih.util.CircularBuffer;
@@ -69,9 +70,11 @@ public class BluetoothLEPort implements PrinterPort2 {
     private boolean portOpened = false;
     private BluetoothLeScanner scanner;
     private boolean receiverRegistered = false;
+    private final FptrParameters params;
 
-    public BluetoothLEPort()
+    public BluetoothLEPort(FptrParameters params)
     {
+        this.params = params;
     }
 
     private void loggerDebug(String text) {
@@ -717,7 +720,7 @@ public class BluetoothLEPort implements PrinterPort2 {
     public String[] getPortNames() throws Exception
     {
         Set<String> ports = new HashSet<>();
-        List<BluetoothDevice> devices = scan("", 3000);
+        List<BluetoothDevice> devices = scan(params.portNamePrefix, params.portNameTimeout, params.portNameSingle);
         for (BluetoothDevice device : devices) {
             ports.add(device.getAddress() + " " + device.getName());
         }
