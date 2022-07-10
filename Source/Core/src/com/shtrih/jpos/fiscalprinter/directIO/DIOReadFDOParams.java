@@ -26,7 +26,7 @@ public class DIOReadFDOParams extends DIOItem {
         FDOParameters fdoParameters = getPrinter().getFDOParameters();
         list.add(fdoParameters.getHost());
         list.add(String.valueOf(fdoParameters.getPort()));
-        list.add(String.valueOf(fdoParameters.getPollPeriodSeconds()));
+        list.add(String.valueOf(fdoParameters.getTimeoutInSec()));
     }
 
 }

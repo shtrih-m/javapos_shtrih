@@ -13,29 +13,27 @@ public class FDOParameters {
 
     private final String host;
     private final int port;
-    private final int pollPeriodSeconds;
+    private final int timeoutInSec;
 
-    public FDOParameters(String host, int port, int pollPeriodSeconds) {
+    public FDOParameters(String host, int port, int timeoutInSec) {
         this.host = host;
         this.port = port;
-        this.pollPeriodSeconds = pollPeriodSeconds;
+        this.timeoutInSec = timeoutInSec;
     }
 
-    /**
-     * @return the host
-     */
     public String getHost() {
         return host;
     }
 
-    /**
-     * @return the port
-     */
     public int getPort() {
         return port;
     }
 
-    public int getPollPeriodSeconds() {
-        return pollPeriodSeconds;
+    public int getTimeoutInSec() {
+        return timeoutInSec;
+    }
+
+    public int getTimeoutInMSec() {
+        return timeoutInSec * 1000;
     }
 }

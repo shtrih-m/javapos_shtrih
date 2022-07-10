@@ -203,13 +203,14 @@ public class BluetoothLEPort implements PrinterPort2 {
         if (events != null) {
             events.onDisconnect();
         }
-        doClose();
+        disconnect();
         setState(ConnectState.FailedToConnectGatt);
-        // start wait for device
-        if (portOpened)
-        {
-            loggerDebug("Start scan");
+        startReconnect();
+    }
 
+    private void startReconnect() {
+        if (portOpened) {
+            loggerDebug("Start scan");
             scanState = ScanState.ScanStarted;
             List<ScanFilter> filters = new ArrayList<>();
             filters.add(new ScanFilter.Builder().setDeviceAddress(device.getAddress()).build());
@@ -221,6 +222,7 @@ public class BluetoothLEPort implements PrinterPort2 {
             loggerDebug("Scan started!");
         }
     }
+
 
     private final ScanCallback scanOpenedDeviceCallback = new ScanCallback()
     {
@@ -372,7 +374,7 @@ public class BluetoothLEPort implements PrinterPort2 {
     {
         loggerDebug("open(" + timeout + ")");
 
-        doOpen(timeout);
+        connect(timeout);
         registerReceiver();
         portOpened = true;
         loggerDebug("open: OK");
@@ -403,9 +405,18 @@ public class BluetoothLEPort implements PrinterPort2 {
                 String stateText = state + ", " + getStateText(state);
                 logger.debug("BluetoothAdapter state changed: " + stateText);
 
-                if ((state == BluetoothAdapter.STATE_TURNING_OFF)||(state == BluetoothAdapter.STATE_OFF)||state == BluetoothAdapter.STATE_TURNING_ON)
-                {
-                    doClose();
+                switch(state){
+                    case BluetoothAdapter.STATE_ON:{
+                        startReconnect();
+                        break;
+                    }
+
+                    case BluetoothAdapter.STATE_OFF:
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                    case  BluetoothAdapter.STATE_TURNING_ON:{
+                        disconnect();
+                        break;
+                    }
                 }
             }
         }
@@ -442,7 +453,7 @@ public class BluetoothLEPort implements PrinterPort2 {
         }
     }
 
-    public synchronized void doOpen(int timeout) throws Exception
+    public synchronized void connect(int timeout) throws Exception
     {
         if (isOpened()) return;
 
@@ -520,17 +531,17 @@ public class BluetoothLEPort implements PrinterPort2 {
     public void close()
     {
         loggerDebug("close");
-        doClose();
+        disconnect();
         unregisterReceiver();
 
         portOpened = false;
         loggerDebug("close: OK");
     }
 
-    public synchronized void doClose()
+    public synchronized void disconnect()
     {
         if (!isOpened()) return;
-        logger.debug("doClose");
+        logger.debug("disconnect");
 
         if (scanner != null){
             scanner.stopScan(scanOpenedDeviceCallback);
@@ -545,7 +556,7 @@ public class BluetoothLEPort implements PrinterPort2 {
             events.onDisconnect();
         }
         rxBuffer.clear();
-        logger.debug("doClose: OK");
+        logger.debug("disconnect: OK");
     }
 
     public int byteToInt(int B) {
@@ -816,7 +827,7 @@ public class BluetoothLEPort implements PrinterPort2 {
     }
 
     public void openPort() throws Exception{
-        doOpen(openTimeout);
+        connect(openTimeout);
     }
 
     public void setPortEvents(IPortEvents events){

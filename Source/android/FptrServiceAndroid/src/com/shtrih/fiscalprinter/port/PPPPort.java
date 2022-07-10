@@ -230,20 +230,14 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
                 while (true)
                 {
                     Thread.sleep(0);
-                    try {
-                        int b = socket.getInputStream().read();
-                        if (b < 0) break;
-                        rxBuffer.write(b);
-                    }
-                    catch(Exception e){
-                        logger.error("rxProc: " + e.getMessage());
-                    }
+                    int b = socket.getInputStream().read();
+                    if (b < 0) break;
+                    rxBuffer.write(b);
                 }
 
         }
-        catch(InterruptedException e)
-        {
-            logger.error("rxProc InterruptedException: " + e.getMessage());
+        catch(Exception e){
+            logger.error("rxProc: " + e.getMessage());
         }
     }
 

@@ -2459,8 +2459,8 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public String[] readPortNames(String portPrefix, int  timeout, boolean isSingle) throws Exception{
         Object[] params = new Object[3];
         params[0] = portPrefix;
-        params[1] = timeout;
-        params[2] = isSingle;
+        params[1] = new Integer(timeout);
+        params[2] = new Boolean(isSingle);
         directIO(SmFptrConst.SMFPTR_DIO_READ_PORT_NAMES, null, params);
         return (String[])params[0];
     }

@@ -14,6 +14,7 @@
       MAC address and name. Application can use this command to simplify 
       entering device address. 
   [-] Fixed error with text report and command 0xFF46, print receipt item 2
+  [-] Changed FDO server timeout - it is read from table "FDO parameters" (Т19П3)
   
 ********************************************************************************
 

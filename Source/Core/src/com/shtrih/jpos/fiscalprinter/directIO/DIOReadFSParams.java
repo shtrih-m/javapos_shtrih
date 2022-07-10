@@ -98,7 +98,7 @@ public class DIOReadFSParams extends DIOItem {
         // 15 - № порта
         list.add(String.valueOf(fdoParameters.getPort()));
         // 16 - Таймаут ожидание ответа от ОФД
-        list.add(String.valueOf(fdoParameters.getPollPeriodSeconds()));
+        list.add(String.valueOf(fdoParameters.getTimeoutInSec()));
     }
 
     

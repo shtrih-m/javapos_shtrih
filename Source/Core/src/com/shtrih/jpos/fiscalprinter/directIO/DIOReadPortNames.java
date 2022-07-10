@@ -23,8 +23,8 @@ public class DIOReadPortNames extends DIOItem {
         if (params.length >= 3)
         {
             service.getParams().portNamePrefix = (String)params[0];
-            service.getParams().portNameTimeout = (int)params[1];
-            service.getParams().portNameSingle = (boolean)params[2];
+            service.getParams().portNameTimeout = (Integer)params[1];
+            service.getParams().portNameSingle = (Boolean) params[2];
         }
         String[] portNames = service.getPort().getPortNames();
         params[0] = portNames;

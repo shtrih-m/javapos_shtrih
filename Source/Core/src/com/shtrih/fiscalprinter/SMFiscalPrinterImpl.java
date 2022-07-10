@@ -4171,19 +4171,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
      */
     public FDOParameters readFDOParameters() throws Exception {
         if (capFiscalStorage) {
-
             final int tableNumber = getFDOTableNumber();
-
-            final int hostField = 1;
-            final int portField = 2;
-            final int pollPeriodField = 3;
-
-            String host = readTable(tableNumber, 1, hostField);
-
-            int portValue = readTableIntValueFromStringOrInt(tableNumber, portField);
-            int pollPeriod = isShtrihMobile() ? readTableIntValueFromStringOrInt(tableNumber, pollPeriodField) : 5;
-
-            return new FDOParameters(host, portValue, pollPeriod);
+            String host = readTable(tableNumber, 1, 1);
+            int portValue = Integer.valueOf(readTable(tableNumber, 1, 2));
+            int timeoutInSec = Integer.valueOf(readTable(tableNumber, 1, 3));
+            return new FDOParameters(host, portValue, timeoutInSec);
         }
         return null;
     }
@@ -5260,14 +5252,14 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     private byte[] sendFDOData(byte[] data) throws Exception {
         FDOParameters parameters = getFDOParameters();
-        logger.debug(String.format("FDO %s:%d, connection timeout %d ms, poll period %d ms",
-                parameters.getHost(), parameters.getPort(), params.FSConnectTimeout,
-                parameters.getPollPeriodSeconds() * 1000));
+        logger.debug(String.format("FDO %s:%d, connection timeout %d ms",
+                parameters.getHost(), parameters.getPort(),
+                parameters.getTimeoutInMSec()));
 
         Socket socket = new Socket();
         try {
             socket.setTcpNoDelay(true);
-            socket.setSoTimeout(params.FSConnectTimeout);
+            socket.setSoTimeout(parameters.getTimeoutInMSec());
             socket.connect(new InetSocketAddress(parameters.getHost(), parameters.getPort()));
             socket.getOutputStream().write(data);
             InputStream in = socket.getInputStream();
