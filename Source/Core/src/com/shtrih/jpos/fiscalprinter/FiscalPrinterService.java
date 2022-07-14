@@ -23,6 +23,7 @@ import com.shtrih.jpos.DeviceService;
 public class FiscalPrinterService extends DeviceService implements
         FiscalPrinterService113 {
 
+    private long startTime = 0;
     private final FiscalPrinterImpl impl;
     static CompositeLogger logger = CompositeLogger.getLogger(FiscalPrinterService.class);
 
@@ -34,10 +35,24 @@ public class FiscalPrinterService extends DeviceService implements
     }
 
     public void handleException(Throwable e) throws JposException {
-        impl.handleException(e);
+        startTime = System.currentTimeMillis() - startTime;
+        String suffix = String.format(", time = %d ms", startTime);
+        JposExceptionHandler.handleException(e, suffix);
     }
 
-    public boolean getCapCompareFirmwareVersion() throws JposException {
+    public void methodBegin(String text)
+    {
+        startTime = System.currentTimeMillis();
+        logger.debug(text);
+    }
+
+    public void methodEnd(String text)
+    {
+        startTime = System.currentTimeMillis() - startTime;
+        logger.debug(String.format("%s, time = %d ms", text, startTime));
+    }
+
+    public synchronized boolean getCapCompareFirmwareVersion() throws JposException {
         logger.debug("getCapCompareFirmwareVersion()");
         boolean result = false;
         try {
@@ -49,7 +64,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapUpdateFirmware() throws JposException {
+    public synchronized boolean getCapUpdateFirmware() throws JposException {
         logger.debug("getCapUpdateFirmware()");
         boolean result = false;
         try {
@@ -61,7 +76,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void compareFirmwareVersion(String firmwareFileName, int[] result)
+    public synchronized void compareFirmwareVersion(String firmwareFileName, int[] result)
             throws JposException {
         logger.debug("compareFirmwareVersion("
                 + String.valueOf(firmwareFileName) + ", "
@@ -74,7 +89,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("compareFirmwareVersion: OK");
     }
 
-    public void updateFirmware(String firmwareFileName) throws JposException {
+    public synchronized void updateFirmware(String firmwareFileName) throws JposException {
         logger.debug("updateFirmware(" + String.valueOf(firmwareFileName) + ")");
         try {
             impl.updateFirmware(firmwareFileName);
@@ -84,7 +99,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("updateFirmware: OK");
     }
 
-    public String getCheckHealthText() throws JposException {
+    public synchronized String getCheckHealthText() throws JposException {
         logger.debug("getCheckHealthText()");
 
         String result = "";
@@ -99,7 +114,7 @@ public class FiscalPrinterService extends DeviceService implements
 
 
 
-    public boolean getClaimed() throws JposException {
+    public synchronized boolean getClaimed() throws JposException {
         logger.debug("getClaimed()");
         boolean result = false;
         try {
@@ -111,7 +126,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getDeviceEnabled() throws JposException {
+    public synchronized boolean getDeviceEnabled() throws JposException {
         logger.debug("getDeviceEnabled()");
         boolean result = false;
         try {
@@ -123,7 +138,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setDeviceEnabled(boolean deviceEnabled) throws JposException {
+    public synchronized void setDeviceEnabled(boolean deviceEnabled) throws JposException {
         logger.debug("setDeviceEnabled(" + String.valueOf(deviceEnabled) + ")");
         try {
             impl.setDeviceEnabled(deviceEnabled);
@@ -133,7 +148,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setDeviceEnabled: OK");
     }
 
-    public String getDeviceServiceDescription() throws JposException {
+    public synchronized String getDeviceServiceDescription() throws JposException {
         logger.debug("getDeviceServiceDescription()");
         String result = "";
         try {
@@ -145,7 +160,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getDeviceServiceVersion() throws JposException {
+    public synchronized int getDeviceServiceVersion() throws JposException {
         logger.debug("getDeviceServiceVersion()");
         int result = 0;
         try {
@@ -157,7 +172,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getFreezeEvents() throws JposException {
+    public synchronized boolean getFreezeEvents() throws JposException {
         logger.debug("getFreezeEvents()");
         boolean result = false;
         try {
@@ -169,7 +184,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setFreezeEvents(boolean freezeEvents) throws JposException {
+    public synchronized void setFreezeEvents(boolean freezeEvents) throws JposException {
         logger.debug("setFreezeEvents(" + String.valueOf(freezeEvents) + ")");
         try {
             impl.setFreezeEvents(freezeEvents);
@@ -179,7 +194,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setFreezeEvents: OK");
     }
 
-    public String getPhysicalDeviceDescription() throws JposException {
+    public synchronized String getPhysicalDeviceDescription() throws JposException {
         logger.debug("getPhysicalDeviceDescription()");
         String result = "";
         try {
@@ -191,7 +206,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public String getPhysicalDeviceName() throws JposException {
+    public synchronized String getPhysicalDeviceName() throws JposException {
         logger.debug("getPhysicalDeviceName()");
         String result = "";
         try {
@@ -203,7 +218,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getState() throws JposException {
+    public synchronized int getState() throws JposException {
         logger.debug("getState()");
         int result = 0;
         try {
@@ -215,7 +230,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void claim(int timeout) throws JposException {
+    public synchronized void claim(int timeout) throws JposException {
         logger.debug("claim(" + String.valueOf(timeout) + ")");
         try {
             impl.claim(timeout);
@@ -225,7 +240,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("claim: OK");
     }
 
-    public void close() throws JposException {
+    public synchronized void close() throws JposException {
         logger.debug("close()");
         try {
             impl.close();
@@ -235,7 +250,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("close: OK");
     }
 
-    public void checkHealth(int level) throws JposException {
+    public synchronized void checkHealth(int level) throws JposException {
         logger.debug("checkHealth(" + String.valueOf(level) + ")");
         try {
             impl.checkHealth(level);
@@ -245,7 +260,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("checkHealth: OK");
     }
 
-    public void directIO(int command, int[] data, Object object)
+    public synchronized void directIO(int command, int[] data, Object object)
             throws JposException {
         logger.debug("directIO(" + getDirectIOCommandText(command) + ", "
                 + String.valueOf(data) + ", " + String.valueOf(object) + ")");
@@ -257,11 +272,11 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("directIO: OK");
     }
 
-    public void setJposEntry(JposEntry entry) {
+    public synchronized void setJposEntry(JposEntry entry) {
         jposEntry = entry;
     }
 
-    public void open(String logicalName, EventCallbacks cb)
+    public synchronized void open(String logicalName, EventCallbacks cb)
             throws JposException {
         logger.debug("open(" + String.valueOf(logicalName) + ")");
         try {
@@ -273,7 +288,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("open: OK");
     }
 
-    public void release() throws JposException {
+    public synchronized void release() throws JposException {
         logger.debug("release()");
         try {
             impl.release();
@@ -283,7 +298,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("release: OK");
     }
 
-    public boolean getCapAdditionalLines() throws JposException {
+    public synchronized boolean getCapAdditionalLines() throws JposException {
         logger.debug("getCapAdditionalLines()");
         boolean result = false;
         try {
@@ -295,7 +310,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapAmountAdjustment() throws JposException {
+    public synchronized boolean getCapAmountAdjustment() throws JposException {
         logger.debug("getCapAmountAdjustment()");
         boolean result = false;
         try {
@@ -307,7 +322,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapAmountNotPaid() throws JposException {
+    public synchronized boolean getCapAmountNotPaid() throws JposException {
         logger.debug("getCapAmountNotPaid()");
         boolean result = false;
         try {
@@ -319,7 +334,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapCheckTotal() throws JposException {
+    public synchronized boolean getCapCheckTotal() throws JposException {
         logger.debug("getCapCheckTotal()");
         boolean result = false;
         try {
@@ -331,7 +346,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapCoverSensor() throws JposException {
+    public synchronized boolean getCapCoverSensor() throws JposException {
         logger.debug("getCapCoverSensor()");
         boolean result = false;
         try {
@@ -343,7 +358,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapDoubleWidth() throws JposException {
+    public synchronized boolean getCapDoubleWidth() throws JposException {
         logger.debug("getCapDoubleWidth()");
         boolean result = false;
         try {
@@ -355,7 +370,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapDuplicateReceipt() throws JposException {
+    public synchronized boolean getCapDuplicateReceipt() throws JposException {
         logger.debug("getCapDuplicateReceipt()");
         boolean result = false;
         try {
@@ -367,7 +382,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setDuplicateReceipt(boolean duplicateReceipt)
+    public synchronized void setDuplicateReceipt(boolean duplicateReceipt)
             throws JposException {
         logger.debug("setDuplicateReceipt(" + String.valueOf(duplicateReceipt)
                 + ")");
@@ -379,7 +394,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setDuplicateReceipt: OK");
     }
 
-    public boolean getCapFixedOutput() throws JposException {
+    public synchronized boolean getCapFixedOutput() throws JposException {
         logger.debug("getCapFixedOutput()");
         boolean result = false;
         try {
@@ -391,7 +406,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapHasVatTable() throws JposException {
+    public synchronized boolean getCapHasVatTable() throws JposException {
         logger.debug("getCapHasVatTable()");
         boolean result = false;
         try {
@@ -403,7 +418,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapIndependentHeader() throws JposException {
+    public synchronized boolean getCapIndependentHeader() throws JposException {
         logger.debug("getCapIndependentHeader()");
         boolean result = false;
         try {
@@ -415,7 +430,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapItemList() throws JposException {
+    public synchronized boolean getCapItemList() throws JposException {
         logger.debug("getCapItemList()");
         boolean result = false;
         try {
@@ -427,7 +442,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapJrnEmptySensor() throws JposException {
+    public synchronized boolean getCapJrnEmptySensor() throws JposException {
         logger.debug("getCapJrnEmptySensor()");
         boolean result = false;
         try {
@@ -439,7 +454,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapJrnNearEndSensor() throws JposException {
+    public synchronized boolean getCapJrnNearEndSensor() throws JposException {
         logger.debug("getCapJrnNearEndSensor()");
         boolean result = false;
         try {
@@ -451,7 +466,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapJrnPresent() throws JposException {
+    public synchronized boolean getCapJrnPresent() throws JposException {
         logger.debug("getCapJrnPresent()");
         boolean result = false;
         try {
@@ -463,7 +478,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapNonFiscalMode() throws JposException {
+    public synchronized boolean getCapNonFiscalMode() throws JposException {
         logger.debug("getCapNonFiscalMode()");
         boolean result = false;
         try {
@@ -475,7 +490,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapOrderAdjustmentFirst() throws JposException {
+    public synchronized boolean getCapOrderAdjustmentFirst() throws JposException {
         logger.debug("getCapOrderAdjustmentFirst()");
         boolean result = false;
         try {
@@ -487,7 +502,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapPercentAdjustment() throws JposException {
+    public synchronized boolean getCapPercentAdjustment() throws JposException {
         logger.debug("getCapPercentAdjustment()");
         boolean result = false;
         try {
@@ -499,7 +514,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapPositiveAdjustment() throws JposException {
+    public synchronized boolean getCapPositiveAdjustment() throws JposException {
         logger.debug("getCapPositiveAdjustment()");
         boolean result = false;
         try {
@@ -511,7 +526,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapPowerLossReport() throws JposException {
+    public synchronized boolean getCapPowerLossReport() throws JposException {
         logger.debug("getCapPowerLossReport()");
         boolean result = false;
         try {
@@ -523,7 +538,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getCapPowerReporting() throws JposException {
+    public synchronized int getCapPowerReporting() throws JposException {
         logger.debug("getCapPowerReporting()");
         int result = 0;
         try {
@@ -535,7 +550,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapPredefinedPaymentLines() throws JposException {
+    public synchronized boolean getCapPredefinedPaymentLines() throws JposException {
         logger.debug("getCapPredefinedPaymentLines()");
         boolean result = false;
         try {
@@ -547,7 +562,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapReceiptNotPaid() throws JposException {
+    public synchronized boolean getCapReceiptNotPaid() throws JposException {
         logger.debug("getCapReceiptNotPaid()");
         boolean result = false;
         try {
@@ -559,7 +574,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapRecEmptySensor() throws JposException {
+    public synchronized boolean getCapRecEmptySensor() throws JposException {
         logger.debug("getCapRecEmptySensor()");
         boolean result = false;
         try {
@@ -571,7 +586,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapRecNearEndSensor() throws JposException {
+    public synchronized boolean getCapRecNearEndSensor() throws JposException {
         logger.debug("getCapRecNearEndSensor()");
         boolean result = false;
         try {
@@ -583,7 +598,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapRecPresent() throws JposException {
+    public synchronized boolean getCapRecPresent() throws JposException {
         logger.debug("getCapRecPresent()");
         boolean result = false;
         try {
@@ -595,7 +610,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapRemainingFiscalMemory() throws JposException {
+    public synchronized boolean getCapRemainingFiscalMemory() throws JposException {
         logger.debug("getCapRemainingFiscalMemory()");
         boolean result = false;
         try {
@@ -607,7 +622,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapReservedWord() throws JposException {
+    public synchronized boolean getCapReservedWord() throws JposException {
         logger.debug("getCapReservedWord()");
         boolean result = false;
         try {
@@ -619,7 +634,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapSetHeader() throws JposException {
+    public synchronized boolean getCapSetHeader() throws JposException {
         logger.debug("getCapSetHeader()");
         boolean result = false;
         try {
@@ -631,7 +646,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapSetPOSID() throws JposException {
+    public synchronized boolean getCapSetPOSID() throws JposException {
         logger.debug("getCapSetPOSID()");
         boolean result = false;
         try {
@@ -643,7 +658,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapSetStoreFiscalID() throws JposException {
+    public synchronized boolean getCapSetStoreFiscalID() throws JposException {
         logger.debug("getCapSetStoreFiscalID()");
         boolean result = false;
         try {
@@ -655,7 +670,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapSetTrailer() throws JposException {
+    public synchronized boolean getCapSetTrailer() throws JposException {
         logger.debug("getCapSetTrailer()");
         boolean result = false;
         try {
@@ -667,7 +682,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapSetVatTable() throws JposException {
+    public synchronized boolean getCapSetVatTable() throws JposException {
         logger.debug("getCapSetVatTable()");
         boolean result = false;
         try {
@@ -679,7 +694,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapSlpEmptySensor() throws JposException {
+    public synchronized boolean getCapSlpEmptySensor() throws JposException {
         logger.debug("getCapSlpEmptySensor()");
         boolean result = false;
         try {
@@ -691,7 +706,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapSlpFiscalDocument() throws JposException {
+    public synchronized boolean getCapSlpFiscalDocument() throws JposException {
         logger.debug("getCapSlpFiscalDocument()");
         boolean result = false;
         try {
@@ -703,7 +718,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapSlpFullSlip() throws JposException {
+    public synchronized boolean getCapSlpFullSlip() throws JposException {
         logger.debug("getCapSlpFullSlip()");
         boolean result = false;
         try {
@@ -715,7 +730,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapSlpNearEndSensor() throws JposException {
+    public synchronized boolean getCapSlpNearEndSensor() throws JposException {
         logger.debug("getCapSlpNearEndSensor()");
         boolean result = false;
         try {
@@ -727,7 +742,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapSlpPresent() throws JposException {
+    public synchronized boolean getCapSlpPresent() throws JposException {
         logger.debug("getCapSlpPresent()");
         boolean result = false;
         try {
@@ -739,7 +754,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapSlpValidation() throws JposException {
+    public synchronized boolean getCapSlpValidation() throws JposException {
         logger.debug("getCapSlpValidation()");
         boolean result = false;
         try {
@@ -751,7 +766,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapSubAmountAdjustment() throws JposException {
+    public synchronized boolean getCapSubAmountAdjustment() throws JposException {
         logger.debug("getCapSubAmountAdjustment()");
         boolean result = false;
         try {
@@ -763,7 +778,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapSubPercentAdjustment() throws JposException {
+    public synchronized boolean getCapSubPercentAdjustment() throws JposException {
         logger.debug("getCapSubPercentAdjustment()");
         boolean result = false;
         try {
@@ -775,7 +790,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapSubtotal() throws JposException {
+    public synchronized boolean getCapSubtotal() throws JposException {
         logger.debug("getCapSubtotal()");
         boolean result = false;
         try {
@@ -787,7 +802,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapTrainingMode() throws JposException {
+    public synchronized boolean getCapTrainingMode() throws JposException {
         logger.debug("getCapTrainingMode()");
         boolean result = false;
         try {
@@ -799,7 +814,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapValidateJournal() throws JposException {
+    public synchronized boolean getCapValidateJournal() throws JposException {
         logger.debug("getCapValidateJournal()");
         boolean result = false;
         try {
@@ -811,7 +826,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapXReport() throws JposException {
+    public synchronized boolean getCapXReport() throws JposException {
         logger.debug("getCapXReport()");
         boolean result = false;
         try {
@@ -823,7 +838,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getOutputID() throws JposException {
+    public synchronized int getOutputID() throws JposException {
         logger.debug("getOutputID()");
         int result = 0;
         try {
@@ -835,7 +850,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getPowerNotify() throws JposException {
+    public synchronized int getPowerNotify() throws JposException {
         logger.debug("getPowerNotify()");
         int result = 0;
         try {
@@ -847,7 +862,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setPowerNotify(int powerNotify) throws JposException {
+    public synchronized void setPowerNotify(int powerNotify) throws JposException {
         logger.debug("setPowerNotify(" + String.valueOf(powerNotify) + ")");
         try {
             impl.setPowerNotify(powerNotify);
@@ -857,7 +872,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setPowerNotify: OK");
     }
 
-    public int getPowerState() throws JposException {
+    public synchronized int getPowerState() throws JposException {
         logger.debug("getPowerState()");
         int result = 0;
         try {
@@ -869,7 +884,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getAmountDecimalPlace() throws JposException {
+    public synchronized int getAmountDecimalPlace() throws JposException {
         logger.debug("getAmountDecimalPlace()");
         int result = 0;
         try {
@@ -881,7 +896,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getAsyncMode() throws JposException {
+    public synchronized boolean getAsyncMode() throws JposException {
         logger.debug("getAsyncMode()");
         boolean result = false;
         try {
@@ -893,7 +908,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setAsyncMode(boolean asyncMode) throws JposException {
+    public synchronized void setAsyncMode(boolean asyncMode) throws JposException {
         logger.debug("setAsyncMode(" + String.valueOf(asyncMode) + ")");
         try {
             impl.setAsyncMode(asyncMode);
@@ -903,7 +918,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setAsyncMode: OK");
     }
 
-    public boolean getCheckTotal() throws JposException {
+    public synchronized boolean getCheckTotal() throws JposException {
         logger.debug("getCheckTotal()");
         boolean result = false;
         try {
@@ -915,7 +930,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setCheckTotal(boolean checkTotal) throws JposException {
+    public synchronized void setCheckTotal(boolean checkTotal) throws JposException {
         logger.debug("setCheckTotal(" + String.valueOf(checkTotal) + ")");
         try {
             impl.setCheckTotal(checkTotal);
@@ -925,7 +940,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setCheckTotal: OK");
     }
 
-    public int getCountryCode() throws JposException {
+    public synchronized int getCountryCode() throws JposException {
         logger.debug("getCountryCode()");
         int result = 0;
         try {
@@ -937,7 +952,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCoverOpen() throws JposException {
+    public synchronized boolean getCoverOpen() throws JposException {
         logger.debug("getCoverOpen()");
         boolean result = false;
         try {
@@ -949,7 +964,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getDayOpened() throws JposException {
+    public synchronized boolean getDayOpened() throws JposException {
         logger.debug("getDayOpened()");
         boolean result = false;
         try {
@@ -961,7 +976,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getDescriptionLength() throws JposException {
+    public synchronized int getDescriptionLength() throws JposException {
         logger.debug("getDescriptionLength()");
         int result = 0;
         try {
@@ -973,7 +988,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getDuplicateReceipt() throws JposException {
+    public synchronized boolean getDuplicateReceipt() throws JposException {
         logger.debug("getDuplicateReceipt()");
         boolean result = false;
         try {
@@ -985,7 +1000,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getErrorLevel() throws JposException {
+    public synchronized int getErrorLevel() throws JposException {
         logger.debug("getErrorLevel()");
         int result = 0;
         try {
@@ -997,7 +1012,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getErrorOutID() throws JposException {
+    public synchronized int getErrorOutID() throws JposException {
         logger.debug("getErrorOutID()");
         int result = 0;
         try {
@@ -1009,7 +1024,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getErrorState() throws JposException {
+    public synchronized int getErrorState() throws JposException {
         logger.debug("getErrorState()");
         int result = 0;
         try {
@@ -1021,7 +1036,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getErrorStation() throws JposException {
+    public synchronized int getErrorStation() throws JposException {
         logger.debug("getErrorStation()");
         int result = 0;
         try {
@@ -1033,7 +1048,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public String getErrorString() throws JposException {
+    public synchronized String getErrorString() throws JposException {
         logger.debug("getErrorString()");
         String result = "";
         try {
@@ -1045,7 +1060,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getFlagWhenIdle() throws JposException {
+    public synchronized boolean getFlagWhenIdle() throws JposException {
         logger.debug("getFlagWhenIdle()");
         boolean result = false;
         try {
@@ -1057,7 +1072,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setFlagWhenIdle(boolean flagWhenIdle) throws JposException {
+    public synchronized void setFlagWhenIdle(boolean flagWhenIdle) throws JposException {
         logger.debug("setFlagWhenIdle(" + String.valueOf(flagWhenIdle) + ")");
         try {
             impl.setFlagWhenIdle(flagWhenIdle);
@@ -1067,7 +1082,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setFlagWhenIdle: OK");
     }
 
-    public boolean getJrnEmpty() throws JposException {
+    public synchronized boolean getJrnEmpty() throws JposException {
         logger.debug("getJrnEmpty()");
         boolean result = false;
         try {
@@ -1079,7 +1094,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getJrnNearEnd() throws JposException {
+    public synchronized boolean getJrnNearEnd() throws JposException {
         logger.debug("getJrnNearEnd()");
         boolean result = false;
         try {
@@ -1091,7 +1106,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getMessageLength() throws JposException {
+    public synchronized int getMessageLength() throws JposException {
         logger.debug("getMessageLength()");
         int result = 0;
         try {
@@ -1103,7 +1118,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getNumHeaderLines() throws JposException {
+    public synchronized int getNumHeaderLines() throws JposException {
         logger.debug("getNumHeaderLines()");
         int result = 0;
         try {
@@ -1115,7 +1130,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getNumTrailerLines() throws JposException {
+    public synchronized int getNumTrailerLines() throws JposException {
         logger.debug("getNumTrailerLines()");
         int result = 0;
         try {
@@ -1127,7 +1142,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getNumVatRates() throws JposException {
+    public synchronized int getNumVatRates() throws JposException {
         logger.debug("getNumVatRates()");
         int result = 0;
         try {
@@ -1139,7 +1154,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public String getPredefinedPaymentLines() throws JposException {
+    public synchronized String getPredefinedPaymentLines() throws JposException {
         logger.debug("getPredefinedPaymentLines()");
         String result = "";
         try {
@@ -1151,7 +1166,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getPrinterState() throws JposException {
+    public synchronized int getPrinterState() throws JposException {
         logger.debug("getPrinterState()");
         int result = 0;
         try {
@@ -1163,7 +1178,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getQuantityDecimalPlaces() throws JposException {
+    public synchronized int getQuantityDecimalPlaces() throws JposException {
         logger.debug("getQuantityDecimalPlaces()");
         int result = 0;
         try {
@@ -1175,7 +1190,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getQuantityLength() throws JposException {
+    public synchronized int getQuantityLength() throws JposException {
         logger.debug("getQuantityLength()");
         int result = 0;
         try {
@@ -1187,7 +1202,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getRecEmpty() throws JposException {
+    public synchronized boolean getRecEmpty() throws JposException {
         logger.debug("getRecEmpty()");
         boolean result = false;
         try {
@@ -1199,7 +1214,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getRecNearEnd() throws JposException {
+    public synchronized boolean getRecNearEnd() throws JposException {
         logger.debug("getRecNearEnd()");
         boolean result = false;
         try {
@@ -1211,7 +1226,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getRemainingFiscalMemory() throws JposException {
+    public synchronized int getRemainingFiscalMemory() throws JposException {
         logger.debug("getRemainingFiscalMemory()");
         int result = 0;
         try {
@@ -1223,7 +1238,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public String getReservedWord() throws JposException {
+    public synchronized String getReservedWord() throws JposException {
         logger.debug("getReservedWord()");
         String result = "";
         try {
@@ -1235,7 +1250,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getSlpEmpty() throws JposException {
+    public synchronized boolean getSlpEmpty() throws JposException {
         logger.debug("getSlpEmpty()");
         boolean result = false;
         try {
@@ -1247,7 +1262,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getSlpNearEnd() throws JposException {
+    public synchronized boolean getSlpNearEnd() throws JposException {
         logger.debug("getSlpNearEnd()");
         boolean result = false;
         try {
@@ -1259,7 +1274,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getSlipSelection() throws JposException {
+    public synchronized int getSlipSelection() throws JposException {
         logger.debug("getSlipSelection()");
         int result = 0;
         try {
@@ -1271,7 +1286,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setSlipSelection(int slipSelection) throws JposException {
+    public synchronized void setSlipSelection(int slipSelection) throws JposException {
         logger.debug("setSlipSelection(" + String.valueOf(slipSelection) + ")");
         try {
             impl.setSlipSelection(slipSelection);
@@ -1281,7 +1296,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setSlipSelection: OK");
     }
 
-    public boolean getTrainingModeActive() throws JposException {
+    public synchronized boolean getTrainingModeActive() throws JposException {
         logger.debug("getTrainingModeActive()");
         boolean result = false;
         try {
@@ -1293,7 +1308,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void beginFiscalDocument(int documentAmount) throws JposException {
+    public synchronized void beginFiscalDocument(int documentAmount) throws JposException {
         logger.debug("beginFiscalDocument(" + String.valueOf(documentAmount)
                 + ")");
         try {
@@ -1304,17 +1319,17 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("beginFiscalDocument: OK");
     }
 
-    public void beginFiscalReceipt(boolean printHeader) throws JposException {
-        logger.debug("beginFiscalReceipt(" + String.valueOf(printHeader) + ")");
+    public synchronized void beginFiscalReceipt(boolean printHeader) throws JposException {
+        methodBegin(String.format("beginFiscalReceipt(%s)",  String.valueOf(printHeader)));
         try {
             impl.beginFiscalReceipt(printHeader);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("beginFiscalReceipt: OK");
+        methodEnd("beginFiscalReceipt: OK");
     }
 
-    public void beginFixedOutput(int station, int documentType)
+    public synchronized void beginFixedOutput(int station, int documentType)
             throws JposException {
         logger.debug("beginFixedOutput(" + String.valueOf(station) + ", "
                 + String.valueOf(documentType) + ")");
@@ -1326,7 +1341,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("beginFixedOutput: OK");
     }
 
-    public void beginInsertion(int timeout) throws JposException {
+    public synchronized void beginInsertion(int timeout) throws JposException {
         logger.debug("beginInsertion(" + String.valueOf(timeout) + ")");
         try {
             impl.beginInsertion(timeout);
@@ -1336,7 +1351,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("beginInsertion: OK");
     }
 
-    public void beginItemList(int vatID) throws JposException {
+    public synchronized void beginItemList(int vatID) throws JposException {
         logger.debug("beginItemList(" + String.valueOf(vatID) + ")");
         try {
             impl.beginItemList(vatID);
@@ -1346,7 +1361,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("beginItemList: OK");
     }
 
-    public void beginNonFiscal() throws JposException {
+    public synchronized void beginNonFiscal() throws JposException {
         logger.debug("beginNonFiscal()");
         try {
             impl.beginNonFiscal();
@@ -1356,7 +1371,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("beginNonFiscal: OK");
     }
 
-    public void beginRemoval(int timeout) throws JposException {
+    public synchronized void beginRemoval(int timeout) throws JposException {
         logger.debug("beginRemoval(" + String.valueOf(timeout) + ")");
         try {
             impl.beginRemoval(timeout);
@@ -1366,7 +1381,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("beginRemoval: OK");
     }
 
-    public void beginTraining() throws JposException {
+    public synchronized void beginTraining() throws JposException {
         logger.debug("beginTraining()");
         try {
             impl.beginTraining();
@@ -1376,7 +1391,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("beginTraining: OK");
     }
 
-    public void clearError() throws JposException {
+    public synchronized void clearError() throws JposException {
         logger.debug("clearError()");
         try {
             impl.clearError();
@@ -1386,7 +1401,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("clearError: OK");
     }
 
-    public void clearOutput() throws JposException {
+    public synchronized void clearOutput() throws JposException {
         logger.debug("clearOutput()");
         try {
             impl.clearOutput();
@@ -1396,7 +1411,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("clearOutput: OK");
     }
 
-    public void endFiscalDocument() throws JposException {
+    public synchronized void endFiscalDocument() throws JposException {
         logger.debug("endFiscalDocument()");
         try {
             impl.endFiscalDocument();
@@ -1406,7 +1421,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("endFiscalDocument: OK");
     }
 
-    public void endFiscalReceipt(boolean printHeader) throws JposException {
+    public synchronized void endFiscalReceipt(boolean printHeader) throws JposException {
         logger.debug("endFiscalReceipt(" + String.valueOf(printHeader) + ")");
         try {
             impl.endFiscalReceipt(printHeader);
@@ -1416,7 +1431,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("endFiscalReceipt: OK");
     }
 
-    public void endFixedOutput() throws JposException {
+    public synchronized void endFixedOutput() throws JposException {
         logger.debug("endFixedOutput()");
         try {
             impl.endFixedOutput();
@@ -1426,7 +1441,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("endFixedOutput: OK");
     }
 
-    public void endInsertion() throws JposException {
+    public synchronized void endInsertion() throws JposException {
         logger.debug("endInsertion()");
         try {
             impl.endInsertion();
@@ -1436,7 +1451,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("endInsertion: OK");
     }
 
-    public void endItemList() throws JposException {
+    public synchronized void endItemList() throws JposException {
         logger.debug("endItemList()");
         try {
             impl.endItemList();
@@ -1446,7 +1461,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("endItemList: OK");
     }
 
-    public void endNonFiscal() throws JposException {
+    public synchronized void endNonFiscal() throws JposException {
         logger.debug("endNonFiscal()");
         try {
             impl.endNonFiscal();
@@ -1456,7 +1471,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("endNonFiscal: OK");
     }
 
-    public void endRemoval() throws JposException {
+    public synchronized void endRemoval() throws JposException {
         logger.debug("endRemoval()");
         try {
             impl.endRemoval();
@@ -1466,7 +1481,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("endRemoval: OK");
     }
 
-    public void endTraining() throws JposException {
+    public synchronized void endTraining() throws JposException {
         logger.debug("endTraining()");
         try {
             impl.endTraining();
@@ -1476,7 +1491,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("endTraining: OK");
     }
 
-    public void getData(int dataItem, int[] optArgs, String[] data)
+    public synchronized void getData(int dataItem, int[] optArgs, String[] data)
             throws JposException {
         logger.debug("getData(" + String.valueOf(dataItem) + ", "
                 + String.valueOf(optArgs) + ", " + String.valueOf(data) + ")");
@@ -1488,7 +1503,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("getData: OK");
     }
 
-    public void getDate(String[] Date) throws JposException {
+    public synchronized void getDate(String[] Date) throws JposException {
         logger.debug("getDate(" + String.valueOf(Date) + ")");
         try {
             impl.getDate(Date);
@@ -1498,7 +1513,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("getDate: OK");
     }
 
-    public void getTotalizer(int vatID, int optArgs, String[] data)
+    public synchronized void getTotalizer(int vatID, int optArgs, String[] data)
             throws JposException {
         logger.debug("getTotalizer(" + String.valueOf(vatID) + ", "
                 + String.valueOf(optArgs) + ", " + String.valueOf(data) + ")");
@@ -1510,7 +1525,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("getTotalizer: OK");
     }
 
-    public void getVatEntry(int vatID, int optArgs, int[] vatRate)
+    public synchronized void getVatEntry(int vatID, int optArgs, int[] vatRate)
             throws JposException {
         logger.debug("getVatEntry(" + String.valueOf(vatID) + ", "
                 + String.valueOf(optArgs) + ", " + String.valueOf(vatRate)
@@ -1523,7 +1538,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("getVatEntry: OK");
     }
 
-    public void printDuplicateReceipt() throws JposException {
+    public synchronized void printDuplicateReceipt() throws JposException {
         logger.debug("printDuplicateReceipt()");
         try {
             impl.printDuplicateReceipt();
@@ -1533,7 +1548,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printDuplicateReceipt: OK");
     }
 
-    public void printFiscalDocumentLine(String documentLine)
+    public synchronized void printFiscalDocumentLine(String documentLine)
             throws JposException {
         logger.debug("printFiscalDocumentLine(" + String.valueOf(documentLine)
                 + ")");
@@ -1545,7 +1560,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printFiscalDocumentLine: OK");
     }
 
-    public void printFixedOutput(int documentType, int lineNumber, String data)
+    public synchronized void printFixedOutput(int documentType, int lineNumber, String data)
             throws JposException {
         logger.debug("printFixedOutput(" + String.valueOf(documentType) + ", "
                 + String.valueOf(lineNumber) + ", " + String.valueOf(data)
@@ -1558,7 +1573,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printFixedOutput: OK");
     }
 
-    public void printNormal(int station, String data) throws JposException {
+    public synchronized void printNormal(int station, String data) throws JposException {
         logger.debug("printNormal(" + String.valueOf(station) + ", "
                 + String.valueOf(data) + ")");
         try {
@@ -1569,7 +1584,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printNormal: OK");
     }
 
-    public void printPeriodicTotalsReport(String date1, String date2)
+    public synchronized void printPeriodicTotalsReport(String date1, String date2)
             throws JposException {
         logger.debug("printPeriodicTotalsReport(" + String.valueOf(date1)
                 + ", " + String.valueOf(date2) + ")");
@@ -1581,7 +1596,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printPeriodicTotalsReport: OK");
     }
 
-    public void printPowerLossReport() throws JposException {
+    public synchronized void printPowerLossReport() throws JposException {
         logger.debug("printPowerLossReport()");
         try {
             impl.printPowerLossReport();
@@ -1591,7 +1606,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printPowerLossReport: OK");
     }
 
-    public void printRecItem(String description, long price, int quantity,
+    public synchronized void printRecItem(String description, long price, int quantity,
             int vatInfo, long unitPrice, String unitName) throws JposException {
         logger.debug("printRecItem(" + String.valueOf(description) + ", "
                 + String.valueOf(price) + ", " + String.valueOf(quantity)
@@ -1607,7 +1622,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecItem: OK");
     }
 
-    public void printRecItemAdjustment(int adjustmentType, String description,
+    public synchronized void printRecItemAdjustment(int adjustmentType, String description,
             long amount, int vatInfo) throws JposException {
         logger.debug("printRecItemAdjustment(" + String.valueOf(adjustmentType)
                 + ", " + String.valueOf(description) + ", "
@@ -1621,7 +1636,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecItemAdjustment: OK");
     }
 
-    public void printRecMessage(String message) throws JposException {
+    public synchronized void printRecMessage(String message) throws JposException {
         logger.debug("printRecMessage(" + String.valueOf(message) + ")");
         try {
             impl.printRecMessage(message);
@@ -1631,7 +1646,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecMessage: OK");
     }
 
-    public void printRecNotPaid(String description, long amount)
+    public synchronized void printRecNotPaid(String description, long amount)
             throws JposException {
         logger.debug("printRecNotPaid(" + String.valueOf(description) + ", "
                 + String.valueOf(amount) + ")");
@@ -1643,7 +1658,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecNotPaid: OK");
     }
 
-    public void printRecRefund(String description, long amount, int vatInfo)
+    public synchronized void printRecRefund(String description, long amount, int vatInfo)
             throws JposException {
         logger.debug("printRecRefund(" + String.valueOf(description) + ", "
                 + String.valueOf(amount) + ", " + String.valueOf(vatInfo) + ")");
@@ -1655,7 +1670,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecRefund: OK");
     }
 
-    public void printRecItemRefund(String description, long amount,
+    public synchronized void printRecItemRefund(String description, long amount,
             int quantity, int vatInfo, long unitAmount, String unitName)
             throws JposException {
         logger.debug("printRecItemRefund(" + String.valueOf(description) + ", "
@@ -1672,7 +1687,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecItemRefund: OK");
     }
 
-    public void printRecItemRefundVoid(String description, long amount,
+    public synchronized void printRecItemRefundVoid(String description, long amount,
             int quantity, int vatInfo, long unitAmount, String unitName)
             throws JposException {
         logger.debug("printRecItemRefundVoid(" + String.valueOf(description)
@@ -1689,7 +1704,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecItemRefundVoid: OK");
     }
 
-    public void printRecItemAdjustmentVoid(int adjustmentType,
+    public synchronized void printRecItemAdjustmentVoid(int adjustmentType,
             String description, long amount, int vatInfo) throws JposException {
         logger.debug("printRecItemAdjustmentVoid("
                 + String.valueOf(adjustmentType) + ", "
@@ -1704,7 +1719,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecItemAdjustmentVoid: OK");
     }
 
-    public void printRecSubtotal(long amount) throws JposException {
+    public synchronized void printRecSubtotal(long amount) throws JposException {
         logger.debug("printRecSubtotal(" + String.valueOf(amount) + ")");
         try {
             impl.printRecSubtotal(amount);
@@ -1714,7 +1729,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecSubtotal: OK");
     }
 
-    public void printRecSubtotalAdjustment(int adjustmentType,
+    public synchronized void printRecSubtotalAdjustment(int adjustmentType,
             String description, long amount) throws JposException {
         logger.debug("printRecSubtotalAdjustment("
                 + String.valueOf(adjustmentType) + ", "
@@ -1728,7 +1743,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecSubtotalAdjustment: OK");
     }
 
-    public void printRecTotal(long total, long payment, String description)
+    public synchronized void printRecTotal(long total, long payment, String description)
             throws JposException {
         logger.debug("printRecTotal(" + String.valueOf(total) + ", "
                 + String.valueOf(payment) + ", " + String.valueOf(description)
@@ -1741,7 +1756,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecTotal: OK");
     }
 
-    public void printRecVoid(String description) throws JposException {
+    public synchronized void printRecVoid(String description) throws JposException {
         logger.debug("printRecVoid(" + String.valueOf(description) + ")");
         try {
             impl.printRecVoid(description);
@@ -1751,7 +1766,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecVoid: OK");
     }
 
-    public void printRecVoidItem(String description, long amount, int quantity,
+    public synchronized void printRecVoidItem(String description, long amount, int quantity,
             int adjustmentType, long adjustment, int vatInfo)
             throws JposException {
         logger.debug("printRecVoidItem(" + String.valueOf(description) + ", "
@@ -1768,7 +1783,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecVoidItem: OK");
     }
 
-    public void printReport(int reportType, String startNum, String endNum)
+    public synchronized void printReport(int reportType, String startNum, String endNum)
             throws JposException {
         logger.debug("printReport(" + String.valueOf(reportType) + ", "
                 + String.valueOf(startNum) + ", " + String.valueOf(endNum)
@@ -1781,7 +1796,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printReport: OK");
     }
 
-    public void printXReport() throws JposException {
+    public synchronized void printXReport() throws JposException {
         logger.debug("printXReport()");
         try {
             impl.printXReport();
@@ -1791,7 +1806,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printXReport: OK");
     }
 
-    public void printZReport() throws JposException {
+    public synchronized void printZReport() throws JposException {
         logger.debug("printZReport()");
         try {
             impl.printZReport();
@@ -1801,17 +1816,17 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printZReport: OK");
     }
 
-    public void resetPrinter() throws JposException {
-        logger.debug("resetPrinter()");
+    public synchronized void resetPrinter() throws JposException {
+        methodBegin("resetPrinter()");
         try {
             impl.resetPrinter();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("resetPrinter: OK");
+        methodEnd("resetPrinter: OK");
     }
 
-    public void setDate(String date) throws JposException {
+    public synchronized void setDate(String date) throws JposException {
         logger.debug("setDate(" + String.valueOf(date) + ")");
         try {
             impl.setDate(date);
@@ -1821,7 +1836,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setDate: OK");
     }
 
-    public void setHeaderLine(int lineNumber, String text, boolean doubleWidth)
+    public synchronized void setHeaderLine(int lineNumber, String text, boolean doubleWidth)
             throws JposException {
         logger.debug("setHeaderLine(" + String.valueOf(lineNumber) + ", \""
                 + String.valueOf(text) + "\", " + String.valueOf(doubleWidth)
@@ -1834,7 +1849,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setHeaderLine: OK");
     }
 
-    public void setPOSID(String POSID, String cashierID) throws JposException {
+    public synchronized void setPOSID(String POSID, String cashierID) throws JposException {
         logger.debug("setPOSID(" + String.valueOf(POSID) + ", "
                 + String.valueOf(cashierID) + ")");
         try {
@@ -1845,7 +1860,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setPOSID: OK");
     }
 
-    public void setStoreFiscalID(String ID) throws JposException {
+    public synchronized void setStoreFiscalID(String ID) throws JposException {
         logger.debug("setStoreFiscalID(" + String.valueOf(ID) + ")");
         try {
             impl.setStoreFiscalID(ID);
@@ -1855,7 +1870,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setStoreFiscalID: OK");
     }
 
-    public void setTrailerLine(int lineNumber, String text, boolean doubleWidth)
+    public synchronized void setTrailerLine(int lineNumber, String text, boolean doubleWidth)
             throws JposException {
         logger.debug("setTrailerLine(" + String.valueOf(lineNumber) + ", \""
                 + String.valueOf(text) + "\", " + String.valueOf(doubleWidth)
@@ -1868,7 +1883,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setTrailerLine: OK");
     }
 
-    public void setVatTable() throws JposException {
+    public synchronized void setVatTable() throws JposException {
         logger.debug("setVatTable()");
         try {
             impl.setVatTable();
@@ -1878,7 +1893,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setVatTable: OK");
     }
 
-    public void setVatValue(int vatID, String vatValue) throws JposException {
+    public synchronized void setVatValue(int vatID, String vatValue) throws JposException {
         logger.debug("setVatValue(" + String.valueOf(vatID) + ", "
                 + String.valueOf(vatValue) + ")");
         try {
@@ -1889,7 +1904,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setVatValue: OK");
     }
 
-    public void verifyItem(String itemName, int vatID) throws JposException {
+    public synchronized void verifyItem(String itemName, int vatID) throws JposException {
         logger.debug("verifyItem(" + String.valueOf(itemName) + ", "
                 + String.valueOf(vatID) + ")");
         try {
@@ -1900,7 +1915,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("verifyItem: OK");
     }
 
-    public boolean getCapAdditionalHeader() throws JposException {
+    public synchronized boolean getCapAdditionalHeader() throws JposException {
         logger.debug("getCapAdditionalHeader()");
         boolean result = false;
         try {
@@ -1912,7 +1927,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapAdditionalTrailer() throws JposException {
+    public synchronized boolean getCapAdditionalTrailer() throws JposException {
         logger.debug("getCapAdditionalTrailer()");
         boolean result = false;
         try {
@@ -1924,7 +1939,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapChangeDue() throws JposException {
+    public synchronized boolean getCapChangeDue() throws JposException {
         logger.debug("getCapChangeDue()");
         boolean result = false;
         try {
@@ -1936,7 +1951,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapEmptyReceiptIsVoidable() throws JposException {
+    public synchronized boolean getCapEmptyReceiptIsVoidable() throws JposException {
         logger.debug("getCapEmptyReceiptIsVoidable()");
         boolean result = false;
         try {
@@ -1948,7 +1963,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapFiscalReceiptStation() throws JposException {
+    public synchronized boolean getCapFiscalReceiptStation() throws JposException {
         logger.debug("getCapFiscalReceiptStation()");
         boolean result = false;
         try {
@@ -1960,7 +1975,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapFiscalReceiptType() throws JposException {
+    public synchronized boolean getCapFiscalReceiptType() throws JposException {
         logger.debug("getCapFiscalReceiptType()");
         boolean result = false;
         try {
@@ -1972,7 +1987,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapMultiContractor() throws JposException {
+    public synchronized boolean getCapMultiContractor() throws JposException {
         logger.debug("getCapMultiContractor()");
         boolean result = false;
         try {
@@ -1984,7 +1999,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapOnlyVoidLastItem() throws JposException {
+    public synchronized boolean getCapOnlyVoidLastItem() throws JposException {
         logger.debug("getCapOnlyVoidLastItem()");
         boolean result = false;
         try {
@@ -1996,7 +2011,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapPackageAdjustment() throws JposException {
+    public synchronized boolean getCapPackageAdjustment() throws JposException {
         logger.debug("getCapPackageAdjustment()");
         boolean result = false;
         try {
@@ -2008,7 +2023,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapPostPreLine() throws JposException {
+    public synchronized boolean getCapPostPreLine() throws JposException {
         logger.debug("getCapPostPreLine()");
         boolean result = false;
         try {
@@ -2020,7 +2035,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapSetCurrency() throws JposException {
+    public synchronized boolean getCapSetCurrency() throws JposException {
         logger.debug("getCapSetCurrency()");
         boolean result = false;
         try {
@@ -2032,7 +2047,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapTotalizerType() throws JposException {
+    public synchronized boolean getCapTotalizerType() throws JposException {
         logger.debug("getCapTotalizerType()");
         boolean result = false;
         try {
@@ -2044,7 +2059,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public int getActualCurrency() throws JposException {
+    public synchronized int getActualCurrency() throws JposException {
         logger.debug("getActualCurrency()");
         int result = 0;
         try {
@@ -2056,7 +2071,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public String getAdditionalHeader() throws JposException {
+    public synchronized String getAdditionalHeader() throws JposException {
         logger.debug("getAdditionalHeader()");
         String result = "";
         try {
@@ -2068,7 +2083,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setAdditionalHeader(String additionalHeader)
+    public synchronized void setAdditionalHeader(String additionalHeader)
             throws JposException {
         logger.debug("setAdditionalHeader(" + String.valueOf(additionalHeader)
                 + ")");
@@ -2080,7 +2095,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setAdditionalHeader: OK");
     }
 
-    public String getAdditionalTrailer() throws JposException {
+    public synchronized String getAdditionalTrailer() throws JposException {
         logger.debug("getAdditionalTrailer()");
         String result = "";
         try {
@@ -2092,7 +2107,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setAdditionalTrailer(String additionalTrailer)
+    public synchronized void setAdditionalTrailer(String additionalTrailer)
             throws JposException {
         logger.debug("setAdditionalTrailer("
                 + String.valueOf(additionalTrailer) + ")");
@@ -2104,7 +2119,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setAdditionalTrailer: OK");
     }
 
-    public String getChangeDue() throws JposException {
+    public synchronized String getChangeDue() throws JposException {
         logger.debug("getChangeDue()");
         String result = "";
         try {
@@ -2116,7 +2131,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setChangeDue(String changeDue) throws JposException {
+    public synchronized void setChangeDue(String changeDue) throws JposException {
         logger.debug("setChangeDue(" + String.valueOf(changeDue) + ")");
         try {
             impl.setChangeDue(changeDue);
@@ -2126,7 +2141,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setChangeDue: OK");
     }
 
-    public int getContractorId() throws JposException {
+    public synchronized int getContractorId() throws JposException {
         logger.debug("getContractorId()");
         int result = 0;
         try {
@@ -2138,7 +2153,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setContractorId(int contractorId) throws JposException {
+    public synchronized void setContractorId(int contractorId) throws JposException {
         logger.debug("setContractorId(" + String.valueOf(contractorId) + ")");
         try {
             impl.setContractorId(contractorId);
@@ -2148,7 +2163,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setContractorId: OK");
     }
 
-    public int getDateType() throws JposException {
+    public synchronized int getDateType() throws JposException {
         logger.debug("getDateType()");
         int result = 0;
         try {
@@ -2160,7 +2175,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setDateType(int dateType) throws JposException {
+    public synchronized void setDateType(int dateType) throws JposException {
         logger.debug("setDateType(" + String.valueOf(dateType) + ")");
         try {
             impl.setDateType(dateType);
@@ -2170,7 +2185,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setDateType: OK");
     }
 
-    public int getFiscalReceiptStation() throws JposException {
+    public synchronized int getFiscalReceiptStation() throws JposException {
         logger.debug("getFiscalReceiptStation()");
         int result = 0;
         try {
@@ -2182,7 +2197,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setFiscalReceiptStation(int fiscalReceiptStation)
+    public synchronized void setFiscalReceiptStation(int fiscalReceiptStation)
             throws JposException {
         logger.debug("setFiscalReceiptStation("
                 + String.valueOf(fiscalReceiptStation) + ")");
@@ -2194,7 +2209,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setFiscalReceiptStation: OK");
     }
 
-    public int getFiscalReceiptType() throws JposException {
+    public synchronized int getFiscalReceiptType() throws JposException {
         logger.debug("getFiscalReceiptType()");
         int result = 0;
         try {
@@ -2206,7 +2221,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setFiscalReceiptType(int fiscalReceiptType)
+    public synchronized void setFiscalReceiptType(int fiscalReceiptType)
             throws JposException {
         logger.debug("setFiscalReceiptType("
                 + String.valueOf(fiscalReceiptType) + ")");
@@ -2218,7 +2233,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setFiscalReceiptType: OK");
     }
 
-    public int getMessageType() throws JposException {
+    public synchronized int getMessageType() throws JposException {
         logger.debug("getMessageType()");
         int result = 0;
         try {
@@ -2230,7 +2245,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setMessageType(int messageType) throws JposException {
+    public synchronized void setMessageType(int messageType) throws JposException {
         logger.debug("setMessageType(" + String.valueOf(messageType) + ")");
         try {
             impl.setMessageType(messageType);
@@ -2240,7 +2255,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setMessageType: OK");
     }
 
-    public String getPostLine() throws JposException {
+    public synchronized String getPostLine() throws JposException {
         logger.debug("getPostLine()");
         String result = "";
         try {
@@ -2252,7 +2267,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setPostLine(String postLine) throws JposException {
+    public synchronized void setPostLine(String postLine) throws JposException {
         logger.debug("setPostLine(" + String.valueOf(postLine) + ")");
         try {
             impl.setPostLine(postLine);
@@ -2262,7 +2277,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setPostLine: OK");
     }
 
-    public String getPreLine() throws JposException {
+    public synchronized String getPreLine() throws JposException {
         logger.debug("getPreLine()");
         String result = "";
         try {
@@ -2274,7 +2289,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setPreLine(String preLine) throws JposException {
+    public synchronized void setPreLine(String preLine) throws JposException {
         logger.debug("setPreLine(" + String.valueOf(preLine) + ")");
         try {
             impl.setPreLine(preLine);
@@ -2284,7 +2299,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setPreLine: OK");
     }
 
-    public int getTotalizerType() throws JposException {
+    public synchronized int getTotalizerType() throws JposException {
         logger.debug("getTotalizerType()");
         int result = 0;
         try {
@@ -2296,7 +2311,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void setTotalizerType(int totalizerType) throws JposException {
+    public synchronized void setTotalizerType(int totalizerType) throws JposException {
         logger.debug("setTotalizerType(" + String.valueOf(totalizerType) + ")");
         try {
             impl.setTotalizerType(totalizerType);
@@ -2306,7 +2321,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setTotalizerType: OK");
     }
 
-    public void setCurrency(int newCurrency) throws JposException {
+    public synchronized void setCurrency(int newCurrency) throws JposException {
         logger.debug("setCurrency(" + String.valueOf(newCurrency) + ")");
         try {
             impl.setCurrency(newCurrency);
@@ -2316,7 +2331,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("setCurrency: OK");
     }
 
-    public void printRecCash(long amount) throws JposException {
+    public synchronized void printRecCash(long amount) throws JposException {
         logger.debug("printRecCash(" + String.valueOf(amount) + ")");
         try {
             impl.printRecCash(amount);
@@ -2326,7 +2341,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecCash: OK");
     }
 
-    public void printRecItemFuel(String description, long price, int quantity,
+    public synchronized void printRecItemFuel(String description, long price, int quantity,
             int vatInfo, long unitPrice, String unitName, long specialTax,
             String specialTaxName) throws JposException {
         logger.debug("printRecItemFuel(" + String.valueOf(description) + ", "
@@ -2344,7 +2359,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecItemFuel: OK");
     }
 
-    public void printRecItemFuelVoid(String description, long price,
+    public synchronized void printRecItemFuelVoid(String description, long price,
             int vatInfo, long specialTax) throws JposException {
         logger.debug("printRecItemFuelVoid(" + String.valueOf(description)
                 + ", " + String.valueOf(price) + ", " + String.valueOf(vatInfo)
@@ -2357,7 +2372,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecItemFuelVoid: OK");
     }
 
-    public void printRecPackageAdjustment(int adjustmentType,
+    public synchronized void printRecPackageAdjustment(int adjustmentType,
             String description, String vatAdjustment) throws JposException {
         logger.debug("printRecPackageAdjustment("
                 + String.valueOf(adjustmentType) + ", "
@@ -2372,7 +2387,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecPackageAdjustment: OK");
     }
 
-    public void printRecPackageAdjustVoid(int adjustmentType,
+    public synchronized void printRecPackageAdjustVoid(int adjustmentType,
             String vatAdjustment) throws JposException {
         logger.debug("printRecPackageAdjustVoid("
                 + String.valueOf(adjustmentType) + ", "
@@ -2385,7 +2400,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecPackageAdjustVoid: OK");
     }
 
-    public void printRecRefundVoid(String description, long amount, int vatInfo)
+    public synchronized void printRecRefundVoid(String description, long amount, int vatInfo)
             throws JposException {
         logger.debug("printRecRefundVoid(" + String.valueOf(description) + ", "
                 + String.valueOf(amount) + ", " + String.valueOf(vatInfo) + ")");
@@ -2397,7 +2412,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecRefundVoid: OK");
     }
 
-    public void printRecSubtotalAdjustVoid(int adjustmentType, long amount)
+    public synchronized void printRecSubtotalAdjustVoid(int adjustmentType, long amount)
             throws JposException {
         logger.debug("printRecSubtotalAdjustVoid("
                 + String.valueOf(adjustmentType) + ", "
@@ -2410,7 +2425,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecSubtotalAdjustVoid: OK");
     }
 
-    public void printRecTaxID(String taxID) throws JposException {
+    public synchronized void printRecTaxID(String taxID) throws JposException {
         logger.debug("printRecTaxID(" + String.valueOf(taxID) + ")");
         try {
             impl.printRecTaxID(taxID);
@@ -2420,7 +2435,7 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("printRecTaxID: OK");
     }
 
-    public int getAmountDecimalPlaces() throws JposException {
+    public synchronized int getAmountDecimalPlaces() throws JposException {
         logger.debug("getAmountDecimalPlaces()");
         int result = 0;
         try {
@@ -2432,7 +2447,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapStatisticsReporting() throws JposException {
+    public synchronized boolean getCapStatisticsReporting() throws JposException {
         logger.debug("getCapStatisticsReporting()");
         boolean result = false;
         try {
@@ -2444,7 +2459,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public boolean getCapUpdateStatistics() throws JposException {
+    public synchronized boolean getCapUpdateStatistics() throws JposException {
         logger.debug("getCapUpdateStatistics()");
         boolean result = false;
         try {
@@ -2456,7 +2471,7 @@ public class FiscalPrinterService extends DeviceService implements
         return result;
     }
 
-    public void resetStatistics(String statisticsBuffer) throws JposException {
+    public synchronized void resetStatistics(String statisticsBuffer) throws JposException {
         logger.debug("resetStatistics(" + String.valueOf(statisticsBuffer)
                 + ")");
         try {
@@ -2467,36 +2482,32 @@ public class FiscalPrinterService extends DeviceService implements
         logger.debug("resetStatistics: OK");
     }
 
-    public void retrieveStatistics(String[] statisticsBuffer)
+    public synchronized void retrieveStatistics(String[] statisticsBuffer)
             throws JposException {
-        logger.debug("retrieveStatistics(" + String.valueOf(statisticsBuffer)
-                + ")");
+        methodBegin(String.format("retrieveStatistics(%s)", String.valueOf(statisticsBuffer)));
         try {
             impl.retrieveStatistics(statisticsBuffer);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("retrieveStatistics: OK");
+        methodEnd("retrieveStatistics: OK");
     }
 
-    public void updateStatistics(String statisticsBuffer) throws JposException {
-        logger.debug("updateStatistics(" + String.valueOf(statisticsBuffer)
-                + ")");
+    public synchronized void updateStatistics(String statisticsBuffer) throws JposException {
+        methodBegin(String.format("updateStatistics(%s)", statisticsBuffer));
         try {
             impl.updateStatistics(statisticsBuffer);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("updateStatistics: OK");
+        methodEnd("updateStatistics: OK");
     }
 
-    public void printRecItemVoid(String description, long price, int quantity,
-            int vatInfo, long unitPrice, String unitName) throws JposException {
-        logger.debug("printRecItemVoid(" + String.valueOf(description) + ", "
-                + String.valueOf(price) + ", " + String.valueOf(quantity)
-                + ", " + String.valueOf(vatInfo) + ", "
-                + String.valueOf(unitPrice) + ", " + String.valueOf(unitName)
-                + ")");
+    public synchronized void printRecItemVoid(String description, long price, int quantity,
+            int vatInfo, long unitPrice, String unitName) throws JposException
+    {
+        methodBegin(String.format("printRecItemVoid(\"%s\", %d, %d, %d, %d, \"%s\")",
+                description, price, quantity, vatInfo, unitPrice, unitName));
         try {
             impl.printRecItemVoid(description, price, quantity, vatInfo,
                     unitPrice, unitName);
@@ -2504,23 +2515,22 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecItemVoid: OK");
+        methodEnd("printRecItemVoid: OK");
     }
 
-    public boolean getCapPositiveSubtotalAdjustment() throws JposException {
-        logger.debug("getCapPositiveSubtotalAdjustment()");
+    public synchronized boolean getCapPositiveSubtotalAdjustment() throws JposException {
+        methodBegin("getCapPositiveSubtotalAdjustment()");
         boolean result = false;
         try {
             result = impl.getCapPositiveSubtotalAdjustment();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapPositiveSubtotalAdjustment = "
-                + String.valueOf(result));
+        methodEnd(String.format("getCapPositiveSubtotalAdjustment = ", result));
         return result;
     }
 
-    public String getDirectIOCommandText(int command) {
+    public synchronized String getDirectIOCommandText(int command) {
         HashMap<Integer, String> map = new HashMap<Integer, String>();
         map.put(SmFptrConst.SMFPTR_DIO_COMMAND,
                 "SMFPTR_DIO_COMMAND");

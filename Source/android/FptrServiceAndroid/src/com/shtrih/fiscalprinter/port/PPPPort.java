@@ -10,15 +10,16 @@ import com.shtrih.NativeResource;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.util.CircularBuffer;
 import com.shtrih.util.CompositeLogger;
-import com.shtrih.util.Hex;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.StaticContext;
 import com.shtrih.util.Time;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
 
 import ru.shtrih_m.kktnetd.PPPConfig;
 
@@ -45,6 +46,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     private boolean firstCommand = true;
     private String localSocketName = null;
     private Thread rxThread = null;
+    private Exception rxException = null;
     private CircularBuffer rxBuffer = new CircularBuffer(1024);
     private static CompositeLogger logger = CompositeLogger.getLogger(PPPPort.class);
 
@@ -55,7 +57,6 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         this.params = params;
         this.printerPort = printerPort;
         readTimeout = params.getByteTimeout();
-        printerPort.setPortEvents(this);
     }
 
     public boolean isOpened() {
@@ -74,17 +75,23 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         printerPort.setPortName(params.portName);
         printerPort.setTimeout(params.byteTimeout);
         printerPort.open(timeout);
+        printerPort.setPortEvents(this);
         startPPPThread();
         openLocalSocket(timeout);
         dispatchThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                bluetoothProc();
+                dispatchProc();
             }
         });
         dispatchThread.start();
         openSocket();
         opened = true;
+
+        if (events != null) {
+            events.onConnect();
+        }
+
         logger.debug("open: OK");
     }
 
@@ -99,6 +106,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         socket.setSoTimeout(connectTimeout);
         socket.connect(new InetSocketAddress("127.0.0.1", 7778));
         socket.setSoTimeout(0);
+        rxException = null;
         rxThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -159,13 +167,18 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         }
 
         logger.debug("close");
+        opened = false;
         stopDispatchThread();
         stopPPPThread();
         closeLocalSocket();
         closeSocket();
+        printerPort.setPortEvents(null);
         printerPort.close();
-        opened = false;
         firstCommand = true;
+        if (events != null) {
+            events.onDisconnect();
+        }
+
         logger.debug("close: OK");
     }
 
@@ -192,12 +205,14 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     public void stopDispatchThread() {
         if (dispatchThread == null) return;
 
+        logger.debug("stopDispatchThread");
         dispatchThread.interrupt();
         try {
             dispatchThread.join();
         } catch (InterruptedException e) {
         }
         dispatchThread = null;
+        logger.debug("stopDispatchThread: OK");
     }
 
     public void closeSocket()
@@ -213,6 +228,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
+        socket = null;
 
         if (rxThread != null) {
             rxThread.interrupt();
@@ -237,27 +253,25 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
 
         }
         catch(Exception e){
+            rxException = e;
             logger.error("rxProc: " + e.getMessage());
         }
     }
 
-    public void bluetoothProc()
+    public void dispatchProc()
     {
+        logger.debug("dispatchProc.start");
         try {
             while (true)
             {
                 Thread.sleep(0);
-                try {
-                    dispatchPackets();
-                } catch (Exception e) {
-                    logger.error("bluetoothProc: " + e.getMessage());
-                }
+                dispatchPackets();
             }
+        } catch (InterruptedException e) {
+        } catch (Exception e) {
+            logger.error("dispatchProc: ", e);
         }
-        catch(InterruptedException e)
-        {
-            logger.error("bluetoothProc interrupted");
-        }
+        logger.debug("dispatchProc.end");
     }
 
     public void dispatchPackets() throws Exception
@@ -269,16 +283,24 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         count = printerPort.available();
         if (count > 0) {
             data = printerPort.read(count);
-            localSocket.getOutputStream().write(data, 0, count);
-            localSocket.getOutputStream().flush();
+            //logger.debug("<- PPP " + Hex.toHex(data));
+            OutputStream os = localSocket.getOutputStream();
+            if (os != null) {
+                os.write(data, 0, count);
+                os.flush();
+            }
         }
         // read localSocket
-        count = localSocket.getInputStream().available();
-        if (count > 0) {
-            data = new byte[count];
-            count = localSocket.getInputStream().read(data);
+        InputStream is = localSocket.getInputStream();
+        if (is != null) {
+            count = is.available();
             if (count > 0) {
-                printerPort.write(data);
+                data = new byte[count];
+                count = is.read(data);
+                if (count > 0) {
+                    //logger.debug("-> PPP " + Hex.toHex(data));
+                    printerPort.write(data);
+                }
             }
         }
     }
@@ -336,6 +358,8 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     public byte[] readBytes(int len) throws Exception{
         open();
 
+        //logger.debug("readBytes(" + len + ", " + readTimeout + ")");
+
         firstCommand = false;
         //logger.debug("readBytes: " + len);
         if (len <= 0)
@@ -343,10 +367,13 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
             throw new Exception("Data length <= 0");
         }
 
-        // wait for data available with timaout
+        // wait for data available with timeout
         long startTime = System.currentTimeMillis();
         for (;;)
         {
+            if (rxException != null){
+                throw rxException;
+            }
             if (rxBuffer.available() >= len) break;
             Time.delay(1);
             long currentTime = System.currentTimeMillis();
@@ -365,16 +392,15 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         open();
         for (int i = 0; i < 2; i++) {
             try {
-                //openSocket();
+                openSocket();
                 rxBuffer.clear();
                 socket.getOutputStream().write(b);
                 socket.getOutputStream().flush();
                 return;
-            } catch (Exception e)
+            } catch (SocketException e)
             {
-
-                logger.error(e.getMessage());
-                //closeSocket();
+                logger.error("write: " + e.getMessage(),  e);
+                closeSocket();
                 if (i == 1) {
                     throw e;
                 }
@@ -396,7 +422,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     public void setTimeout(int timeout) throws Exception {
         readTimeout = timeout;
         if (firstCommand){
-            readTimeout = timeout + 20000; // !!!
+            readTimeout = timeout + 100000;
         }
         logger.debug("setTimeout(" + readTimeout + ")");
     }
@@ -438,9 +464,6 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     {
         try {
             //open();
-            if (events != null) {
-                events.onConnect();
-            }
         }
         catch(Exception e){
             logger.error("onConnect: " + e.getMessage());
@@ -448,9 +471,6 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     }
 
     public void onDisconnect(){
-        if (events != null) {
-            events.onDisconnect();
-        }
         close();
     }
 }

@@ -66,6 +66,7 @@ public class BluetoothLEPort implements PrinterPort2 {
     private boolean scanSingle = false;
     List<BluetoothDevice> scanDevices = new Vector<>();
     HashMap<Object, StatusOperation> operations = new HashMap<>();
+    private final List<byte[]> txqueue = new Vector<>();
     private IPortEvents events = null;
     private boolean portOpened = false;
     private BluetoothLeScanner scanner;
@@ -133,7 +134,25 @@ public class BluetoothLEPort implements PrinterPort2 {
                 characteristic, int status)
         {
             loggerDebug("BluetoothGattCallback.onCharacteristicWrite(status: " + status);
-            completeOperation(characteristic, status);
+            //completeOperation(characteristic, status);
+            if (status != BluetoothGatt.GATT_SUCCESS){
+                logger.error("onCharacteristicWrite: status != BluetoothGatt.GATT_SUCCESS, status = " + status);
+            }
+
+            if (status == BluetoothGatt.GATT_SUCCESS)
+            {
+                byte[] data = null;
+                synchronized(txqueue)
+                {
+                    if (txqueue.size() > 0) {
+                        data = txqueue.remove(0);
+                    }
+                }
+                if (data != null) {
+                    characteristic.setValue(data);
+                    writeCharacteristic(characteristic);
+                }
+            }
         }
 
         public void onCharacteristicChanged (BluetoothGatt gatt, BluetoothGattCharacteristic
@@ -200,11 +219,7 @@ public class BluetoothLEPort implements PrinterPort2 {
     private void gattDisconnected()
     {
         loggerDebug("gattDisconnected");
-        if (events != null) {
-            events.onDisconnect();
-        }
         disconnect();
-        setState(ConnectState.FailedToConnectGatt);
         startReconnect();
     }
 
@@ -233,7 +248,6 @@ public class BluetoothLEPort implements PrinterPort2 {
             scanner.stopScan(scanOpenedDeviceCallback);
 
             device = result.getDevice();
-            rxBuffer.clear();
             setState(ConnectState.ConnectGatt);
             Context context = StaticContext.getContext();
             bluetoothGatt = device.connectGatt(context, true, new BluetoothGattCallbackImpl());
@@ -292,7 +306,7 @@ public class BluetoothLEPort implements PrinterPort2 {
             if (characteristic == null) return;
 
             if (characteristic.getUuid().equals(TX_CHAR_UUID)) {
-                //loggerDebug("Received: " + Hex.toHex(characteristic.getValue()));
+                loggerDebug("Received: " + Hex.toHex(characteristic.getValue()));
                 rxBuffer.write(characteristic.getValue());
             }
         }
@@ -531,10 +545,10 @@ public class BluetoothLEPort implements PrinterPort2 {
     public void close()
     {
         loggerDebug("close");
+        portOpened = false;
         disconnect();
         unregisterReceiver();
 
-        portOpened = false;
         loggerDebug("close: OK");
     }
 
@@ -556,6 +570,7 @@ public class BluetoothLEPort implements PrinterPort2 {
             events.onDisconnect();
         }
         rxBuffer.clear();
+        txqueue.clear();
         logger.debug("disconnect: OK");
     }
 
@@ -625,7 +640,21 @@ public class BluetoothLEPort implements PrinterPort2 {
             }
             byte[] blockData = new byte[dataSize];
             System.arraycopy(b, offset, blockData, 0, dataSize);
-            writeData(blockData);
+            synchronized(txqueue) {
+                txqueue.add(blockData);
+            }
+        }
+        if (isOpened())
+        {
+            byte[] data = null;
+            synchronized (txqueue) {
+                if (txqueue.size() > 0) {
+                    data = txqueue.remove(0);
+                }
+            }
+            if (data != null) {
+                writeData(data);
+            }
         }
         loggerDebug("write: OK");
     }
@@ -633,25 +662,47 @@ public class BluetoothLEPort implements PrinterPort2 {
     private void writeData(byte[] blockData) throws Exception
     {
         loggerDebug("writeData: " + Hex.toHex(blockData));
-        checkPortOpened();
-        BluetoothGattService uartService = bluetoothGatt.getService(UART_SERVICE_UUID);
-        if (uartService == null) {
-            throw new IOException("UartService not found!");
+        if (isOpened()) {
+            BluetoothGattService uartService = bluetoothGatt.getService(UART_SERVICE_UUID);
+            if (uartService == null) {
+                throw new IOException("UartService not found!");
+            }
+            BluetoothGattCharacteristic RxChar = uartService.getCharacteristic(RX_CHAR_UUID);
+            if (RxChar == null) {
+                throw new IOException("Rx charateristic not found!");
+            }
+            RxChar.setValue(blockData);
+            writeCharacteristic(RxChar);
+            /*
+            if (!status) {
+                throw new IOException("Failed bluetoothGatt.writeCharacteristic");
+            }
+            StatusOperation operation = new StatusOperation(RxChar, "Write");
+            operations.put(RxChar, operation);
+            operation.wait(writeTimeout);
+            operation.checkStatus();
+            operations.remove(operation);
+             */
         }
-        BluetoothGattCharacteristic RxChar = uartService.getCharacteristic(RX_CHAR_UUID);
-        if (RxChar == null) {
-            throw new IOException("Rx charateristic not found!");
+        //txBuffer.write(blockData);
+    }
+
+    public void writeCharacteristic(BluetoothGattCharacteristic characteristic)
+    {
+        int maxCount = 10;
+        try {
+            for (int i=0;i<maxCount;i++) {
+                boolean status = bluetoothGatt.writeCharacteristic(characteristic);
+                if (status) break;
+                if (!status) {
+                    String.format("Failed bluetoothGatt.writeCharacteristic, %d", i + 1);
+                    Thread.sleep(100);
+                }
+            }
         }
-        RxChar.setValue(blockData);
-        StatusOperation operation = new StatusOperation(RxChar, "Write");
-        operations.put(RxChar, operation);
-        boolean status = bluetoothGatt.writeCharacteristic(RxChar);
-        if (!status) {
-            throw new IOException("Failed bluetoothGatt.writeCharacteristic");
+        catch(Exception e){
+            logger.error(e.getMessage());
         }
-        operation.wait(writeTimeout);
-        operation.checkStatus();
-        operations.remove(operation);
     }
 
     private class StatusOperation
@@ -679,7 +730,7 @@ public class BluetoothLEPort implements PrinterPort2 {
                 checkPortState();
                 long currentTime = System.currentTimeMillis();
                 if ((currentTime - startTime) > timeout) {
-                    throw new IOException(name + "failed with timeout");
+                    throw new IOException(name + " failed with timeout");
                 }
                 Time.delay(1);
             }
@@ -688,7 +739,7 @@ public class BluetoothLEPort implements PrinterPort2 {
         public void checkStatus() throws Exception
         {
             if (status != BluetoothGatt.GATT_SUCCESS){
-                throw new IOException(name + "failed with status " + status);
+                throw new IOException(name + " failed with status " + status);
             }
         }
 
@@ -837,12 +888,10 @@ public class BluetoothLEPort implements PrinterPort2 {
     // PrinterPort2
 
     public int available() throws Exception{
-        openPort();
         return rxBuffer.available();
     }
 
     public byte[] read(int len) throws Exception{
-        openPort();
         return rxBuffer.read(len);
     }
 

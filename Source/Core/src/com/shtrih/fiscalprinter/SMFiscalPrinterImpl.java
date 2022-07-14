@@ -242,11 +242,15 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 }
                 device.send(command);
             } catch (Exception e) {
-                port.close();
+                //port.close(); !!!
                 throw new DeviceException(PrinterConst.SMFPTR_E_NOCONNECTION, e.getMessage());
             }
 
-            if (command.isSucceeded()) {
+            if (command.isSucceeded())
+            {
+                if (command.getCode() == 0xFF45){
+                    Thread.sleep(3000);
+                }
                 commandSucceeded(command);
             } else {
                 if (capLastErrorText) {
@@ -5225,6 +5229,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public synchronized void sendFDODocuments() throws Exception
     {
+        if (!capFDOSupport()) {
+            logger.debug("FDO commands not supported, capFDOSupport=false");
+            return;
+        }
+
         while (true) {
             byte[] data = fsReadBlockData();
             if (data.length == 0) {

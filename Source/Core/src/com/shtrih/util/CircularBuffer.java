@@ -49,8 +49,8 @@ public class CircularBuffer {
 
     public synchronized byte[] read(int len)
     {
-        if (!(available() >= len)){
-            return null;
+        if (len > available()){
+            len = available();
         }
         byte[] out = new byte[len];
         for (int i=0;i<len;i++){

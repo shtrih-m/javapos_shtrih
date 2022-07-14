@@ -37,13 +37,15 @@ public class JposExceptionHandler implements JposConst, FiscalPrinterConst,
     }
 
     public static void handleException(Throwable e) throws JposException {
+        handleException(e, "");
+    }
 
+    public static void handleException(Throwable e, String suffix) throws JposException {
         JposException jposException = getJposException(e);
-        logger.error("JposException. " + "ErrorCode: "
-                + String.valueOf(jposException.getErrorCode()) + ", "
-                + "ErrorCodeExtended: "
-                + String.valueOf(jposException.getErrorCodeExtended()) + ", "
-                + "'" + jposException.getMessage() + "'");
+        logger.error(String.format("JposException. ErrorCode: %d, ErrorCodeExtended: %d, \"%s\"" + suffix,
+                jposException.getErrorCode(),
+                jposException.getErrorCodeExtended(),
+                jposException.getMessage()));
 
         throw jposException;
     }
