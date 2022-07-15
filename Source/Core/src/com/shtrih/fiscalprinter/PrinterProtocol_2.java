@@ -21,7 +21,7 @@ public class PrinterProtocol_2 implements PrinterProtocol {
     private final Frame frame = new Frame();
     byte[] rx = {};
     private int byteTimeout = 100;
-    private int maxRepeatCount = 1;
+    private int maxRepeatCount = 3;
     private final boolean isReliable;
     private static CompositeLogger logger = CompositeLogger.getLogger(PrinterProtocol_2.class);
 
@@ -46,13 +46,11 @@ public class PrinterProtocol_2 implements PrinterProtocol {
     public void send(PrinterCommand command) throws Exception
     {
         int repeatCount = maxRepeatCount;
-        if (isReliable){
-            repeatCount = 1;
-        }
         synchronized (port.getSyncObject())
         {
             for (int i = 0; i < repeatCount; i++)
             {
+
                 if (i > 0){
                     logger.debug(String.format("Retry %d/%d", i ,repeatCount));
                 }
@@ -98,7 +96,6 @@ public class PrinterProtocol_2 implements PrinterProtocol {
             logger.error(e.getMessage());
             isSynchronized = false;
             return false;
-            //throw e;
         }
     }
 

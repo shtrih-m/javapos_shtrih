@@ -45,9 +45,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     private boolean opened = false;
     private boolean firstCommand = true;
     private String localSocketName = null;
-    private Thread rxThread = null;
-    private Exception rxException = null;
-    private CircularBuffer rxBuffer = new CircularBuffer(1024);
+    private long lastTimeInMillis = 0;
     private static CompositeLogger logger = CompositeLogger.getLogger(PPPPort.class);
 
     private final FptrParameters params;
@@ -97,24 +95,25 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
 
     public void openSocket() throws Exception
     {
-        if (socket != null){
-            return;
+        if ((lastTimeInMillis != 0) && ((Calendar.getInstance().getTimeInMillis()-lastTimeInMillis) > 60000))
+        {
+            logger.debug("Reopen connection after 60 seconds of inacticity");
+            closeSocket();
         }
-        logger.debug("openSocket()");
-        socket = new Socket();
-        socket.setTcpNoDelay(true);
-        socket.setSoTimeout(connectTimeout);
-        socket.connect(new InetSocketAddress("127.0.0.1", 7778));
-        socket.setSoTimeout(0);
-        rxException = null;
-        rxThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                rxProc();
-            }
-        });
-        rxThread.start();
-        logger.debug("openSocket: OK");
+
+        if (socket == null){
+            socket = new Socket();
+            socket.setTcpNoDelay(true);
+        }
+        if (!socket.isConnected())
+        {
+            logger.debug("socket.connect");
+            socket.setSoTimeout(connectTimeout);
+            socket.connect(new InetSocketAddress("127.0.0.1", 7778));
+            socket.setSoTimeout(readTimeout);
+            lastTimeInMillis = Calendar.getInstance().getTimeInMillis();
+            logger.debug("socket.connect: OK");
+        }
     }
 
     public void startPPPThread() throws Exception
@@ -144,6 +143,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         if (localSocket != null) {
             return;
         }
+        logger.debug("openLocalSocket");
         localSocket = new LocalSocket();
         long time = Calendar.getInstance().getTimeInMillis() + timeout;
         for (;;) {
@@ -158,6 +158,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
                 Thread.sleep(100);
             }
         }
+        logger.debug("openLocalSocket: OK");
     }
 
     public synchronized void close()
@@ -229,33 +230,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
             logger.error(e.getMessage());
         }
         socket = null;
-
-        if (rxThread != null) {
-            rxThread.interrupt();
-            try {
-                rxThread.join();
-            } catch (InterruptedException e) {
-            }
-            rxThread = null;
-        }
-    }
-
-    public void rxProc()
-    {
-        try {
-                while (true)
-                {
-                    Thread.sleep(0);
-                    int b = socket.getInputStream().read();
-                    if (b < 0) break;
-                    rxBuffer.write(b);
-                }
-
-        }
-        catch(Exception e){
-            rxException = e;
-            logger.error("rxProc: " + e.getMessage());
-        }
+        logger.debug("closeSocket: OK");
     }
 
     public void dispatchProc()
@@ -326,8 +301,8 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         return byteToInt(readBytes(1)[0]);
     }
 
-/*
-    public byte[] readBytes2(int len) throws Exception {
+    public byte[] readBytes(int len) throws Exception
+    {
         open();
 
         long time = Calendar.getInstance().getTimeInMillis() + readTimeout;
@@ -337,53 +312,24 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         int offset = 0;
         while (len > 0)
         {
+            openSocket();
+
             int count = Math.min(len, socket.getInputStream().available());
             if (count > 0) {
                 count = socket.getInputStream().read(data, offset, count);
                 if (count == -1) {
+                    closeSocket();
                     noConnectionError();
                 }
                 len -= count;
                 offset += count;
             }
-            if (Calendar.getInstance().getTimeInMillis() > time){
+            lastTimeInMillis = Calendar.getInstance().getTimeInMillis();
+            if (lastTimeInMillis > time){
                 noConnectionError();
             }
             Thread.sleep(0);
         }
-        return data;
-    }
-*/
-
-    public byte[] readBytes(int len) throws Exception{
-        open();
-
-        //logger.debug("readBytes(" + len + ", " + readTimeout + ")");
-
-        firstCommand = false;
-        //logger.debug("readBytes: " + len);
-        if (len <= 0)
-        {
-            throw new Exception("Data length <= 0");
-        }
-
-        // wait for data available with timeout
-        long startTime = System.currentTimeMillis();
-        for (;;)
-        {
-            if (rxException != null){
-                throw rxException;
-            }
-            if (rxBuffer.available() >= len) break;
-            Time.delay(1);
-            long currentTime = System.currentTimeMillis();
-            if ((currentTime - startTime) > readTimeout)
-            {
-                throw new IOException("Read timed out");
-            }
-        }
-        byte[] data = rxBuffer.read(len);
-        //logger.debug("read(" + Hex.toHex(data) + ")");
         return data;
     }
 
@@ -393,7 +339,6 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         for (int i = 0; i < 2; i++) {
             try {
                 openSocket();
-                rxBuffer.clear();
                 socket.getOutputStream().write(b);
                 socket.getOutputStream().flush();
                 return;
@@ -423,6 +368,9 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         readTimeout = timeout;
         if (firstCommand){
             readTimeout = timeout + 100000;
+        }
+        if (isOpened()){
+            socket.setSoTimeout(readTimeout);
         }
         logger.debug("setTimeout(" + readTimeout + ")");
     }
@@ -462,12 +410,6 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
 
     public void onConnect()
     {
-        try {
-            //open();
-        }
-        catch(Exception e){
-            logger.error("onConnect: " + e.getMessage());
-        }
     }
 
     public void onDisconnect(){
