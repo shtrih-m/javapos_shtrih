@@ -735,4 +735,7 @@ public interface SMFiscalPrinter {
     public void setPrintMode(int value);
     
     public void sendFDODocuments() throws Exception;
+    
+    public void writeTLVItems() throws Exception;
+    
 }

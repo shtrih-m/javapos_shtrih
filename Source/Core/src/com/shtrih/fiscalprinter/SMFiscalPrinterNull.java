@@ -1315,4 +1315,6 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void sendFDODocuments() throws Exception{
     }
     
+    public void writeTLVItems() throws Exception{
+    }
 }

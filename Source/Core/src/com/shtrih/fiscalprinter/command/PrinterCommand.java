@@ -10,8 +10,7 @@ import static com.shtrih.fiscalprinter.SMFiscalPrinterImpl.charsetName;
 
 public abstract class PrinterCommand {
 
-    public final static int DefaultTimeout = 10000;
-    private int timeout = DefaultTimeout;
+    private int timeout = 10000;
     protected int resultCode = 0;
     private final String charsetName = "Cp1251";
     private boolean repeatEnabled = false;
@@ -129,46 +128,32 @@ public abstract class PrinterCommand {
 
         switch (code)
         {
-            case 0x10:
-            case 0x11:
-                return 1000;
-            case 0x16:
-                return 60000;
-            case 0xB2:
-                return 20000;
-            case 0xB4:
-                return 40000;
-            case 0xB5:
-                return 40000;
-            case 0xB6:
-                return 150000;
-            case 0xB7:
-                return 150000;
-            case 0xB8:
-                return 100000;
-            case 0xB9:
-                return 100000;
-            case 0xBA:
-                return 40000;
-            case 0x40:
-                return 30000;
-            case 0x41:
-                return 65000;
-            case 0x61:
-                return 20000;
-            case 0x62:
-                return 30000;
-            case 0x66:
-                return 35000;
-            case 0x67:
-                return 20000;
-            case 0xE0:
-                return 120000;
+            case 0x10: return 3000;
+            case 0x11: return 3000;
+            case 0x16: return 60000;
+            case 0xB2: return 20000;
+            case 0xB4: return 40000;
+            case 0xB5: return 40000;
+            case 0xB6: return 150000;
+            case 0xB7: return 150000;
+            case 0xB8: return 100000;
+            case 0xB9: return 100000;
+            case 0xBA: return 40000;
+            case 0x40: return 30000;
+            case 0x41: return 65000;
+            case 0x61: return 20000;
+            case 0x62: return 30000;
+            case 0x66: return 35000;
+            case 0x67: return 20000;
+            case 0xE0: return 120000;
+            case 0x26: return 5000;
+            case 0xFF61: return 40000;
+            case 0xFF67: return 40000;
             default:
-                return DefaultTimeout;
+                return 30000;
         }
     }
-
+    
     public boolean getIsRepeatable() {
         return false;
     }

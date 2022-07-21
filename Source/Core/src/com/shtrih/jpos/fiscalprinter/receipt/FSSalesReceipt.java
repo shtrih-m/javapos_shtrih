@@ -236,6 +236,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             }
         }
         getDevice().fsWriteTLV(baos.toByteArray());
+        getDevice().writeTLVItems();
     }
     
     public void printTLVItems() throws Exception {

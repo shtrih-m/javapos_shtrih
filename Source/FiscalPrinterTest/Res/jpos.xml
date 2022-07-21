@@ -294,7 +294,7 @@
 		<prop name="jsonUpdateEnabled" type="String" value="0"/>
 		<prop name="openReceiptOnBegin" type="String" value="1"/>
 		<!-- Режим записи тегов. 0 - в том месте, где был вызван, 1 - до позиций чека, 2 - после всех позиций чека -->
-		<prop name="writeTagMode" type="String" value="0"/>
+		<prop name="writeTagMode" type="String" value="1"/>
 		<!-- Печать описани тэгов средствами драйвера -->
 		<prop name="FSPrintTags" type="String" value="1"/>
 		<!-- Место печати тэгов в документе, если включена опция FSPrintTags:
