@@ -95,6 +95,27 @@ public class PrinterModelParameters implements PrinterConst {
     private final boolean capFiscalStorage;
     // 44 - Поддержка EoD ("Ethernet" over Driver)
     private final boolean capEoD;
+    // 45 - Поддержка автопечати тегов
+    private final boolean capTagAutoprint;
+    // 46 - Поддержка двумерных штрихкодов в футере
+    private final boolean cap2DBarcodeInFooter;
+    // 47 - Поддержка ФН 1.1
+    private final boolean capFFD11;
+    // 48 - Поддержка чеков коррекции как обычных чеков
+    private final boolean capCorrectionReceipt;
+    // 49 - Поддержка в команде 6BH отсутствие параметров или передача четырех байтного расширенного кода ошибки
+    private final boolean cap6BExtended;
+    // 50 - Поддержка расширенных ответов на команды формирования ФД
+    private final boolean capFDExtendedAnswer;
+    // 51 - Требуется авторизация на команды формирования ФД
+    private final boolean capFDAuthRequired;
+    // 52 - Поддержка "чистой" передачи поверх надежного протокола
+    private final boolean capProtocol1_1;
+    //53 - Поддержка режима блокирования в рамках сессии поверх надежного протокола (автоматическая отмена незавершенного документа)
+    private final boolean capAutoCancelReceipt;
+    // 54 - Поддержка четырех байтного расширенного кода ошибки в ответе, если код ошибки ненулевой
+    private final boolean cap4BytesErrorCode;
+    
 
 
     // Ширина печати шрифтом 1(1 байт)
@@ -203,6 +224,16 @@ public class PrinterModelParameters implements PrinterConst {
         capGraphics512 = BitUtils.testBit(flags, 42);
         capFiscalStorage = BitUtils.testBit(flags, 43);
         capEoD = BitUtils.testBit(flags, 44);
+        capTagAutoprint = BitUtils.testBit(flags, 45);
+        cap2DBarcodeInFooter = BitUtils.testBit(flags, 46);
+        capFFD11 = BitUtils.testBit(flags, 47);
+        capCorrectionReceipt = BitUtils.testBit(flags, 48);
+        cap6BExtended = BitUtils.testBit(flags, 49);
+        capFDExtendedAnswer = BitUtils.testBit(flags, 50);
+        capFDAuthRequired = BitUtils.testBit(flags, 51);
+        capProtocol1_1 = BitUtils.testBit(flags, 52);
+        capAutoCancelReceipt = BitUtils.testBit(flags, 53);
+        cap4BytesErrorCode = BitUtils.testBit(flags, 54);
 
         font1Width = in.readByte();
         font2Width = in.readByte();
@@ -250,7 +281,7 @@ public class PrinterModelParameters implements PrinterConst {
     }
 
     public boolean isGraphics512Supported() {
-        return capGraphics512;
+        return isCapGraphics512();
     }
 
     public boolean isCapEoD() {
@@ -678,15 +709,15 @@ public class PrinterModelParameters implements PrinterConst {
      * @return Номер таблицы параметров ОФД (1 байт) 0 - не поддерживается, 1…255
      */
     public int getFDOTableNumber() {
-        return fdoTableNumber;
+        return getFdoTableNumber();
     }
 
     public boolean capFDOTableNumber() {
-        return fdoTableNumber > 0;
+        return getFdoTableNumber() > 0;
     }
 
     public boolean capFsTableNumber() {
-        return fsTableNumber > 0;
+        return getFsTableNumber() > 0;
     }
 
     /**
@@ -700,24 +731,122 @@ public class PrinterModelParameters implements PrinterConst {
      * @return Номер таблицы версии ФФД (1 байт) 0 - не поддерживается, 1…255
      */
     public int getFFDTableNumber() {
-        return ffdTableNumber;
+        return getFfdTableNumber();
     }
 
     /**
      * @return Номер поля в таблице версии ФФД (1 байт) 0 - не поддерживается, 1…255
      */
     public int getFFDColumnNumber() {
-        return ffdColumnNumber;
+        return getFfdColumnNumber();
     }
 
     public boolean capFFDTableAndColumnNumber() {
-        return ffdTableNumber > 0 && ffdColumnNumber > 0;
+        return getFfdTableNumber() > 0 && getFfdColumnNumber() > 0;
     }
 
     /**
      * 43 - Поддержка ФН
      */
     public boolean getCapFiscalStorage() {
+        return isCapFiscalStorage();
+    }
+
+    /**
+     * @return the capFiscalStorage
+     */
+    public boolean isCapFiscalStorage() {
         return capFiscalStorage;
+    }
+
+    /**
+     * @return the capTagAutoprint
+     */
+    public boolean isCapTagAutoprint() {
+        return capTagAutoprint;
+    }
+
+    /**
+     * @return the cap2DBarcodeInFooter
+     */
+    public boolean isCap2DBarcodeInFooter() {
+        return cap2DBarcodeInFooter;
+    }
+
+    /**
+     * @return the capFFD11
+     */
+    public boolean isCapFFD11() {
+        return capFFD11;
+    }
+
+    /**
+     * @return the capCorrectionReceipt
+     */
+    public boolean isCapCorrectionReceipt() {
+        return capCorrectionReceipt;
+    }
+
+    /**
+     * @return the cap6BExtended
+     */
+    public boolean isCap6BExtended() {
+        return cap6BExtended;
+    }
+
+    /**
+     * @return the capFDExtendedAnswer
+     */
+    public boolean isCapFDExtendedAnswer() {
+        return capFDExtendedAnswer;
+    }
+
+    /**
+     * @return the capFDAuthRequired
+     */
+    public boolean isCapFDAuthRequired() {
+        return capFDAuthRequired;
+    }
+
+    /**
+     * @return the capProtocol1_1
+     */
+    public boolean isCapProtocol1_1() {
+        return capProtocol1_1;
+    }
+
+    /**
+     * @return the capAutoCancelReceipt
+     */
+    public boolean isCapAutoCancelReceipt() {
+        return capAutoCancelReceipt;
+    }
+
+    /**
+     * @return the cap4BytesErrorCode
+     */
+    public boolean isCap4BytesErrorCode() {
+        return cap4BytesErrorCode;
+    }
+
+    /**
+     * @return the fdoTableNumber
+     */
+    public int getFdoTableNumber() {
+        return fdoTableNumber;
+    }
+
+    /**
+     * @return the ffdTableNumber
+     */
+    public int getFfdTableNumber() {
+        return ffdTableNumber;
+    }
+
+    /**
+     * @return the ffdColumnNumber
+     */
+    public int getFfdColumnNumber() {
+        return ffdColumnNumber;
     }
 }

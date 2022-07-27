@@ -248,12 +248,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
             if (command.isSucceeded())
             {
-                /*
                 // After receipt close
                 if (command.getCode() == 0xFF45){
                     Thread.sleep(3000);
                 }
-                 */
                 commandSucceeded(command);
             } else {
                 if (capLastErrorText) {
@@ -1554,7 +1552,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         interrupted = false;
     }
 
-    public void writeTLVItems() throws Exception {
+    public void writeTLVItems() throws Exception 
+    {
+        if (tlvItems.size() == 0) return;
+        
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         for (int i = 0; i < tlvItems.size(); i++) {
             baos.write(tlvItems.get(i));
@@ -2434,8 +2435,16 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     /**
      * Устройство Кассовое ядро
      */
-    public boolean isCashCore() {
-        return deviceMetrics.isCashCore();
+    public boolean isCashCore() 
+    {
+        boolean cashCore;
+        if (capModelParameters()){
+            cashCore = modelParameters.isCapCashCore();
+        } else
+        {
+            cashCore = deviceMetrics.isCashCore();
+        }
+        return cashCore;
     }
 
     /**
@@ -4913,7 +4922,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
 
         if ((getFDVersion() == PrinterConst.FS_FORMAT_FFD_1_2)
-                || (params.markingType == SmFptrConst.MARKING_TYPE_PRINTER)) {
+                || (params.markingType == SmFptrConst.MARKING_TYPE_PRINTER)) 
+        {
             FSBindMC command = new FSBindMC();
             command.data = data;
             return fsBindMC(command);
@@ -5100,8 +5110,25 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public int getFDVersion() throws Exception {
-        if (fdVersion == null) {
-            fdVersion = Integer.parseInt(readTable(17, 1, 17));
+        if (fdVersion == null) 
+        {
+            try{
+                if (isCashCore())
+                {
+                    PrinterTable printerTable = getTable(10);
+                    if (printerTable.getFieldCount() >= 38){
+                        fdVersion = Integer.parseInt(readTable(10, 1, 38));
+                    } else{
+                        fdVersion = Integer.parseInt(readTable(10, 1, 29));
+                    }
+                } else{
+                    fdVersion = Integer.parseInt(readTable(17, 1, 17));
+                }
+            } catch(Exception e)
+            {
+                fdVersion = PrinterConst.FS_FORMAT_FFD_1_2;
+                logger.error("getFDVersion, " + e.getMessage());
+            }
         }
         return fdVersion;
     }

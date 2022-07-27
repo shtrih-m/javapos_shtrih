@@ -1052,7 +1052,8 @@ class PrinterTest implements FiscalPrinterConst {
             //printCorrectionReceipt2(1);
             //printCorrectionReceipt2(3);
             //printCorrectionReceipts();
-            printReceiptWithTag1262();
+            //printReceiptWithTag1262();
+            printFiscalReceiptWithTag2108();
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -5166,14 +5167,27 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
     
-    /*
-    writer = new TLVWriter();
-    writer.addTag(1262, "001");
-    writer.addTag(1263, "TEST");
-    writer.addTag(1264, "28374682347");
-    writer.addTag(1265, "02928347");
-    printer.fsWriteOperationTag(1260, writer.getBytes());
-    */
+    public void printFiscalReceiptWithTag2108() {
+        try {
+            String code = "010464007801637221AgqLybqxM9MbR\u001d" + 
+                "91FFD0\u001d92dGVzdL31KAYL0YT6592MjmW7a2HkF3IY+muf2pVSKdQ=";
+            
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(FPTR_RT_SALES);
+            printer.beginFiscalReceipt(true);
+            
+            printer.addItemCode(code.getBytes());
+            printer.printRecItem("Item 1", 123, 1000, 1, 123, "");
+            printer.fsWriteOperationTag(1023, "1");
+            printer.fsWriteOperationTag(2108, "11");
+            
+            
+            printer.printRecTotal(6200, 6200, "01");
+            printer.endFiscalReceipt(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     
     
 }
