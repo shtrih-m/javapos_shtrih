@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity
         getPrefValue(nbTableRow, "TableRow", "1");
         getPrefValue(tbTableCellValue, "TableCellValue", "");
         getPrefValue(tbMonoToken, "MonoToken", "");
-        getPrefValue(nbTimeout, "ByteTimeout", "500");
+        getPrefValue(nbTimeout, "ByteTimeout", "3000");
         getPrefValue(chbFastConnect, "FastConnect", true);
         getPrefValue(chbPPPConnection, "PPPConnection", false);
         getPrefValue(chbScocFirmwareUpdate, "ScocFirmwareUpdate", false);

@@ -119,7 +119,7 @@ public class PPPThread implements Runnable {
             if (Calendar.getInstance().getTimeInMillis() > time){
                 return false;
             }
-            Thread.sleep(timeout/100);
+            Thread.sleep(1000);
         }
     }
 

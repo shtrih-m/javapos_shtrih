@@ -566,11 +566,12 @@ public class BluetoothLEPort implements PrinterPort2 {
 
         TxChar = null;
         setState(ConnectState.Disconnected);
+        rxBuffer.clear();
+        txqueue.clear();
+
         if (events != null) {
             events.onDisconnect();
         }
-        rxBuffer.clear();
-        txqueue.clear();
         logger.debug("disconnect: OK");
     }
 
