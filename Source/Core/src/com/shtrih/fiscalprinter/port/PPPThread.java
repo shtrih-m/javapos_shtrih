@@ -23,6 +23,7 @@ import java.util.Calendar;
 public class PPPThread implements Runnable {
 
     private long ctx = 0;
+    private String status = "";
     private Thread thread = null;
     private final PPPConfig config;
     private static CompositeLogger logger = CompositeLogger.getLogger(PPPThread.class);
@@ -71,7 +72,10 @@ public class PPPThread implements Runnable {
         if (isStarted() && (ctx != 0))
         {
             result = Api.api_status(ctx);
-            logger.debug("PPP status =" + result);
+            if (!status.equalsIgnoreCase(result)) {
+                status = result;
+                logger.debug("PPP status =" + result);
+            }
         }
         return result;
     }
@@ -90,6 +94,7 @@ public class PPPThread implements Runnable {
             }
             thread.join();
             thread = null;
+            status = "";
         } catch (Exception e) {
             logger.error(e);
         }
