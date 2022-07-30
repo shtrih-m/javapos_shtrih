@@ -81,7 +81,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         startPPPThread();
         openLocalSocket(timeout);
         startDispatchThread();
-        pppThread.waitForStatus("{\"phase\":\"PPP_PHASE_RUNNING\",\"status\":\"RUNNING\"}", 60000);
+        pppThread.waitForPhase("PPP_PHASE_RUNNING", 60000);
         openSocket();
         opened = true;
         if (events != null) {
@@ -126,7 +126,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         }
         pppThread = new PPPThread(config);
         pppThread.start();
-        pppThread.waitForStatus("\"status\":\"RUNNING\"", 5000);
+        pppThread.waitForStatus("RUNNING", 5000);
     }
 
     public void openLocalSocket(int timeout) throws Exception {

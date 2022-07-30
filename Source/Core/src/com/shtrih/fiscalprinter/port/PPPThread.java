@@ -11,6 +11,8 @@ import com.shtrih.util.CompositeLogger;
 import com.shtrih.LibManager;
 import ru.shtrih_m.kktnetd.Api;
 import ru.shtrih_m.kktnetd.PPPConfig;
+import ru.shtrih_m.kktnetd.PPPStatus;
+
 import com.shtrih.util.StringUtils;
 
 import java.io.InputStream;
@@ -72,7 +74,11 @@ public class PPPThread implements Runnable {
         if (isStarted() && (ctx != 0))
         {
             result = Api.api_status(ctx);
-            if (!status.equalsIgnoreCase(result)) {
+            if (result == null){
+                result = "";
+            }
+            if (!status.equalsIgnoreCase(result))
+            {
                 status = result;
                 logger.debug("PPP status =" + result);
             }
@@ -114,12 +120,36 @@ public class PPPThread implements Runnable {
         }
     }
 
-    public boolean waitForStatus(String status, long timeout) throws InterruptedException
+    public boolean waitForStatus(String statusToWait, long timeout) throws Exception
     {
         long time = Calendar.getInstance().getTimeInMillis() + timeout;
-        for (;;){
-            if (getStatus().contains(status)) {
-                return true;
+        for (;;)
+        {
+            String statusJson = getStatus();
+            if (!statusJson.isEmpty()) {
+                PPPStatus status = PPPStatus.fromJson(statusJson);
+                if (statusToWait.equals(status.status)) {
+                    return true;
+                }
+            }
+            if (Calendar.getInstance().getTimeInMillis() > time){
+                return false;
+            }
+            Thread.sleep(1000);
+        }
+    }
+
+    public boolean waitForPhase(String phase, long timeout) throws Exception
+    {
+        long time = Calendar.getInstance().getTimeInMillis() + timeout;
+        for (;;)
+        {
+            String statusJson = getStatus();
+            if (!statusJson.isEmpty()) {
+                PPPStatus status = PPPStatus.fromJson(statusJson);
+                if (phase.equals(status.phase)) {
+                    return true;
+                }
             }
             if (Calendar.getInstance().getTimeInMillis() > time){
                 return false;

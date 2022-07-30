@@ -69,7 +69,7 @@ public class PPPConfig {
         return gson.toJson(this);
     }
 
-    public PPPConfig fromJson(String jsonText) throws Exception {
+    public static PPPConfig fromJson(String jsonText) throws Exception {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return (PPPConfig) gson.fromJson(jsonText, PPPConfig.class);
     }
