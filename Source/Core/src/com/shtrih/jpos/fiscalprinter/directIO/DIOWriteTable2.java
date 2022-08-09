@@ -35,7 +35,7 @@ public class DIOWriteTable2 {
         int fieldNumber = Integer.valueOf(params[2]).intValue();
         String fieldValue = params[3];
         fieldValue = service.decodeText(fieldValue);
-        service.printer.check(service.printer.writeTable(tableNumber,
+        service.getPrinter().check(service.getPrinter().writeTable(tableNumber,
                 rowNumber, fieldNumber, fieldValue));
     }
 }

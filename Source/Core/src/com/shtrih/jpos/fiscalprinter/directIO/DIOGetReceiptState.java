@@ -19,7 +19,7 @@ public class DIOGetReceiptState extends DIOItem {
     }
 
     public void execute(int[] data, Object object) throws Exception {
-        service.printer.readOperationRegister(1);
+        service.getPrinter().readOperationRegister(1);
 
     }
 }

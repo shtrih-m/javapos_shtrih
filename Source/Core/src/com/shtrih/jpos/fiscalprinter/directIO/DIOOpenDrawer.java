@@ -34,7 +34,7 @@ public class DIOOpenDrawer {
         if (data.length > 0) {
             drawerNumber = data[0];
         }
-        service.printer.openCashDrawer(drawerNumber);
+        service.getPrinter().openCashDrawer(drawerNumber);
     }
 
 }

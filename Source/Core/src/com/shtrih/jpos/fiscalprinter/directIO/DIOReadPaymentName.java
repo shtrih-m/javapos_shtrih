@@ -32,7 +32,7 @@ public class DIOReadPaymentName {
 
         int rowNumber = data[0];
         String[] fieldValue = new String[1];
-        service.printer.check(service.printer.readTable(
+        service.getPrinter().check(service.getPrinter().readTable(
                 PrinterConst.SMFP_TABLE_PAYTYPE, rowNumber, 1, fieldValue));
         ((String[]) (object))[0] = service.encodeText(fieldValue[0]);
     }

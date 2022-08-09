@@ -33,7 +33,7 @@ public class DIOWritePaymentName {
         int rowNumber = data[0];
         String fieldValue = ((String[]) (object))[0];
         fieldValue = service.decodeText(fieldValue);
-        service.printer.check(service.printer.writeTable(
+        service.getPrinter().check(service.getPrinter().writeTable(
                 PrinterConst.SMFP_TABLE_PAYTYPE, rowNumber, 1, fieldValue));
     }
 }

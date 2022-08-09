@@ -48,8 +48,8 @@ public class DIOExecuteCommandStr2 {
         }
         command.setTimeout(timeout);
         CommandParamsTextReader.read(inParams, command.getInParams());
-        service.printer.execute(command);
-        service.printer.check(command.getResultCode());
+        service.getPrinter().execute(command);
+        service.getPrinter().check(command.getResultCode());
         String outParams = CommandParamsTextWriter
                 .write(command.getOutParams());
         lines[2] = outParams;

@@ -22,7 +22,7 @@ public class DIOReadShortStatus extends DIOItem
 
     public void execute(int[] data, Object object) throws Exception 
     {
-        ShortPrinterStatus status = service.printer.readShortStatus();
+        ShortPrinterStatus status = service.getPrinter().readShortStatus();
         ((Object[])object)[0] = status;
     }
 }

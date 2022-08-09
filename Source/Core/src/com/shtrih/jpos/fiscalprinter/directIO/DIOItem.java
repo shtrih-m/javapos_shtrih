@@ -28,7 +28,7 @@ public class DIOItem {
         return service;
     }
     
-    public SMFiscalPrinter getPrinter() {
+    public SMFiscalPrinter getPrinter() throws Exception {
         return service.getPrinter();
     }
 

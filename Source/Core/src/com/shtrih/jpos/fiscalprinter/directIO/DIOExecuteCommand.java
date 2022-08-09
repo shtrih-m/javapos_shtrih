@@ -20,8 +20,9 @@ public class DIOExecuteCommand {
         byte[] tx = (byte[]) ((Object[]) object)[0];
         RawCommand command = new RawCommand(tx);
         command.setTimeout(timeout);
-        service.printer.deviceExecute(command);
-        service.printer.check(command.getResultCode());
+        service.checkEnabled();
+        service.getPrinter().deviceExecute(command);
+        service.getPrinter().check(command.getResultCode());
         ((Object[]) object)[1] = command.getRxData();
     }
 }

@@ -31,7 +31,7 @@ public class DIOReadCashReg {
 
         String[] lines = (String[]) object;
         int number = data[0];
-        long amount = service.printer.readCashRegisterCorrection(number);
+        long amount = service.getPrinter().readCashRegisterCorrection(number);
         lines[0] = String.valueOf(amount);
         lines[1] = CashRegister.getName(number);
     }

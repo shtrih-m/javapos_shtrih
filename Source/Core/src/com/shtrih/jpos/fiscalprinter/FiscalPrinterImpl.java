@@ -148,15 +148,15 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private int[] vatValues;
     private PrinterPort port;
     private PrinterProtocol device;
-    public SMFiscalPrinter printer;
+    private SMFiscalPrinter printer;
     private ReceiptPrinter receiptPrinter;
     private final FiscalPrinterStatistics statistics;
     // --------------------------------------------------------------------------
     // Variables
     // --------------------------------------------------------------------------
     // Instance Data Set in Derived Class
-    public boolean claimed = false;
-    public String checkHealthText = "";
+    private boolean claimed = false;
+    private String checkHealthText = "";
     private String physicalDeviceDescription = "";
     private String deviceServiceDescription = "";
     private int deviceServiceVersion;
@@ -446,9 +446,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         deviceServiceVersion = deviceVersion113 + ServiceVersionUtil.getVersionInt();
     }
 
-    public SMFiscalPrinter getPrinter() {
+    public SMFiscalPrinter getPrinter() throws Exception
+    {
+        checkEnabled();
         if (printer == null) {
-            logger.error("printer is null");
+            throw new Exception("Printer is not initialized");
         }
         return printer;
     }
@@ -2097,7 +2099,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public PrinterImages getPrinterImages() {
+    public PrinterImages getPrinterImages() throws Exception {
         return getPrinter().getPrinterImages();
     }
 
@@ -4327,7 +4329,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    private void checkEnabled() throws Exception {
+    public void checkEnabled() throws Exception {
         checkClaimed();
         if (!deviceEnabled) {
             throw new JposException(JPOS_E_DISABLED);

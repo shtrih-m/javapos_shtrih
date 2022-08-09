@@ -22,7 +22,8 @@ public class DIOReadLongStatus extends DIOItem
 
     public void execute(int[] data, Object object) throws Exception 
     {
-        LongPrinterStatus status = service.printer.readLongStatus();
+        service.checkEnabled();
+        LongPrinterStatus status = service.getPrinter().readLongStatus();
         ((Object[])object)[0] = status;
     }
 }

@@ -71,7 +71,7 @@ public class DirectIOHandler {
         this.service = service;
     }
 
-    public SMFiscalPrinter getPrinter() {
+    public SMFiscalPrinter getPrinter() throws Exception {
         return service.getPrinter();
     }
 

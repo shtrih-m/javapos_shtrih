@@ -35,8 +35,8 @@ public class DIOReadEJSerial {
         LongPrinterStatus status = service.readLongStatus();
         if (status.getRegistrationNumber() > 0) {
             ReadEJSerialNumber command = new ReadEJSerialNumber();
-            command.setPassword(service.printer.getSysPassword());
-            service.printer.execute(command);
+            command.setPassword(service.getPrinter().getSysPassword());
+            service.getPrinter().execute(command);
             serial[0] = String.valueOf(command.getSerial());
         }
     }

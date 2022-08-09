@@ -34,7 +34,7 @@ public class DIOSetFFDVersion extends DIOItem {
         }
     }
 
-    private boolean isDesktop() {
+    private boolean isDesktop() throws Exception {
         DeviceMetrics metrics = getPrinter().getDeviceMetrics();
         return metrics.isDesktop() || metrics.isShtrihNano();
     }

@@ -46,7 +46,7 @@ public class DirectIOHandler2 {
         this.service = service;
     }
 
-    public SMFiscalPrinter getPrinter() {
+    public SMFiscalPrinter getPrinter() throws Exception {
         return service.getPrinter();
     }
 
@@ -925,7 +925,7 @@ public class DirectIOHandler2 {
         int number = data[0];
         Object[] params = (Object[]) object;
         CashRegister register = new CashRegister(number);
-        long amount = service.printer.readCashRegisterCorrection(number);
+        long amount = service.getPrinter().readCashRegisterCorrection(number);
         register.setValue(amount);
         params[0] = register;
     }
@@ -935,7 +935,7 @@ public class DirectIOHandler2 {
         int number = data[0];
         Object[] params = (Object[]) object;
         OperationRegister register = new OperationRegister(number);
-        service.printer.check(service.printer.readOperationRegister(register));
+        service.getPrinter().check(service.getPrinter().readOperationRegister(register));
         params[0] = register;
     }
 

@@ -35,7 +35,7 @@ public class DIOReadTable2 {
         int fieldNumber = Integer.valueOf(params[2]).intValue();
         
         String[] fieldValue = new String[1];
-        service.printer.check(service.printer.readTable(tableNumber, rowNumber,
+        service.getPrinter().check(service.getPrinter().readTable(tableNumber, rowNumber,
                 fieldNumber, fieldValue));
         params[3] = service.encodeText(service.encodeText(fieldValue[0]));
     }

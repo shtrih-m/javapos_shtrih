@@ -33,7 +33,7 @@ public class DIOReadOperReg {
 
         String[] lines = (String[]) object;
         int regNumber = data[0];
-        long regValue = service.printer.readOperationRegister(regNumber);
+        long regValue = service.getPrinter().readOperationRegister(regNumber);
         lines[0] = String.valueOf(regValue);
         lines[1] = OperationRegister.getName(data[0]);
     }

@@ -32,12 +32,12 @@ public class DIOGetFFDVersion extends DIOItem {
         }
     }
 
-    private boolean isDesktop() {
+    private boolean isDesktop() throws Exception {
         DeviceMetrics metrics = getPrinter().getDeviceMetrics();
         return metrics.isDesktop() || metrics.isShtrihNano();
     }
 
-    private boolean isElves() {
+    private boolean isElves() throws Exception {
         DeviceMetrics metrics = getPrinter().getDeviceMetrics();
         return metrics.isElves();
     }
