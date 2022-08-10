@@ -7,6 +7,13 @@
     
 ********************************************************************************
 
+  10.08.2022
+  deviceServiceVersion = 1013674
+
+  [-] Fixed error with null pointer exception via directIO when driver not enabled
+
+********************************************************************************
+
   30.07.2022
   deviceServiceVersion = 1013673
   
