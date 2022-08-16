@@ -448,7 +448,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public SMFiscalPrinter getPrinter() throws Exception
     {
-        checkEnabled();
         if (printer == null) {
             throw new Exception("Printer is not initialized");
         }

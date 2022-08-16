@@ -53,32 +53,32 @@ public class FiscalPrinterService extends DeviceService implements
     }
 
     public synchronized boolean getCapCompareFirmwareVersion() throws JposException {
-        logger.debug("getCapCompareFirmwareVersion()");
+        methodBegin("getCapCompareFirmwareVersion()");
         boolean result = false;
         try {
             result = impl.getCapCompareFirmwareVersion();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapCompareFirmwareVersion = " + String.valueOf(result));
+        methodEnd("getCapCompareFirmwareVersion = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapUpdateFirmware() throws JposException {
-        logger.debug("getCapUpdateFirmware()");
+        methodBegin("getCapUpdateFirmware()");
         boolean result = false;
         try {
             result = impl.getCapUpdateFirmware();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapUpdateFirmware = " + String.valueOf(result));
+        methodEnd("getCapUpdateFirmware = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void compareFirmwareVersion(String firmwareFileName, int[] result)
             throws JposException {
-        logger.debug("compareFirmwareVersion("
+        methodBegin("compareFirmwareVersion("
                 + String.valueOf(firmwareFileName) + ", "
                 + String.valueOf(result) + ")");
         try {
@@ -86,190 +86,189 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("compareFirmwareVersion: OK");
+        methodEnd("compareFirmwareVersion: OK");
     }
 
     public synchronized void updateFirmware(String firmwareFileName) throws JposException {
-        logger.debug("updateFirmware(" + String.valueOf(firmwareFileName) + ")");
+        methodBegin("updateFirmware(" + String.valueOf(firmwareFileName) + ")");
         try {
             impl.updateFirmware(firmwareFileName);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("updateFirmware: OK");
+        methodEnd("updateFirmware: OK");
     }
 
     public synchronized String getCheckHealthText() throws JposException {
-        logger.debug("getCheckHealthText()");
-
+        methodBegin("getCheckHealthText()");
         String result = "";
         try {
             result = impl.getCheckHealthText();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCheckHealthText = " + String.valueOf(result));
+        methodEnd("getCheckHealthText = " + String.valueOf(result));
         return result;
     }
 
 
 
     public synchronized boolean getClaimed() throws JposException {
-        logger.debug("getClaimed()");
+        methodBegin("getClaimed()");
         boolean result = false;
         try {
             result = impl.getClaimed();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getClaimed = " + String.valueOf(result));
+        methodEnd("getClaimed = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getDeviceEnabled() throws JposException {
-        logger.debug("getDeviceEnabled()");
+        methodBegin("getDeviceEnabled()");
         boolean result = false;
         try {
             result = impl.getDeviceEnabled();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getDeviceEnabled = " + String.valueOf(result));
+        methodEnd("getDeviceEnabled = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setDeviceEnabled(boolean deviceEnabled) throws JposException {
-        logger.debug("setDeviceEnabled(" + String.valueOf(deviceEnabled) + ")");
+        methodBegin("setDeviceEnabled(" + String.valueOf(deviceEnabled) + ")");
         try {
             impl.setDeviceEnabled(deviceEnabled);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setDeviceEnabled: OK");
+        methodEnd("setDeviceEnabled: OK");
     }
 
     public synchronized String getDeviceServiceDescription() throws JposException {
-        logger.debug("getDeviceServiceDescription()");
+        methodBegin("getDeviceServiceDescription()");
         String result = "";
         try {
             result = impl.getDeviceServiceDescription();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getDeviceServiceDescription = " + String.valueOf(result));
+        methodEnd("getDeviceServiceDescription = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getDeviceServiceVersion() throws JposException {
-        logger.debug("getDeviceServiceVersion()");
+        methodBegin("getDeviceServiceVersion()");
         int result = 0;
         try {
             result = impl.getDeviceServiceVersion();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getDeviceServiceVersion = " + String.valueOf(result));
+        methodEnd("getDeviceServiceVersion = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getFreezeEvents() throws JposException {
-        logger.debug("getFreezeEvents()");
+        methodBegin("getFreezeEvents()");
         boolean result = false;
         try {
             result = impl.getFreezeEvents();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getFreezeEvents = " + String.valueOf(result));
+        methodEnd("getFreezeEvents = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setFreezeEvents(boolean freezeEvents) throws JposException {
-        logger.debug("setFreezeEvents(" + String.valueOf(freezeEvents) + ")");
+        methodBegin("setFreezeEvents(" + String.valueOf(freezeEvents) + ")");
         try {
             impl.setFreezeEvents(freezeEvents);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setFreezeEvents: OK");
+        methodEnd("setFreezeEvents: OK");
     }
 
     public synchronized String getPhysicalDeviceDescription() throws JposException {
-        logger.debug("getPhysicalDeviceDescription()");
+        methodBegin("getPhysicalDeviceDescription()");
         String result = "";
         try {
             result = impl.getPhysicalDeviceDescription();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getPhysicalDeviceDescription = " + String.valueOf(result));
+        methodEnd("getPhysicalDeviceDescription = " + String.valueOf(result));
         return result;
     }
 
     public synchronized String getPhysicalDeviceName() throws JposException {
-        logger.debug("getPhysicalDeviceName()");
+        methodBegin("getPhysicalDeviceName()");
         String result = "";
         try {
             result = impl.getPhysicalDeviceName();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getPhysicalDeviceName = " + String.valueOf(result));
+        methodEnd("getPhysicalDeviceName = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getState() throws JposException {
-        logger.debug("getState()");
+        methodBegin("getState()");
         int result = 0;
         try {
             result = impl.getState();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getState = " + String.valueOf(result));
+        methodEnd("getState = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void claim(int timeout) throws JposException {
-        logger.debug("claim(" + String.valueOf(timeout) + ")");
+        methodBegin("claim(" + String.valueOf(timeout) + ")");
         try {
             impl.claim(timeout);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("claim: OK");
+        methodEnd("claim: OK");
     }
 
     public synchronized void close() throws JposException {
-        logger.debug("close()");
+        methodBegin("close()");
         try {
             impl.close();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("close: OK");
+        methodEnd("close: OK");
     }
 
     public synchronized void checkHealth(int level) throws JposException {
-        logger.debug("checkHealth(" + String.valueOf(level) + ")");
+        methodBegin("checkHealth(" + String.valueOf(level) + ")");
         try {
             impl.checkHealth(level);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("checkHealth: OK");
+        methodEnd("checkHealth: OK");
     }
 
     public synchronized void directIO(int command, int[] data, Object object)
             throws JposException {
-        logger.debug("directIO(" + getDirectIOCommandText(command) + ", "
+        methodBegin("directIO(" + getDirectIOCommandText(command) + ", "
                 + String.valueOf(data) + ", " + String.valueOf(object) + ")");
         try {
             impl.directIO(command, data, object);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("directIO: OK");
+        methodEnd("directIO: OK");
     }
 
     public synchronized void setJposEntry(JposEntry entry) {
@@ -278,1045 +277,1045 @@ public class FiscalPrinterService extends DeviceService implements
 
     public synchronized void open(String logicalName, EventCallbacks cb)
             throws JposException {
-        logger.debug("open(" + String.valueOf(logicalName) + ")");
+        methodBegin("open(" + String.valueOf(logicalName) + ")");
         try {
             impl.setJposEntry(jposEntry);
             impl.open(logicalName, cb);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("open: OK");
+        methodEnd("open: OK");
     }
 
     public synchronized void release() throws JposException {
-        logger.debug("release()");
+        methodBegin("release()");
         try {
             impl.release();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("release: OK");
+        methodEnd("release: OK");
     }
 
     public synchronized boolean getCapAdditionalLines() throws JposException {
-        logger.debug("getCapAdditionalLines()");
+        methodBegin("getCapAdditionalLines()");
         boolean result = false;
         try {
             result = impl.getCapAdditionalLines();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapAdditionalLines = " + String.valueOf(result));
+        methodEnd("getCapAdditionalLines = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapAmountAdjustment() throws JposException {
-        logger.debug("getCapAmountAdjustment()");
+        methodBegin("getCapAmountAdjustment()");
         boolean result = false;
         try {
             result = impl.getCapAmountAdjustment();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapAmountAdjustment = " + String.valueOf(result));
+        methodEnd("getCapAmountAdjustment = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapAmountNotPaid() throws JposException {
-        logger.debug("getCapAmountNotPaid()");
+        methodBegin("getCapAmountNotPaid()");
         boolean result = false;
         try {
             result = impl.getCapAmountNotPaid();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapAmountNotPaid = " + String.valueOf(result));
+        methodEnd("getCapAmountNotPaid = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapCheckTotal() throws JposException {
-        logger.debug("getCapCheckTotal()");
+        methodBegin("getCapCheckTotal()");
         boolean result = false;
         try {
             result = impl.getCapCheckTotal();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapCheckTotal = " + String.valueOf(result));
+        methodEnd("getCapCheckTotal = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapCoverSensor() throws JposException {
-        logger.debug("getCapCoverSensor()");
+        methodBegin("getCapCoverSensor()");
         boolean result = false;
         try {
             result = impl.getCapCoverSensor();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapCoverSensor = " + String.valueOf(result));
+        methodEnd("getCapCoverSensor = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapDoubleWidth() throws JposException {
-        logger.debug("getCapDoubleWidth()");
+        methodBegin("getCapDoubleWidth()");
         boolean result = false;
         try {
             result = impl.getCapDoubleWidth();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapDoubleWidth = " + String.valueOf(result));
+        methodEnd("getCapDoubleWidth = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapDuplicateReceipt() throws JposException {
-        logger.debug("getCapDuplicateReceipt()");
+        methodBegin("getCapDuplicateReceipt()");
         boolean result = false;
         try {
             result = impl.getCapDuplicateReceipt();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapDuplicateReceipt = " + String.valueOf(result));
+        methodEnd("getCapDuplicateReceipt = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setDuplicateReceipt(boolean duplicateReceipt)
             throws JposException {
-        logger.debug("setDuplicateReceipt(" + String.valueOf(duplicateReceipt)
+        methodBegin("setDuplicateReceipt(" + String.valueOf(duplicateReceipt)
                 + ")");
         try {
             impl.setDuplicateReceipt(duplicateReceipt);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setDuplicateReceipt: OK");
+        methodEnd("setDuplicateReceipt: OK");
     }
 
     public synchronized boolean getCapFixedOutput() throws JposException {
-        logger.debug("getCapFixedOutput()");
+        methodBegin("getCapFixedOutput()");
         boolean result = false;
         try {
             result = impl.getCapFixedOutput();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapFixedOutput = " + String.valueOf(result));
+        methodEnd("getCapFixedOutput = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapHasVatTable() throws JposException {
-        logger.debug("getCapHasVatTable()");
+        methodBegin("getCapHasVatTable()");
         boolean result = false;
         try {
             result = impl.getCapHasVatTable();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapHasVatTable = " + String.valueOf(result));
+        methodEnd("getCapHasVatTable = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapIndependentHeader() throws JposException {
-        logger.debug("getCapIndependentHeader()");
+        methodBegin("getCapIndependentHeader()");
         boolean result = false;
         try {
             result = impl.getCapIndependentHeader();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapIndependentHeader = " + String.valueOf(result));
+        methodEnd("getCapIndependentHeader = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapItemList() throws JposException {
-        logger.debug("getCapItemList()");
+        methodBegin("getCapItemList()");
         boolean result = false;
         try {
             result = impl.getCapItemList();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapItemList = " + String.valueOf(result));
+        methodEnd("getCapItemList = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapJrnEmptySensor() throws JposException {
-        logger.debug("getCapJrnEmptySensor()");
+        methodBegin("getCapJrnEmptySensor()");
         boolean result = false;
         try {
             result = impl.getCapJrnEmptySensor();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapJrnEmptySensor = " + String.valueOf(result));
+        methodEnd("getCapJrnEmptySensor = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapJrnNearEndSensor() throws JposException {
-        logger.debug("getCapJrnNearEndSensor()");
+        methodBegin("getCapJrnNearEndSensor()");
         boolean result = false;
         try {
             result = impl.getCapJrnNearEndSensor();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapJrnNearEndSensor = " + String.valueOf(result));
+        methodEnd("getCapJrnNearEndSensor = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapJrnPresent() throws JposException {
-        logger.debug("getCapJrnPresent()");
+        methodBegin("getCapJrnPresent()");
         boolean result = false;
         try {
             result = impl.getCapJrnPresent();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapJrnPresent = " + String.valueOf(result));
+        methodEnd("getCapJrnPresent = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapNonFiscalMode() throws JposException {
-        logger.debug("getCapNonFiscalMode()");
+        methodBegin("getCapNonFiscalMode()");
         boolean result = false;
         try {
             result = impl.getCapNonFiscalMode();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapNonFiscalMode = " + String.valueOf(result));
+        methodEnd("getCapNonFiscalMode = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapOrderAdjustmentFirst() throws JposException {
-        logger.debug("getCapOrderAdjustmentFirst()");
+        methodBegin("getCapOrderAdjustmentFirst()");
         boolean result = false;
         try {
             result = impl.getCapOrderAdjustmentFirst();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapOrderAdjustmentFirst = " + String.valueOf(result));
+        methodEnd("getCapOrderAdjustmentFirst = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapPercentAdjustment() throws JposException {
-        logger.debug("getCapPercentAdjustment()");
+        methodBegin("getCapPercentAdjustment()");
         boolean result = false;
         try {
             result = impl.getCapPercentAdjustment();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapPercentAdjustment = " + String.valueOf(result));
+        methodEnd("getCapPercentAdjustment = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapPositiveAdjustment() throws JposException {
-        logger.debug("getCapPositiveAdjustment()");
+        methodBegin("getCapPositiveAdjustment()");
         boolean result = false;
         try {
             result = impl.getCapPositiveAdjustment();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapPositiveAdjustment = " + String.valueOf(result));
+        methodEnd("getCapPositiveAdjustment = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapPowerLossReport() throws JposException {
-        logger.debug("getCapPowerLossReport()");
+        methodBegin("getCapPowerLossReport()");
         boolean result = false;
         try {
             result = impl.getCapPowerLossReport();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapPowerLossReport = " + String.valueOf(result));
+        methodEnd("getCapPowerLossReport = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getCapPowerReporting() throws JposException {
-        logger.debug("getCapPowerReporting()");
+        methodBegin("getCapPowerReporting()");
         int result = 0;
         try {
             result = impl.getCapPowerReporting();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapPowerReporting = " + String.valueOf(result));
+        methodEnd("getCapPowerReporting = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapPredefinedPaymentLines() throws JposException {
-        logger.debug("getCapPredefinedPaymentLines()");
+        methodBegin("getCapPredefinedPaymentLines()");
         boolean result = false;
         try {
             result = impl.getCapPredefinedPaymentLines();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapPredefinedPaymentLines = " + String.valueOf(result));
+        methodEnd("getCapPredefinedPaymentLines = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapReceiptNotPaid() throws JposException {
-        logger.debug("getCapReceiptNotPaid()");
+        methodBegin("getCapReceiptNotPaid()");
         boolean result = false;
         try {
             result = impl.getCapReceiptNotPaid();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapReceiptNotPaid = " + String.valueOf(result));
+        methodEnd("getCapReceiptNotPaid = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapRecEmptySensor() throws JposException {
-        logger.debug("getCapRecEmptySensor()");
+        methodBegin("getCapRecEmptySensor()");
         boolean result = false;
         try {
             result = impl.getCapRecEmptySensor();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapRecEmptySensor = " + String.valueOf(result));
+        methodEnd("getCapRecEmptySensor = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapRecNearEndSensor() throws JposException {
-        logger.debug("getCapRecNearEndSensor()");
+        methodBegin("getCapRecNearEndSensor()");
         boolean result = false;
         try {
             result = impl.getCapRecNearEndSensor();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapRecNearEndSensor = " + String.valueOf(result));
+        methodEnd("getCapRecNearEndSensor = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapRecPresent() throws JposException {
-        logger.debug("getCapRecPresent()");
+        methodBegin("getCapRecPresent()");
         boolean result = false;
         try {
             result = impl.getCapRecPresent();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapRecPresent = " + String.valueOf(result));
+        methodEnd("getCapRecPresent = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapRemainingFiscalMemory() throws JposException {
-        logger.debug("getCapRemainingFiscalMemory()");
+        methodBegin("getCapRemainingFiscalMemory()");
         boolean result = false;
         try {
             result = impl.getCapRemainingFiscalMemory();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapRemainingFiscalMemory = " + String.valueOf(result));
+        methodEnd("getCapRemainingFiscalMemory = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapReservedWord() throws JposException {
-        logger.debug("getCapReservedWord()");
+        methodBegin("getCapReservedWord()");
         boolean result = false;
         try {
             result = impl.getCapReservedWord();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapReservedWord = " + String.valueOf(result));
+        methodEnd("getCapReservedWord = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapSetHeader() throws JposException {
-        logger.debug("getCapSetHeader()");
+        methodBegin("getCapSetHeader()");
         boolean result = false;
         try {
             result = impl.getCapSetHeader();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapSetHeader = " + String.valueOf(result));
+        methodEnd("getCapSetHeader = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapSetPOSID() throws JposException {
-        logger.debug("getCapSetPOSID()");
+        methodBegin("getCapSetPOSID()");
         boolean result = false;
         try {
             result = impl.getCapSetPOSID();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapSetPOSID = " + String.valueOf(result));
+        methodEnd("getCapSetPOSID = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapSetStoreFiscalID() throws JposException {
-        logger.debug("getCapSetStoreFiscalID()");
+        methodBegin("getCapSetStoreFiscalID()");
         boolean result = false;
         try {
             result = impl.getCapSetStoreFiscalID();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapSetStoreFiscalID = " + String.valueOf(result));
+        methodEnd("getCapSetStoreFiscalID = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapSetTrailer() throws JposException {
-        logger.debug("getCapSetTrailer()");
+        methodBegin("getCapSetTrailer()");
         boolean result = false;
         try {
             result = impl.getCapSetTrailer();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapSetTrailer = " + String.valueOf(result));
+        methodEnd("getCapSetTrailer = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapSetVatTable() throws JposException {
-        logger.debug("getCapSetVatTable()");
+        methodBegin("getCapSetVatTable()");
         boolean result = false;
         try {
             result = impl.getCapSetVatTable();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapSetVatTable = " + String.valueOf(result));
+        methodEnd("getCapSetVatTable = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapSlpEmptySensor() throws JposException {
-        logger.debug("getCapSlpEmptySensor()");
+        methodBegin("getCapSlpEmptySensor()");
         boolean result = false;
         try {
             result = impl.getCapSlpEmptySensor();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapSlpEmptySensor = " + String.valueOf(result));
+        methodEnd("getCapSlpEmptySensor = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapSlpFiscalDocument() throws JposException {
-        logger.debug("getCapSlpFiscalDocument()");
+        methodBegin("getCapSlpFiscalDocument()");
         boolean result = false;
         try {
             result = impl.getCapSlpFiscalDocument();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapSlpFiscalDocument = " + String.valueOf(result));
+        methodEnd("getCapSlpFiscalDocument = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapSlpFullSlip() throws JposException {
-        logger.debug("getCapSlpFullSlip()");
+        methodBegin("getCapSlpFullSlip()");
         boolean result = false;
         try {
             result = impl.getCapSlpFullSlip();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapSlpFullSlip = " + String.valueOf(result));
+        methodEnd("getCapSlpFullSlip = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapSlpNearEndSensor() throws JposException {
-        logger.debug("getCapSlpNearEndSensor()");
+        methodBegin("getCapSlpNearEndSensor()");
         boolean result = false;
         try {
             result = impl.getCapSlpNearEndSensor();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapSlpNearEndSensor = " + String.valueOf(result));
+        methodEnd("getCapSlpNearEndSensor = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapSlpPresent() throws JposException {
-        logger.debug("getCapSlpPresent()");
+        methodBegin("getCapSlpPresent()");
         boolean result = false;
         try {
             result = impl.getCapSlpPresent();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapSlpPresent = " + String.valueOf(result));
+        methodEnd("getCapSlpPresent = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapSlpValidation() throws JposException {
-        logger.debug("getCapSlpValidation()");
+        methodBegin("getCapSlpValidation()");
         boolean result = false;
         try {
             result = impl.getCapSlpValidation();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapSlpValidation = " + String.valueOf(result));
+        methodEnd("getCapSlpValidation = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapSubAmountAdjustment() throws JposException {
-        logger.debug("getCapSubAmountAdjustment()");
+        methodBegin("getCapSubAmountAdjustment()");
         boolean result = false;
         try {
             result = impl.getCapSubAmountAdjustment();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapSubAmountAdjustment = " + String.valueOf(result));
+        methodEnd("getCapSubAmountAdjustment = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapSubPercentAdjustment() throws JposException {
-        logger.debug("getCapSubPercentAdjustment()");
+        methodBegin("getCapSubPercentAdjustment()");
         boolean result = false;
         try {
             result = impl.getCapSubPercentAdjustment();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapSubPercentAdjustment = " + String.valueOf(result));
+        methodEnd("getCapSubPercentAdjustment = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapSubtotal() throws JposException {
-        logger.debug("getCapSubtotal()");
+        methodBegin("getCapSubtotal()");
         boolean result = false;
         try {
             result = impl.getCapSubtotal();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapSubtotal = " + String.valueOf(result));
+        methodEnd("getCapSubtotal = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapTrainingMode() throws JposException {
-        logger.debug("getCapTrainingMode()");
+        methodBegin("getCapTrainingMode()");
         boolean result = false;
         try {
             result = impl.getCapTrainingMode();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapTrainingMode = " + String.valueOf(result));
+        methodEnd("getCapTrainingMode = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapValidateJournal() throws JposException {
-        logger.debug("getCapValidateJournal()");
+        methodBegin("getCapValidateJournal()");
         boolean result = false;
         try {
             result = impl.getCapValidateJournal();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapValidateJournal = " + String.valueOf(result));
+        methodEnd("getCapValidateJournal = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapXReport() throws JposException {
-        logger.debug("getCapXReport()");
+        methodBegin("getCapXReport()");
         boolean result = false;
         try {
             result = impl.getCapXReport();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapXReport = " + String.valueOf(result));
+        methodEnd("getCapXReport = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getOutputID() throws JposException {
-        logger.debug("getOutputID()");
+        methodBegin("getOutputID()");
         int result = 0;
         try {
             result = impl.getOutputID();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getOutputID = " + String.valueOf(result));
+        methodEnd("getOutputID = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getPowerNotify() throws JposException {
-        logger.debug("getPowerNotify()");
+        methodBegin("getPowerNotify()");
         int result = 0;
         try {
             result = impl.getPowerNotify();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getPowerNotify = " + String.valueOf(result));
+        methodEnd("getPowerNotify = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setPowerNotify(int powerNotify) throws JposException {
-        logger.debug("setPowerNotify(" + String.valueOf(powerNotify) + ")");
+        methodBegin("setPowerNotify(" + String.valueOf(powerNotify) + ")");
         try {
             impl.setPowerNotify(powerNotify);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setPowerNotify: OK");
+        methodEnd("setPowerNotify: OK");
     }
 
     public synchronized int getPowerState() throws JposException {
-        logger.debug("getPowerState()");
+        methodBegin("getPowerState()");
         int result = 0;
         try {
             result = impl.getPowerState();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getPowerState = " + String.valueOf(result));
+        methodEnd("getPowerState = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getAmountDecimalPlace() throws JposException {
-        logger.debug("getAmountDecimalPlace()");
+        methodBegin("getAmountDecimalPlace()");
         int result = 0;
         try {
             result = impl.getAmountDecimalPlace();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getAmountDecimalPlace = " + String.valueOf(result));
+        methodEnd("getAmountDecimalPlace = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getAsyncMode() throws JposException {
-        logger.debug("getAsyncMode()");
+        methodBegin("getAsyncMode()");
         boolean result = false;
         try {
             result = impl.getAsyncMode();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getAsyncMode = " + String.valueOf(result));
+        methodEnd("getAsyncMode = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setAsyncMode(boolean asyncMode) throws JposException {
-        logger.debug("setAsyncMode(" + String.valueOf(asyncMode) + ")");
+        methodBegin("setAsyncMode(" + String.valueOf(asyncMode) + ")");
         try {
             impl.setAsyncMode(asyncMode);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setAsyncMode: OK");
+        methodEnd("setAsyncMode: OK");
     }
 
     public synchronized boolean getCheckTotal() throws JposException {
-        logger.debug("getCheckTotal()");
+        methodBegin("getCheckTotal()");
         boolean result = false;
         try {
             result = impl.getCheckTotal();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCheckTotal = " + String.valueOf(result));
+        methodEnd("getCheckTotal = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setCheckTotal(boolean checkTotal) throws JposException {
-        logger.debug("setCheckTotal(" + String.valueOf(checkTotal) + ")");
+        methodBegin("setCheckTotal(" + String.valueOf(checkTotal) + ")");
         try {
             impl.setCheckTotal(checkTotal);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setCheckTotal: OK");
+        methodEnd("setCheckTotal: OK");
     }
 
     public synchronized int getCountryCode() throws JposException {
-        logger.debug("getCountryCode()");
+        methodBegin("getCountryCode()");
         int result = 0;
         try {
             result = impl.getCountryCode();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCountryCode = " + String.valueOf(result));
+        methodEnd("getCountryCode = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCoverOpen() throws JposException {
-        logger.debug("getCoverOpen()");
+        methodBegin("getCoverOpen()");
         boolean result = false;
         try {
             result = impl.getCoverOpen();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCoverOpen = " + String.valueOf(result));
+        methodEnd("getCoverOpen = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getDayOpened() throws JposException {
-        logger.debug("getDayOpened()");
+        methodBegin("getDayOpened()");
         boolean result = false;
         try {
             result = impl.getDayOpened();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getDayOpened = " + String.valueOf(result));
+        methodEnd("getDayOpened = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getDescriptionLength() throws JposException {
-        logger.debug("getDescriptionLength()");
+        methodBegin("getDescriptionLength()");
         int result = 0;
         try {
             result = impl.getDescriptionLength();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getDescriptionLength = " + String.valueOf(result));
+        methodEnd("getDescriptionLength = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getDuplicateReceipt() throws JposException {
-        logger.debug("getDuplicateReceipt()");
+        methodBegin("getDuplicateReceipt()");
         boolean result = false;
         try {
             result = impl.getDuplicateReceipt();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getDuplicateReceipt = " + String.valueOf(result));
+        methodEnd("getDuplicateReceipt = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getErrorLevel() throws JposException {
-        logger.debug("getErrorLevel()");
+        methodBegin("getErrorLevel()");
         int result = 0;
         try {
             result = impl.getErrorLevel();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getErrorLevel = " + String.valueOf(result));
+        methodEnd("getErrorLevel = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getErrorOutID() throws JposException {
-        logger.debug("getErrorOutID()");
+        methodBegin("getErrorOutID()");
         int result = 0;
         try {
             result = impl.getErrorOutID();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getErrorOutID = " + String.valueOf(result));
+        methodEnd("getErrorOutID = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getErrorState() throws JposException {
-        logger.debug("getErrorState()");
+        methodBegin("getErrorState()");
         int result = 0;
         try {
             result = impl.getErrorState();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getErrorState = " + String.valueOf(result));
+        methodEnd("getErrorState = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getErrorStation() throws JposException {
-        logger.debug("getErrorStation()");
+        methodBegin("getErrorStation()");
         int result = 0;
         try {
             result = impl.getErrorStation();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getErrorStation = " + String.valueOf(result));
+        methodEnd("getErrorStation = " + String.valueOf(result));
         return result;
     }
 
     public synchronized String getErrorString() throws JposException {
-        logger.debug("getErrorString()");
+        methodBegin("getErrorString()");
         String result = "";
         try {
             result = impl.getErrorString();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getErrorString = " + String.valueOf(result));
+        methodEnd("getErrorString = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getFlagWhenIdle() throws JposException {
-        logger.debug("getFlagWhenIdle()");
+        methodBegin("getFlagWhenIdle()");
         boolean result = false;
         try {
             result = impl.getFlagWhenIdle();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getFlagWhenIdle = " + String.valueOf(result));
+        methodEnd("getFlagWhenIdle = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setFlagWhenIdle(boolean flagWhenIdle) throws JposException {
-        logger.debug("setFlagWhenIdle(" + String.valueOf(flagWhenIdle) + ")");
+        methodBegin("setFlagWhenIdle(" + String.valueOf(flagWhenIdle) + ")");
         try {
             impl.setFlagWhenIdle(flagWhenIdle);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setFlagWhenIdle: OK");
+        methodEnd("setFlagWhenIdle: OK");
     }
 
     public synchronized boolean getJrnEmpty() throws JposException {
-        logger.debug("getJrnEmpty()");
+        methodBegin("getJrnEmpty()");
         boolean result = false;
         try {
             result = impl.getJrnEmpty();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getJrnEmpty = " + String.valueOf(result));
+        methodEnd("getJrnEmpty = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getJrnNearEnd() throws JposException {
-        logger.debug("getJrnNearEnd()");
+        methodBegin("getJrnNearEnd()");
         boolean result = false;
         try {
             result = impl.getJrnNearEnd();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getJrnNearEnd = " + String.valueOf(result));
+        methodEnd("getJrnNearEnd = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getMessageLength() throws JposException {
-        logger.debug("getMessageLength()");
+        methodBegin("getMessageLength()");
         int result = 0;
         try {
             result = impl.getMessageLength();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getMessageLength = " + String.valueOf(result));
+        methodEnd("getMessageLength = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getNumHeaderLines() throws JposException {
-        logger.debug("getNumHeaderLines()");
+        methodBegin("getNumHeaderLines()");
         int result = 0;
         try {
             result = impl.getNumHeaderLines();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getNumHeaderLines = " + String.valueOf(result));
+        methodEnd("getNumHeaderLines = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getNumTrailerLines() throws JposException {
-        logger.debug("getNumTrailerLines()");
+        methodBegin("getNumTrailerLines()");
         int result = 0;
         try {
             result = impl.getNumTrailerLines();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getNumTrailerLines = " + String.valueOf(result));
+        methodEnd("getNumTrailerLines = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getNumVatRates() throws JposException {
-        logger.debug("getNumVatRates()");
+        methodBegin("getNumVatRates()");
         int result = 0;
         try {
             result = impl.getNumVatRates();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getNumVatRates = " + String.valueOf(result));
+        methodEnd("getNumVatRates = " + String.valueOf(result));
         return result;
     }
 
     public synchronized String getPredefinedPaymentLines() throws JposException {
-        logger.debug("getPredefinedPaymentLines()");
+        methodBegin("getPredefinedPaymentLines()");
         String result = "";
         try {
             result = impl.getPredefinedPaymentLines();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getPredefinedPaymentLines = " + String.valueOf(result));
+        methodEnd("getPredefinedPaymentLines = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getPrinterState() throws JposException {
-        logger.debug("getPrinterState()");
+        methodBegin("getPrinterState()");
         int result = 0;
         try {
             result = impl.getPrinterState();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getPrinterState = " + String.valueOf(result));
+        methodEnd("getPrinterState = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getQuantityDecimalPlaces() throws JposException {
-        logger.debug("getQuantityDecimalPlaces()");
+        methodBegin("getQuantityDecimalPlaces()");
         int result = 0;
         try {
             result = impl.getQuantityDecimalPlaces();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getQuantityDecimalPlaces = " + String.valueOf(result));
+        methodEnd("getQuantityDecimalPlaces = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getQuantityLength() throws JposException {
-        logger.debug("getQuantityLength()");
+        methodBegin("getQuantityLength()");
         int result = 0;
         try {
             result = impl.getQuantityLength();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getQuantityLength = " + String.valueOf(result));
+        methodEnd("getQuantityLength = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getRecEmpty() throws JposException {
-        logger.debug("getRecEmpty()");
+        methodBegin("getRecEmpty()");
         boolean result = false;
         try {
             result = impl.getRecEmpty();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getRecEmpty = " + String.valueOf(result));
+        methodEnd("getRecEmpty = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getRecNearEnd() throws JposException {
-        logger.debug("getRecNearEnd()");
+        methodBegin("getRecNearEnd()");
         boolean result = false;
         try {
             result = impl.getRecNearEnd();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getRecNearEnd = " + String.valueOf(result));
+        methodEnd("getRecNearEnd = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getRemainingFiscalMemory() throws JposException {
-        logger.debug("getRemainingFiscalMemory()");
+        methodBegin("getRemainingFiscalMemory()");
         int result = 0;
         try {
             result = impl.getRemainingFiscalMemory();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getRemainingFiscalMemory = " + String.valueOf(result));
+        methodEnd("getRemainingFiscalMemory = " + String.valueOf(result));
         return result;
     }
 
     public synchronized String getReservedWord() throws JposException {
-        logger.debug("getReservedWord()");
+        methodBegin("getReservedWord()");
         String result = "";
         try {
             result = impl.getReservedWord();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getReservedWord = " + String.valueOf(result));
+        methodEnd("getReservedWord = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getSlpEmpty() throws JposException {
-        logger.debug("getSlpEmpty()");
+        methodBegin("getSlpEmpty()");
         boolean result = false;
         try {
             result = impl.getSlpEmpty();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getSlpEmpty = " + String.valueOf(result));
+        methodEnd("getSlpEmpty = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getSlpNearEnd() throws JposException {
-        logger.debug("getSlpNearEnd()");
+        methodBegin("getSlpNearEnd()");
         boolean result = false;
         try {
             result = impl.getSlpNearEnd();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getSlpNearEnd = " + String.valueOf(result));
+        methodEnd("getSlpNearEnd = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getSlipSelection() throws JposException {
-        logger.debug("getSlipSelection()");
+        methodBegin("getSlipSelection()");
         int result = 0;
         try {
             result = impl.getSlipSelection();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getSlipSelection = " + String.valueOf(result));
+        methodEnd("getSlipSelection = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setSlipSelection(int slipSelection) throws JposException {
-        logger.debug("setSlipSelection(" + String.valueOf(slipSelection) + ")");
+        methodBegin("setSlipSelection(" + String.valueOf(slipSelection) + ")");
         try {
             impl.setSlipSelection(slipSelection);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setSlipSelection: OK");
+        methodEnd("setSlipSelection: OK");
     }
 
     public synchronized boolean getTrainingModeActive() throws JposException {
-        logger.debug("getTrainingModeActive()");
+        methodBegin("getTrainingModeActive()");
         boolean result = false;
         try {
             result = impl.getTrainingModeActive();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getTrainingModeActive = " + String.valueOf(result));
+        methodEnd("getTrainingModeActive = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void beginFiscalDocument(int documentAmount) throws JposException {
-        logger.debug("beginFiscalDocument(" + String.valueOf(documentAmount)
+        methodBegin("beginFiscalDocument(" + String.valueOf(documentAmount)
                 + ")");
         try {
             impl.beginFiscalDocument(documentAmount);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("beginFiscalDocument: OK");
+        methodEnd("beginFiscalDocument: OK");
     }
 
     public synchronized void beginFiscalReceipt(boolean printHeader) throws JposException {
@@ -1331,203 +1330,203 @@ public class FiscalPrinterService extends DeviceService implements
 
     public synchronized void beginFixedOutput(int station, int documentType)
             throws JposException {
-        logger.debug("beginFixedOutput(" + String.valueOf(station) + ", "
+        methodBegin("beginFixedOutput(" + String.valueOf(station) + ", "
                 + String.valueOf(documentType) + ")");
         try {
             impl.beginFixedOutput(station, documentType);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("beginFixedOutput: OK");
+        methodEnd("beginFixedOutput: OK");
     }
 
     public synchronized void beginInsertion(int timeout) throws JposException {
-        logger.debug("beginInsertion(" + String.valueOf(timeout) + ")");
+        methodBegin("beginInsertion(" + String.valueOf(timeout) + ")");
         try {
             impl.beginInsertion(timeout);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("beginInsertion: OK");
+        methodEnd("beginInsertion: OK");
     }
 
     public synchronized void beginItemList(int vatID) throws JposException {
-        logger.debug("beginItemList(" + String.valueOf(vatID) + ")");
+        methodBegin("beginItemList(" + String.valueOf(vatID) + ")");
         try {
             impl.beginItemList(vatID);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("beginItemList: OK");
+        methodEnd("beginItemList: OK");
     }
 
     public synchronized void beginNonFiscal() throws JposException {
-        logger.debug("beginNonFiscal()");
+        methodBegin("beginNonFiscal()");
         try {
             impl.beginNonFiscal();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("beginNonFiscal: OK");
+        methodEnd("beginNonFiscal: OK");
     }
 
     public synchronized void beginRemoval(int timeout) throws JposException {
-        logger.debug("beginRemoval(" + String.valueOf(timeout) + ")");
+        methodBegin("beginRemoval(" + String.valueOf(timeout) + ")");
         try {
             impl.beginRemoval(timeout);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("beginRemoval: OK");
+        methodEnd("beginRemoval: OK");
     }
 
     public synchronized void beginTraining() throws JposException {
-        logger.debug("beginTraining()");
+        methodBegin("beginTraining()");
         try {
             impl.beginTraining();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("beginTraining: OK");
+        methodEnd("beginTraining: OK");
     }
 
     public synchronized void clearError() throws JposException {
-        logger.debug("clearError()");
+        methodBegin("clearError()");
         try {
             impl.clearError();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("clearError: OK");
+        methodEnd("clearError: OK");
     }
 
     public synchronized void clearOutput() throws JposException {
-        logger.debug("clearOutput()");
+        methodBegin("clearOutput()");
         try {
             impl.clearOutput();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("clearOutput: OK");
+        methodEnd("clearOutput: OK");
     }
 
     public synchronized void endFiscalDocument() throws JposException {
-        logger.debug("endFiscalDocument()");
+        methodBegin("endFiscalDocument()");
         try {
             impl.endFiscalDocument();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("endFiscalDocument: OK");
+        methodEnd("endFiscalDocument: OK");
     }
 
     public synchronized void endFiscalReceipt(boolean printHeader) throws JposException {
-        logger.debug("endFiscalReceipt(" + String.valueOf(printHeader) + ")");
+        methodBegin("endFiscalReceipt(" + String.valueOf(printHeader) + ")");
         try {
             impl.endFiscalReceipt(printHeader);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("endFiscalReceipt: OK");
+        methodEnd("endFiscalReceipt: OK");
     }
 
     public synchronized void endFixedOutput() throws JposException {
-        logger.debug("endFixedOutput()");
+        methodBegin("endFixedOutput()");
         try {
             impl.endFixedOutput();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("endFixedOutput: OK");
+        methodEnd("endFixedOutput: OK");
     }
 
     public synchronized void endInsertion() throws JposException {
-        logger.debug("endInsertion()");
+        methodBegin("endInsertion()");
         try {
             impl.endInsertion();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("endInsertion: OK");
+        methodEnd("endInsertion: OK");
     }
 
     public synchronized void endItemList() throws JposException {
-        logger.debug("endItemList()");
+        methodBegin("endItemList()");
         try {
             impl.endItemList();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("endItemList: OK");
+        methodEnd("endItemList: OK");
     }
 
     public synchronized void endNonFiscal() throws JposException {
-        logger.debug("endNonFiscal()");
+        methodBegin("endNonFiscal()");
         try {
             impl.endNonFiscal();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("endNonFiscal: OK");
+        methodEnd("endNonFiscal: OK");
     }
 
     public synchronized void endRemoval() throws JposException {
-        logger.debug("endRemoval()");
+        methodBegin("endRemoval()");
         try {
             impl.endRemoval();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("endRemoval: OK");
+        methodEnd("endRemoval: OK");
     }
 
     public synchronized void endTraining() throws JposException {
-        logger.debug("endTraining()");
+        methodBegin("endTraining()");
         try {
             impl.endTraining();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("endTraining: OK");
+        methodEnd("endTraining: OK");
     }
 
     public synchronized void getData(int dataItem, int[] optArgs, String[] data)
             throws JposException {
-        logger.debug("getData(" + String.valueOf(dataItem) + ", "
+        methodBegin("getData(" + String.valueOf(dataItem) + ", "
                 + String.valueOf(optArgs) + ", " + String.valueOf(data) + ")");
         try {
             impl.getData(dataItem, optArgs, data);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getData: OK");
+        methodEnd("getData: OK");
     }
 
     public synchronized void getDate(String[] Date) throws JposException {
-        logger.debug("getDate(" + String.valueOf(Date) + ")");
+        methodBegin("getDate(" + String.valueOf(Date) + ")");
         try {
             impl.getDate(Date);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getDate: OK");
+        methodEnd("getDate: OK");
     }
 
     public synchronized void getTotalizer(int vatID, int optArgs, String[] data)
             throws JposException {
-        logger.debug("getTotalizer(" + String.valueOf(vatID) + ", "
+        methodBegin("getTotalizer(" + String.valueOf(vatID) + ", "
                 + String.valueOf(optArgs) + ", " + String.valueOf(data) + ")");
         try {
             impl.getTotalizer(vatID, optArgs, data);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getTotalizer: OK");
+        methodEnd("getTotalizer: OK");
     }
 
     public synchronized void getVatEntry(int vatID, int optArgs, int[] vatRate)
             throws JposException {
-        logger.debug("getVatEntry(" + String.valueOf(vatID) + ", "
+        methodBegin("getVatEntry(" + String.valueOf(vatID) + ", "
                 + String.valueOf(optArgs) + ", " + String.valueOf(vatRate)
                 + ")");
         try {
@@ -1535,34 +1534,34 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getVatEntry: OK");
+        methodEnd("getVatEntry: OK");
     }
 
     public synchronized void printDuplicateReceipt() throws JposException {
-        logger.debug("printDuplicateReceipt()");
+        methodBegin("printDuplicateReceipt()");
         try {
             impl.printDuplicateReceipt();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printDuplicateReceipt: OK");
+        methodEnd("printDuplicateReceipt: OK");
     }
 
     public synchronized void printFiscalDocumentLine(String documentLine)
             throws JposException {
-        logger.debug("printFiscalDocumentLine(" + String.valueOf(documentLine)
+        methodBegin("printFiscalDocumentLine(" + String.valueOf(documentLine)
                 + ")");
         try {
             impl.printFiscalDocumentLine(documentLine);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printFiscalDocumentLine: OK");
+        methodEnd("printFiscalDocumentLine: OK");
     }
 
     public synchronized void printFixedOutput(int documentType, int lineNumber, String data)
             throws JposException {
-        logger.debug("printFixedOutput(" + String.valueOf(documentType) + ", "
+        methodBegin("printFixedOutput(" + String.valueOf(documentType) + ", "
                 + String.valueOf(lineNumber) + ", " + String.valueOf(data)
                 + ")");
         try {
@@ -1570,45 +1569,45 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printFixedOutput: OK");
+        methodEnd("printFixedOutput: OK");
     }
 
     public synchronized void printNormal(int station, String data) throws JposException {
-        logger.debug("printNormal(" + String.valueOf(station) + ", "
+        methodBegin("printNormal(" + String.valueOf(station) + ", "
                 + String.valueOf(data) + ")");
         try {
             impl.printNormal(station, data);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printNormal: OK");
+        methodEnd("printNormal: OK");
     }
 
     public synchronized void printPeriodicTotalsReport(String date1, String date2)
             throws JposException {
-        logger.debug("printPeriodicTotalsReport(" + String.valueOf(date1)
+        methodBegin("printPeriodicTotalsReport(" + String.valueOf(date1)
                 + ", " + String.valueOf(date2) + ")");
         try {
             impl.printPeriodicTotalsReport(date1, date2);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printPeriodicTotalsReport: OK");
+        methodEnd("printPeriodicTotalsReport: OK");
     }
 
     public synchronized void printPowerLossReport() throws JposException {
-        logger.debug("printPowerLossReport()");
+        methodBegin("printPowerLossReport()");
         try {
             impl.printPowerLossReport();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printPowerLossReport: OK");
+        methodEnd("printPowerLossReport: OK");
     }
 
     public synchronized void printRecItem(String description, long price, int quantity,
             int vatInfo, long unitPrice, String unitName) throws JposException {
-        logger.debug("printRecItem(" + String.valueOf(description) + ", "
+        methodBegin("printRecItem(" + String.valueOf(description) + ", "
                 + String.valueOf(price) + ", " + String.valueOf(quantity)
                 + ", " + String.valueOf(vatInfo) + ", "
                 + String.valueOf(unitPrice) + ", " + String.valueOf(unitName)
@@ -1619,12 +1618,12 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecItem: OK");
+        methodEnd("printRecItem: OK");
     }
 
     public synchronized void printRecItemAdjustment(int adjustmentType, String description,
             long amount, int vatInfo) throws JposException {
-        logger.debug("printRecItemAdjustment(" + String.valueOf(adjustmentType)
+        methodBegin("printRecItemAdjustment(" + String.valueOf(adjustmentType)
                 + ", " + String.valueOf(description) + ", "
                 + String.valueOf(amount) + ", " + String.valueOf(vatInfo) + ")");
         try {
@@ -1633,47 +1632,47 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecItemAdjustment: OK");
+        methodEnd("printRecItemAdjustment: OK");
     }
 
     public synchronized void printRecMessage(String message) throws JposException {
-        logger.debug("printRecMessage(" + String.valueOf(message) + ")");
+        methodBegin("printRecMessage(" + String.valueOf(message) + ")");
         try {
             impl.printRecMessage(message);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecMessage: OK");
+        methodEnd("printRecMessage: OK");
     }
 
     public synchronized void printRecNotPaid(String description, long amount)
             throws JposException {
-        logger.debug("printRecNotPaid(" + String.valueOf(description) + ", "
+        methodBegin("printRecNotPaid(" + String.valueOf(description) + ", "
                 + String.valueOf(amount) + ")");
         try {
             impl.printRecNotPaid(description, amount);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecNotPaid: OK");
+        methodEnd("printRecNotPaid: OK");
     }
 
     public synchronized void printRecRefund(String description, long amount, int vatInfo)
             throws JposException {
-        logger.debug("printRecRefund(" + String.valueOf(description) + ", "
+        methodBegin("printRecRefund(" + String.valueOf(description) + ", "
                 + String.valueOf(amount) + ", " + String.valueOf(vatInfo) + ")");
         try {
             impl.printRecRefund(description, amount, vatInfo);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecRefund: OK");
+        methodEnd("printRecRefund: OK");
     }
 
     public synchronized void printRecItemRefund(String description, long amount,
             int quantity, int vatInfo, long unitAmount, String unitName)
             throws JposException {
-        logger.debug("printRecItemRefund(" + String.valueOf(description) + ", "
+        methodBegin("printRecItemRefund(" + String.valueOf(description) + ", "
                 + String.valueOf(amount) + ", " + String.valueOf(quantity)
                 + ", " + String.valueOf(vatInfo) + ", "
                 + String.valueOf(unitAmount) + ", " + String.valueOf(unitName)
@@ -1684,13 +1683,13 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecItemRefund: OK");
+        methodEnd("printRecItemRefund: OK");
     }
 
     public synchronized void printRecItemRefundVoid(String description, long amount,
             int quantity, int vatInfo, long unitAmount, String unitName)
             throws JposException {
-        logger.debug("printRecItemRefundVoid(" + String.valueOf(description)
+        methodBegin("printRecItemRefundVoid(" + String.valueOf(description)
                 + ", " + String.valueOf(amount) + ", "
                 + String.valueOf(quantity) + ", " + String.valueOf(vatInfo)
                 + ", " + String.valueOf(unitAmount) + ", "
@@ -1701,12 +1700,12 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecItemRefundVoid: OK");
+        methodEnd("printRecItemRefundVoid: OK");
     }
 
     public synchronized void printRecItemAdjustmentVoid(int adjustmentType,
             String description, long amount, int vatInfo) throws JposException {
-        logger.debug("printRecItemAdjustmentVoid("
+        methodBegin("printRecItemAdjustmentVoid("
                 + String.valueOf(adjustmentType) + ", "
                 + String.valueOf(description) + ", " + String.valueOf(amount)
                 + ", " + String.valueOf(vatInfo) + ")");
@@ -1716,22 +1715,22 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecItemAdjustmentVoid: OK");
+        methodEnd("printRecItemAdjustmentVoid: OK");
     }
 
     public synchronized void printRecSubtotal(long amount) throws JposException {
-        logger.debug("printRecSubtotal(" + String.valueOf(amount) + ")");
+        methodBegin("printRecSubtotal(" + String.valueOf(amount) + ")");
         try {
             impl.printRecSubtotal(amount);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecSubtotal: OK");
+        methodEnd("printRecSubtotal: OK");
     }
 
     public synchronized void printRecSubtotalAdjustment(int adjustmentType,
             String description, long amount) throws JposException {
-        logger.debug("printRecSubtotalAdjustment("
+        methodBegin("printRecSubtotalAdjustment("
                 + String.valueOf(adjustmentType) + ", "
                 + String.valueOf(description) + ", " + String.valueOf(amount)
                 + ")");
@@ -1740,12 +1739,12 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecSubtotalAdjustment: OK");
+        methodEnd("printRecSubtotalAdjustment: OK");
     }
 
     public synchronized void printRecTotal(long total, long payment, String description)
             throws JposException {
-        logger.debug("printRecTotal(" + String.valueOf(total) + ", "
+        methodBegin("printRecTotal(" + String.valueOf(total) + ", "
                 + String.valueOf(payment) + ", " + String.valueOf(description)
                 + ")");
         try {
@@ -1753,23 +1752,23 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecTotal: OK");
+        methodEnd("printRecTotal: OK");
     }
 
     public synchronized void printRecVoid(String description) throws JposException {
-        logger.debug("printRecVoid(" + String.valueOf(description) + ")");
+        methodBegin("printRecVoid(" + String.valueOf(description) + ")");
         try {
             impl.printRecVoid(description);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecVoid: OK");
+        methodEnd("printRecVoid: OK");
     }
 
     public synchronized void printRecVoidItem(String description, long amount, int quantity,
             int adjustmentType, long adjustment, int vatInfo)
             throws JposException {
-        logger.debug("printRecVoidItem(" + String.valueOf(description) + ", "
+        methodBegin("printRecVoidItem(" + String.valueOf(description) + ", "
                 + String.valueOf(amount) + ", " + String.valueOf(quantity)
                 + ", " + String.valueOf(adjustmentType) + ", "
                 + String.valueOf(adjustment) + ", " + String.valueOf(vatInfo)
@@ -1780,12 +1779,12 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecVoidItem: OK");
+        methodEnd("printRecVoidItem: OK");
     }
 
     public synchronized void printReport(int reportType, String startNum, String endNum)
             throws JposException {
-        logger.debug("printReport(" + String.valueOf(reportType) + ", "
+        methodBegin("printReport(" + String.valueOf(reportType) + ", "
                 + String.valueOf(startNum) + ", " + String.valueOf(endNum)
                 + ")");
         try {
@@ -1793,27 +1792,27 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printReport: OK");
+        methodEnd("printReport: OK");
     }
 
     public synchronized void printXReport() throws JposException {
-        logger.debug("printXReport()");
+        methodBegin("printXReport()");
         try {
             impl.printXReport();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printXReport: OK");
+        methodEnd("printXReport: OK");
     }
 
     public synchronized void printZReport() throws JposException {
-        logger.debug("printZReport()");
+        methodBegin("printZReport()");
         try {
             impl.printZReport();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printZReport: OK");
+        methodEnd("printZReport: OK");
     }
 
     public synchronized void resetPrinter() throws JposException {
@@ -1827,18 +1826,18 @@ public class FiscalPrinterService extends DeviceService implements
     }
 
     public synchronized void setDate(String date) throws JposException {
-        logger.debug("setDate(" + String.valueOf(date) + ")");
+        methodBegin("setDate(" + String.valueOf(date) + ")");
         try {
             impl.setDate(date);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setDate: OK");
+        methodEnd("setDate: OK");
     }
 
     public synchronized void setHeaderLine(int lineNumber, String text, boolean doubleWidth)
             throws JposException {
-        logger.debug("setHeaderLine(" + String.valueOf(lineNumber) + ", \""
+        methodBegin("setHeaderLine(" + String.valueOf(lineNumber) + ", \""
                 + String.valueOf(text) + "\", " + String.valueOf(doubleWidth)
                 + ")");
         try {
@@ -1846,33 +1845,33 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setHeaderLine: OK");
+        methodEnd("setHeaderLine: OK");
     }
 
     public synchronized void setPOSID(String POSID, String cashierID) throws JposException {
-        logger.debug("setPOSID(" + String.valueOf(POSID) + ", "
+        methodBegin("setPOSID(" + String.valueOf(POSID) + ", "
                 + String.valueOf(cashierID) + ")");
         try {
             impl.setPOSID(POSID, cashierID);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setPOSID: OK");
+        methodEnd("setPOSID: OK");
     }
 
     public synchronized void setStoreFiscalID(String ID) throws JposException {
-        logger.debug("setStoreFiscalID(" + String.valueOf(ID) + ")");
+        methodBegin("setStoreFiscalID(" + String.valueOf(ID) + ")");
         try {
             impl.setStoreFiscalID(ID);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setStoreFiscalID: OK");
+        methodEnd("setStoreFiscalID: OK");
     }
 
     public synchronized void setTrailerLine(int lineNumber, String text, boolean doubleWidth)
             throws JposException {
-        logger.debug("setTrailerLine(" + String.valueOf(lineNumber) + ", \""
+        methodBegin("setTrailerLine(" + String.valueOf(lineNumber) + ", \""
                 + String.valueOf(text) + "\", " + String.valueOf(doubleWidth)
                 + ")");
         try {
@@ -1880,471 +1879,471 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setTrailerLine: OK");
+        methodEnd("setTrailerLine: OK");
     }
 
     public synchronized void setVatTable() throws JposException {
-        logger.debug("setVatTable()");
+        methodBegin("setVatTable()");
         try {
             impl.setVatTable();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setVatTable: OK");
+        methodEnd("setVatTable: OK");
     }
 
     public synchronized void setVatValue(int vatID, String vatValue) throws JposException {
-        logger.debug("setVatValue(" + String.valueOf(vatID) + ", "
+        methodBegin("setVatValue(" + String.valueOf(vatID) + ", "
                 + String.valueOf(vatValue) + ")");
         try {
             impl.setVatValue(vatID, vatValue);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setVatValue: OK");
+        methodEnd("setVatValue: OK");
     }
 
     public synchronized void verifyItem(String itemName, int vatID) throws JposException {
-        logger.debug("verifyItem(" + String.valueOf(itemName) + ", "
+        methodBegin("verifyItem(" + String.valueOf(itemName) + ", "
                 + String.valueOf(vatID) + ")");
         try {
             impl.verifyItem(itemName, vatID);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("verifyItem: OK");
+        methodEnd("verifyItem: OK");
     }
 
     public synchronized boolean getCapAdditionalHeader() throws JposException {
-        logger.debug("getCapAdditionalHeader()");
+        methodBegin("getCapAdditionalHeader()");
         boolean result = false;
         try {
             result = impl.getCapAdditionalHeader();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapAdditionalHeader = " + String.valueOf(result));
+        methodEnd("getCapAdditionalHeader = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapAdditionalTrailer() throws JposException {
-        logger.debug("getCapAdditionalTrailer()");
+        methodBegin("getCapAdditionalTrailer()");
         boolean result = false;
         try {
             result = impl.getCapAdditionalTrailer();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapAdditionalTrailer = " + String.valueOf(result));
+        methodEnd("getCapAdditionalTrailer = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapChangeDue() throws JposException {
-        logger.debug("getCapChangeDue()");
+        methodBegin("getCapChangeDue()");
         boolean result = false;
         try {
             result = impl.getCapChangeDue();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapChangeDue = " + String.valueOf(result));
+        methodEnd("getCapChangeDue = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapEmptyReceiptIsVoidable() throws JposException {
-        logger.debug("getCapEmptyReceiptIsVoidable()");
+        methodBegin("getCapEmptyReceiptIsVoidable()");
         boolean result = false;
         try {
             result = impl.getCapEmptyReceiptIsVoidable();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapEmptyReceiptIsVoidable = " + String.valueOf(result));
+        methodEnd("getCapEmptyReceiptIsVoidable = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapFiscalReceiptStation() throws JposException {
-        logger.debug("getCapFiscalReceiptStation()");
+        methodBegin("getCapFiscalReceiptStation()");
         boolean result = false;
         try {
             result = impl.getCapFiscalReceiptStation();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapFiscalReceiptStation = " + String.valueOf(result));
+        methodEnd("getCapFiscalReceiptStation = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapFiscalReceiptType() throws JposException {
-        logger.debug("getCapFiscalReceiptType()");
+        methodBegin("getCapFiscalReceiptType()");
         boolean result = false;
         try {
             result = impl.getCapFiscalReceiptType();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapFiscalReceiptType = " + String.valueOf(result));
+        methodEnd("getCapFiscalReceiptType = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapMultiContractor() throws JposException {
-        logger.debug("getCapMultiContractor()");
+        methodBegin("getCapMultiContractor()");
         boolean result = false;
         try {
             result = impl.getCapMultiContractor();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapMultiContractor = " + String.valueOf(result));
+        methodEnd("getCapMultiContractor = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapOnlyVoidLastItem() throws JposException {
-        logger.debug("getCapOnlyVoidLastItem()");
+        methodBegin("getCapOnlyVoidLastItem()");
         boolean result = false;
         try {
             result = impl.getCapOnlyVoidLastItem();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapOnlyVoidLastItem = " + String.valueOf(result));
+        methodEnd("getCapOnlyVoidLastItem = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapPackageAdjustment() throws JposException {
-        logger.debug("getCapPackageAdjustment()");
+        methodBegin("getCapPackageAdjustment()");
         boolean result = false;
         try {
             result = impl.getCapPackageAdjustment();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapPackageAdjustment = " + String.valueOf(result));
+        methodEnd("getCapPackageAdjustment = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapPostPreLine() throws JposException {
-        logger.debug("getCapPostPreLine()");
+        methodBegin("getCapPostPreLine()");
         boolean result = false;
         try {
             result = impl.getCapPostPreLine();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapPostPreLine = " + String.valueOf(result));
+        methodEnd("getCapPostPreLine = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapSetCurrency() throws JposException {
-        logger.debug("getCapSetCurrency()");
+        methodBegin("getCapSetCurrency()");
         boolean result = false;
         try {
             result = impl.getCapSetCurrency();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapSetCurrency = " + String.valueOf(result));
+        methodEnd("getCapSetCurrency = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapTotalizerType() throws JposException {
-        logger.debug("getCapTotalizerType()");
+        methodBegin("getCapTotalizerType()");
         boolean result = false;
         try {
             result = impl.getCapTotalizerType();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapTotalizerType = " + String.valueOf(result));
+        methodEnd("getCapTotalizerType = " + String.valueOf(result));
         return result;
     }
 
     public synchronized int getActualCurrency() throws JposException {
-        logger.debug("getActualCurrency()");
+        methodBegin("getActualCurrency()");
         int result = 0;
         try {
             result = impl.getActualCurrency();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getActualCurrency = " + String.valueOf(result));
+        methodEnd("getActualCurrency = " + String.valueOf(result));
         return result;
     }
 
     public synchronized String getAdditionalHeader() throws JposException {
-        logger.debug("getAdditionalHeader()");
+        methodBegin("getAdditionalHeader()");
         String result = "";
         try {
             result = impl.getAdditionalHeader();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getAdditionalHeader = " + String.valueOf(result));
+        methodEnd("getAdditionalHeader = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setAdditionalHeader(String additionalHeader)
             throws JposException {
-        logger.debug("setAdditionalHeader(" + String.valueOf(additionalHeader)
+        methodBegin("setAdditionalHeader(" + String.valueOf(additionalHeader)
                 + ")");
         try {
             impl.setAdditionalHeader(additionalHeader);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setAdditionalHeader: OK");
+        methodEnd("setAdditionalHeader: OK");
     }
 
     public synchronized String getAdditionalTrailer() throws JposException {
-        logger.debug("getAdditionalTrailer()");
+        methodBegin("getAdditionalTrailer()");
         String result = "";
         try {
             result = impl.getAdditionalTrailer();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getAdditionalTrailer = " + String.valueOf(result));
+        methodEnd("getAdditionalTrailer = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setAdditionalTrailer(String additionalTrailer)
             throws JposException {
-        logger.debug("setAdditionalTrailer("
+        methodBegin("setAdditionalTrailer("
                 + String.valueOf(additionalTrailer) + ")");
         try {
             impl.setAdditionalTrailer(additionalTrailer);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setAdditionalTrailer: OK");
+        methodEnd("setAdditionalTrailer: OK");
     }
 
     public synchronized String getChangeDue() throws JposException {
-        logger.debug("getChangeDue()");
+        methodBegin("getChangeDue()");
         String result = "";
         try {
             result = impl.getChangeDue();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getChangeDue = " + String.valueOf(result));
+        methodEnd("getChangeDue = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setChangeDue(String changeDue) throws JposException {
-        logger.debug("setChangeDue(" + String.valueOf(changeDue) + ")");
+        methodBegin("setChangeDue(" + String.valueOf(changeDue) + ")");
         try {
             impl.setChangeDue(changeDue);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setChangeDue: OK");
+        methodEnd("setChangeDue: OK");
     }
 
     public synchronized int getContractorId() throws JposException {
-        logger.debug("getContractorId()");
+        methodBegin("getContractorId()");
         int result = 0;
         try {
             result = impl.getContractorId();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getContractorId = " + String.valueOf(result));
+        methodEnd("getContractorId = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setContractorId(int contractorId) throws JposException {
-        logger.debug("setContractorId(" + String.valueOf(contractorId) + ")");
+        methodBegin("setContractorId(" + String.valueOf(contractorId) + ")");
         try {
             impl.setContractorId(contractorId);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setContractorId: OK");
+        methodEnd("setContractorId: OK");
     }
 
     public synchronized int getDateType() throws JposException {
-        logger.debug("getDateType()");
+        methodBegin("getDateType()");
         int result = 0;
         try {
             result = impl.getDateType();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getDateType = " + String.valueOf(result));
+        methodEnd("getDateType = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setDateType(int dateType) throws JposException {
-        logger.debug("setDateType(" + String.valueOf(dateType) + ")");
+        methodBegin("setDateType(" + String.valueOf(dateType) + ")");
         try {
             impl.setDateType(dateType);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setDateType: OK");
+        methodEnd("setDateType: OK");
     }
 
     public synchronized int getFiscalReceiptStation() throws JposException {
-        logger.debug("getFiscalReceiptStation()");
+        methodBegin("getFiscalReceiptStation()");
         int result = 0;
         try {
             result = impl.getFiscalReceiptStation();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getFiscalReceiptStation = " + String.valueOf(result));
+        methodEnd("getFiscalReceiptStation = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setFiscalReceiptStation(int fiscalReceiptStation)
             throws JposException {
-        logger.debug("setFiscalReceiptStation("
+        methodBegin("setFiscalReceiptStation("
                 + String.valueOf(fiscalReceiptStation) + ")");
         try {
             impl.setFiscalReceiptStation(fiscalReceiptStation);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setFiscalReceiptStation: OK");
+        methodEnd("setFiscalReceiptStation: OK");
     }
 
     public synchronized int getFiscalReceiptType() throws JposException {
-        logger.debug("getFiscalReceiptType()");
+        methodBegin("getFiscalReceiptType()");
         int result = 0;
         try {
             result = impl.getFiscalReceiptType();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getFiscalReceiptType = " + String.valueOf(result));
+        methodEnd("getFiscalReceiptType = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setFiscalReceiptType(int fiscalReceiptType)
             throws JposException {
-        logger.debug("setFiscalReceiptType("
+        methodBegin("setFiscalReceiptType("
                 + String.valueOf(fiscalReceiptType) + ")");
         try {
             impl.setFiscalReceiptType(fiscalReceiptType);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setFiscalReceiptType: OK");
+        methodEnd("setFiscalReceiptType: OK");
     }
 
     public synchronized int getMessageType() throws JposException {
-        logger.debug("getMessageType()");
+        methodBegin("getMessageType()");
         int result = 0;
         try {
             result = impl.getMessageType();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getMessageType = " + String.valueOf(result));
+        methodEnd("getMessageType = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setMessageType(int messageType) throws JposException {
-        logger.debug("setMessageType(" + String.valueOf(messageType) + ")");
+        methodBegin("setMessageType(" + String.valueOf(messageType) + ")");
         try {
             impl.setMessageType(messageType);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setMessageType: OK");
+        methodEnd("setMessageType: OK");
     }
 
     public synchronized String getPostLine() throws JposException {
-        logger.debug("getPostLine()");
+        methodBegin("getPostLine()");
         String result = "";
         try {
             result = impl.getPostLine();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getPostLine = " + String.valueOf(result));
+        methodEnd("getPostLine = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setPostLine(String postLine) throws JposException {
-        logger.debug("setPostLine(" + String.valueOf(postLine) + ")");
+        methodBegin("setPostLine(" + String.valueOf(postLine) + ")");
         try {
             impl.setPostLine(postLine);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setPostLine: OK");
+        methodEnd("setPostLine: OK");
     }
 
     public synchronized String getPreLine() throws JposException {
-        logger.debug("getPreLine()");
+        methodBegin("getPreLine()");
         String result = "";
         try {
             result = impl.getPreLine();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getPreLine = " + String.valueOf(result));
+        methodEnd("getPreLine = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setPreLine(String preLine) throws JposException {
-        logger.debug("setPreLine(" + String.valueOf(preLine) + ")");
+        methodBegin("setPreLine(" + String.valueOf(preLine) + ")");
         try {
             impl.setPreLine(preLine);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setPreLine: OK");
+        methodEnd("setPreLine: OK");
     }
 
     public synchronized int getTotalizerType() throws JposException {
-        logger.debug("getTotalizerType()");
+        methodBegin("getTotalizerType()");
         int result = 0;
         try {
             result = impl.getTotalizerType();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getTotalizerType = " + String.valueOf(result));
+        methodEnd("getTotalizerType = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void setTotalizerType(int totalizerType) throws JposException {
-        logger.debug("setTotalizerType(" + String.valueOf(totalizerType) + ")");
+        methodBegin("setTotalizerType(" + String.valueOf(totalizerType) + ")");
         try {
             impl.setTotalizerType(totalizerType);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setTotalizerType: OK");
+        methodEnd("setTotalizerType: OK");
     }
 
     public synchronized void setCurrency(int newCurrency) throws JposException {
-        logger.debug("setCurrency(" + String.valueOf(newCurrency) + ")");
+        methodBegin("setCurrency(" + String.valueOf(newCurrency) + ")");
         try {
             impl.setCurrency(newCurrency);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("setCurrency: OK");
+        methodEnd("setCurrency: OK");
     }
 
     public synchronized void printRecCash(long amount) throws JposException {
-        logger.debug("printRecCash(" + String.valueOf(amount) + ")");
+        methodBegin("printRecCash(" + String.valueOf(amount) + ")");
         try {
             impl.printRecCash(amount);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecCash: OK");
+        methodEnd("printRecCash: OK");
     }
 
     public synchronized void printRecItemFuel(String description, long price, int quantity,
             int vatInfo, long unitPrice, String unitName, long specialTax,
             String specialTaxName) throws JposException {
-        logger.debug("printRecItemFuel(" + String.valueOf(description) + ", "
+        methodBegin("printRecItemFuel(" + String.valueOf(description) + ", "
                 + String.valueOf(price) + ", " + String.valueOf(quantity)
                 + ", " + String.valueOf(vatInfo) + ", "
                 + String.valueOf(unitPrice) + ", " + String.valueOf(unitName)
@@ -2356,12 +2355,12 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecItemFuel: OK");
+        methodEnd("printRecItemFuel: OK");
     }
 
     public synchronized void printRecItemFuelVoid(String description, long price,
             int vatInfo, long specialTax) throws JposException {
-        logger.debug("printRecItemFuelVoid(" + String.valueOf(description)
+        methodBegin("printRecItemFuelVoid(" + String.valueOf(description)
                 + ", " + String.valueOf(price) + ", " + String.valueOf(vatInfo)
                 + ", " + String.valueOf(specialTax) + ")");
         try {
@@ -2369,12 +2368,12 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecItemFuelVoid: OK");
+        methodEnd("printRecItemFuelVoid: OK");
     }
 
     public synchronized void printRecPackageAdjustment(int adjustmentType,
             String description, String vatAdjustment) throws JposException {
-        logger.debug("printRecPackageAdjustment("
+        methodBegin("printRecPackageAdjustment("
                 + String.valueOf(adjustmentType) + ", "
                 + String.valueOf(description) + ", "
                 + String.valueOf(vatAdjustment) + ")");
@@ -2384,12 +2383,12 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecPackageAdjustment: OK");
+        methodEnd("printRecPackageAdjustment: OK");
     }
 
     public synchronized void printRecPackageAdjustVoid(int adjustmentType,
             String vatAdjustment) throws JposException {
-        logger.debug("printRecPackageAdjustVoid("
+        methodBegin("printRecPackageAdjustVoid("
                 + String.valueOf(adjustmentType) + ", "
                 + String.valueOf(vatAdjustment) + ")");
         try {
@@ -2397,24 +2396,24 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecPackageAdjustVoid: OK");
+        methodEnd("printRecPackageAdjustVoid: OK");
     }
 
     public synchronized void printRecRefundVoid(String description, long amount, int vatInfo)
             throws JposException {
-        logger.debug("printRecRefundVoid(" + String.valueOf(description) + ", "
+        methodBegin("printRecRefundVoid(" + String.valueOf(description) + ", "
                 + String.valueOf(amount) + ", " + String.valueOf(vatInfo) + ")");
         try {
             impl.printRecRefundVoid(description, amount, vatInfo);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecRefundVoid: OK");
+        methodEnd("printRecRefundVoid: OK");
     }
 
     public synchronized void printRecSubtotalAdjustVoid(int adjustmentType, long amount)
             throws JposException {
-        logger.debug("printRecSubtotalAdjustVoid("
+        methodBegin("printRecSubtotalAdjustVoid("
                 + String.valueOf(adjustmentType) + ", "
                 + String.valueOf(amount) + ")");
         try {
@@ -2422,64 +2421,64 @@ public class FiscalPrinterService extends DeviceService implements
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecSubtotalAdjustVoid: OK");
+        methodEnd("printRecSubtotalAdjustVoid: OK");
     }
 
     public synchronized void printRecTaxID(String taxID) throws JposException {
-        logger.debug("printRecTaxID(" + String.valueOf(taxID) + ")");
+        methodBegin("printRecTaxID(" + String.valueOf(taxID) + ")");
         try {
             impl.printRecTaxID(taxID);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("printRecTaxID: OK");
+        methodEnd("printRecTaxID: OK");
     }
 
     public synchronized int getAmountDecimalPlaces() throws JposException {
-        logger.debug("getAmountDecimalPlaces()");
+        methodBegin("getAmountDecimalPlaces()");
         int result = 0;
         try {
             result = impl.getAmountDecimalPlaces();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getAmountDecimalPlaces = " + String.valueOf(result));
+        methodEnd("getAmountDecimalPlaces = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapStatisticsReporting() throws JposException {
-        logger.debug("getCapStatisticsReporting()");
+        methodBegin("getCapStatisticsReporting()");
         boolean result = false;
         try {
             result = impl.getCapStatisticsReporting();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapStatisticsReporting = " + String.valueOf(result));
+        methodEnd("getCapStatisticsReporting = " + String.valueOf(result));
         return result;
     }
 
     public synchronized boolean getCapUpdateStatistics() throws JposException {
-        logger.debug("getCapUpdateStatistics()");
+        methodBegin("getCapUpdateStatistics()");
         boolean result = false;
         try {
             result = impl.getCapUpdateStatistics();
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("getCapUpdateStatistics = " + String.valueOf(result));
+        methodEnd("getCapUpdateStatistics = " + String.valueOf(result));
         return result;
     }
 
     public synchronized void resetStatistics(String statisticsBuffer) throws JposException {
-        logger.debug("resetStatistics(" + String.valueOf(statisticsBuffer)
+        methodBegin("resetStatistics(" + String.valueOf(statisticsBuffer)
                 + ")");
         try {
             impl.resetStatistics(statisticsBuffer);
         } catch (Throwable e) {
             handleException(e);
         }
-        logger.debug("resetStatistics: OK");
+        methodEnd("resetStatistics: OK");
     }
 
     public synchronized void retrieveStatistics(String[] statisticsBuffer)

@@ -75,9 +75,15 @@ public final class FSBindMC extends PrinterCommand {
             int paramLen = in.readByte();
             if (paramLen > 0)
             {
-                serverErrorCode = in.readByte();
-                serverCheckStatus = in.readByte();
-                serverTLVData =  in.readBytesToEnd();
+                if ((paramLen > 0)&&(in.size() > 7)){
+                    serverErrorCode = in.readByte();
+                }
+                if ((paramLen > 1)&&(in.size() > 8)){
+                    serverCheckStatus = in.readByte();
+                }
+                if ((paramLen > 2)&&(in.size() > 9)){
+                    serverTLVData =  in.readBytesToEnd();
+                }
             }
         }
    }

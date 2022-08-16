@@ -5169,8 +5169,7 @@ class PrinterTest implements FiscalPrinterConst {
     
     public void printFiscalReceiptWithTag2108() {
         try {
-            String code = "010464007801637221AgqLybqxM9MbR\u001d" + 
-                "91FFD0\u001d92dGVzdL31KAYL0YT6592MjmW7a2HkF3IY+muf2pVSKdQ=";
+            String code = "0104607070190158215Ky5oR\u001d93dGV";
             
             printer.resetPrinter();
             printer.setFiscalReceiptType(FPTR_RT_SALES);
@@ -5178,7 +5177,7 @@ class PrinterTest implements FiscalPrinterConst {
             
             printer.addItemCode(code.getBytes());
             printer.printRecItem("Item 1", 123, 1000, 1, 123, "");
-            printer.fsWriteOperationTag(1023, "1");
+            //printer.fsWriteOperationTag(1023, "1");
             printer.fsWriteOperationTag(2108, "11");
             
             
