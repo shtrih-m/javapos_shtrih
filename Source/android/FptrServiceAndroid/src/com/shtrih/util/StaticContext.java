@@ -23,25 +23,8 @@ public class StaticContext
 	public static void setContext(Object value)
 	{
 		context = (Context)value;
-		SysUtils.setFilesPath(getFilesPathContext(context));
+		SysUtils.setFilesPath(SysUtils.getFilesPathContext(context));
 	}
-
-	public static String getFilesPathContext(Context context)
-	{
-		File downloads = context.getExternalFilesDir(null);
-
-		if (downloads != null) {
-
-			if (downloads.exists())
-				return downloads.getAbsolutePath() + File.separator;
-
-			if (downloads.mkdirs())
-				return downloads.getAbsolutePath() + File.separator;
-		}
-
-		return context.getFilesDir().getAbsolutePath() + File.separator;
-	}
-
 
 	public static InputStream openResource(String fileName) throws Exception {
 		return checkContext().getAssets().open(fileName);

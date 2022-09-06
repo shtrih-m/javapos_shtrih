@@ -41,6 +41,10 @@ class PrinterTest implements FiscalPrinterConst {
         this.printer = printer;
     }
 
+    public ShtrihFiscalPrinter getPrinter(){
+        return printer;
+    }
+    
     public String centerLine(String data, int lineLength) {
         int len = Math.min(data.length(), lineLength);
         String s = data.substring(0, len);

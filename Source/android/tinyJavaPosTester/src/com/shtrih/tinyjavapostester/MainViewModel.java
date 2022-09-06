@@ -19,8 +19,7 @@ public class MainViewModel extends AndroidViewModel
     public MainViewModel(Application app){
         super(app);
 
-        //StaticContext.setContext(this.getApplication());
-        SysUtils.setFilesPath(StaticContext.getFilesPathContext(this.getApplication()));
+        StaticContext.setContext(this.getApplication());
         printer = new ShtrihFiscalPrinter(new FiscalPrinter());
     }
 

@@ -168,6 +168,14 @@ public class MainActivity extends AppCompatActivity
 
         model = ViewModelProviders.of(this).get(MainViewModel.class);
 
+        /*
+        String filesPath = "2834bds8as7d68123h12wjhg";
+        SysUtils.setFilesPath(filesPath);
+        if (!SysUtils.getFilesPath().equals(filesPath)){
+            log.error("setFilesPath failed!");
+        }
+        */
+
         LogbackConfig.configure(SysUtils.getFilesPath());
 
         printer = model.getPrinter();

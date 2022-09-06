@@ -135,7 +135,7 @@ public class MainDialog extends javax.swing.JDialog
         btnESCBarcodesPrintRecMessage = new javax.swing.JButton();
         btnPrintFiscalReceipt2 = new javax.swing.JButton();
         btnOpenDay = new javax.swing.JButton();
-        btnPrintFiscalReceipt3 = new javax.swing.JButton();
+        btnReadLongStatus = new javax.swing.JButton();
         btnPrintBarcodes = new javax.swing.JButton();
         jSeparator5 = new javax.swing.JSeparator();
         lblBarcode = new javax.swing.JLabel();
@@ -431,13 +431,13 @@ public class MainDialog extends javax.swing.JDialog
         });
         pnlFptr1.add(btnOpenDay, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 380, 160, 26));
 
-        btnPrintFiscalReceipt3.setText("fiscal receipt 3");
-        btnPrintFiscalReceipt3.addActionListener(new java.awt.event.ActionListener() {
+        btnReadLongStatus.setText("read long status");
+        btnReadLongStatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPrintFiscalReceipt3ActionPerformed(evt);
+                btnReadLongStatusActionPerformed(evt);
             }
         });
-        pnlFptr1.add(btnPrintFiscalReceipt3, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 270, 160, 30));
+        pnlFptr1.add(btnReadLongStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 270, 160, 30));
 
         btnPrintBarcodes.setText("Print barcodes");
         btnPrintBarcodes.addActionListener(new java.awt.event.ActionListener() {
@@ -1226,9 +1226,13 @@ public class MainDialog extends javax.swing.JDialog
         }
     }//GEN-LAST:event_btnOpenDayActionPerformed
 
-    private void btnPrintFiscalReceipt3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintFiscalReceipt3ActionPerformed
-        controller.printFiscalReceipt3();
-    }//GEN-LAST:event_btnPrintFiscalReceipt3ActionPerformed
+    private void btnReadLongStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReadLongStatusActionPerformed
+        try{
+            controller.getPrinter().readLongPrinterStatus();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnReadLongStatusActionPerformed
 
     private void btnPrintBarcodesActionPerformed(java.awt.event.ActionEvent evt) {
         try {
@@ -1356,7 +1360,6 @@ public class MainDialog extends javax.swing.JDialog
     private javax.swing.JButton btnPrintDuplicateReceipt;
     private javax.swing.JButton btnPrintFiscalReceipt;
     private javax.swing.JButton btnPrintFiscalReceipt2;
-    private javax.swing.JButton btnPrintFiscalReceipt3;
     private javax.swing.JButton btnPrintImage;
     private javax.swing.JButton btnPrintLine;
     private javax.swing.JButton btnPrintNonfiscalReceipt;
@@ -1365,6 +1368,7 @@ public class MainDialog extends javax.swing.JDialog
     private javax.swing.JButton btnPrintSpeedTest;
     private javax.swing.JButton btnReadCashReg;
     private javax.swing.JButton btnReadLastEJDocument;
+    private javax.swing.JButton btnReadLongStatus;
     private javax.swing.JButton btnReadMaxGraphics;
     private javax.swing.JButton btnReadOperReg;
     private javax.swing.JButton btnReadStatus;
