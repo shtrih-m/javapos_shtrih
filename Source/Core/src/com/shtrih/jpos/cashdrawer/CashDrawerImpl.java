@@ -129,25 +129,25 @@ public class CashDrawerImpl extends DeviceService implements
     // private
     private void checkOpened() throws JposException {
         if (state == JPOS_S_CLOSED) {
-            throw new JposException(JPOS_E_CLOSED);
+            throw new JposException(JPOS_E_CLOSED, "Service is closed");
         }
     }
 
     private void checkClaimed() throws JposException {
         if (!claimed) {
-            throw new JposException(JPOS_E_NOTCLAIMED);
+            throw new JposException(JPOS_E_NOTCLAIMED, "Service is not claimed");
         }
     }
 
     private void checkEnabled() throws JposException {
         if (!getDeviceEnabled()) {
-            throw new JposException(JPOS_E_DISABLED);
+            throw new JposException(JPOS_E_DISABLED, "Service is not enabled");
         }
     }
 
     private void checkOnLine() throws JposException {
         if (!connected) {
-            throw new JposException(JPOS_E_OFFLINE);
+            throw new JposException(JPOS_E_OFFLINE, "Device is offline");
         }
     }
 

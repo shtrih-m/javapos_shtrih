@@ -1943,7 +1943,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     private void checkOpened() throws Exception {
         if (state == JPOS_S_CLOSED) {
-            throw new JposException(JPOS_E_CLOSED);
+            throw new JposException(JPOS_E_CLOSED, "Service is closed");
         }
     }
 
@@ -3681,7 +3681,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             sendDocumentsZReport();
             startFDOService();
         } else {
-            throw new JposException(JPOS_E_ILLEGAL);
+            throw new JposException(JPOS_E_ILLEGAL, "Day is closed");
         }
     }
 
@@ -4324,14 +4324,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     private void checkClaimed() throws Exception {
         if (!claimed) {
-            throw new JposException(JPOS_E_NOTCLAIMED);
+            throw new JposException(JPOS_E_NOTCLAIMED, "Service is not claimed");
         }
     }
 
     public void checkEnabled() throws Exception {
         checkClaimed();
         if (!deviceEnabled) {
-            throw new JposException(JPOS_E_DISABLED);
+            throw new JposException(JPOS_E_DISABLED, "Service is not enabled");
         }
     }
 

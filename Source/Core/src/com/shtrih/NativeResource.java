@@ -159,13 +159,7 @@ public class NativeResource {
 		if(!resource.canRead()) {
 			throw new RuntimeException("Cant open JNI file: "+resource.getAbsolutePath());
 		}
-		//System.out.println("Loading: "+resource.getAbsolutePath());
-		try {
-			System.load(resource.getAbsolutePath());
-		} catch(UnsatisfiedLinkError e){
-			System.out.println(e.getMessage());
-			throw e;
-		}
+		System.load(resource.getAbsolutePath());
 	}
 
 	private void copyResource(InputStream io, File file) throws IOException {
@@ -245,7 +239,6 @@ public class NativeResource {
 		if(fd == null || !fd.canRead()) {
 			throw new NativeResourceException("Unable to deploy native resource");
 		}
-		//System.out.println("Local file: "+fd.getAbsolutePath());
 		return fd;
 	}
 

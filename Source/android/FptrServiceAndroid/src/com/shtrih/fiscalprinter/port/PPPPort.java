@@ -89,11 +89,15 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         }
     }
 
-    public void openSocket() throws Exception {
+    public void openSocket() throws Exception
+    {
+        /*
         if ((lastTimeInMillis != 0) && ((Calendar.getInstance().getTimeInMillis() - lastTimeInMillis) > 60000)) {
             logger.debug("Reopen connection after 60 seconds of inactivity");
             closeSocket();
         }
+         */
+
         if (socket == null) {
             socket = new Socket();
             socket.setTcpNoDelay(true);
