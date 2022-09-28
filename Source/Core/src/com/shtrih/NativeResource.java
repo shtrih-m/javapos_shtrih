@@ -244,7 +244,6 @@ public class NativeResource {
 
 	private static class OSUtil {
 		public static boolean is64Bit() {
-			////System.out.println("Arch: "+getOsArch());
 			return getOsArch().startsWith("x86_64") || getOsArch().startsWith("amd64")  || getOsArch().startsWith("aarch64");
 		}
 		public static boolean isARM() {
@@ -254,7 +253,6 @@ public class NativeResource {
 			return getOsArch().toLowerCase().contains("ppc");
 		}
 		public static boolean isWindows() {
-			////System.out.println("OS name: "+getOsName());
 			return getOsName().toLowerCase().startsWith("windows") ||getOsName().toLowerCase().startsWith("microsoft") || getOsName().toLowerCase().startsWith("ms");
 		}
 
