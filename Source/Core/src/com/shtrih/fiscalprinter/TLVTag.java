@@ -66,7 +66,7 @@ public class TLVTag {
         return result;
     }
 
-    public byte[] vlnToTLV(long v) {
+    public static byte[] vlnToTLV(long v) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         for (int i = 0; i < 8; i++) {
             stream.write((int) (v >>> (8 * i)) & 0xFF);
@@ -77,12 +77,12 @@ public class TLVTag {
         return stream.toByteArray();
     }
 
-    public byte[] fvlnToTLV(double v) throws Exception {
+    public static byte[] fvlnToTLV(double v) throws Exception {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         String s = String.valueOf(v);
         int k = s.length() - s.indexOf(".") - 1;
         stream.write(k);
-        stream.write(vlnToTLV((long) (v * Math.pow(10, k))));
+        stream.write(vlnToTLV(Math.round(v * Math.pow(10, k))));
         return stream.toByteArray();
     }
 

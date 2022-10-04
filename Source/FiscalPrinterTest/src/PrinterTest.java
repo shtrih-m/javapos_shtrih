@@ -5171,7 +5171,7 @@ class PrinterTest implements FiscalPrinterConst {
         }
     }
     
-    public void printFiscalReceiptWithTag2108() {
+        public void printFiscalReceiptWithTag1023() {
         try {
             String code = "0104607070190158215Ky5oR\u001d93dGV";
             
@@ -5181,7 +5181,7 @@ class PrinterTest implements FiscalPrinterConst {
             
             printer.addItemCode(code.getBytes());
             printer.printRecItem("Item 1", 123, 1000, 1, 123, "");
-            //printer.fsWriteOperationTag(1023, "1");
+            printer.fsWriteOperationTag(1023, "1");
             printer.fsWriteOperationTag(2108, "11");
             
             
@@ -5191,6 +5191,25 @@ class PrinterTest implements FiscalPrinterConst {
             e.printStackTrace();
         }
     }
-    
-    
+
+    public void printFiscalReceiptWithTag2108() {
+        try {
+            String code = "0104607070190158215Ky5oR\u001d93dGV";
+            
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(FPTR_RT_SALES);
+            printer.beginFiscalReceipt(true);
+            
+            printer.addItemCode(code.getBytes());
+            printer.printRecItem("Item 1", 99500, 9950, 1, 10000, "");
+            printer.fsWriteOperationTag(1023, "9.95");
+            printer.fsWriteOperationTag(2108, "11");
+            
+            printer.printRecTotal(99500, 99500, "01");
+            printer.endFiscalReceipt(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

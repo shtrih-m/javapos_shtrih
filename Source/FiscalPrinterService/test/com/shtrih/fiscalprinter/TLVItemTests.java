@@ -178,4 +178,16 @@ public class TLVItemTests {
         assertEquals(false, item.isSTLV());
         assertEquals("234", item.getText());
     }
+    
+    @Test
+    public void testTLVWriter3() throws Exception 
+    {
+        TLVItem item;
+        TLVWriter writer = new TLVWriter();
+        writer.addTag(1023, "9.95");
+        byte[] data = writer.getBytes();
+        assertEquals("FF 03 03 00 02 E3 03", Hex.toHex(data));
+    }
+
+    
 }
