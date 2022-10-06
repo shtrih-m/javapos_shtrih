@@ -82,10 +82,6 @@ public class BluetoothLEPort implements PrinterPort2 {
         //logger.debug(text);
     }
 
-    private void loggerError(String text) {
-        logger.error(text);
-    }
-
     private void setState(ConnectState newState)
     {
         if (newState != state){
@@ -209,7 +205,7 @@ public class BluetoothLEPort implements PrinterPort2 {
             if (bluetoothGatt == null) return;
             setState(ConnectState.RequestMtu);
             if (!bluetoothGatt.requestMtu(mtu)){
-                loggerError("Failed to configure MTU");
+                logger.error("Failed to configure MTU");
             }
         } else {
             discoverServices();
@@ -260,7 +256,7 @@ public class BluetoothLEPort implements PrinterPort2 {
         setState(ConnectState.DiscoverServices);
         if (!bluetoothGatt.discoverServices())
         {
-            loggerError("Failed to discover services");
+            logger.error("Failed to discover services");
             setState(ConnectState.DiscoverServicesFailed);
         }
     }
@@ -271,27 +267,27 @@ public class BluetoothLEPort implements PrinterPort2 {
 
         if (state != ConnectState.DiscoverServices)
         {
-            loggerError("state != ConnectState.DiscoverServices");
+            logger.error("state != ConnectState.DiscoverServices");
         }
 
         if (bluetoothGatt == null) return;
         BluetoothGattService uartService = bluetoothGatt.getService(UART_SERVICE_UUID);
         if (uartService == null) {
-            loggerError("UartService not found!");
+            logger.error("UartService not found!");
             setState(ConnectState.UartServiceNotSupported);
             return;
         }
         TxChar = uartService.getCharacteristic(TX_CHAR_UUID);
         if (TxChar == null)
         {
-            loggerError("Tx charateristic not found!");
+            logger.error("Tx charateristic not found!");
             setState(ConnectState.TxCharCharacteristicNotSupported);
             return;
         }
         bluetoothGatt.setCharacteristicNotification(TxChar, true);
         BluetoothGattDescriptor descriptor = TxChar.getDescriptor(CCCD);
         if(descriptor == null){
-            loggerError("CCCD == null!");
+            logger.error("CCCD == null!");
             setState(ConnectState.TxCharCccdDescriptorNotSupported);
             return;
         }
@@ -311,7 +307,7 @@ public class BluetoothLEPort implements PrinterPort2 {
             }
         }
         catch(Exception e){
-            loggerError("dataAvailable: " + e.getMessage());
+            logger.error("dataAvailable", e);
         }
     }
 
@@ -447,7 +443,7 @@ public class BluetoothLEPort implements PrinterPort2 {
                 receiverRegistered = true;
             }
         } catch (Exception e) {
-            logger.error("Failed to register receiver, " + e.getMessage());
+            logger.error("Failed to register receiver", e);
         }
     }
 
@@ -702,7 +698,7 @@ public class BluetoothLEPort implements PrinterPort2 {
             }
         }
         catch(Exception e){
-            logger.error(e.getMessage());
+            logger.error(e);
         }
     }
 

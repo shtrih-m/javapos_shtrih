@@ -47,14 +47,21 @@ public class Logger {
     }
 
     public synchronized void fatal(String text, Throwable e) {
+        if (text == null) return;
+        if (e == null) return;
+
         error(text + e.getMessage());
     }
 
     public synchronized void error(String text, Throwable e) {
+        if (text == null) return;
+        if (e == null) return;
+
         error(text + e.getMessage());
     }
 
     public synchronized void error(Throwable e) {
+        if (e == null) return;
         error(e.getMessage());
     }
 
@@ -63,6 +70,7 @@ public class Logger {
     }
 
     public synchronized void debug(String text) {
+        if (text == null) return;
         write("DEBUG", text);
     }
 
@@ -75,9 +83,10 @@ public class Logger {
     }
 
     public synchronized void write(String prefix, String text) {
-        if (!enabled) {
-            return;
-        }
+        if (!enabled) return;
+        if (text == null) return;
+        if (prefix == null) return;
+
         try {
             if (writer == null) {
                 writer = new BufferedWriter(new OutputStreamWriter(

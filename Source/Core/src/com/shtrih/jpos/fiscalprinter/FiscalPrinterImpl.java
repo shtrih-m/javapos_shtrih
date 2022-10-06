@@ -1958,7 +1958,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 writeFieldsFileFromFileName();
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e);
         }
     }
 
@@ -2054,7 +2054,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 }
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e);
         }
     }
 
@@ -2134,7 +2134,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             try {
                 writeField(field);
             } catch (Exception e) {
-                logger.error("WriteField: " + e.getMessage());
+                logger.error("WriteField", e);
             }
         }
     }
@@ -3178,7 +3178,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             getPrinter().waitForPrinting();
             getPrinter().cancelReceipt();
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e);
         }
     }
 
@@ -3205,7 +3205,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 }
             } catch (Exception e) {
                 // ignore print errors because cashin is succeeded
-                logger.error("endFiscalReceipt: " + e.getMessage());
+                logger.error("endFiscalReceipt", e);
             }
             startFDOService();
             setPrinterState(FPTR_PS_MONITOR);
@@ -3676,7 +3676,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 printCalcReport();
                 printEndFiscal();
             } catch (Exception e) {
-                logger.error("printZReport: " + e.getMessage());
+                logger.error("printZReport", e);
             }
             sendDocumentsZReport();
             startFDOService();
@@ -3690,7 +3690,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             try {
                 getPrinter().sendFDODocuments();
             } catch (Exception e) {
-                logger.debug("sendFDODocuments failed, " + e.getMessage());
+                logger.debug("sendFDODocuments failed", e);
             }
         }
     }
@@ -3712,7 +3712,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             String docDate = status.getDocumentDate().toString() + " " + status.getDocumentTime().toString2();
             printer.printLines("ДАТА ПЕРВОГО ДОКУМЕНТА:", docDate);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e);
         }
     }
 
@@ -4370,7 +4370,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             if (e.isConnectionError()) {
                 setPowerState(JPOS_PS_OFFLINE);
             }
-            logger.error("checkDeviceStatus: " + e.getMessage());
+            logger.error("checkDeviceStatus", e);
         }
     }
 
@@ -4384,7 +4384,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (Exception e) {
-            logger.error("DeviceProc: " + e.getMessage());
+            logger.error("DeviceProc", e);
         }
         logger.debug("Poll thread stopped");
     }
@@ -4763,7 +4763,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             printer.waitForPrinting();
             printEndFiscal();
         } catch (Exception e) {
-            logger.error("fsPrintCalcReport: " + e.getMessage());
+            logger.error("fsPrintCalcReport", e);
         }
     }
 

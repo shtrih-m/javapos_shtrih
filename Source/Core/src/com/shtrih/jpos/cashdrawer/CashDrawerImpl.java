@@ -122,7 +122,7 @@ public class CashDrawerImpl extends DeviceService implements
     }
 
     public void handleException(Exception e) throws JposException {
-        logger.error("handleException: " + e.getMessage());
+        logger.error("handleException", e);
         JposExceptionHandler.handleException(e);
     }
 

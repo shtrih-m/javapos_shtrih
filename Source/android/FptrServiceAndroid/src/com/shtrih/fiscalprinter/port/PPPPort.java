@@ -145,7 +145,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
                 localSocket.connect(new LocalSocketAddress(localSocketName));
                 break;
             } catch (IOException e) {
-                logger.error(e.getMessage());
+                logger.error("openLocalSocket", e);
                 if (Calendar.getInstance().getTimeInMillis() > time) {
                     throw e;
                 }
@@ -184,7 +184,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         try {
             localSocket.close();
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e);
         }
         localSocket = null;
     }
@@ -233,7 +233,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         try {
             socket.close();
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e);
         }
         socket = null;
         logger.debug("closeSocket: OK");
@@ -341,7 +341,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
                 socket.getOutputStream().flush();
                 return;
             } catch (SocketException e) {
-                logger.error("write: " + e.getMessage(), e);
+                logger.error("write", e);
                 closeSocket();
                 if (i == 1) {
                     throw e;
@@ -407,7 +407,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
             try {
                 connect(openTimeout);
             } catch (Exception e) {
-                logger.error("Failed to reconnect, " + e.getMessage());
+                logger.error("Failed to reconnect", e);
             }
         }
     }

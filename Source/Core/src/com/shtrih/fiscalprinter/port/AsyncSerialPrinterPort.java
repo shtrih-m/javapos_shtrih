@@ -113,7 +113,7 @@ public class AsyncSerialPrinterPort implements Runnable, PrinterPort
         }
         catch (Exception e)
         {
-            logger.error(e.getMessage());
+            logger.error(e);
             close();
         }            
     }

@@ -93,7 +93,7 @@ public class PrinterProtocol_2 implements PrinterProtocol {
 
         } catch (Exception e)
         {
-            logger.error(e.getMessage());
+            logger.error("sendCommand", e);
             isSynchronized = false;
             return false;
         }

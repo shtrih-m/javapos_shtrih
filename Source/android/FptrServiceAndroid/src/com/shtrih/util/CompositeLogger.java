@@ -32,7 +32,11 @@ public class CompositeLogger {
         isEnabled = value;
     }
 
-    public synchronized void fatal(String text, Throwable e) {
+    public synchronized void fatal(String text, Throwable e)
+    {
+        if (text == null) return;
+        if (e == null) return;
+
         if (isEnabled)
             Log.e(className, text, e);
 
@@ -40,6 +44,9 @@ public class CompositeLogger {
     }
 
     public synchronized void error(String text, Throwable e) {
+        if (text == null) return;
+        if (e == null) return;
+
         if (isEnabled)
             Log.e(className, text, e);
 
@@ -47,6 +54,8 @@ public class CompositeLogger {
     }
 
     public synchronized void error(Throwable e) {
+        if (e == null) return;
+
         if (isEnabled)
             Log.e(className, "", e);
 
@@ -54,6 +63,8 @@ public class CompositeLogger {
     }
 
     public synchronized void error(String text) {
+        if (text == null) return;
+
         if (isEnabled)
             Log.e(className, text);
 
@@ -61,9 +72,21 @@ public class CompositeLogger {
     }
 
     public synchronized void debug(String text) {
+        if (text == null) return;
+
         if (isEnabled)
             Log.d(className, text);
 
         log4JLogger.debug(text);
+    }
+
+    public synchronized void debug(String text, Throwable e) {
+        if (text == null) return;
+        if (e == null) return;
+
+        if (isEnabled)
+            Log.d(className, text, e);
+
+        log4JLogger.debug(text, e);
     }
 }

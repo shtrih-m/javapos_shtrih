@@ -30,26 +30,45 @@ public class FileLogger {
         return new FileLogger(className);
     }
 
-    public synchronized void fatal(String text, Throwable e) {
+    public synchronized void fatal(String text, Throwable e)
+    {
+        if (text == null) return;
+        if (e == null) return;
+
         error(text + e.getMessage());
     }
 
     public synchronized void error(String text, Throwable e) {
+        if (text == null) return;
+        if (e == null) return;
+
         error(text + e.getMessage());
     }
 
     public synchronized void error(Throwable e) {
+        if (e == null) return;
         error(e.getMessage());
     }
 
     public synchronized void error(String text) {
+        if (text == null) return;
+        
         write("ERROR", text);
     }
 
     public synchronized void debug(String text) {
+        if (text == null) return;
+        
         write("DEBUG", text);
     }
 
+    public synchronized void debug(String text, Throwable e) {
+        if (text == null) return;
+        if (e == null) return;
+
+        debug(text + e.getMessage());
+    }
+    
     public void setEnabled(boolean value) {
         enabled = value;
     }
@@ -58,10 +77,12 @@ public class FileLogger {
         return SysUtils.getFilesPath() + "shtrihjavapos.log";
     }
 
-    private synchronized void write(String prefix, String text) {
-        if (!enabled) {
-            return;
-        }
+    private synchronized void write(String prefix, String text)
+    {
+        if (!enabled) return;
+        if (prefix == null) return;
+        if (text == null) return;
+
         try {
             if (writer == null) {
                 writer = new BufferedWriter(new OutputStreamWriter(

@@ -511,7 +511,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                         getPrinter().printText(getParams().receiptVoidText);
                     }
                 } catch (Exception e) {
-                    logger.error("Cancel receipt: " + e.getMessage());
+                    logger.error("Cancel receipt", e);
                 }
                 getFiscalDay().cancelFiscalRec();
                 clearReceipt();

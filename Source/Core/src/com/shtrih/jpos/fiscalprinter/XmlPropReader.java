@@ -166,7 +166,7 @@ public class XmlPropReader {
                 }
             }
         } catch (Exception e) {
-            logger.error("readPrinterHeader: " + e.getMessage());
+            logger.error("readPrinterHeader", e);
         }
     }
 
@@ -189,7 +189,7 @@ public class XmlPropReader {
             String s = readParameterStr(node, paramName);
             result = Integer.valueOf(s).intValue();
         } catch (Exception e) {
-            logger.error("readParameterInt failed, " + paramName + ", " + e.getMessage());
+            logger.error("readParameterInt failed, " + paramName, e);
         }
         return result;
     }

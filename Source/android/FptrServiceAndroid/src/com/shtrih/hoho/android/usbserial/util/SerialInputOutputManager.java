@@ -141,7 +141,7 @@ public class SerialInputOutputManager implements Runnable {
                 step();
             }
         } catch (Exception e) {
-            Log.w(TAG, "Run ending due to exception: " + e.getMessage(), e);
+            Log.w(TAG, "Run ending due to exception", e);
             final Listener listener = getListener();
             if (listener != null) {
               listener.onRunError(e);

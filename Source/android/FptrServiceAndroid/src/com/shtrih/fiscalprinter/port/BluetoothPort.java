@@ -182,7 +182,7 @@ public class BluetoothPort implements PrinterPort2 {
                 receiverRegistered = true;
             }
         } catch (Exception e) {
-            logger.error("Failed to register receiver, " + e.getMessage());
+            logger.error("Failed to register receiver, ", e);
         }
     }
 

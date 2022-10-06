@@ -288,7 +288,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 }
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e);
         }
     }
 
@@ -358,7 +358,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 }
             }
         } catch (Exception e) {
-            logger.error("Correct date failed " + e.getMessage());
+            logger.error("Correct date failed ", e);
 
         }
     }
@@ -393,7 +393,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             try {
                 printerEvents.beforeCommand(command);
             } catch (Exception e) {
-                logger.error("beforeCommand " + e.getMessage());
+                logger.error("beforeCommand", e);
             }
         }
     }
@@ -403,7 +403,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             try {
                 printerEvents.afterCommand(command);
             } catch (Exception e) {
-                logger.error("afterCommand " + e.getMessage());
+                logger.error("afterCommand", e);
             }
         }
     }
@@ -3267,7 +3267,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             writer.save(SysUtils.getFilesPath() + "models2.xml");
 
         } catch (Exception e) {
-            logger.error("updateModels " + e.getMessage());
+            logger.error("updateModels ", e);
         }
     }
 
@@ -3684,7 +3684,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             try {
                 waitForPrinting();
             } catch (Exception e) {
-                logger.error("openFiscalDay wait for printing failed" + e.getMessage());
+                logger.error("openFiscalDay wait for printing failed", e);
             }
         }
     }
@@ -3876,7 +3876,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             try {
                 item.print(this);
             } catch (Exception e) {
-                logger.error("printItems " + e.getMessage());
+                logger.error("printItems", e);
             }
         }
         items.clear();
@@ -4454,7 +4454,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
             logger.debug("updateFirmware(): OK");
         } catch (Exception e) {
-            logger.error("updateFirmware " + e.getMessage());
+            logger.error("updateFirmware ", e);
         }
     }
 
@@ -4692,7 +4692,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
             return true;
         } catch (Exception e) {
-            logger.error("connectDevice " + e.getMessage());
+            logger.error("connectDevice ", e);
             return false;
         }
     }
@@ -5127,7 +5127,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             } catch(Exception e)
             {
                 fdVersion = PrinterConst.FS_FORMAT_FFD_1_2;
-                logger.error("getFDVersion, " + e.getMessage());
+                logger.error("getFDVersion", e);
             }
         }
         return fdVersion;

@@ -65,7 +65,6 @@ public class FDOService implements Runnable {
             
         } catch (Exception e) {
             logger.error("FDO data sending failed", e);
-            logger.error(e.getMessage());
         }
         started = false;
         logger.debug("FSService stopped");

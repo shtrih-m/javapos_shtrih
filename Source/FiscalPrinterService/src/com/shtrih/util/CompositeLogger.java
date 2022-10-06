@@ -38,28 +38,47 @@ public class CompositeLogger {
     }
     
     public synchronized void fatal(String text, Throwable e) {
+        if (text == null) return;
+        if (e == null) return;
+        
         log4JLogger.fatal(text, e);
         fileLogger.fatal(text, e);
     }
     
     public synchronized void error(String text, Throwable e) {
+        if (text == null) return;
+        if (e == null) return;
+        
         log4JLogger.error(text, e);
         fileLogger.error(text, e);
     }
     
     public synchronized void error(Throwable e) {
+        if (e == null) return;
+        
         log4JLogger.error(e);
         fileLogger.error(e);
     }
     
     public synchronized void error(String text) {
+        if (text == null) return;
+        
         log4JLogger.error(text);
         fileLogger.error(text);
     }
     
     public synchronized void debug(String text) {
+        if (text == null) return;
+        
         log4JLogger.debug(text);
         fileLogger.debug(text);
     }
     
+    public synchronized void debug(String text, Throwable e) {
+        if (text == null) return;
+        if (e == null) return;
+        
+        log4JLogger.debug(text, e);
+        fileLogger.debug(text, e);
+    }
 }

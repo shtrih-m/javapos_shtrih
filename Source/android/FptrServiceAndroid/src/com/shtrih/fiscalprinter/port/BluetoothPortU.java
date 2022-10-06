@@ -64,7 +64,7 @@ public class BluetoothPortU implements PrinterPort
             return true;
         }
         catch (Exception e){
-            logger.error(e.getMessage());
+            logger.error(e);
             return false;
         }
     }

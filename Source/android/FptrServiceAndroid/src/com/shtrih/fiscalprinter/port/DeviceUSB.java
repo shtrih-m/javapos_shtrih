@@ -237,7 +237,7 @@ public class DeviceUSB {
         try {
             currentDevice.getPorts().get(0).open(usbManager.openDevice(currentDevice.getDevice()));
         } catch (IOException e) {
-            L.error("Ошибка подключения к устройству(" + e.getMessage() + ")");
+            L.error("Ошибка подключения к устройству", e);
             return false;
         }
         try {
@@ -274,7 +274,7 @@ public class DeviceUSB {
         try {
             currentDevice.getPorts().get(0).write(buff, 1000);
         } catch (IOException e) {
-            L.error("Ошибка записи на устройство(" + e.getMessage() + ")");
+            L.error("Ошибка записи на устройство", e);
             return false;
         }
         return true;
@@ -300,7 +300,7 @@ public class DeviceUSB {
 //                    try {
 //                        countNow = currentDevice.getPorts().get(0).read(buff, МИНИМАЛЬНОЕ_ВРЕМЯ_ОЖИДАНИЯ_ОТВЕТА);
 //                    } catch (IOException e) {
-//                        L.error("Ошибка чтения с устройства(" + e.getMessage() + ")");
+//                        L.error("Ошибка чтения с устройства", e);
 //                    }
 //                    if (countNow > 0)
 //                        break;
@@ -319,7 +319,7 @@ public class DeviceUSB {
                 }
 
             } catch (IOException e) {
-                L.error("Ошибка чтения с устройства(" + e.getMessage() + ")");
+                L.error("Ошибка чтения с устройства", e);
                 return false;
             }
         }
@@ -336,7 +336,7 @@ public class DeviceUSB {
             try {
 				countNow=currentDevice.getPorts().get(0).read(buff,timeout);
 			} catch (IOException e) {
-				super.SetError(ОШИБКА_ЧТЕНИЯ_С_УСТРОЙСВА,"Ошибка чтения с устройства("+e.getMessage()+")");
+				super.SetError(ОШИБКА_ЧТЕНИЯ_С_УСТРОЙСВА,"Ошибка чтения с устройства", e);
 			}
 			if(countNow==0) {
 				super.SetError(ОШИБКА_ЧТЕНИЯ_С_УСТРОЙСВА,"Ошибка чтения с устройства");
@@ -348,7 +348,7 @@ public class DeviceUSB {
         /*try {
             countNow=currentDevice.getPorts().get(0).read(buff,timeout);
 		} catch (IOException e) {
-			super.SetError(ОШИБКА_ЧТЕНИЯ_С_УСТРОЙСВА,"Ошибка чтения с устройства("+e.getMessage()+")");
+			super.SetError(ОШИБКА_ЧТЕНИЯ_С_УСТРОЙСВА,"Ошибка чтения с устройства", e);
 		}
 		System.arraycopy(buff,0,buffer,offset,count);*/
         return true;
@@ -366,23 +366,23 @@ public class DeviceUSB {
             try {
                 currentDevice.getPorts().get(0).open(usbManager.openDevice(currentDevice.getDevice()));
             } catch (IOException e) {
-                L.error("Неправильное USB-устройство(" + e.getMessage() + ")");
+                L.error("Неправильное USB-устройство", e);
                 continue;
             } catch (NullPointerException e) {
-                L.error("USB-устройство недоступно(" + e.getMessage() + ")");
+                L.error("USB-устройство недоступно", e);
                 continue;
             }
             try {
                 currentDevice.getPorts().get(0).setParameters(baudRate, dataBits, stopBits, parity);
             } catch (IOException e) {
-                L.error("Ошибка установки параметров(" + e.getMessage() + ")");
+                L.error("Ошибка установки параметров", e);
                 continue;
             }
             String deviceName = String.format(Locale.ENGLISH, "%d", currentDevice.getDevice().getDeviceId());
             try {
                 currentDevice.getPorts().get(0).close();
             } catch (IOException e) {
-                L.error("Ошибка установки параметров(" + e.getMessage() + ")");
+                L.error("Ошибка установки параметров", e);
             }
 
             UsbSerialDriverWithName curDriver = new UsbSerialDriverWithName(usbSerialDrivers.get(i), deviceName);
