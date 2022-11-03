@@ -69,7 +69,7 @@ public class PPPPort implements PrinterPort {
         opened = true;
     }
 
-    public void openSocket() throws Exception
+    public void openSocket() throws IOException
     {
         if (socket != null){
             return;
@@ -145,7 +145,7 @@ public class PPPPort implements PrinterPort {
 
         try {
             socket.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
@@ -196,7 +196,7 @@ public class PPPPort implements PrinterPort {
                 socket.getOutputStream().write(b);
                 socket.getOutputStream().flush();
                 return;
-            } catch (Exception e) {
+            } catch (IOException e) {
                 closeSocket();
                 if (i == 1) {
                     throw e;

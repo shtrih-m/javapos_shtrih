@@ -583,15 +583,8 @@ public class MainActivity extends AppCompatActivity
                 // printer.addStatusUpdateListener(new FptrEventListener());
                 printer.claim(3000);
                 printer.setDeviceEnabled(true);
-
                 model.ScocUpdaterStatus.set("");
                 printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, this.params.observer);
-                // test for port reopen
-                log.debug("Cashier name: " + printer.readCashierName());
-                //printer.reboot();
-                //log.debug("Cashier name: " + printer.readCashierName());
-
-
                 return null;
             } catch (Exception e) {
                 log.error("Device " + this.params.portName + " connection using protocol " + selectedProtocol + " failed", e);
@@ -1050,9 +1043,7 @@ public class MainActivity extends AppCompatActivity
                 if (printer.getState() != JposConst.JPOS_S_CLOSED) {
                     printer.close();
                 }
-
                 model.ScocUpdaterStatus.set("");
-
                 return null;
 
             } catch (Exception e) {

@@ -964,6 +964,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 stopJsonUpdateService();
                 stopFirmwareUpdaterService();
                 getPrinter().disconnect();
+                getPrinter().closePort();
                 connected = false;
                 setPowerState(JPOS_PS_UNKNOWN);
             }
@@ -2299,7 +2300,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         saveProperties();
         setDeviceEnabled(false);
         claimed = false;
-        getPrinter().closePort();
     }
 
     // ////////////////////////////////////////////////////////////////////////////

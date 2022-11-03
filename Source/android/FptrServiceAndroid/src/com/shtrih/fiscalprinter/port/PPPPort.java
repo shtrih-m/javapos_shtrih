@@ -91,13 +91,6 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
 
     public void openSocket() throws Exception
     {
-        /*
-        if ((lastTimeInMillis != 0) && ((Calendar.getInstance().getTimeInMillis() - lastTimeInMillis) > 60000)) {
-            logger.debug("Reopen connection after 60 seconds of inactivity");
-            closeSocket();
-        }
-         */
-
         if (socket == null) {
             socket = new Socket();
             socket.setTcpNoDelay(true);
@@ -156,8 +149,8 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     }
 
     public synchronized void close() {
-        if (!isOpened()) return;
         logger.debug("close");
+        if (!isOpened()) return;
         disconnect();
         printerPort.setPortEvents(null);
         printerPort.close();
@@ -169,10 +162,10 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         if (!isOpened()) return;
 
         opened = false;
-        stopDispatchThread();
-        stopPPPThread();
-        closeLocalSocket();
         closeSocket();
+        stopDispatchThread();
+        closeLocalSocket();
+        stopPPPThread();
         if (events != null) {
             events.onDisconnect();
         }
