@@ -2408,7 +2408,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 && modelParameters.isCapGraphicsFlags() && params.footerFlagEnabled;
 
         if (capFiscalStorage) {
-
             int fsTableNumber = getFsTableNumber();
             getModel().addParameter("fdoName", "", fsTableNumber, 1, 10);
             getModel().addParameter("CompressedFontEnabled", "", 1, 1, 31);
@@ -3466,22 +3465,28 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     @Override
     public String readFullSerial() throws Exception {
-        if (serial.isEmpty()) {
+        if (serial.isEmpty()) 
+        {
             if (getDeviceMetrics().isElves()) {
                 serial = getLongStatus().getSerial();
-            } else {
-                serial = readTable(getFsTableNumber(), 1, 1).trim();
+            } else 
+            {
+                if (capFiscalStorage){
+                    serial = readTable(getFsTableNumber(), 1, 1).trim();
+                } else{
+                    serial = getLongStatus().getSerial();
+                }
             }
         }
         return serial;
     }
 
     @Override
-    public String readRnm() throws Exception {
+    public String readRnm() throws Exception 
+    {
         if (getDeviceMetrics().isElves()) {
             return readTable(11, 1, 2).trim();
         }
-
         return readTable(getFsTableNumber(), 1, 3).trim();
     }
 
@@ -3638,8 +3643,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public String getErrorText(int code) throws Exception {
-        if (capModelParameters() && modelParameters.isCapCommand6B() && (code >= 0) && (code <= 0xFF)) {
-            return String.valueOf(code) + ", " + readErrorDescription(code);
+        if (capModelParameters() && modelParameters.isCapCommand6B() && (code >= 0) && (code <= 0xFF) && capLastErrorText) 
+        {
+            ReadErrorDescription command = readErrorDescription(code);
+            if (command.isSucceeded())
+            {
+                return String.valueOf(code) + ", " + command.getText();
+            }
         }
 
         String key = "PrinterError";
@@ -3660,10 +3670,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return String.valueOf(code) + ", " + result;
     }
 
-    private String readErrorDescription(int code) throws Exception {
+    private ReadErrorDescription readErrorDescription(int code) throws Exception {
         ReadErrorDescription command = new ReadErrorDescription(code);
-        execute(command);
-        return command.getErrorDescription();
+        executeCommand(command);
+        capLastErrorText = command.isSucceeded();
+        return command;
     }
 
     private ReadLastErrorText readExtendedCode() throws Exception {
@@ -4824,8 +4835,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         while (rc == 0) {
             ReadEJDocumentLine command = new ReadEJDocumentLine();
             command.setPassword(sysPassword);
-            rc = executeCommand(command);
-            if (rc != 0) {
+            executeCommand(command);
+            if (command.isFailed()) {
                 break;
             }
             lines.add(command.getLine());

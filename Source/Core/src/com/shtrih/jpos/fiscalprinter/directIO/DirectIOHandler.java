@@ -623,6 +623,14 @@ public class DirectIOHandler {
                 new DIOReadPortNames(service).execute(data, object);
                 break;
 
+            case SmFptrConst.SMFPTR_DIO_SEND_FDO_DOCUMENTS:
+                new DIOSendFDODocuments(service).execute(data, object);
+                break;
+                
+            case SmFptrConst.SMFPTR_DIO_FS_READ_COMM_STATUS:
+                new DIOReadCommStatus(service).execute(data, object);
+                break;
+                    
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL, Localizer.getString(Localizer.invalidParameterValue) + ", command");
         }

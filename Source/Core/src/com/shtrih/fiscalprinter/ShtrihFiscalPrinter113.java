@@ -2465,4 +2465,14 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         return (String[])params[0];
     }
 
+    public void sendFDODocuments() throws Exception{
+        directIO(SmFptrConst.SMFPTR_DIO_SEND_FDO_DOCUMENTS, null, null);
+    }
+           
+    public String[] readCommStatus() throws Exception
+    {
+        String[] lines = new String[5];
+        directIO(SmFptrConst.SMFPTR_DIO_FS_READ_COMM_STATUS, null, lines);
+        return lines;
+    }
 }

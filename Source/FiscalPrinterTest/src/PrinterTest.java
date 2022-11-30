@@ -3,7 +3,7 @@
 // BaseJposService.java - Abstract base class for all JavaPOS services.
 //
 // Modification history
-// ------------------------------------------------------------------
+// ----D--------------------------------------------------------------
 // 2007-07-24 JavaPOS Release 1.0                                  VK
 //
 /////////////////////////////////////////////////////////////////////
@@ -1057,7 +1057,16 @@ class PrinterTest implements FiscalPrinterConst {
             //printCorrectionReceipt2(3);
             //printCorrectionReceipts();
             //printReceiptWithTag1262();
-            printFiscalReceiptWithTag2108();
+            //printFiscalReceiptWithTag2108();
+            
+            String[] lines = printer.readCommStatus();
+            System.out.println("Communication status  : " + lines[0]);
+            System.out.println("Read message status   : " + lines[1]);
+            System.out.println("Message queue size    : " + lines[2]);
+            System.out.println("First document number : " + lines[3]);
+            System.out.println("First document date   : " + lines[4]);
+            
+            printer.sendFDODocuments();
             
         } catch (Exception e) {
             e.printStackTrace();

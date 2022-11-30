@@ -790,17 +790,14 @@ public class TextDocumentFilter implements IPrinterEvents {
 
         ReadEJDocumentLine command2 = new ReadEJDocumentLine();
         command2.setPassword(printer.getSysPassword());
-        int rc = 0;
-        while (printer.succeeded(rc)) {
-            rc = printer.executeCommand(command2);
-            if (printer.succeeded(rc)) {
-                String line = command2.getLine();
-                lines.add(line);
-                if ((line.length() > 0) && (line.contains("#"))) {
-                    printer.cancelEJDocument();
-                    break;
-                }
-
+        while (true) {
+            printer.executeCommand(command2);
+            if (command2.isFailed()) break;
+            String line = command2.getLine();
+            lines.add(line);
+            if ((line.length() > 0) && (line.contains("#"))) {
+                printer.cancelEJDocument();
+                break;
             }
         }
 

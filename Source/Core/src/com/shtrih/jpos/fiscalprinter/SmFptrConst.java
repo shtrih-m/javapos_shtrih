@@ -735,6 +735,12 @@ public class SmFptrConst {
     // Read port names
     public static final int SMFPTR_DIO_READ_PORT_NAMES = 0x90;
 
+    // Send documents to FDO server
+    public static final int SMFPTR_DIO_SEND_FDO_DOCUMENTS = 0x91;
+    
+    // Read communication status
+    public static final int SMFPTR_DIO_FS_READ_COMM_STATUS = 0x92;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

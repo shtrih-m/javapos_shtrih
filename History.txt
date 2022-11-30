@@ -7,6 +7,17 @@
     
 ********************************************************************************
 
+  30.11.2022
+  deviceServiceVersion = 1013680
+  
+  [+] Added directIO command to send documents from application
+	  SMFPTR_DIO_SEND_FDO_DOCUMENTS = 0x91;
+    
+  [+] Added directIO command to read FDO server communication status
+	  SMFPTR_DIO_FS_READ_COMM_STATUS = 0x92;
+
+********************************************************************************
+
   06.10.2022
   deviceServiceVersion = 1013679
   
