@@ -38,7 +38,7 @@ public class FFD105Documents {
         prepare(printer);
 
         FSStatusInfo fsStatus = printer.fsReadStatus();
-        int docNumebr = (int) fsStatus.getDocNumber() + 1; // Номер ФД
+        int docNumber = (int) fsStatus.getDocNumber() + 1; // Номер ФД
         LongPrinterStatus printerStatus = printer.readLongPrinterStatus();
         int shiftNumber = printerStatus.getCurrentShiftNumber(); // Номер смены
 
@@ -68,7 +68,7 @@ public class FFD105Documents {
         prepare(printer);
 
         FSStatusInfo fsStatus = printer.fsReadStatus();
-        int docNumebr = (int) fsStatus.getDocNumber() + 1; // Номер ФД
+        int docNumber = (int) fsStatus.getDocNumber() + 1; // Номер ФД
         LongPrinterStatus printerStatus = printer.readLongPrinterStatus();
         int shiftNumber = printerStatus.getCurrentShiftNumber(); // Номер смены
 
@@ -212,7 +212,7 @@ public class FFD105Documents {
         printer.beginFiscalReceipt(false);
 
         FSStatusInfo fsStatus = printer.fsReadStatus();
-        int docNumebr = (int) fsStatus.getDocNumber() + 1; // Номер ФД
+        int docNumber = (int) fsStatus.getDocNumber() + 1; // Номер ФД
         int shiftNumber = printer.readLongPrinterStatus().getCurrentShiftNumber(); // Номер смены
 
         if (electronically) {
