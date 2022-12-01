@@ -117,7 +117,6 @@ public class DriverHeader implements PrinterHeader {
     }
 
     void printTrailer(String additionalTrailer) throws Exception {
-        printer.waitForPrinting();
         printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_BEFORE_TRAILER);
         printTrailer();
         printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_AFTER_TRAILER);
@@ -134,7 +133,6 @@ public class DriverHeader implements PrinterHeader {
     }
 
     void printHeaderBeforeCutter() throws Exception {
-        printer.waitForPrinting();
         int imageHeight = 0;
 
         int lineHeight = printer.getLineHeight(FontNumber.getNormalFont());
@@ -169,7 +167,6 @@ public class DriverHeader implements PrinterHeader {
     }
 
     public void printHeaderAfterCutter() throws Exception {
-        printer.waitForPrinting();
         int imageHeight = 0;
         int lineHeight = printer.getLineHeight(new FontNumber(PrinterConst.FONT_NUMBER_NORMAL));
         int headerHeight = printer.getHeaderHeight();

@@ -120,7 +120,7 @@
 		<!-- 0 - command 10h, short status request  -->
 		<!-- 1 - command 11h, long status request  -->
 		<!-- 2 - status command selected by driver -->
-		<prop name="statusCommand" type="String" value="2"/>
+		<prop name="statusCommand" type="String" value="0"/>
 		<!-- Localization file name -->
 		<prop name="messagesFileName" type="String" value="shtrihjavapos_ru.properties"/>
 		<!-- Wrap text enabled -->
@@ -357,7 +357,7 @@
 		<prop name="waitForBarcodePrinting" type="String" value="1"/>
 
 		<!-- validTimeDiffInSecs -->
-		<prop name="validTimeDiffInSecs" type="String" value="5"/>
+		<prop name="validTimeDiffInSecs" type="String" value="0"/>
 
 		<prop name="commandTimeoutE0" type="String" value="100000"/>
 
