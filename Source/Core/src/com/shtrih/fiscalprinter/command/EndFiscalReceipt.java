@@ -59,7 +59,7 @@ public final class EndFiscalReceipt extends PrinterCommand {
         out.writeByte(getParams().getTax2());
         out.writeByte(getParams().getTax3());
         out.writeByte(getParams().getTax4());
-        out.writeString(getParams().getText());
+        out.writeString(getParams().getText(), 40);
     }
 
     public final void decode(CommandInputStream in) throws Exception {

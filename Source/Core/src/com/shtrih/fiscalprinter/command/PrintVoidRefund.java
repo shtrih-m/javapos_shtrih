@@ -68,7 +68,7 @@ public final class PrintVoidRefund extends PrinterCommand {
         out.writeByte(item.getTax2());
         out.writeByte(item.getTax3());
         out.writeByte(item.getTax4());
-        out.writeString(item.getText());
+        out.writeString(item.getText(), 40);
     }
 
     public final void decode(CommandInputStream in) throws Exception {

@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE JposEntries PUBLIC "-//JavaPOS//DTD//EN"
-                             "jpos/res/jcl.dtd">
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <JposEntries>
 <!--Saved by JavaPOS jpos.config/loader (JCL) version 2.1.0-RC3 on 10/26/04 8:17 AM-->
    <JposEntry logicalName="VirtualLineDisplay">
@@ -33,7 +31,7 @@
         <!--<prop name="portName" type="String" value="192.168.137.111:7778"/>-->
         <!--<prop name="portName" type="String" value="192.168.1.134:12345"/>-->
 		
-        <prop name="portName" type="String" value="COM10"/>
+        <prop name="portName" type="String" value="COM4"/>
 		
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
@@ -90,7 +88,7 @@
         <!-- 0 - command 10h, short status request  -->
         <!-- 1 - command 11h, long status request  -->
         <!-- 2 - status command selected by driver -->
-        <prop name="statusCommand" type="String" value="1"/>
+        <prop name="statusCommand" type="String" value="0"/>
         <!-- Localization file name -->
         <prop name="messagesFileName" type="String" value="shtrihjavapos_ru.properties"/>
         <!-- Wrap text enabled -->
@@ -186,7 +184,7 @@
         <!-- Monitoring enabled -->
         <prop name="MonitoringEnabled" type="String" value="0"/>
         <!-- Receipt report enabled -->
-        <prop name="receiptReportEnabled" type="String" value="1"/>
+        <prop name="receiptReportEnabled" type="String" value="0"/>
         <!-- Receipt report file name -->
         <prop name="receiptReportFileName" type="String" value="ZCheckReport.xml"/>
         <!-- headerMode, the way how to print header and trailer lines -->
@@ -258,7 +256,7 @@
         <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 		<!-- Receipt template -->
 		<prop name="FSCombineItemAdjustments" type="String" value="0"/>
-		<prop name="ReceiptTemplateEnabled" type="String" value="1"/>
+		<prop name="ReceiptTemplateEnabled" type="String" value="0"/>
 		<prop name="FieldSeparator" type="String" value=":"/>
 		<prop name="ItemTableHeader" type="String"  value="-------------------HEADER-----------------"/>
 		<prop name="ItemTableTrailer" type="String" value="-------------------TRAILER----------------"/>
@@ -308,7 +306,7 @@
 		<!-- Command delay in milliseconds -->
 		<prop name="commandDelayInMs" type="String" value="10"/>
 		<!-- taxCalculation, 0 - fiscal printer on receipt items, 1 - driver on receipt total -->
-		<prop name="taxCalculation" type="String" value="1"/>
+		<prop name="taxCalculation" type="String" value="0"/>
 		
 		<!-- rebootBeforeDayOpen - reboot fiscal printer before open fiscal day -->
 		<!-- default value is false -->
@@ -322,7 +320,7 @@
         <!-- device state polling enabled -->
         <prop name="pollEnabled" type="String" value="0"/>
         <prop name="fastConnect" type="String" value="0"/>
-        <prop name="validTimeDiffInSecs" type="String" value="1"/>
+        <prop name="validTimeDiffInSecs" type="String" value="0"/>
         <prop name="commandTimeoutFF61" type="String" value="12345"/>
         <prop name="FSConnectTimeout" type="String" value="30000"/>
 		
