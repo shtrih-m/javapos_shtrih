@@ -13,9 +13,7 @@
 package com.shtrih.fiscalprinter.port;
 
 import gnu.io.SerialPort;
-import gnu.io.SerialPortEvent;
 import gnu.io.CommPortIdentifier;
-import gnu.io.SerialPortEventListener;
 
 import java.util.Vector;
 import java.io.IOException;
@@ -23,8 +21,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 import java.util.Enumeration;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 
 import com.shtrih.util.Localizer;
 import com.shtrih.util.CompositeLogger;
@@ -239,10 +235,12 @@ public class AsyncSerialPrinterPort implements Runnable, PrinterPort
     public void setPortEvents(IPortEvents events){
     }
 
-    public String readParameter(int parameterID){
-        switch (parameterID){
-            case PrinterPort.PARAMID_IS_RELIABLE: return "0";
-            default: return null;
+    public int directIO(int command, int[] data, Object object)
+    {
+        switch (command){
+            case PrinterPort.DIO_READ_IS_RELIABLE: data[0] = 0;
+            default: data[0] = 0;
         }
+        return 0;
     }
 }

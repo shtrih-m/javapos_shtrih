@@ -364,11 +364,16 @@ public class BluetoothPort implements PrinterPort2 {
         return buffer;
     }
 
-    public String readParameter(int parameterID){
-        switch (parameterID){
-            case PrinterPort.PARAMID_IS_RELIABLE: return "1";
-            default: return null;
+    public int directIO(int command, int[] data, Object object)
+    {
+        switch (command){
+            case PrinterPort.DIO_READ_IS_RELIABLE:
+                data[0] = 1;
+                break;
+
+            default: data[0] = 0;
         }
+        return 0;
     }
 
 }

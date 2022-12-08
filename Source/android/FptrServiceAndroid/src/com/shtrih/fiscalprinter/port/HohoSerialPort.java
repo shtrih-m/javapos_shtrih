@@ -204,16 +204,12 @@ public class HohoSerialPort implements PrinterPort {
 
     }
 
-    public String readParameter(int parameterID){
-        switch (parameterID){
-            case PrinterPort.PARAMID_IS_RELIABLE: return "0";
-            default: return null;
+    public int directIO(int command, int[] data, Object object)
+    {
+        switch (command){
+            case PrinterPort.DIO_READ_IS_RELIABLE: data[0] = 0;
+            default: data[0] = 0;
         }
+        return 0;
     }
 }
-
-
-/*
- *
- *
- * */

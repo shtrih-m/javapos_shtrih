@@ -1703,9 +1703,20 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         execute(command);
     }
 
+    public void reportRemoteRSSI()
+    {
+        try {
+            port.directIO(PrinterPort.DIO_REPORT_RSSI, null, null);
+        }
+        catch(Exception e){
+            logger.error(e.getMessage());
+        }
+    }
+
     public void openReceipt(int receiptType) throws Exception {
         logger.debug("openReceipt");
 
+        reportRemoteRSSI();
         if (capOpenReceipt) {
             OpenReceipt command = new OpenReceipt();
             command.setPassword(usrPassword);

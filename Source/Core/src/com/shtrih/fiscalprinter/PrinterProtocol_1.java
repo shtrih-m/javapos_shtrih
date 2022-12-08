@@ -21,7 +21,6 @@ import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.fiscalprinter.port.PrinterPort;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.Logger2;
-import com.shtrih.util.SysUtils;
 import com.shtrih.util.Time;
 
 public class PrinterProtocol_1 implements PrinterProtocol {
@@ -49,7 +48,11 @@ public class PrinterProtocol_1 implements PrinterProtocol {
 
     public PrinterProtocol_1(PrinterPort port) {
         this.port = port;
-        isReliable = port.readParameter(PrinterPort.PARAMID_IS_RELIABLE).equalsIgnoreCase("1");
+
+        int[] data = new int[1];
+        data[0] = 0;
+        port.directIO(PrinterPort.DIO_READ_IS_RELIABLE, data, null);
+        isReliable = (data[0] == 1);
     }
 
     private void portWrite(int b) throws Exception {

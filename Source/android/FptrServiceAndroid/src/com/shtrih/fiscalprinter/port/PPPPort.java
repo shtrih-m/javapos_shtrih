@@ -8,11 +8,9 @@ package com.shtrih.fiscalprinter.port;
 import com.shtrih.LibManager;
 import com.shtrih.NativeResource;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
-import com.shtrih.util.CircularBuffer;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.StaticContext;
-import com.shtrih.util.Time;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -386,14 +384,11 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         this.events = events;
     }
 
-    public String readParameter(int parameterID) {
-        switch (parameterID) {
-            case PrinterPort.PARAMID_IS_RELIABLE:
-                return "1";
-            default:
-                return null;
-        }
+    public int directIO(int command, int[] data, Object object)
+    {
+        return printerPort.directIO(command, data, object);
     }
+
 
     public void onConnect() {
         if (portOpened) {

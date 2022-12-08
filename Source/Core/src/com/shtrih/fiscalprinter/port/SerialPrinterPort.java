@@ -1,20 +1,5 @@
 package com.shtrih.fiscalprinter.port;
 
-import com.shtrih.util.CompositeLogger;
-import com.shtrih.util.Localizer;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Vector;
-
-import gnu.io.CommPortIdentifier;
-import gnu.io.SerialPort;
-
 public class SerialPrinterPort implements PrinterPort2 {
 
     public SerialPrinterPortSingle port = null;
@@ -95,10 +80,12 @@ public class SerialPrinterPort implements PrinterPort2 {
         return buffer;
     }
 
-    public String readParameter(int parameterID){
-        switch (parameterID){
-            case PrinterPort.PARAMID_IS_RELIABLE: return "0";
-            default: return null;
+    public int directIO(int command, int[] data, Object object)
+    {
+        switch (command){
+            case PrinterPort.DIO_READ_IS_RELIABLE: data[0] = 0;
+            default: data[0] = 0;
         }
+        return 0;
     }
 }

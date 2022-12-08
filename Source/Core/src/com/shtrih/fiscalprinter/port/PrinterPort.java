@@ -11,7 +11,8 @@ import java.io.OutputStream;
 
 public interface PrinterPort 
 {
-    public static final int PARAMID_IS_RELIABLE = 1;
+    public static final int DIO_READ_IS_RELIABLE = 1;
+    public static final int DIO_REPORT_RSSI      = 2;
 
     void open(int timeout) throws Exception;
 
@@ -41,8 +42,7 @@ public interface PrinterPort
 
     void setPortEvents(IPortEvents events);
 
-    String readParameter(int parameterID);
-
+    int directIO(int command, int[] data, Object object);
 
     public interface IPortEvents
     {

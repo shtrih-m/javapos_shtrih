@@ -88,8 +88,7 @@ public class CancellablePrinterPort implements PrinterPort
         port.setPortEvents(events);
     }
 
-    public String readParameter(int parameterID){
-        return port.readParameter(parameterID);
+    public int directIO(int command, int[] data, Object object){
+        return port.directIO(command, data, object);
     }
-
 }

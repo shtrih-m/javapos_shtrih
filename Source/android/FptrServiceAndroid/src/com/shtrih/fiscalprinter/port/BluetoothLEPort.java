@@ -181,7 +181,7 @@ public class BluetoothLEPort implements PrinterPort2 {
 
         public void onReadRemoteRssi (BluetoothGatt gatt,int rssi, int status)
         {
-            loggerDebug("BluetoothGattCallback.onReadRemoteRssi(rssi: " + rssi + ", " + "status: " + status + ")");
+            logger.debug("Remote rssi: " + rssi + ", " + "status: " + status + ")");
         }
 
         public void onMtuChanged (BluetoothGatt gatt,int mtu, int status)
@@ -207,6 +207,7 @@ public class BluetoothLEPort implements PrinterPort2 {
             if (!bluetoothGatt.requestMtu(mtu)){
                 logger.error("Failed to configure MTU");
             }
+            reportRemoteRSSI();
         } else {
             discoverServices();
         }
@@ -240,7 +241,7 @@ public class BluetoothLEPort implements PrinterPort2 {
         @Override
         public void onScanResult(int callbackType, ScanResult result)
         {
-            loggerDebug("scanOpenedDeviceCallback.onScanResult: " + result.toString());
+            logger.debug("scanOpenedDeviceCallback.onScanResult: " + result.toString());
             scanner.stopScan(scanOpenedDeviceCallback);
 
             device = result.getDevice();
@@ -892,10 +893,29 @@ public class BluetoothLEPort implements PrinterPort2 {
         return rxBuffer.read(len);
     }
 
-    public String readParameter(int parameterID){
-        switch (parameterID){
-            case PrinterPort.PARAMID_IS_RELIABLE: return "1";
-            default: return null;
+    public int directIO(int command, int[] data, Object object)
+    {
+        switch (command){
+            case PrinterPort.DIO_READ_IS_RELIABLE:
+                data[0] = 1;
+                break;
+
+            case PrinterPort.DIO_REPORT_RSSI:
+                reportRemoteRSSI();
+                break;
+
+            default: data[0] = 0;
+        }
+        return 0;
+    }
+
+    public void reportRemoteRSSI()
+    {
+        // read remote RSSI
+        if (bluetoothGatt == null) return;
+        if (!bluetoothGatt.readRemoteRssi()){
+            logger.error("Failed to read remote RSSI");
         }
     }
+
 }
