@@ -111,7 +111,15 @@ public class BluetoothPort implements PrinterPort2 {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            switch (action) {
+            switch (action)
+            {
+                case BluetoothDevice.ACTION_FOUND:
+                {
+                    int  rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI,Short.MIN_VALUE);
+                    logger.debug("RSSI: " + rssi + " dBm");
+                    break;
+                }
+
                 case BluetoothDevice.ACTION_ACL_CONNECTED: {
                     BluetoothDevice btdevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     if (btdevice.equals(device)) {

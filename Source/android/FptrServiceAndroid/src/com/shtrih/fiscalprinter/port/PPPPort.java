@@ -389,7 +389,6 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         return printerPort.directIO(command, data, object);
     }
 
-
     public void onConnect() {
         if (portOpened) {
             try {
