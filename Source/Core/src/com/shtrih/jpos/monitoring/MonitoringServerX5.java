@@ -63,7 +63,7 @@ public class MonitoringServerX5 implements Runnable {
     public void run() {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
-            while (!thread.isInterrupted()) {
+            while (!Thread.currentThread().isInterrupted()) {
                 try {
                     serverSocket.setSoTimeout(AcceptTimeout);
                     Socket socket = serverSocket.accept();

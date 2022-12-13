@@ -582,6 +582,12 @@ public class MainActivity extends AppCompatActivity
                 printer.setLibraryContext(getApplicationContext());
                 // printer.addStatusUpdateListener(new FptrEventListener());
                 printer.claim(3000);
+                /*
+                for (int i=0;i<10;i++){
+                    printer.setDeviceEnabled(true);
+                    printer.setDeviceEnabled(false);
+                }
+                 */
                 printer.setDeviceEnabled(true);
                 model.ScocUpdaterStatus.set("");
                 printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, this.params.observer);

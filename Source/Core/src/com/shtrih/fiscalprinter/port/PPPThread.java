@@ -104,6 +104,7 @@ public class PPPThread implements Runnable {
         } catch (Exception e) {
             logger.error(e);
         }
+        logger.debug("PPP thread stopped");
     }
 
     public boolean waitForContext(long timeout, long timeToSleep) throws InterruptedException
