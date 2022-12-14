@@ -17,6 +17,7 @@ import java.nio.ByteOrder;
 import java.nio.ByteBuffer;
 import java.io.ByteArrayInputStream;
 
+import com.shtrih.fiscalprinter.port.ClosedConnectionException;
 import com.shtrih.util.Time;
 import com.shtrih.jpos.fiscalprinter.receipt.FSSaleReceiptItem;
 import com.shtrih.fiscalprinter.MCNotification;
@@ -241,8 +242,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     port.open(getParams().portOpenTimeout);
                 }
                 device.send(command);
-            } catch (Exception e) {
-                //port.close(); !!!
+            }
+            catch (ClosedConnectionException e)
+            {
+                if (!command.getIsRepeatable()){
+                    throw new DeviceException(PrinterConst.SMFPTR_E_NOCONNECTION, e.getMessage());
+                }
+                command.setRepeatNeeded(true);
+                return;
+            }
+            catch (Exception e)
+            {
                 throw new DeviceException(PrinterConst.SMFPTR_E_NOCONNECTION, e.getMessage());
             }
 
@@ -364,9 +374,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public LongPrinterStatus connect() throws Exception {
         logger.debug("connect");
-        synchronized (port.getSyncObject()) {
-            device.connect();
-
+        synchronized (port.getSyncObject())
+        {
             ReadPrinterModelParameters command = new ReadPrinterModelParameters();
             if (executeCommand(command) == 0) {
                 modelParameters = command.getParameters();
@@ -438,8 +447,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return errorCode == 0;
     }
 
-    private static final int maxCmdRepeatCount = 1;
-
     public int executeCommand(PrinterCommand command) throws Exception {
         long startedAt = System.currentTimeMillis();
 
@@ -450,7 +457,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         int timeout = getCommandTimeout(command.getCode());
         command.setTimeout(timeout);
 
-        for (int i = 0; i < maxCmdRepeatCount; i++) {
+        for (int i = 0; i < params.maxRepeatCount; i++) {
             command.setRepeatNeeded(false);
             deviceExecute(command);
             resultCode = command.getResultCode();

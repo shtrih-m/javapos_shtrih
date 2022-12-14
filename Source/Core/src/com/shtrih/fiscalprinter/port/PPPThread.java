@@ -140,6 +140,25 @@ public class PPPThread implements Runnable {
         }
     }
 
+    public boolean waitForStatus(PPPStatus statusToWait, long timeout) throws Exception
+    {
+        long time = Calendar.getInstance().getTimeInMillis() + timeout;
+        for (;;)
+        {
+            String statusJson = getStatus();
+            if (!statusJson.isEmpty()) {
+                PPPStatus status = PPPStatus.fromJson(statusJson);
+                if (statusToWait.equals(status)) {
+                    return true;
+                }
+            }
+            if (Calendar.getInstance().getTimeInMillis() > time){
+                return false;
+            }
+            Thread.sleep(1000);
+        }
+    }
+
     public boolean waitForPhase(String phase, long timeout) throws Exception
     {
         long time = Calendar.getInstance().getTimeInMillis() + timeout;

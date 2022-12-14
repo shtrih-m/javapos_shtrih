@@ -21,6 +21,7 @@ import java.net.Socket;
 import java.net.SocketException;
 
 import ru.shtrih_m.kktnetd.PPPConfig;
+import ru.shtrih_m.kktnetd.PPPStatus;
 
 import java.util.Calendar;
 import java.util.UUID;
@@ -33,6 +34,7 @@ import android.net.LocalSocketAddress;
  */
 public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
 
+    private int repeatCount = 0;
     private IPortEvents events;
     private Socket socket = null;
     private LocalSocket localSocket = null;
@@ -83,7 +85,9 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         startPPPThread();
         openLocalSocket(timeout);
         startDispatchThread();
-        pppThread.waitForPhase("PPP_PHASE_RUNNING", 60000);
+        if (!pppThread.waitForPhase("PPP_PHASE_RUNNING", 60000)){
+            noConnectionError();
+        }
         openSocket();
         opened = true;
         if (events != null) {
@@ -310,9 +314,18 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         return byteToInt(readBytes(1)[0]);
     }
 
-    public byte[] readBytes(int len) throws Exception {
-        open();
+    public byte[] readBytes(int len) throws Exception
+    {
+        /*
+        if (repeatCount == 0)
+        {
+            repeatCount++;
+            closeSocket();
+            throw new ClosedConnectionException("Connection closed");
+        }
+         */
 
+        open();
         long time = Calendar.getInstance().getTimeInMillis() + readTimeout;
 
         byte[] data = new byte[len];
@@ -325,7 +338,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
                 count = socket.getInputStream().read(data, offset, count);
                 if (count == -1) {
                     closeSocket();
-                    noConnectionError();
+                    throw new ClosedConnectionException("Connection closed");
                 }
                 len -= count;
                 offset += count;
@@ -370,7 +383,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
 
     public void setTimeout(int timeout) throws Exception {
         readTimeout = timeout;
-        if (isOpened()) {
+        if (socket != null) {
             socket.setSoTimeout(readTimeout);
         }
         logger.debug("setTimeout(" + readTimeout + ")");

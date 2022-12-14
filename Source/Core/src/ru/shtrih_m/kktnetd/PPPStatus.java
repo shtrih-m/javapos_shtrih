@@ -80,9 +80,18 @@ public class PPPStatus
     public PPPStatus() {
     }
 
+    public PPPStatus(String phase, String status) {
+        this.phase = phase;
+        this.status = status;
+    }
+
     public static PPPStatus fromJson(String jsonText) throws Exception {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return (PPPStatus) gson.fromJson(jsonText, PPPStatus.class);
     }
-}
 
+    public boolean isEqual(PPPStatus status){
+        return (this.phase.equalsIgnoreCase(status.phase) &&
+                (this.status.equalsIgnoreCase(status.status)));
+    }
+}

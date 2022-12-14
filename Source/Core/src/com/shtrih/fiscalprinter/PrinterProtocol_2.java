@@ -21,7 +21,6 @@ public class PrinterProtocol_2 implements PrinterProtocol {
     private final Frame frame = new Frame();
     byte[] rx = {};
     private int byteTimeout = 100;
-    private int maxRepeatCount = 3;
     private final boolean isReliable;
     private static CompositeLogger logger = CompositeLogger.getLogger(PrinterProtocol_2.class);
 
@@ -37,36 +36,12 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         this.byteTimeout = value;
     }
 
-    public void setMaxRepeatCount(int value) {
-        this.maxRepeatCount = value;
-    }
-
     public void connect() throws Exception
     {
         synchronizeFrames(byteTimeout);
     }
 
-    public void send(PrinterCommand command) throws Exception
-    {
-        int repeatCount = maxRepeatCount;
-        synchronized (port.getSyncObject())
-        {
-            for (int i = 0; i < repeatCount; i++)
-            {
-
-                if (i > 0){
-                    logger.debug(String.format("Retry %d/%d", i ,repeatCount));
-                }
-                if (sendCommand(command, i + 1)) {
-                    return;
-                }
-            }
-            throw new DeviceException(PrinterConst.SMFPTR_E_NOCONNECTION,
-                    Localizer.getString(Localizer.NoConnection));
-        }
-    }
-
-    private boolean sendCommand(PrinterCommand command, int retryNum) throws Exception {
+    public void send(PrinterCommand command) throws Exception {
 
         try {
             connect();
@@ -87,18 +62,18 @@ public class PrinterProtocol_2 implements PrinterProtocol {
                     }
                     stepFrameNumber();
                     command.decodeData(rx);
-                    return true;
+                    return;
                 }
                 command.decodeData(rx);
             }
             stepFrameNumber();
-            return true;
+            return;
 
         } catch (Exception e)
         {
             logger.error("sendCommand", e);
             isSynchronized = false;
-            return false;
+            throw e;
         }
     }
 
