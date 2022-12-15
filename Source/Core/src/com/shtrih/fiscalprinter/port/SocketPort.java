@@ -77,7 +77,8 @@ public class SocketPort implements PrinterPort2 {
 
         int b = socket.getInputStream().read();
         if (b == -1) {
-            noConnectionError();
+            close();
+            throw new ClosedConnectionException("Connection closed");
         }
 
         return b;
@@ -95,7 +96,8 @@ public class SocketPort implements PrinterPort2 {
         while (len > 0) {
             int count = socket.getInputStream().read(data, offset, len);
             if (count == -1) {
-                noConnectionError();
+                close();
+                throw new ClosedConnectionException("Connection closed");
             }
             len -= count;
             offset += count;

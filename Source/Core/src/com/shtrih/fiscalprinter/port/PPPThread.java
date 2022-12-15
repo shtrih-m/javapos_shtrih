@@ -104,6 +104,7 @@ public class PPPThread implements Runnable {
         } catch (Exception e) {
             logger.error(e);
         }
+        logger.debug("PPP thread stopped");
     }
 
     public boolean waitForContext(long timeout, long timeToSleep) throws InterruptedException
@@ -129,6 +130,25 @@ public class PPPThread implements Runnable {
             if (!statusJson.isEmpty()) {
                 PPPStatus status = PPPStatus.fromJson(statusJson);
                 if (statusToWait.equals(status.status)) {
+                    return true;
+                }
+            }
+            if (Calendar.getInstance().getTimeInMillis() > time){
+                return false;
+            }
+            Thread.sleep(1000);
+        }
+    }
+
+    public boolean waitForStatus(PPPStatus statusToWait, long timeout) throws Exception
+    {
+        long time = Calendar.getInstance().getTimeInMillis() + timeout;
+        for (;;)
+        {
+            String statusJson = getStatus();
+            if (!statusJson.isEmpty()) {
+                PPPStatus status = PPPStatus.fromJson(statusJson);
+                if (statusToWait.equals(status)) {
                     return true;
                 }
             }

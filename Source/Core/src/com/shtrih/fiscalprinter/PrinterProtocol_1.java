@@ -39,7 +39,6 @@ public class PrinterProtocol_1 implements PrinterProtocol {
     private int maxNakCommandNumber = 1;
     private int maxNakAnswerNumber = 1;
     private int maxAckNumber = 1;
-    private int maxRepeatCount = 1;
     private byte[] txData = new byte[0];
     private byte[] rxData = new byte[0];
     private final Frame frame = new Frame();
@@ -304,10 +303,6 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         return maxAckNumber;
     }
 
-    public int getMaxRepeatCount() {
-        return maxRepeatCount;
-    }
-
     public void setMaxNakCommandNumber(int value) {
         if (!isReliable) {
             maxNakCommandNumber = value;
@@ -323,12 +318,6 @@ public class PrinterProtocol_1 implements PrinterProtocol {
     public void setMaxAckNumber(int value) {
         if (!isReliable) {
             maxAckNumber = value;
-        }
-    }
-
-    public void setMaxRepeatCount(int value) {
-        if (!isReliable) {
-            maxRepeatCount = value;
         }
     }
 

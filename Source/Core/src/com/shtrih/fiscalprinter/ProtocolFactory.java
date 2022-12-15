@@ -30,7 +30,6 @@ public final class ProtocolFactory {
                 protocol1.setMaxNakCommandNumber(params.maxNakCommandNumber);
                 protocol1.setMaxNakAnswerNumber(params.maxNakAnswerNumber);
                 protocol1.setMaxAckNumber(params.maxAckNumber);
-                protocol1.setMaxRepeatCount(params.maxRepeatCount);
                 return protocol1;
             }
 
@@ -43,7 +42,6 @@ public final class ProtocolFactory {
             case SmFptrConst.SMFPTR_PROTOCOL_2: {
                 PrinterProtocol_2 protocol2 = new PrinterProtocol_2(port);
                 protocol2.setByteTimeout(params.getByteTimeout());
-                protocol2.setMaxRepeatCount(params.maxRepeatCount);
                 return protocol2;
             }
 
