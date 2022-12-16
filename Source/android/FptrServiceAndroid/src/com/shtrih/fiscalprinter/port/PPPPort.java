@@ -99,16 +99,11 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     {
         if (socket == null)
         {
-            logger.debug("openSocket...");
             socket = new Socket();
             socket.setTcpNoDelay(true);
             socket.setSoTimeout(connectTimeout);
             socket.connect(new InetSocketAddress("127.0.0.1", 7778));
             socket.setSoTimeout(readTimeout);
-
-            //logger.debug("openSocket: wait for established status...");
-            //pppThread.waitForStatus("ESTABLISHED", 50000);
-            logger.debug("openSocket: OK");
         }
     }
 
@@ -342,7 +337,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         for (int i = 0; i < 2; i++) {
             try {
                 open();
-                logger.debug("=>> write: " + Hex.toHex(b));
+                //logger.debug("=>> write: " + Hex.toHex(b));
                 socket.getOutputStream().write(b);
                 return;
             } catch (SocketException e) {
@@ -400,6 +395,10 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
 
     public int directIO(int command, int[] data, Object object)
     {
+        if (command == DIO_REPORT_IS_PPP){
+            data[0] = 1;
+            return 0;
+        }
         return printerPort.directIO(command, data, object);
     }
 

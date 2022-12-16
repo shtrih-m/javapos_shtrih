@@ -133,6 +133,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public int logoPosition = SmFptrConst.SMFPTR_LOGO_PRINT;
     private final FptrParameters params;
+    private boolean setPrinterFDOMode = true;
     private boolean freezeEvents = true;
     private final FiscalPrinterFilters filters = new FiscalPrinterFilters();
     private Thread asyncThread = null;
@@ -1063,7 +1064,37 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public void stopFDOService() {
+    public boolean isPPP()
+    {
+        int[] data = new int[1];
+        data[0] = 0;
+        port.directIO(PrinterPort.DIO_REPORT_IS_PPP, data, null);
+        return data[0] == 1;
+    }
+
+    public void setPrinterFDOMode(int mode)
+    {
+        try
+        {
+            if (!setPrinterFDOMode) return;
+
+            if (params.fdoMode != SmFptrConst.FDO_MODE_DISABLE_IN_REC){
+                return;
+            }
+
+            if (isPPP()) {
+                printer.writeTable(21, 1, 2, String.valueOf(mode));
+            }
+        }
+        catch(Exception e)
+        {
+            setPrinterFDOMode = false;
+            logger.error("setPrinterFDOMode ", e);
+        }
+    }
+
+    public void stopFDOService()
+    {
         if (fdoService == null) {
             return;
         }
@@ -3127,6 +3158,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkEnabled();
         checkPrinterState(FPTR_PS_MONITOR);
         stopFDOService();
+        setPrinterFDOMode(0);
         logger.debug("DeviceServiceVersion: " + String.valueOf(deviceServiceVersion));
         try {
 
@@ -3207,6 +3239,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 // ignore print errors because cashin is succeeded
                 logger.error("endFiscalReceipt", e);
             }
+            setPrinterFDOMode(1);
             startFDOService();
             setPrinterState(FPTR_PS_MONITOR);
             params.nonFiscalDocNumber++;

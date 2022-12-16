@@ -7,6 +7,14 @@
     
 ********************************************************************************
 
+  16.12.2022
+  deviceServiceVersion = 1013683
+  
+  [-] Added fdoMode=3 to enable and disable sending documents to FDO server 
+      (table 21, field 2)
+  
+********************************************************************************
+
   13.12.2022
   deviceServiceVersion = 1013682
   

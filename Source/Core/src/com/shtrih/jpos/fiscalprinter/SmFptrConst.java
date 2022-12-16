@@ -27,7 +27,8 @@ public class SmFptrConst {
     public static final int FDO_MODE_DISABLED       = 0;
     public static final int FDO_MODE_ENABLED        = 1;
     public static final int FDO_MODE_ZREPORT        = 2;
-    
+    public static final int FDO_MODE_DISABLE_IN_REC = 3;
+
     ///////////////////////////////////////////////////////////////////////////
     // How to make 1162 tag, from driver or from fiscal printer
     public static final int MARKING_TYPE_PRINTER = 0;

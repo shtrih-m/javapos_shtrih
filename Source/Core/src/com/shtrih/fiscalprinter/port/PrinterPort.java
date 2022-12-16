@@ -13,6 +13,7 @@ public interface PrinterPort
 {
     public static final int DIO_READ_IS_RELIABLE = 1;
     public static final int DIO_REPORT_RSSI      = 2;
+    public static final int DIO_REPORT_IS_PPP    = 3;
 
     void open(int timeout) throws Exception;
 
