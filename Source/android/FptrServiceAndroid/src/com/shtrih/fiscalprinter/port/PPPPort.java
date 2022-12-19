@@ -47,7 +47,6 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     private boolean opened = false;
     private boolean portOpened = false;
     private String localSocketName = null;
-    private long lastTimeInMillis = 0;
     private static CompositeLogger logger = CompositeLogger.getLogger(PPPPort.class);
 
     private final FptrParameters params;
@@ -98,17 +97,13 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
 
     public void openSocket() throws Exception
     {
-        if (socket == null) {
+        if (socket == null)
+        {
             socket = new Socket();
             socket.setTcpNoDelay(true);
-        }
-        if (!socket.isConnected()) {
-            logger.debug("socket.connect");
             socket.setSoTimeout(connectTimeout);
             socket.connect(new InetSocketAddress("127.0.0.1", 7778));
             socket.setSoTimeout(readTimeout);
-            lastTimeInMillis = Calendar.getInstance().getTimeInMillis();
-            logger.debug("socket.connect: OK");
         }
     }
 
@@ -233,16 +228,14 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     public void closeSocket() {
         logger.debug("closeSocket");
 
-        if (socket == null) {
-            return;
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (Exception e) {
+                logger.error(e);
+            }
+            socket = null;
         }
-
-        try {
-            socket.close();
-        } catch (Exception e) {
-            logger.error(e);
-        }
-        socket = null;
         logger.debug("closeSocket: OK");
     }
 
@@ -316,34 +309,22 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
 
     public byte[] readBytes(int len) throws Exception
     {
-        /*
-        if (repeatCount == 0)
-        {
-            repeatCount++;
-            closeSocket();
-            throw new ClosedConnectionException("Connection closed");
-        }
-         */
-
-        open();
-        long time = Calendar.getInstance().getTimeInMillis() + readTimeout;
-
+        long time = Calendar.getInstance().getTimeInMillis() + readTimeout + 10000; // !!!
         byte[] data = new byte[len];
         int offset = 0;
         while (len > 0) {
-            openSocket();
 
             int count = Math.min(len, socket.getInputStream().available());
             if (count > 0) {
                 count = socket.getInputStream().read(data, offset, count);
                 if (count == -1) {
-                    closeSocket();
+                    close();
                     throw new ClosedConnectionException("Connection closed");
                 }
                 len -= count;
                 offset += count;
             }
-            lastTimeInMillis = Calendar.getInstance().getTimeInMillis();
+            long lastTimeInMillis = Calendar.getInstance().getTimeInMillis();
             if (lastTimeInMillis > time) {
                 noConnectionError();
             }
@@ -353,12 +334,11 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     }
 
     public void write(byte[] b) throws Exception {
-        open();
         for (int i = 0; i < 2; i++) {
             try {
-                openSocket();
+                open();
+                //logger.debug("=>> write: " + Hex.toHex(b));
                 socket.getOutputStream().write(b);
-                socket.getOutputStream().flush();
                 return;
             } catch (SocketException e) {
                 logger.error("write", e);
@@ -415,6 +395,10 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
 
     public int directIO(int command, int[] data, Object object)
     {
+        if (command == DIO_REPORT_IS_PPP){
+            data[0] = 1;
+            return 0;
+        }
         return printerPort.directIO(command, data, object);
     }
 

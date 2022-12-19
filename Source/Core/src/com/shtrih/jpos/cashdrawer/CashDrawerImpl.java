@@ -686,7 +686,6 @@ public class CashDrawerImpl extends DeviceService implements
             port.setPortName(searchPortName);
             port.setBaudRate(searchBaudRate);
             port.open(searchTimeout);
-            printer.connect();
 
             LongPrinterStatus status = printer.readLongStatus();
             // always set port parameters to update byte

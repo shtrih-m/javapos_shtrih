@@ -231,7 +231,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         synchronized (port.getSyncObject()) {
             Time.delay(params.commandDelayInMs);
             beforeCommand(command);
-            correctDateTime(command);
+            //correctDateTime(command);
 
             if (interrupted || Thread.currentThread().isInterrupted()) {
                 throw new InterruptedException();
@@ -347,13 +347,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 PrinterTime currentTime = new PrinterTime();
                 FSReadStatus fsStatus = fsReadStatus();
 
-                if (!status.getDate().isEqual(currentDate)) {
-                    if (fsStatus.getDate().after(currentDate)) {
-                        check(writeDate(fsStatus.getDate()));
-                        check(confirmDate(fsStatus.getDate()));
-                        check(writeTime(fsStatus.getTime()));
-                        return;
-                    } else {
+                if (!status.getDate().isEqual(currentDate))
+                {
+                    if (fsStatus.getDate().beforeOrEqual(currentDate))
+                    {
                         check(writeDate(currentDate));
                         check(confirmDate(currentDate));
                     }

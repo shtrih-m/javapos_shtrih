@@ -113,7 +113,11 @@ public class PrinterDate {
     public boolean before(PrinterDate date){
         return compare(date) < 0;
     }
-    
+
+    public boolean beforeOrEqual(PrinterDate date){
+        return compare(date) <= 0;
+    }
+
     public boolean after(PrinterDate date){
         return compare(date) > 0;
     }
