@@ -13,7 +13,7 @@ public class ReadErrorDescriptionTests {
 
     @Test
     public void should_serialize_request() throws Exception {
-        ReadErrorDescription cmd = new ReadErrorDescription(94);
+        ReadErrorTextByCode cmd = new ReadErrorTextByCode(94);
 
         byte[] data = cmd.encodeData();
 
@@ -25,7 +25,7 @@ public class ReadErrorDescriptionTests {
 
     @Test
     public void should_deserialize_response() throws Exception {
-        ReadErrorDescription cmd = new ReadErrorDescription(94);
+        ReadErrorTextByCode cmd = new ReadErrorTextByCode(94);
 
         byte[] responseData = byteArray(
                 0x6B, 0x00, 0xCA, 0xCA, 0xD2, 0x3A, 0x20, 0xCD, 0xE5, 0xE2,

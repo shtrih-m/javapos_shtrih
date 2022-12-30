@@ -159,6 +159,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private volatile boolean interrupted = false;
     private Integer fdVersion = null;
     private boolean capLastErrorText = true;
+    private boolean capErrorTextByCode = true;
     private FDOParameters fdoParameters = null;
     public boolean isTableTextCleared = false;
     private final Map<Integer, Integer> taxRates = new HashMap<Integer, Integer>();
@@ -228,7 +229,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void deviceExecute(PrinterCommand command) throws Exception {
-        synchronized (port.getSyncObject()) {
+        synchronized (port.getSyncObject()) 
+        {
             Time.delay(params.commandDelayInMs);
             beforeCommand(command);
             //correctDateTime(command);
@@ -242,17 +244,13 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     port.open(getParams().portOpenTimeout);
                 }
                 device.send(command);
-            }
-            catch (ClosedConnectionException e)
-            {
-                if (!command.getIsRepeatable()){
+            } catch (ClosedConnectionException e) {
+                if (!command.getIsRepeatable()) {
                     throw new DeviceException(PrinterConst.SMFPTR_E_NOCONNECTION, e.getMessage());
                 }
                 command.setRepeatNeeded(true);
                 return;
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new DeviceException(PrinterConst.SMFPTR_E_NOCONNECTION, e.getMessage());
             }
 
@@ -262,16 +260,21 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     Thread.sleep(3000);
                 }
                 commandSucceeded(command);
-            } else {
-                if (capLastErrorText) {
-                    ReadLastErrorText command2 = readExtendedCode();
-                    if (command2.isSucceeded()) {
-                        logger.error(command2.getErrorText());
+            } else 
+            {
+                if (command.getCode() != 0x6B)
+                {
+                    if (capLastErrorText) {
+                        ReadLastErrorText command2 = readLastErrorText();
+                        if (command2.isSucceeded()) {
+                            logger.error(command2.getErrorText());
+                        }
                     } else {
-                        capLastErrorText = false;
+                        String text = getErrorText(command.getResultCode());
+                        logger.error(text + ", " + command.getParametersText(commands));
                     }
-                } else {
-                    String text = getErrorText(command.getResultCode());
+                } else{
+                    String text = getDriverErrorText(command.getResultCode());
                     logger.error(text + ", " + command.getParametersText(commands));
                 }
             }
@@ -347,10 +350,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 PrinterTime currentTime = new PrinterTime();
                 FSReadStatus fsStatus = fsReadStatus();
 
-                if (!status.getDate().isEqual(currentDate))
-                {
-                    if (fsStatus.getDate().beforeOrEqual(currentDate))
-                    {
+                if (!status.getDate().isEqual(currentDate)) {
+                    if (fsStatus.getDate().beforeOrEqual(currentDate)) {
                         check(writeDate(currentDate));
                         check(confirmDate(currentDate));
                     }
@@ -371,12 +372,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public LongPrinterStatus connect() throws Exception {
         logger.debug("connect");
-        synchronized (port.getSyncObject())
-        {
+        synchronized (port.getSyncObject()) {
             ReadPrinterModelParameters command = new ReadPrinterModelParameters();
             if (executeCommand(command) == 0) {
                 modelParameters = command.getParameters();
                 capLastErrorText = modelParameters.isCapCommand6B();
+                capErrorTextByCode = modelParameters.isCapCommand6B();
                 capCutter = modelParameters.isCapCutter();
             } else {
                 modelParameters = null;
@@ -1707,12 +1708,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         execute(command);
     }
 
-    public void reportRemoteRSSI()
-    {
+    public void reportRemoteRSSI() {
         try {
             port.directIO(PrinterPort.DIO_REPORT_RSSI, null, null);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
@@ -2700,7 +2699,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             if (barcode.getType() != SmFptrConst.SMFPTR_BARCODE_EAN13) {
                 throw new Exception(
                         Localizer
-                        .getString(Localizer.PrinterSupportesEAN13Only));
+                                .getString(Localizer.PrinterSupportesEAN13Only));
             }
 
             if (barcode.isTextAbove()) {
@@ -3654,13 +3653,16 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public String getErrorText(int code) throws Exception {
-        if (capModelParameters() && modelParameters.isCapCommand6B() && (code >= 0) && (code <= 0xFF) && capLastErrorText) {
-            ReadErrorDescription command = readErrorDescription(code);
+        if (capErrorTextByCode) {
+            ReadErrorTextByCode command = readErrorText(code);
             if (command.isSucceeded()) {
                 return String.valueOf(code) + ", " + command.getText();
             }
         }
+        return getDriverErrorText(code);
+    }
 
+    public String getDriverErrorText(int code) throws Exception {
         String key = "PrinterError";
         if ((code >= 0x00) && (code <= 0xFF)) {
             key += Hex.toHex((byte) code);
@@ -3679,16 +3681,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return String.valueOf(code) + ", " + result;
     }
 
-    private ReadErrorDescription readErrorDescription(int code) throws Exception {
-        ReadErrorDescription command = new ReadErrorDescription(code);
+    private ReadErrorTextByCode readErrorText(int code) throws Exception {
+        ReadErrorTextByCode command = new ReadErrorTextByCode(code);
         executeCommand(command);
-        capLastErrorText = command.isSucceeded();
+        capErrorTextByCode = command.isSucceeded();
         return command;
     }
 
-    private ReadLastErrorText readExtendedCode() throws Exception {
+    private ReadLastErrorText readLastErrorText() throws Exception {
         ReadLastErrorText command = new ReadLastErrorText();
         executeCommand(command);
+        capLastErrorText = command.isSucceeded();
         return command;
     }
 

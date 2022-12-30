@@ -1,13 +1,13 @@
 package com.shtrih.fiscalprinter.command;
 
-public class ReadErrorDescription extends PrinterCommand {
+public class ReadErrorTextByCode extends PrinterCommand {
     // in
     private final int errorCode;
 
     // out params
     private String errorDescription;
 
-    public ReadErrorDescription(int errorCode) {
+    public ReadErrorTextByCode(int errorCode) {
         this.errorCode = errorCode;
     }
 
