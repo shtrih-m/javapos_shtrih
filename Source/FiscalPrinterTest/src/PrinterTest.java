@@ -1069,13 +1069,27 @@ class PrinterTest implements FiscalPrinterConst {
             printer.sendFDODocuments();
             */
             
-            printFiscalReceiptDate();
+            //printFiscalReceiptDate();
+            testRefundReceipt();
             
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public void testRefundReceipt() {
+        try {
+            printer.resetPrinter();
+            printer.setFiscalReceiptType(FPTR_RT_REFUND);
+            printer.beginFiscalReceipt(true);
+            printer.printRecItemRefund("Описание отсутствует", 1, 1000000, 1, 1, "");
+            printer.printRecTotal(1, 1, "14");
+            printer.endFiscalReceipt(false);   
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+  
     public void testGetTextLength() {
         try {
 
