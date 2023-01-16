@@ -84,10 +84,7 @@ public class PrinterProtocol_2 implements PrinterProtocol {
 
         port.setTimeout(timeout);
         writeCommand(null);
-        for(;;) {
-            frameNumber = readAnswer();
-            if (rx.length == 0) break;
-        }
+        frameNumber = readAnswer();
         isSynchronized = true;
         stepFrameNumber();
     }
