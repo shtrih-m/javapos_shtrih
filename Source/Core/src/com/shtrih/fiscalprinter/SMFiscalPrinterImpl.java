@@ -5280,6 +5280,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             return;
         }
 
+        checkFDOConnection();
+        
         while (true) {
             byte[] data = fsReadBlockData();
             if (data.length == 0) {
@@ -5305,6 +5307,19 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
+    
+    public void checkFDOConnection() throws Exception 
+    {
+        logger.debug("testOFDConnection");
+        FDOParameters parameters = getFDOParameters();
+        Socket socket = new Socket();
+        socket.setTcpNoDelay(true);
+        socket.setSoTimeout(parameters.getTimeoutInMSec());
+        socket.connect(new InetSocketAddress(parameters.getHost(), parameters.getPort()));
+        socket.close();
+        logger.debug("testOFDConnection: OK");
+    }
+    
     private byte[] sendFDOData(byte[] data) throws Exception {
         FDOParameters parameters = getFDOParameters();
         logger.debug(String.format("FDO %s:%d, connection timeout %d ms",

@@ -742,6 +742,9 @@ public class SmFptrConst {
     // Read communication status
     public static final int SMFPTR_DIO_FS_READ_COMM_STATUS = 0x92;
     
+    // Check FDO connection
+    public static final int SMFPTR_DIO_CHECK_FDO_CONNECTION = 0x93;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,
