@@ -587,6 +587,10 @@ public class DirectIOHandler2 {
                 new DIOReadCommStatus(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_CHECK_FDO_CONNECTION:
+                new DIOCheckFDOConnection(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL, Localizer.getString(Localizer.invalidParameterValue) + ", command");
         }

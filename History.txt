@@ -7,6 +7,14 @@
     
 ********************************************************************************
 
+  20.01.2023
+  deviceServiceVersion = 1013686
+  
+  [+] Added directIO command SMFPTR_DIO_CHECK_FDO_CONNECTION = 0x93 to 
+      check connection to FDO server
+  
+********************************************************************************
+
   16.01.2023
   deviceServiceVersion = 1013685
   

@@ -2475,4 +2475,9 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_FS_READ_COMM_STATUS, null, lines);
         return lines;
     }
+    
+    public void checkFDOConnection() throws Exception{
+        directIO(SmFptrConst.SMFPTR_DIO_CHECK_FDO_CONNECTION, null, null);
+    }
+    
 }
