@@ -111,6 +111,7 @@ import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
+import java.util.List;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -959,6 +960,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 } catch (Exception e) {
                     logger.error("Failed to start JsonUpdateService", e);
                 }
+                
+                if (params.textReportEnabled || (params.duplicateReceipt == SmFptrConst.DUPLICATE_RECEIPT_DRIVER))
+                {
+                    filter = new TextDocumentFilter(getPrinter(), header, params.textReportEnabled);
+                    getPrinter().addEvents(filter);
+                }
+                
             } else {
                 stopPoll();
                 stopFDOService();
@@ -2262,10 +2270,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
         receipt = new NullReceipt(getReceiptContext());
 
-        if (params.textReportEnabled) {
-            filter = new TextDocumentFilter(getPrinter(), header);
-            getPrinter().addEvents(filter);
-        }
 
         state = JPOS_S_IDLE;
         setFreezeEvents(false);
@@ -3258,7 +3262,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             if (!getDuplicateReceipt()) {
                 throw new JposException(JPOS_E_ILLEGAL, "THere is no documents to print");
             }
-            if (printer.getParams().duplicateReceiptMethod == SmFptrConst.DUPLICATE_RECEIPT_DEVICE)
+            if (printer.getParams().duplicateReceipt == SmFptrConst.DUPLICATE_RECEIPT_DEVICE)
             {
                 printDocStart();
                 getPrinter().duplicateReceipt();
@@ -3266,8 +3270,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 printEndFiscal();
             } else
             {
-                //textReport. !!!
-            }
+                printDocStart();
+                List<String> lines = filter.getDocLines();
+                for (int i=0;i<lines.size();i++)
+                {
+                    printer.printText(lines.get(i));
+                }
+                printEndFiscal();
+           }
             duplicateReceipt = false;
         } finally {
             printer.getParams().textReportEnabled = filterEnabled;

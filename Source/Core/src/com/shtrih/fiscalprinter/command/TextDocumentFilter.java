@@ -9,16 +9,19 @@ import com.shtrih.jpos.fiscalprinter.PrinterHeader;
 import com.shtrih.util.BitUtils;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.MathUtils;
+import com.shtrih.util.StringUtils;
 import com.shtrih.util.SysUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class TextDocumentFilter implements IPrinterEvents {
 
     private static CompositeLogger logger = CompositeLogger.getLogger(TextDocumentFilter.class);
 
+    private final int lineLength;
     private boolean enabled = true;
     private String deviceName = "ККМ";
     private int operatorNumber = 1;
@@ -31,9 +34,12 @@ public class TextDocumentFilter implements IPrinterEvents {
     private boolean connected = false;
     private final PrinterHeader header;
     private final SMFiscalPrinter printer;
+    private final boolean saveToStorage;
     private XReport report = new XReport();
     private final String[] paymentNames = new String[16];
     private final List<Operator> operators = new ArrayList<Operator>();
+    private List<String> docLines = new Vector<String>();
+    private SKLStorage storage;
 
     private static String SFiscalSign = "ФП";
     private static String SSaleText = "ПРОДАЖА";
@@ -58,9 +64,11 @@ public class TextDocumentFilter implements IPrinterEvents {
     public static final String SINN = "ИНН";
     private static String[] docNames = {SSaleText, SBuyText, SRetSaleText, SRetBuyText};
 
-    public TextDocumentFilter(SMFiscalPrinter printer, PrinterHeader header) {
+    public TextDocumentFilter(SMFiscalPrinter printer, PrinterHeader header, boolean saveToStorage) throws Exception{
         this.header = header;
         this.printer = printer;
+        this.saveToStorage = saveToStorage;
+        lineLength = printer.getMessageLength(FontNumber.getNormalFont());
     }
 
     public boolean getEnabled() {
@@ -188,8 +196,10 @@ public class TextDocumentFilter implements IPrinterEvents {
         }
     }
 
-    private void openReceipt(OpenReceipt command) throws Exception {
+    private void openReceipt(OpenReceipt command) throws Exception 
+    {
         openReceipt2(command.getReceiptType());
+        docLines.clear();
     }
 
     private void openReceipt2(int receiptType) throws Exception {
@@ -561,7 +571,9 @@ public class TextDocumentFilter implements IPrinterEvents {
         }
     }
 
-    public XReport readXReport() throws Exception {
+    public XReport readXReport() throws Exception 
+    {
+        docLines.clear();
         XReport report = new XReport();
         FMTotals totals = printer.readFPTotals(1);
         report.salesAmountBefore = totals.getSalesAmount();
@@ -601,7 +613,9 @@ public class TextDocumentFilter implements IPrinterEvents {
         return report;
     }
 
-    public void printCashIn(PrintCashIn command) throws Exception {
+    public void printCashIn(PrintCashIn command) throws Exception 
+    {
+        docLines.clear();
         isDocumentPrinted = true;
         operatorNumber = command.getOperator();
         long docNumber = printer.readCashRegister(155);
@@ -614,6 +628,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
 
     public void printCashOut(PrintCashOut command) throws Exception {
+        docLines.clear();
         isDocumentPrinted = true;
         operatorNumber = command.getOperator();
         long docNumber = printer.readCashRegister(156);
@@ -633,29 +648,6 @@ public class TextDocumentFilter implements IPrinterEvents {
         add(text, amountToStr(value));
     }
 
-    public int getLineLength() throws Exception {
-        return printer.getMessageLength(FontNumber.getNormalFont());
-    }
-
-    public void add(String s1, String s2) throws Exception {
-        getSKLWriter().add(s1, s2);
-    }
-
-    private SKLWriter sklWriter;
-
-    private SKLWriter getSKLWriter() throws Exception {
-        if (sklWriter == null) {
-            String filePath = SysUtils.getFilesPath() + printer.getParams().textReportFileName;
-            SKLStorage storage = new FileSKLStorage(filePath);
-            sklWriter = new SKLWriter(storage, getLineLength());
-        }
-
-        return sklWriter;
-    }
-
-    public void add(String line) throws Exception {
-        getSKLWriter().add(line);
-    }
 
     private void beginDocument() throws Exception {
         printReceiptHeader();
@@ -768,10 +760,6 @@ public class TextDocumentFilter implements IPrinterEvents {
         }
     }
 
-    public void addCenter(char c, String text) throws Exception {
-        getSKLWriter().addCenter(c, text);
-    }
-
     public void readEJReport(boolean isReceipt) throws Exception {
         if (printer.getCapFiscalStorage()) {
             ReadFiscalStorage();
@@ -824,4 +812,112 @@ public class TextDocumentFilter implements IPrinterEvents {
         add("        " + s);
     }
 
+    public void add(String s1, String s2) throws Exception {
+        if (s1.length() > lineLength && s2.length() < lineLength && lineLength - (s1.length() % lineLength) - s2.length() > 0) {
+
+            int len = lineLength - (s1.length() % lineLength) - s2.length();
+            String line = s1 + StringUtils.stringOfChar(' ', len) + s2;
+            add(line);
+            return;
+        }
+
+        if (s1.length() + s2.length() + 1 > lineLength) {
+            addPaddedLeft(s1);
+            addPaddedRight(s2);
+
+            return;
+        }
+
+        int len = lineLength - s1.length() - s2.length();
+        String line = s1 + StringUtils.stringOfChar(' ', len) + s2;
+        writeLn(line);
+    }
+
+    private void addPaddedLeft(String s1) throws Exception {
+        if (s1.length() > lineLength) {
+            add(s1);
+            return;
+        }
+
+        if (s1.length() == lineLength) {
+            writeLn(s1);
+            return;
+        }
+
+        int len = lineLength - s1.length();
+        String line = s1 + StringUtils.stringOfChar(' ', len);
+        writeLn(line);
+    }
+
+    private void addPaddedRight(String s2) throws Exception {
+        if (s2.length() > lineLength) {
+            add(s2);
+            return;
+        }
+
+        if (s2.length() == lineLength) {
+            writeLn(s2);
+            return;
+        }
+
+        int len = lineLength - s2.length();
+        String line = StringUtils.stringOfChar(' ', len) + s2;
+        writeLn(line);
+    }
+
+    public void addCenter(char c, String text) throws Exception {
+        int l = (lineLength - text.length()) / 2;
+        String line = StringUtils.stringOfChar(c, l) + text;
+        line = line + StringUtils.stringOfChar(c, lineLength - line.length());
+        writeLn(line);
+    }
+
+    public void add(String line) throws Exception {
+
+        if (line.length() <= lineLength) {
+            addPaddedLeft(line);
+            return;
+        }
+
+        int lineNumber = 0;
+
+        while (true) {
+            int beginIndex = lineNumber * lineLength;
+            if (line.length() <= beginIndex) {
+                break;
+            }
+
+            int endIndex = (lineNumber + 1) * lineLength;
+
+            if (endIndex > line.length()) {
+                endIndex = line.length();
+            }
+
+            String substring = line.substring(beginIndex, endIndex);
+
+            addPaddedLeft(substring);
+
+            lineNumber++;
+        }
+    }
+
+    public List<String> getDocLines(){
+        return docLines;
+    }
+    
+    private SKLStorage getStorage() throws Exception 
+    {
+        if (storage == null) {
+            String filePath = SysUtils.getFilesPath() + printer.getParams().textReportFileName;
+            SKLStorage storage = new FileSKLStorage(filePath);
+        }
+        return storage;
+    }
+
+    private void writeLn(String line) throws Exception {
+        docLines.add(line);
+        if (saveToStorage){
+            getStorage().writeLine(line);
+        }
+    }
 }

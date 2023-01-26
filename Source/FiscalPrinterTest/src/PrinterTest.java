@@ -1074,9 +1074,11 @@ class PrinterTest implements FiscalPrinterConst {
             //printFiscalReceiptDate();
             //testRefundReceipt();
             //printFiscalReceipt145_4();
+            //checkItemCode2();
             
-            checkItemCode2();
-                   
+            printer.setDuplicateReceipt(true);
+            printFiscalReceiptDate();
+            printer.printDuplicateReceipt();
                     
             
         } catch (Exception e) {
