@@ -22,6 +22,12 @@ public class SmFptrConst {
     }
 
     ///////////////////////////////////////////////////////////////////////////
+    // Duplicate receipt method
+    
+    public static final int DUPLICATE_RECEIPT_DEVICE    = 0;
+    public static final int DUPLICATE_RECEIPT_DRIVER    = 1;
+    
+    ///////////////////////////////////////////////////////////////////////////
     // FDO mode
     
     public static final int FDO_MODE_DISABLED       = 0;

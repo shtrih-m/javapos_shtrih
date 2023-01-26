@@ -3255,10 +3255,19 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             if (!getCapDuplicateReceipt()) {
                 throw new JposException(JPOS_E_ILLEGAL, Localizer.getString(Localizer.receiptDuplicationNotSupported));
             }
-            printDocStart();
-            getPrinter().duplicateReceipt();
-            receipt.printReceiptEnding();
-            printEndFiscal();
+            if (!getDuplicateReceipt()) {
+                throw new JposException(JPOS_E_ILLEGAL, "THere is no documents to print");
+            }
+            if (printer.getParams().duplicateReceiptMethod == SmFptrConst.DUPLICATE_RECEIPT_DEVICE)
+            {
+                printDocStart();
+                getPrinter().duplicateReceipt();
+                receipt.printReceiptEnding();
+                printEndFiscal();
+            } else
+            {
+                //textReport. !!!
+            }
             duplicateReceipt = false;
         } finally {
             printer.getParams().textReportEnabled = filterEnabled;

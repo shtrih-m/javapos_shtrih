@@ -30,6 +30,8 @@ import com.shtrih.util.Hex;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.jpos.DIOUtils;
 import com.shtrih.util.StringUtils;
+import com.shtrih.fiscalprinter.ShtrihFiscalPrinter113;
+import com.shtrih.fiscalprinter.ShtrihFiscalPrinter113.CheckItemCodeResponse;
 
 class PrinterTest implements FiscalPrinterConst {
 
@@ -1071,15 +1073,32 @@ class PrinterTest implements FiscalPrinterConst {
             
             //printFiscalReceiptDate();
             //testRefundReceipt();
+            //printFiscalReceipt145_4();
             
-            printer.checkFDOConnection();
+            checkItemCode2();
+                   
+                    
             
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void testRefundReceipt() {
+    public void checkItemCode2() throws Exception
+    {
+        System.out.println("checkItemCode2");
+        String barcode = "010464007801637221AgqLybqxM9MbR\u001d91FFD0\u001d92dGVzdL31KAYL0YT6592MjmW7a2HkF3IY+muf2pVSKdQ=";
+        byte[] tlv = new byte[0];
+        CheckItemCodeResponse response = printer.checkItemCode2(1, 0, barcode.getBytes(), tlv);
+        System.out.println("response.localCheckStatus: " + response.localCheckStatus);
+        System.out.println("response.symbolicType: " + response.symbolicType);
+        System.out.println("response.serverErrorCode: " + response.serverErrorCode);
+        System.out.println("response.serverCheckStatus: " + response.serverCheckStatus);
+        System.out.println("response.serverTLVData: " + response.serverTLVData);
+        System.out.println("checkItemCode2: OK");
+    }
+            
+   public void testRefundReceipt() {
         try {
             printer.resetPrinter();
             printer.setFiscalReceiptType(FPTR_RT_REFUND);
@@ -3867,6 +3886,8 @@ class PrinterTest implements FiscalPrinterConst {
             byte[] data = QRCodeData.getBytes();
             System.out.println("Barcode: " + Hex.toHex(data));
 
+            CheckItemCodeResponse response = printer.checkItemCode2(1, 0, data, null);
+                    
             printer.addItemCode(data);
             printer.printRecItem("1. СДОБА ЗАМОСКВОРЕЦКАЯ", 3200, 1000, 2, 3200, "шт");
             printer.printRecItemAdjustment(1, "            1206", 320, 2);

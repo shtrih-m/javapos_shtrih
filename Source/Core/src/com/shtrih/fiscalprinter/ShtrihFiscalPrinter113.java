@@ -2479,5 +2479,38 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void checkFDOConnection() throws Exception{
         directIO(SmFptrConst.SMFPTR_DIO_CHECK_FDO_CONNECTION, null, null);
     }
+
+    public class CheckItemCodeResponse
+    {
+        public int localCheckStatus;
+        public int localErrorCode;
+        public int symbolicType;
+        public int serverErrorCode;
+        public int serverCheckStatus;
+        public byte[] serverTLVData;
+    
+        public CheckItemCodeResponse(){
+        }
+    }
+    
+    public CheckItemCodeResponse checkItemCode2(int itemStatus, 
+            int checkMode, byte[] data, byte[] tlv) throws Exception{
+
+        Object[] params = new Object[10];
+        
+        params[0] = new Integer(itemStatus);
+        params[1] = new Integer(checkMode);
+        params[2] = data;
+        params[3] = tlv;
+        directIO(SmFptrConst.SMFPTR_DIO_CHECK_ITEM_CODE2, null, params);
+        CheckItemCodeResponse response = new CheckItemCodeResponse();
+        response.localCheckStatus = (Integer)params[4];
+        response.localErrorCode = (Integer)params[5];
+        response.symbolicType = (Integer)params[6];
+        response.serverErrorCode = (Integer)params[7];
+        response.serverCheckStatus = (Integer)params[8];
+        response.serverTLVData = (byte[])params[9];
+        return response;
+    }
     
 }
