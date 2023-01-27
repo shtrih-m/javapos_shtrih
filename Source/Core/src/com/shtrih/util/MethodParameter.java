@@ -19,6 +19,12 @@ public final class MethodParameter {
     private MethodParameter() {
     }
 
+    public static void checkNotNull(Object obj, String parameterName) throws Exception {
+        if (obj == null){
+            throw new InvalidParameterException(parameterName + " cannot be null");
+        }
+    }
+            
     public static void checkRange(long parameterValue, long minValue,
             long maxValue, String parameterName) throws Exception {
         if (parameterValue < minValue) {

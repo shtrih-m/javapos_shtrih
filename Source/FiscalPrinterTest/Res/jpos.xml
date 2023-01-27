@@ -65,7 +65,7 @@
         <!-- Amount coefficient -->
         <prop name="amountFactor" type="String" value="1"/>
         <!-- Quantity coefficient -->
-        <prop name="quantityFactor" type="String" value="1"/>
+        <prop name="quantityFactor" type="String" value="1000"/>
         <!-- Strings encoding -->
         <prop name="stringEncoding" type="String" value="Cp866"/>
         <!-- Statistics file name -->
@@ -327,6 +327,7 @@
         <!-- PPP start service -->
         <prop name="PPPStartService" type="String" value="1"/>
         <prop name="tagsBeforeItem" type="String" value="0"/>
+        <prop name="duplicateReceipt" type="String" value="1"/>
     </JposEntry> 
 	
     <JposEntry logicalName="ShtrihCashDrawer">
