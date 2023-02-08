@@ -7,10 +7,19 @@
     
 ********************************************************************************
 
+  08.02.2023
+  deviceServiceVersion = 1013688
+  
+  [+] Added parameter duplicateReceipt. Valid values are:
+      DUPLICATE_RECEIPT_DEVICE = 0; // Uses device command 0x8C, print document copy
+      DUPLICATE_RECEIPT_DRIVER = 1; // Document copy printed by driver
+  
+********************************************************************************
+
   26.01.2023
   deviceServiceVersion = 1013687
   
-  [+] Added method cehckItemCode2 to class ShtrihFiscalPrinter113
+  [+] Added method checkItemCode2 to class ShtrihFiscalPrinter113
 
 ********************************************************************************
 

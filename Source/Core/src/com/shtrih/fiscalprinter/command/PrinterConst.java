@@ -675,6 +675,7 @@ public interface PrinterConst {
     public static final int SMFPTR_E_READ_ANSWER            = -2;
     public static final int SMFPTR_E_WRITE_COMMAND          = -3;
     public static final int SMFPTR_E_INVALID_ANSWER_CODE    = -4;
+    public static final int SMFPTR_E_FDO_CONNECTION         = -5;
 
     // ////////////////////////////////////////////////////////////////////////
     // Tax constants

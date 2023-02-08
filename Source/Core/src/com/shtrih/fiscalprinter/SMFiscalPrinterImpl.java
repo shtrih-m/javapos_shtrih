@@ -5346,13 +5346,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             if (size > 0) {
                 readInputStream(in, answer, headerSize, size);
             }
+            socket.close();
             return answer;
-        } finally {
-            try {
-                socket.close();
-            } catch (Exception e) {
-                logger.error("Socket close failed", e);
-            }
+        } catch(Exception e)
+        {
+            throw new DeviceException(PrinterConst.SMFPTR_E_FDO_CONNECTION,
+                    e.getMessage());
         }
     }
 
