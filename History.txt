@@ -12,6 +12,10 @@
   
   [-] Fixed error with printDuplicateReceipt method
   
+  [-] Fixed error with writing tags to 1256 STLV,
+      added parameter processTag1256 to pack tags in 1256
+      Default value is false
+  
 ********************************************************************************
 
   08.02.2023

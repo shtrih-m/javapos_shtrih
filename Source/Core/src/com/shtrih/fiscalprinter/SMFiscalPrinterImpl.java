@@ -3600,7 +3600,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             filterTLVItemsPrinter(src);
         }
         src.removeEmptySTLV();
-        TLVFilter.filter(src, dst, ffd);
+        if (params.processTag1256){
+            TLVFilter.filter(src, dst, ffd);
+        }
     }
 
     public void filterTLVItemsDriver(TLVItems items) throws Exception {

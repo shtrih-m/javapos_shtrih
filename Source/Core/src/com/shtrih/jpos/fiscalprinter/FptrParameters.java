@@ -213,6 +213,7 @@ public class FptrParameters {
     public int portNameTimeout = 3000;
     public boolean portNameSingle = true;
     public int duplicateReceipt = SmFptrConst.DUPLICATE_RECEIPT_DEVICE;
+    public boolean processTag1256 = false;
 
 
     public FptrParameters() throws Exception {
@@ -476,6 +477,7 @@ public class FptrParameters {
         fillTextToMinLength = reader.readBoolean("fillTextToMinLength", false);
         waitPrintComplete = reader.readBoolean("waitPrintComplete", true);
         duplicateReceipt = reader.readInteger("duplicateReceipt", SmFptrConst.DUPLICATE_RECEIPT_DEVICE);
+        processTag1256 = reader.readBoolean("processTag1256", false);
 
         // paymentNames
         String paymentName;
