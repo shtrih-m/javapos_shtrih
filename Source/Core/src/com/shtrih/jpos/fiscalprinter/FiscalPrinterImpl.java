@@ -3259,9 +3259,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             if (!getCapDuplicateReceipt()) {
                 throw new JposException(JPOS_E_ILLEGAL, Localizer.getString(Localizer.receiptDuplicationNotSupported));
             }
-            if (!getDuplicateReceipt()) {
-                throw new JposException(JPOS_E_ILLEGAL, "THere is no documents to print");
-            }
             if (printer.getParams().duplicateReceipt == SmFptrConst.DUPLICATE_RECEIPT_DEVICE)
             {
                 printDocStart();
@@ -3270,8 +3267,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 printEndFiscal();
             } else
             {
-                printDocStart();
                 List<String> lines = filter.getDocLines();
+                if (lines.size() == 0) {
+                    throw new JposException(JPOS_E_ILLEGAL, "There is no documents to print");
+                }
+            
+                printDocStart();
                 for (int i=0;i<lines.size();i++)
                 {
                     printer.printText(lines.get(i));
