@@ -3658,7 +3658,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         if (capErrorTextByCode) {
             ReadErrorTextByCode command = readErrorText(code);
             if (command.isSucceeded()) {
-                return String.valueOf(code) + ", " + command.getText();
+                return String.valueOf(code) + ", " + command.getErrorDescription();
             }
         }
         return getDriverErrorText(code);
