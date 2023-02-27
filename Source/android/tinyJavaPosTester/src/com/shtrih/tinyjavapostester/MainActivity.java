@@ -1389,6 +1389,59 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void printXReport(View v) {
+        new PrintXReportTask(this).execute();
+    }
+
+    private class PrintXReportTask extends AsyncTask<Void, Void, String> {
+
+        private final AppCompatActivity parent;
+        private long startedAt;
+        private long doneAt;
+        private ProgressDialog dialog;
+
+        public PrintXReportTask(AppCompatActivity parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = ProgressDialog.show(parent, "Printing X-report", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            startedAt = System.currentTimeMillis();
+
+            try {
+                printer.resetPrinter();
+                printer.printXReport();
+
+                return null;
+
+            } catch (Exception e) {
+                log.error("X-report printing failed", e);
+                return e.getMessage();
+            } finally {
+                doneAt = System.currentTimeMillis();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            dialog.dismiss();
+
+            if (result == null)
+                showMessage("Success " + (doneAt - startedAt) + " ms");
+            else
+                showMessage(result);
+        }
+    }
 
     public void openFiscalDay(View v) {
         new OpenFiscalDayTask(this).execute();

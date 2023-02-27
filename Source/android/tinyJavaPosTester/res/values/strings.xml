@@ -15,6 +15,7 @@
     <string name="action_print_qr_code">Print QR code</string>
     <string name="action_open_fiscal_day">Open fiscal day</string>
     <string name="action_print_z_report">Print Z-report</string>
+    <string name="action_print_x_report">Print X-report</string>
     <string name="action_print_current_day_journal">Print current day journal</string>
     <string name="action_print_duplicate_receipt">Print duplicate receipt</string>
     <string name="action_connect_to_device_direct">Connect to network device</string>

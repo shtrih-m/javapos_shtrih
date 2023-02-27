@@ -323,6 +323,13 @@
                 android:text="@string/action_print_z_report" />
 
             <Button
+                android:id="@+id/btnPrintXReport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="printXReport"
+                android:text="@string/action_print_x_report" />
+
+            <Button
                 android:id="@+id/btnPrintDayJournal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
