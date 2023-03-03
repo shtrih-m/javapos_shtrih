@@ -963,7 +963,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 
                 if (params.textReportEnabled || (params.duplicateReceipt == SmFptrConst.DUPLICATE_RECEIPT_DRIVER))
                 {
-                    filter = new TextDocumentFilter(getPrinter(), header, params.textReportEnabled);
+                    filter = new TextDocumentFilter(getPrinter(), header);
                     getPrinter().addEvents(filter);
                 }
                 
@@ -3246,6 +3246,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             setPrinterFDOMode(1);
             startFDOService();
             setPrinterState(FPTR_PS_MONITOR);
+            filter.endFiscalReceipt();
             params.nonFiscalDocNumber++;
             saveProperties();
         }
@@ -3702,6 +3703,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkPrinterState(FPTR_PS_MONITOR);
         printDocStart();
         getPrinter().printXReport();
+        filter.printXReport();
         printEndFiscal();
     }
 
@@ -3721,9 +3723,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         if (status.getPrinterMode().canPrintZReport()) {
 
             saveZReportXml();
-
             printDocStart();
             getPrinter().printZReport();
+            filter.printZReport();
             fiscalDay.close();
             try {
                 printCalcReport();

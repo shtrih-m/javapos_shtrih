@@ -327,6 +327,7 @@
         <!-- PPP start service -->
         <prop name="PPPStartService" type="String" value="1"/>
         <prop name="tagsBeforeItem" type="String" value="0"/>
+        <!-- duplicateReceipt 0 - device command (default), 1 - driver -->
         <prop name="duplicateReceipt" type="String" value="1"/>
     </JposEntry> 
 	
