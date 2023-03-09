@@ -11,10 +11,10 @@ public class DeviceFirmwareResponse {
         TLVReader parser = new TLVReader();
         TLVItems items = parser.read(data);
         TLVItem item = items.find(8103);
-        if (item != null) {
-            return parseFirmwareResponse(parser, item.getData());
+        if (item == null) {
+            throw new Exception("Tag 8103 was not found");
         }
-        throw new Exception("Tag 8103 was not found");
+        return parseFirmwareResponse(parser, item.getData());
     }
 
     private static DeviceFirmwareResponse parseFirmwareResponse(TLVReader reader, byte[] data) throws Exception {

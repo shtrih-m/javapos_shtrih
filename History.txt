@@ -7,6 +7,14 @@
     
 ********************************************************************************
 
+  09.03.2023
+  deviceServiceVersion = 1013691
+  
+  [-] Fixed error with null header objects
+  [-] Fixed error with printDuplicateReceipt method
+  
+********************************************************************************
+
   21.02.2023
   deviceServiceVersion = 1013690
   

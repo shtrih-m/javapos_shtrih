@@ -4211,14 +4211,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
      */
     public FDOParameters readFDOParameters() throws Exception {
-        if (capFiscalStorage) {
-            final int tableNumber = getFDOTableNumber();
-            String host = readTable(tableNumber, 1, 1);
-            int portValue = Integer.valueOf(readTable(tableNumber, 1, 2));
-            int timeoutInSec = Integer.valueOf(readTable(tableNumber, 1, 3));
-            return new FDOParameters(host, portValue, timeoutInSec);
-        }
-        return null;
+        final int tableNumber = getFDOTableNumber();
+        String host = readTable(tableNumber, 1, 1);
+        int portValue = Integer.valueOf(readTable(tableNumber, 1, 2));
+        int timeoutInSec = Integer.valueOf(readTable(tableNumber, 1, 3));
+        return new FDOParameters(host, portValue, timeoutInSec);
     }
 
     public FDOParameters getFDOParameters() throws Exception {

@@ -927,11 +927,18 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
     
     private void readLastDoc() {
-        try {
-            docLines = new Vector<String>();
-            BufferedReader reader = new BufferedReader(new FileReader(getLastDocFilePath()));
-            String line;
+        try
+        {
+            docLines.clear();
+            File file = new File(getLastDocFilePath());
+            if (!file.exists()) {
+                logger.debug("Last document not found");
+                return;
+            }
+
+            BufferedReader reader = new BufferedReader(new FileReader(file));
             try {
+                String line;
                 while ((line = reader.readLine()) != null) {
                     docLines.add(line);
                 }

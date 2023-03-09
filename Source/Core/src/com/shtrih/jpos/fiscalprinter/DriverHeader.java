@@ -171,7 +171,8 @@ public class DriverHeader implements PrinterHeader {
         int lineHeight = printer.getLineHeight(new FontNumber(PrinterConst.FONT_NUMBER_NORMAL));
         int headerHeight = printer.getHeaderHeight();
         PrinterImage image = printer.getPrinterImage(SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
-        if (image != null) {
+        if (image != null) 
+        {
             imageHeight = image.getHeight() + printer.getLineSpacing();
         }
         if (imageHeight > headerHeight) {

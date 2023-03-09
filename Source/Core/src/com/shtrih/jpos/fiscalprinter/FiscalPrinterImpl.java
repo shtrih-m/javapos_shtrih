@@ -448,8 +448,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         deviceServiceVersion = deviceVersion113 + ServiceVersionUtil.getVersionInt();
     }
 
-    public SMFiscalPrinter getPrinter() throws Exception
-    {
+    public SMFiscalPrinter getPrinter() throws Exception {
         if (printer == null) {
             throw new Exception("Printer is not initialized");
         }
@@ -960,14 +959,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 } catch (Exception e) {
                     logger.error("Failed to start JsonUpdateService", e);
                 }
-                
-                if (params.textReportEnabled || (params.duplicateReceipt == SmFptrConst.DUPLICATE_RECEIPT_DRIVER))
-                {
+
+                if (params.textReportEnabled || (params.duplicateReceipt == SmFptrConst.DUPLICATE_RECEIPT_DRIVER)) {
                     filter = new TextDocumentFilter(getPrinter(), header);
                     getPrinter().addEvents(filter);
                 }
-                
+
             } else {
+                saveProperties();
                 stopPoll();
                 stopFDOService();
                 stopJsonUpdateService();
@@ -984,19 +983,22 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void updateCommandTimeouts() {
         try {
-            // 0xFF61 command timeout
-            int kmtimeout = 1000 * Integer.parseInt(getPrinter().readTable(19, 1, 8));
-            int timeout = getPrinter().getCommandTimeout(0xFF61);
-            if (timeout < kmtimeout) {
-                getPrinter().setCommandTimeout(0xFF61, kmtimeout + 1000);
+            String[] value = new String[1];
+            int rc = getPrinter().readTable(19, 1, 8, value);
+            if (getPrinter().succeeded(rc)) {
+                // 0xFF61 command timeout
+                int kmtimeout = 1000 * Integer.parseInt(value[0]);
+                int timeout = getPrinter().getCommandTimeout(0xFF61);
+                if (timeout < kmtimeout) {
+                    getPrinter().setCommandTimeout(0xFF61, kmtimeout + 1000);
+                }
             }
         } catch (Exception e) {
             logger.error(e);
         }
     }
 
-    public void startFDOService() 
-    {
+    public void startFDOService() {
         if (fdoService != null) {
             return;
         }
@@ -1072,37 +1074,33 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public boolean isPPP()
-    {
+    public boolean isPPP() {
         int[] data = new int[1];
         data[0] = 0;
         port.directIO(PrinterPort.DIO_REPORT_IS_PPP, data, null);
         return data[0] == 1;
     }
 
-    public void setPrinterFDOMode(int mode)
-    {
-        try
-        {
-            if (!setPrinterFDOMode) return;
+    public void setPrinterFDOMode(int mode) {
+        try {
+            if (!setPrinterFDOMode) {
+                return;
+            }
 
-            if (params.fdoMode != SmFptrConst.FDO_MODE_DISABLE_IN_REC){
+            if (params.fdoMode != SmFptrConst.FDO_MODE_DISABLE_IN_REC) {
                 return;
             }
 
             if (isPPP()) {
                 printer.writeTable(21, 1, 2, String.valueOf(mode));
             }
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             setPrinterFDOMode = false;
             logger.error("setPrinterFDOMode ", e);
         }
     }
 
-    public void stopFDOService()
-    {
+    public void stopFDOService() {
         if (fdoService == null) {
             return;
         }
@@ -2240,6 +2238,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             port.setPortEvents(new PortEventsNotifier());
             device = ProtocolFactory.getProtocol(params, port);
             printer = new SMFiscalPrinterImpl(port, device, params);
+            header = new NullHeader(printer);
 
             if (params.escCommandsEnabled) {
                 printer.setEscPrinter(new NCR7167Printer(this));
@@ -2269,7 +2268,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
 
         receipt = new NullReceipt(getReceiptContext());
-
 
         state = JPOS_S_IDLE;
         setFreezeEvents(false);
@@ -2332,7 +2330,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void release() throws Exception {
-        saveProperties();
         setDeviceEnabled(false);
         claimed = false;
     }
@@ -3157,8 +3154,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     // ////////////////////////////////////////////////////////////////////////////
     // Fiscal Receipt
     // ////////////////////////////////////////////////////////////////////////////
-    public void beginFiscalReceipt(boolean printHeader) throws Exception
-    {
+    public void beginFiscalReceipt(boolean printHeader) throws Exception {
         checkEnabled();
         checkPrinterState(FPTR_PS_MONITOR);
         stopFDOService();
@@ -3260,26 +3256,23 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             if (!getCapDuplicateReceipt()) {
                 throw new JposException(JPOS_E_ILLEGAL, Localizer.getString(Localizer.receiptDuplicationNotSupported));
             }
-            if (printer.getParams().duplicateReceipt == SmFptrConst.DUPLICATE_RECEIPT_DEVICE)
-            {
+            if (printer.getParams().duplicateReceipt == SmFptrConst.DUPLICATE_RECEIPT_DEVICE) {
                 printDocStart();
                 getPrinter().duplicateReceipt();
                 receipt.printReceiptEnding();
                 printEndFiscal();
-            } else
-            {
+            } else {
                 List<String> lines = filter.getDocLines();
                 if (lines.size() == 0) {
                     throw new JposException(JPOS_E_ILLEGAL, "There is no documents to print");
                 }
-            
+
                 printDocStart();
-                for (int i=0;i<lines.size();i++)
-                {
+                for (int i = 0; i < lines.size(); i++) {
                     printer.printText(lines.get(i));
                 }
                 printEndFiscal();
-           }
+            }
             duplicateReceipt = false;
         } finally {
             printer.getParams().textReportEnabled = filterEnabled;
@@ -4859,7 +4852,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public int mcClearBuffer() throws Exception {
         return printer.mcClearBuffer();
     }
-    public PrinterPort getPort(){
+
+    public PrinterPort getPort() {
         return port;
     }
 
