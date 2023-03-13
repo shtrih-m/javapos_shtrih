@@ -18,7 +18,7 @@ public abstract class PrinterCommand {
     private boolean errorReportEnabled = true;
     private byte[] txData;
     private byte[] rxData;
-    public boolean readAnswer = true;
+    public boolean hasAnswer = true;
 
     /**
      * Creates a new instance of PrinterCommand

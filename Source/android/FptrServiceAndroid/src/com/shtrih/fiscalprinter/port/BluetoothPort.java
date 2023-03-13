@@ -178,7 +178,9 @@ public class BluetoothPort implements PrinterPort2 {
         }
     }
 
-    private void registerReceiver() {
+    private void registerReceiver()
+    {
+        logger.debug("registerReceiver");
         try {
             // events
             IntentFilter filter = new IntentFilter();
@@ -188,6 +190,7 @@ public class BluetoothPort implements PrinterPort2 {
             if (context != null) {
                 context.registerReceiver(mBroadcastReceiver, filter);
                 receiverRegistered = true;
+                logger.debug("Receiver registered");
             }
         } catch (Exception e) {
             logger.error("Failed to register receiver, ", e);
@@ -245,6 +248,7 @@ public class BluetoothPort implements PrinterPort2 {
                     receiverRegistered = false;
                     Context context = StaticContext.getContext();
                     if (context != null) {
+                        logger.debug("unregisterReceiver");
                         context.unregisterReceiver(mBroadcastReceiver);
                     }
                 }

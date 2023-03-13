@@ -364,6 +364,6 @@
 		<!-- fdoMode, 0 - disabled, 1 - enabled, 2 - on z report, 3 - disable in receipt  -->
 		<prop name="fdoMode" type="String" value="3"/>
 
-		<prop name="duplicateReceipt" type="String" value="1"/>
+		<prop name="duplicateReceipt" type="String" value="0"/>
 	</JposEntry>
 </JposEntries>

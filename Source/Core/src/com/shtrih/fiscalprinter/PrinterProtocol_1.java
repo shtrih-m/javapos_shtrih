@@ -281,6 +281,10 @@ public class PrinterProtocol_1 implements PrinterProtocol {
         }
     }
 
+    public void disconnect(){
+
+    }
+
     public void setMaxEnqNumber(int value) {
         if (!isReliable) {
             maxEnqNumber = value;
@@ -362,8 +366,8 @@ public class PrinterProtocol_1 implements PrinterProtocol {
             logger.debug("sendCommand: " + command.getText() + ", " + command.getIsRepeatable());
 
             byte[] tx = frame.encode(command.encodeData());
-            byte[] rx = send(tx, command.getTimeout(), command.readAnswer);
-            if (command.readAnswer) {
+            byte[] rx = send(tx, command.getTimeout(), command.hasAnswer);
+            if (command.hasAnswer) {
                 command.decodeData(rx);
             }
         }

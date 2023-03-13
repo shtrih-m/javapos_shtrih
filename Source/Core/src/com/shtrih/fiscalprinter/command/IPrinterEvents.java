@@ -16,6 +16,5 @@ package com.shtrih.fiscalprinter.command;
 public interface IPrinterEvents {
 
     public void afterCommand(PrinterCommand command) throws Exception;
-
     public void beforeCommand(PrinterCommand command) throws Exception;
 }

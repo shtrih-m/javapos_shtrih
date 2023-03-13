@@ -149,7 +149,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private PrinterHeader header;
     private int[] vatValues;
     private PrinterPort port;
-    private PrinterProtocol device;
+    private PrinterProtocol device = null;
     private SMFiscalPrinter printer;
     private ReceiptPrinter receiptPrinter;
     private final FiscalPrinterStatistics statistics;
@@ -267,7 +267,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private boolean isRecPresent = true;
     private boolean filterEnabled = true;
     private boolean isInReceiptTrailer = false;
-    private TextDocumentFilter filter = null;
+    private TextDocumentFilter filter = new TextDocumentFilter();
     private FDOService fdoService;
     private FirmwareUpdaterService firmwareUpdaterService;
     private boolean docEndEnabled = true;
@@ -276,8 +276,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private volatile boolean eventStopFlag = false;
     private ReceiptContext receiptContext = null;
 
-    public void enableTextDocumentFilter(boolean value) {
-        filter.setEnabled(value);
+    public TextDocumentFilter getTextDocumentFilter() {
+        return filter;
     }
 
     public void setFirmwareUpdateObserver(FirmwareUpdateObserver observer) {
@@ -960,9 +960,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     logger.error("Failed to start JsonUpdateService", e);
                 }
 
+                filter.init(getPrinter());
+                getPrinter().addEvents(filter);
                 if (params.textReportEnabled || (params.duplicateReceipt == SmFptrConst.DUPLICATE_RECEIPT_DRIVER)) {
-                    filter = new TextDocumentFilter(getPrinter(), header);
-                    getPrinter().addEvents(filter);
+                    filter.setEnabled(true);
                 }
 
             } else {
@@ -2282,8 +2283,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             setPowerState(JPOS_PS_ONLINE);
         }
 
-        public void onDisconnect() {
+        public void onDisconnect()
+        {
             setPowerState(JPOS_PS_OFFLINE);
+            if (device != null) {
+                device.disconnect();
+            }
         }
 
     }

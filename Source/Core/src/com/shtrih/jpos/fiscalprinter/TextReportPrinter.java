@@ -90,16 +90,17 @@ public class TextReportPrinter {
         printer.resetPrinter();
         
         List<String> lines = readReport(params);
-
-        printer.enableTextDocumentFilter(false);
+        boolean filterEnabled = printer.getTextDocumentFilter().getEnabled();
+        printer.getTextDocumentFilter().setEnabled(false);
         try {
             for (String line : lines) {
                 printer.getPrinter().printLine(PrinterConst.SMFP_STATION_REC,
                         line, FontNumber.getNormalFont());
             }
             printer.printEndFiscal();
-        } finally {
-            printer.enableTextDocumentFilter(true);
+        } finally
+        {
+            printer.getTextDocumentFilter().setEnabled(filterEnabled);
         }
     }
     

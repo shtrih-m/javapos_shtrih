@@ -18,5 +18,6 @@ import com.shtrih.fiscalprinter.command.PrinterCommand;
 
 public interface PrinterProtocol {
 	public void connect() throws Exception;
+	public void disconnect();
 	public void send(PrinterCommand command) throws Exception;
 }

@@ -2,13 +2,12 @@ package com.shtrih.fiscalprinter;
 
 import com.shtrih.fiscalprinter.command.CommandOutputStream;
 import com.shtrih.fiscalprinter.command.PrinterCommand;
-import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.fiscalprinter.port.PrinterPort;
 import com.shtrih.util.CompositeLogger;
-import com.shtrih.util.Localizer;
 import com.shtrih.util.Logger2;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * @author V.Kravtsov
@@ -41,33 +40,37 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         synchronizeFrames(byteTimeout);
     }
 
+    public void disconnect(){
+        isSynchronized = false;
+    }
+
     public void send(PrinterCommand command) throws Exception {
 
-        try {
-            connect();
+        try
+        {
+            int maxSyncCount = 3;
+            for (int i=0;i<maxSyncCount;i++)
+            {
+                connect();
 
-            int timeout = command.getTimeout();
-            port.setTimeout(timeout + byteTimeout);
+                int timeout = command.getTimeout();
+                port.setTimeout(timeout + byteTimeout);
 
-            writeCommand(command.encodeData());
-            if (command.readAnswer) {
-                int frameNum = readAnswer();
-                if (frameNum != frameNumber) {
-                    logger.error("Incorrect frame number");
-                    for (; ; ) {
-                        frameNum = readAnswer();
-                        if (frameNum == frameNumber) {
-                            break;
-                        }
+                writeCommand(command.encodeData());
+                if (command.hasAnswer) {
+                    int frameNum = readAnswer();
+                    if (frameNum == frameNumber) {
+                        command.decodeData(rx);
+                        stepFrameNumber();
+                        return;
+
+                    } else {
+                        logger.error("Incorrect frame number");
+                        isSynchronized = false;
                     }
-                    stepFrameNumber();
-                    command.decodeData(rx);
-                    return;
                 }
-                command.decodeData(rx);
             }
-            stepFrameNumber();
-            return;
+            throw new IOException("Failed to synchronize frapme numbers");
 
         } catch (Exception e)
         {

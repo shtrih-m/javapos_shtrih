@@ -24,8 +24,8 @@ public class TextDocumentFilter implements IPrinterEvents {
     
     private static CompositeLogger logger = CompositeLogger.getLogger(TextDocumentFilter.class);
     
-    private final int lineLength;
-    private boolean enabled = true;
+    private int lineLength;
+    private boolean enabled = false;
     private String deviceName = "ККМ";
     private int operatorNumber = 1;
     private LongPrinterStatus status = null;
@@ -35,9 +35,8 @@ public class TextDocumentFilter implements IPrinterEvents {
     private boolean isEJPresent = false;
     private boolean isDocumentPrinted = false;
     private boolean connected = false;
-    private final PrinterHeader header;
-    private final SMFiscalPrinter printer;
-    private final boolean saveToStorage;
+    private SMFiscalPrinter printer;
+    private boolean saveToStorage;
     private XReport report = new XReport();
     private final String[] paymentNames = new String[16];
     private final List<Operator> operators = new ArrayList<Operator>();
@@ -68,14 +67,17 @@ public class TextDocumentFilter implements IPrinterEvents {
     public static final String SINN = "ИНН";
     private static String[] docNames = {SSaleText, SBuyText, SRetSaleText, SRetBuyText};
     
-    public TextDocumentFilter(SMFiscalPrinter printer, PrinterHeader header) throws Exception {
-        this.header = header;
+    public TextDocumentFilter() {
+    }
+
+    public void init(SMFiscalPrinter printer) throws Exception
+    {
         this.printer = printer;
         saveToStorage = printer.getParams().textReportEnabled;
         lineLength = printer.getMessageLength(FontNumber.getNormalFont());
         readLastDoc();
     }
-    
+
     public boolean getEnabled() {
         return enabled;
     }
@@ -86,6 +88,10 @@ public class TextDocumentFilter implements IPrinterEvents {
     
     @Override
     public void beforeCommand(PrinterCommand command) throws Exception {
+        if (printer == null) {
+            return;
+        }
+
         if (!enabled) {
             return;
         }
@@ -115,6 +121,10 @@ public class TextDocumentFilter implements IPrinterEvents {
     
     @Override
     public void afterCommand(PrinterCommand command) throws Exception {
+        if (printer == null) {
+            return;
+        }
+
         if (!enabled) {
             return;
         }

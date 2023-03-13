@@ -13,16 +13,10 @@ package com.shtrih.fiscalprinter;
 
 import java.util.Map;
 import java.util.HashMap;
-import java.nio.ByteOrder;
-import java.nio.ByteBuffer;
 import java.io.ByteArrayInputStream;
 
 import com.shtrih.fiscalprinter.port.ClosedConnectionException;
 import com.shtrih.util.Time;
-import com.shtrih.jpos.fiscalprinter.receipt.FSSaleReceiptItem;
-import com.shtrih.fiscalprinter.MCNotification;
-import com.shtrih.fiscalprinter.GS1Barcode;
-import com.shtrih.fiscalprinter.GS1BarcodeParser;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.barcode.SmBarcode;
 import com.shtrih.barcode.SmBarcodeEncoder;
@@ -33,7 +27,6 @@ import com.shtrih.fiscalprinter.model.PrinterModel;
 import com.shtrih.fiscalprinter.model.PrinterModels;
 import com.shtrih.fiscalprinter.model.XmlModelsWriter;
 import com.shtrih.fiscalprinter.port.PrinterPort;
-import com.shtrih.fiscalprinter.port.SerialPrinterPort;
 import com.shtrih.fiscalprinter.table.PrinterField;
 import com.shtrih.fiscalprinter.table.PrinterFields;
 import com.shtrih.fiscalprinter.table.PrinterTable;
@@ -68,18 +61,13 @@ import java.net.Socket;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.Vector;
 
 import jpos.JposConst;
 import jpos.JposException;
-import jpos.FiscalPrinterConst;
 
 import static jpos.JposConst.JPOS_E_EXTENDED;
-import static jpos.JposConst.JPOS_E_NOHARDWARE;
 
 public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
@@ -4150,7 +4138,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         ServiceCommand command = new ServiceCommand();
         command.setFunctionCode(ServiceCommand.CODE_REBOOT);
         command.setIntData(0);
-        command.readAnswer = false; // do not wait answer
+        command.hasAnswer = false; // do not wait answer
         int rc = executeCommand(command);
         if (succeeded(rc)) {
             port.close();

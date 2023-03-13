@@ -84,6 +84,9 @@ public class PrinterProtocol_1_1 implements PrinterProtocol
     {
     }
 
+    public void disconnect(){
+    }
+
     public int getByteTimeout() {
         return byteTimeout;
     }
