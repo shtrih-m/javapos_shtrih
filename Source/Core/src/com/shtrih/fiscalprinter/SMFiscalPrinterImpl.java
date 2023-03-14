@@ -1697,10 +1697,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void reportRemoteRSSI() {
-        try {
-            port.directIO(PrinterPort.DIO_REPORT_RSSI, null, null);
+        try
+        {
+            int[] data = new int[1];
+            port.directIO(PrinterPort.DIO_REPORT_RSSI, data, null);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("reportRemoteRSSI", e);
         }
     }
 
