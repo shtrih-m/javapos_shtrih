@@ -9,6 +9,7 @@ import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Logger2;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Calendar;
@@ -42,7 +43,9 @@ public class ScocClient {
             byte[] payload = new DeviceStatusCommand(1, now, firmwareVersion).toBytes();
 
             ScocCommand request = new ScocCommand(serialNumber, uin, payload);
-            socket.getOutputStream().write(request.toBytes());
+            OutputStream os = socket.getOutputStream();
+            os.write(request.toBytes());
+            os.close();
 
             socket.setSoTimeout(ResponseTimeout);
             InputStream in = socket.getInputStream();
@@ -70,7 +73,9 @@ public class ScocClient {
             byte[] payload = new DeviceFirmwareCommand(now, firmwareVersion, partNumber).toBytes();
 
             ScocCommand request = new ScocCommand(serialNumber, uin, payload);
-            socket.getOutputStream().write(request.toBytes());
+            OutputStream os = socket.getOutputStream();
+            os.write(request.toBytes());
+            os.close();
 
             socket.setSoTimeout(ResponseTimeout);
             InputStream in = socket.getInputStream();

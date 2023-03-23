@@ -31,6 +31,7 @@ public class BluetoothPort implements PrinterPort2 {
     private int timeout = 5000;
     private int openTimeout = 5000;
     private String portName = "";
+    private boolean portOpened = true;
     private BluetoothDevice device = null;
     private BluetoothSocket socket = null;
     private boolean receiverRegistered = false;
@@ -82,6 +83,12 @@ public class BluetoothPort implements PrinterPort2 {
     public void open(int timeout) throws Exception {
         if (isOpened()) return;
 
+        openPort(timeout);
+        portOpened = true;
+    }
+
+    public void openPort(int timeout) throws Exception
+    {
         Thread.sleep(0); // check thread interrupted
         BluetoothAdapter adapter = getBluetoothAdapter();
         if (BluetoothAdapter.checkBluetoothAddress(portName)) {
@@ -111,6 +118,8 @@ public class BluetoothPort implements PrinterPort2 {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            logger.debug("BroadcastReceiver: " + intent);
+
             switch (action)
             {
                 case BluetoothDevice.ACTION_FOUND:
@@ -144,8 +153,20 @@ public class BluetoothPort implements PrinterPort2 {
                                 socket.close();
                                 socket = null;
                             } catch (Exception e) {
-                                logger.error("BluetoothDevice.ACTION_ACL_DISCONNECTED: ", e);
+                                logger.error("Failed to close socket ", e);
                             }
+                        }
+                        if (portOpened)
+                        {
+                            logger.debug("startConnectThread");
+                            Thread connectThread = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    connectProc();
+                                }
+                            });
+                            connectThread.start();
+                            logger.debug("startConnectThread: OK");
                         }
                     }
                     break;
@@ -153,6 +174,24 @@ public class BluetoothPort implements PrinterPort2 {
             }
         }
     };
+
+    public void connectProc() {
+        logger.debug("connectProc.start");
+        try {
+            while (!Thread.currentThread().isInterrupted())
+            {
+                Thread.sleep(0);
+                open(0);
+            }
+        } catch (InterruptedException e)
+        {
+            logger.error("connectProc: ", e);
+            Thread.currentThread().interrupt();
+        } catch (Exception e) {
+            logger.error("connectProc: ", e);
+        }
+        logger.debug("connectProc.end");
+    }
 
     private void connectDevice(BluetoothDevice device) throws Exception {
         if (device == null) {
@@ -184,8 +223,12 @@ public class BluetoothPort implements PrinterPort2 {
         try {
             // events
             IntentFilter filter = new IntentFilter();
+            filter.addAction(BluetoothDevice.ACTION_FOUND);
+            filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+            filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
             filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
             filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+
             Context context = StaticContext.getContext();
             if (context != null) {
                 context.registerReceiver(mBroadcastReceiver, filter);
@@ -241,7 +284,8 @@ public class BluetoothPort implements PrinterPort2 {
 
     @Override
     public synchronized void close() {
-        if (isOpened()) {
+        if (isOpened())
+        {
             logger.debug("close()");
             try {
                 if (receiverRegistered) {
@@ -258,6 +302,7 @@ public class BluetoothPort implements PrinterPort2 {
             }
         }
         socket = null;
+        portOpened = false;
     }
 
     public synchronized boolean isOpened() {

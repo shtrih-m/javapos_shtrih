@@ -42,7 +42,6 @@ public class PPPThread implements Runnable {
         if (isStarted()) {
             return;
         }
-
         logger.debug("PPP thread starting...");
         ctx = 0;
         thread = new Thread(this);

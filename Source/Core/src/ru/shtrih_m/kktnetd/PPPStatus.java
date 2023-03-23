@@ -90,7 +90,9 @@ public class PPPStatus
         return (PPPStatus) gson.fromJson(jsonText, PPPStatus.class);
     }
 
-    public boolean isEqual(PPPStatus status){
+    public boolean isEqual(PPPStatus status)
+    {
+        if (status == null) return false;
         return (this.phase.equalsIgnoreCase(status.phase) &&
                 (this.status.equalsIgnoreCase(status.status)));
     }

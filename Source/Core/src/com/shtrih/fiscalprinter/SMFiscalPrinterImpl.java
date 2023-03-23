@@ -9,8 +9,20 @@
 /**
  * @author V.Kravtsov
  */
+/*
+ *  mPrinterDevice.java
+ *
+ * Created on July 31 2007, 16:46
+ *f
+ * To change this template, choose Tools | Template Manager
+ * and open the template in the editor.
+ */
+/**
+ * @author V.Kravtsov
+ */
 package com.shtrih.fiscalprinter;
 
+import java.io.OutputStream;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.ByteArrayInputStream;
@@ -238,7 +250,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 }
                 command.setRepeatNeeded(true);
                 return;
-            } catch (Exception e) {
+            } catch (Exception e)
+            {
+                port.close();
                 throw new DeviceException(PrinterConst.SMFPTR_E_NOCONNECTION, e.getMessage());
             }
 
@@ -5320,7 +5334,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             socket.setTcpNoDelay(true);
             socket.setSoTimeout(parameters.getTimeoutInMSec());
             socket.connect(new InetSocketAddress(parameters.getHost(), parameters.getPort()));
-            socket.getOutputStream().write(data);
+            OutputStream os = socket.getOutputStream();
+            os.write(data);
+            os.close();
             InputStream in = socket.getInputStream();
 
             int headerSize = 30;

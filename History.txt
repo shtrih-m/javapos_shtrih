@@ -7,6 +7,14 @@
     
 ********************************************************************************
 
+  23.03.2023
+  deviceServiceVersion = 1013693
+  
+  [-] Fixed error with PPP reconnection
+  [-] Fixed error with text strings in driver duplicate receipt 
+  
+********************************************************************************
+
   13.03.2023
   deviceServiceVersion = 1013692
   

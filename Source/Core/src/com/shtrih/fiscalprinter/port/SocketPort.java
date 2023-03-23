@@ -109,8 +109,14 @@ public class SocketPort implements PrinterPort2 {
         for (int i = 0; i < 2; i++) {
             try {
                 open();
-                socket.getOutputStream().write(b);
-                socket.getOutputStream().flush();
+                OutputStream os = socket.getOutputStream();
+                try {
+                    os.write(b);
+                    os.flush();
+                }
+                finally{
+                    os.close();
+                }
                 return;
             } catch (Exception e) {
                 close();
