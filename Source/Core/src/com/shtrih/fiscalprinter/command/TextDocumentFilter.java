@@ -228,7 +228,9 @@ public class TextDocumentFilter implements IPrinterEvents {
     private void clearLastDoc() {
         docLines.clear();
         File file = new File(getLastDocFilePath());
-        file.delete();
+        if (!file.delete()){
+            logger.error("Failed to delete file, " + getLastDocFilePath());
+        }
     }
     
     private void openReceipt2(int receiptType) throws Exception {

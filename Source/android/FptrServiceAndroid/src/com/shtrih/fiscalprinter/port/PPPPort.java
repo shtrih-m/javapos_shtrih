@@ -34,20 +34,17 @@ import android.net.LocalSocketAddress;
  */
 public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
 
-    enum PortStatus{Disconnected, Connecting, Connected};
     private int repeatCount = 0;
     private IPortEvents events;
     private Socket socket = null;
-    private PPPStatus pppStatus;
     private LocalSocket localSocket = null;
     private boolean stopFlag = false;
-    private Thread pppPollThread = null;
     private Thread dispatchThread = null;
     private PPPThread pppThread = null;
     private int openTimeout = 3000;
     private int connectTimeout = 3000;
     private int readTimeout = 3000;
-    private PortStatus status = PortStatus.Disconnected;
+    private boolean opened = false;
     private boolean portOpened = false;
     private String localSocketName = null;
     private static CompositeLogger logger = CompositeLogger.getLogger(PPPPort.class);
@@ -62,24 +59,21 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     }
 
     public boolean isOpened() {
-        return status == PortStatus.Connected;
+        return opened;
     }
 
     public synchronized void open(int timeout) throws Exception {
         if (isOpened()) return;
         logger.debug("open");
         connect(timeout);
-        waitForConnection(60000);
         portOpened = true;
         logger.debug("open: OK");
     }
 
     public synchronized void connect(int timeout) throws Exception
     {
-        if (status != PortStatus.Disconnected) return;
-
         logger.debug("connect...");
-        status = PortStatus.Connecting;
+        if (isOpened()) return;
         openTimeout = timeout;
         localSocketName = UUID.randomUUID().toString();
 
@@ -88,19 +82,17 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         printerPort.open(timeout);
         printerPort.setPortEvents(this);
         startPPPThread();
-        logger.debug("connect: OK");
-    }
-
-    public void waitForConnection(int timeout) throws Exception{
-        long time = Calendar.getInstance().getTimeInMillis() + timeout;
-        for (;;)
-        {
-            if (isOpened()) return;
-            if (Calendar.getInstance().getTimeInMillis() > time){
-                noConnectionError();
-            }
-            Thread.sleep(200);
+        openLocalSocket(timeout);
+        startDispatchThread();
+        if (!pppThread.waitForPhase("PPP_PHASE_RUNNING", 60000)){
+            noConnectionError();
         }
+        openSocket();
+        opened = true;
+        if (events != null) {
+            events.onConnect();
+        }
+        logger.debug("connect: OK");
     }
 
     public void openSocket() throws Exception
@@ -135,52 +127,8 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         }
         pppThread = new PPPThread(config);
         pppThread.start();
-        // poll thread
-        pppPollThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                pppPollProc();
-            }
-        });
-        pppPollThread.start();
+        pppThread.waitForStatus("RUNNING", 5000);
         logger.debug("startPPPThread(): OK");
-    }
-
-    public void pppPollProc() {
-        logger.debug("pppPollProc.start");
-        try {
-            while (!Thread.currentThread().isInterrupted())
-            {
-                if (status == PortStatus.Disconnected) break;
-                String statusJson = pppThread.getStatus();
-                if (!statusJson.isEmpty()) {
-                    PPPStatus status = PPPStatus.fromJson(statusJson);
-                    if (status != null) {
-                        if (!status.isEqual(pppStatus)) {
-                            pppStatus = status;
-                            if (status.status.equals("RUNNING")) {
-                                openLocalSocket(openTimeout);
-                                startDispatchThread();
-                            }
-                            if (status.phase.equals("PPP_PHASE_RUNNING")) {
-                                openSocket();
-                                this.status = PortStatus.Connected;
-                                if (events != null) {
-                                    events.onConnect();
-                                }
-                            }
-                        }
-                    }
-                }
-                Thread.sleep(1000);
-            }
-        } catch (InterruptedException e)
-        {
-            Thread.currentThread().interrupt();
-        } catch (Exception e) {
-            logger.error("pppPollProc: ", e);
-        }
-        logger.debug("pppPollProc.end");
     }
 
     public void openLocalSocket(int timeout) throws Exception {
@@ -218,7 +166,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     public synchronized void disconnect() {
         if (!isOpened()) return;
 
-        status = PortStatus.Disconnected;
+        opened = false;
         closeSocket();
         stopDispatchThread();
         closeLocalSocket();
@@ -241,17 +189,6 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
 
     public void stopPPPThread() {
         if (pppThread == null) return;
-        if (pppPollThread == null) return;
-
-        pppPollThread.interrupt();
-        try {
-            pppPollThread.join();
-        } catch (InterruptedException e)
-        {
-            logger.error("pppPollThread ", e);
-            Thread.currentThread().interrupt();
-        }
-        pppPollThread = null;
 
         pppThread.stop();
         pppThread = null;
@@ -332,11 +269,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
             //logger.debug("<- PPP " + Hex.toHex(data));
             OutputStream os = localSocket.getOutputStream();
             if (os != null) {
-                try {
-                        os.write(data, 0, count);
-                }finally {
-                    os.close();
-                }
+                os.write(data, 0, count);
             }
         }
         // read localSocket
@@ -405,16 +338,11 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
             try {
                 open();
                 //logger.debug("=>> write: " + Hex.toHex(b));
-                OutputStream os = socket.getOutputStream();
-                if (os != null)
-                {
-                    os.write(b);
-                    os.close();
-                }
+                socket.getOutputStream().write(b);
                 return;
-            } catch (SocketException e)
-            {
+            } catch (SocketException e) {
                 logger.error("write", e);
+                closeSocket();
                 if (i == 1) {
                     throw e;
                 }

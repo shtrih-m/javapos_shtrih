@@ -3254,8 +3254,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public void printDuplicateReceipt() throws Exception {
-        boolean filterEnabled = printer.getParams().textReportEnabled;
-        printer.getParams().textReportEnabled = false;
+        boolean filterEnabled = filter.getEnabled();
+        filter.setEnabled(false);
         try {
             checkPrinterState(FPTR_PS_MONITOR);
             if (!getCapDuplicateReceipt()) {
@@ -3280,7 +3280,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             }
             duplicateReceipt = false;
         } finally {
-            printer.getParams().textReportEnabled = filterEnabled;
+            filter.setEnabled(filterEnabled);
         }
     }
 

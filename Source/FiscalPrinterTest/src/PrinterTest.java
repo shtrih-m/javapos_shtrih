@@ -1148,6 +1148,11 @@ class PrinterTest implements FiscalPrinterConst {
             printer.beginFiscalReceipt(true);
             printer.printRecItem("Item 1", 100, 1000, 1, 100, "");
             printer.printRecTotal(100, 100, "1");
+            printer.printRecMessage("-------------------------------");
+            printer.printRecMessage("Подвал строка 1");
+            printer.printRecMessage("Подвал строка 2");
+            printer.printRecMessage("Подвал строка 3");
+            printer.printRecMessage("-------------------------------");
             printer.endFiscalReceipt(false);
 
             System.out.println("Last document number : "
