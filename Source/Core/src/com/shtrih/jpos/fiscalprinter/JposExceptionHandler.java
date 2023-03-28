@@ -90,7 +90,7 @@ public class JposExceptionHandler implements JposConst, FiscalPrinterConst,
                             JPOS_EFPTR_SLP_EMPTY, text);
 
                 default:
-                    if (errorCode < 0) {
+                    if (errorCode == SMFPTR_E_NOCONNECTION) {
                         return new JposException(JPOS_E_TIMEOUT, text);
                     } else {
                         return new JposException(JPOS_E_EXTENDED, errorCode + 300,
