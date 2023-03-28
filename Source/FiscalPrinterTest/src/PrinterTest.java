@@ -1068,7 +1068,6 @@ class PrinterTest implements FiscalPrinterConst {
             System.out.println("Message queue size    : " + lines[2]);
             System.out.println("First document number : " + lines[3]);
             System.out.println("First document date   : " + lines[4]);
-            printer.sendFDODocuments();
             */
             
             //printFiscalReceiptDate();
@@ -1076,10 +1075,11 @@ class PrinterTest implements FiscalPrinterConst {
             //printFiscalReceipt145_4();
             //checkItemCode2();
             
-            printer.setDuplicateReceipt(true);
-            printFiscalReceiptDate();
-            printer.printDuplicateReceipt();
+            //printer.setDuplicateReceipt(true);
+            //printFiscalReceiptDate();
+            //printer.printDuplicateReceipt();
                     
+            printer.sendFDODocuments();
             
         } catch (Exception e) {
             e.printStackTrace();

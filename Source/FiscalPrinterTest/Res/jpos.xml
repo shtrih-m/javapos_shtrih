@@ -316,7 +316,7 @@
 		<prop name="markingType" type="String" value="1"/>
 		
 		<prop name="quantityCorrectionEnabled" type="String" value="0"/>
-		<prop name="fdoMode" type="String" value="2"/>
+		<prop name="fdoMode" type="String" value="1"/>
         <!-- device state polling enabled -->
         <prop name="pollEnabled" type="String" value="0"/>
         <prop name="fastConnect" type="String" value="0"/>

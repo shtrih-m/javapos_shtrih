@@ -229,8 +229,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void deviceExecute(PrinterCommand command) throws Exception {
-        synchronized (port.getSyncObject()) 
-        {
+        synchronized (port.getSyncObject()) {
             Time.delay(params.commandDelayInMs);
             beforeCommand(command);
             //correctDateTime(command);
@@ -250,8 +249,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 }
                 command.setRepeatNeeded(true);
                 return;
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 port.close();
                 throw new DeviceException(PrinterConst.SMFPTR_E_NOCONNECTION, e.getMessage());
             }
@@ -262,10 +260,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     Thread.sleep(3000);
                 }
                 commandSucceeded(command);
-            } else 
-            {
-                if (command.getCode() != 0x6B)
-                {
+            } else {
+                if (command.getCode() != 0x6B) {
                     if (capLastErrorText) {
                         ReadLastErrorText command2 = readLastErrorText();
                         if (command2.isSucceeded()) {
@@ -275,7 +271,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                         String text = getErrorText(command.getResultCode());
                         logger.error(text + ", " + command.getParametersText(commands));
                     }
-                } else{
+                } else {
                     String text = getDriverErrorText(command.getResultCode());
                     logger.error(text + ", " + command.getParametersText(commands));
                 }
@@ -1711,8 +1707,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void reportRemoteRSSI() {
-        try
-        {
+        try {
             int[] data = new int[1];
             port.directIO(PrinterPort.DIO_REPORT_RSSI, data, null);
         } catch (Exception e) {
@@ -2703,7 +2698,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             if (barcode.getType() != SmFptrConst.SMFPTR_BARCODE_EAN13) {
                 throw new Exception(
                         Localizer
-                                .getString(Localizer.PrinterSupportesEAN13Only));
+                        .getString(Localizer.PrinterSupportesEAN13Only));
             }
 
             if (barcode.isTextAbove()) {
@@ -3604,7 +3599,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             filterTLVItemsPrinter(src);
         }
         src.removeEmptySTLV();
-        if (params.processTag1256){
+        if (params.processTag1256) {
             TLVFilter.filter(src, dst, ffd);
         }
     }
@@ -5284,7 +5279,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
 
         checkFDOConnection();
-        
+
         while (true) {
             byte[] data = fsReadBlockData();
             if (data.length == 0) {
@@ -5310,27 +5305,30 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    
-    public void checkFDOConnection() throws Exception 
-    {
-        logger.debug("testOFDConnection");
-        FDOParameters parameters = getFDOParameters();
-        Socket socket = new Socket();
-        socket.setTcpNoDelay(true);
-        socket.setSoTimeout(parameters.getTimeoutInMSec());
-        socket.connect(new InetSocketAddress(parameters.getHost(), parameters.getPort()));
-        socket.close();
-        logger.debug("testOFDConnection: OK");
-    }
-    
-    private byte[] sendFDOData(byte[] data) throws Exception {
-        FDOParameters parameters = getFDOParameters();
-        logger.debug(String.format("FDO %s:%d, connection timeout %d ms",
-                parameters.getHost(), parameters.getPort(),
-                parameters.getTimeoutInMSec()));
-
-        Socket socket = new Socket();
+    public void checkFDOConnection() throws Exception {
         try {
+            logger.debug("testOFDConnection");
+            FDOParameters parameters = getFDOParameters();
+            Socket socket = new Socket();
+            socket.setTcpNoDelay(true);
+            socket.setSoTimeout(parameters.getTimeoutInMSec());
+            socket.connect(new InetSocketAddress(parameters.getHost(), parameters.getPort()));
+            socket.close();
+            logger.debug("testOFDConnection: OK");
+        } catch (Exception e) {
+            throw new DeviceException(PrinterConst.SMFPTR_E_FDO_CONNECTION,
+                    e.getMessage());
+        }
+    }
+
+    private byte[] sendFDOData(byte[] data) throws Exception {
+        try {
+            FDOParameters parameters = getFDOParameters();
+            logger.debug(String.format("FDO %s:%d, connection timeout %d ms",
+                    parameters.getHost(), parameters.getPort(),
+                    parameters.getTimeoutInMSec()));
+
+            Socket socket = new Socket();
             socket.setTcpNoDelay(true);
             socket.setSoTimeout(parameters.getTimeoutInMSec());
             socket.connect(new InetSocketAddress(parameters.getHost(), parameters.getPort()));
@@ -5353,8 +5351,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             }
             socket.close();
             return answer;
-        } catch(Exception e)
-        {
+        } catch (Exception e) {
             throw new DeviceException(PrinterConst.SMFPTR_E_FDO_CONNECTION,
                     e.getMessage());
         }
