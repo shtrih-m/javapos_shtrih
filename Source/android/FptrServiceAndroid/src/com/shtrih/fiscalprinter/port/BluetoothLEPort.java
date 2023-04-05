@@ -119,7 +119,7 @@ public class BluetoothLEPort implements PrinterPort2 {
         public void onCharacteristicRead (BluetoothGatt gatt, BluetoothGattCharacteristic
                 characteristic,  int status)
         {
-            loggerDebug("BluetoothGattCallback.onCharacteristicRead(status: " + status);
+            logger.debug("BluetoothGattCallback.onCharacteristicRead(status: " + status);
             if (status == BluetoothGatt.GATT_SUCCESS)
             {
                 dataAvailable(characteristic);
@@ -303,7 +303,7 @@ public class BluetoothLEPort implements PrinterPort2 {
             if (characteristic == null) return;
 
             if (characteristic.getUuid().equals(TX_CHAR_UUID)) {
-                loggerDebug("Received: " + Hex.toHex(characteristic.getValue()));
+                //logger.debug("Received: " + Hex.toHex(characteristic.getValue()));
                 rxBuffer.write(characteristic.getValue());
             }
         }
@@ -599,7 +599,8 @@ public class BluetoothLEPort implements PrinterPort2 {
         {
             checkPortState();
             if (rxBuffer.available() >= len) break;
-            Time.delay(1);
+            Thread.sleep(0);
+            //Time.delay(1); !!!
             long currentTime = System.currentTimeMillis();
             if ((currentTime - startTime) > timeout)
             {
@@ -660,7 +661,8 @@ public class BluetoothLEPort implements PrinterPort2 {
     private void writeData(byte[] blockData) throws Exception
     {
         loggerDebug("writeData: " + Hex.toHex(blockData));
-        if (isOpened()) {
+        if (isOpened())
+        {
             BluetoothGattService uartService = bluetoothGatt.getService(UART_SERVICE_UUID);
             if (uartService == null) {
                 throw new IOException("UartService not found!");
@@ -687,13 +689,16 @@ public class BluetoothLEPort implements PrinterPort2 {
 
     public void writeCharacteristic(BluetoothGattCharacteristic characteristic)
     {
+        if (bluetoothGatt == null) return;
+
         int maxCount = 10;
         try {
             for (int i=0;i<maxCount;i++) {
                 boolean status = bluetoothGatt.writeCharacteristic(characteristic);
                 if (status) break;
-                if (!status) {
-                    String.format("Failed bluetoothGatt.writeCharacteristic, %d", i + 1);
+                if (!status)
+                {
+                    logger.error(String.format("Failed bluetoothGatt.writeCharacteristic, %d", i + 1));
                     Thread.sleep(100);
                 }
             }

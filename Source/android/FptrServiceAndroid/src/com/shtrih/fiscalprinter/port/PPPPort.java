@@ -37,7 +37,11 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     private int repeatCount = 0;
     private IPortEvents events;
     private Socket socket = null;
+    private InputStream inputStream = null;
+    private OutputStream outputStream = null;
     private LocalSocket localSocket = null;
+    private InputStream lsInputStream;
+    private OutputStream lsOutputStream;
     private boolean stopFlag = false;
     private Thread dispatchThread = null;
     private PPPThread pppThread = null;
@@ -104,6 +108,8 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
             socket.setSoTimeout(connectTimeout);
             socket.connect(new InetSocketAddress("127.0.0.1", 7778));
             socket.setSoTimeout(readTimeout);
+            inputStream = socket.getInputStream();
+            outputStream = socket.getOutputStream();
         }
     }
 
@@ -141,6 +147,9 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         for (; ; ) {
             try {
                 localSocket.connect(new LocalSocketAddress(localSocketName));
+                lsInputStream = localSocket.getInputStream();
+                lsOutputStream = localSocket.getOutputStream();
+
                 break;
             } catch (IOException e) {
                 logger.error("openLocalSocket", e);
@@ -267,18 +276,16 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         if (count > 0) {
             data = printerPort.read(count);
             //logger.debug("<- PPP " + Hex.toHex(data));
-            OutputStream os = localSocket.getOutputStream();
-            if (os != null) {
-                os.write(data, 0, count);
+            if (lsOutputStream != null) {
+                lsOutputStream.write(data, 0, count);
             }
         }
         // read localSocket
-        InputStream is = localSocket.getInputStream();
-        if (is != null) {
-            count = is.available();
+        if (lsInputStream != null) {
+            count = lsInputStream.available();
             if (count > 0) {
                 data = new byte[count];
-                count = is.read(data);
+                count = lsInputStream.read(data);
                 if (count > 0) {
                     //logger.debug("-> PPP " + Hex.toHex(data));
                     printerPort.write(data);
@@ -314,9 +321,9 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         int offset = 0;
         while (len > 0) {
 
-            int count = Math.min(len, socket.getInputStream().available());
+            int count = Math.min(len, inputStream.available());
             if (count > 0) {
-                count = socket.getInputStream().read(data, offset, count);
+                count = inputStream.read(data, offset, count);
                 if (count == -1) {
                     close();
                     throw new ClosedConnectionException("Connection closed");
@@ -338,7 +345,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
             try {
                 open();
                 //logger.debug("=>> write: " + Hex.toHex(b));
-                socket.getOutputStream().write(b);
+                outputStream.write(b);
                 return;
             } catch (SocketException e) {
                 logger.error("write", e);

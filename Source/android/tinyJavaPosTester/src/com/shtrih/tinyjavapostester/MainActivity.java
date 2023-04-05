@@ -591,6 +591,7 @@ public class MainActivity extends AppCompatActivity
                 printer.setDeviceEnabled(true);
                 model.ScocUpdaterStatus.set("");
                 printer.setParameter3(SmFptrConst.SMFPTR_DIO_PARAM_FIRMWARE_UPDATE_OBSERVER, this.params.observer);
+                //testCommandTime();
                 return null;
             } catch (Exception e) {
                 log.error("Device " + this.params.portName + " connection using protocol " + selectedProtocol + " failed", e);
@@ -613,6 +614,18 @@ public class MainActivity extends AppCompatActivity
 
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
+    }
+
+    public void testCommandTime() throws JposException
+    {
+        printer.readShortPrinterStatus();
+        int count = 100;
+        long startTime = System.currentTimeMillis();
+        for (int i=0;i<count;i++) {
+            printer.readShortPrinterStatus();
+        }
+        long commandTime = (System.currentTimeMillis() - startTime) / count;
+        log.debug(String.format("Short status command time: %d ms", commandTime));
     }
 
     public class FptrEventListener implements StatusUpdateListener

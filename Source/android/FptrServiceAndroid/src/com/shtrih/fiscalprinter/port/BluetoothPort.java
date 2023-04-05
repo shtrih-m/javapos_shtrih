@@ -32,6 +32,8 @@ public class BluetoothPort implements PrinterPort2 {
     private int openTimeout = 5000;
     private String portName = "";
     private boolean portOpened = true;
+    private InputStream inputStream;
+    private OutputStream outputStream;
     private BluetoothDevice device = null;
     private BluetoothSocket socket = null;
     private boolean receiverRegistered = false;
@@ -205,6 +207,9 @@ public class BluetoothPort implements PrinterPort2 {
             }
 
             socket.connect();
+            inputStream = socket.getInputStream();
+            outputStream = socket.getOutputStream();
+
             if (events != null) {
                 events.onConnect();
             }
@@ -327,11 +332,8 @@ public class BluetoothPort implements PrinterPort2 {
     @Override
     public void write(byte[] b) throws Exception {
         connect();
-        OutputStream os = getSocket().getOutputStream();
-
         try {
-            os.write(b);
-            os.flush();
+            outputStream.write(b);
         } catch (IOException e) {
             close();
             throw e;
@@ -358,17 +360,15 @@ public class BluetoothPort implements PrinterPort2 {
     public int readByte() throws Exception {
         try {
             int result;
-            InputStream is = getSocket().getInputStream();
             long startTime = System.currentTimeMillis();
             while (true) {
-                if (is.available() == 0) {
+                if (inputStream.available() == 0) {
                     long currentTime = System.currentTimeMillis();
                     if ((currentTime - startTime) > timeout) {
                         noConnectionError();
                     }
                 } else {
-                    result = is.read();
-
+                    result = inputStream.read();
                     if (result < 0) {
                         noConnectionError();
                     }
@@ -411,13 +411,15 @@ public class BluetoothPort implements PrinterPort2 {
 
     public int available() throws Exception {
         checkOpened();
-        return socket.getInputStream().available();
+        return inputStream.available();
     }
 
     public byte[] read(int len) throws Exception {
         checkOpened();
         byte[] buffer = new byte[len];
-        socket.getInputStream().read(buffer, 0, len);
+        if (inputStream.read(buffer, 0, len) == -1){
+            noConnectionError();
+        }
         return buffer;
     }
 

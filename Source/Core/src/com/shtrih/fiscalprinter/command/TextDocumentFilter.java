@@ -375,8 +375,20 @@ public class TextDocumentFilter implements IPrinterEvents {
         endDocument();
     }
     
-    private String getPaymentName(int paymentNumber) {
-        return paymentNames[paymentNumber];
+    private String getPaymentName(int paymentIndex) throws Exception
+    {
+        String paymentName = paymentNames[paymentIndex];
+        if (paymentName == null)
+        {
+            paymentName = "";
+            String[] fieldValue = new String[1];
+            if (printer.readTable(PrinterConst.SMFP_TABLE_PAYTYPE, paymentIndex + 1, 1, fieldValue) == 0)
+            {
+                paymentName = fieldValue[0];
+            }
+            paymentNames[paymentIndex] = paymentName;
+        }
+        return paymentName;
     }
     
     private void printSale(PrintSale command) throws Exception {
@@ -592,12 +604,6 @@ public class TextDocumentFilter implements IPrinterEvents {
             operatorNumber = status.getOperatorNumber();
             isFiscal = (status.getRegistrationNumber() > 0);
             isEJPresent = status.getPrinterFlags().isEJPresent();
-            for (int i = 0; i <= 15; i++) {
-                String[] fieldValue = new String[1];
-                if (printer.readTable(PrinterConst.SMFP_TABLE_PAYTYPE, i + 1, 1, fieldValue) == 0) {
-                    paymentNames[i] = fieldValue[0];
-                }
-            }
             connected = true;
         }
     }
