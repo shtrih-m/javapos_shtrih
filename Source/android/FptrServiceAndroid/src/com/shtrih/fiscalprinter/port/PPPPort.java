@@ -12,7 +12,6 @@ import com.shtrih.util.ByteUtils;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.StaticContext;
-import com.shtrih.util.Hex;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +21,6 @@ import java.net.Socket;
 import java.net.SocketException;
 
 import ru.shtrih_m.kktnetd.PPPConfig;
-import ru.shtrih_m.kktnetd.PPPStatus;
 
 import java.util.Calendar;
 import java.util.UUID;
@@ -49,8 +47,8 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     private int openTimeout = 3000;
     private int connectTimeout = 3000;
     private int readTimeout = 3000;
+    private boolean connected = false;
     private boolean opened = false;
-    private boolean portOpened = false;
     private String localSocketName = null;
     private static CompositeLogger logger = CompositeLogger.getLogger(PPPPort.class);
 
@@ -63,22 +61,22 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         readTimeout = params.getByteTimeout();
     }
 
-    public boolean isOpened() {
-        return opened;
+    public boolean isConnected() {
+        return connected;
     }
 
     public synchronized void open(int timeout) throws Exception {
-        if (isOpened()) return;
+        if (opened) return;
         logger.debug("open");
         connect(timeout);
-        portOpened = true;
+        opened = true;
         logger.debug("open: OK");
     }
 
     public synchronized void connect(int timeout) throws Exception
     {
         logger.debug("connect...");
-        if (isOpened()) return;
+        if (isConnected()) return;
         openTimeout = timeout;
         localSocketName = UUID.randomUUID().toString();
 
@@ -93,10 +91,10 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
             noConnectionError();
         }
         openSocket();
-        opened = true;
         if (events != null) {
             events.onConnect();
         }
+        connected = true;
         logger.debug("connect: OK");
     }
 
@@ -163,26 +161,33 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         logger.debug("openLocalSocket: OK");
     }
 
-    public synchronized void close() {
+    public synchronized void close()
+    {
+        if (!opened) return;
         logger.debug("close");
-        if (!isOpened()) return;
         disconnect();
         printerPort.setPortEvents(null);
         printerPort.close();
-        portOpened = false;
+        opened = false;
         logger.debug("close: OK");
     }
 
-    public synchronized void disconnect() {
-        if (!isOpened()) return;
+    public void disconnect() {
+        if (!isConnected()) return;
 
-        opened = false;
+        connected = false;
         closeSocket();
         stopDispatchThread();
         closeLocalSocket();
         stopPPPThread();
         if (events != null) {
             events.onDisconnect();
+        }
+    }
+
+    public void checkConnected() throws Exception{
+        if (!connected) {
+            throw new IOException("Device disconnected");
         }
     }
 
@@ -310,16 +315,18 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
 
     public byte[] readBytes(int len) throws Exception
     {
+        checkConnected();
         long time = Calendar.getInstance().getTimeInMillis() + readTimeout + 10000; // !!!
         byte[] data = new byte[len];
         int offset = 0;
         while (len > 0) {
+            checkConnected();
 
             int count = Math.min(len, inputStream.available());
             if (count > 0) {
                 count = inputStream.read(data, offset, count);
                 if (count == -1) {
-                    close();
+                    disconnect();
                     throw new ClosedConnectionException("Connection closed");
                 }
                 len -= count;
@@ -334,7 +341,9 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         return data;
     }
 
-    public void write(byte[] b) throws Exception {
+    public void write(byte[] b) throws Exception
+    {
+        checkConnected();
         for (int i = 0; i < 2; i++) {
             try {
                 open();
@@ -404,7 +413,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     }
 
     public void onConnect() {
-        if (portOpened) {
+        if (opened) {
             try {
                 connect(openTimeout);
             } catch (Exception e) {

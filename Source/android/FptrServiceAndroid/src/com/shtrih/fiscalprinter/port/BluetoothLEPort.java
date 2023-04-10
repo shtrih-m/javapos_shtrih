@@ -567,7 +567,6 @@ public class BluetoothLEPort implements PrinterPort2 {
 
     public void disconnect() // synchronized
     {
-        logger.debug("disconnect()");
         if (state == ConnectState.Disconnected) return;
 
         synchronized(rxBuffer) {
@@ -590,7 +589,6 @@ public class BluetoothLEPort implements PrinterPort2 {
         if (events != null) {
             events.onDisconnect();
         }
-        logger.debug("disconnect(): OK");
     }
 
     public int readByte() throws Exception
@@ -601,7 +599,6 @@ public class BluetoothLEPort implements PrinterPort2 {
     public byte[] readBytes(int len) throws Exception{
         checkPortOpened();
 
-        //logger.debug("readBytes: " + len);
         if (len <= 0)
         {
             throw new Exception("Data length <= 0");
@@ -902,10 +899,13 @@ public class BluetoothLEPort implements PrinterPort2 {
     // PrinterPort2
 
     public int available() throws Exception{
+        checkPortState();
         return rxBuffer.available();
     }
 
-    public byte[] read(int len) throws Exception{
+    public byte[] read(int len) throws Exception
+    {
+        checkPortState();
         return rxBuffer.read(len);
     }
 

@@ -391,13 +391,14 @@ public class BluetoothPort implements PrinterPort2 {
         int offset = 0;
         byte[] buffer = new byte[len];
         long startTime = System.currentTimeMillis();
-        while (true) {
-            int count = inputStream.read(buffer, 0, len);
-            if (count == -1) {
+        while (len > 0) {
+            int count = inputStream.read(buffer, offset, len);
+            if (count < 0 ) {
                 throw new IOException("Socket closed");
             }
+            len -= count;
             offset += count;
-            if (offset == len) break;
+            if (len == 0) break;
 
             long currentTime = System.currentTimeMillis();
             if ((currentTime - startTime) > timeout) {

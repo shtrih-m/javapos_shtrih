@@ -7,10 +7,11 @@
     
 ********************************************************************************
 
-  04.04.2023
+  10.04.2023
   deviceServiceVersion = 1013695
   
   [-] Fixed error with low data rate with Bluetooth connection
+  [-] Fixed error with timeout after Bluetooth disabled
   
 ********************************************************************************
 

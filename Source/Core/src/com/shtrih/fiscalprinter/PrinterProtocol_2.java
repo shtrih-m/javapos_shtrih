@@ -71,7 +71,6 @@ public class PrinterProtocol_2 implements PrinterProtocol {
                     }
                 }
             }
-            
             throw new IOException("Failed to synchronize frame numbers");
 
         } catch (Exception e)
