@@ -5,7 +5,7 @@ import com.shtrih.fiscalprinter.command.FSReadExpDate;
 
 import org.junit.Test;
 
-import static com.shtrih.fiscalprinter.ByteUtils.byteArray;
+import static com.shtrih.util.ByteUtils.byteArray;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 

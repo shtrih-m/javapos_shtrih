@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import static com.shtrih.fiscalprinter.ByteUtils.byteArray;
+import static com.shtrih.util.ByteUtils.byteArray;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 

@@ -4,7 +4,7 @@ import com.shtrih.fiscalprinter.command.FSFindDocument;
 
 import org.junit.Test;
 
-import static com.shtrih.fiscalprinter.ByteUtils.byteArray;
+import static com.shtrih.util.ByteUtils.byteArray;
 
 public class FSFindDocumentTests {
 
