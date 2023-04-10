@@ -12,6 +12,8 @@ import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.StaticContext;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.Time;
+import com.shtrih.util.ByteUtils;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -124,6 +126,15 @@ public class BluetoothPort implements PrinterPort2 {
 
             switch (action)
             {
+                case BluetoothAdapter.ACTION_STATE_CHANGED:
+                {
+                    int  state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, Short.MIN_VALUE);
+                    if ((state == BluetoothAdapter.STATE_TURNING_OFF)||(state == BluetoothAdapter.STATE_OFF)){
+                        disconnect();
+                    }
+                    break;
+                }
+
                 case BluetoothDevice.ACTION_FOUND:
                 {
                     int  rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI,Short.MIN_VALUE);
@@ -146,36 +157,45 @@ public class BluetoothPort implements PrinterPort2 {
                     BluetoothDevice btdevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     if (btdevice.equals(device)) {
                         logger.debug("BluetoothDevice.ACTION_ACL_DISCONNECTED");
-                        if (events != null) {
-                            events.onDisconnect();
-                        }
-
-                        if (isOpened()) {
-                            try {
-                                socket.close();
-                                socket = null;
-                            } catch (Exception e) {
-                                logger.error("Failed to close socket ", e);
-                            }
-                        }
-                        if (portOpened)
-                        {
-                            logger.debug("startConnectThread");
-                            Thread connectThread = new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    connectProc();
-                                }
-                            });
-                            connectThread.start();
-                            logger.debug("startConnectThread: OK");
-                        }
+                        disconnect();
+                        //startConnectThread();
                     }
                     break;
                 }
             }
         }
     };
+
+    public void disconnect() {
+        if (events != null) {
+            events.onDisconnect();
+        }
+
+        if (isOpened()) {
+            logger.debug("socket.close");
+            try {
+                socket.close();
+                socket = null;
+            } catch (Exception e) {
+                logger.error("Failed to close socket ", e);
+            }
+        }
+    }
+
+    public void startConnectThread()
+    {
+        if (portOpened) {
+            logger.debug("startConnectThread");
+            Thread connectThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    connectProc();
+                }
+            });
+            connectThread.start();
+            logger.debug("startConnectThread: OK");
+        }
+    }
 
     public void connectProc() {
         logger.debug("connectProc.start");
@@ -200,7 +220,6 @@ public class BluetoothPort implements PrinterPort2 {
             throw new Exception("Failed to get BluetoothDevice by address");
         }
 
-        try {
             socket = device.createInsecureRfcommSocketToServiceRecord(SPP_UUID);
             if (socket == null) {
                 throw new Exception("Failed to get bluetooth device socket");
@@ -214,12 +233,6 @@ public class BluetoothPort implements PrinterPort2 {
                 events.onConnect();
             }
             registerReceiver();
-            return;
-
-        } catch (IOException e) {
-            close();
-            throw e;
-        }
     }
 
     private void registerReceiver()
@@ -302,11 +315,11 @@ public class BluetoothPort implements PrinterPort2 {
                     }
                 }
                 socket.close();
+                socket = null;
             } catch (Exception e) {
                 logger.error("Bluetooth socket close failed", e);
             }
         }
-        socket = null;
         portOpened = false;
     }
 
@@ -332,12 +345,7 @@ public class BluetoothPort implements PrinterPort2 {
     @Override
     public void write(byte[] b) throws Exception {
         connect();
-        try {
-            outputStream.write(b);
-        } catch (IOException e) {
-            close();
-            throw e;
-        }
+        outputStream.write(b);
     }
 
     @Override
@@ -349,37 +357,54 @@ public class BluetoothPort implements PrinterPort2 {
 
     @Override
     public byte[] readBytes(int len) throws Exception {
-        byte[] data = new byte[len];
-        for (int i = 0; i < len; i++) {
-            data[i] = (byte) readByte();
-        }
-        return data;
+        return read(len);
     }
 
     @Override
-    public int readByte() throws Exception {
-        try {
-            int result;
-            long startTime = System.currentTimeMillis();
-            while (true) {
-                if (inputStream.available() == 0) {
-                    long currentTime = System.currentTimeMillis();
-                    if ((currentTime - startTime) > timeout) {
-                        noConnectionError();
-                    }
-                } else {
-                    result = inputStream.read();
-                    if (result < 0) {
-                        noConnectionError();
-                    }
+    public int readByte() throws Exception
+    {
+        return ByteUtils.byteToInt(read(1)[0]);
+    }
 
-                    return result;
+    public int readByte2() throws Exception {
+        int result;
+        long startTime = System.currentTimeMillis();
+        while (true) {
+            if (inputStream.available() == 0) {
+                long currentTime = System.currentTimeMillis();
+                if ((currentTime - startTime) > timeout) {
+                    noConnectionError();
                 }
+            } else {
+                result = inputStream.read();
+                if (result < 0) {
+                    noConnectionError();
+                }
+
+                return result;
             }
-        } catch (Exception e) {
-            close();
-            throw e;
         }
+    }
+
+    public byte[] read(int len) throws Exception {
+        checkOpened();
+        int offset = 0;
+        byte[] buffer = new byte[len];
+        long startTime = System.currentTimeMillis();
+        while (true) {
+            int count = inputStream.read(buffer, 0, len);
+            if (count == -1) {
+                throw new IOException("Socket closed");
+            }
+            offset += count;
+            if (offset == len) break;
+
+            long currentTime = System.currentTimeMillis();
+            if ((currentTime - startTime) > timeout) {
+                noConnectionError();
+            }
+        }
+        return buffer;
     }
 
     private void noConnectionError() throws Exception {
@@ -412,15 +437,6 @@ public class BluetoothPort implements PrinterPort2 {
     public int available() throws Exception {
         checkOpened();
         return inputStream.available();
-    }
-
-    public byte[] read(int len) throws Exception {
-        checkOpened();
-        byte[] buffer = new byte[len];
-        if (inputStream.read(buffer, 0, len) == -1){
-            noConnectionError();
-        }
-        return buffer;
     }
 
     public int directIO(int command, int[] data, Object object)

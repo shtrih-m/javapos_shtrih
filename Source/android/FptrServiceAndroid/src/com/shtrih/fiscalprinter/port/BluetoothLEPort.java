@@ -29,6 +29,7 @@ import java.util.Vector;
 import java.util.ArrayList;
 
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
+import com.shtrih.util.ByteUtils;
 import com.shtrih.util.Hex;
 import com.shtrih.util.Time;
 import com.shtrih.util.CircularBuffer;
@@ -85,7 +86,7 @@ public class BluetoothLEPort implements PrinterPort2 {
     private void setState(ConnectState newState)
     {
         if (newState != state){
-            loggerDebug("setState(" + newState + ")");
+            //logger.debug("setState(" + newState + ")");
             state = newState;
         }
     }
@@ -97,7 +98,6 @@ public class BluetoothLEPort implements PrinterPort2 {
 
         public void onConnectionStateChange (BluetoothGatt gatt,int status, int newState)
         {
-            // onConnectionStateChange(status: 8 newState: 0
             loggerDebug("BluetoothGattCallback.onConnectionStateChange(status: " + status + " newState: " + newState);
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 gattConnected();
@@ -304,7 +304,11 @@ public class BluetoothLEPort implements PrinterPort2 {
 
             if (characteristic.getUuid().equals(TX_CHAR_UUID)) {
                 //logger.debug("Received: " + Hex.toHex(characteristic.getValue()));
-                rxBuffer.write(characteristic.getValue());
+                synchronized(rxBuffer)
+                {
+                    rxBuffer.write(characteristic.getValue());
+                    rxBuffer.notify();
+                }
             }
         }
         catch(Exception e){
@@ -413,8 +417,7 @@ public class BluetoothLEPort implements PrinterPort2 {
             if (intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED))
             {
                 int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-                String stateText = state + ", " + getStateText(state);
-                logger.debug("BluetoothAdapter state changed: " + stateText);
+                logger.debug(String.format("BluetoothAdapter state changed: %d, %s", state, getStateText(state)));
 
                 switch(state){
                     case BluetoothAdapter.STATE_ON:{
@@ -422,9 +425,9 @@ public class BluetoothLEPort implements PrinterPort2 {
                         break;
                     }
 
-                    case BluetoothAdapter.STATE_OFF:
                     case BluetoothAdapter.STATE_TURNING_OFF:
-                    case  BluetoothAdapter.STATE_TURNING_ON:{
+                    case BluetoothAdapter.STATE_OFF:
+                    {
                         disconnect();
                         break;
                     }
@@ -464,6 +467,12 @@ public class BluetoothLEPort implements PrinterPort2 {
         }
     }
 
+    public void checkPortState() throws IOException {
+        if (state != ConnectState.Connected) {
+            throw new IOException("Device disconnected");
+        }
+    }
+
     public synchronized void connect(int timeout) throws Exception
     {
         if (isOpened()) return;
@@ -497,7 +506,10 @@ public class BluetoothLEPort implements PrinterPort2 {
 
     private void connectDevice(BluetoothDevice device) throws Exception
     {
-        rxBuffer.clear();
+        synchronized(rxBuffer) {
+            rxBuffer.clear();
+            rxBuffer.notify();
+        }
         setState(ConnectState.ConnectGatt);
         Context context = StaticContext.checkContext();
         bluetoothGatt = device.connectGatt(context, true, new BluetoothGattCallbackImpl());
@@ -549,70 +561,67 @@ public class BluetoothLEPort implements PrinterPort2 {
         loggerDebug("close: OK");
     }
 
-    public synchronized void disconnect()
+    public boolean isConnected(){
+        return bluetoothGatt != null;
+    }
+
+    public void disconnect() // synchronized
     {
-        if (!isOpened()) return;
-        logger.debug("disconnect");
+        logger.debug("disconnect()");
+        if (state == ConnectState.Disconnected) return;
+
+        synchronized(rxBuffer) {
+            rxBuffer.clear();
+            rxBuffer.notify();
+        }
+        setState(ConnectState.Disconnected);
 
         if (scanner != null){
             scanner.stopScan(scanOpenedDeviceCallback);
         }
-        bluetoothGatt.disconnect();
-        bluetoothGatt.close();
-        bluetoothGatt = null;
-
+        if (bluetoothGatt != null) {
+            bluetoothGatt.disconnect();
+            bluetoothGatt.close();
+            bluetoothGatt = null;
+        }
         TxChar = null;
-        setState(ConnectState.Disconnected);
-        rxBuffer.clear();
         txqueue.clear();
 
         if (events != null) {
             events.onDisconnect();
         }
-        logger.debug("disconnect: OK");
-    }
-
-    public int byteToInt(int B) {
-        if (B < 0) {
-            B = (int) (256 + B);
-        }
-        return B;
+        logger.debug("disconnect(): OK");
     }
 
     public int readByte() throws Exception
     {
-        return byteToInt(readBytes(1)[0]);
+        return ByteUtils.byteToInt(readBytes(1)[0]);
     }
 
     public byte[] readBytes(int len) throws Exception{
         checkPortOpened();
 
-        //loggerDebug("readBytes: " + len);
+        //logger.debug("readBytes: " + len);
         if (len <= 0)
         {
             throw new Exception("Data length <= 0");
         }
 
-        // wait for data available with timaout
-        long startTime = System.currentTimeMillis();
-        for (;;)
+        synchronized(rxBuffer)
         {
-            checkPortState();
-            if (rxBuffer.available() >= len) break;
-            Thread.sleep(0);
-            //Time.delay(1); !!!
-            long currentTime = System.currentTimeMillis();
-            if ((currentTime - startTime) > timeout)
-            {
-                throw new IOException("Read timed out");
-            }
-        }
-        return rxBuffer.read(len);
-    }
+            // wait for data available with timaout
+            long startTime = System.currentTimeMillis();
+            for (; ; ) {
+                checkPortState();
+                if (rxBuffer.available() >= len) break;
+                rxBuffer.wait(timeout);
 
-    public void checkPortState() throws IOException {
-        if (state != ConnectState.Connected) {
-            throw new IOException("Device disconnected");
+                long currentTime = System.currentTimeMillis();
+                if ((currentTime - startTime) > timeout) {
+                    throw new IOException("Read timed out");
+                }
+            }
+            return rxBuffer.read(len);
         }
     }
 
@@ -691,9 +700,11 @@ public class BluetoothLEPort implements PrinterPort2 {
     {
         if (bluetoothGatt == null) return;
 
-        int maxCount = 10;
+        int maxCount = 3;
         try {
-            for (int i=0;i<maxCount;i++) {
+            for (int i=0;i<maxCount;i++)
+            {
+                checkPortState();
                 boolean status = bluetoothGatt.writeCharacteristic(characteristic);
                 if (status) break;
                 if (!status)

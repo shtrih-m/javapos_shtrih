@@ -3,6 +3,7 @@ package com.shtrih.fiscalprinter;
 import com.shtrih.fiscalprinter.command.CommandOutputStream;
 import com.shtrih.fiscalprinter.command.PrinterCommand;
 import com.shtrih.fiscalprinter.port.PrinterPort;
+import com.shtrih.util.ByteUtils;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Logger2;
 
@@ -70,7 +71,8 @@ public class PrinterProtocol_2 implements PrinterProtocol {
                     }
                 }
             }
-            throw new IOException("Failed to synchronize frapme numbers");
+            
+            throw new IOException("Failed to synchronize frame numbers");
 
         } catch (Exception e)
         {
@@ -185,13 +187,6 @@ public class PrinterProtocol_2 implements PrinterProtocol {
             return value & 0xFFFF;
         }
 
-        public int byteToInt(int B) {
-            if (B < 0) {
-                B = 256 + B;
-            }
-            return B;
-        }
-
         public int updateCRC(int CRC, int value) {
             int result = Short(((CRC >>> 8) | (Short(CRC << 8))));
             result = Short(result ^ (Short(value)));
@@ -204,7 +199,7 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         public int getCRC(byte[] data) {
             int result = 0xFFFF;
             for (int i = 0; i < data.length; i++) {
-                result = updateCRC(result, byteToInt(data[i]));
+                result = updateCRC(result, ByteUtils.byteToInt(data[i]));
             }
             return result;
         }
@@ -231,7 +226,7 @@ public class PrinterProtocol_2 implements PrinterProtocol {
         public byte[] stuffing(byte[] data) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             for (int i = 0; i < data.length; i++) {
-                int item = byteToInt(data[i]);
+                int item = ByteUtils.byteToInt(data[i]);
                 if (item == STX) {
                     stream.write(ESC);
                     stream.write(TSTX);
@@ -252,14 +247,14 @@ public class PrinterProtocol_2 implements PrinterProtocol {
                 return result;
             }
             for (int i = 0; i < data.length; i++) {
-                if (byteToInt(data[i]) == ESC) {
+                if (ByteUtils.byteToInt(data[i]) == ESC) {
                     if (i == data.length - 1) {
                         break;
                     }
-                    if (byteToInt(data[i + 1]) == TSTX) {
+                    if (ByteUtils.byteToInt(data[i + 1]) == TSTX) {
                         stream.write(STX);
                     }
-                    if (byteToInt(data[i + 1]) == TESC) {
+                    if (ByteUtils.byteToInt(data[i + 1]) == TESC) {
                         stream.write(ESC);
                     }
                 } else {

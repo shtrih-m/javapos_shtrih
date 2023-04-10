@@ -8,6 +8,7 @@ package com.shtrih.fiscalprinter.port;
 import com.shtrih.LibManager;
 import com.shtrih.NativeResource;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
+import com.shtrih.util.ByteUtils;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.Localizer;
 import com.shtrih.util.StaticContext;
@@ -303,15 +304,8 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         throw new IOException(Localizer.getString(Localizer.NoConnection));
     }
 
-    public int byteToInt(int B) {
-        if (B < 0) {
-            B = (int) (256 + B);
-        }
-        return B;
-    }
-
     public int readByte() throws Exception {
-        return byteToInt(readBytes(1)[0]);
+        return ByteUtils.byteToInt(readBytes(1)[0]);
     }
 
     public byte[] readBytes(int len) throws Exception

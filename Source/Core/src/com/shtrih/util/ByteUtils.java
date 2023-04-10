@@ -1,9 +1,10 @@
-package com.shtrih.fiscalprinter;
+package com.shtrih.util;
 
 /**
  * @author P.Zhirkov
  */
-public class ByteUtils {
+public class ByteUtils
+{
     public static byte[] byteArray(int... array) {
         byte[] result = new byte[array.length];
 
@@ -12,6 +13,13 @@ public class ByteUtils {
         }
 
         return result;
+    }
+
+    public static int byteToInt(int B) {
+        if (B < 0) {
+            B = (int) (256 + B);
+        }
+        return B;
     }
 
 }

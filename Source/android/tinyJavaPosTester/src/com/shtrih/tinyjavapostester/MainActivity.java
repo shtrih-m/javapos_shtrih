@@ -1151,7 +1151,7 @@ public class MainActivity extends AppCompatActivity
                 return null;
 
             } catch (Exception e) {
-                log.error("Receipt printing failed", e);
+                //log.error("Receipt printing failed", e);
                 return e.getMessage();
             } finally {
                 doneAt = System.currentTimeMillis();

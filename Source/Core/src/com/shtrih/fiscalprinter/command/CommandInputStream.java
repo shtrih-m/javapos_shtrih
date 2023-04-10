@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.shtrih.util.ByteUtils;
 import com.shtrih.util.Localizer;
 
 public class CommandInputStream {
@@ -58,7 +59,7 @@ public class CommandInputStream {
             throw new Exception("" +
                     "No data available");
 
-        return byteToInt(b);
+        return ByteUtils.byteToInt(b);
     }
 
     public void mark() throws IOException {
@@ -77,13 +78,6 @@ public class CommandInputStream {
     public PrinterDateTime readFSDateTime() throws Exception
     {
         return new PrinterDateTime(readBytes(PrinterDateTime.BodyLength));
-    }
-
-    public int byteToInt(int B) {
-        if (B < 0) {
-            B = (int) (256 + B);
-        }
-        return B;
     }
 
     public int readShort() throws Exception {
@@ -155,7 +149,7 @@ public class CommandInputStream {
         byte[] data = readBytes(len);
         if (!arrayEqual(data, (byte) 0xFF)) {
             for (int i = 0; i < len; i++) {
-                long B = byteToInt(data[i]);
+                long B = ByteUtils.byteToInt(data[i]);
                 result += (B << (8 * i));
             }
         }

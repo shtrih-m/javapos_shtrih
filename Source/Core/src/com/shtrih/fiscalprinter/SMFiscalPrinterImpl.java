@@ -260,6 +260,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     Thread.sleep(3000);
                 }
                 commandSucceeded(command);
+                afterCommand(command);
             } else {
                 if (command.getCode() != 0x6B) {
                     if (capLastErrorText) {
@@ -276,7 +277,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     logger.error(text + ", " + command.getParametersText(commands));
                 }
             }
-            afterCommand(command);
         }
     }
 
@@ -456,8 +456,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         for (int i = 0; i < params.maxRepeatCount; i++) {
             command.setRepeatNeeded(false);
             deviceExecute(command);
-            resultCode = command.getResultCode();
 
+            if (command.isSucceeded()) break;
             if (!command.getRepeatNeeded()) {
                 break;
             }

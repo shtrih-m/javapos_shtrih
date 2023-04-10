@@ -562,9 +562,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             isRecPresent = status.getPrinterFlags().isRecPresent();
         }
 
-        if (status.getPrinterFlags().isRecPresent()) {
-            getPrinter().waitForPrinting();
-
+        if (status.getPrinterFlags().isRecPresent())
+        {
             if (isInReceiptTrailer) {
                 printEndNonFiscal();
                 isInReceiptTrailer = false;
@@ -3228,8 +3227,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
             try {
                 receipt.endFiscalReceipt(printHeader);
-            } catch (Exception e) {
-                cancelReceipt2();
+            } catch (DeviceException e) {
+                if (e.getErrorCode() > 0) {
+                    cancelReceipt2();
+                }
                 throw e;
             }
 
