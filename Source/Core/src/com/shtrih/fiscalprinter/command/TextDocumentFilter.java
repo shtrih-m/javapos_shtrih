@@ -838,7 +838,9 @@ public class TextDocumentFilter implements IPrinterEvents {
         }
     }
     
-    private void ReadFiscalStorage() throws Exception {
+    private void ReadFiscalStorage() throws Exception 
+    {
+        printer.waitForPrinting();
         long docNumber = printer.fsReadStatus().getDocNumber();
         long docSign = printer.fsFindDocument(docNumber).getDocument().getDocSign();
         add(String.format("ФД:%d ФП:%10d", docNumber, docSign));
@@ -848,7 +850,10 @@ public class TextDocumentFilter implements IPrinterEvents {
         add("        " + s);
     }
     
-    public void add(String s1, String s2) throws Exception {
+    public void add(String s1, String s2) throws Exception 
+    {
+        if ((s1 == null)||(s2 == null)) return;
+        
         if (s1.length() > lineLength && s2.length() < lineLength && lineLength - (s1.length() % lineLength) - s2.length() > 0) {
             
             int len = lineLength - (s1.length() % lineLength) - s2.length();
@@ -869,7 +874,9 @@ public class TextDocumentFilter implements IPrinterEvents {
         writeLn(line);
     }
     
-    private void addPaddedLeft(String s1) throws Exception {
+    private void addPaddedLeft(String s1) throws Exception 
+    {
+        if (s1 == null) return;
         if (s1.length() > lineLength) {
             add(s1);
             return;
@@ -886,6 +893,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
     
     private void addPaddedRight(String s2) throws Exception {
+        if (s2 == null) return;
         if (s2.length() > lineLength) {
             add(s2);
             return;
@@ -902,13 +910,17 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
     
     public void addCenter(char c, String text) throws Exception {
+        if (text == null) return;
+        
         int l = (lineLength - text.length()) / 2;
         String line = StringUtils.stringOfChar(c, l) + text;
         line = line + StringUtils.stringOfChar(c, lineLength - line.length());
         writeLn(line);
     }
     
-    public void add(String line) throws Exception {
+    public void add(String line) throws Exception 
+    {
+        if (line == null) return;
         
         if (line.length() <= lineLength) {
             addPaddedLeft(line);

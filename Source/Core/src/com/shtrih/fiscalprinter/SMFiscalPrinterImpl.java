@@ -88,6 +88,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         NOTDEFINED, TRUE, FALSE
     }
 
+    private int resultCode = 0;
     public PrinterProtocol device;
     // delay on wait
     public static final int TimeToSleep = 500;
@@ -117,7 +118,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private final FptrParameters params;
     private final PrinterImages printerImages = new PrinterImages();
     private final ReceiptImages receiptImages = new ReceiptImages();
-    private int resultCode = 0;
     private NCR7167Printer escPrinter = new NCR7167Printer(null);
     private final FieldInfoMap fields = new FieldInfoMap();
     private boolean capDiscount = true;
@@ -243,6 +243,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     port.open(getParams().portOpenTimeout);
                 }
                 device.send(command);
+                resultCode = command.getResultCode();
+                
             } catch (ClosedConnectionException e) {
                 if (!command.getIsRepeatable()) {
                     throw new DeviceException(PrinterConst.SMFPTR_E_NOCONNECTION, e.getMessage());
@@ -468,7 +470,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 i--;
             }
         }
-        if (saveCommands && succeeded(resultCode) && isReceiptCommand(command)) {
+        if (saveCommands && command.isSucceeded() && isReceiptCommand(command)) {
             BinaryCommand cmd = new BinaryCommand(command.getCode(),
                     command.getText(), command.getTxData());
             receiptCommands.add(cmd);
@@ -476,8 +478,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
         long doneAt = System.currentTimeMillis();
 
-        logger.debug(text + " = " + resultCode + ", " + (doneAt - startedAt) + " ms");
-        return resultCode;
+        logger.debug(text + " = " + command.getResultCode() + ", " + (doneAt - startedAt) + " ms");
+        return command.getResultCode();
     }
 
     private String renderCommandCode(int commandCode) {
