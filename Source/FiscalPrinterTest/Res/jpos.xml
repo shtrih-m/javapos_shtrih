@@ -47,9 +47,9 @@
 		<!-- Subtotal font -->
         <prop name="subtotalFont" type="String" value="1"/>
         <!-- Driver byte receive timeout -->
-        <prop name="byteTimeout" type="String" value="5000"/>
+        <prop name="byteTimeout" type="String" value="100"/>
         <!-- Device byte receive timeout -->
-        <prop name="deviceByteTimeout" type="String" value="5000"/>
+        <prop name="deviceByteTimeout" type="String" value="500"/>
         <!-- Device search enabled for all serial ports -->
         <prop name="searchByPortEnabled" type="String" value="0"/>
         <!-- Device search enabled for all baud rates -->
@@ -102,15 +102,15 @@
         <!-- Cut mode, 0 - auto, 1 - disabled -->
         <prop name="cutMode" type="String" value="0"/>
         <!-- maxEnqNumber -->
-        <prop name="maxEnqNumber" type="String" value="3"/>
+        <prop name="maxEnqNumber" type="String" value="10"/>
         <!-- maxNakCommandNumber -->
-        <prop name="maxNakCommandNumber" type="String" value="3"/>
+        <prop name="maxNakCommandNumber" type="String" value="10"/>
         <!-- maxNakAnswerNumber -->
-        <prop name="maxNakAnswerNumber" type="String" value="3"/>
+        <prop name="maxNakAnswerNumber" type="String" value="10"/>
         <!-- maxAckNumber -->
         <prop name="maxAckNumber" type="String" value="3"/>
         <!-- maxRepeatCount -->
-        <prop name="maxRepeatCount" type="String" value="3"/>
+        <prop name="maxRepeatCount" type="String" value="10"/>
         <!-- Payment types -->
         <!-- Payment types -->
         <prop name="payType0" type="String" value="0"/>

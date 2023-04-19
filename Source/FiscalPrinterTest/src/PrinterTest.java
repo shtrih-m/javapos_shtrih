@@ -1072,14 +1072,17 @@ class PrinterTest implements FiscalPrinterConst {
             
             //printFiscalReceiptDate();
             //testRefundReceipt();
-            //printFiscalReceipt145_4();
             //checkItemCode2();
             
             //printer.setDuplicateReceipt(true);
             //printFiscalReceiptDate();
             //printer.printDuplicateReceipt();
                     
-            printer.sendFDODocuments();
+            //printer.sendFDODocuments();
+            //printFiscalReceipt145_4();
+            
+            
+            printFiscalReceipt145_7();
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -3974,11 +3977,9 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(false);
-            printer.printRecItem("1. Ложка", 124, 0, 0, 0, "");
-            printer.printRecItem("2. Ложка", 124, 0, 0, 0, "");
             printer.fsWriteTag(1008, "foo@example.com");
-            printer.printRecItem("3. Ложка", 124, 0, 0, 0, "");
-
+            
+            printer.printRecItem("1. Ложка", 124, 0, 0, 0, "");
             printer.printRecTotal(10000, 10000, "");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {
