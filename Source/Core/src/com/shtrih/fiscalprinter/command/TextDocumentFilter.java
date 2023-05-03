@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Vector;
 import java.io.File;
 import java.io.FileReader;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 public class TextDocumentFilter implements IPrinterEvents {
     
@@ -215,7 +218,8 @@ public class TextDocumentFilter implements IPrinterEvents {
                     openReceipt((OpenReceipt) command);
                     break;
             }
-        } finally {
+        } finally 
+        {
             enabled = true;
         }
     }
@@ -307,7 +311,7 @@ public class TextDocumentFilter implements IPrinterEvents {
             // ВСЕГО
             add(STotalText, summToStr(receiptTotal));
             // СКИДКА
-            long discountAmount = Math.round(receiptTotal * params.getDiscount() / 100);
+            long discountAmount = Math.round(receiptTotal * params.getDiscount() / 100.0);
             String line = String.format("%s %s %%", SDiscountText, amountToStr(params.getDiscount()));
             add(line, summToStr(discountAmount)
                     + getTaxData(params.getTax1(), params.getTax2(), params.getTax3(), params.getTax4()));
@@ -433,11 +437,26 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
     
     private String amountToStr(long value) {
-        return String.format("%d.%02d", value / 100, value % 100);
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+        symbols.setDecimalSeparator('.');
+        DecimalFormat formatter = new DecimalFormat("0.00", symbols);
+        return formatter.format(value / 100.0);
     }
     
-    private String quantityToStr(double value) {
-        return String.format("%.6f", value);
+    public static String quantityToStr(double value) 
+    {
+        DecimalFormat formatter;
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+        symbols.setDecimalSeparator('.');
+        
+        double fpart = value * 1000.0 - Math.floor(value * 1000.0);
+        if (fpart > 0.001)
+        {
+            formatter = new DecimalFormat("0.000000", symbols);
+        } else{
+            formatter = new DecimalFormat("0.000", symbols);
+        }
+        return formatter.format(value);
     }
     
     public String getTaxData(int tax1, int tax2, int tax3, int tax4) throws Exception {
@@ -491,10 +510,10 @@ public class TextDocumentFilter implements IPrinterEvents {
         String line = "";
         add(item.getText());
         
-        line = String.format("%s X %s", quantityToStr(item.getQuantity() / 1000000), amountToStr(item.getPrice()));
+        line = String.format("%s X %s", quantityToStr(item.getQuantity() / 1000000.0), amountToStr(item.getPrice()));
         add("", line);
         
-        line = summToStr(item.getPrice(), item.getQuantity() / 1000000)
+        line = summToStr(item.getPrice(), item.getQuantity() / 1000000.0)
                 + getTaxData(taxBitsToInt(item.getTax()), 0, 0, 0);
         add(String.format("%02d", item.getDepartment()), line);
     }

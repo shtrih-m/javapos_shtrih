@@ -3979,7 +3979,8 @@ class PrinterTest implements FiscalPrinterConst {
             printer.beginFiscalReceipt(false);
             printer.fsWriteTag(1008, "foo@example.com");
             
-            printer.printRecItem("1. Ложка", 124, 0, 0, 0, "");
+            printer.printRecItem("1. Item1", 124, 123000, 0, 124, "");
+            printer.printRecItem("2. Item2", 124, 123400, 0, 124, "");
             printer.printRecTotal(10000, 10000, "");
             printer.endFiscalReceipt(false);
         } catch (Exception e) {

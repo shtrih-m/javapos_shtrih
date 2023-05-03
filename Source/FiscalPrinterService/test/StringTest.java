@@ -83,4 +83,17 @@ public class StringTest extends TestCase {
         String text = "test1test2";
         assertEquals("test1", text.substring(0, 5));
     }
+    
+    /*
+    public void testFormat()
+            throws Exception 
+    {
+        assertEquals("0,100", String.format("%.3f", 0.1));
+        assertEquals("0,120", String.format("%.3f", 0.12));
+        assertEquals("0,123", String.format("%.3f", 0.123));
+        assertEquals("0,123400", String.format("%.6f", 0.1234));
+        assertEquals("0,123450", String.format("%.6f", 0.12345));
+        assertEquals("0,123456", String.format("%.6f", 0.123456));
+    }
+    */
 }

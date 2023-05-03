@@ -42,5 +42,13 @@ public class DecimalFormatTest  extends TestCase {
         
         value = 0;
         assertEquals("0.00", formatter.format(value));
+
+        formatter = new DecimalFormat("0.000000", symbols);
+        value = 0.000001;
+        assertEquals("0.000001", formatter.format(value));
+        
+        formatter = new DecimalFormat("0.000", symbols);
+        value = 0.001;
+        assertEquals("0.001", formatter.format(value));
     }
 }
