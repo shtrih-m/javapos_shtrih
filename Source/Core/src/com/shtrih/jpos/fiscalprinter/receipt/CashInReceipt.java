@@ -49,4 +49,7 @@ public class CashInReceipt extends CustomReceipt implements FiscalReceipt {
     public long getSubtotal() throws Exception {
         return 0;
     }
+    
+    public void accept(ReceiptVisitor visitor) throws Exception{
+    }
 }

@@ -47,7 +47,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private int receiptType = 0;
     private boolean isOpened = false;
     private String voidDescription = "";
-    public Vector items = new Vector();
+    public Vector<Object> items = new Vector<Object>();
     private final Vector endingItems = new Vector();
     private final long[] payments = new long[16]; // payment amounts
     public final FSDiscounts discounts = new FSDiscounts();
@@ -1533,31 +1533,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         return result / 1000000.0;
     }
 
+    public void accept(ReceiptVisitor visitor) throws Exception{
+        visitor.visitSalesReceipt(this);
+    }
+    
 }
-
-/*
- long amount = Math.round(item.getPriceWithDiscount() * item.getQuantity());
- long discountAmount = amount - item.getTotal();
- if (discountAmount > 0) 
- {
- if ((discounts.getTotal() + discountAmount-1) > 99){
- throw new Exception("Discount cannot be applied");
- }
- printTotalDiscount(discountAmount-1, 0, "");
- item.setTotal(amount-1);
- item.getDiscounts().clear();
- }
-
- public long calcPriceWithDiscount() {
- if (quantity == 0) {
- return 0;
- }
- if ((discounts.getTotal() == 0)||(discounts.getTotal() == 1)) {
- return price;
- }
- long price1 = (long)Math.abs((totalAmount - discounts.getTotal()) / (double)quantity);
- return price1;
- }
-
-
- */

@@ -17,6 +17,8 @@ public class SocketPort implements PrinterPort2 {
     private final String portName;
     private int readTimeout;
     private int openTimeout;
+    private InputStream inputStream = null;
+    private OutputStream outputStream = null;
 
     public static synchronized SocketPort getInstance(String portName, int openTimeout) {
         SocketPort item = items.get(portName);
@@ -31,7 +33,7 @@ public class SocketPort implements PrinterPort2 {
         this.portName = portName;
         this.openTimeout = openTimeout;
         this.readTimeout = openTimeout;
-        logger.debug("SocketPort(" + portName + ")");
+        logger.debug("SocketPort(" + portName + ", " + openTimeout + ")");
     }
 
     public void open() throws Exception {
@@ -56,6 +58,8 @@ public class SocketPort implements PrinterPort2 {
         String host = tokenizer.nextToken();
         int port = Integer.parseInt(tokenizer.nextToken());
         socket.connect(new InetSocketAddress(host, port), openTimeout);
+        inputStream = socket.getInputStream();
+        outputStream = socket.getOutputStream();
     }
 
     public void close() {
@@ -70,6 +74,8 @@ public class SocketPort implements PrinterPort2 {
         } catch (Exception e) {
         }
         socket = null;
+        inputStream = null;
+        outputStream = null;
     }
 
     public int readByte() throws Exception {
@@ -109,14 +115,7 @@ public class SocketPort implements PrinterPort2 {
         for (int i = 0; i < 2; i++) {
             try {
                 open();
-                OutputStream os = socket.getOutputStream();
-                try {
-                    os.write(b);
-                    os.flush();
-                }
-                finally{
-                    os.close();
-                }
+                outputStream.write(b);
                 return;
             } catch (Exception e) {
                 close();
@@ -137,12 +136,13 @@ public class SocketPort implements PrinterPort2 {
     public void setBaudRate(int baudRate) throws Exception {
     }
 
-    public void setTimeout(int timeout) throws Exception {
-
+    public void setTimeout(int timeout) throws Exception 
+    {
+        //logger.debug("setTimeout(" + timeout + ")");
         this.readTimeout = timeout;
-
-        if (isConnected())
+        if (isConnected()){
             socket.setSoTimeout(readTimeout);
+        }
     }
 
     public String getPortName() {
@@ -175,7 +175,7 @@ public class SocketPort implements PrinterPort2 {
 
     public byte[] read(int len) throws Exception{
         byte[] buffer = new byte[len];
-        socket.getInputStream().read(buffer, 0, len);
+        inputStream.read(buffer, 0, len);
         return buffer;
     }
 

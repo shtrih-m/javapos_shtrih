@@ -43,7 +43,6 @@ public class TextDocumentFilter implements IPrinterEvents {
     private XReport report = new XReport();
     private final String[] paymentNames = new String[16];
     private final List<Operator> operators = new ArrayList<Operator>();
-    private List<String> docLines = new Vector<String>();
     private SKLStorage storage;
     private SKLStorage lastDoc;
     
@@ -69,6 +68,10 @@ public class TextDocumentFilter implements IPrinterEvents {
     private static String SDayClosed = "СМЕНА ЗАКРЫТА";
     public static final String SINN = "ИНН";
     private static String[] docNames = {SSaleText, SBuyText, SRetSaleText, SRetBuyText};
+    public boolean receiptEnabled = false;
+    public boolean isDocumentActive = false;
+    private final List<String> lines = new ArrayList<String>();
+    
     
     public TextDocumentFilter() {
     }
@@ -78,7 +81,6 @@ public class TextDocumentFilter implements IPrinterEvents {
         this.printer = printer;
         saveToStorage = printer.getParams().textReportEnabled;
         lineLength = printer.getMessageLength(FontNumber.getNormalFont());
-        readLastDoc();
     }
 
     public boolean getEnabled() {
@@ -139,11 +141,15 @@ public class TextDocumentFilter implements IPrinterEvents {
             switch (command.getCode()) 
             {
                 case 0x17:
-                    add(((PrintString) command).getLine());
+                    if (isDocumentActive){
+                        add(((PrintString) command).getLine());
+                    }
                     break;
                     
                 case 0x2F:
+                    if (isDocumentActive){
                     add(((PrintStringFont) command).getLine());
+                    }
                     break;
                     
                 case 0x40:
@@ -226,15 +232,6 @@ public class TextDocumentFilter implements IPrinterEvents {
     
     private void openReceipt(OpenReceipt command) throws Exception {
         openReceipt2(command.getReceiptType());
-        clearLastDoc();
-    }
-    
-    private void clearLastDoc() {
-        docLines.clear();
-        File file = new File(getLastDocFilePath());
-        if (!file.delete()){
-            logger.error("Failed to delete file, " + getLastDocFilePath());
-        }
     }
     
     private void openReceipt2(int receiptType) throws Exception {
@@ -396,34 +393,40 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
     
     private void printSale(PrintSale command) throws Exception {
+        if (!receiptEnabled) return;
         operatorNumber = command.getOperator();
         openReceipt2(PrinterConst.SMFP_RECTYPE_SALE);
         printReceiptItem(command.getItem());
     }
     
     private void printSale(FSPrintRecItem command) throws Exception {
+        if (!receiptEnabled) return;
         printReceiptItem(command.getItem());
     }
     
     private void printRefund(PrintRefund command) throws Exception {
+        if (!receiptEnabled) return;
         operatorNumber = command.getOperator();
         openReceipt2(PrinterConst.SMFP_RECTYPE_BUY);
         printReceiptItem(command.getItem());
     }
     
     private void printVoidSale(PrintVoidSale command) throws Exception {
+        if (!receiptEnabled) return;
         operatorNumber = command.getOperator();
         openReceipt2(PrinterConst.SMFP_RECTYPE_RETSALE);
         printReceiptItem(command.getItem());
     }
     
     private void printVoidRefund(PrintVoidRefund command) throws Exception {
+        if (!receiptEnabled) return;
         operatorNumber = command.getOperator();
         openReceipt2(PrinterConst.SMFP_RECTYPE_RETBUY);
         printReceiptItem(command.getItem());
     }
     
     private void printVoidItem(PrintVoidItem command) throws Exception {
+        if (!receiptEnabled) return;
         operatorNumber = command.getOperator();
         PriceItem item = command.getItem();
         // Line 1
@@ -628,7 +631,6 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
     
     public XReport readXReport() throws Exception {
-        clearLastDoc();
         XReport report = new XReport();
         FMTotals totals = printer.readFPTotals(1);
         report.salesAmountBefore = totals.getSalesAmount();
@@ -669,7 +671,6 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
     
     public void printCashIn(PrintCashIn command) throws Exception {
-        clearLastDoc();
         isDocumentPrinted = true;
         operatorNumber = command.getOperator();
         long docNumber = printer.readCashRegister(155);
@@ -682,7 +683,6 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
     
     public void printCashOut(PrintCashOut command) throws Exception {
-        clearLastDoc();
         isDocumentPrinted = true;
         operatorNumber = command.getOperator();
         long docNumber = printer.readCashRegister(156);
@@ -704,9 +704,12 @@ public class TextDocumentFilter implements IPrinterEvents {
     
     private void beginDocument() throws Exception {
         printReceiptHeader();
+        isDocumentActive = true;
+        lines.clear();
     }
     
     private void endDocument() throws Exception {
+        isDocumentActive = false;
     }
     
     private void printReceiptHeader() throws Exception {
@@ -968,10 +971,6 @@ public class TextDocumentFilter implements IPrinterEvents {
         }
     }
     
-    public List<String> getDocLines() {
-        return docLines;
-    }
-    
     private SKLStorage getStorage() throws Exception {
         if (storage == null) {
             String filePath = SysUtils.getFilesPath() + printer.getParams().textReportFileName;
@@ -980,44 +979,13 @@ public class TextDocumentFilter implements IPrinterEvents {
         return storage;
     }
     
-    public static String getLastDocFilePath() {
-        return SysUtils.getFilesPath() + "document.txt";
+    public List<String> getLines(){
+        return lines;
     }
-    
-    private void readLastDoc() {
-        try
-        {
-            docLines.clear();
-            File file = new File(getLastDocFilePath());
-            if (!file.exists()) {
-                logger.debug("Last document not found");
-                return;
-            }
-
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            try {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    docLines.add(line);
-                }
-            } finally {
-                reader.close();
-            }
-        } catch (Exception e) {
-            logger.error("Failed to read last document, ", e);
-        }
-    }
-    
-    private SKLStorage getLastDoc() throws Exception {
-        if (lastDoc == null) {
-            lastDoc = new FileSKLStorage(getLastDocFilePath());
-        }
-        return lastDoc;
-    }
-    
-    private void writeLn(String line) throws Exception {
-        docLines.add(line);
-        getLastDoc().writeLine(line);
+            
+    private void writeLn(String line) throws Exception 
+    {
+        lines.add(line);
         if (saveToStorage) {
             getStorage().writeLine(line);
         }

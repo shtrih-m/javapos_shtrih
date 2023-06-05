@@ -113,4 +113,6 @@ public interface FiscalReceipt {
     public long getSubtotal() throws Exception;
     
     public void printReceiptEnding() throws Exception;
+    
+    public void accept(ReceiptVisitor visitor) throws Exception;
 }

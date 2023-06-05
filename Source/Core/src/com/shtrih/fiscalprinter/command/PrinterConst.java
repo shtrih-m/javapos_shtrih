@@ -17,6 +17,32 @@ package com.shtrih.fiscalprinter.command;
 public interface PrinterConst {
     
     // ///////////////////////////////////////////////////////////////////
+    // Duplicate document text
+    
+    public static final String SFiscalSign = "ФП";
+    public static final String SSaleText = "ПРОДАЖА";
+    public static final String SBuyText = "ПОКУПКА";
+    public static final String SRetSaleText = "ВОЗВРАТ ПРОДАЖИ";
+    public static final String SRetBuyText = "ВОЗВРАТ ПОКУПКИ";
+    public static final String SCashInText = "ВНЕСЕНИЕ";
+    public static final String SCashOutText = "ВЫПЛАТА";
+    public static final String SStornoText = "СТОРНО";
+    public static final String STotalText = "ВСЕГО";
+    public static final String SRoundingText = "ОКРУГЛЕНИЕ";
+    public static final String SDiscountText = "СКИДКА";
+    public static final String SChargeText = "НАДБАВКА";
+    public static final String SReceiptTotal = "ИТОГ";
+    public static final String SChangeText = "СДАЧА";
+    public static final String SReceiptCancelled = "ЧЕК АННУЛИРОВАН";
+    public static final String SDiscountStornoText = "СТОРНО СКИДКИ";
+    public static final String SChargeStornoText = "СТОРНО НАДБАВКИ";
+    public static final String SXReportText = "СУТОЧНЫЙ ОТЧЕТ БЕЗ ГАШЕНИЯ";
+    public static final String SZReportText = "СУТОЧНЫЙ ОТЧЕТ С ГАШЕНИЕМ";
+    public static final String SDayClosed = "СМЕНА ЗАКРЫТА";
+    public static final String SINN = "ИНН";
+    public static final String[] docNames = {SSaleText, SBuyText, SRetSaleText, SRetBuyText};
+    
+    // ///////////////////////////////////////////////////////////////////
     // Print mode
 
     public static final int PRINT_MODE_ENABLED          = 0;

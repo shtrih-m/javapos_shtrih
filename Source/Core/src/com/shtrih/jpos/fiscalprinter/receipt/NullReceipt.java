@@ -235,4 +235,8 @@ public class NullReceipt implements FiscalReceipt {
     
     public void printReceiptEnding() throws Exception{
     }
+    
+    public void accept(ReceiptVisitor visitor) throws Exception{
+        visitor.visitCustomReceipt(this);
+    }
 }

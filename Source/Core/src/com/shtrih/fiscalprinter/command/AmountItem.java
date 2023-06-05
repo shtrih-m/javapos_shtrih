@@ -19,7 +19,7 @@ public class AmountItem {
     private int tax2;
     private int tax3;
     private int tax4;
-    private String text;
+    private String text = "";
 
     /** Creates a new instance of AmountItem */
     public AmountItem() {

@@ -50,4 +50,6 @@ public class CashOutReceipt extends CustomReceipt implements FiscalReceipt {
         return 0;
     }
     
+    public void accept(ReceiptVisitor visitor) throws Exception{
+    }
 }
