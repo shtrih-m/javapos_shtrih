@@ -49,6 +49,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private String voidDescription = "";
     public Vector<Object> items = new Vector<Object>();
     private final Vector endingItems = new Vector();
+    //private final List<ReceiptPayment> payments = new ArrayList<>(ReceiptPayment); // payment amounts
     private final long[] payments = new long[16]; // payment amounts
     public final FSDiscounts discounts = new FSDiscounts();
     private Vector<String> messages = new Vector<String>();

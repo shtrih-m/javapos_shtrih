@@ -244,7 +244,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 }
                 device.send(command);
                 resultCode = command.getResultCode();
-                
             } catch (ClosedConnectionException e) {
                 if (!command.getIsRepeatable()) {
                     throw new DeviceException(PrinterConst.SMFPTR_E_NOCONNECTION, e.getMessage());
@@ -262,7 +261,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     Thread.sleep(3000);
                 }
                 commandSucceeded(command);
-                afterCommand(command);
             } else {
                 if (command.getCode() != 0x6B) {
                     if (capLastErrorText) {
@@ -279,6 +277,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                     logger.error(text + ", " + command.getParametersText(commands));
                 }
             }
+            afterCommand(command);
         }
     }
 

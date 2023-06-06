@@ -9,6 +9,7 @@ import com.shtrih.jpos.fiscalprinter.receipt.ReceiptVisitor;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
+import com.shtrih.fiscalprinter.command.PrinterConst;
 import static com.shtrih.fiscalprinter.command.TextDocumentFilter.quantityToStr;
 import com.shtrih.fiscalprinter.skl.FileSKLStorage;
 import com.shtrih.fiscalprinter.skl.SKLStorage;
@@ -68,15 +69,17 @@ public class TextGenerator implements ReceiptVisitor {
             for (int i = 0; i < receipt.items.size(); i++) {
                 process((Object) receipt.items.get(i));
             }
-            
-            /*
             if (receipt.discounts.getTotal() > 0)
             {
-                add(STotalText, summToStr(receipt.getSubtotal()));
-                // ОКРУГЛЕНИЕ
-                //add(SRoundingText, summToStr(command.getDiscount()));
+                add(PrinterConst.STotalText, summToStr(receipt.getSubtotal()));
+                /*
+                if (receipt.isRounded()){
+                    add(PrinterConst.SRoundingText, summToStr(receipt.getRounding()));
+                }
+                */
             }
-            add(SReceiptTotal, summToStr(receipt.getTotal()));
+            //add(PrinterConst.SReceiptTotal, summToStr(receipt.getTotal()));
+            /*
             receipt.getPaymentAmount()
         long[] payments = params.getPayments();
         
