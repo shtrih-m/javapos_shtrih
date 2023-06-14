@@ -244,6 +244,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
                 }
                 device.send(command);
                 resultCode = command.getResultCode();
+
             } catch (ClosedConnectionException e) {
                 if (!command.getIsRepeatable()) {
                     throw new DeviceException(PrinterConst.SMFPTR_E_NOCONNECTION, e.getMessage());
@@ -4936,18 +4937,19 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         return executeCommand(command);
     }
 
-    public int sendItemCode(byte[] data) throws Exception {
-        if (data == null) {
+    public int sendItemCode(ItemCode itemCode) throws Exception {
+        if (itemCode == null) {
             return 0;
         }
 
         if ((getFDVersion() == PrinterConst.FS_FORMAT_FFD_1_2)
                 || (params.markingType == SmFptrConst.MARKING_TYPE_PRINTER)) {
             FSBindMC command = new FSBindMC();
-            command.data = data;
+            command.data = itemCode.getData();
+            command.volumeAccounting = itemCode.isVolumeAccounting();
             return fsBindMC(command);
         } else {
-            byte[] tagValue = barcodeTo1162Tag(data);
+            byte[] tagValue = barcodeTo1162Tag(itemCode.getData());
             return fsWriteOperationTLV(tagValue);
         }
     }
@@ -5335,7 +5337,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             socket.connect(new InetSocketAddress(parameters.getHost(), parameters.getPort()));
             OutputStream os = socket.getOutputStream();
             os.write(data);
-            os.close();
             InputStream in = socket.getInputStream();
 
             int headerSize = 30;

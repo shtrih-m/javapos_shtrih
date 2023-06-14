@@ -4863,12 +4863,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return "";
     }
     
-    public void setItemBarcode(String barcode) throws Exception {
-        receipt.setItemBarcode(barcode);
-    }
-    
-    public void addItemCode(byte[] mcdata) throws Exception {
-        receipt.addItemCode(mcdata);
+    public void addItemCode(ItemCode itemCode) throws Exception {
+        receipt.addItemCode(itemCode);
     }
     
     public void saveMCNotifications(String fileName) throws Exception {

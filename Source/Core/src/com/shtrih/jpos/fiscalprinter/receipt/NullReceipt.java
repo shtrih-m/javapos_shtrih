@@ -16,6 +16,7 @@ import jpos.JposException;
 import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
+import com.shtrih.fiscalprinter.command.ItemCode;
 import com.shtrih.fiscalprinter.command.TextLine;
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.jpos.fiscalprinter.PrintItem;
@@ -220,13 +221,10 @@ public class NullReceipt implements FiscalReceipt {
     public void setMessages(Vector<TextLine> messages) {
     }
 
-    public void setItemBarcode(String barcode) throws Exception {
-    }
-
     public void setItemBarcode2(String barcode) throws Exception {
     }
 
-    public void addItemCode(byte[] mcdata) throws Exception {
+    public void addItemCode(ItemCode itemCode) throws Exception {
     }
 
     public long getSubtotal() throws Exception {

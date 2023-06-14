@@ -1168,7 +1168,7 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return false;
     }
 
-    public int sendItemCode(byte[] data) throws Exception {
+    public int sendItemCode(ItemCode itemCode) throws Exception {
         return 0;
     }
 

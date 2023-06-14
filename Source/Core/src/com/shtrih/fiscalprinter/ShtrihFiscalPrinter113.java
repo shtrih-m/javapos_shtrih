@@ -1959,7 +1959,7 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         tlv.add(item);
         fsWriteOperationTLV(tlv.getBytes(), true);
     }
-    
+
     public void fsWriteOperationTag(int tagId, String tagValue, boolean print) throws Exception {
         TLVWriter tlv = new TLVWriter();
         tlv.addTag(tagId, tagValue);
@@ -2307,16 +2307,22 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         return readEJDocument(0);
     }
 
-    public void setItemCode(String GTIN, String serial) throws JposException {
-        directIO(SmFptrConst.SMFPTR_DIO_SET_ITEM_CODE, null, new String[]{GTIN, serial});
-    }
-
     public void setItemCode(String barcode) throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_SET_ITEM_CODE, null, new String[]{barcode});
     }
 
+    public void setItemCode(String barcode, boolean volumeAccounting) throws JposException {
+        String[] params = new String[]{barcode, StringUtils.boolToStr(volumeAccounting)};
+        directIO(SmFptrConst.SMFPTR_DIO_SET_ITEM_CODE, null, params);
+    }
+
     public void addItemCode(byte[] data) throws JposException {
         directIO(SmFptrConst.SMFPTR_DIO_ADD_ITEM_CODE, null, new Object[]{data});
+    }
+
+    public void addItemCode(byte[] data, boolean volumeAccounting) throws JposException {
+        directIO(SmFptrConst.SMFPTR_DIO_ADD_ITEM_CODE, null,
+                new Object[]{data, volumeAccounting});
     }
 
     public void mcClearBuffer() throws JposException {
@@ -2348,6 +2354,13 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
     public void bindItemCode(String barcode) throws JposException {
         String[] params = new String[6];
         params[0] = barcode;
+        directIO(SmFptrConst.SMFPTR_DIO_BIND_ITEM_CODE, null, params);
+    }
+
+    public void bindItemCode(String barcode, boolean volumeAccounting) throws JposException {
+        Object[] params = new Object[7];
+        params[0] = barcode;
+        params[1] = new Boolean(volumeAccounting);
         directIO(SmFptrConst.SMFPTR_DIO_BIND_ITEM_CODE, null, params);
     }
 
@@ -2434,13 +2447,13 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         data[1] = timeout;
         directIO(SmFptrConst.SMFPTR_DIO_SET_COMMAND_TIMEOUT, data, null);
     }
-    
+
     public void setLibraryContext(Object context)
             throws JposException {
         int data[] = new int[]{SmFptrConst.SMFPTR_DIO_PARAM_CONTEXT};
         directIO(SmFptrConst.SMFPTR_DIO_SET_DRIVER_PARAMETER, data, context);
     }
-    
+
     public Object getLibraryContext() throws JposException {
         Object object[] = new Object[1];
         int data[] = new int[]{SmFptrConst.SMFPTR_DIO_PARAM_CONTEXT};
@@ -2456,61 +2469,60 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         directIO(SmFptrConst.SMFPTR_DIO_REBOOT_WAIT, null, null);
     }
 
-    public String[] readPortNames(String portPrefix, int  timeout, boolean isSingle) throws Exception{
+    public String[] readPortNames(String portPrefix, int timeout, boolean isSingle) throws Exception {
         Object[] params = new Object[3];
         params[0] = portPrefix;
         params[1] = new Integer(timeout);
         params[2] = new Boolean(isSingle);
         directIO(SmFptrConst.SMFPTR_DIO_READ_PORT_NAMES, null, params);
-        return (String[])params[0];
+        return (String[]) params[0];
     }
 
-    public void sendFDODocuments() throws Exception{
+    public void sendFDODocuments() throws Exception {
         directIO(SmFptrConst.SMFPTR_DIO_SEND_FDO_DOCUMENTS, null, null);
     }
-           
-    public String[] readCommStatus() throws Exception
-    {
+
+    public String[] readCommStatus() throws Exception {
         String[] lines = new String[5];
         directIO(SmFptrConst.SMFPTR_DIO_FS_READ_COMM_STATUS, null, lines);
         return lines;
     }
-    
-    public void checkFDOConnection() throws Exception{
+
+    public void checkFDOConnection() throws Exception {
         directIO(SmFptrConst.SMFPTR_DIO_CHECK_FDO_CONNECTION, null, null);
     }
 
-    public class CheckItemCodeResponse
-    {
+    public class CheckItemCodeResponse {
+
         public int localCheckStatus;
         public int localErrorCode;
         public int symbolicType;
         public int serverErrorCode;
         public int serverCheckStatus;
         public byte[] serverTLVData;
-    
-        public CheckItemCodeResponse(){
+
+        public CheckItemCodeResponse() {
         }
     }
-    
-    public CheckItemCodeResponse checkItemCode2(int itemStatus, 
-            int checkMode, byte[] data, byte[] tlv) throws Exception{
+
+    public CheckItemCodeResponse checkItemCode2(int itemStatus,
+            int checkMode, byte[] data, byte[] tlv) throws Exception {
 
         Object[] params = new Object[10];
-        
+
         params[0] = new Integer(itemStatus);
         params[1] = new Integer(checkMode);
         params[2] = data;
         params[3] = tlv;
         directIO(SmFptrConst.SMFPTR_DIO_CHECK_ITEM_CODE2, null, params);
         CheckItemCodeResponse response = new CheckItemCodeResponse();
-        response.localCheckStatus = (Integer)params[4];
-        response.localErrorCode = (Integer)params[5];
-        response.symbolicType = (Integer)params[6];
-        response.serverErrorCode = (Integer)params[7];
-        response.serverCheckStatus = (Integer)params[8];
-        response.serverTLVData = (byte[])params[9];
+        response.localCheckStatus = (Integer) params[4];
+        response.localErrorCode = (Integer) params[5];
+        response.symbolicType = (Integer) params[6];
+        response.serverErrorCode = (Integer) params[7];
+        response.serverCheckStatus = (Integer) params[8];
+        response.serverTLVData = (byte[]) params[9];
         return response;
     }
-    
+
 }

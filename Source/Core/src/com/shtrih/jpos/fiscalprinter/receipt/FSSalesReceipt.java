@@ -27,6 +27,7 @@ import com.shtrih.util.MethodParameter;
 import com.shtrih.util.StringUtils;
 import com.shtrih.util.SysUtils;
 import com.shtrih.fiscalprinter.TLVTextWriter;
+import com.shtrih.fiscalprinter.command.ItemCode;
 
 import java.util.Vector;
 
@@ -55,7 +56,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private Vector<String> messages = new Vector<String>();
     private final ReceiptTemplate receiptTemplate;
     private static CompositeLogger logger = CompositeLogger.getLogger(FSSalesReceipt.class);
-    private List<byte[]> itemCodes = new Vector<byte[]>();
+    private List<ItemCode> itemCodes = new Vector<ItemCode>();
     private Vector itemTags = new Vector();
     private boolean itemDiscountsApplied = false;
 
@@ -666,7 +667,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         //printItemCodes(item.getItemCodes()); !!!
     }
 
-    public void sendItemCodes(List<byte[]> codes) throws Exception {
+    public void sendItemCodes(List<ItemCode> codes) throws Exception {
         for (int i = 0; i < codes.size(); i++) {
             getDevice().sendItemCode(codes.get(i));
         }
@@ -1197,7 +1198,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             getParams().getReceiptFields().clear();
 
             itemTags = new Vector();
-            itemCodes = new Vector<byte[]>();
+            itemCodes = new Vector<ItemCode>();
 
             if (getParams().itemTotalAmount != null) {
                 item.setTotal(getParams().itemTotalAmount);
@@ -1217,11 +1218,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 getParams().itemUnit = null;
             }
             // check MC
-            if (getParams().checkItemCodeEnabled) {
-                List<byte[]> codes = item.getItemCodes();
+            if (getParams().checkItemCodeEnabled) 
+            {
+                List<ItemCode> codes = item.getItemCodes();
                 for (int i = 0; i < codes.size(); i++) {
                     CheckCodeRequest request = new CheckCodeRequest();
-                    request.setData(codes.get(i));
+                    request.setData(codes.get(i).getData());
                     request.setIsSale(isSaleReceipt());
                     request.setQuantity(item.getQuantity());
                     request.setUnit(10);
@@ -1427,12 +1429,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         items.add(graphics);
     }
 
-    public void setItemBarcode(String barcode) throws Exception {
-        itemCodes.add(barcode.getBytes());
-    }
-
-    public void addItemCode(byte[] mcdata) throws Exception {
-        itemCodes.add(mcdata);
+    public void addItemCode(ItemCode itemCode) throws Exception {
+        itemCodes.add(itemCode);
     }
 
     public void applyDiscounts() throws Exception {

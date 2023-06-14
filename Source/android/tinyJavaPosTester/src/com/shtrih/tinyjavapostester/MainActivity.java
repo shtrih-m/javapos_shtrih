@@ -1244,7 +1244,7 @@ public class MainActivity extends AppCompatActivity
             String barcode
                     = "010405104227920221TB6qQHbmOTZBf" + GS + "2406402" + GS + "91ffd0" + GS
                     + "92DbZgaQm2x0uA5+8/AzMM9hVq6apGvtM3bJzejjpHan2pvK4O+XbYcVgFRR5I4HmCLQvZ74KgKkIhVADd==";
-            printer.setItemCode(barcode, "");
+            printer.setItemCode(barcode);
             printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE, SmFptrConst.MARK_TYPE_TOBACCO);
 
             printer.printRecItem("Item 1", 10099, 1000, 1, 10099, "");

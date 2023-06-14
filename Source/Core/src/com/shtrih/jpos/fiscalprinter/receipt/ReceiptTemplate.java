@@ -325,7 +325,7 @@ public class ReceiptTemplate {
                 if (item.getItemCodes().size() == 0) {
                     return null;
                 }
-                byte[] mc = item.getItemCodes().get(0);
+                byte[] mc = item.getItemCodes().get(0).getData();
                 return Tag2115.getValue(mc);
             }
 

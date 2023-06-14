@@ -5,6 +5,8 @@
  */
 package com.shtrih.fiscalprinter.request;
 
+import com.shtrih.fiscalprinter.command.ItemCode;
+
 /**
  *
  * @author Виталий
@@ -21,14 +23,14 @@ public class CheckCodeRequest
     public CheckCodeRequest(){}
 
     /**
-     * @return the data
+     * @return the itemCode
      */
     public byte[] getData() {
         return data;
     }
 
     /**
-     * @param data the data to set
+     * @param itemCode the data to set
      */
     public void setData(byte[] data) {
         this.data = data;

@@ -4,16 +4,17 @@
  */
 package com.shtrih.jpos.fiscalprinter.receipt;
 
-import com.shtrih.fiscalprinter.FontNumber;
-import com.shtrih.fiscalprinter.TLVItems;
+import java.util.List;
 import java.util.Vector;
 import java.util.HashMap;
 
 import com.shtrih.util.MethodParameter;
 import com.shtrih.fiscalprinter.receipt.*;
+import com.shtrih.fiscalprinter.FontNumber;
+import com.shtrih.fiscalprinter.TLVItems;
 import com.shtrih.fiscalprinter.command.PriceItem;
 import com.shtrih.fiscalprinter.command.AmountItem;
-import java.util.List;
+import com.shtrih.fiscalprinter.command.ItemCode;
 
 /**
  * @author V.Kravtsov
@@ -42,7 +43,7 @@ public class FSSaleReceiptItem {
     private Integer unit;
     private final FSDiscounts discounts = new FSDiscounts();
     private final List<FSTLVItem> tags = new Vector<FSTLVItem>();
-    private final List<byte[]> itemCodes = new Vector<byte[]>();
+    private final List<ItemCode> itemCodes = new Vector<ItemCode>();
 
     public FSSaleReceiptItem() {
     }
@@ -299,7 +300,7 @@ public class FSSaleReceiptItem {
         this.unit = unit;
     }
 
-    public List<byte[]> getItemCodes(){
+    public List<ItemCode> getItemCodes(){
         return itemCodes;
     }
 }

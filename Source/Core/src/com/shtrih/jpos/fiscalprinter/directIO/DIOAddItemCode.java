@@ -12,6 +12,7 @@ package com.shtrih.jpos.fiscalprinter.directIO;
 import com.shtrih.jpos.DIOUtils;
 import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
+import com.shtrih.fiscalprinter.command.ItemCode;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 
 public class DIOAddItemCode extends DIOItem {
@@ -23,7 +24,13 @@ public class DIOAddItemCode extends DIOItem {
     public void execute(int[] data, Object object) throws Exception {
 
         Object[] params = (Object[])object;
-        service.addItemCode((byte[]) params[0]);
+        byte[] barcodeData = (byte[]) params[0];
+        boolean volumeAccounting = false;
+        if (params.length > 1)
+        {
+            volumeAccounting = (Boolean)params[1];
+        }
+        service.addItemCode(new ItemCode(barcodeData, volumeAccounting));
     }
 
 }

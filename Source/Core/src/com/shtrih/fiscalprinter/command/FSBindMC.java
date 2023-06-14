@@ -13,27 +13,32 @@ package com.shtrih.fiscalprinter.command;
  * @author V.Kravtsov
  */
 /****************************************************************************
+ 
     Привязка  маркированного товара к позиции FF67H
-    Код команды FF67h. Длина сообщения: 5+N байт.
-    Пароль оператора: 4 байта
-    Длина кода маркировки: 1 байт
-    Данные маркировки N байт
-    Данная команда должна вызываться после привязки всех тегов к предмету расчета.
+    Код команды 	FF67h. Длина сообщения: 7+N байт.
+    Пароль оператора (4 байта)
+    Длина кода маркировки (1 байт)
+    Данные маркировки (N байт)
+    Признак ОСУ (1 байт) 1
 
-    Ответ: FF67h	    Длина сообщения: 4 байт.
-    Код ошибки: 1 байт
-    первые 2 байта значения реквизита "код товара”: 2 байта,
-    Тип Data Matrix:1 байт.
-    0 – КМ 88,
-    1-КМ симметричный,
-    2-КМ Табачный,
-    3-КМ 44.
+    Ответ: FF67h. Длина сообщения: 6+(6+N)4 байт.
+    Код ошибки (1 байт)
+    Распознанный тип кода (2 байта) 2
+    Тип Data Matrix (1 байт) 3
+    0       – КМ 88
+    1       – КМ симметричный
+    2       – КМ Табачный
+    3       – КМ 44
+    0xFF    – GS-1 без маркировки
+    Результат проверки (6+N байт)4 может отсутствовать (см. Примечание 1)
+    * 
 ****************************************************************************/
 
 public final class FSBindMC extends PrinterCommand {
     // in
     public int password;
     public byte[] data; 
+    public boolean volumeAccounting = false;
     // out
     public int itemCode;
     public int codeType;
@@ -63,6 +68,9 @@ public final class FSBindMC extends PrinterCommand {
         out.writeInt(password);
         out.writeByte(data.length);
         out.writeBytes(data);
+        if (volumeAccounting){
+            out.writeByte(0xFF);
+        }
     }
 
     public final void decode(CommandInputStream in) throws Exception {

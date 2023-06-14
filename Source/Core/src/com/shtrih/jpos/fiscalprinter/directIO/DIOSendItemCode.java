@@ -12,6 +12,8 @@ import com.shtrih.jpos.DIOUtils;
 import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
+import com.shtrih.fiscalprinter.command.ItemCode;
+
 
 public class DIOSendItemCode extends DIOItem {
 
@@ -23,7 +25,7 @@ public class DIOSendItemCode extends DIOItem {
 
         String[] lines = (String[]) object;
         String barcode = lines[0];
-        getPrinter().check(getPrinter().sendItemCode(barcode.getBytes()));
+        getPrinter().check(getPrinter().sendItemCode(new ItemCode(barcode.getBytes())));
     }
 
 }

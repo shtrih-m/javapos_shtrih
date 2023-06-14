@@ -26,6 +26,9 @@ public class DIOBindItemCode extends DIOItem {
         DIOUtils.checkObjectMinLength(params, 7);
         FSBindMC command = new FSBindMC();
         command.data = (byte[]) params[0];
+        if (params[1] != null){
+            command.volumeAccounting = (Boolean)params[1];
+        }
         int rc = getPrinter().fsBindMC(command);
         getPrinter().check(command.getResultCode());
         params[0] = new Integer(command.itemCode);

@@ -94,6 +94,8 @@ import com.shtrih.jpos.fiscalprinter.PrinterImages;
 import com.shtrih.jpos.fiscalprinter.ReceiptImages;
 import com.shtrih.jpos.fiscalprinter.receipt.FSSaleReceiptItem;
 import com.shtrih.printer.ncr7167.NCR7167Printer;
+import com.shtrih.fiscalprinter.command.ItemCode;
+
 
 import java.util.List;
 import java.util.Vector;
@@ -664,7 +666,7 @@ public interface SMFiscalPrinter {
 
     public boolean getCapOpenFiscalDay();
 
-    public int sendItemCode(byte[] data) throws Exception;
+    public int sendItemCode(ItemCode itemCode) throws Exception;
 
     public void checkItemCode(CheckCodeRequest request) throws Exception;
     
