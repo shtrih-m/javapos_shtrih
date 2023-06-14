@@ -317,6 +317,7 @@
 		<prop name="markingType" type="String" value="1"/>
 		
 		<prop name="quantityCorrectionEnabled" type="String" value="0"/>
+		<!-- FDO mode: 0 - disabled, 1 - enabled, 2 - after z report, 3 - disabled in receipt -->
 		<prop name="fdoMode" type="String" value="1"/>
         <!-- device state polling enabled -->
         <prop name="pollEnabled" type="String" value="0"/>
