@@ -10,7 +10,8 @@
   14.06.2023
   deviceServiceVersion = 1013699
   
-  [+] Добавлен флаг объёмно-сортового учета (ОСУ)
+  [+] Added flag for volume accounting 
+  [-] Fixed error with FDO data transfer
   
 ********************************************************************************
 
