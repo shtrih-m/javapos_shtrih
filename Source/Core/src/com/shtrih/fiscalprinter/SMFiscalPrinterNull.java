@@ -1320,4 +1320,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     
     public void checkFDOConnection() throws Exception{
     }
+    
+    public int getOperatorNumber(){
+        return 1;
+    }
 }

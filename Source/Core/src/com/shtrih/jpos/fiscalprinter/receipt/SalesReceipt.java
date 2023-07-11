@@ -13,6 +13,7 @@ import jpos.JposException;
 import jpos.FiscalPrinterConst;
 import com.shtrih.util.CompositeLogger;
 
+import com.shtrih.fiscalprinter.receipt.PrinterReceipt;
 import com.shtrih.fiscalprinter.command.AmountItem;
 import com.shtrih.fiscalprinter.command.CloseRecParams;
 import com.shtrih.fiscalprinter.command.PriceItem;
@@ -42,6 +43,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
     private boolean isOpened = false;
     private final long[] vatAmounts = new long[5];
     private final ReceiptItems items = new ReceiptItems();
+    private final PrinterReceipt receipt = new PrinterReceipt();
     private static CompositeLogger logger = CompositeLogger.getLogger(SalesReceipt.class);
 
     public SalesReceipt(ReceiptContext context, int receiptType) {
@@ -49,6 +51,10 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         this.receiptType = receiptType;
     }
 
+    public PrinterReceipt getReceipt(){
+        return receipt;
+    }
+    
     public boolean isOpened() {
         return isOpened;
     }
@@ -82,7 +88,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
             int vatInfo, long unitPrice, String unitName) throws Exception {
 
         openReceipt(true);
-        getPrinter().printPreLine();
+        printPreLine();
         // if unitPrice is zero then we use price and quantity = 1
         long itemPrice = price;
         if (unitPrice == 0) {
@@ -93,14 +99,14 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
             }
             itemPrice = unitPrice;
         }
-        description = getPrinter().printDescription(description);
+        description = printDescription(description);
         printReceiptItem(description, itemPrice, quantity, vatInfo);
 
         long amount = Math.round(unitPrice * Math.abs(quantity));
         if (amount > price) {
             printDiscount(amount - price, vatInfo, "");
         }
-        getPrinter().printPostLine();
+        printPostLine();
     }
 
     public void printReceiptItem(String description, long price, double quantity,
@@ -132,13 +138,13 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void endFiscalReceipt(boolean printHeader) throws Exception {
-        PrinterStatus status = getPrinter().getPrinter().waitForPrinting();
+        PrinterStatus status = getPrinter().waitForPrinting();
         if (status.getPrinterMode().isReceiptOpened()) {
             if (getReceipt().isCancelled()) {
-                getPrinter().getPrinter().cancelReceipt();
+                getPrinter().cancelReceipt();
                 getFiscalDay().cancelFiscalRec();
             } else {
-                getPrinter().checkZeroReceipt();
+                checkZeroReceipt();
                 long[] sum = getReceipt().getPayments();
                 CloseRecParams closeParams = new CloseRecParams();
                 closeParams.setSum1(sum[0]);
@@ -151,37 +157,37 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
                 closeParams.setTax4(0);
                 closeParams.setDiscount(0);
                 closeParams.setText(getParams().closeReceiptText);
-                getPrinter().getPrinter().closeReceipt(closeParams);
+                getPrinter().closeReceipt(closeParams);
                 getFiscalDay().closeFiscalRec();
                 // Print may not respond for some time
                 Time.delay(getParams().recCloseSleepTime);
             }
         } else if (getReceipt().isCancelled()) {
-            getPrinter().printText(getParams().receiptVoidText);
+            printText(getParams().receiptVoidText);
         }
     }
 
     public void printRecRefund(String description, long amount, int vatInfo)
             throws Exception {
         openReceipt(false);
-        getPrinter().printPreLine();
-        description = getPrinter().printDescription(description);
+        printPreLine();
+        description = printDescription(description);
         printReceiptItem(description, amount, 1, vatInfo);
     }
 
     public void printRecTotal(long total, long payment, long payType,
             String description) throws Exception {
-        long receiptSubtotal = getPrinter().getSubtotal();
+        long receiptSubtotal = getSubtotal();
         checkTotal(receiptSubtotal, total);
         getReceipt().addPayment(payment, payType);
-        getPrinter().printPreLine();
-        getPrinter().printPostLine();
+        printPreLine();
+        printPostLine();
     }
 
     public void printRecItemVoid(String description, long price, double quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
         openReceipt(false);
-        getPrinter().printPreLine();
+        printPreLine();
         // if unitPrice is zero - use price and quantity = 1
         if (unitPrice == 0) {
             quantity = 1;
@@ -191,43 +197,43 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
             }
             price = unitPrice;
         }
-        description = getPrinter().printDescription(description);
+        description = printDescription(description);
         printReceiptItem(description, price, quantity, vatInfo);
-        getPrinter().printPostLine();
+        printPostLine();
     }
 
     public void printRecSubtotal(long amount) throws Exception {
 
-        long receiptSubtotal = getPrinter().getSubtotal();
+        long receiptSubtotal = getSubtotal();
         checkTotal(receiptSubtotal, amount);
-        getPrinter().printPreLine();
-        getPrinter().printStrings(getParams().subtotalText,
-                "=" + StringUtils.amountToString(getPrinter().getSubtotal()));
-        getPrinter().printPostLine();
+        printPreLine();
+        printStrings(getParams().subtotalText,
+                "=" + StringUtils.amountToString(getSubtotal()));
+        printPostLine();
     }
 
     public void printRecItemAdjustment(int adjustmentType, String description,
             long amount, int vatInfo) throws Exception {
-        getPrinter().printPreLine();
+        printPreLine();
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
-                description = getPrinter().printDescription(description);
+                description = printDescription(description);
                 printDiscount(amount, vatInfo, description);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_AMOUNT_SURCHARGE:
-                description = getPrinter().printDescription(description);
+                description = printDescription(description);
                 printCharge(amount, vatInfo, description);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_DISCOUNT:
-                description = getPrinter().printDescription(description);
+                description = printDescription(description);
                 amount = getReceipt().getItemPercentAdjustmentAmount(amount);
                 printDiscount(amount, vatInfo, description);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_SURCHARGE:
-                description = getPrinter().printDescription(description);
+                description = printDescription(description);
                 amount = getReceipt().getItemPercentAdjustmentAmount(amount);
                 printCharge(amount, vatInfo, description);
                 break;
@@ -243,27 +249,27 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
             String description, long amount) throws Exception {
 
         checkAdjustment(adjustmentType, amount);
-        getPrinter().printPreLine();
+        printPreLine();
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
-                description = getPrinter().printDescription(description);
+                description = printDescription(description);
                 printDiscount(amount, 0, description);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_AMOUNT_SURCHARGE:
-                description = getPrinter().printDescription(description);
+                description = printDescription(description);
                 printCharge(amount, 0, description);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_DISCOUNT:
-                description = getPrinter().printDescription(description);
-                amount = Math.round(getPrinter().getSubtotal() * amount / 10000.0);
+                description = printDescription(description);
+                amount = Math.round(getSubtotal() * amount / 10000.0);
                 printDiscount(amount, 0, description);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_SURCHARGE:
-                description = getPrinter().printDescription(description);
-                amount = Math.round(getPrinter().getSubtotal() * amount / 10000.0);
+                description = printDescription(description);
+                amount = Math.round(getSubtotal() * amount / 10000.0);
                 printCharge(amount, 0, description);
                 break;
 
@@ -272,13 +278,13 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
                         Localizer.getString(Localizer.invalidParameterValue)
                         + "AdjustmentType");
         }
-        getPrinter().printPostLine();
+        printPostLine();
     }
 
     public void printRecVoidItem(String description, long amount, double quantity,
             int adjustmentType, long adjustment, int vatInfo) throws Exception {
         openReceipt(false);
-        description = getPrinter().printDescription(description);
+        description = printDescription(description);
         printStorno(amount, quantity, getParams().department,
                 vatInfo, description);
     }
@@ -286,7 +292,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printRecRefundVoid(String description, long amount, int vatInfo)
             throws Exception {
         openReceipt(true);
-        description = getPrinter().printDescription(description);
+        description = printDescription(description);
         printStorno(amount, 1, getParams().department, vatInfo,
                 description);
     }
@@ -304,9 +310,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
                 adjustments.parse(vatAdjustment);
                 checkAdjustments(FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT,
                         adjustments);
-                getPrinter().printText(PrinterConst.SMFP_STATION_REC,
-                        description,
-                        getPrinter().getPrinter().getParams().getFont());
+                printText(description);
                 for (int i = 0; i < adjustments.size(); i++) {
                     adjustment = adjustments.getItem(i);
                     printDiscount(adjustment.amount, adjustment.vat, "");
@@ -319,7 +323,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
                 checkAdjustments(FiscalPrinterConst.FPTR_AT_AMOUNT_SURCHARGE,
                         adjustments);
 
-                getPrinter().printText(description);
+                printText(description);
                 for (int i = 0; i < adjustments.size(); i++) {
                     adjustment = adjustments.getItem(i);
                     printCharge(adjustment.amount, adjustment.vat, "");
@@ -347,7 +351,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
                 checkAdjustments(FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT,
                         adjustments);
 
-                getPrinter().printText("Void discount");
+                printText("Void discount");
                 for (int i = 0; i < adjustments.size(); i++) {
                     adjustment = adjustments.getItem(i);
                     printCharge(adjustment.amount, adjustment.vat, "");
@@ -360,7 +364,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
                 checkAdjustments(FiscalPrinterConst.FPTR_AT_AMOUNT_SURCHARGE,
                         adjustments);
 
-                getPrinter().printText("Void charge");
+                printText("Void charge");
                 for (int i = 0; i < adjustments.size(); i++) {
                     adjustment = adjustments.getItem(i);
                     printDiscount(adjustment.amount, adjustment.vat, "");
@@ -376,7 +380,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecSubtotalAdjustVoid(int adjustmentType, long amount)
             throws Exception {
-        getPrinter().printPreLine();
+        printPreLine();
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
                 printDiscount(amount, 0, "");
@@ -387,12 +391,12 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_DISCOUNT:
-                amount = Math.round(getPrinter().getSubtotal() * amount / 10000.0);
+                amount = Math.round(getSubtotal() * amount / 10000.0);
                 printCharge(amount, 0, "");
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_SURCHARGE:
-                amount = Math.round(getPrinter().getSubtotal() * amount / 10000.0);
+                amount = Math.round(getSubtotal() * amount / 10000.0);
                 printDiscount(amount, 0, "");
                 break;
 
@@ -406,26 +410,26 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printRecItemAdjustmentVoid(int adjustmentType,
             String description, long amount, int vatInfo) throws Exception {
         checkAdjustment(adjustmentType, amount);
-        getPrinter().printPreLine();
+        printPreLine();
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
-                description = getPrinter().printDescription(description);
+                description = printDescription(description);
                 printCharge(amount, vatInfo, description);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_AMOUNT_SURCHARGE:
-                description = getPrinter().printDescription(description);
+                description = printDescription(description);
                 printDiscount(amount, vatInfo, description);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_DISCOUNT:
-                description = getPrinter().printDescription(description);
+                description = printDescription(description);
                 amount = getReceipt().getItemPercentAdjustmentAmount(amount);
                 printCharge(amount, vatInfo, description);
                 break;
 
             case FiscalPrinterConst.FPTR_AT_PERCENTAGE_SURCHARGE:
-                description = getPrinter().printDescription(description);
+                description = printDescription(description);
                 amount = getReceipt().getItemPercentAdjustmentAmount(amount);
                 printDiscount(amount, vatInfo, description);
                 break;
@@ -441,7 +445,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
             double quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
         openReceipt(false);
-        getPrinter().printPreLine();
+        printPreLine();
         // if unitPrice is zero then we use price and quantity = 1
         if (unitAmount == 0) {
             quantity = 1;
@@ -451,16 +455,16 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
             }
             amount = unitAmount;
         }
-        description = getPrinter().printDescription(description);
+        description = printDescription(description);
         printReceiptItem(description, amount, quantity, vatInfo);
-        getPrinter().printPostLine();
+        printPostLine();
     }
 
     public void printRecItemRefundVoid(String description, long amount,
             double quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
         openReceipt(true);
-        getPrinter().printPreLine();
+        printPreLine();
         // if unitPrice is zero - use price and quantity = 1
         if (unitAmount == 0) {
             quantity = 1;
@@ -470,14 +474,14 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
             }
             amount = unitAmount;
         }
-        description = getPrinter().printDescription(description);
+        description = printDescription(description);
         printStorno(amount, quantity, getParams().department,
                 vatInfo, description);
-        getPrinter().printPostLine();
+        printPostLine();
     }
 
     public void printRecVoid(String description) throws Exception {
-        getPrinter().printText(description);
+        printText(description);
         getReceipt().cancel();
     }
 
@@ -496,7 +500,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setTax3(0);
         item.setTax4(0);
         item.setText(description);
-        getPrinter().getPrinter().printSale(item);
+        getPrinter().printSale(item);
         vatAmounts[vatInfo] = vatAmounts[vatInfo] + item.getAmount();
         getReceipt().printSale(item);
     }
@@ -512,7 +516,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setTax3(0);
         item.setTax4(0);
         item.setText(description);
-        getPrinter().getPrinter().printVoidSale(item);
+        getPrinter().printVoidSale(item);
         getReceipt().printSaleRefund(item);
     }
 
@@ -527,7 +531,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setTax3(0);
         item.setTax4(0);
         item.setText(description);
-        getPrinter().getPrinter().printRefund(item);
+        getPrinter().printRefund(item);
         getReceipt().printSaleRefund(item);
     }
 
@@ -542,7 +546,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setTax3(0);
         item.setTax4(0);
         item.setText(description);
-        getPrinter().getPrinter().printVoidRefund(item);
+        getPrinter().printVoidRefund(item);
         getReceipt().printSale(item);
     }
 
@@ -559,7 +563,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
             item.setTax3(0);
             item.setTax4(0);
             item.setText(description);
-            getPrinter().getPrinter().printVoidItem(item);
+            getPrinter().printVoidItem(item);
             getReceipt().printStorno(item);
             vatAmounts[vatInfo] = vatAmounts[vatInfo] - vatAmount;
         } else {
@@ -589,7 +593,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
                     + String.valueOf(vatAmounts[item.getTax1()]));
 
             if (item.getAmount() <= vatAmounts[item.getTax1()]) {
-                getPrinter().getPrinter().printVoidItem(item.getItem());
+                getPrinter().printVoidItem(item.getItem());
                 getReceipt().printStorno(item.getItem());
                 vatAmounts[item.getTax1()] = vatAmounts[item.getTax1()]
                         - item.getAmount();
@@ -610,7 +614,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setTax3(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setTax4(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setText(text);
-        getPrinter().getPrinter().printDiscount(item);
+        getPrinter().printDiscount(item);
         getReceipt().printDiscount(item);
         vatAmounts[tax1] = vatAmounts[tax1] - amount;
         printStornoItems();
@@ -626,7 +630,7 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         item.setTax3(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setTax4(PrinterConst.SMFPTR_TAX_NOTAX);
         item.setText(text);
-        getPrinter().getPrinter().printCharge(item);
+        getPrinter().printCharge(item);
         getReceipt().printCharge(item);
         vatAmounts[tax1] = vatAmounts[tax1] + amount;
         printStornoItems();

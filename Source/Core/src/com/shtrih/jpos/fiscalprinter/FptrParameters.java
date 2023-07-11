@@ -89,7 +89,6 @@ public class FptrParameters {
     public String zeroPriceFilterTime1 = "21:00";
     public String zeroPriceFilterTime2 = "11:00";
     public String zeroPriceFilterErrorText = "";
-    public boolean discountFilterEnabled = false;
 
     public int RFAmountLength = 8;
     public int RFQuantityLength = 10;
@@ -340,8 +339,6 @@ public class FptrParameters {
                 "11:00");
         zeroPriceFilterErrorText = reader.readString(
                 "ZeroPriceFilterErrorText", "");
-        discountFilterEnabled = reader.readBoolean("DiscountFilterEnabled",
-                false);
         salesReceiptType = reader.readInteger("salesReceiptType",
                 SmFptrConst.SMFPTR_RECEIPT_NORMAL);
         cutPaperDelay = reader.readInteger("cutPaperDelay", 0);

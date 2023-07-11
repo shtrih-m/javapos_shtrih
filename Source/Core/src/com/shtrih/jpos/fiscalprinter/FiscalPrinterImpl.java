@@ -61,8 +61,6 @@ import com.shtrih.jpos.fiscalprinter.receipt.GlobusSalesReceipt;
 import com.shtrih.jpos.fiscalprinter.receipt.NonfiscalReceipt;
 import com.shtrih.jpos.fiscalprinter.receipt.NullReceipt;
 import com.shtrih.jpos.fiscalprinter.receipt.ReceiptContext;
-import com.shtrih.jpos.fiscalprinter.receipt.ReceiptPrinter;
-import com.shtrih.jpos.fiscalprinter.receipt.ReceiptPrinterImpl;
 import com.shtrih.jpos.fiscalprinter.receipt.SalesReceipt;
 import com.shtrih.jpos.fiscalprinter.request.FiscalPrinterRequest;
 import com.shtrih.jpos.fiscalprinter.request.PrintNormalRequest;
@@ -154,7 +152,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private PrinterPort port;
     private PrinterProtocol device = null;
     private SMFiscalPrinter printer;
-    private ReceiptPrinter receiptPrinter;
     private final FiscalPrinterStatistics statistics;
     // --------------------------------------------------------------------------
     // Variables
@@ -262,7 +259,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private String logicalName = "";
     private boolean asyncMode = false;
     private FiscalReceipt receipt = new NullReceipt();
-    private final PrinterReceipt printerReceipt = new PrinterReceipt();
     private boolean connected = false;
     private boolean isLicenseValid = false;
     private final MonitoringServerX5 monitoringServer = new MonitoringServerX5(this);
@@ -2254,7 +2250,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             if (params.receiptReportEnabled) {
                 getPrinter().addEvents(new ReceiptReportFilter(printer, params));
             }
-            receiptPrinter = new ReceiptPrinterImpl(printer, params);
             getPrinter().setTaxPassword(params.taxPassword);
             getPrinter().setUsrPassword(params.usrPassword);
             getPrinter().setSysPassword(params.sysPassword);
@@ -2329,11 +2324,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     params.zeroPriceFilterEnabled, time1, time2,
                     params.zeroPriceFilterErrorText);
             
-            filters.add(filter);
-        }
-        
-        if (params.discountFilterEnabled) {
-            FiscalPrinterFilter113 filter = new DiscountFilter(this);
             filters.add(filter);
         }
     }
@@ -4732,18 +4722,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     
     private ReceiptContext getReceiptContext() {
         if (receiptContext == null) {
-            receiptContext = new ReceiptContext(receiptPrinter, params,
-                    fiscalDay, printerReceipt, printerState, this);
+            receiptContext = new ReceiptContext(printer, params,
+                    fiscalDay, printerState, this);
         }
         return receiptContext;
     }
     
     public FptrParameters getParams() {
         return params;
-    }
-    
-    public PrinterReceipt getReceipt() {
-        return printerReceipt;
     }
     
     public FontNumber getFont() {
@@ -4936,5 +4922,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             logger.error("Failed to read last document, ", e);
         }
     }
+    
+    /*
+    private final PrinterReceipt printerReceipt = new PrinterReceipt();
+    public PrinterReceipt getReceipt() {
+        return printerReceipt;
+    }
+    */
     
 }

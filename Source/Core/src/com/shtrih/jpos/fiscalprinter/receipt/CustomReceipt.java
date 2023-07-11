@@ -17,6 +17,7 @@ import com.shtrih.fiscalprinter.FontNumber;
 import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.ItemCode;
+import com.shtrih.fiscalprinter.command.PrinterConst;
 import com.shtrih.fiscalprinter.command.PrinterStatus;
 import com.shtrih.fiscalprinter.model.PrinterModel;
 import com.shtrih.fiscalprinter.receipt.PrinterReceipt;
@@ -29,6 +30,8 @@ import static jpos.FiscalPrinterConst.FPTR_PS_MONITOR;
 import static jpos.FiscalPrinterConst.JPOS_EFPTR_BAD_ITEM_AMOUNT;
 import static jpos.JposConst.JPOS_E_EXTENDED;
 import com.shtrih.fiscalprinter.command.TextLine;
+import com.shtrih.jpos.fiscalprinter.JposPrinterStation;
+import com.shtrih.util.Localizer;
 import java.util.Vector;
 
 public abstract class CustomReceipt implements FiscalReceipt {
@@ -41,37 +44,82 @@ public abstract class CustomReceipt implements FiscalReceipt {
         this.context = context;
     }
 
-    public ReceiptContext getContext() {
-        return context;
-    }
-
-    public FiscalPrinterImpl getService() {
-        return context.getService();
-    }
-
-    public void setPrinterState(int state) {
-        context.setPrinterState(state);
-    }
-
-    public ReceiptPrinter getPrinter() {
-        return context.getPrinter();
-    }
-
     public FptrParameters getParams() {
         return context.getParams();
+    }
+    
+    public SMFiscalPrinter getPrinter() {
+        return context.getPrinter();
     }
 
     public FiscalDay getFiscalDay() {
         return context.getFiscalDay();
     }
-
-    public PrinterReceipt getReceipt() {
-        return context.getReceipt();
+    
+    public ReceiptContext getContext() {
+        return context;
     }
-
+    
+    public FiscalPrinterImpl getService() {
+        return context.getService();
+    }
+    
     public PrinterModel getModel() throws Exception {
-        return getPrinter().getPrinter().getModel();
+        return getPrinter().getModel();
     }
+
+    public void printRecMessage(int station, FontNumber font, String message)
+            throws Exception {
+        getPrinter().printText(station, message, font);
+    }
+
+    public void printNormal(int station, String data) throws Exception {
+        getPrinter().printText(getStation(station), data,
+                getParams().font);
+    }
+
+    public void checkTotal(long recTotal, long appTotal) throws Exception {
+        if (!getParams().checkTotalEnabled) {
+            return;
+        }
+
+        if (!getService().getCheckTotal()) {
+            return;
+        }
+
+        if (recTotal != appTotal) {
+            logger.error("Totals compare failed!");
+            logger.debug("Receipt total: " + recTotal);
+            logger.debug("Application total: " + appTotal);
+
+            setPrinterState(FPTR_PS_MONITOR);
+            throw new JposException(JPOS_E_EXTENDED,
+                    JPOS_EFPTR_BAD_ITEM_AMOUNT);
+        }
+    }
+    
+    public void printBarcode(PrinterBarcode barcode) throws Exception {
+        getPrinter().printBarcode(barcode);
+    }
+
+    public void printGraphics(PrinterGraphics graphics) throws Exception {
+        graphics.print(getPrinter());
+    }
+
+    public long getSubtotal() throws Exception {
+        long total = 0;
+        PrinterStatus status = getPrinter().readPrinterStatus();
+        if (status.getPrinterMode().isReceiptOpened()) {
+            total = getPrinter().getSubtotal();
+        }
+        return total;
+    }
+
+    
+    public void setPrinterState(int state) {
+        context.setPrinterState(state);
+    }
+
 
     public boolean getCapAutoCut() throws Exception {
         return false;
@@ -205,35 +253,6 @@ public abstract class CustomReceipt implements FiscalReceipt {
         notSupported();
     }
 
-    public void printRecMessage(int station, FontNumber font, String message)
-            throws Exception {
-        getPrinter().printText(station, message, font);
-    }
-
-    public void printNormal(int station, String data) throws Exception {
-        getPrinter().printText(getPrinter().getStation(station), data,
-                getParams().font);
-    }
-
-    public void checkTotal(long recTotal, long appTotal) throws Exception {
-        if (!getParams().checkTotalEnabled) {
-            return;
-        }
-
-        if (!getService().getCheckTotal()) {
-            return;
-        }
-
-        if (recTotal != appTotal) {
-            logger.error("Totals compare failed!");
-            logger.debug("Receipt total: " + recTotal);
-            logger.debug("Application total: " + appTotal);
-
-            setPrinterState(FPTR_PS_MONITOR);
-            throw new JposException(JPOS_E_EXTENDED,
-                    JPOS_EFPTR_BAD_ITEM_AMOUNT);
-        }
-    }
 
     public void fsWriteTLV(byte[] data, boolean print) throws Exception {
     }
@@ -244,33 +263,106 @@ public abstract class CustomReceipt implements FiscalReceipt {
     public void setDiscountAmount(int amount) throws Exception {
     }
 
-    public void printBarcode(PrinterBarcode barcode) throws Exception {
-        getPrinter().getPrinter().printBarcode(barcode);
-    }
-
-    public void printGraphics(PrinterGraphics graphics) throws Exception {
-        graphics.print(getPrinter().getPrinter());
-    }
-
     public void setItemBarcode2(String barcode) throws Exception {
     }
 
     public void addItemCode(ItemCode itemCode) throws Exception{
     }
     
-    public long getSubtotal() throws Exception {
-        long total = 0;
-        PrinterStatus status = getPrinter().getPrinter().readPrinterStatus();
-        if (status.getPrinterMode().isReceiptOpened()) {
-            total = getPrinter().getSubtotal();
-        }
-        return total;
-    }
-
     public void printReceiptEnding() throws Exception{
     }
     
     public void accept(ReceiptVisitor visitor) throws Exception{
         visitor.visitCustomReceipt(this);
     }
-}
+    
+    public void checkZeroReceipt() throws Exception {
+
+        if (!context.getParams().getZeroReceiptEnabled()) {
+            if (getSubtotal() == 0) {
+                throw new JposException(JposConst.JPOS_E_ILLEGAL,
+                        "Zero receipts sre disabled");
+            }
+        }
+    }
+    
+    public int getStation(int station) throws Exception {
+        // check valid stations
+        JposPrinterStation printerStation = new JposPrinterStation(station);
+        if (printerStation.isRecStation()
+                && (!getModel().getCapRecPresent())) {
+            throw new JposException(JposConst.JPOS_E_ILLEGAL,
+                    Localizer.getString(Localizer.receiptStationNotPresent));
+        }
+        if (printerStation.isJrnStation()
+                && (!getModel().getCapJrnPresent())) {
+            throw new JposException(JposConst.JPOS_E_ILLEGAL,
+                    Localizer.getString(Localizer.journalStationNotPresent));
+        }
+        if (printerStation.isSlpStation()
+                && (!getModel().getCapSlpPresent())) {
+            throw new JposException(JposConst.JPOS_E_ILLEGAL,
+                    Localizer.getString(Localizer.slipStationNotPresent));
+        }
+        return printerStation.getStation();
+    }
+    
+    public void printPreLine() throws Exception {
+        if (getParams().preLine.length() > 0) {
+            printText(getParams().preLine);
+            getParams().preLine = "";
+        }
+    }
+    
+    public void printPostLine() throws Exception {
+        if (getParams().postLine.length() > 0) {
+            printText(getParams().postLine);
+            getParams().postLine = "";
+        }
+    }
+    
+    public void printText(String text) throws Exception {
+        getPrinter().printText(PrinterConst.SMFP_STATION_REC, text, 
+            getPrinter().getParams().getFont());
+    }
+
+    public String[] parseText(String text) throws Exception {
+        logger.debug("parseText: " + text);
+        FontNumber font = getParams().getFont();
+        return getPrinter().splitText(text, font);
+    }
+    
+    public String printDescription(String description) throws Exception {
+        String result = "";
+        String[] lines = parseText(description);
+        if (lines.length == 1) {
+            result = lines[0];
+        } else {
+            for (int i = 0; i < lines.length - 1; i++) {
+                printText(lines[i]);
+            }
+            result = lines[lines.length - 1];
+        }
+        return result;
+    }
+
+    private String formatStrings(String line1, String line2) throws Exception {
+        int len;
+        String S = "";
+        len = getPrinter().getMessageLength() - line2.length();
+
+        for (int i = 0; i < len; i++) {
+            if (i < line1.length()) {
+                S = S + line1.charAt(i);
+            } else {
+                S = S + " ";
+            }
+        }
+        return S + line2;
+    }
+
+
+    public void printStrings(String line1, String line2) throws Exception {
+        printText(formatStrings(line1, line2));
+    }
+}    

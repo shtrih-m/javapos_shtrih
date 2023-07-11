@@ -22,13 +22,12 @@ import com.shtrih.jpos.fiscalprinter.FptrParameters;
 import com.shtrih.jpos.fiscalprinter.PrintItem;
 import java.util.Vector;
 
-public class NullReceipt implements FiscalReceipt {
+public class NullReceipt extends CustomReceipt implements FiscalReceipt {
 
-    private boolean cancelled = false;
-    private ReceiptContext context = null;
     private final Vector<TextLine> messages = new Vector();
 
     public NullReceipt() {
+        super(null);
     }
 
     public Vector<TextLine> getMessages() {
@@ -36,15 +35,11 @@ public class NullReceipt implements FiscalReceipt {
     }
 
     public NullReceipt(ReceiptContext context) {
-        this.context = context;
+        super(context);
     }
 
     public FptrParameters getParams() {
-        return context.getParams();
-    }
-
-    public ReceiptPrinter getPrinter() {
-        return context.getPrinter();
+        return getContext().getParams();
     }
 
     public boolean getCapAutoCut() throws Exception {
@@ -185,9 +180,8 @@ public class NullReceipt implements FiscalReceipt {
     }
 
     public void printNormal(int station, String data) throws Exception {
-        if (context != null) {
-            getPrinter().printText(getPrinter().getStation(station), data,
-                    getParams().font);
+        if (getContext() != null) {
+            getPrinter().printText(getStation(station), data, getParams().font);
         }
     }
 
@@ -200,22 +194,22 @@ public class NullReceipt implements FiscalReceipt {
     }
 
     public void fsWriteTLV(byte[] data, boolean print) throws Exception {
-        getPrinter().getPrinter().fsWriteTLV(data);
+        getPrinter().fsWriteTLV(data);
     }
 
     public void fsWriteOperationTLV(byte[] data, boolean print) throws Exception {
-        getPrinter().getPrinter().fsWriteOperationTLV(data);
+        getPrinter().fsWriteOperationTLV(data);
     }
 
     public void setDiscountAmount(int amount) throws Exception {
     }
 
     public void printBarcode(PrinterBarcode barcode) throws Exception {
-        getPrinter().getPrinter().printBarcode(barcode);
+        getPrinter().printBarcode(barcode);
     }
 
     public void printGraphics(PrinterGraphics graphics) throws Exception {
-        graphics.print(getPrinter().getPrinter());
+        graphics.print(getPrinter());
     }
 
     public void setMessages(Vector<TextLine> messages) {

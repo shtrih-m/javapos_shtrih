@@ -80,7 +80,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public SMFiscalPrinter getDevice() {
-        return getPrinter().getPrinter();
+        return getPrinter();
     }
 
     public boolean isOpened() {
@@ -289,7 +289,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
             if (item instanceof PrintItem) {
                 PrintItem printItem = (PrintItem) item;
-                printItem.print(getPrinter().getPrinter());
+                printItem.print(getPrinter());
             }
             if (getParams().writeTagMode == SmFptrConst.WRITE_TAG_MODE_IN_PLACE) {
                 printTLVItem(item);
@@ -330,7 +330,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
             if (item instanceof PrintItem) {
                 PrintItem printItem = (PrintItem) item;
-                printItem.print(getPrinter().getPrinter());
+                printItem.print(getPrinter());
             }
             if (getParams().writeTagMode == SmFptrConst.WRITE_TAG_MODE_IN_PLACE) {
                 printTLVItem(item);
@@ -509,8 +509,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     if (getParams().printVoidedReceipt) {
                         String docName = getDevice().getReceiptName(receiptType);
                         getDevice().printReceiptHeader(docName);
-                        getPrinter().printText(voidDescription);
-                        getPrinter().printText(getParams().receiptVoidText);
+                        printText(voidDescription);
+                        printText(getParams().receiptVoidText);
                     }
                 } catch (Exception e) {
                     logger.error("Cancel receipt", e);
@@ -1090,6 +1090,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         long paymentAmount = getPaymentAmount();
         return paymentAmount >= subtotal;
     }
+    
+    public long getChange(){
+        return getPaymentAmount() - getSubtotal();
+    }
 
     public void clearPrePostLine() {
         getParams().clearPrePostLine();
@@ -1294,7 +1298,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         discounts.add(item);
     }
 
-    public long getSubtotal() throws Exception {
+    public long getSubtotal() {
         long total = 0;
         for (int i = 0; i < items.size(); i++) {
             Object object = items.get(i);
@@ -1414,7 +1418,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public String formatLines(String line1, String line2) throws Exception {
-        return StringUtils.alignLines(line1, line2, getPrinter().getTextLength());
+        return StringUtils.alignLines(line1, line2, getPrinter().getMessageLength());
     }
 
     public void printBarcode(PrinterBarcode barcode) throws Exception {
@@ -1534,6 +1538,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void accept(ReceiptVisitor visitor) throws Exception{
         visitor.visitSalesReceipt(this);
+    }
+    
+    public long[] getPayments(){
+        return payments;
     }
     
 }

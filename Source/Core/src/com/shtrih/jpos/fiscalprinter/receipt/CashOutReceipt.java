@@ -27,14 +27,14 @@ public class CashOutReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void endFiscalReceipt(boolean printHeader) throws Exception {
         logger.debug("endFiscalReceipt");
-        getPrinter().getPrinter().printCashOut(total);
+        getPrinter().printCashOut(total);
     }
 
     public void printRecTotal(long total, long payment, long payType,
             String description) throws Exception {
         logger.debug("printRecTotal");
-        getPrinter().printPreLine();
-        getPrinter().printPostLine();
+        printPreLine();
+        printPostLine();
         this.payment += payment;
     }
 

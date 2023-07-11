@@ -346,11 +346,11 @@ public class ReceiptTemplate {
     static String taxLetters = "АБВГДЕ";
 
     private String getTaxName(int tax) throws Exception {
-        return context.getPrinter().getPrinter().getTaxName(tax);
+        return context.getPrinter().getTaxName(tax);
     }
 
     private String getTaxAmount(FSSaleReceiptItem item) throws Exception {
-        long taxAmount = context.getPrinter().getPrinter().getTaxAmount(item.getTax1(), item.getTotal());
+        long taxAmount = context.getPrinter().getTaxAmount(item.getTax1(), item.getTotal());
         return StringUtils.amountToString(taxAmount);
     }
 

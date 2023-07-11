@@ -68,12 +68,18 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private static CompositeLogger logger = CompositeLogger.getLogger(GlobusSalesReceipt.class);
     private int receiptType = 0;
     private boolean endSeparatorPrinted = false;
+    private final PrinterReceipt receipt = new PrinterReceipt();
 
     public GlobusSalesReceipt(ReceiptContext context, int receiptType) {
         super(context);
         this.receiptType = receiptType;
     }
 
+    public PrinterReceipt getReceipt() {
+        return receipt;
+    }
+
+    
     public boolean isOpened() {
         return getReceipt().isOpened();
     }
@@ -104,9 +110,9 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
             }
             price = unitPrice;
         }
-        description = getPrinter().printDescription(description);
+        description = printDescription(description);
         printReceiptItem(description, price, quantity, vatInfo);
-        getPrinter().printPostLine();
+        printPostLine();
     }
 
     public String getVatText(int vatInfo) {
@@ -129,11 +135,11 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printLines(String line1, String line2) throws Exception {
         String text = formatLines(line1, line2);
-        getPrinter().printText(text);
+        printText(text);
     }
 
     public String formatLines(String line1, String line2) throws Exception {
-        return StringUtils.alignLines(line1, line2, getPrinter().getTextLength());
+        return StringUtils.alignLines(line1, line2, getPrinter().getMessageLength());
     }
 
     public void printReceiptItem(String description, long price, double quantity,
@@ -166,7 +172,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 + getVatText(vatInfo);
 
         text = formatLines(description, text);
-        getPrinter().printText(text);
+        printText(text);
     }
 
     public void printReceiptItemVoid(String description, long price, double quantity,
@@ -200,21 +206,17 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 + getVatText(vatInfo);
 
         text = formatLines(description, text);
-        getPrinter().printText(text);
-    }
-
-    public PrinterReceipt getReceipt() {
-        return getContext().getReceipt();
+        printText(text);
     }
 
     public void endFiscalReceipt(boolean printHeader) throws Exception {
-        PrinterStatus status = getPrinter().getPrinter().waitForPrinting();
+        PrinterStatus status = getPrinter().waitForPrinting();
         if (status.getPrinterMode().isReceiptOpened()) {
             if (getReceipt().isCancelled()) {
-                getPrinter().getPrinter().cancelReceipt();
+                getPrinter().cancelReceipt();
                 getFiscalDay().cancelFiscalRec();
             } else {
-                getPrinter().checkZeroReceipt();
+                checkZeroReceipt();
                 printEndSeparator();
                 printReceiptItems();
                 getPrinter().printText(" ");
@@ -234,7 +236,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
             }
         } else if (getReceipt().isCancelled()) 
         {
-            getPrinter().printText(getParams().receiptVoidText);                
+            printText(getParams().receiptVoidText);                
         }
     }
 
@@ -247,8 +249,8 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     private void printSeparator() throws Exception {
         if (getParams().RFSeparatorLine == SmFptrConst.SMFPTR_SEPARATOR_LINE_DASHES) {
-            String text = StringUtils.stringOfChar('-', getPrinter()
-                    .getTextLength());
+            String text = StringUtils.stringOfChar('-', 
+                    getPrinter().getMessageLength());
             getPrinter().printText(text);
         }
         if (getParams().RFSeparatorLine == SmFptrConst.SMFPTR_SEPARATOR_LINE_GRAPHICS) {
@@ -266,7 +268,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         doOpenReceipt();
         printPreLine();
         printReceiptItem(description, amount, 1, vatInfo);
-        getPrinter().printPostLine();
+        printPostLine();
     }
 
     public void printRecTotal(long total, long payment, long payType,
@@ -279,7 +281,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
             payment = total - getPayment();
         }
         getReceipt().addPayment(payment, paymentType.getValue());
-        getPrinter().printPostLine();
+        printPostLine();
     }
 
     public void printRecItemVoid(String description, long price, double quantity,
@@ -308,8 +310,8 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         printPreLine();
         
         String text = "=" + StringUtils.amountToString(getReceipt().getTotal());
-        getPrinter().getPrinter().printLines(getParams().subtotalText, text, getParams().subtotalFont);
-        getPrinter().printPostLine();
+        getPrinter().printLines(getParams().subtotalText, text, getParams().subtotalFont);
+        printPostLine();
         
     }
 
@@ -359,7 +361,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         printPreLine();
         checkAdjAmount(adjustmentType, amount);
         recSubtotalAdjustment(description, adjustmentType, amount);
-        getPrinter().printPostLine();
+        printPostLine();
     }
 
     public void printRecVoidItem(String description, long amount, double quantity,
@@ -548,7 +550,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         String text = "= " + StringUtils.amountToString(amount)
                 + getVatText(vatInfo);
         text = formatLines(PrinterDiscountText + " " + description, text);
-        getPrinter().printText(text);
+        printText(text);
     }
 
     public void printCharge(String description, long amount, int vatInfo)
@@ -566,7 +568,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         String text = "= " + StringUtils.amountToString(amount)
                 + getVatText(vatInfo);
         text = formatLines(PrinterChargeText + " " + description, text);
-        getPrinter().printText(text);
+        printText(text);
     }
 
     private void checkPercents(long amount) throws Exception {
@@ -752,7 +754,7 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     private SMFiscalPrinter getFPrinter() throws Exception {
-        return getPrinter().getPrinter();
+        return getPrinter();
     }
 
     public void printPreLine() throws Exception {

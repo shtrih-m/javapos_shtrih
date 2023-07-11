@@ -165,6 +165,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private final Map<Integer, Integer> taxRates = new HashMap<Integer, Integer>();
     private int printMode = PrinterConst.PRINT_MODE_ENABLED;
     private boolean connected = false;
+    private int operatorNumber = 1;
+    
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params) {
@@ -649,6 +651,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setPassword(usrPassword);
         execute(command);
         longStatus = command.getStatus();
+        operatorNumber = longStatus.getOperatorNumber();
         return command.getStatus();
     }
 
@@ -694,6 +697,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         ReadShortStatus command = new ReadShortStatus(usrPassword);
         execute(command);
         shortStatus = command.getStatus();
+        operatorNumber = longStatus.getOperatorNumber();
 
         /*
          NumberFormat formatter = new DecimalFormat("#0.00");
@@ -1726,8 +1730,11 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             command.setPassword(usrPassword);
             command.setReceiptType(receiptType);
             int rc = executeCommand(command);
+            if (command.isSucceeded()){
+                operatorNumber = command.getOperator();
+            }
+                    
             capOpenReceipt = isCommandSupported(rc);
-
             if (capOpenReceipt) {
                 check(rc);
                 writeTLVItems();
@@ -5393,6 +5400,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             text = StringUtils.appendRight(text, PrinterConst.MIN_TEXT_LENGTH);
         }
         return text;
+    }
+    
+    public int getOperatorNumber(){
+        return operatorNumber;
     }
 
 }

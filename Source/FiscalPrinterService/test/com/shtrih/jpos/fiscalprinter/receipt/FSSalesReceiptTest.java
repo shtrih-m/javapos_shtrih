@@ -43,14 +43,11 @@ public class FSSalesReceiptTest {
         PrinterPort port = PrinterPortFactory.createInstance(params);
         PrinterProtocol device = ProtocolFactory.getProtocol(params, port);
         SMFiscalPrinter printer = new SMFiscalPrinterNull(port, device, params);
-        ReceiptPrinter receiptPrinter = new ReceiptPrinterImpl(printer, params);
         FiscalDay fiscalDay = new FiscalDay();
-        PrinterReceipt printerReceipt = new PrinterReceipt();
         FiscalPrinterState printerState = new FiscalPrinterState();
         FiscalPrinterImpl impl = new FiscalPrinterImpl();
         ReceiptContext context = new ReceiptContext(
-                receiptPrinter, params, fiscalDay,
-                printerReceipt, printerState, impl);
+                printer, params, fiscalDay, printerState, impl);
         
         return new FSSalesReceipt(context, PrinterConst.SMFP_RECTYPE_SALE);
     }
