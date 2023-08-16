@@ -37,33 +37,21 @@ import java.util.Vector;
 public abstract class CustomReceipt implements FiscalReceipt {
 
     protected boolean cancelled = false;
-    private final ReceiptContext context;
+    private final SMFiscalPrinter printer;
     private static CompositeLogger logger = CompositeLogger.getLogger(CustomReceipt.class);
 
-    public CustomReceipt(ReceiptContext context) {
-        this.context = context;
+    public CustomReceipt(SMFiscalPrinter printer) {
+        this.printer = printer;
     }
 
     public FptrParameters getParams() {
-        return context.getParams();
+        return printer.getParams();
     }
     
     public SMFiscalPrinter getPrinter() {
-        return context.getPrinter();
+        return printer;
     }
 
-    public FiscalDay getFiscalDay() {
-        return context.getFiscalDay();
-    }
-    
-    public ReceiptContext getContext() {
-        return context;
-    }
-    
-    public FiscalPrinterImpl getService() {
-        return context.getService();
-    }
-    
     public PrinterModel getModel() throws Exception {
         return getPrinter().getModel();
     }
@@ -83,7 +71,7 @@ public abstract class CustomReceipt implements FiscalReceipt {
             return;
         }
 
-        if (!getService().getCheckTotal()) {
+        if (!getParams().checkTotal) {
             return;
         }
 
@@ -92,7 +80,6 @@ public abstract class CustomReceipt implements FiscalReceipt {
             logger.debug("Receipt total: " + recTotal);
             logger.debug("Application total: " + appTotal);
 
-            setPrinterState(FPTR_PS_MONITOR);
             throw new JposException(JPOS_E_EXTENDED,
                     JPOS_EFPTR_BAD_ITEM_AMOUNT);
         }
@@ -115,11 +102,6 @@ public abstract class CustomReceipt implements FiscalReceipt {
         return total;
     }
 
-    
-    public void setPrinterState(int state) {
-        context.setPrinterState(state);
-    }
-
 
     public boolean getCapAutoCut() throws Exception {
         return false;
@@ -137,6 +119,10 @@ public abstract class CustomReceipt implements FiscalReceipt {
         return cancelled;
     }
 
+    public boolean isEnding() throws Exception{
+        return isPayed() || isCancelled();
+    }
+            
     public void notSupported() throws Exception {
         throw new JposException(JposConst.JPOS_E_ILLEGAL,
                 "Receipt method is not supported");
@@ -278,7 +264,7 @@ public abstract class CustomReceipt implements FiscalReceipt {
     
     public void checkZeroReceipt() throws Exception {
 
-        if (!context.getParams().getZeroReceiptEnabled()) {
+        if (!getParams().getZeroReceiptEnabled()) {
             if (getSubtotal() == 0) {
                 throw new JposException(JposConst.JPOS_E_ILLEGAL,
                         "Zero receipts sre disabled");
@@ -365,4 +351,5 @@ public abstract class CustomReceipt implements FiscalReceipt {
     public void printStrings(String line1, String line2) throws Exception {
         printText(formatStrings(line1, line2));
     }
+
 }    

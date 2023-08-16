@@ -55,59 +55,76 @@ public class TextGenerator implements ReceiptVisitor {
     private List<String> lines = new Vector<String>();
     private static CompositeLogger logger = CompositeLogger.getLogger(TextGenerator.class);
 
-    public TextGenerator(SMFiscalPrinter printer) throws Exception {
+    public TextGenerator(SMFiscalPrinter printer) {
         this.printer = printer;
     }
 
-    public void visitCustomReceipt(Object element) {
+    public void visitCustomReceipt(Object element) throws Exception {
     }
 
-    public void visitSalesReceipt(Object element) {
+    public void visitCashInReceipt(Object element) throws Exception{
+        if (!(element instanceof CashInReceipt)) {
+            return;
+        }
+        CashInReceipt receipt = (CashInReceipt) element;
+        
+        printReceiptHeader();
+        add(PrinterConst.SCashInText, amountToStr(receipt.getSubtotal()));
+        // Change
+        if (receipt.getChange() > 0) {
+            add(PrinterConst.SChangeText, summToStr(receipt.getChange()));
+        }
+    }
+    
+    public void visitCashOutReceipt(Object element) throws Exception{
+        if (!(element instanceof CashOutReceipt)) {
+            return;
+        }
+        CashOutReceipt receipt = (CashOutReceipt) element;
+        
+        printReceiptHeader();
+        add(PrinterConst.SCashOutText, amountToStr(receipt.getSubtotal()));
+        // Change
+        if (receipt.getChange() > 0) {
+            add(PrinterConst.SChangeText, summToStr(receipt.getChange()));
+        }
+    }
+    
+    public void visitSalesReceipt(Object element) throws Exception {
         if (!(element instanceof FSSalesReceipt)) {
             return;
         }
         FSSalesReceipt receipt = (FSSalesReceipt) element;
-        try {
-            connect();
-            operatorNumber = printer.getOperatorNumber();
+        connect();
+        operatorNumber = printer.getOperatorNumber();
 
-            lines.clear();
-            printReceiptHeader();
-            for (int i = 0; i < receipt.items.size(); i++) {
-                process((Object) receipt.items.get(i));
-            }
-            if (receipt.discounts.getTotal() > 0) {
-                add(PrinterConst.STotalText, summToStr(receipt.getSubtotal()));
-                /*
-                 if (receipt.isRounded()){
-                 add(PrinterConst.SRoundingText, summToStr(receipt.getRounding()));
-                 }
-                 */
-            }
-            
-            add(PrinterConst.SReceiptTotal, summToStr(receipt.getSubtotal()));
-            // payments
-            long[] payments = receipt.getPayments();
-            for (int i = 0; i < payments.length; i++) 
-            {
-                if (payments[i] > 0) 
-                {
-                    String paymentName = printer.readTable(PrinterConst.SMFP_TABLE_PAYTYPE, i + 1, 1);
-                    add(paymentName, summToStr(payments[i]));
-                }
-            }
-            // Change
-            if (receipt.getChange() > 0) 
-            {
-                add(PrinterConst.SChangeText, summToStr(receipt.getChange()));
-            }
-
-        } catch (Exception e) {
-            logger.error("Failed duplicate receipt", e);
+        lines.clear();
+        printReceiptHeader();
+        for (int i = 0; i < receipt.items.size(); i++) {
+            process((Object) receipt.items.get(i));
         }
+        if (receipt.getDiscountsTotal() > 0) {
+            add(PrinterConst.STotalText, summToStr(receipt.getSubtotal()));
+            if (receipt.isRounded()) {
+                add(PrinterConst.SRoundingText, summToStr(receipt.getDiscountsTotal()));
+            }
+        }
+        add(PrinterConst.SReceiptTotal, summToStr(receipt.getSubtotal()));
+        // payments
+        long[] payments = receipt.getPayments();
+        for (int i = 0; i < payments.length; i++) {
+            if (payments[i] > 0) {
+                String paymentName = printer.readTable(PrinterConst.SMFP_TABLE_PAYTYPE, i + 1, 1);
+                add(paymentName, summToStr(payments[i]));
+            }
+        }
+        // Change
+        if (receipt.getChange() > 0) {
+            add(PrinterConst.SChangeText, summToStr(receipt.getChange()));
+        }
+
     }
 
-    
     public void addFiscalSign() {
         try {
             printer.waitForPrinting();
@@ -228,11 +245,11 @@ public class TextGenerator implements ReceiptVisitor {
         add(item.getText());
 
         line = String.format("%s X %s",
-                quantityToStr(item.getQuantity() / 1000000.0),
+                quantityToStr(item.getQuantity()),
                 amountToStr(item.getPrice()));
         add("", line);
 
-        line = summToStr(item.getPrice(), item.getQuantity() / 1000000.0)
+        line = summToStr(item.getPrice(), item.getQuantity())
                 + getTaxData(item.getTax1(), 0, 0, 0);
         add(String.format("%02d", item.getDepartment()), line);
 
@@ -298,6 +315,13 @@ public class TextGenerator implements ReceiptVisitor {
     }
 
     private void add(String s1, String s2) throws Exception {
+        if (s1 == null) {
+            return;
+        }
+        if (s2 == null) {
+            return;
+        }
+
         int len = getLineLength() - s1.length() - s2.length();
         String line = s1 + StringUtils.stringOfChar(' ', len) + s2;
         add(line);

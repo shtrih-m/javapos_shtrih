@@ -11,6 +11,8 @@ package com.shtrih.jpos.fiscalprinter.receipt;
  */
 public interface ReceiptVisitor {
  
-    public void visitSalesReceipt(Object element);
-    public void visitCustomReceipt(Object element);
+    public void visitSalesReceipt(Object element) throws Exception;
+    public void visitCashInReceipt(Object element) throws Exception;
+    public void visitCashOutReceipt(Object element) throws Exception;
+    public void visitCustomReceipt(Object element) throws Exception;
 }

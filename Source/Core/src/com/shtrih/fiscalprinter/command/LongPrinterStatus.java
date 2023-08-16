@@ -30,8 +30,8 @@ public class LongPrinterStatus implements PrinterConst {
     private String fmFirmwareVersion = "";
     private int fmFirmwareBuild = 0;
     private PrinterDate fmFirmwareDate = new PrinterDate();
-    private PrinterDate date = new PrinterDate();
-    private PrinterTime time = new PrinterTime();
+    private PrinterDate date = new PrinterDate(1, 2, 3);
+    private PrinterTime time = new PrinterTime(1, 2, 3);
     private int fmFlags = 0;
     private int serialNumber = 0;
     private int dayNumber = 0;

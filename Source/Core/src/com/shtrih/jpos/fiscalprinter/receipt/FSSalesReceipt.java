@@ -59,11 +59,12 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private List<ItemCode> itemCodes = new Vector<ItemCode>();
     private Vector itemTags = new Vector();
     private boolean itemDiscountsApplied = false;
+    public static final int maximumRounding = 99;
 
-    public FSSalesReceipt(ReceiptContext context, int receiptType) throws Exception {
-        super(context);
+    public FSSalesReceipt(SMFiscalPrinter printer, int receiptType) throws Exception {
+        super(printer);
         this.receiptType = receiptType;
-        receiptTemplate = new ReceiptTemplate(context);
+        receiptTemplate = new ReceiptTemplate(printer);
     }
 
     public boolean isSaleReceipt() {
@@ -134,6 +135,14 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 vatInfo, description, unitName);
     }
 
+    public boolean isRounded(){
+        return discounts.getTotal() <= maximumRounding;
+    }
+    
+    public long getDiscountsTotal(){
+        return discounts.getTotal();
+    }
+            
     // pack discounts
     public void addItemsDiscounts() throws Exception {
 
@@ -155,7 +164,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
             saleItem.addDiscount(discount);
             return;
         }
-        if (discountTotal < 100) {
+        if (discountTotal <= maximumRounding) {
             return;
         }
 
@@ -515,7 +524,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                 } catch (Exception e) {
                     logger.error("Cancel receipt", e);
                 }
-                getFiscalDay().cancelFiscalRec();
                 clearReceipt();
             } else {
                 FSCloseReceipt closeReceipt = new FSCloseReceipt();
@@ -556,7 +564,6 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
                     rc = getDevice().closeReceipt(command);
                 }
                 getDevice().check(rc);
-                getFiscalDay().closeFiscalRec();
             }
         }
         discounts.clear();
@@ -812,7 +819,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
 
     private void addTextItem(String text, FontNumber font) throws Exception {
         FSTextReceiptItem item = new FSTextReceiptItem(text, getPreLine(), getPostLine(), font);
-        if (getContext().getPrinterState().isEnding()) {
+        if (isEnding()) {
             endingItems.add(item);
         } else {
             items.add(item);
@@ -1422,7 +1429,7 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printBarcode(PrinterBarcode barcode) throws Exception {
-        if (getContext().getPrinterState().isEnding()) {
+        if (isEnding()) {
             endingItems.add(barcode);
         } else {
             items.add(barcode);

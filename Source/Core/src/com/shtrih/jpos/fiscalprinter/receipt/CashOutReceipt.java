@@ -8,6 +8,7 @@ package com.shtrih.jpos.fiscalprinter.receipt;
  *
  * @author V.Kravtsov
  */
+import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.util.CompositeLogger;
 
 public class CashOutReceipt extends CustomReceipt implements FiscalReceipt {
@@ -16,8 +17,8 @@ public class CashOutReceipt extends CustomReceipt implements FiscalReceipt {
     private long payment = 0; // paied total
     private static CompositeLogger logger = CompositeLogger.getLogger(CashInReceipt.class);
 
-    public CashOutReceipt(ReceiptContext context) {
-        super(context);
+    public CashOutReceipt(SMFiscalPrinter printer) {
+        super(printer);
     }
 
     public void printRecCash(long amount) throws Exception {
@@ -47,9 +48,14 @@ public class CashOutReceipt extends CustomReceipt implements FiscalReceipt {
     }
     
     public long getSubtotal() throws Exception {
-        return 0;
+        return total;
+    }
+    
+    public long getChange() {
+        return payment - total;
     }
     
     public void accept(ReceiptVisitor visitor) throws Exception{
+        visitor.visitCashOutReceipt(this);
     }
 }

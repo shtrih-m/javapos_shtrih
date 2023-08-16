@@ -34,6 +34,12 @@ public class PrinterField {
         this.row = row;
     }
 
+    public PrinterField(FieldInfo fieldInfo, int row, String value) {
+        this.fieldInfo = fieldInfo;
+        this.row = row;
+        this.value = value;
+    }
+    
     public PrinterField getCopy() throws Exception {
         PrinterField res = new PrinterField(getFieldInfo(), getRow());
         res.setValue(value);
@@ -70,8 +76,8 @@ public class PrinterField {
 
     }
 
-    public void setValue(String value) throws Exception {
-        checkValue(value);
+    public void setValue(String value) {
+        //checkValue(value);
         this.value = value;
     }
 

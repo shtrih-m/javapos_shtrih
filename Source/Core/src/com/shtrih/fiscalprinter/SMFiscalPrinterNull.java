@@ -46,6 +46,7 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     private final PrinterPort port;
     private final FptrParameters params;
     private final PrinterImages printerImages = new PrinterImages();
+    public final PrinterTables tables = new PrinterTables();
     private int resultCode = 0;
 
     public SMFiscalPrinterNull(
@@ -76,7 +77,14 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         printerStatus.setSubmode(submode);
         shortStatus.setSubmode(submode);
         longStatus.setSubmode(submode);
-
+        
+        deviceMetrics.setDeviceType(1);
+        deviceMetrics.setDeviceSubType(2);
+        deviceMetrics.setProtocolVersion(3);
+        deviceMetrics.setProtocolSubVersion(4);
+        deviceMetrics.setModel(5);
+        deviceMetrics.setLanguage(0);
+        deviceMetrics.setDeviceName("DeviceName");
     }
 
     public boolean getCapFiscalStorage() {
@@ -245,16 +253,22 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     }
 
     public int readTable(int tableNumber, int rowNumber, int fieldNumber,
-            String[] fieldValue) throws Exception {
+            String[] fieldValue) throws Exception 
+    {
+        PrinterTable table = tables.find(tableNumber);
+        if (table == null) return 0x33;
+        PrinterField field = table.getFields().find(tableNumber, rowNumber, fieldNumber);
+        if (field == null) return 0x33;
+        fieldValue[0] = field.getValue();
         return 0;
     }
 
-    public int readTableInfo(int tableNumber, Object[] out) throws Exception {
-        return 0;
-    }
-
-    public ReadTableInfo readTableInfo(int tableNumber) throws Exception {
-        return new ReadTableInfo();
+    public ReadTableInfo readTableInfo(int tableNumber) throws Exception 
+    {
+        PrinterTable table = tables.find(tableNumber);
+        ReadTableInfo result = new ReadTableInfo();
+        result.setTable(table);
+        return result;
     }
 
     public PrintCashIn printCashIn(long sum) throws Exception {

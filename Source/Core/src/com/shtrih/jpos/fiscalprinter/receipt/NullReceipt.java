@@ -34,12 +34,8 @@ public class NullReceipt extends CustomReceipt implements FiscalReceipt {
         return messages;
     }
 
-    public NullReceipt(ReceiptContext context) {
-        super(context);
-    }
-
-    public FptrParameters getParams() {
-        return getContext().getParams();
+    public NullReceipt(SMFiscalPrinter printer) {
+        super(printer);
     }
 
     public boolean getCapAutoCut() throws Exception {
@@ -180,7 +176,7 @@ public class NullReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void printNormal(int station, String data) throws Exception {
-        if (getContext() != null) {
+        if (getPrinter() != null) {
             getPrinter().printText(getStation(station), data, getParams().font);
         }
     }

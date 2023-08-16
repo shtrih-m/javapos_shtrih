@@ -8,6 +8,7 @@ package com.shtrih.jpos.fiscalprinter.receipt;
  *
  * @author V.Kravtsov
  */
+import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import jpos.JposConst;
 import jpos.JposException;
 import jpos.FiscalPrinterConst;
@@ -46,8 +47,8 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
     private final PrinterReceipt receipt = new PrinterReceipt();
     private static CompositeLogger logger = CompositeLogger.getLogger(SalesReceipt.class);
 
-    public SalesReceipt(ReceiptContext context, int receiptType) {
-        super(context);
+    public SalesReceipt(SMFiscalPrinter printer, int receiptType) {
+        super(printer);
         this.receiptType = receiptType;
     }
 
@@ -142,7 +143,6 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
         if (status.getPrinterMode().isReceiptOpened()) {
             if (getReceipt().isCancelled()) {
                 getPrinter().cancelReceipt();
-                getFiscalDay().cancelFiscalRec();
             } else {
                 checkZeroReceipt();
                 long[] sum = getReceipt().getPayments();
@@ -158,7 +158,6 @@ public class SalesReceipt extends CustomReceipt implements FiscalReceipt {
                 closeParams.setDiscount(0);
                 closeParams.setText(getParams().closeReceiptText);
                 getPrinter().closeReceipt(closeParams);
-                getFiscalDay().closeFiscalRec();
                 // Print may not respond for some time
                 Time.delay(getParams().recCloseSleepTime);
             }

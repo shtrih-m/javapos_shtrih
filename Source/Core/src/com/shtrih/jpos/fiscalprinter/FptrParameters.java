@@ -138,11 +138,11 @@ public class FptrParameters {
     public int FSTagsPlacement = 0;
     public boolean textReportEmptyLinesEnabled = true;
     public boolean ReceiptTemplateEnabled = false;
-    public String ItemTableHeader = null;
-    public String ItemTableTrailer = null;
-    public String ItemRowFormat = null;
-    public String discountFormat = null;
-    public String chargeFormat = null;
+    public String ItemTableHeader = "";
+    public String ItemTableTrailer = "";
+    public String ItemRowFormat = "%TITLE% %QUAN% X %PRICE%";
+    public String discountFormat = "";
+    public String chargeFormat = "";
     public boolean capJrnPresent = true;
     public boolean nonFiscalHeaderEnabled = false;
     public boolean fsHeaderEnabled = false;
@@ -215,7 +215,7 @@ public class FptrParameters {
     public boolean processTag1256 = false;
 
 
-    public FptrParameters() throws Exception {
+    public FptrParameters() {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
         subtotalFont = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
         discountFont = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);

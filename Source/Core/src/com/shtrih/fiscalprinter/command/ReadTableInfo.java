@@ -64,6 +64,10 @@ public class ReadTableInfo extends PrinterCommand {
         return table;
     }
 
+    public void setTable(PrinterTable table) {
+        this.table = table;
+    }
+    
     public boolean getIsRepeatable() {
         return true;
     }

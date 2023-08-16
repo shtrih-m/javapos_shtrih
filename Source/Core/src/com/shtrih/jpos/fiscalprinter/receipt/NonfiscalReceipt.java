@@ -4,13 +4,15 @@
  */
 package com.shtrih.jpos.fiscalprinter.receipt;
 
+import com.shtrih.fiscalprinter.SMFiscalPrinter;
+
 /**
  * @author V.Kravtsov
  */
 
 public class NonfiscalReceipt extends CustomReceipt implements FiscalReceipt {
 
-    public NonfiscalReceipt(ReceiptContext context) {
-        super(context);
+    public NonfiscalReceipt(SMFiscalPrinter printer) {
+        super(printer);
     }
 }

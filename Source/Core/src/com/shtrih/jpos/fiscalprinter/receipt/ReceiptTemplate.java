@@ -6,6 +6,7 @@
 package com.shtrih.jpos.fiscalprinter.receipt;
 
 import com.shtrih.fiscalprinter.FontNumber;
+import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.TLVItem;
 import com.shtrih.fiscalprinter.TLVItems;
 import com.shtrih.fiscalprinter.TLVReader;
@@ -29,7 +30,7 @@ import java.util.Vector;
  */
 public class ReceiptTemplate {
 
-    private final ReceiptContext context;
+    private final SMFiscalPrinter printer;
     private String[] headerLines = new String[0];
     private String[] trailerLines = new String[0];
     private TemplateLine[] itemTemplate = null;
@@ -37,13 +38,13 @@ public class ReceiptTemplate {
     private TemplateLine[] chargeTemplate = null;
     private long m_position_count = 0;
 
-    public ReceiptTemplate(ReceiptContext context) throws Exception {
-        this.context = context;
+    public ReceiptTemplate(SMFiscalPrinter printer) throws Exception {
+        this.printer = printer;
         parseFormatLines();
     }
 
     public FptrParameters getParams() {
-        return context.getParams();
+        return printer.getParams();
     }
 
     public boolean hasPreLine() {
@@ -346,11 +347,11 @@ public class ReceiptTemplate {
     static String taxLetters = "АБВГДЕ";
 
     private String getTaxName(int tax) throws Exception {
-        return context.getPrinter().getTaxName(tax);
+        return printer.getTaxName(tax);
     }
 
     private String getTaxAmount(FSSaleReceiptItem item) throws Exception {
-        long taxAmount = context.getPrinter().getTaxAmount(item.getTax1(), item.getTotal());
+        long taxAmount = printer.getTaxAmount(item.getTax1(), item.getTotal());
         return StringUtils.amountToString(taxAmount);
     }
 
@@ -398,8 +399,7 @@ public class ReceiptTemplate {
     private String formatStrings(FontNumber font, String line1, String line2) throws Exception {
         int len;
         StringBuilder sb = new StringBuilder();
-        len = context.getService().getPrinter().getMessageLength(font)
-                - line2.length();
+        len = printer.getMessageLength(font) - line2.length();
 
         for (int i = 0; i < len; i++) {
             if (i < line1.length()) {

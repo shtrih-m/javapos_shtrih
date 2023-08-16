@@ -70,8 +70,8 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
     private boolean endSeparatorPrinted = false;
     private final PrinterReceipt receipt = new PrinterReceipt();
 
-    public GlobusSalesReceipt(ReceiptContext context, int receiptType) {
-        super(context);
+    public GlobusSalesReceipt(SMFiscalPrinter printer, int receiptType) {
+        super(printer);
         this.receiptType = receiptType;
     }
 
@@ -214,7 +214,6 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         if (status.getPrinterMode().isReceiptOpened()) {
             if (getReceipt().isCancelled()) {
                 getPrinter().cancelReceipt();
-                getFiscalDay().cancelFiscalRec();
             } else {
                 checkZeroReceipt();
                 printEndSeparator();
