@@ -3983,6 +3983,11 @@ class PrinterTest implements FiscalPrinterConst {
             printer.beginFiscalReceipt(false);
             printer.fsWriteTag(1008, "foo@example.com");
             
+            TLVWriter tlvWriter = new TLVWriter();
+            tlvWriter.add(1227, "БЕТА ООО");
+            tlvWriter.add(1228, "9705069985");
+            printer.fsWriteTag(1256, tlvWriter.getBytes());
+            
             printer.setItemCode(QRCodeData, true);
             printer.printRecItem("1. Item1", 124, 123000, 0, 124, "");
             printer.addItemCode(data, true);

@@ -1363,7 +1363,8 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
     }
 
     public void fsWriteOperationTLV(byte[] data, boolean print) throws Exception {
-        FSTLVItem item = new FSTLVItem(data, getParams().getFont(), print);
+        FSTLVItem item = new FSTLVItem(
+                data, getParams().getFont(), print);
         if (getParams().tagsBeforeItem) {
             itemTags.add(item);
         } else {

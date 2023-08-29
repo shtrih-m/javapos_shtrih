@@ -3610,6 +3610,8 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         src.removeEmptySTLV();
         if (params.processTag1256) {
             TLVFilter.filter(src, dst, ffd);
+        } else{
+            dst.add(src);
         }
     }
 
