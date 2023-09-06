@@ -836,6 +836,10 @@ public class FSSalesReceipt extends CustomReceipt implements FiscalReceipt {
         checkTotal(getSubtotal(), total);
         addPayment(payment, payType);
         clearPrePostLine();
+
+        if (isPayed()){
+            ending = true;
+        }
     }
 
     public void printRecItemVoid(String description, long price, double quantity,

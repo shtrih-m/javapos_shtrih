@@ -3981,6 +3981,7 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(false);
+            printer.printRecMessage("printRecMessage 1");
             printer.fsWriteTag(1008, "foo@example.com");
             
             TLVWriter tlvWriter = new TLVWriter();

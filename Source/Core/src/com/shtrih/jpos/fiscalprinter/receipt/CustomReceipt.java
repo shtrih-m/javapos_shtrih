@@ -36,6 +36,7 @@ import java.util.Vector;
 
 public abstract class CustomReceipt implements FiscalReceipt {
 
+    protected boolean ending = false;
     protected boolean cancelled = false;
     private final SMFiscalPrinter printer;
     private static CompositeLogger logger = CompositeLogger.getLogger(CustomReceipt.class);
@@ -120,7 +121,7 @@ public abstract class CustomReceipt implements FiscalReceipt {
     }
 
     public boolean isEnding() throws Exception{
-        return isPayed() || isCancelled();
+        return ending;
     }
             
     public void notSupported() throws Exception {
@@ -129,6 +130,7 @@ public abstract class CustomReceipt implements FiscalReceipt {
     }
 
     public void beginFiscalReceipt(boolean printHeader) throws Exception {
+        ending = false;
         cancelled = false;
     }
 
@@ -171,6 +173,7 @@ public abstract class CustomReceipt implements FiscalReceipt {
 
     public void printRecVoid(String description) throws Exception {
         cancelled = true;
+        ending = true;
     }
 
     public void printRecVoidItem(String description, long amount, double quantity,
