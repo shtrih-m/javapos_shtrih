@@ -17,6 +17,14 @@ package com.shtrih.fiscalprinter.command;
 public interface PrinterConst {
     
     // ///////////////////////////////////////////////////////////////////
+    // Printer FDO mode constants
+    
+    // Documents are sent to FDO server by driver
+    public static final int FDO_MODE_DRIVER     = 0;
+    // Documents are sent to FDO server by printer
+    public static final int FDO_MODE_PRINTER    = 1;
+    
+    // ///////////////////////////////////////////////////////////////////
     // Duplicate document text
     
     public static final String SFiscalSign = "ФП";

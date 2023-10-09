@@ -931,7 +931,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     loadProperties();
                     updateCommandTimeouts();
                 }
-                setPrinterFDOMode(1);
+                setPrinterFDOMode(PrinterConst.FDO_MODE_PRINTER);
                 isTablesRead = false;
                 capSetVatTable = getPrinter().getCapSetVatTable();
                 capUpdateFirmware = getPrinter().getCapUpdateFirmware();
@@ -3167,7 +3167,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkEnabled();
         checkPrinterState(FPTR_PS_MONITOR);
         stopFDOService();
-        setPrinterFDOMode(0);
+        setPrinterFDOMode(PrinterConst.FDO_MODE_DRIVER);
         logger.debug("DeviceServiceVersion: " + String.valueOf(deviceServiceVersion));
         try {
 
@@ -3267,7 +3267,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 // ignore print errors because cashin is succeeded
                 logger.error("endFiscalReceipt", e);
             }
-            setPrinterFDOMode(1);
+            setPrinterFDOMode(PrinterConst.FDO_MODE_PRINTER);
             startFDOService();
             setPrinterState(FPTR_PS_MONITOR);
             filter.endFiscalReceipt();
