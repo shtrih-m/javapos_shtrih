@@ -15,4 +15,5 @@ public interface ReceiptVisitor {
     public void visitCashInReceipt(Object element) throws Exception;
     public void visitCashOutReceipt(Object element) throws Exception;
     public void visitCustomReceipt(Object element) throws Exception;
+    public void visitNonfiscalReceipt(Object element) throws Exception;
 }

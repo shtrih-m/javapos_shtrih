@@ -24,7 +24,9 @@ import com.shtrih.jpos.fiscalprinter.receipt.CashOutReceipt;
 import com.shtrih.jpos.fiscalprinter.receipt.FSSalesReceipt;
 import com.shtrih.jpos.fiscalprinter.receipt.FSTextReceiptItem;
 import com.shtrih.jpos.fiscalprinter.receipt.FSSaleReceiptItem;
+import com.shtrih.jpos.fiscalprinter.receipt.NonfiscalReceipt;
 import com.shtrih.jpos.fiscalprinter.receipt.FSTLVItem;
+import com.shtrih.jpos.fiscalprinter.receipt.TextReceiptItem;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.StringUtils;
 import com.shtrih.util.SysUtils;
@@ -87,6 +89,19 @@ public class TextGenerator implements ReceiptVisitor {
         // Change
         if (receipt.getChange() > 0) {
             add(PrinterConst.SChangeText, summToStr(receipt.getChange()));
+        }
+    }
+    
+    public void visitNonfiscalReceipt(Object element) throws Exception{
+        if (!(element instanceof NonfiscalReceipt)) {
+            return;
+        }
+        NonfiscalReceipt receipt = (NonfiscalReceipt) element;
+        
+        lines.clear();
+        printReceiptHeader();
+        for (int i = 0; i < receipt.items.size(); i++) {
+            process((Object) receipt.items.get(i));
         }
     }
     
@@ -199,6 +214,9 @@ public class TextGenerator implements ReceiptVisitor {
             if (item instanceof PrintItem) {
                 process((PrintItem) item);
             }
+            if (item instanceof TextReceiptItem) {
+                process((TextReceiptItem) item);
+            }
         } catch (Exception e) {
             logger.error(e);
         }
@@ -281,6 +299,10 @@ public class TextGenerator implements ReceiptVisitor {
         add(item.preLine);
         add(item.text);
         add(item.postLine);
+    }
+    
+    private void process(TextReceiptItem item) throws Exception {
+        add(item.text);
     }
 
     private void process(PrinterBarcode item) throws Exception {

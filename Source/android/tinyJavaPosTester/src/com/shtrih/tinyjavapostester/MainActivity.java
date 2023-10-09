@@ -1145,7 +1145,8 @@ public class MainActivity extends AppCompatActivity
 
                     String title = String.format("Printing receipt %d...", i);
                     publishProgress(title);
-                    printSalesReceipt(positions, strings);
+                    printFiscalReceipt();
+                    //printSalesReceipt(positions, strings);
                     //printer.printJournalDocNumber();
                 }
                 return null;
@@ -1236,30 +1237,17 @@ public class MainActivity extends AppCompatActivity
 
     public void printFiscalReceipt() throws Exception
     {
+            char GS = 0x1D;
+            //String barcode = "0103041094787443215GsjdH" + GS + "93dGVz";
+            //String barcode = "0103041094787443215L;*)=" + GS + "93dGVz";
+            String barcode = "01030410947874432150ZOi;" + GS + "93dGVz";
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(true);
-
-            char GS = 0x1D;
-            String barcode
-                    = "010405104227920221TB6qQHbmOTZBf" + GS + "2406402" + GS + "91ffd0" + GS
-                    + "92DbZgaQm2x0uA5+8/AzMM9hVq6apGvtM3bJzejjpHan2pvK4O+XbYcVgFRR5I4HmCLQvZ74KgKkIhVADd==";
-            printer.setItemCode(barcode);
-            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_ITEM_MARK_TYPE, SmFptrConst.MARK_TYPE_TOBACCO);
-
+            printer.checkItemCode(barcode);
+            printer.addItemCode(barcode.getBytes());
             printer.printRecItem("Item 1", 10099, 1000, 1, 10099, "");
-            printer.fsWriteOperationTag(1197, "KG");
-
-            printer.printRecItem("Item 2", 20000, 1000, 2, 20000, "");
-            printer.printRecItem("Item 3", 30000, 1000, 3, 30000, "");
-            printer.printRecItem("Item 4", 40000, 1000, 4, 40000, "");
-            printer.printRecItem("Item 5", 50000, 1000, 5, 50000, "");
-            printer.printRecItem("Item 6", 60000, 1000, 6, 60000, "");
-            printer.printRecSubtotal(210099);
-
-            printer.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_VALUE_0, 1);
-            printer.printRecSubtotalAdjustment(1, "", 99);
-            printer.printRecTotal(210000, 210000, "1");
+            printer.printRecTotal(210000, 210000, "");
             printer.endFiscalReceipt(false);
     }
 

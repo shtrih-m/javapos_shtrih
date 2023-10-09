@@ -931,7 +931,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     loadProperties();
                     updateCommandTimeouts();
                 }
-
+                setPrinterFDOMode(1);
                 isTablesRead = false;
                 capSetVatTable = getPrinter().getCapSetVatTable();
                 capUpdateFirmware = getPrinter().getCapUpdateFirmware();
@@ -2489,7 +2489,19 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 return;
             }
 
-            synchronized (printer) {
+            if (textGenerator != null) 
+            {
+                try{
+                    receipt.accept(textGenerator);
+                } catch (Exception e) {
+                    logger.error("Failed duplicate receipt", e);
+                }
+                setDocumentLines(textGenerator.getLines());
+            }
+            
+            synchronized (printer) 
+            {
+                
                 docEndEnabled = true;
                 isInReceiptTrailer = true;
                 getPrinter().waitForPrinting();

@@ -22,6 +22,7 @@ import com.shtrih.fiscalprinter.table.PrinterTable;
 import com.shtrih.fiscalprinter.table.PrinterTables;
 import com.shtrih.jpos.fiscalprinter.receipt.CashInReceipt;
 import com.shtrih.jpos.fiscalprinter.receipt.CashOutReceipt;
+import com.shtrih.jpos.fiscalprinter.receipt.NonfiscalReceipt;
 
 
 /**
@@ -168,4 +169,32 @@ public class TextGeneratorTest {
         }
     }
     
+    /**
+     * Test of visitNonfiscalReceipt method, of class TextGenerator.
+     */
+    @Test
+    public void testVisitNonfiscalReceipt() {
+        System.out.println("testVisitNonfiscalReceipt");
+        try{
+            NonfiscalReceipt receipt = new NonfiscalReceipt(printer);
+            TextGenerator instance = new TextGenerator(printer);
+            
+            receipt.printNormal(2, "Line 1");
+            receipt.printNormal(2, "Line 2");
+            receipt.printNormal(2, "Line 3");
+            
+            assertEquals("size != 0", 0, instance.getLines().size());
+            instance.visitNonfiscalReceipt(receipt);
+            assertEquals(5, instance.getLines().size());
+            
+            assertEquals("ККМ 12345             ИНН 9876 №1234", instance.getLines().get(0));
+            assertEquals("01.02.2003 01:02            Кассир 1", instance.getLines().get(1));
+            assertEquals("Line 1", instance.getLines().get(2));
+            assertEquals("Line 2", instance.getLines().get(3));
+            assertEquals("Line 3", instance.getLines().get(4));
+        }
+        catch(Exception e){
+            fail(e.getMessage());
+        }
+    }
 }
