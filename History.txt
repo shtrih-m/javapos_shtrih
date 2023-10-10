@@ -8,6 +8,14 @@
 ********************************************************************************
 
   06.09.2023
+  deviceServiceVersion = 1013703
+  
+  [-] Fixed error with writing fdo mode on device enabling
+  [-] Fixed error with duplicate of nonfiscal documents
+  
+********************************************************************************
+
+  06.09.2023
   deviceServiceVersion = 1013702
   
   [-] Fixed error with printing before receipt ending
