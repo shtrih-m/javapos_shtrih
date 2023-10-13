@@ -7,11 +7,12 @@
     
 ********************************************************************************
 
-  06.09.2023
+  13.10.2023
   deviceServiceVersion = 1013703
   
   [-] Fixed error with writing fdo mode on device enabling
   [-] Fixed error with duplicate of nonfiscal documents
+  [-] Fixed error with repeat of endFiscalReceipt method
   
 ********************************************************************************
 

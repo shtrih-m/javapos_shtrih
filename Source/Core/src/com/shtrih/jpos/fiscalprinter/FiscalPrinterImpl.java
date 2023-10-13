@@ -2489,19 +2489,17 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 return;
             }
 
-            if (textGenerator != null) 
-            {
-                try{
+            if (textGenerator != null) {
+                try {
                     receipt.accept(textGenerator);
                 } catch (Exception e) {
                     logger.error("Failed duplicate receipt", e);
                 }
                 setDocumentLines(textGenerator.getLines());
             }
-            
-            synchronized (printer) 
-            {
-                
+
+            synchronized (printer) {
+
                 docEndEnabled = true;
                 isInReceiptTrailer = true;
                 getPrinter().waitForPrinting();
@@ -3236,9 +3234,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             checkEnabled();
             checkPrinterState(FPTR_PS_FISCAL_RECEIPT_ENDING);
             if (receipt instanceof FSSalesReceipt) {
-                if (textGenerator != null) 
-                {
-                    try{
+                if (textGenerator != null) {
+                    try {
                         receipt.accept(textGenerator);
                     } catch (Exception e) {
                         logger.error("Failed duplicate receipt", e);
@@ -3248,41 +3245,47 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             }
 
             try {
-                receipt.endFiscalReceipt(printHeader);
-            } catch (DeviceException e) {
-                if (e.getErrorCode() > 0) {
-                    cancelReceipt2();
+
+                try {
+                    receipt.endFiscalReceipt(printHeader);
+                } catch (DeviceException e) {
+                    if (e.getErrorCode() > 0) {
+                        cancelReceipt2();
+                    }
+                    throw e;
                 }
-                throw e;
-            }
 
-            getPrinter().stopSaveCommands();
-
-            try {
-                Time.delay(getParams().recCloseSleepTime);
-                if (!receipt.getCapAutoCut()) {
-                    printEndFiscal();
+                try {
+                    Time.delay(getParams().recCloseSleepTime);
+                    if (!receipt.getCapAutoCut()) {
+                        printEndFiscal();
+                    }
+                } catch (Exception e) {
+                    // ignore print errors because cashin is succeeded
+                    logger.error("endFiscalReceipt", e);
                 }
-            } catch (Exception e) {
-                // ignore print errors because cashin is succeeded
-                logger.error("endFiscalReceipt", e);
+            } finally {
+                endFiscalreceipt2();
             }
-            setPrinterFDOMode(PrinterConst.FDO_MODE_PRINTER);
-            startFDOService();
-            setPrinterState(FPTR_PS_MONITOR);
-            filter.endFiscalReceipt();
-
-            setDocumentLines(filter.getLines());
-            if ((textGenerator != null) && (receipt instanceof FSSalesReceipt)) {
-                textGenerator.addFiscalSign();
-                setDocumentLines(textGenerator.getLines());
-            } else {
-                setDocumentLines(filter.getLines());
-            }
-
-            params.nonFiscalDocNumber++;
-            saveProperties();
         }
+    }
+
+    public void endFiscalreceipt2() throws Exception {
+        getPrinter().stopSaveCommands();
+        setPrinterFDOMode(PrinterConst.FDO_MODE_PRINTER);
+        startFDOService();
+        setPrinterState(FPTR_PS_MONITOR);
+        filter.endFiscalReceipt();
+
+        setDocumentLines(filter.getLines());
+        if ((textGenerator != null) && (receipt instanceof FSSalesReceipt)) {
+            textGenerator.addFiscalSign();
+            setDocumentLines(textGenerator.getLines());
+        } else {
+            setDocumentLines(filter.getLines());
+        }
+        params.nonFiscalDocNumber++;
+        saveProperties();
     }
 
     public void printDuplicateReceipt() throws Exception {
