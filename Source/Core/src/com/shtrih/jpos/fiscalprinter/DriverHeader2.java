@@ -14,7 +14,7 @@ public class DriverHeader2 extends DriverHeader
 	public void endFiscal(String additionalTrailer)
 			throws Exception {
 		printTrailer(additionalTrailer);
-		printSpaceLines(getNumHeaderLines());
+		printSpaceLines(printer.getParams().getNumHeaderLines());
 		getPrinter().cutPaper();
 	}
         

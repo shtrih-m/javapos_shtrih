@@ -16,60 +16,24 @@ import jpos.JposException;
 public class DeviceHeader implements PrinterHeader {
 
     private final SMFiscalPrinter printer;
-    private final ReceiptLines header;
-    private final ReceiptLines trailer;
     private final CompositeLogger logger = CompositeLogger.getLogger(DeviceHeader.class);
 
     public DeviceHeader(SMFiscalPrinter printer) throws Exception {
         this.printer = printer;
-        header = new ReceiptLines(printer.getNumHeaderLines());
-        trailer = new ReceiptLines(printer.getNumTrailerLines());
-    }
-
-    @Override
-    public int getNumHeaderLines() throws Exception {
-        return printer.getNumHeaderLines();
-    }
-
-    @Override
-    public int getNumTrailerLines() throws Exception {
-        return printer.getNumTrailerLines();
-    }
-
-    // numHeaderLines for device cannot be changed
-    @Override
-    public void setNumHeaderLines(int numHeaderLines) throws Exception {
-    }
-
-    // numTrailerLines for device cannot be changed
-    @Override
-    public void setNumTrailerLines(int numTrailerLines) throws Exception {
     }
 
     @Override
     public void initDevice() throws Exception {
         logger.debug("initDevice");
 
-        header.setCount(printer.getNumHeaderLines());
-        trailer.setCount(printer.getNumTrailerLines());
+        printer.getParams().setNumHeaderLines(printer.getNumHeaderLines());
+        printer.getParams().setNumTrailerLines(printer.getNumTrailerLines());
         printer.updateTableText();
-    }
-
-    @Override
-    public ReceiptLine getHeaderLine(int number) throws Exception {
-        return header.getLine(number);
-    }
-
-    @Override
-    public ReceiptLine getTrailerLine(int number) throws Exception {
-        return trailer.getLine(number);
     }
 
     @Override
     public void setHeaderLine(int number, String text, boolean doubleWidth)
             throws Exception {
-        header.setLine(number, text, doubleWidth);
-
         int table = printer.getModel().getHeaderTableNumber();
         int row = printer.getHeaderTableRow();
         printer.writeTable(table, row + number - 1, 1, text);
@@ -78,8 +42,6 @@ public class DeviceHeader implements PrinterHeader {
     @Override
     public void setTrailerLine(int number, String text, boolean doubleWidth)
             throws Exception {
-        trailer.setLine(number, text, doubleWidth);
-
         int table = printer.getModel().getTrailerTableNumber();
         int row = printer.getModel().getTrailerTableRow();
         printer.writeTable(table, row + number - 1, 1, text);
@@ -104,7 +66,7 @@ public class DeviceHeader implements PrinterHeader {
                     printer.getParams().getFont());
         }
         printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_AFTER_ADDTRAILER);
-        if (getNumTrailerLines() >= 0) {
+        if (printer.getParams().getNumTrailerLines() >= 0) {
             printRecLine(" ");
             printRecLine(" ");
         }
@@ -135,14 +97,6 @@ public class DeviceHeader implements PrinterHeader {
 
     public void endFiscal(String additionalTrailer)
             throws Exception {
-    }
-
-    public ReceiptLines getHeaderLines() {
-        return header;
-    }
-
-    public ReceiptLines getTrailerLines() {
-        return trailer;
     }
 
 }

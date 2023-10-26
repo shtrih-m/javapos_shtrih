@@ -658,11 +658,11 @@ public class DirectIOHandler2 {
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_NUMHEADERLINES:
-                paramValue = String.valueOf(getParams().numHeaderLines);
+                paramValue = String.valueOf(getParams().getNumHeaderLines());
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_NUMTRAILERLINES:
-                paramValue = String.valueOf(getParams().numTrailerLines);
+                paramValue = String.valueOf(getParams().getNumTrailerLines());
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_POLL_ENABLED:

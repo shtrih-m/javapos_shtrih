@@ -1134,12 +1134,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return firmwareUpdaterService != null;
     }
 
-    public void setNumHeaderLines(int numHeaderLines) throws Exception {
-        header.setNumHeaderLines(numHeaderLines);
+    public void setNumHeaderLines(int numHeaderLines) throws Exception 
+    {
+        printer.getParams().setNumHeaderLines(numHeaderLines);
     }
 
     public void setNumTrailerLines(int numTrailerLines) throws Exception {
-        header.setNumTrailerLines(numTrailerLines);
+        printer.getParams().setNumTrailerLines(numTrailerLines);
     }
 
     public LongPrinterStatus readLongStatus() throws Exception {
@@ -1646,12 +1647,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public int getNumHeaderLines() throws Exception {
         checkEnabled();
-        return header.getNumHeaderLines();
+        return getParams().getNumHeaderLines();
     }
 
     public int getNumTrailerLines() throws Exception {
         checkEnabled();
-        return header.getNumTrailerLines();
+        return getParams().getNumTrailerLines();
     }
 
     public int getNumVatRates() throws Exception {
@@ -3916,11 +3917,11 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public String getHeaderLine(int index) throws Exception {
-        return header.getHeaderLine(index + 1).getText();
+        return getParams().getHeaderLine(index + 1).getText();
     }
 
     public String getTrailerLine(int index) throws Exception {
-        return header.getTrailerLine(index + 1).getText();
+        return getParams().getTrailerLine(index + 1).getText();
     }
 
     public void setHeaderLine(int lineNumber, String text, boolean doubleWidth) throws Exception {
@@ -3939,6 +3940,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             text = StringUtils.centerLine(text.trim(), getMessageLength());
         }
         text = StringUtils.trimRight(text);
+        params.setHeaderLine(lineNumber, text, doubleWidth);
         header.setHeaderLine(lineNumber, text, doubleWidth);
         saveProperties();
         logoPosition = SmFptrConst.SMFPTR_LOGO_PRINT;
@@ -3971,6 +3973,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             text = StringUtils.centerLine(text.trim(), getMessageLength());
         }
         text = StringUtils.trimRight(text);
+        params.setTrailerLine(lineNumber, text, doubleWidth);
         header.setTrailerLine(lineNumber, text, doubleWidth);
         saveProperties();
         logoPosition = SmFptrConst.SMFPTR_LOGO_PRINT;
@@ -4611,7 +4614,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                     serial);
             writer.write(getPrinterImages());
             writer.write(printer.getReceiptImages());
-            writer.writePrinterHeader(header);
+            writer.writePrinterHeader(params);
             writer.writeNonFiscalDocNumber(params.nonFiscalDocNumber);
             writer.writeParameterBool("isTableTextCleared", params.isTableTextCleared);
 
@@ -4634,7 +4637,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
                 reader.read(getPrinterImages());
                 reader.read(printer.getReceiptImages());
-                reader.readPrinterHeader(header);
+                reader.readPrinterHeader(params);
                 params.nonFiscalDocNumber = reader.readNonFiscalDocNumber();
                 params.isTableTextCleared = reader.readParameterBool("isTableTextCleared");
                 logger.debug("loadProperties: OK");
@@ -4937,10 +4940,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    /*
-     private final PrinterReceipt printerReceipt = new PrinterReceipt();
-     public PrinterReceipt getReceipt() {
-     return printerReceipt;
-     }
-     */
+    public PrinterHeader getHeader(){
+        return header;
+    }
 }

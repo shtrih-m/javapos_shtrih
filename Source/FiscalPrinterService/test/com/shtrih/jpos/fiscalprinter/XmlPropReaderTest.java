@@ -51,43 +51,40 @@ public class XmlPropReaderTest extends TestCase {
         ReceiptImage receiptImage = new ReceiptImage(1, 2);
         receiptImages.add(receiptImage);
 
-        SMFiscalPrinterNull printer = new SMFiscalPrinterNull(null, null, new FptrParameters());
+        FptrParameters params = new FptrParameters();
 
-        DriverHeader header = new DriverHeader(printer);
-        header.setNumHeaderLines(4);
-        header.setHeaderLine(1, "HeaderLine 1", false);
-        header.setHeaderLine(2, "HeaderLine 2", true);
-        header.setHeaderLine(3, "HeaderLine 3", false);
-        header.setHeaderLine(4, "HeaderLine 4", false);
+        params.setNumHeaderLines(4);
+        params.setHeaderLine(1, "HeaderLine 1", false);
+        params.setHeaderLine(2, "HeaderLine 2", true);
+        params.setHeaderLine(3, "HeaderLine 3", false);
+        params.setHeaderLine(4, "HeaderLine 4", false);
 
-        assertEquals("HeaderLine 1", header.getHeaderLine(1).getText());
-        assertEquals(false, header.getHeaderLine(1).isDoubleWidth());
-        assertEquals("HeaderLine 2", header.getHeaderLine(2).getText());
-        assertEquals(true, header.getHeaderLine(2).isDoubleWidth());
-        assertEquals("HeaderLine 3", header.getHeaderLine(3).getText());
-        assertEquals(false, header.getHeaderLine(3).isDoubleWidth());
-        assertEquals("HeaderLine 4", header.getHeaderLine(4).getText());
-        assertEquals(false, header.getHeaderLine(4).isDoubleWidth());
+        assertEquals("HeaderLine 1", params.getHeaderLine(1).getText());
+        assertEquals(false, params.getHeaderLine(1).isDoubleWidth());
+        assertEquals("HeaderLine 2", params.getHeaderLine(2).getText());
+        assertEquals(true, params.getHeaderLine(2).isDoubleWidth());
+        assertEquals("HeaderLine 3", params.getHeaderLine(3).getText());
+        assertEquals(false, params.getHeaderLine(3).isDoubleWidth());
+        assertEquals("HeaderLine 4", params.getHeaderLine(4).getText());
+        assertEquals(false, params.getHeaderLine(4).isDoubleWidth());
 
 
-        header.setNumTrailerLines(3);
-        header.setTrailerLine(1, "TrailerLine 1", false);
-        header.setTrailerLine(2, "TrailerLine 2", true);
+        params.setNumTrailerLines(3);
+        params.setTrailerLine(1, "TrailerLine 1", false);
+        params.setTrailerLine(2, "TrailerLine 2", true);
 
-        assertEquals("TrailerLine 1", header.getTrailerLine(1).getText());
-        assertEquals(false, header.getTrailerLine(1).isDoubleWidth());
-        assertEquals("TrailerLine 2", header.getTrailerLine(2).getText());
-        assertEquals(true, header.getTrailerLine(2).isDoubleWidth());
-        assertEquals("", header.getTrailerLine(3).getText());
-        assertEquals(false, header.getTrailerLine(3).isDoubleWidth());
+        assertEquals("TrailerLine 1", params.getTrailerLine(1).getText());
+        assertEquals(false, params.getTrailerLine(1).isDoubleWidth());
+        assertEquals("TrailerLine 2", params.getTrailerLine(2).getText());
+        assertEquals(true, params.getTrailerLine(2).isDoubleWidth());
+        assertEquals("", params.getTrailerLine(3).getText());
+        assertEquals(false, params.getTrailerLine(3).isDoubleWidth());
 
         XmlPropWriter writer = new XmlPropWriter("FiscalPrinter", "Device1");
         writer.write(printerImages);
         writer.write(receiptImages);
-        writer.writePrinterHeader(header);
+        writer.writePrinterHeader(params);
         writer.save(fileName);
-
-        header = new DriverHeader(printer);
 
         XmlPropReader reader = new XmlPropReader();
         reader.load("FiscalPrinter", "Device1", fileName);
@@ -96,27 +93,25 @@ public class XmlPropReaderTest extends TestCase {
 
         //header.initDevice();
 
-        header.setNumHeaderLines(4);
-        header.setNumTrailerLines(3);
-        reader.readPrinterHeader(header);
+        params.setNumHeaderLines(4);
+        params.setNumTrailerLines(3);
+        reader.readPrinterHeader(params);
 
+        assertEquals("HeaderLine 1", params.getHeaderLine(1).getText());
+        assertEquals(false, params.getHeaderLine(1).isDoubleWidth());
+        assertEquals("HeaderLine 2", params.getHeaderLine(2).getText());
+        assertEquals(true, params.getHeaderLine(2).isDoubleWidth());
+        assertEquals("HeaderLine 3", params.getHeaderLine(3).getText());
+        assertEquals(false, params.getHeaderLine(3).isDoubleWidth());
+        assertEquals("HeaderLine 4", params.getHeaderLine(4).getText());
+        assertEquals(false, params.getHeaderLine(4).isDoubleWidth());
 
-
-        assertEquals("HeaderLine 1", header.getHeaderLine(1).getText());
-        assertEquals(false, header.getHeaderLine(1).isDoubleWidth());
-        assertEquals("HeaderLine 2", header.getHeaderLine(2).getText());
-        assertEquals(true, header.getHeaderLine(2).isDoubleWidth());
-        assertEquals("HeaderLine 3", header.getHeaderLine(3).getText());
-        assertEquals(false, header.getHeaderLine(3).isDoubleWidth());
-        assertEquals("HeaderLine 4", header.getHeaderLine(4).getText());
-        assertEquals(false, header.getHeaderLine(4).isDoubleWidth());
-
-        assertEquals("TrailerLine 1", header.getTrailerLine(1).getText());
-        assertEquals(false, header.getTrailerLine(1).isDoubleWidth());
-        assertEquals("TrailerLine 2", header.getTrailerLine(2).getText());
-        assertEquals(true, header.getTrailerLine(2).isDoubleWidth());
-        assertEquals("", header.getTrailerLine(3).getText());
-        assertEquals(false, header.getTrailerLine(3).isDoubleWidth());
+        assertEquals("TrailerLine 1", params.getTrailerLine(1).getText());
+        assertEquals(false, params.getTrailerLine(1).isDoubleWidth());
+        assertEquals("TrailerLine 2", params.getTrailerLine(2).getText());
+        assertEquals(true, params.getTrailerLine(2).isDoubleWidth());
+        assertEquals("", params.getTrailerLine(3).getText());
+        assertEquals(false, params.getTrailerLine(3).isDoubleWidth());
 
         assertEquals(2, printerImages.size());
         printerImage = printerImages.get(0);

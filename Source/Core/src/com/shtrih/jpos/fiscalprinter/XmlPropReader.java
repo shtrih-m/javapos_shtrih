@@ -121,13 +121,13 @@ public class XmlPropReader {
         return new ReceiptImage(imageIndex, position);
     }
 
-    public void readPrinterHeader(PrinterHeader header) throws Exception {
+    public void readPrinterHeader(FptrParameters params) throws Exception {
         try {
-            for (int i = 1; i <= header.getNumHeaderLines(); i++) {
-                header.setHeaderLine(i, "", false);
+            for (int i = 1; i <= params.getNumHeaderLines(); i++) {
+                params.setHeaderLine(i, "", false);
             }
-            for (int i = 1; i <= header.getNumTrailerLines(); i++) {
-                header.setTrailerLine(i, "", false);
+            for (int i = 1; i <= params.getNumTrailerLines(); i++) {
+                params.setTrailerLine(i, "", false);
             }
 
             // header
@@ -137,14 +137,14 @@ public class XmlPropReader {
             
             int count = headerNode.getChildNodes().getLength();
             for (int i = 0; i < count; i++) {
-                if (number > header.getNumHeaderLines()) {
+                if (number > params.getNumHeaderLines()) {
                     break;
                 }
                 Node lineNode = headerNode.getChildNodes().item(i);
                 if (lineNode.getNodeName().equalsIgnoreCase("Line")) {
                     String text = readParameterStr(lineNode, "Text");
                     boolean doubleWidth = readParameterBool(lineNode, "DoubleWidth");
-                    header.setHeaderLine(number, text, doubleWidth);
+                    params.setHeaderLine(number, text, doubleWidth);
                     number++;
                 }
             }
@@ -154,14 +154,14 @@ public class XmlPropReader {
             
             count = headerNode.getChildNodes().getLength();
             for (int i = 0; i < count; i++) {
-                if (number > header.getNumTrailerLines()) {
+                if (number > params.getNumTrailerLines()) {
                     break;
                 }
                 Node lineNode = headerNode.getChildNodes().item(i);
                 if (lineNode.getNodeName().equalsIgnoreCase("Line")) {
                     String text = readParameterStr(lineNode, "Text");
                     boolean doubleWidth = readParameterBool(lineNode, "DoubleWidth");
-                    header.setTrailerLine(number, text, doubleWidth);
+                    params.setTrailerLine(number, text, doubleWidth);
                     number++;
                 }
             }

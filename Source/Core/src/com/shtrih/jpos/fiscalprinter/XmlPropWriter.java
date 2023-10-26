@@ -85,16 +85,16 @@ public class XmlPropWriter {
         addParameter(imageNode, "Position", new Integer(image.getPosition()));
     }
 
-    public void writePrinterHeader(PrinterHeader header) throws Exception {
+    public void writePrinterHeader(FptrParameters params) throws Exception {
         node = doc.createElement("Header");
         root.appendChild(node);
-        ReceiptLines lines = header.getHeaderLines();
+        ReceiptLines lines = params.getHeader();
         for (int i = 1; i <= lines.getCount(); i++) {
             write(lines.getLine(i));
         }
         node = doc.createElement("Trailer");
         root.appendChild(node);
-        lines = header.getTrailerLines();
+        lines = params.getTrailer();
         for (int i = 1; i <= lines.getCount(); i++) {
             write(lines.getLine(i));
         }

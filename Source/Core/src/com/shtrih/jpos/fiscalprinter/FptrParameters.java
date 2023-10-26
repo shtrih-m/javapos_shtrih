@@ -59,8 +59,6 @@ public class FptrParameters {
     public boolean centerImage = true; // center BMP image
     public String fieldsFileName = "";
     public String fieldsFilesPath = "";
-    public int numHeaderLines;
-    public int numTrailerLines;
     public String[] taxNames = {"А", "Б", "В", "Г"};
     public final Vector paymentNames = new Vector();
     public int reportDevice = SmFptrConst.SMFPTR_REPORT_DEVICE_EJ;
@@ -213,7 +211,10 @@ public class FptrParameters {
     public boolean portNameSingle = true;
     public int duplicateReceipt = SmFptrConst.DUPLICATE_RECEIPT_DEVICE;
     public boolean processTag1256 = false;
-
+    private int numHeaderLines;
+    private int numTrailerLines;
+    private final ReceiptLines header = new ReceiptLines();
+    private final ReceiptLines trailer = new ReceiptLines();
 
     public FptrParameters() {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -292,8 +293,8 @@ public class FptrParameters {
         fieldsFilesPath = reader.readString("fieldsFilesPath", "");
         setGraphicsLineDelay(reader.readInteger("graphicsLineDelay",
                 defaultGraphicsLineDelay));
-        numHeaderLines = reader.readInteger("numHeaderLines", 5);
-        numTrailerLines = reader.readInteger("numTrailerLines", 0);
+        setNumHeaderLines(reader.readInteger("numHeaderLines", 5));
+        setNumTrailerLines(reader.readInteger("numTrailerLines", 0));
         reportDevice = reader.readInteger("reportDevice",
                 SmFptrConst.SMFPTR_REPORT_DEVICE_EJ);
         reportType = reader.readInteger("reportType",
@@ -373,15 +374,15 @@ public class FptrParameters {
         barcodeTextPosition = reader.readInteger("barcodeTextPosition", SmFptrConst.SMFPTR_TEXTPOS_BELOW);
         barcodeTextFont = reader.readInteger("barcodeTextFont", 1);
         barcodeAspectRatio = reader.readInteger("barcodeAspectRatio", 3);
-        
+
         fdoMode = SmFptrConst.FDO_MODE_DISABLED;
-        if (reader.readBoolean("FSServiceEnabled", false)){
+        if (reader.readBoolean("FSServiceEnabled", false)) {
             fdoMode = SmFptrConst.FDO_MODE_ENABLED;
         }
-        if (reader.propertyExists("fdoMode")){
+        if (reader.propertyExists("fdoMode")) {
             fdoMode = reader.readInteger("fdoMode", SmFptrConst.FDO_MODE_DISABLED);
         }
-        
+
         FSHost = reader.readString("FSHost", "k-server.test-naofd.ru");
         FSPort = reader.readInteger("FSPort", 7779);
         FSConnectTimeout = reader.readInteger("FSConnectTimeout", 3000);
@@ -510,8 +511,7 @@ public class FptrParameters {
             Enumeration props = jposEntry.getPropertyNames();
             while (props.hasMoreElements()) {
                 String propertyName = (String) props.nextElement();
-                if (propertyName.indexOf(tag) != -1) 
-                {
+                if (propertyName.indexOf(tag) != -1) {
                     try {
                         String propertyValue = reader.readString(propertyName, "");
                         String scode = propertyName.substring(tag.length());
@@ -533,7 +533,7 @@ public class FptrParameters {
         try {
             payTypes.clear();
             JposPropertyReader reader = new JposPropertyReader(jposEntry);
-            
+
             String payTypeID = "";
             String payTypeValue = "";
             String propertyName = "";
@@ -683,4 +683,48 @@ public class FptrParameters {
         receiptFields.put(fieldName, fieldValue);
     }
 
+    public int getNumHeaderLines() {
+        return numHeaderLines;
+    }
+
+    public int getNumTrailerLines() {
+        return numTrailerLines;
+    }
+
+    public void setNumHeaderLines(int numHeaderLines) throws Exception {
+        this.numHeaderLines = numHeaderLines;
+        header.setCount(numHeaderLines);
+    }
+
+    public void setNumTrailerLines(int numTrailerLines) throws Exception 
+    {
+        this.numTrailerLines = numTrailerLines;
+        trailer.setCount(numTrailerLines);
+    }
+
+    public void setHeaderLine(int number, String text, boolean doubleWidth)
+            throws Exception {
+        header.setLine(number, text, doubleWidth);
+    }
+
+    public void setTrailerLine(int number, String text, boolean doubleWidth)
+            throws Exception {
+        trailer.setLine(number, text, doubleWidth);
+    }
+
+    public ReceiptLine getHeaderLine(int number) throws Exception {
+        return header.getLine(number);
+    }
+
+    public ReceiptLine getTrailerLine(int number) throws Exception {
+        return trailer.getLine(number);
+    }
+
+    public ReceiptLines getHeader() {
+        return header;
+    }
+
+    public ReceiptLines getTrailer() {
+        return trailer;
+    }
 }

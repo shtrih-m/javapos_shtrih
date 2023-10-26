@@ -19,39 +19,7 @@ public class NullHeader implements PrinterHeader {
     }
 
     @Override
-    public int getNumHeaderLines() throws Exception {
-        return header.getCount();
-    }
-
-    @Override
-    public int getNumTrailerLines() throws Exception {
-        return trailer.getCount();
-    }
-
-    // numHeaderLines for device cannot be changed
-    @Override
-    public void setNumHeaderLines(int numHeaderLines) throws Exception {
-        header.setCount(numHeaderLines);
-    }
-
-    // numTrailerLines for device cannot be changed
-    @Override
-    public void setNumTrailerLines(int numTrailerLines) throws Exception {
-        trailer.setCount(numTrailerLines);
-    }
-
-    @Override
     public void initDevice() throws Exception {
-    }
-
-    @Override
-    public ReceiptLine getHeaderLine(int number) throws Exception {
-        return header.getLine(number);
-    }
-
-    @Override
-    public ReceiptLine getTrailerLine(int number) throws Exception {
-        return trailer.getLine(number);
     }
 
     @Override
@@ -79,15 +47,5 @@ public class NullHeader implements PrinterHeader {
     @Override
     public void endNonFiscal(String additionalTrailer)
             throws Exception {
-    }
-
-    @Override
-    public ReceiptLines getHeaderLines() {
-        return header;
-    }
-
-    @Override
-    public ReceiptLines getTrailerLines() {
-        return trailer;
     }
 }

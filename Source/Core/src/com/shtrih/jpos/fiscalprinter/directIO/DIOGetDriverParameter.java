@@ -32,11 +32,11 @@ public class DIOGetDriverParameter extends DIOItem {
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_NUMHEADERLINES:
-                ((int[]) object)[0] = getParams().numHeaderLines;
+                ((int[]) object)[0] = getParams().getNumHeaderLines();
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_NUMTRAILERLINES:
-                ((int[]) object)[0] = getParams().numTrailerLines;
+                ((int[]) object)[0] = getParams().getNumTrailerLines();
                 break;
 
             case SmFptrConst.SMFPTR_DIO_PARAM_POLL_ENABLED:

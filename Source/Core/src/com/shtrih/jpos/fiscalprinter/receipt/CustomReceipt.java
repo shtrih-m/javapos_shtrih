@@ -354,5 +354,4 @@ public abstract class CustomReceipt implements FiscalReceipt {
     public void printStrings(String line1, String line2) throws Exception {
         printText(formatStrings(line1, line2));
     }
-
 }    

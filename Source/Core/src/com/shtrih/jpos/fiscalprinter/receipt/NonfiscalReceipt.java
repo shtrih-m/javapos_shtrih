@@ -13,7 +13,7 @@ import java.util.Vector;
  */
 public class NonfiscalReceipt extends CustomReceipt implements FiscalReceipt {
 
-    public Vector<Object> items = new Vector<Object>();
+    public Vector<TextReceiptItem> items = new Vector<TextReceiptItem>();
 
     public NonfiscalReceipt(SMFiscalPrinter printer) {
         super(printer);
@@ -25,16 +25,16 @@ public class NonfiscalReceipt extends CustomReceipt implements FiscalReceipt {
 
     public void printRecMessage(int station, FontNumber font, String message)
             throws Exception {
-        addTextItem(message, getParams().getFont());
+        addTextItem(message, font);
+        getPrinter().printText(getStation(station), message, font);
     }
 
     public void printNormal(int station, String data) throws Exception {
         addTextItem(data, getParams().getFont());
+        getPrinter().printText(getStation(station), data, getParams().font);
     }
     
     public void accept(ReceiptVisitor visitor) throws Exception{
         visitor.visitNonfiscalReceipt(this);
     }
-    
-
 }

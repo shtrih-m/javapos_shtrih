@@ -38,10 +38,6 @@ public class NullReceipt extends CustomReceipt implements FiscalReceipt {
         super(printer);
     }
 
-    public boolean getCapAutoCut() throws Exception {
-        return false;
-    }
-
     public boolean isPayed() {
         return false;
     }

@@ -26,9 +26,7 @@ import jpos.JposException;
 public class DriverHeader implements PrinterHeader {
 
     private int lineNumber = 0;
-    private final ReceiptLines header;
-    private final ReceiptLines trailer;
-    private final SMFiscalPrinter printer;
+    protected final SMFiscalPrinter printer;
     private final CompositeLogger logger = CompositeLogger.getLogger(DriverHeader.class);
 
     /**
@@ -36,25 +34,10 @@ public class DriverHeader implements PrinterHeader {
      */
     public DriverHeader(SMFiscalPrinter printer) throws Exception {
         this.printer = printer;
-        
-        int numHeaderLines = printer.getParams().numHeaderLines;
-        header = new ReceiptLines(numHeaderLines);
-        int numTrailerLines = printer.getParams().numTrailerLines;
-        trailer = new ReceiptLines(numTrailerLines);
     }
 
     public SMFiscalPrinter getPrinter() {
         return printer;
-    }
-
-    @Override
-    public ReceiptLine getHeaderLine(int number) throws Exception {
-        return header.getLine(number);
-    }
-
-    @Override
-    public ReceiptLine getTrailerLine(int number) throws Exception {
-        return trailer.getLine(number);
     }
 
     @Override
@@ -64,35 +47,13 @@ public class DriverHeader implements PrinterHeader {
     }
 
     @Override
-    public int getNumHeaderLines() throws Exception {
-        return header.getCount();
-    }
-
-    @Override
-    public int getNumTrailerLines() {
-        return trailer.getCount();
-    }
-
-    @Override
-    public void setNumHeaderLines(int numHeaderLines) throws Exception {
-        header.setCount(numHeaderLines);
-    }
-
-    @Override
-    public void setNumTrailerLines(int numTrailerLines) throws Exception {
-        trailer.setCount(numTrailerLines);
-    }
-
-    @Override
     public void setHeaderLine(int number, String text, boolean doubleWidth)
             throws Exception {
-        header.setLine(number, text, doubleWidth);
     }
 
     @Override
     public void setTrailerLine(int number, String text, boolean doubleWidth)
             throws Exception {
-        trailer.setLine(number, text, doubleWidth);
     }
 
     private void printLine(ReceiptLine line) throws Exception {
@@ -125,7 +86,7 @@ public class DriverHeader implements PrinterHeader {
                     printer.getParams().getFont());
         }
         printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_AFTER_ADDTRAILER);
-        if (getNumTrailerLines() >= 0) {
+        if (printer.getParams().getNumTrailerLines() >= 0) {
             printRecLine(" ");
             printRecLine(" ");
         }
@@ -153,14 +114,14 @@ public class DriverHeader implements PrinterHeader {
         } else {
             printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
             lineNumber = (headerHeight - imageHeight) / lineHeight;
-            printLines(header, 1, lineNumber);
+            printLines(getHeader(), 1, lineNumber);
         }
         printer.waitForPrinting();
     }
 
     public void printHeaderNoCutter() throws Exception {
         printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
-        printLines(header);
+        printLines(getHeader());
         printer.waitForPrinting();
         printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
         printer.waitForPrinting();
@@ -183,10 +144,10 @@ public class DriverHeader implements PrinterHeader {
             } else {
                 printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_BEFORE_HEADER);
             }
-            printLines(header);
+            printLines(getHeader());
         } else {
             lineNumber = (headerHeight - imageHeight) / lineHeight;
-            printLines(header, lineNumber + 1, header.getCount());
+            printLines(getHeader(), lineNumber + 1, getHeader().getCount());
         }
         printer.printReceiptImage(SmFptrConst.SMFPTR_LOGO_AFTER_HEADER);
         printer.waitForPrinting();
@@ -224,8 +185,8 @@ public class DriverHeader implements PrinterHeader {
     }
 
     private void printTrailer() throws Exception {
-        for (int i = 1; i <= getNumTrailerLines(); i++) {
-            printLine(getTrailerLine(i));
+        for (int i = 1; i <= printer.getParams().getNumTrailerLines(); i++) {
+            printLine(getParams().getTrailerLine(i));
         }
     }
 
@@ -260,13 +221,16 @@ public class DriverHeader implements PrinterHeader {
         logger.debug("beginDocument");
         printText(additionalHeader);
     }
-
-    public ReceiptLines getHeaderLines() {
-        return header;
+    
+    public FptrParameters getParams(){
+        return printer.getParams();
     }
-
-    public ReceiptLines getTrailerLines() {
-        return trailer;
+    
+    public ReceiptLines getHeader(){
+        return getParams().getHeader();
     }
-
+    
+    public ReceiptLines getTrailer(){
+        return getParams().getTrailer();
+    }
 }

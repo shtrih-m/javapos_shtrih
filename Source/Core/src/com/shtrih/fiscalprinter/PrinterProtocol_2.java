@@ -38,7 +38,16 @@ public class PrinterProtocol_2 implements PrinterProtocol {
 
     public void connect() throws Exception
     {
-        synchronizeFrames(byteTimeout);
+        for (int i=0;i<10;i++) {
+            try {
+                //synchronizeFrames(byteTimeout);
+                synchronizeFrames(100);
+                break;
+            }
+            catch(Exception e){
+                logger.error("Failed to connect", e);
+            }
+        }
     }
 
     public void disconnect(){

@@ -22,6 +22,9 @@ public class ReceiptLines {
     private int count;
     private final Map<Integer, ReceiptLine> lines = new HashMap<Integer, ReceiptLine>();
 
+    public ReceiptLines() {
+    }
+
     public ReceiptLines(int count) {
         this.count = count;
     }
@@ -30,8 +33,7 @@ public class ReceiptLines {
         return count;
     }
 
-    public void setCount(int newCount) throws Exception 
-    {
+    public void setCount(int newCount) throws Exception {
         this.count = newCount;
     }
 
@@ -41,7 +43,7 @@ public class ReceiptLines {
 
     public ReceiptLine getLine(int number) throws Exception {
         ReceiptLine result = lines.get(number);
-        if (result == null){
+        if (result == null) {
             result = new ReceiptLine();
         }
         return result;

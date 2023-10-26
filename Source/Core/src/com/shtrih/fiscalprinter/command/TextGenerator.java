@@ -5,6 +5,8 @@
  */
 package com.shtrih.fiscalprinter.command;
 
+import com.shtrih.jpos.fiscalprinter.ReceiptLines;
+import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
 import com.shtrih.jpos.fiscalprinter.receipt.ReceiptVisitor;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.fiscalprinter.FontNumber;
@@ -76,6 +78,7 @@ public class TextGenerator implements ReceiptVisitor {
         if (receipt.getChange() > 0) {
             add(PrinterConst.SChangeText, summToStr(receipt.getChange()));
         }
+        printReceiptTrailer();
     }
     
     public void visitCashOutReceipt(Object element) throws Exception{
@@ -90,6 +93,7 @@ public class TextGenerator implements ReceiptVisitor {
         if (receipt.getChange() > 0) {
             add(PrinterConst.SChangeText, summToStr(receipt.getChange()));
         }
+        printReceiptTrailer();
     }
     
     public void visitNonfiscalReceipt(Object element) throws Exception{
@@ -103,6 +107,7 @@ public class TextGenerator implements ReceiptVisitor {
         for (int i = 0; i < receipt.items.size(); i++) {
             process((Object) receipt.items.get(i));
         }
+        printReceiptTrailer();
     }
     
     public void visitSalesReceipt(Object element) throws Exception {
@@ -137,7 +142,7 @@ public class TextGenerator implements ReceiptVisitor {
         if (receipt.getChange() > 0) {
             add(PrinterConst.SChangeText, summToStr(receipt.getChange()));
         }
-
+        printReceiptTrailer();
     }
 
     public void addFiscalSign() {
@@ -177,7 +182,13 @@ public class TextGenerator implements ReceiptVisitor {
         return operatorName;
     }
 
-    private void printReceiptHeader() throws Exception {
+    private void printReceiptHeader() throws Exception 
+    {
+        ReceiptLines lines = printer.getParams().getHeader();
+        for (int i=1;i<=lines.getCount();i++){
+            add(lines.getLine(i).getText());
+        }
+                
         LongPrinterStatus status = printer.readLongStatus();
         int documentNumber = status.getDocumentNumber() + 1;
         // ККМ
@@ -192,6 +203,13 @@ public class TextGenerator implements ReceiptVisitor {
         add(s, getOperatorName());
     }
 
+    private void printReceiptTrailer()throws Exception {
+        ReceiptLines lines = printer.getParams().getTrailer();
+        for (int i=1;i<=lines.getCount();i++){
+            add(lines.getLine(i).getText());
+        }
+    }
+    
     private void process(Object item) throws Exception {
         try {
             if (item instanceof FSSaleReceiptItem) {
