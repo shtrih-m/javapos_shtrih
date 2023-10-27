@@ -2529,4 +2529,31 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         return response;
     }
 
+    public class FSDocumentSize {
+
+        private final int documentNumber;
+        private final int noticeNumber;
+
+        public FSDocumentSize(int documentNumber, int noticeNumber) {
+            this.documentNumber = documentNumber;
+            this.noticeNumber = noticeNumber;
+        }
+
+        public int getDocumentNumber() {
+            return documentNumber;
+        }
+
+        public int getNoticeNumber() {
+            return noticeNumber;
+        }
+    }
+
+    public FSDocumentSize fsReadDocumentSize() throws Exception 
+    {
+        String[] lines = new String[2];
+        directIO(SmFptrConst.SMFPTR_DIO_FS_READ_DOCUMENT_SIZE, null, lines);
+        int documentNumber = Integer.parseInt(lines[0]);
+        int noticeNumber = Integer.parseInt(lines[1]);
+        return new FSDocumentSize(documentNumber, noticeNumber);
+    }
 }

@@ -751,6 +751,9 @@ public class SmFptrConst {
     // Check FDO connection
     public static final int SMFPTR_DIO_CHECK_FDO_CONNECTION = 0x93;
     
+    // FS read document size
+    public static final int SMFPTR_DIO_FS_READ_DOCUMENT_SIZE = 0x94;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

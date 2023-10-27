@@ -15,7 +15,7 @@ import com.shtrih.fiscalprinter.SMFiscalPrinter;
 import com.shtrih.fiscalprinter.command.FSCheckMC;
 import com.shtrih.fiscalprinter.command.FSReadRandomData;
 import com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl;
-import com.shtrih.fiscalprinter.command.ReadMCNotification;
+import com.shtrih.fiscalprinter.command.FSReadMCNotification;
 
 
 public class DIOReadMCNotification extends DIOItem {
@@ -28,7 +28,7 @@ public class DIOReadMCNotification extends DIOItem {
     {
         Object[] params = (Object[])object;
         DIOUtils.checkObjectMinLength(params, 5);
-        ReadMCNotification command = new ReadMCNotification();
+        FSReadMCNotification command = new FSReadMCNotification();
         int rc = getPrinter().readMCNotification(command);
         getPrinter().check(rc);
         

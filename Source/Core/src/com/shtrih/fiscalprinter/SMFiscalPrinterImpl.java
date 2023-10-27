@@ -5156,19 +5156,19 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public int startReadMCNotifications(StartReadMCNotifications command) throws Exception {
+    public int startReadMCNotifications(FSStartReadMCNotifications command) throws Exception {
         command.password = sysPassword;
         return executeCommand(command);
     }
 
-    public int readMCNotification(ReadMCNotification command) throws Exception {
+    public int readMCNotification(FSReadMCNotification command) throws Exception {
         command.password = sysPassword;
         return executeCommand(command);
     }
 
     public MCNotifications readNotifications() throws Exception {
         MCNotifications items = new MCNotifications();
-        StartReadMCNotifications startCommand = new StartReadMCNotifications();
+        FSStartReadMCNotifications startCommand = new FSStartReadMCNotifications();
         check(startReadMCNotifications(startCommand));
         int count = startCommand.count;
         for (int i = 0; i < count; i++) {
@@ -5183,7 +5183,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         int number = 0;
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         for (;;) {
-            ReadMCNotification command = new ReadMCNotification();
+            FSReadMCNotification command = new FSReadMCNotification();
             readMCNotification(command);
 
             if (command.getResultCode() == 8) {
@@ -5207,7 +5207,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public void confirmNotifications(MCNotifications items) throws Exception {
-        ConfirmMCNotification command = new ConfirmMCNotification();
+        FSConfirmMCNotification command = new FSConfirmMCNotification();
         int count = items.size();
         for (int i = 0; i < count; i++) {
             MCNotification item = items.get(i);
@@ -5397,5 +5397,4 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     public int getOperatorNumber(){
         return operatorNumber;
     }
-
 }

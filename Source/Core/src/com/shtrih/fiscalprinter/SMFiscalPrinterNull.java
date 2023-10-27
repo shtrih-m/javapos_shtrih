@@ -1243,11 +1243,11 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return null;
     }
 
-    public int startReadMCNotifications(StartReadMCNotifications command) throws Exception {
+    public int startReadMCNotifications(FSStartReadMCNotifications command) throws Exception {
         return 0;
     }
 
-    public int readMCNotification(ReadMCNotification command) throws Exception {
+    public int readMCNotification(FSReadMCNotification command) throws Exception {
         return 0;
     }
 

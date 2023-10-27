@@ -635,6 +635,10 @@ public class DirectIOHandler {
                 new DIOCheckFDOConnection(service).execute(data, object);
                 break;
                 
+            case SmFptrConst.SMFPTR_DIO_FS_READ_DOCUMENT_SIZE:
+                new DIOFSReadDocumentSize(service).execute(data, object);
+                break;
+                
             default:
                 throw new JposException(JposConst.JPOS_E_ILLEGAL, Localizer.getString(Localizer.invalidParameterValue) + ", command");
         }

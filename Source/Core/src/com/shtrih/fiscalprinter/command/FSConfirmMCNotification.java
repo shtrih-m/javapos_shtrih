@@ -31,7 +31,7 @@ package com.shtrih.fiscalprinter.command;
  * 
  ***************************************************************************/
 
-public final class ConfirmMCNotification extends PrinterCommand {
+public final class FSConfirmMCNotification extends PrinterCommand {
     // in
     public int password;
     public int number;
@@ -40,7 +40,7 @@ public final class ConfirmMCNotification extends PrinterCommand {
     /**
      * Creates a new instance of ConfirmDate
      */
-    public ConfirmMCNotification() {
+    public FSConfirmMCNotification() {
         super();
     }
 

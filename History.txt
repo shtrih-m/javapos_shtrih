@@ -7,6 +7,15 @@
     
 ********************************************************************************
 
+  27.10.2023
+  deviceServiceVersion = 1013705
+  
+  [+] Added directIO command SMFPTR_DIO_FS_READ_DOCUMENT_SIZE to execute
+      command 0xFF74, read document size.
+      public static final int SMFPTR_DIO_FS_READ_DOCUMENT_SIZE = 0x94;
+
+********************************************************************************
+
   26.10.2023
   deviceServiceVersion = 1013704
   
