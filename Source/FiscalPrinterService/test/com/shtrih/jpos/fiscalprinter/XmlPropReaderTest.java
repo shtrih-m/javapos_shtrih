@@ -29,15 +29,15 @@ public class XmlPropReaderTest extends TestCase {
     public void testSave() throws Exception {
         System.out.println("save");
         String fileName = "build/XmlPropReaderTest.xml";
-        PrinterImages printerImages = new PrinterImages();
-        printerImages.setMaxSize(1000);
+        FptrParameters params = new FptrParameters();
+        params.getPrinterImages().setMaxSize(1000);
         PrinterImage printerImage = new PrinterImage();
         printerImage.setStartPos(10);
         printerImage.setFileName("File name 1");
         printerImage.setHeight(13);
         printerImage.setIsLoaded(true);
         printerImage.setDigest("image1");
-        printerImages.add(printerImage);
+        params.getPrinterImages().add(printerImage);
 
         printerImage = new PrinterImage();
         printerImage.setStartPos(12);
@@ -45,13 +45,10 @@ public class XmlPropReaderTest extends TestCase {
         printerImage.setHeight(12);
         printerImage.setDigest("image2");
         printerImage.setIsLoaded(false);
-        printerImages.add(printerImage);
+        params.getPrinterImages().add(printerImage);
 
-        ReceiptImages receiptImages = new ReceiptImages();
         ReceiptImage receiptImage = new ReceiptImage(1, 2);
-        receiptImages.add(receiptImage);
-
-        FptrParameters params = new FptrParameters();
+        params.getReceiptImages().add(receiptImage);
 
         params.setNumHeaderLines(4);
         params.setHeaderLine(1, "HeaderLine 1", false);
@@ -81,21 +78,12 @@ public class XmlPropReaderTest extends TestCase {
         assertEquals(false, params.getTrailerLine(3).isDoubleWidth());
 
         XmlPropWriter writer = new XmlPropWriter("FiscalPrinter", "Device1");
-        writer.write(printerImages);
-        writer.write(receiptImages);
-        writer.writePrinterHeader(params);
+        writer.write(params);
         writer.save(fileName);
 
         XmlPropReader reader = new XmlPropReader();
         reader.load("FiscalPrinter", "Device1", fileName);
-        reader.read(printerImages);
-        reader.read(receiptImages);
-
-        //header.initDevice();
-
-        params.setNumHeaderLines(4);
-        params.setNumTrailerLines(3);
-        reader.readPrinterHeader(params);
+        reader.read(params);
 
         assertEquals("HeaderLine 1", params.getHeaderLine(1).getText());
         assertEquals(false, params.getHeaderLine(1).isDoubleWidth());
@@ -113,22 +101,21 @@ public class XmlPropReaderTest extends TestCase {
         assertEquals("", params.getTrailerLine(3).getText());
         assertEquals(false, params.getTrailerLine(3).isDoubleWidth());
 
-        assertEquals(2, printerImages.size());
-        printerImage = printerImages.get(0);
+        assertEquals(2, params.getPrinterImages().size());
+        printerImage = params.getPrinterImages().get(0);
         assertEquals(1, printerImage.getStartPos());
         assertEquals("File name 1", printerImage.getFileName());
         assertEquals(13, printerImage.getHeight());
         assertEquals(true, printerImage.getIsLoaded());
 
-        printerImage = printerImages.get(1);
+        printerImage = params.getPrinterImages().get(1);
         assertEquals(14, printerImage.getStartPos());
         assertEquals("File name 2", printerImage.getFileName());
         assertEquals(12, printerImage.getHeight());
         assertEquals(false, printerImage.getIsLoaded());
 
-
-        assertEquals(1, receiptImages.size());
-        receiptImage = receiptImages.get(0);
+        assertEquals(1, params.getReceiptImages().size());
+        receiptImage = params.getReceiptImages().get(0);
         assertEquals(1, receiptImage.getImageIndex());
         assertEquals(2, receiptImage.getPosition());
     }

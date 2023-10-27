@@ -43,21 +43,29 @@ public class XmlPropWriter {
         node.setAttribute(name, String.valueOf(value));
     }
 
-    public void write(PrinterImages images) throws Exception {
+    public void write(FptrParameters params) throws Exception {
+        writePrinterImages(params.getPrinterImages());
+        writeReceiptImages(params.getReceiptImages());
+        writePrinterHeader(params);
+        writeNonFiscalDocNumber(params.nonFiscalDocNumber);
+        writeParameterBool("isTableTextCleared", params.isTableTextCleared);
+    }
+
+    private void writePrinterImages(PrinterImages images) throws Exception {
         node = doc.createElement("Images");
         root.appendChild(node);
         for (int i = 0; i < images.size(); i++) {
-            write(images.get(i));
+            writePrinterImage(images.get(i));
         }
     }
 
-    public void writeNonFiscalDocNumber(int number) throws Exception {
+    private void writeNonFiscalDocNumber(int number) throws Exception {
         Element childNode = doc.createElement("NonFiscal");
         root.appendChild(childNode);
         addParameter(childNode, "DocumentNumber", number);
     }
 
-    public void write(PrinterImage image) throws Exception {
+    private void writePrinterImage(PrinterImage image) throws Exception {
         Element imageNode = doc.createElement("Image");
         node.appendChild(imageNode);
 
@@ -69,15 +77,15 @@ public class XmlPropWriter {
                 StringUtils.boolToStr(image.getIsLoaded()));
     }
 
-    public void write(ReceiptImages images) throws Exception {
+    private void writeReceiptImages(ReceiptImages images) throws Exception {
         node = doc.createElement("ReceiptImages");
         root.appendChild(node);
         for (int i = 0; i < images.size(); i++) {
-            write(images.get(i));
+            writeReceiptImage(images.get(i));
         }
     }
 
-    public void write(ReceiptImage image) throws Exception {
+    private void writeReceiptImage(ReceiptImage image) throws Exception {
         Element imageNode = doc.createElement("ReceiptImage");
         node.appendChild(imageNode);
         addParameter(imageNode, "ImageIndex",
@@ -85,22 +93,22 @@ public class XmlPropWriter {
         addParameter(imageNode, "Position", new Integer(image.getPosition()));
     }
 
-    public void writePrinterHeader(FptrParameters params) throws Exception {
+    private void writePrinterHeader(FptrParameters params) throws Exception {
         node = doc.createElement("Header");
         root.appendChild(node);
         ReceiptLines lines = params.getHeader();
         for (int i = 1; i <= lines.getCount(); i++) {
-            write(lines.getLine(i));
+            writeReceiptLine(lines.getLine(i));
         }
         node = doc.createElement("Trailer");
         root.appendChild(node);
         lines = params.getTrailer();
         for (int i = 1; i <= lines.getCount(); i++) {
-            write(lines.getLine(i));
+            writeReceiptLine(lines.getLine(i));
         }
     }
 
-    public void write(ReceiptLine line) throws Exception {
+    private void writeReceiptLine(ReceiptLine line) throws Exception {
         if (line == null) {
             return;
         }
@@ -110,7 +118,7 @@ public class XmlPropWriter {
         addParameter(lineNode, "DoubleWidth", StringUtils.boolToStr(line.isDoubleWidth()));
     }
 
-    public void writeParameterBool(String name, boolean value) throws Exception{
+    private void writeParameterBool(String name, boolean value) throws Exception {
         addParameter(root, name, StringUtils.boolToStr(value));
     }
 

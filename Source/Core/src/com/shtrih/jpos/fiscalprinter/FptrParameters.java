@@ -215,6 +215,8 @@ public class FptrParameters {
     private int numTrailerLines;
     private final ReceiptLines header = new ReceiptLines();
     private final ReceiptLines trailer = new ReceiptLines();
+    private final PrinterImages printerImages = new PrinterImages();
+    private final ReceiptImages receiptImages = new ReceiptImages();
 
     public FptrParameters() {
         font = new FontNumber(PrinterConst.FONT_NUMBER_NORMAL);
@@ -727,4 +729,13 @@ public class FptrParameters {
     public ReceiptLines getTrailer() {
         return trailer;
     }
+    
+    public PrinterImages getPrinterImages(){
+        return printerImages;
+    }
+    
+    public ReceiptImages getReceiptImages(){
+        return receiptImages;
+    }
+    
 }

@@ -45,7 +45,6 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public static CompositeLogger logger = CompositeLogger.getLogger(SMFiscalPrinterNull.class);
     private final PrinterPort port;
     private final FptrParameters params;
-    private final PrinterImages printerImages = new PrinterImages();
     public final PrinterTables tables = new PrinterTables();
     private int resultCode = 0;
 
@@ -670,10 +669,6 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public void printBarcode(PrinterBarcode barcode) throws Exception {
     }
 
-    public PrinterImages getPrinterImages() {
-        return new PrinterImages();
-    }
-
     public String processEscCommands(String text)
             throws Exception {
         return "";
@@ -739,10 +734,6 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     }
 
     public void setEscPrinter(NCR7167Printer escPrinter) {
-    }
-
-    public ReceiptImages getReceiptImages() {
-        return null;
     }
 
     public void printImage(PrinterImage image) throws Exception {

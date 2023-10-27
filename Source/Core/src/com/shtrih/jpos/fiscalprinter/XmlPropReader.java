@@ -41,7 +41,7 @@ public class XmlPropReader {
         node = root;
     }
 
-    public Node findChildNode(Node node, String nodeName) throws Exception {
+    private Node findChildNode(Node node, String nodeName) throws Exception {
         Node result = null;
         NodeList list = node.getChildNodes();
         for (int i = 0; i < list.getLength(); i++) {
@@ -53,7 +53,7 @@ public class XmlPropReader {
         return result;
     }
 
-    public Node getChildNode(Node node, String nodeName) throws Exception {
+    private Node getChildNode(Node node, String nodeName) throws Exception {
         Node result = findChildNode(node, nodeName);
         if (result == null) {
             throw new Exception("Child node not found, " + nodeName);
@@ -61,7 +61,16 @@ public class XmlPropReader {
         return result;
     }
 
-    public void read(PrinterImages images) throws Exception {
+    public void read(FptrParameters params) throws Exception
+    {
+        readPrinterImages(params.getPrinterImages());
+        readReceiptImages(params.getReceiptImages());
+        readPrinterHeader(params);
+        params.nonFiscalDocNumber = readNonFiscalDocNumber();
+        params.isTableTextCleared = readParameterBool("isTableTextCleared");
+    }
+    
+    private void readPrinterImages(PrinterImages images) throws Exception {
         images.clear();
         Node imagesNode = getChildNode(root, "Images");
         if (imagesNode == null) {
@@ -81,7 +90,7 @@ public class XmlPropReader {
         }
     }
 
-    public PrinterImage readPrinterImage(Node imageNode) throws Exception {
+    private PrinterImage readPrinterImage(Node imageNode) throws Exception {
         PrinterImage image = new PrinterImage();
         image.setFileName(readParameterStr(imageNode, "FileName"));
         image.setDigest(readParameterStr(imageNode, "Digest"));
@@ -91,7 +100,7 @@ public class XmlPropReader {
         return image;
     }
 
-    public void read(ReceiptImages images) throws Exception {
+    private void readReceiptImages(ReceiptImages images) throws Exception {
         images.clear();
         Node imagesNode = findChildNode(root, "ReceiptImages");
         if (imagesNode == null) {
@@ -105,7 +114,7 @@ public class XmlPropReader {
         }
     }
 
-    public int readNonFiscalDocNumber() throws Exception {
+    private int readNonFiscalDocNumber() throws Exception {
         int result = 1;
         Node childNode = findChildNode(root, "NonFiscal");
         if (childNode != null) {
@@ -114,14 +123,14 @@ public class XmlPropReader {
         return result;
     }
 
-    public ReceiptImage readReceiptImage(Node imageNode)
+    private ReceiptImage readReceiptImage(Node imageNode)
             throws Exception {
         int imageIndex = readParameterInt(imageNode, "ImageIndex");
         int position = readParameterInt(imageNode, "Position");
         return new ReceiptImage(imageIndex, position);
     }
 
-    public void readPrinterHeader(FptrParameters params) throws Exception {
+    private void readPrinterHeader(FptrParameters params) throws Exception {
         try {
             for (int i = 1; i <= params.getNumHeaderLines(); i++) {
                 params.setHeaderLine(i, "", false);
@@ -183,7 +192,7 @@ public class XmlPropReader {
         return result;
     }
 
-    public int readParameterInt(Node node, String paramName) throws Exception {
+    private int readParameterInt(Node node, String paramName) throws Exception {
         int result = 0;
         try {
             String s = readParameterStr(node, paramName);
@@ -194,7 +203,7 @@ public class XmlPropReader {
         return result;
     }
 
-    public boolean readParameterBool(Node node, String paramName)
+    private boolean readParameterBool(Node node, String paramName)
             throws Exception {
         String paramValue = readParameterStr(node, paramName);
         if ((paramValue.equals("")) || paramValue.equalsIgnoreCase("0")) {
@@ -202,7 +211,7 @@ public class XmlPropReader {
         }
         return true;
     }
-    public Node getRoot(){
+    private Node getRoot(){
         return root;
     }
 
@@ -211,11 +220,11 @@ public class XmlPropReader {
         return readParameterStr(root, paramName);
     }
 
-    public int readParameterInt(String paramName) throws Exception {
+    private int readParameterInt(String paramName) throws Exception {
         return readParameterInt(root, paramName);
     }
 
-    public boolean readParameterBool(String paramName) throws Exception{
+    private boolean readParameterBool(String paramName) throws Exception{
         return readParameterBool(root, paramName);
     }
 

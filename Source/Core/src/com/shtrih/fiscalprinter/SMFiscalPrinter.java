@@ -413,8 +413,6 @@ public interface SMFiscalPrinter {
 
     public void printBarcode(PrinterBarcode barcode) throws Exception;
 
-    public PrinterImages getPrinterImages();
-
     public String processEscCommands(String text)
             throws Exception;
 
@@ -450,8 +448,6 @@ public interface SMFiscalPrinter {
     public FMTotals readFSTotals() throws Exception;
 
     public void setEscPrinter(NCR7167Printer escPrinter);
-
-    public ReceiptImages getReceiptImages();
 
     public void printReceiptImage(int position) throws Exception;
 

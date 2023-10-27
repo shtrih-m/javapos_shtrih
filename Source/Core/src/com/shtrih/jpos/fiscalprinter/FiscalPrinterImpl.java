@@ -2137,7 +2137,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public PrinterImages getPrinterImages() throws Exception {
-        return getPrinter().getPrinterImages();
+        return params.getPrinterImages();
     }
 
     public void printImage(int index) throws Exception {
@@ -4612,12 +4612,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             String serial = "FiscalPrinter_" + getPrinter().getFullSerial();
             XmlPropWriter writer = new XmlPropWriter("FiscalPrinter",
                     serial);
-            writer.write(getPrinterImages());
-            writer.write(printer.getReceiptImages());
-            writer.writePrinterHeader(params);
-            writer.writeNonFiscalDocNumber(params.nonFiscalDocNumber);
-            writer.writeParameterBool("isTableTextCleared", params.isTableTextCleared);
-
+            writer.write(params);
             writer.save(getPropsFileName());
         } catch (Exception e) {
             logger.error("saveProperties", e);
@@ -4634,12 +4629,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             if (f.exists()) {
                 XmlPropReader reader = new XmlPropReader();
                 reader.load("FiscalPrinter", serial, fileName);
-
-                reader.read(getPrinterImages());
-                reader.read(printer.getReceiptImages());
-                reader.readPrinterHeader(params);
-                params.nonFiscalDocNumber = reader.readNonFiscalDocNumber();
-                params.isTableTextCleared = reader.readParameterBool("isTableTextCleared");
+                reader.read(params);
                 logger.debug("loadProperties: OK");
             } else {
                 logger.debug("loadProperties: no file");
@@ -4811,7 +4801,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     public ReceiptImages getReceiptImages() {
-        return printer.getReceiptImages();
+        return params.getReceiptImages();
     }
 
     public void fsWriteTLV(byte[] data, boolean print) throws Exception {

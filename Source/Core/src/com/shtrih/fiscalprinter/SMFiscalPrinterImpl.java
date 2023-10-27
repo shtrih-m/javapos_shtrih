@@ -116,8 +116,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private final List<byte[]> tlvItems = new ArrayList<byte[]>();
     private final PrinterPort port;
     private final FptrParameters params;
-    private final PrinterImages printerImages = new PrinterImages();
-    private final ReceiptImages receiptImages = new ReceiptImages();
     private NCR7167Printer escPrinter = new NCR7167Printer(null);
     private final FieldInfoMap fields = new FieldInfoMap();
     private boolean capDiscount = true;
@@ -200,10 +198,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public FptrParameters getParams() {
         return params;
-    }
-
-    public PrinterImages getPrinterImages() {
-        return printerImages;
     }
 
     public void setDevice(PrinterProtocol device) {
@@ -2811,7 +2805,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public int getImageFirstLine() {
-        return getPrinterImages().getTotalSize() + 3;
+        return getParams().getPrinterImages().getTotalSize() + 3;
     }
 
     public int getPrintWidth() throws Exception {
@@ -3291,27 +3285,23 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
     }
 
-    public ReceiptImages getReceiptImages() {
-        return receiptImages;
-    }
-
     public void printReceiptImage(int position) throws Exception {
-        for (int i = 0; i < receiptImages.size(); i++) {
-            ReceiptImage image = receiptImages.get(i);
+        for (int i = 0; i < params.getReceiptImages().size(); i++) {
+            ReceiptImage image = params.getReceiptImages().get(i);
             if (image.valid(position)) {
-                PrinterImage printerImage = printerImages.get(image
-                        .getImageIndex());
+                PrinterImage printerImage = params.getPrinterImages().get(
+                        image.getImageIndex());
                 printImage(printerImage);
             }
         }
     }
 
     public PrinterImage getPrinterImage(int position) throws Exception {
-        ReceiptImage image = receiptImages.imageByPosition(position);
+        ReceiptImage image = params.getReceiptImages().imageByPosition(position);
         if (image != null) {
             int index = image.getImageIndex();
-            if (getPrinterImages().validIndex(index)) {
-                return getPrinterImages().get(index);
+            if (params.getPrinterImages().validIndex(index)) {
+                return params.getPrinterImages().get(index);
             }
         }
         return null;
@@ -3329,7 +3319,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
 
         image.render(getMaxGraphicsWidth(), getMaxGraphicsHeight(), getParams().centerImage);
-        image.setStartPos(getPrinterImages().getTotalSize() + 1);
+        image.setStartPos(params.getPrinterImages().getTotalSize() + 1);
         // check max image width
         if (image.getWidth() > getMaxGraphicsWidth()) {
             throw new Exception(
@@ -3348,12 +3338,12 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         image.setIsLoaded(true);
 
         if (addImage) {
-            getPrinterImages().add(image);
+            params.getPrinterImages().add(image);
         }
     }
 
     public int loadRawGraphics(byte[][] data) throws Exception {
-        int startPos = getPrinterImages().getTotalSize() + 1;
+        int startPos = params.getPrinterImages().getTotalSize() + 1;
 
         if (getCapLoadGraphics3()) {
             loadGraphics3(startPos, data);
