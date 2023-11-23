@@ -40,9 +40,7 @@ public class FSSalesReceiptTest {
         FptrParameters params = new FptrParameters();
         params.quantityFactor = 1000.0;
         params.amountFactor = 1.0;
-        PrinterPort port = PrinterPortFactory.createInstance(params);
-        PrinterProtocol device = ProtocolFactory.getProtocol(params, port);
-        SMFiscalPrinter printer = new SMFiscalPrinterNull(port, device, params);
+        SMFiscalPrinter printer = new SMFiscalPrinterNull(params);
         return new FSSalesReceipt(printer, PrinterConst.SMFP_RECTYPE_SALE);
     }
 

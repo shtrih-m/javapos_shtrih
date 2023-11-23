@@ -44,7 +44,7 @@ public class TextGeneratorTest {
         FieldInfo fieldInfo;
 
         FptrParameters params = new FptrParameters();
-        printer = new SMFiscalPrinterNull(null, null, params);
+        printer = new SMFiscalPrinterNull(params);
 
         printer.getLongStatus().setSerialNumber(12345);
         printer.getLongStatus().setDocumentNumber(1233);

@@ -673,7 +673,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     public void printCashIn(PrintCashIn command) throws Exception {
         isDocumentPrinted = true;
         operatorNumber = command.getOperator();
-        long docNumber = printer.readCashRegister(155);
+        long docNumber = printer.readOperationRegister(155);
         printer.waitForPrinting();
         
         beginDocument();
@@ -685,7 +685,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     public void printCashOut(PrintCashOut command) throws Exception {
         isDocumentPrinted = true;
         operatorNumber = command.getOperator();
-        long docNumber = printer.readCashRegister(156);
+        long docNumber = printer.readOperationRegister(156);
         printer.waitForPrinting();
         
         beginDocument();

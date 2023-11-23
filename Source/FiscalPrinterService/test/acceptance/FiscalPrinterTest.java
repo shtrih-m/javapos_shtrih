@@ -44,7 +44,7 @@ public class FiscalPrinterTest extends TestCase
     {
         /*
         FptrParameters parameters = new FptrParameters();
-        SMFiscalPrinterNull printer = new SMFiscalPrinterNull(null, null, parameters);
+        SMFiscalPrinterNull printer = new SMFiscalPrinterNull(parameters);
         FiscalPrinterImpl service = new FiscalPrinterImpl();
         service.setPrinter(printer);
         JposEntry jposEntry = new JposEntry();

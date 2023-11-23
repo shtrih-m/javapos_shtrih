@@ -26,6 +26,7 @@ import com.shtrih.jpos.fiscalprinter.receipt.FSSaleReceiptItem;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.HashMap;
 
 /**
  *
@@ -33,7 +34,6 @@ import java.util.Vector;
  */
 public class SMFiscalPrinterNull implements SMFiscalPrinter {
 
-    public PrinterProtocol device;
     private PrinterModel model = null;
     private final PrinterModels models = new PrinterModels();
     private DeviceMetrics deviceMetrics = new DeviceMetrics();
@@ -43,17 +43,13 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public ReadTableInfo tableInfo = new ReadTableInfo();
     public ReadFieldInfo fieldInfo = new ReadFieldInfo();
     public static CompositeLogger logger = CompositeLogger.getLogger(SMFiscalPrinterNull.class);
-    private final PrinterPort port;
     private final FptrParameters params;
     public final PrinterTables tables = new PrinterTables();
     private int resultCode = 0;
+    private final HashMap<Integer,Long> cashRegisters = new HashMap<Integer,Long>();
+    private final HashMap<Integer,Integer> operationRegisters = new HashMap<Integer,Integer>();
 
-    public SMFiscalPrinterNull(
-            PrinterPort port,
-            PrinterProtocol device,
-            FptrParameters params) {
-        this.port = port;
-        this.device = device;
+    public SMFiscalPrinterNull(FptrParameters params) {
         this.params = params;
         models.load();
         try {
@@ -92,14 +88,6 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
 
     public FptrParameters getParams() {
         return params;
-    }
-
-    public void setDevice(PrinterProtocol device) {
-        this.device = device;
-    }
-
-    public PrinterProtocol getDevice() {
-        return device;
     }
 
     public void addEvents(IPrinterEvents item) {
@@ -317,16 +305,25 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
         return 0;
     }
 
-    public int readOperationRegister(int number) throws Exception {
-        return 0;
+    public int readOperationRegister(int number) throws Exception 
+    {
+        Integer value = operationRegisters.get(number);
+        if (value == null) return 0;
+        return value;
     }
 
     public int readCashRegister(CashRegister register) throws Exception {
         return 0;
     }
 
-    public long readCashRegister(int number) throws Exception {
-        return 0;
+    public long readCashRegister(int number) throws Exception 
+    {
+        Long value = cashRegisters.get(number);
+        if (value == null){
+            return 0;
+        } else{
+            return value;
+        }
     }
 
     public long readCashRegisterCorrection(int number) throws Exception {
@@ -1328,5 +1325,13 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     
     public int getOperatorNumber(){
         return 1;
+    }
+    
+    public HashMap<Integer,Long> getCashRegisters(){
+        return cashRegisters;
+    }
+    
+    public HashMap<Integer,Integer> getOperationRegisters(){
+        return operationRegisters;
     }
 }
