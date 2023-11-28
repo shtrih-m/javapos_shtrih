@@ -3995,6 +3995,10 @@ class PrinterTest implements FiscalPrinterConst {
             printer.printRecItem("2. Item2", 124, 123400, 0, 124, "");
             printer.printRecTotal(10000, 10000, "");
             printer.endFiscalReceipt(false);
+            
+            int docNumber = printer.readLongPrinterStatus().getDocumentNumber();
+            printer.printJournalDocNumber(docNumber);
+                    
         } catch (Exception e) {
             e.printStackTrace();
         }

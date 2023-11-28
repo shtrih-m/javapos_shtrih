@@ -15,7 +15,7 @@ import org.junit.Ignore;
 /**
  * @author P.Zhirkov
  */
-@Ignore
+
 public class TextReportStorageTests {
 
     private File file;
@@ -24,7 +24,6 @@ public class TextReportStorageTests {
     @Before
     public void context() throws IOException {
         file = File.createTempFile("TextReportStorageTests", ".txt");
-
         storage = new TextReportStorage(file.getAbsolutePath());
     }
 
@@ -238,6 +237,7 @@ public class TextReportStorageTests {
         assertEqual(expectedReport, storage.searchZReport(1));
     }
 
+    @Ignore
     @Test
     public void should_search_z_report_in_the_middle() throws Exception {
         writeFile("ККТ 1358                  ИНН 770123456789 №0237\n" +
@@ -338,6 +338,7 @@ public class TextReportStorageTests {
         assertEqual(expectedReport, storage.searchZReport(19));
     }
 
+    @Ignore
     @Test
     public void should_search_z_report_in_the_middle_when_previous_report_has_different_number_then_minus_one() throws Exception {
         writeFile("ККТ 1358                  ИНН 770123456789 №0237\n" +
@@ -434,10 +435,12 @@ public class TextReportStorageTests {
                 "НЕОБНУЛ.СУММА ПОКУПОК НА НАЧ.СМЕНЫ          0.00\n" +
                 "ЧЕКОВ ПРОДАЖ                                0000\n" +
                 "0000                                        0.00\n";
-
-        assertEqual(expectedReport, storage.searchZReport(19));
+        List<String> report = storage.searchZReport(19);
+        assertEqual(expectedReport, report);
     }
 
+    
+    @Ignore
     @Test
     public void should_search_z_report_in_the_middle_with_no_documents() throws Exception {
         writeFile("ККТ 1358                  ИНН 770123456789 №0237\n" +
@@ -1051,7 +1054,7 @@ public class TextReportStorageTests {
     }
 
     private void writeFile(String text) throws IOException {
-        OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), Charset.forName("utf-8"));
+        OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file));
 
         try {
             writer.write(text);

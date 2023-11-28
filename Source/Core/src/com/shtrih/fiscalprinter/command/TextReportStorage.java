@@ -107,7 +107,7 @@ public class TextReportStorage
     }
 
     private boolean isDocumentHeader(String line) {
-        return line.contains(TextDocumentFilter.SINN);
+        return line.contains(TextDocumentFilter.SINN) && line.contains("№");
     }
 
     private List<String> copyLines(List<String> lines, int index1, int index2) {
