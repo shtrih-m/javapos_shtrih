@@ -77,7 +77,6 @@ public class TextDocumentFilterTest {
         item.setText("Item 1");
         PrintSale command = new PrintSale(30, item);
         printer.getOperationRegisters().put(new Integer(156), new Integer(1234));
-        filter.receiptEnabled = true;
         assertEquals(0, filter.getLines().size());
                 
         filter.init(printer);
@@ -105,7 +104,6 @@ public class TextDocumentFilterTest {
         item.setText("Item 1");
         PrintRefund command = new PrintRefund(30, item);
         printer.getOperationRegisters().put(new Integer(156), new Integer(1234));
-        filter.receiptEnabled = true;
         assertEquals(0, filter.getLines().size());
                 
         filter.init(printer);
@@ -133,7 +131,6 @@ public class TextDocumentFilterTest {
         item.setText("Item 1");
         PrintVoidSale command = new PrintVoidSale(30, item);
         printer.getOperationRegisters().put(new Integer(156), new Integer(1234));
-        filter.receiptEnabled = true;
         assertEquals(0, filter.getLines().size());
                 
         filter.init(printer);
@@ -161,7 +158,6 @@ public class TextDocumentFilterTest {
         item.setText("Item 1");
         PrintVoidRefund command = new PrintVoidRefund(30, item);
         printer.getOperationRegisters().put(new Integer(156), new Integer(1234));
-        filter.receiptEnabled = true;
         assertEquals(0, filter.getLines().size());
                 
         filter.init(printer);
@@ -190,7 +186,6 @@ public class TextDocumentFilterTest {
         item.setText("Item 1");
         PrintSale command = new PrintSale(30, item);
         printer.getOperationRegisters().put(new Integer(156), new Integer(1234));
-        filter.receiptEnabled = true;
         assertEquals(0, filter.getLines().size());
                 
         filter.init(printer);
@@ -207,7 +202,6 @@ public class TextDocumentFilterTest {
     public void test_void_receipt_command() throws Exception 
     {
         VoidFiscalReceipt command = new VoidFiscalReceipt();
-        filter.receiptEnabled = true;
         assertEquals(0, filter.getLines().size());
                 
         filter.init(printer);

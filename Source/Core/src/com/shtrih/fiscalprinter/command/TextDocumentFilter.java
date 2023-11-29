@@ -68,8 +68,7 @@ public class TextDocumentFilter implements IPrinterEvents {
     private static String SDayClosed = "СМЕНА ЗАКРЫТА";
     public static final String SINN = "ИНН";
     private static String[] docNames = {SSaleText, SBuyText, SRetSaleText, SRetBuyText};
-    public boolean receiptEnabled = false;
-    public boolean isDocumentActive = false;
+    private boolean documentActive = false;
     private final List<String> lines = new ArrayList<String>();
     
     
@@ -141,13 +140,13 @@ public class TextDocumentFilter implements IPrinterEvents {
             switch (command.getCode()) 
             {
                 case 0x17:
-                    if (isDocumentActive){
+                    if (documentActive){
                         add(((PrintString) command).getLine());
                     }
                     break;
                     
                 case 0x2F:
-                    if (isDocumentActive){
+                    if (documentActive){
                     add(((PrintStringFont) command).getLine());
                     }
                     break;
@@ -393,40 +392,34 @@ public class TextDocumentFilter implements IPrinterEvents {
     }
     
     private void printSale(PrintSale command) throws Exception {
-        if (!receiptEnabled) return;
         operatorNumber = command.getOperator();
         openReceipt2(PrinterConst.SMFP_RECTYPE_SALE);
         printReceiptItem(command.getItem());
     }
     
     private void printSale(FSPrintRecItem command) throws Exception {
-        if (!receiptEnabled) return;
         printReceiptItem(command.getItem());
     }
     
     private void printRefund(PrintRefund command) throws Exception {
-        if (!receiptEnabled) return;
         operatorNumber = command.getOperator();
         openReceipt2(PrinterConst.SMFP_RECTYPE_BUY);
         printReceiptItem(command.getItem());
     }
     
     private void printVoidSale(PrintVoidSale command) throws Exception {
-        if (!receiptEnabled) return;
         operatorNumber = command.getOperator();
         openReceipt2(PrinterConst.SMFP_RECTYPE_RETSALE);
         printReceiptItem(command.getItem());
     }
     
     private void printVoidRefund(PrintVoidRefund command) throws Exception {
-        if (!receiptEnabled) return;
         operatorNumber = command.getOperator();
         openReceipt2(PrinterConst.SMFP_RECTYPE_RETBUY);
         printReceiptItem(command.getItem());
     }
     
     private void printVoidItem(PrintVoidItem command) throws Exception {
-        if (!receiptEnabled) return;
         operatorNumber = command.getOperator();
         PriceItem item = command.getItem();
         // Line 1
@@ -704,12 +697,12 @@ public class TextDocumentFilter implements IPrinterEvents {
     
     private void beginDocument() throws Exception {
         printReceiptHeader();
-        isDocumentActive = true;
+        documentActive = true;
         lines.clear();
     }
     
     private void endDocument() throws Exception {
-        isDocumentActive = false;
+        documentActive = false;
     }
     
     private void printReceiptHeader() throws Exception {

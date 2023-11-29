@@ -3974,24 +3974,11 @@ class PrinterTest implements FiscalPrinterConst {
 
     public void printFiscalReceipt145_7() 
     {
-        String QRCodeData = "010464007801637221AgqLybqxM9MbR\u001d91FFD0\u001d92dGVzdL31KAYL0YT6592MjmW7a2HkF3IY+muf2pVSKdQ=";
-        byte[] data = QRCodeData.getBytes();
-            
         try {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(false);
-            printer.printRecMessage("printRecMessage 1");
-            printer.fsWriteTag(1008, "foo@example.com");
-            
-            TLVWriter tlvWriter = new TLVWriter();
-            tlvWriter.add(1227, "БЕТА ООО");
-            tlvWriter.add(1228, "9705069985");
-            printer.fsWriteTag(1256, tlvWriter.getBytes());
-            
-            printer.setItemCode(QRCodeData, true);
             printer.printRecItem("1. Item1", 124, 123000, 0, 124, "");
-            printer.addItemCode(data, true);
             printer.printRecItem("2. Item2", 124, 123400, 0, 124, "");
             printer.printRecTotal(10000, 10000, "");
             printer.endFiscalReceipt(false);
