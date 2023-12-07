@@ -1082,7 +1082,13 @@ class PrinterTest implements FiscalPrinterConst {
             //printFiscalReceipt145_4();
             
             
-            printFiscalReceipt145_7();
+            //printFiscalReceipt145_7();
+            boolean vva = printer.readVVASupported();
+            if (vva){
+                System.out.println("VVA supported");
+            } else{
+                System.out.println("VVA not supported");
+            }
             
         } catch (Exception e) {
             e.printStackTrace();

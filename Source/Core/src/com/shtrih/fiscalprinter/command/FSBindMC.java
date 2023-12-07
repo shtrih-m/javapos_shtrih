@@ -38,7 +38,7 @@ public final class FSBindMC extends PrinterCommand {
     // in
     public int password;
     public byte[] data; 
-    public boolean volumeAccounting = false;
+    public boolean volumeAccounting = false; // volumetric varietal accounting
     // out
     public int itemCode;
     public int codeType;

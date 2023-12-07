@@ -754,6 +754,9 @@ public class SmFptrConst {
     // FS read document size
     public static final int SMFPTR_DIO_FS_READ_DOCUMENT_SIZE = 0x94;
     
+    // Read if Volumetric Varietal Accounting supported
+    public static final int SMFPTR_DIO_READ_VVA_SUPPORTED = 0x95;
+    
     // ///////////////////////////////////////////////////////////////////
     // Parameter constants for directIO commands:
     // FPTR_DIO_GET_DRIVER_PARAMETER,

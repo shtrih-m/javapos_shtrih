@@ -121,4 +121,5 @@ public class PrinterDate {
     public boolean after(PrinterDate date){
         return compare(date) > 0;
     }
+    
 }

@@ -1334,4 +1334,8 @@ public class SMFiscalPrinterNull implements SMFiscalPrinter {
     public HashMap<Integer,Integer> getOperationRegisters(){
         return operationRegisters;
     }
+    
+    public boolean isVVASupported(){
+        return false;
+    }
 }

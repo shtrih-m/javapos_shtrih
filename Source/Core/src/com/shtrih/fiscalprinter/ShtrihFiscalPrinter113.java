@@ -2556,4 +2556,12 @@ public class ShtrihFiscalPrinter113 implements BaseControl,
         int noticeNumber = Integer.parseInt(lines[1]);
         return new FSDocumentSize(documentNumber, noticeNumber);
     }
+    
+    // Read if fiscal printer supports volumetric varietal accounting
+    public boolean readVVASupported() throws Exception
+    {
+        int[] data = new int[1];
+        directIO(SmFptrConst.SMFPTR_DIO_READ_VVA_SUPPORTED, data, null);
+        return data[0] != 0;
+    }
 }

@@ -25,6 +25,7 @@ package com.shtrih.fiscalprinter;
 import java.io.OutputStream;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Scanner;
 import java.io.ByteArrayInputStream;
 
 import com.shtrih.fiscalprinter.port.ClosedConnectionException;
@@ -33,6 +34,7 @@ import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.barcode.SmBarcode;
 import com.shtrih.barcode.SmBarcodeEncoder;
 import com.shtrih.barcode.ZXingEncoder;
+import com.shtrih.fiscalprinter.CashCoreVersion;
 import com.shtrih.fiscalprinter.command.*;
 import com.shtrih.fiscalprinter.request.*;
 import com.shtrih.fiscalprinter.model.PrinterModel;
@@ -83,11 +85,6 @@ import static jpos.JposConst.JPOS_E_EXTENDED;
 
 public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
-    enum Boolean {
-
-        NOTDEFINED, TRUE, FALSE
-    }
-
     private int resultCode = 0;
     public PrinterProtocol device;
     // delay on wait
@@ -120,17 +117,17 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private final FieldInfoMap fields = new FieldInfoMap();
     private boolean capDiscount = true;
     private boolean capDisableDiscountText = false;
-    private Boolean capLoadGraphics1 = Boolean.NOTDEFINED;
-    private Boolean capLoadGraphics2 = Boolean.NOTDEFINED;
-    private Boolean capLoadGraphics3 = Boolean.NOTDEFINED;
+    private Boolean capLoadGraphics1 = null;
+    private Boolean capLoadGraphics2 = null;
+    private Boolean capLoadGraphics3 = null;
     private boolean capGraphics3Scale = false;
-    private Boolean capPrintGraphics1 = Boolean.NOTDEFINED;
-    private Boolean capPrintGraphics2 = Boolean.NOTDEFINED;
-    private Boolean capPrintGraphics3 = Boolean.NOTDEFINED;
-    private Boolean capPrintScaled = Boolean.NOTDEFINED;
-    private Boolean capPrintGraphicsLine = Boolean.NOTDEFINED;
-    private Boolean capPrintBarcode2 = Boolean.NOTDEFINED;
-    private Boolean capPrintBarcode3 = Boolean.NOTDEFINED;
+    private Boolean capPrintGraphics1 = null;
+    private Boolean capPrintGraphics2 = null;
+    private Boolean capPrintGraphics3 = null;
+    private Boolean capPrintScaled = null;
+    private Boolean capPrintGraphicsLine = null;
+    private Boolean capPrintBarcode2 = null;
+    private Boolean capPrintBarcode3 = null;
     private boolean capFSPrintItem = true;
     private boolean capCutter = true;
     private String fsUser = "";
@@ -164,7 +161,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     private int printMode = PrinterConst.PRINT_MODE_ENABLED;
     private boolean connected = false;
     private int operatorNumber = 1;
-    
+    private Boolean vvaSupported = null;
 
     public SMFiscalPrinterImpl(PrinterPort port, PrinterProtocol device,
             FptrParameters params) {
@@ -455,7 +452,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             command.setRepeatNeeded(false);
             deviceExecute(command);
 
-            if (command.isSucceeded()) break;
+            if (command.isSucceeded()) {
+                break;
+            }
             if (!command.getRepeatNeeded()) {
                 break;
             }
@@ -1724,10 +1723,10 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             command.setPassword(usrPassword);
             command.setReceiptType(receiptType);
             int rc = executeCommand(command);
-            if (command.isSucceeded()){
+            if (command.isSucceeded()) {
                 operatorNumber = command.getOperator();
             }
-                    
+
             capOpenReceipt = isCommandSupported(rc);
             if (capOpenReceipt) {
                 check(rc);
@@ -2189,33 +2188,25 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public boolean getCapLoadGraphics1() throws Exception {
-        if (capLoadGraphics1 == Boolean.NOTDEFINED) {
+        if (capLoadGraphics1 == null) {
             byte[] data = new byte[40];
             for (int i = 0; i < data.length; i++) {
                 data[i] = 0;
             }
-            if (isCommandSupported(loadGraphics1(1, data))) {
-                capLoadGraphics1 = Boolean.TRUE;
-            } else {
-                capLoadGraphics1 = Boolean.FALSE;
-            }
+            capLoadGraphics1 = isCommandSupported(loadGraphics1(1, data));
         }
-        return capLoadGraphics1 == Boolean.TRUE;
+        return capLoadGraphics1;
     }
 
     public boolean getCapLoadGraphics2() throws Exception {
-        if (capLoadGraphics2 == Boolean.NOTDEFINED) {
+        if (capLoadGraphics2 == null) {
             byte[] data = new byte[40];
             for (int i = 0; i < data.length; i++) {
                 data[i] = 0;
             }
-            if (isCommandSupported(loadGraphics2(1, data))) {
-                capLoadGraphics2 = Boolean.TRUE;
-            } else {
-                capLoadGraphics2 = Boolean.FALSE;
-            }
+            capLoadGraphics2 = isCommandSupported(loadGraphics2(1, data));
         }
-        return capLoadGraphics2 == Boolean.TRUE;
+        return capLoadGraphics2;
     }
 
     public boolean capGraphicsFlags() {
@@ -2227,111 +2218,77 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
     }
 
     public boolean getCapLoadGraphics3() throws Exception {
-        if (capLoadGraphics3 == Boolean.NOTDEFINED) {
+        if (capLoadGraphics3 == null) {
             if (capModelParameters()) {
-                if (modelParameters.isGraphics512Supported()) {
-                    capLoadGraphics3 = Boolean.TRUE;
-                } else {
-                    capLoadGraphics3 = Boolean.FALSE;
-                }
+                capLoadGraphics3 = modelParameters.isGraphics512Supported();
             } else {
                 byte[] data = new byte[40];
                 for (int i = 0; i < data.length; i++) {
                     data[i] = 0;
                 }
-                if (isCommandSupported(loadGraphics3(1, data))) {
-                    capLoadGraphics3 = Boolean.TRUE;
-                } else {
-                    capLoadGraphics3 = Boolean.FALSE;
-                }
+                capLoadGraphics3 = isCommandSupported(loadGraphics3(1, data));
             }
         }
-        return capLoadGraphics3 == Boolean.TRUE;
+        return capLoadGraphics3;
     }
 
     public boolean getCapPrintGraphics1() throws Exception {
-        if (capPrintGraphics1 == Boolean.NOTDEFINED) {
-            if (isCommandSupported(printGraphics1(1, 2))) {
-                capPrintGraphics1 = Boolean.TRUE;
-            } else {
-                capPrintGraphics1 = Boolean.FALSE;
-            }
+        if (capPrintGraphics1 == null) {
+            capPrintGraphics1 = isCommandSupported(printGraphics1(1, 2));
         }
-        return capPrintGraphics1 == Boolean.TRUE;
+        return capPrintGraphics1;
     }
 
     public boolean getCapPrintGraphics2() throws Exception {
-        if (capPrintGraphics2 == Boolean.NOTDEFINED) {
-            if (isCommandSupported(printGraphics2(1, 2))) {
-                capPrintGraphics2 = Boolean.TRUE;
-            } else {
-                capPrintGraphics2 = Boolean.FALSE;
-            }
+        if (capPrintGraphics2 == null) {
+            capPrintGraphics2 = isCommandSupported(printGraphics2(1, 2));
         }
-        return capPrintGraphics2 == Boolean.TRUE;
+        return capPrintGraphics2;
     }
 
     public boolean getCapPrintGraphics3() throws Exception {
-        if (capPrintGraphics3 == Boolean.NOTDEFINED) {
+        if (capPrintGraphics3 == null) {
             if (capModelParameters()) {
-                if (modelParameters.isGraphics512Supported()) {
-                    capPrintGraphics3 = Boolean.TRUE;
-                } else {
-                    capPrintGraphics3 = Boolean.FALSE;
-                }
-            } else if (isCommandSupported(printGraphics3(1, 2))) {
-                capPrintGraphics3 = Boolean.TRUE;
+                capPrintGraphics3 = modelParameters.isGraphics512Supported();
             } else {
-                capPrintGraphics3 = Boolean.FALSE;
+                capPrintGraphics3 = isCommandSupported(printGraphics3(1, 2));
             }
         }
-        return capPrintGraphics3 == Boolean.TRUE;
+        return capPrintGraphics3;
     }
 
     public boolean getCapPrintScaled() throws Exception {
-        if (capPrintScaled == Boolean.NOTDEFINED) {
-            if (isCommandSupported(printScaled(1, 2, 1, 1))) {
-                capPrintScaled = Boolean.TRUE;
-            } else {
-                capPrintScaled = Boolean.FALSE;
-            }
+        if (capPrintScaled == null) {
+            capPrintScaled = isCommandSupported(printScaled(1, 2, 1, 1));
         }
-        return capPrintScaled == Boolean.TRUE;
+        return capPrintScaled;
     }
 
     public boolean getCapPrintGraphicsLine() throws Exception {
-        if (capPrintGraphicsLine == Boolean.NOTDEFINED) {
+        if (capPrintGraphicsLine == null) {
             byte[] data = new byte[40];
             for (int i = 0; i < data.length; i++) {
                 data[i] = 0;
             }
 
-            if (isCommandSupported(printGraphicLine(SMFP_STATION_REC, 1, data))) {
-                capPrintGraphicsLine = Boolean.TRUE;
-            } else {
-                capPrintGraphicsLine = Boolean.FALSE;
-            }
+            capPrintGraphicsLine = isCommandSupported(printGraphicLine(SMFP_STATION_REC, 1, data));
         }
-        return capPrintGraphicsLine == Boolean.TRUE;
+        return capPrintGraphicsLine;
     }
 
     public boolean getCapPrintBarcode2() throws Exception {
-        if (capPrintBarcode2 == Boolean.NOTDEFINED) {
+        if (capPrintBarcode2 == null) {
             PrinterBarcode barcode = new PrinterBarcode();
             barcode.setHeight(1);
             barcode.setText("123456789012");
             barcode.setType(SmFptrConst.SMFPTR_BARCODE_EAN13);
-            if (isCommandSupported(printBarcode2(barcode))) {
-                capPrintBarcode2 = Boolean.TRUE;
-            } else {
-                capPrintBarcode2 = Boolean.FALSE;
-            }
+            capPrintBarcode2 = isCommandSupported(printBarcode2(barcode));
         }
-        return capPrintBarcode2 == Boolean.TRUE;
+        return capPrintBarcode2;
     }
 
     public boolean getCapPrintBarcode3() throws Exception {
-        if (capPrintBarcode3 == Boolean.NOTDEFINED) {
+        if (capPrintBarcode3 == null) {
             byte[] data = {0x00};
             LoadBarcode3 command = new LoadBarcode3();
             command.setPassword(usrPassword);
@@ -2339,13 +2296,9 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             command.setBlockNumber(0);
             command.setBlockData(data);
             int rc = executeCommand(command);
-            if (isCommandSupported(rc)) {
-                capPrintBarcode3 = Boolean.TRUE;
-            } else {
-                capPrintBarcode3 = Boolean.FALSE;
-            }
+            capPrintBarcode3 = isCommandSupported(rc);
         }
-        return capPrintBarcode3 == Boolean.TRUE;
+        return capPrintBarcode3;
     }
 
     private boolean isCapDisableDiscountTextInitialized = false;
@@ -2701,7 +2654,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
             if (barcode.getType() != SmFptrConst.SMFPTR_BARCODE_EAN13) {
                 throw new Exception(
                         Localizer
-                        .getString(Localizer.PrinterSupportesEAN13Only));
+                                .getString(Localizer.PrinterSupportesEAN13Only));
             }
 
             if (barcode.isTextAbove()) {
@@ -3600,7 +3553,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         src.removeEmptySTLV();
         if (params.processTag1256) {
             TLVFilter.filter(src, dst, ffd);
-        } else{
+        } else {
             dst.add(src);
         }
     }
@@ -5393,8 +5346,35 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         }
         return text;
     }
-    
-    public int getOperatorNumber(){
+
+    public int getOperatorNumber() {
         return operatorNumber;
+    }
+
+    public boolean isVVASupported() {
+        if (vvaSupported == null) {
+            vvaSupported = readVVASupported();
+        }
+        return vvaSupported;
+    }
+
+    public boolean readVVASupported() {
+
+        boolean rc = false;
+        try {
+            if (isCashCore()) {
+                CashCoreVersion minVersion = new CashCoreVersion("1.16.43098");
+                CashCoreVersion version = new CashCoreVersion(readTable(3, 1, 25));
+                rc = version.compare(minVersion) >= 0;
+            } else {
+                //  31.05.2023 версия 003 - added VVA flag
+                PrinterDate PrinterDate = new PrinterDate(31, 05, 23);
+                LongPrinterStatus status = getLongStatus();
+                rc = status.getFirmwareDate().compare(PrinterDate) >= 0;
+            }
+        } catch (Exception e) {
+            logger.error("Failed read if VVA supported", e);
+        }
+        return rc;
     }
 }

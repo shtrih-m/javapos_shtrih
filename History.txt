@@ -7,6 +7,21 @@
     
 ********************************************************************************
 
+  06.12.2023
+  deviceServiceVersion = 1013707
+  
+  [+] Added directIO command SMFPTR_DIO_READ_VVA_SUPPORTED = 0x95 to read
+      if fiscal printer supports volumetric varietal accounting. Usage:
+	  
+		public boolean readVVASupported() throws Exception
+		{
+			int[] data = new int[1];
+			directIO(SmFptrConst.SMFPTR_DIO_READ_VVA_SUPPORTED, data, null);
+			return data[0] != 0;
+		}
+ 
+********************************************************************************
+
   29.11.2023
   deviceServiceVersion = 1013706
   

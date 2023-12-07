@@ -4933,4 +4933,5 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public PrinterHeader getHeader(){
         return header;
     }
+    
 }

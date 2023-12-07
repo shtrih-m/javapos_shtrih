@@ -740,4 +740,5 @@ public interface SMFiscalPrinter {
     
     public int getOperatorNumber();
     
+    public boolean isVVASupported();
 }
