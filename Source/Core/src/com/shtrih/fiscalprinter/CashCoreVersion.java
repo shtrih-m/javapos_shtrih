@@ -8,8 +8,6 @@ package com.shtrih.fiscalprinter;
 import com.shtrih.fiscalprinter.command.PrinterDate;
 import java.util.Scanner;
 import com.shtrih.util.MathUtils;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
 /**
  *
  * @author V.Kravtsov
