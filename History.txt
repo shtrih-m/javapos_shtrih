@@ -7,10 +7,11 @@
     
 ********************************************************************************
 
-  28.11.2024
-  deviceServiceVersion = 1013708
+  17.12.2024
+  deviceServiceVersion = 1013709
   
-  [+] Updated kktnetd library binaries
+  [+] Updated kktnetd library binaries. New kktnetd library has smaller TCP 
+      frame size for Bluetooth transmittion
   
 ********************************************************************************
 
