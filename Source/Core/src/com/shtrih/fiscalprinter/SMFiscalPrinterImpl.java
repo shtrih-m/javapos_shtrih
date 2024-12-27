@@ -225,7 +225,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         synchronized (port.getSyncObject()) {
             Time.delay(params.commandDelayInMs);
             beforeCommand(command);
-            //correctDateTime(command);
+            correctDateTime(command);
 
             if (interrupted || Thread.currentThread().isInterrupted()) {
                 throw new InterruptedException();
