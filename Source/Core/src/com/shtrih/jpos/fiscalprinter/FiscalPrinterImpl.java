@@ -3386,7 +3386,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void checkVatInfo(long value) throws Exception {
-        checkLongParam(value, 0, 6, "VatInfo");
+        checkLongParam(value, 0, getNumVatRates(), "VatInfo");
     }
 
     private void checkReceiptStation() throws Exception {

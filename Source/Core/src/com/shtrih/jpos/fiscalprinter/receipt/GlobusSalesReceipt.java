@@ -314,12 +314,9 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         
     }
 
-    public void checkVatInfo(int vatInfo) throws Exception {
-        if ((vatInfo < 0) || (vatInfo > 4)) {
-            throw new JposException(JposConst.JPOS_E_EXTENDED,
-                    FiscalPrinterConst.JPOS_EFPTR_BAD_VAT,
-                    "Invalid VatInfo value");
-        }
+    public void checkVatInfo(int vatInfo) throws Exception 
+    {
+        //checkLongParam(value, 0, getNumVatRates(), "VatInfo");
     }
 
     public void printRecItemAdjustment(int adjustmentType, String description,
