@@ -1,3 +1,4 @@
+
 /*
  * FiscalPrinterImplTest.java
  * JUnit based test
@@ -31,6 +32,20 @@ public class FiscalPrinterImplTest extends TestCase
 {
     
     /*
+
+    protected void setUp() throws Exception {
+        
+        device = new MockPrinterDevice();
+        model = new MockPrinterModel();
+        events = new MockEventCallbacks();
+        instance = new FiscalPrinterImpl();
+        instance.setEventCallbacks(events);
+        instance.printer.setDevice(device);
+    }
+    
+    protected void tearDown() throws Exception {
+    }
+
     private class MockEventCallbacks implements EventCallbacks{
         
         private final Vector events = new Vector();
@@ -86,18 +101,6 @@ public class FiscalPrinterImplTest extends TestCase
     MockEventCallbacks events;
     FiscalPrinterImpl instance;
     
-    protected void setUp() throws Exception {
-        
-        device = new MockPrinterDevice();
-        model = new MockPrinterModel();
-        events = new MockEventCallbacks();
-        instance = new FiscalPrinterImpl();
-        instance.setEventCallbacks(events);
-        instance.printer.setDevice(device);
-    }
-    
-    protected void tearDown() throws Exception {
-    }
     
     /**
      * Test of getRecPaperState method, of class com.shtrih.jpos.fiscalprinter.FiscalPrinterImpl.

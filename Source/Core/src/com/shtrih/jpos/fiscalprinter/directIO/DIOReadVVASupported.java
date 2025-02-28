@@ -28,7 +28,7 @@ public class DIOReadVVASupported extends DIOItem {
         DIOUtils.checkDataMinLength(data, 1);
         data[0] = 0;
         if (service.getPrinter().isVVASupported()){
-            data[1] = 1;
+            data[0] = 1;
         }
     }
 }

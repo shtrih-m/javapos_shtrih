@@ -23,7 +23,7 @@ import java.util.Locale;
 public class FptrParameters {
 
     public static final int defaultGraphicsLineDelay = 200;
-    public static final int defPortOpenTimeout = 100000; // 10 sec
+    public static final int defPortOpenTimeout = 0; // 10 sec
 
     public int portOpenTimeout = defPortOpenTimeout; // 10 sec
     public int byteTimeout = 3000;

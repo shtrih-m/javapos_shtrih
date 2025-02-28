@@ -7,8 +7,8 @@
     
 ********************************************************************************
 
-  26.02.2025
-  deviceServiceVersion = 1013711
+  28.02.2025
+  deviceServiceVersion = 1013712
   
   [-] Fixed error with VatInfo values
   

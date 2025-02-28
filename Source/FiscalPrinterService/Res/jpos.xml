@@ -31,7 +31,7 @@
         <!--<prop name="portName" type="String" value="COM2"/> -->
         <!-- <prop name="portName" type="String" value="COM8"/> -->
         <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
-        <prop name="portName" type="String" value="COM4"/>
+        <prop name="portName" type="String" value="COM8"/>
 		
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
@@ -49,7 +49,7 @@
         <!-- Device search enabled for all serial ports -->
         <prop name="searchByPortEnabled" type="String" value="0"/>
         <!-- Device search enabled for all baud rates -->
-        <prop name="searchByBaudRateEnabled" type="String" value="1"/>
+        <prop name="searchByBaudRateEnabled" type="String" value="0"/>
         <!-- Tax officer password -->
         <prop name="taxPassword" type="String" value="0"/>
         <!-- Operator password -->

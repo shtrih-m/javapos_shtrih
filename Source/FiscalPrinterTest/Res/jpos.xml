@@ -19,7 +19,7 @@
         <!--<prop name="portClass" type="String" value="com.shtrih.bluetooth.BTPrinterPort"/>-->
         <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
         <!-- ProtocolType, 0 - protocol 1, 1 - protocol 2 -->
-        <prop name="protocolType" type="String" value="1"/>
+        <prop name="protocolType" type="String" value="0"/>
         <!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass, 5 - PPP over serial -->
         <prop name="portType" type="String" value="0"/>
         <!--Port name-->
@@ -32,7 +32,7 @@
         <!--<prop name="portName" type="String" value="192.168.1.134:12345"/>-->
 		
         <!--<prop name="portName" type="String" value="192.168.4.1:7778"/>-->
-        <prop name="portName" type="String" value="COM4"/>
+        <prop name="portName" type="String" value="COM8"/>
 		
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->

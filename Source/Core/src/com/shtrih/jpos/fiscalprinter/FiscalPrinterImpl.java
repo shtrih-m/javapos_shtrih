@@ -113,7 +113,10 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.List;
 import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Set;
 
 import jpos.FiscalPrinterConst;
 import jpos.JposConst;
@@ -147,7 +150,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private final FiscalDay fiscalDay = new FiscalDay();
     private final Vector requests = new Vector();
     private PrinterHeader header;
-    private int[] vatValues;
+    private HashMap<Integer, Integer> vatEntries = new HashMap<Integer, Integer>();
     private PrinterPort port;
     private PrinterProtocol device = null;
     private SMFiscalPrinter printer;
@@ -901,7 +904,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void setDeviceEnabled(boolean deviceEnabled) throws Exception {
         logger.debug("setDeviceEnabled(" + deviceEnabled + ")");
         checkClaimed();
-        vatValues = null;
         if (this.deviceEnabled != deviceEnabled) {
             if (deviceEnabled) {
                 physicalDeviceDescription = null;
@@ -3987,18 +3989,18 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
      * Fiscal Printer Service vendor's documentation for details. vatRate - The
      * rate associated with the VAT identifier
      */
+     
     public void getVatEntry(int vatID, int optArgs, int[] vatRate)
             throws Exception {
         checkEnabled();
         checkCapHasVatTable();
-        // 4 tax rates available in SHTRIH-M fiscal printers
         checkParamValue(vatID, 1, getNumVatRates(), "vatID");
-        String[] vatValue = new String[1];
-        vatValue[0] = "";
 
-        getPrinter().check(
-                printer.readTable(SMFP_TABLE_TAX, vatID, 1, vatValue));
-        vatRate[0] = Integer.parseInt(vatValue[0]);
+        vatRate[0] = 0;
+        Integer vatValue = vatEntries.get(vatID);
+        if (vatValue != null){
+            vatRate[0] = vatValue;
+        }
     }
 
     public void setVatTable() throws Exception {
@@ -4006,14 +4008,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkCapHasVatTable();
         checkCapSetVatTable();
 
-        if (vatValues == null) {
-            return;
-        }
-
-        for (int i = 0; i < vatValues.length; i++) {
-            getPrinter().check(
-                    printer.writeTable(SMFP_TABLE_TAX, i + 1, 1,
-                            String.valueOf(vatValues[i])));
+        Integer[] vatIDs = (Integer[])vatEntries.keySet().toArray();
+        for (int i=0; i<vatIDs.length; i++)
+        {
+            int vatID = vatIDs[i];
+            int vatRate = vatEntries.get(vatID);
+            int res = printer.writeTable(SMFP_TABLE_TAX, vatID, 1, String.valueOf(vatRate));
+            getPrinter().check(res);
         }
     }
 
@@ -4036,15 +4037,10 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkCapSetVatTable();
 
         vatValue = decodeText(vatValue);
-
-        if (vatValues == null) {
-            vatValues = new int[getNumVatRates()];
-        }
-
-        checkParamValue(vatID, 1, vatValues.length, "vatID");
+        checkParamValue(vatID, 1, getNumVatRates(), "vatID");
         int intVatValue = Integer.parseInt(vatValue);
         checkParamValue(intVatValue, 0, 10000, "vatValue");
-        vatValues[vatID - 1] = intVatValue;
+        vatEntries.put(vatID, intVatValue);
     }
 
     public void verifyItem(String itemName, int vatID) throws Exception {
