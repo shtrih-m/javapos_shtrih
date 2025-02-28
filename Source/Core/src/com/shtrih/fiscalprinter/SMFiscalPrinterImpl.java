@@ -4265,7 +4265,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
 
     public int getTaxBits(int tax) {
         int result = 0;
-        if ((tax >= 1) && (tax <= 6)) {
+        if ((tax >= 1) && (tax <= 8)) {
             result = (int) BitUtils.setBit(tax - 1);
         }
         return result;
