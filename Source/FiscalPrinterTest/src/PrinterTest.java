@@ -1083,14 +1083,6 @@ class PrinterTest implements FiscalPrinterConst {
             
             
             printFiscalReceipt145_7();
-            /*
-            boolean vva = printer.readVVASupported();
-            if (vva){
-                System.out.println("VVA supported");
-            } else{
-                System.out.println("VVA not supported");
-            }
-            */
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -3986,14 +3978,13 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(false);
-            printer.printRecItem("1. Item1", 124, 123000, 4, 124, "");
-            printer.printRecItem("2. Item2", 124, 123400, 5, 124, "");
+            for (int i=0;i<=12;i++)
+            {
+                printer.printRecItem("Item " + String.valueOf(i+1), 10, 1000, i, 10, "");
+            }
             printer.printRecTotal(10000, 10000, "");
             printer.endFiscalReceipt(false);
             
-            int docNumber = printer.readLongPrinterStatus().getDocumentNumber();
-            printer.printJournalDocNumber(docNumber);
-                    
         } catch (Exception e) {
             e.printStackTrace();
         }
