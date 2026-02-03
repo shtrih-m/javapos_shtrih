@@ -3978,9 +3978,9 @@ class PrinterTest implements FiscalPrinterConst {
             printer.resetPrinter();
             printer.setFiscalReceiptType(SmFptrConst.SMFPTR_RT_SALE);
             printer.beginFiscalReceipt(false);
-            for (int i=0;i<=12;i++)
+            for (int i=1;i<=12;i++)
             {
-                printer.printRecItem("Item " + String.valueOf(i+1), 10, 1000, i, 10, "");
+                printer.printRecItem("Item " + String.valueOf(i), 10, 1000, i, 10, "");
             }
             printer.printRecTotal(10000, 10000, "");
             printer.endFiscalReceipt(false);

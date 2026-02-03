@@ -1,5 +1,6 @@
 package com.shtrih.jpos.fiscalprinter;
 
+import com.shtrih.jpos.fiscalprinter.VatRate;
 import com.shtrih.fiscalprinter.GS1Barcode;
 import com.shtrih.barcode.PrinterBarcode;
 import com.shtrih.ej.EJActivation;
@@ -150,7 +151,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private final FiscalDay fiscalDay = new FiscalDay();
     private final Vector requests = new Vector();
     private PrinterHeader header;
-    private HashMap<Integer, Integer> vatEntries = new HashMap<Integer, Integer>();
+    private Vector<VatRate> vatRates = new Vector<VatRate>();
+    
     private PrinterPort port;
     private PrinterProtocol device = null;
     private SMFiscalPrinter printer;
@@ -386,7 +388,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         capSetPOSID = true;
         capSetStoreFiscalID = false;
         capSetTrailer = true;
-        capSetVatTable = true;
+        capSetVatTable = false;
         capSlpFiscalDocument = false;
         capSlpFullSlip = false;
         capSlpValidation = false;
@@ -448,8 +450,27 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         capUpdateStatistics = true;
         capStatisticsReporting = true;
         deviceServiceVersion = deviceVersion113 + ServiceVersionUtil.getVersionInt();
+        initVatRates();
     }
 
+    public void initVatRates() throws Exception 
+    {
+        vatRates.clear();
+        vatRates.add(VatRate.VAT_20);
+        vatRates.add(VatRate.VAT_20);
+        vatRates.add(VatRate.VAT_10);
+        vatRates.add(VatRate.VAT_0);
+        vatRates.add(VatRate.NO_VAT);
+        vatRates.add(VatRate.VAT_20_120);
+        vatRates.add(VatRate.VAT_10_110);
+        vatRates.add(VatRate.VAT_5);
+        vatRates.add(VatRate.VAT_7);
+        vatRates.add(VatRate.VAT_5_105);
+        vatRates.add(VatRate.VAT_7_107);
+        vatRates.add(VatRate.VAT_22);
+        vatRates.add(VatRate.VAT_22_122);
+    }
+        
     public SMFiscalPrinter getPrinter() throws Exception {
         if (printer == null) {
             throw new Exception("Printer is not initialized");
@@ -1657,9 +1678,9 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return getParams().getNumTrailerLines();
     }
 
-    public int getNumVatRates() throws Exception {
-        PrinterTable table = getPrinter().getTable(PrinterConst.SMFP_TABLE_TAX);
-        return table.getRowCount();
+    public int getNumVatRates() throws Exception 
+    {
+        return vatRates.count();
     }
 
     public String getPredefinedPaymentLines() throws Exception {
@@ -4008,6 +4029,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkCapHasVatTable();
         checkCapSetVatTable();
 
+        VatRate
         Integer[] vatIDs = (Integer[])vatEntries.keySet().toArray();
         for (int i=0; i<vatIDs.length; i++)
         {
