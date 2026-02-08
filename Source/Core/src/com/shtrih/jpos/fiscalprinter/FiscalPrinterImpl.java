@@ -453,7 +453,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         initVatRates();
     }
 
-    public void initVatRates() throws Exception 
+    public void initVatRates() 
     {
         vatRates.clear();
         vatRates.add(VatRate.VAT_20);
@@ -956,7 +956,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
                 }
                 setPrinterFDOMode(PrinterConst.FDO_MODE_PRINTER);
                 isTablesRead = false;
-                capSetVatTable = getPrinter().getCapSetVatTable();
                 capUpdateFirmware = getPrinter().getCapUpdateFirmware();
 
                 // if polling enabled - create device thread
@@ -1680,7 +1679,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public int getNumVatRates() throws Exception 
     {
-        return vatRates.count();
+        return vatRates.size();
     }
 
     public String getPredefinedPaymentLines() throws Exception {
@@ -3428,12 +3427,20 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return value * params.quantityFactor / 1000000.0;
     }
 
+    public int getVatCode(int vatInfo) throws Exception
+    {
+        checkParamValue(vatInfo, 1, getNumVatRates(), "vatInfo");
+        VatRate vatValue = vatRates.get(vatInfo-1);
+        return vatValue.getCode();
+    }
+            
     public void printRecItemAsync(String description, long price, int quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
         unitName = decodeText(unitName);
         description = decodeText(description);
         price = convertAmount(price);
         unitPrice = convertAmount(unitPrice);
+        vatInfo = getVatCode(vatInfo);
 
         checkEnabled();
         checkReceiptStation();
@@ -3517,6 +3524,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             String description, long amount, int vatInfo) throws Exception {
         description = decodeText(description);
         amount = convertAmount(amount);
+        vatInfo = getVatCode(vatInfo);
 
         checkEnabled();
         checkVatInfo(vatInfo);
@@ -3594,6 +3602,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             throws Exception {
         description = decodeText(description);
         amount = convertAmount(amount);
+        vatInfo = getVatCode(vatInfo);
 
         checkEnabled();
         checkVatInfo(vatInfo);
@@ -3684,6 +3693,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkEnabled();
         description = decodeText(description);
         amount = convertAmount(amount);
+        vatInfo = getVatCode(vatInfo);
 
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
         checkQuantity(quantity);
@@ -4018,26 +4028,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkParamValue(vatID, 1, getNumVatRates(), "vatID");
 
         vatRate[0] = 0;
-        Integer vatValue = vatEntries.get(vatID);
-        if (vatValue != null){
-            vatRate[0] = vatValue;
-        }
+        VatRate vatValue = vatRates.get(vatID-1);
+        vatRate[0] = (int)vatValue.getRate()*100;
     }
 
     public void setVatTable() throws Exception {
         checkEnabled();
         checkCapHasVatTable();
         checkCapSetVatTable();
-
-        VatRate
-        Integer[] vatIDs = (Integer[])vatEntries.keySet().toArray();
-        for (int i=0; i<vatIDs.length; i++)
-        {
-            int vatID = vatIDs[i];
-            int vatRate = vatEntries.get(vatID);
-            int res = printer.writeTable(SMFP_TABLE_TAX, vatID, 1, String.valueOf(vatRate));
-            getPrinter().check(res);
-        }
     }
 
     public void checkCapHasVatTable() throws Exception {
@@ -4057,12 +4055,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         checkEnabled();
         checkCapHasVatTable();
         checkCapSetVatTable();
-
-        vatValue = decodeText(vatValue);
-        checkParamValue(vatID, 1, getNumVatRates(), "vatID");
-        int intVatValue = Integer.parseInt(vatValue);
-        checkParamValue(intVatValue, 0, 10000, "vatValue");
-        vatEntries.put(vatID, intVatValue);
     }
 
     public void verifyItem(String itemName, int vatID) throws Exception {
@@ -4141,6 +4133,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             int vatInfo) throws Exception {
         description = decodeText(description);
         amount = convertAmount(amount);
+        vatInfo = getVatCode(vatInfo);
 
         checkEnabled();
         checkVatInfo(vatInfo);
@@ -4253,6 +4246,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         unitPrice = convertAmount(unitPrice);
         description = decodeText(description);
         unitName = decodeText(unitName);
+        vatInfo = getVatCode(vatInfo);
 
         checkEnabled();
         checkQuantity(quantity);
@@ -4276,6 +4270,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
             String description, long amount, int vatInfo) throws Exception {
         description = decodeText(description);
         amount = convertAmount(amount);
+        vatInfo = getVatCode(vatInfo);
 
         checkEnabled();
         checkVatInfo(vatInfo);
@@ -4533,6 +4528,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         description = decodeText(description);
         amount = convertAmount(amount);
         unitAmount = convertAmount(unitAmount);
+        vatInfo = getVatCode(vatInfo);
 
         checkEnabled();
         checkReceiptStation();
@@ -4566,6 +4562,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         unitAmount = convertAmount(unitAmount);
         description = decodeText(description);
         unitName = decodeText(unitName);
+        vatInfo = getVatCode(vatInfo);
 
         checkEnabled();
         checkQuantity(quantity);

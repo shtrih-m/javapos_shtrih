@@ -1285,7 +1285,7 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         fsReceiptItem.setPrice(item.getPrice());
         fsReceiptItem.setAmount(item.getTotalAmount() == null ? 0xFFFFFFFFFFL : item.getTotalAmount());
         fsReceiptItem.setTaxAmount(item.getTaxAmount() == null ? 0L : item.getTaxAmount());
-        fsReceiptItem.setTax(getTaxBits(item.getTax1()));
+        fsReceiptItem.setTax(item.getTax1());
         fsReceiptItem.setDepartment(item.getDepartment());
         fsReceiptItem.setPaymentType(item.getPaymentType());
         fsReceiptItem.setPaymentItem(item.getSubjectType());
@@ -4261,14 +4261,6 @@ public class SMFiscalPrinterImpl implements SMFiscalPrinter, PrinterConst {
         command.setPassword(usrPassword);
         command.setItem(item);
         return executeCommand(command);
-    }
-
-    public int getTaxBits(int tax) {
-        int result = 0;
-        if ((tax >= 1) && (tax <= 8)) {
-            result = (int) BitUtils.setBit(tax - 1);
-        }
-        return result;
     }
 
     public void setIsFooter(boolean value) {
