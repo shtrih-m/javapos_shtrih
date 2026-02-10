@@ -262,7 +262,6 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
     public void printRecRefund(String description, long amount, int vatInfo)
             throws Exception {
         checkAmount(amount);
-        checkVatInfo(vatInfo);
         updateRecType();
         doOpenReceipt();
         printPreLine();
@@ -289,7 +288,6 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         // checkPrice(price);
         // checkQuantity(quantity);
         // checkPrice(unitPrice);
-        checkVatInfo(vatInfo);
 
         if (unitPrice == 0) {
             quantity = 1;
@@ -314,17 +312,11 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         
     }
 
-    public void checkVatInfo(int vatInfo) throws Exception 
-    {
-        //checkLongParam(value, 0, getNumVatRates(), "VatInfo");
-    }
-
     public void printRecItemAdjustment(int adjustmentType, String description,
             long amount, int vatInfo) throws Exception {
         doOpenReceipt();
         printPreLine();
         checkAdjAmount(adjustmentType, amount);
-        checkVatInfo(vatInfo);
 
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
@@ -364,7 +356,6 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
             int adjustmentType, long adjustment, int vatInfo) throws Exception {
         doOpenReceipt();
         checkAmount(amount);
-        checkVatInfo(vatInfo);
         if (quantity <= 0) {
             quantity = 1;
         }
@@ -375,7 +366,6 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
             throws Exception {
         doOpenReceipt();
         checkAmount(amount);
-        checkVatInfo(vatInfo);
         printReceiptItemVoid(description, amount, 1, vatInfo);
     }
 
@@ -430,7 +420,6 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         doOpenReceipt();
         printPreLine();
         checkAdjAmount(adjustmentType, amount);
-        checkVatInfo(vatInfo);
 
         switch (adjustmentType) {
             case FiscalPrinterConst.FPTR_AT_AMOUNT_DISCOUNT:
@@ -464,7 +453,6 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         checkAmount(amount);
         checkAmount(unitAmount);
         // checkQuantity(quantity);
-        checkVatInfo(vatInfo);
 
         double itemQuantity;
         long itemPrice;
@@ -490,7 +478,6 @@ public class GlobusSalesReceipt extends CustomReceipt implements FiscalReceipt {
         checkAmount(price);
         checkAmount(unitPrice);
         // checkQuantity(quantity);
-        checkVatInfo(vatInfo);
 
         if (unitPrice == 0) {
             quantity = 1;

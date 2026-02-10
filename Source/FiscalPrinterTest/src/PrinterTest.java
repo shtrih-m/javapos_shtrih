@@ -1081,7 +1081,7 @@ class PrinterTest implements FiscalPrinterConst {
             //printer.sendFDODocuments();
             //printFiscalReceipt145_4();
             
-            
+            VatTest();
             printFiscalReceipt145_7();
             
         } catch (Exception e) {

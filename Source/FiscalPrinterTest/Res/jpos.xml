@@ -32,7 +32,7 @@
         <!--<prop name="portName" type="String" value="192.168.1.134:12345"/>-->
 		
         <!--<prop name="portName" type="String" value="192.168.4.1:7778"/>-->
-        <prop name="portName" type="String" value="COM8"/>
+        <prop name="portName" type="String" value="COM10"/>
 		
         <prop name="baudRate" type="String" value="115200"/>
         <!--Default department-->
