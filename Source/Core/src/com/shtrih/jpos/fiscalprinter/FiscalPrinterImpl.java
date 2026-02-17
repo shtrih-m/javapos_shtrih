@@ -457,7 +457,6 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     {
         vatRates.clear();
         vatRates.add(VatRate.VAT_20);
-        vatRates.add(VatRate.VAT_20);
         vatRates.add(VatRate.VAT_10);
         vatRates.add(VatRate.VAT_0);
         vatRates.add(VatRate.NO_VAT);
