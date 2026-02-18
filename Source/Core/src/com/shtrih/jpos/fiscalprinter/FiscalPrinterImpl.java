@@ -152,7 +152,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     private final Vector requests = new Vector();
     private PrinterHeader header;
     private Vector<VatRate> vatRates = new Vector<VatRate>();
-    
+
     private PrinterPort port;
     private PrinterProtocol device = null;
     private SMFiscalPrinter printer;
@@ -453,10 +453,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         initVatRates();
     }
 
-    public void initVatRates() 
-    {
+    public void initVatRates() {
         vatRates.clear();
-        vatRates.add(VatRate.VAT_20);
         vatRates.add(VatRate.VAT_20);
         vatRates.add(VatRate.VAT_10);
         vatRates.add(VatRate.VAT_0);
@@ -470,7 +468,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         vatRates.add(VatRate.VAT_22);
         vatRates.add(VatRate.VAT_22_122);
     }
-        
+
     public SMFiscalPrinter getPrinter() throws Exception {
         if (printer == null) {
             throw new Exception("Printer is not initialized");
@@ -1156,8 +1154,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return firmwareUpdaterService != null;
     }
 
-    public void setNumHeaderLines(int numHeaderLines) throws Exception 
-    {
+    public void setNumHeaderLines(int numHeaderLines) throws Exception {
         printer.getParams().setNumHeaderLines(numHeaderLines);
     }
 
@@ -1677,8 +1674,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return getParams().getNumTrailerLines();
     }
 
-    public int getNumVatRates() throws Exception 
-    {
+    public int getNumVatRates() throws Exception {
         return vatRates.size();
     }
 
@@ -3408,7 +3404,7 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     }
 
     private void checkVatInfo(long value) throws Exception {
-        checkLongParam(value, 0, getNumVatRates(), "VatInfo");
+        //checkLongParam(value, 0, getNumVatRates(), "VatInfo");
     }
 
     private void checkReceiptStation() throws Exception {
@@ -3427,27 +3423,91 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         return value * params.quantityFactor / 1000000.0;
     }
 
-    public int getVatCode(int vatInfo) throws Exception
-    {
-        checkParamValue(vatInfo, 1, getNumVatRates(), "vatInfo");
-        VatRate vatValue = vatRates.get(vatInfo-1);
-        return vatValue.getCode();
+    public int getVatCodeShtrih(int vatId) {
+        switch (vatId) {
+            case 1:
+                return 0x01;
+            case 2:
+                return 0x02;
+            case 3:
+                return 0x04;
+            case 4:
+                return 0x08;
+            case 5:
+                return 0x10;
+            case 6:
+                return 0x20;
+            case 7:
+                return 0x81;
+            case 8:
+                return 0x82;
+            case 9:
+                return 0x84;
+            case 10:
+                return 0x88;
+            case 11:
+                return 0xCB;
+            case 12:
+                return 0xCC;
+            default:
+                return 4;
+        }
     }
-            
+
+    public int getVatCodeShtrihNano(int vatId) {
+        switch (vatId) {
+            case 1:
+                return 0x01;
+            case 2:
+                return 0x02;
+            case 3:
+                return 0x04;
+            case 4:
+                return 0x08;
+            case 5:
+                return 0x10;
+            case 6:
+                return 0x20;
+            case 7:
+                return 0x81;
+            case 8:
+                return 0x82;
+            case 9:
+                return 0x84;
+            case 10:
+                return 0x88;
+            case 11:
+                return 0x90;
+            case 12:
+                return 0xA0;
+            default:
+                return 4;
+        }
+    }
+
+    public int getVatCode(int vatId) throws Exception {
+        if (printer.isShtrihNano()) {
+            return getVatCodeShtrihNano(vatId);
+        } else {
+            return getVatCodeShtrih(vatId);
+        }
+    }
+
     public void printRecItemAsync(String description, long price, int quantity,
             int vatInfo, long unitPrice, String unitName) throws Exception {
-        unitName = decodeText(unitName);
-        description = decodeText(description);
-        price = convertAmount(price);
-        unitPrice = convertAmount(unitPrice);
-        vatInfo = getVatCode(vatInfo);
-
         checkEnabled();
         checkReceiptStation();
         checkQuantity(quantity);
         checkPrice(price);
         checkPrice(unitPrice);
         checkVatInfo(vatInfo);
+
+        unitName = decodeText(unitName);
+        description = decodeText(description);
+        price = convertAmount(price);
+        unitPrice = convertAmount(unitPrice);
+        vatInfo = getVatCode(vatInfo);
+
         description = updateDescription(description);
         receipt.printRecItem(description, price, convertQuantity(quantity), vatInfo, unitPrice, unitName);
     }
@@ -3522,13 +3582,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void printRecItemAdjustmentAsync(int adjustmentType,
             String description, long amount, int vatInfo) throws Exception {
-        description = decodeText(description);
-        amount = convertAmount(amount);
-        vatInfo = getVatCode(vatInfo);
-
         checkEnabled();
         checkVatInfo(vatInfo);
         checkAdjustment(adjustmentType, amount);
+
+        description = decodeText(description);
+        amount = convertAmount(amount);
+        vatInfo = getVatCode(vatInfo);
 
         // filter request
         PrintRecItemAdjustmentRequest request = new PrintRecItemAdjustmentRequest(
@@ -3600,12 +3660,12 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void printRecRefundAsync(String description, long amount, int vatInfo)
             throws Exception {
+        checkEnabled();
+        checkVatInfo(vatInfo);
+
         description = decodeText(description);
         amount = convertAmount(amount);
         vatInfo = getVatCode(vatInfo);
-
-        checkEnabled();
-        checkVatInfo(vatInfo);
 
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
         receipt.printRecRefund(description, amount, vatInfo);
@@ -3691,13 +3751,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void printRecVoidItem(String description, long amount, int quantity,
             int adjustmentType, long adjustment, int vatInfo) throws Exception {
         checkEnabled();
-        description = decodeText(description);
-        amount = convertAmount(amount);
-        vatInfo = getVatCode(vatInfo);
-
         checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
         checkQuantity(quantity);
         checkVatInfo(vatInfo);
+
+        description = decodeText(description);
+        amount = convertAmount(amount);
+        vatInfo = getVatCode(vatInfo);
 
         if (getParams().printRecVoidItemAmount) {
             quantity = 1000;
@@ -4020,16 +4080,15 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
      * Fiscal Printer Service vendor's documentation for details. vatRate - The
      * rate associated with the VAT identifier
      */
-     
     public void getVatEntry(int vatID, int optArgs, int[] vatRate)
             throws Exception {
         checkEnabled();
         checkCapHasVatTable();
-        checkParamValue(vatID, 1, getNumVatRates(), "vatID");
+        //checkParamValue(vatID, 1, getNumVatRates(), "vatID");
 
         vatRate[0] = 0;
-        VatRate vatValue = vatRates.get(vatID-1);
-        vatRate[0] = (int)vatValue.getRate()*100;
+        VatRate vatValue = vatRates.get(vatID - 1);
+        vatRate[0] = (int) vatValue.getRate() * 100;
     }
 
     public void setVatTable() throws Exception {
@@ -4131,13 +4190,14 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void printRecRefundVoidAsync(String description, long amount,
             int vatInfo) throws Exception {
+        checkEnabled();
+        checkVatInfo(vatInfo);
+        checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
+
         description = decodeText(description);
         amount = convertAmount(amount);
         vatInfo = getVatCode(vatInfo);
 
-        checkEnabled();
-        checkVatInfo(vatInfo);
-        checkPrinterState(FPTR_PS_FISCAL_RECEIPT);
         receipt.printRecRefundVoid(description, amount, vatInfo);
     }
 
@@ -4242,15 +4302,15 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void printRecItemVoidAsync(String description, long price,
             int quantity, int vatInfo, long unitPrice, String unitName)
             throws Exception {
+        checkEnabled();
+        checkQuantity(quantity);
+        checkVatInfo(vatInfo);
+
         price = convertAmount(price);
         unitPrice = convertAmount(unitPrice);
         description = decodeText(description);
         unitName = decodeText(unitName);
         vatInfo = getVatCode(vatInfo);
-
-        checkEnabled();
-        checkQuantity(quantity);
-        checkVatInfo(vatInfo);
 
         description = updateDescription(description);
         receipt.printRecItemVoid(description, price, convertQuantity(quantity),
@@ -4268,12 +4328,13 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
 
     public void printRecItemAdjustmentVoidAsync(int adjustmentType,
             String description, long amount, int vatInfo) throws Exception {
+        checkEnabled();
+        checkVatInfo(vatInfo);
+
         description = decodeText(description);
         amount = convertAmount(amount);
         vatInfo = getVatCode(vatInfo);
 
-        checkEnabled();
-        checkVatInfo(vatInfo);
         receipt.printRecItemAdjustmentVoid(adjustmentType, description, amount,
                 vatInfo);
     }
@@ -4524,18 +4585,18 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void printRecItemRefundAsync(String description, long amount,
             int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
-        unitName = decodeText(unitName);
-        description = decodeText(description);
-        amount = convertAmount(amount);
-        unitAmount = convertAmount(unitAmount);
-        vatInfo = getVatCode(vatInfo);
-
         checkEnabled();
         checkReceiptStation();
         checkQuantity(quantity);
         checkPrice(amount);
         checkPrice(unitAmount);
         checkVatInfo(vatInfo);
+
+        unitName = decodeText(unitName);
+        description = decodeText(description);
+        amount = convertAmount(amount);
+        unitAmount = convertAmount(unitAmount);
+        vatInfo = getVatCode(vatInfo);
 
         description = updateDescription(description);
         receipt.printRecItemRefund(description, amount, convertQuantity(quantity),
@@ -4558,15 +4619,15 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
     public void printRecItemRefundVoidAsync(String description, long amount,
             int quantity, int vatInfo, long unitAmount, String unitName)
             throws Exception {
+        checkEnabled();
+        checkQuantity(quantity);
+        checkVatInfo(vatInfo);
+
         amount = convertAmount(amount);
         unitAmount = convertAmount(unitAmount);
         description = decodeText(description);
         unitName = decodeText(unitName);
         vatInfo = getVatCode(vatInfo);
-
-        checkEnabled();
-        checkQuantity(quantity);
-        checkVatInfo(vatInfo);
 
         description = updateDescription(description);
         receipt.printRecItemRefundVoid(description, amount,
@@ -4945,8 +5006,8 @@ public class FiscalPrinterImpl extends DeviceService implements PrinterConst,
         }
     }
 
-    public PrinterHeader getHeader(){
+    public PrinterHeader getHeader() {
         return header;
     }
-    
+
 }
