@@ -66,6 +66,7 @@ import com.shtrih.tinyjavapostester.search.bluetooth.DeviceListActivity;
 import com.shtrih.tinyjavapostester.search.tcp.TcpDeviceSearchActivity;
 import com.shtrih.util.Hex;
 import com.shtrih.util.SysUtils;
+import com.shtrih.util.AndroidCompat;
 
 import org.slf4j.LoggerFactory;
 
@@ -278,7 +279,7 @@ public class MainActivity extends AppCompatActivity
         setPrefValue(chbScocFirmwareUpdate, "ScocFirmwareUpdate");
     }
 
-    private ConnectionParameters getParams()
+    private ConnectionParameters getConnectionParams()
     {
         ConnectionParameters params = new ConnectionParameters();
 
@@ -369,7 +370,8 @@ public class MainActivity extends AppCompatActivity
             if (usbManager.hasPermission(device))
                 return;
 
-            PendingIntent mPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
+            PendingIntent mPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION),
+                    AndroidCompat.pendingIntentMutableFlag());
             usbManager.requestPermission(device, mPendingIntent);
         }
     }
@@ -383,7 +385,7 @@ public class MainActivity extends AppCompatActivity
         filter.addAction(ACTION_USB_DETACHED);
         filter.addAction(ACTION_USB_ATTACHED);
         filter.addAction(ACTION_USB_STATE);
-        registerReceiver(usbReceiver, filter);
+        AndroidCompat.registerReceiver(this, usbReceiver, filter);
     }
 
     private void unregisterUsbReceiver() {
@@ -437,37 +439,34 @@ public class MainActivity extends AppCompatActivity
 
     public void verifyBTPermissions() {
 
-        // For Android 6 or higher you have to check the location permission
-        // Seen at https://stackoverflow.com/questions/45197191/how-can-i-modify-bluetoothlegatt-to-enable-ble-device-scanning-on-android-6-0
+        // Android 12+ requires BLUETOOTH_CONNECT / BLUETOOTH_SCAN.
+        // Android 6..11 requires location for BLE discovery.
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return;
+        }
 
-            ArrayList<String> permissions = new ArrayList<String>();
+        ArrayList<String> permissions = new ArrayList<String>();
 
+        if (Build.VERSION.SDK_INT >= 31) {
+            if (checkSelfPermission(com.shtrih.util.AndroidCompat.PERMISSION_BLUETOOTH_CONNECT) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                permissions.add(com.shtrih.util.AndroidCompat.PERMISSION_BLUETOOTH_CONNECT);
+            }
+            if (checkSelfPermission(com.shtrih.util.AndroidCompat.PERMISSION_BLUETOOTH_SCAN) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                permissions.add(com.shtrih.util.AndroidCompat.PERMISSION_BLUETOOTH_SCAN);
+            }
+        } else {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) !=
-                    PackageManager.PERMISSION_GRANTED)
-            {
-                if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION))
-                {
-                    permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-                }
-            }
-            /*
-            if (checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) !=
-                    PackageManager.PERMISSION_GRANTED)
-            {
-                if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_BACKGROUND_LOCATION))
-                {
-                    permissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
-                }
-            }
-            */
-            if(permissions.size() != 0)
-            {
-                requestPermissions(permissions.toArray(new String[0]), 1002);
+                    PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
             }
         }
 
+        if (!permissions.isEmpty()) {
+            requestPermissions(permissions.toArray(new String[0]), 1002);
+        }
     }
 
     @Override
@@ -1607,7 +1606,7 @@ public class MainActivity extends AppCompatActivity
 
     public void connectToDeviceDirect(View view)
     {
-        ConnectionParameters params = getParams();
+        ConnectionParameters params = getConnectionParams();
         params.portType = SmFptrConst.PORT_TYPE_SOCKET;
         new ConnectDeviceTask(params).execute();
     }
@@ -1631,7 +1630,7 @@ public class MainActivity extends AppCompatActivity
         log.debug("Found " + usbs.size() + " USB devices");
 
         int deviceId = usbs.get(0).getDevice().getDeviceId();
-        ConnectionParameters params = getParams();
+        ConnectionParameters params = getConnectionParams();
         params.portName = String.format(Locale.ENGLISH, "%d", deviceId);
         params.portType = SmFptrConst.PORT_TYPE_FROMCLASS;
         params.portClass = "com.shtrih.fiscalprinter.port.UsbPrinterPort";
@@ -1641,7 +1640,7 @@ public class MainActivity extends AppCompatActivity
     public void connectToBTDevice(View view)
     {
         verifyBTPermissions();
-        ConnectionParameters params = getParams();
+        ConnectionParameters params = getConnectionParams();
         params.portType = SmFptrConst.PORT_TYPE_BT;
         new ConnectDeviceTask(params).execute();
     }
@@ -1649,7 +1648,7 @@ public class MainActivity extends AppCompatActivity
     public void connectToBLEDevice(View view)
     {
         verifyBTPermissions();
-        ConnectionParameters params = getParams();
+        ConnectionParameters params = getConnectionParams();
         params.portType = SmFptrConst.PORT_TYPE_BLE;
         new ConnectDeviceTask(params).execute();
     }

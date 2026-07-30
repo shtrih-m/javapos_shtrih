@@ -5,7 +5,7 @@
 
 **Поддерживаемые платформы:**
 * JavaSE 1.6
-* Android 2.3.3
+* Android 2.3.3+ (runtime-совместимость Bluetooth с Android 12+)
 
 Документация доступна [здесь](Doc/SHTRIH/JposShtrih.docx), а так же на [вики](https://github.com/shtrih-m/javapos_shtrih/wiki)
 
@@ -16,6 +16,6 @@
 
 **Supported platforms:**
 * JavaSE 1.6
-* Android 2.3.3
+* Android 2.3.3+ (Bluetooth runtime compatibility with Android 12+)
 
 Documentation available [here](Doc/SHTRIH/JposShtrih.docx) and on [wiki](https://github.com/shtrih-m/javapos_shtrih/wiki)

@@ -1,11 +1,14 @@
 package com.shtrih.fiscalprinter.port;
 
 import android.content.Context;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialPort;
 import com.shtrih.hoho.android.usbserial.driver.UsbSerialProber;
+import com.shtrih.util.AndroidCompat;
 import com.shtrih.util.CircularByteBuffer;
 import com.shtrih.util.CompositeLogger;
 
@@ -37,8 +40,8 @@ public class DeviceUSB {
     //private static final String ACTION_USB_PERMISSION = "com.shtrih.tinyjavapostester.USB_PERMISSION";
 
     private static final CompositeLogger L = CompositeLogger.getLogger(DeviceUSB.class);
+    private final Context context;
     private UsbManager usbManager;
-    //private PendingIntent permissionIntent;
     private UsbSerialDriver currentDevice = null;
 
     private int dataBits = UsbSerialPort.DATABITS_8;
@@ -56,30 +59,9 @@ public class DeviceUSB {
 
         ClearBuffers();
 
+        this.context = context;
         usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
-
-//        permissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION), 0);
-//        IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
-//        context.registerReceiver(usbReceiver, filter);
     }
-
-//    private final BroadcastReceiver usbReceiver = new BroadcastReceiver() {
-//
-//        public void onReceive(Context context, Intent intent) {
-//            String action = intent.getAction();
-//            if (ACTION_USB_PERMISSION.equals(action)) {
-//                synchronized (this) {
-//                    UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-//                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-//                        if (device != null) {
-//                        }
-//                    } else {
-//                        L.error("permission denied for device " + device);
-//                    }
-//                }
-//            }
-//        }
-//    };
 
 //    public String GetSettings() {
 //        int i;
@@ -235,8 +217,15 @@ public class DeviceUSB {
             return false;
         }
         try {
-            currentDevice.getPorts().get(0).open(usbManager.openDevice(currentDevice.getDevice()));
-        } catch (IOException e) {
+            UsbDevice device = currentDevice.getDevice();
+            AndroidCompat.ensureUsbPermission(context, usbManager, device);
+            UsbDeviceConnection connection = usbManager.openDevice(device);
+            if (connection == null) {
+                L.error("UsbManager.openDevice returned null");
+                return false;
+            }
+            currentDevice.getPorts().get(0).open(connection);
+        } catch (Exception e) {
             L.error("Ошибка подключения к устройству", e);
             return false;
         }
@@ -364,12 +353,16 @@ public class DeviceUSB {
         for (int i = 0; i < usbSerialDrivers.size(); i++) {
             currentDevice = usbSerialDrivers.get(i);
             try {
-                currentDevice.getPorts().get(0).open(usbManager.openDevice(currentDevice.getDevice()));
-            } catch (IOException e) {
+                UsbDevice device = currentDevice.getDevice();
+                AndroidCompat.ensureUsbPermission(context, usbManager, device);
+                UsbDeviceConnection connection = usbManager.openDevice(device);
+                if (connection == null) {
+                    L.error("USB-устройство недоступно");
+                    continue;
+                }
+                currentDevice.getPorts().get(0).open(connection);
+            } catch (Exception e) {
                 L.error("Неправильное USB-устройство", e);
-                continue;
-            } catch (NullPointerException e) {
-                L.error("USB-устройство недоступно", e);
                 continue;
             }
             try {

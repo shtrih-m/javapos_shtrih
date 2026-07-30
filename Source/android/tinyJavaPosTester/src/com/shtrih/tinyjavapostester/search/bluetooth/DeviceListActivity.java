@@ -29,6 +29,7 @@ import android.bluetooth.le.ScanSettings;
 
 import com.shtrih.fiscalprinter.port.BluetoothLEPort;
 import com.shtrih.tinyjavapostester.R;
+import com.shtrih.util.AndroidCompat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,7 +83,7 @@ public class DeviceListActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (Build.VERSION.SDK_INT >= 23) {
-                    accessLocationPermission();
+                    accessBluetoothPermissions();
                 }
                 if (btScanStarted) {
                     stopDiscovery();
@@ -97,7 +98,7 @@ public class DeviceListActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 if (Build.VERSION.SDK_INT >= 23) {
-                    accessLocationPermission();
+                    accessBluetoothPermissions();
                 }
                 if (bleScanStarted)
                 {
@@ -128,11 +129,11 @@ public class DeviceListActivity extends AppCompatActivity {
 
         // Register for broadcasts when a device is discovered
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        this.registerReceiver(mReceiver, filter);
+        AndroidCompat.registerReceiver(this, mReceiver, filter);
 
         // Register for broadcasts when discovery has finished
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        this.registerReceiver(mReceiver, filter);
+        AndroidCompat.registerReceiver(this, mReceiver, filter);
 
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -144,34 +145,50 @@ public class DeviceListActivity extends AppCompatActivity {
         }
         bleScanner = mBtAdapter.getBluetoothLeScanner();
 
+        accessBluetoothPermissions();
+        loadPairedDevices();
+    }
 
-        // Get a set of currently paired devices Set<BluetoothDevice>
-        Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices(); // If there are paired devices, add each one to the ArrayAdapter
-        if (pairedDevices.size() > 0) {
-            findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);
-            for (BluetoothDevice device : pairedDevices) {
-                mPairedDevicesArrayAdapter.add(device.getName() + "\n" +
-                        device.getAddress());
+    private void loadPairedDevices() {
+        mPairedDevicesArrayAdapter.clear();
+        try {
+            // Get a set of currently paired devices
+            Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
+            if (pairedDevices != null && pairedDevices.size() > 0) {
+                findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);
+                for (BluetoothDevice device : pairedDevices) {
+                    String name = device.getName();
+                    mPairedDevicesArrayAdapter.add((name != null ? name : "") + "\n" +
+                            device.getAddress());
+                }
+            } else {
+                findViewById(R.id.title_paired_devices).setVisibility(View.GONE);
             }
-        } else {
+        } catch (SecurityException e) {
+            log.error("Failed to read bonded devices, permission missing", e);
             findViewById(R.id.title_paired_devices).setVisibility(View.GONE);
         }
-
     }
 
     final int REQUEST_CODE_LOC = 666;
 
-    private void accessLocationPermission() {
-        int accessCoarseLocation = checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION);
-        int accessFineLocation = checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION);
-
+    private void accessBluetoothPermissions() {
         List<String> listRequestPermission = new ArrayList<String>();
 
-        if (accessCoarseLocation != PackageManager.PERMISSION_GRANTED) {
-            listRequestPermission.add(android.Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
-        if (accessFineLocation != PackageManager.PERMISSION_GRANTED) {
-            listRequestPermission.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
+        if (Build.VERSION.SDK_INT >= 31) {
+            if (checkSelfPermission(AndroidCompat.PERMISSION_BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                listRequestPermission.add(AndroidCompat.PERMISSION_BLUETOOTH_CONNECT);
+            }
+            if (checkSelfPermission(AndroidCompat.PERMISSION_BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                listRequestPermission.add(AndroidCompat.PERMISSION_BLUETOOTH_SCAN);
+            }
+        } else if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                listRequestPermission.add(android.Manifest.permission.ACCESS_COARSE_LOCATION);
+            }
+            if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                listRequestPermission.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
+            }
         }
 
         if (!listRequestPermission.isEmpty()) {
@@ -192,8 +209,7 @@ public class DeviceListActivity extends AppCompatActivity {
                             return;
                         }
                     }
-
-                    //startBTDiscovery(); !!!
+                    loadPairedDevices();
                 }
                 break;
             default:

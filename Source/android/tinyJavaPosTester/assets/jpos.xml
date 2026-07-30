@@ -67,6 +67,7 @@
 
 		<!-- Таймаут чтения данных, мс -->
 		<prop name="byteTimeout" type="String" value="500"/>
+		<prop name="portOpenTimeout" type="String" value="20000"/>
 
 		<!-- Device byte receive timeout -->
 		<prop name="deviceByteTimeout" type="String" value="5000"/>

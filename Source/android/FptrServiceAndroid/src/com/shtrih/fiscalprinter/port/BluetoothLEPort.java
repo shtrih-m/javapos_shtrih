@@ -12,6 +12,8 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.content.Context;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
@@ -29,6 +31,7 @@ import java.util.Vector;
 import java.util.ArrayList;
 
 import com.shtrih.jpos.fiscalprinter.FptrParameters;
+import com.shtrih.util.AndroidCompat;
 import com.shtrih.util.ByteUtils;
 import com.shtrih.util.Hex;
 import com.shtrih.util.Time;
@@ -68,6 +71,15 @@ public class BluetoothLEPort implements PrinterPort2 {
     List<BluetoothDevice> scanDevices = new Vector<>();
     HashMap<Object, StatusOperation> operations = new HashMap<>();
     private final List<byte[]> txqueue = new Vector<>();
+    /** True while a GATT write was accepted and onCharacteristicWrite is pending. */
+    private boolean gattWritePending = false;
+    private final Handler bleHandler = new Handler(Looper.getMainLooper());
+    private final Runnable pumpTxRunnable = new Runnable() {
+        @Override
+        public void run() {
+            pumpTxQueue();
+        }
+    };
     private IPortEvents events = null;
     private boolean portOpened = false;
     private BluetoothLeScanner scanner;
@@ -130,25 +142,15 @@ public class BluetoothLEPort implements PrinterPort2 {
                 characteristic, int status)
         {
             loggerDebug("BluetoothGattCallback.onCharacteristicWrite(status: " + status);
-            //completeOperation(characteristic, status);
+            completeOperation(characteristic, status);
             if (status != BluetoothGatt.GATT_SUCCESS){
                 logger.error("onCharacteristicWrite: status != BluetoothGatt.GATT_SUCCESS, status = " + status);
             }
-
-            if (status == BluetoothGatt.GATT_SUCCESS)
-            {
-                byte[] data = null;
-                synchronized(txqueue)
-                {
-                    if (txqueue.size() > 0) {
-                        data = txqueue.remove(0);
-                    }
-                }
-                if (data != null) {
-                    characteristic.setValue(data);
-                    writeCharacteristic(characteristic);
-                }
+            synchronized (txqueue) {
+                gattWritePending = false;
             }
+            // Drain queued PPP/BLE frames one-by-one (Android allows a single outstanding write).
+            pumpTxQueue();
         }
 
         public void onCharacteristicChanged (BluetoothGatt gatt, BluetoothGattCharacteristic
@@ -223,11 +225,18 @@ public class BluetoothLEPort implements PrinterPort2 {
     private void startReconnect() {
         if (portOpened) {
             loggerDebug("Start scan");
+            try {
+                AndroidCompat.ensureBluetoothScanPermission(StaticContext.getContext());
+            } catch (Exception e) {
+                logger.error("BLE reconnect scan skipped: " + e.getMessage());
+                return;
+            }
             scanState = ScanState.ScanStarted;
             List<ScanFilter> filters = new ArrayList<>();
             filters.add(new ScanFilter.Builder().setDeviceAddress(device.getAddress()).build());
-            ScanSettings settings = new ScanSettings.Builder().setScanMode(
-                    ScanSettings.CALLBACK_TYPE_FIRST_MATCH).build();
+            ScanSettings settings = new ScanSettings.Builder()
+                    .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+                    .build();
 
             scanner = adapter.getBluetoothLeScanner();
             scanner.startScan(filters, settings, scanOpenedDeviceCallback);
@@ -247,7 +256,8 @@ public class BluetoothLEPort implements PrinterPort2 {
             device = result.getDevice();
             setState(ConnectState.ConnectGatt);
             Context context = StaticContext.getContext();
-            bluetoothGatt = device.connectGatt(context, true, new BluetoothGattCallbackImpl());
+            // autoConnect=false: direct LE connect (whitelist/background connect is too slow via HCI bridge)
+            bluetoothGatt = AndroidCompat.connectGatt(device, context, false, new BluetoothGattCallbackImpl());
         }
     };
 
@@ -389,6 +399,12 @@ public class BluetoothLEPort implements PrinterPort2 {
     {
         loggerDebug("open(" + timeout + ")");
 
+        // 0 / negative means "use port default" (BLE connect needs several seconds).
+        // SuperTroyka maps JPOS_E_FAILURE(111) to "Bluetooth off", so a too-small
+        // timeout surfaces as a misleading UI error.
+        if (timeout <= 0) {
+            timeout = openTimeout;
+        }
         connect(timeout);
         registerReceiver();
         portOpened = true;
@@ -438,12 +454,15 @@ public class BluetoothLEPort implements PrinterPort2 {
 
     private void registerReceiver() {
         try {
+            if (receiverRegistered) {
+                return;
+            }
             // events
             IntentFilter filter = new IntentFilter();
             filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
             Context context = StaticContext.getContext();
             if (context != null) {
-                context.registerReceiver(mBroadcastReceiver, filter);
+                AndroidCompat.registerReceiver(context, mBroadcastReceiver, filter);
                 receiverRegistered = true;
             }
         } catch (Exception e) {
@@ -476,6 +495,9 @@ public class BluetoothLEPort implements PrinterPort2 {
     public synchronized void connect(int timeout) throws Exception
     {
         if (isOpened()) return;
+
+        Context context = StaticContext.checkContext();
+        AndroidCompat.ensureBluetoothConnectAndScan(context);
 
         registerReceiver();
         if (state == ConnectState.Disconnected)
@@ -512,7 +534,8 @@ public class BluetoothLEPort implements PrinterPort2 {
         }
         setState(ConnectState.ConnectGatt);
         Context context = StaticContext.checkContext();
-        bluetoothGatt = device.connectGatt(context, true, new BluetoothGattCallbackImpl());
+        // autoConnect=false: direct LE connect; auto=true uses filter accept list with low duty cycle
+        bluetoothGatt = AndroidCompat.connectGatt(device, context, false, new BluetoothGattCallbackImpl());
         if (bluetoothGatt == null) {
             throw new Exception("ConnectGatt returns null");
         }
@@ -528,25 +551,27 @@ public class BluetoothLEPort implements PrinterPort2 {
 
             switch (state){
                 case FailedToConnectGatt:
-                    throw new Exception("Failed to connect Gatt");
+                    throw new IOException("Failed to connect Gatt");
 
                 case DiscoverServicesFailed:
-                    throw new Exception("DiscoverServices function failed");
+                    throw new IOException("DiscoverServices function failed");
 
                 case UartServiceNotSupported:
-                    throw new Exception("Uart service not supported");
+                    throw new IOException("Uart service not supported");
 
                 case TxCharCharacteristicNotSupported:
-                    throw new Exception("TxChar characteristic not supported");
+                    throw new IOException("TxChar characteristic not supported");
 
                 case TxCharCccdDescriptorNotSupported:
-                    throw new Exception("TxChar CCCD descriptor not supported");
+                    throw new IOException("TxChar CCCD descriptor not supported");
             }
 
             Time.delay(100);
-            if ((currentTime - startTime) > timeout) {
+            // Use IOException so JposExceptionHandler maps to JPOS_E_TIMEOUT (112).
+            // SuperTroyka shows 111 as "Bluetooth off" and 112 as "printer not connected".
+            if ((System.currentTimeMillis() - startTime) > timeout) {
                 loggerDebug("waitOpened(): timeout");
-                throw new Exception("Port open timeout");
+                throw new IOException("Port open timeout");
             }
         }
     }
@@ -584,7 +609,11 @@ public class BluetoothLEPort implements PrinterPort2 {
             bluetoothGatt = null;
         }
         TxChar = null;
-        txqueue.clear();
+        bleHandler.removeCallbacks(pumpTxRunnable);
+        synchronized (txqueue) {
+            txqueue.clear();
+            gattWritePending = false;
+        }
 
         if (events != null) {
             events.onDisconnect();
@@ -637,83 +666,91 @@ public class BluetoothLEPort implements PrinterPort2 {
         if (bluetoothmtu > 0) blockSize = bluetoothmtu;
 
         int count = (b.length + blockSize -1)/blockSize;
-        for (int i=0;i<count;i++) {
-            int offset = i * blockSize;
-            int dataSize = b.length - i * blockSize;
-            if (dataSize > blockSize) {
-                dataSize = blockSize;
-            }
-            byte[] blockData = new byte[dataSize];
-            System.arraycopy(b, offset, blockData, 0, dataSize);
-            synchronized(txqueue) {
+        synchronized (txqueue) {
+            for (int i = 0; i < count; i++) {
+                int offset = i * blockSize;
+                int dataSize = b.length - i * blockSize;
+                if (dataSize > blockSize) {
+                    dataSize = blockSize;
+                }
+                byte[] blockData = new byte[dataSize];
+                System.arraycopy(b, offset, blockData, 0, dataSize);
                 txqueue.add(blockData);
             }
         }
-        if (isOpened())
-        {
-            byte[] data = null;
-            synchronized (txqueue) {
-                if (txqueue.size() > 0) {
-                    data = txqueue.remove(0);
-                }
-            }
-            if (data != null) {
-                writeData(data);
-            }
-        }
+        pumpTxQueue();
         loggerDebug("write: OK");
     }
 
-    private void writeData(byte[] blockData) throws Exception
+    /**
+     * Starts at most one GATT write. Further frames stay in {@link #txqueue}
+     * until {@link BluetoothGattCallback#onCharacteristicWrite} completes.
+     */
+    private void pumpTxQueue()
     {
-        loggerDebug("writeData: " + Hex.toHex(blockData));
-        if (isOpened())
-        {
-            BluetoothGattService uartService = bluetoothGatt.getService(UART_SERVICE_UUID);
-            if (uartService == null) {
-                throw new IOException("UartService not found!");
+        byte[] data;
+        synchronized (txqueue) {
+            if (gattWritePending || !isOpened() || txqueue.isEmpty()) {
+                return;
             }
-            BluetoothGattCharacteristic RxChar = uartService.getCharacteristic(RX_CHAR_UUID);
-            if (RxChar == null) {
-                throw new IOException("Rx charateristic not found!");
-            }
-            RxChar.setValue(blockData);
-            writeCharacteristic(RxChar);
-            /*
-            if (!status) {
-                throw new IOException("Failed bluetoothGatt.writeCharacteristic");
-            }
-            StatusOperation operation = new StatusOperation(RxChar, "Write");
-            operations.put(RxChar, operation);
-            operation.wait(writeTimeout);
-            operation.checkStatus();
-            operations.remove(operation);
-             */
+            data = txqueue.remove(0);
+            gattWritePending = true;
         }
-        //txBuffer.write(blockData);
+        try {
+            if (!writeData(data)) {
+                synchronized (txqueue) {
+                    txqueue.add(0, data);
+                    gattWritePending = false;
+                }
+                logger.error("Failed bluetoothGatt.writeCharacteristic, frame re-queued");
+                bleHandler.removeCallbacks(pumpTxRunnable);
+                bleHandler.postDelayed(pumpTxRunnable, 20);
+            }
+        } catch (Exception e) {
+            synchronized (txqueue) {
+                txqueue.add(0, data);
+                gattWritePending = false;
+            }
+            logger.error("pumpTxQueue failed", e);
+            bleHandler.removeCallbacks(pumpTxRunnable);
+            bleHandler.postDelayed(pumpTxRunnable, 20);
+        }
     }
 
-    public void writeCharacteristic(BluetoothGattCharacteristic characteristic)
+    private boolean writeData(byte[] blockData) throws Exception
     {
-        if (bluetoothGatt == null) return;
+        loggerDebug("writeData: " + Hex.toHex(blockData));
+        if (!isOpened() || bluetoothGatt == null) {
+            return false;
+        }
+        BluetoothGattService uartService = bluetoothGatt.getService(UART_SERVICE_UUID);
+        if (uartService == null) {
+            throw new IOException("UartService not found!");
+        }
+        BluetoothGattCharacteristic RxChar = uartService.getCharacteristic(RX_CHAR_UUID);
+        if (RxChar == null) {
+            throw new IOException("Rx charateristic not found!");
+        }
+        RxChar.setValue(blockData);
+        return writeCharacteristic(RxChar);
+    }
 
-        int maxCount = 3;
-        try {
-            for (int i=0;i<maxCount;i++)
-            {
-                checkPortState();
-                boolean status = bluetoothGatt.writeCharacteristic(characteristic);
-                if (status) break;
-                if (!status)
-                {
-                    logger.error(String.format("Failed bluetoothGatt.writeCharacteristic, %d", i + 1));
-                    Thread.sleep(100);
-                }
-            }
+    /**
+     * Submits one GATT write. Android allows only a single outstanding write;
+     * callers must wait for {@code onCharacteristicWrite} before the next.
+     * @return true if the write was accepted by the Bluetooth stack
+     */
+    public boolean writeCharacteristic(BluetoothGattCharacteristic characteristic) throws Exception
+    {
+        if (bluetoothGatt == null) {
+            return false;
         }
-        catch(Exception e){
-            logger.error(e);
+        checkPortState();
+        boolean accepted = bluetoothGatt.writeCharacteristic(characteristic);
+        if (!accepted) {
+            logger.error("Failed bluetoothGatt.writeCharacteristic");
         }
+        return accepted;
     }
 
     private class StatusOperation
@@ -792,16 +829,19 @@ public class BluetoothLEPort implements PrinterPort2 {
 
     public String[] getPortNames() throws Exception
     {
+        AndroidCompat.ensureBluetoothConnectAndScan(StaticContext.checkContext());
         Set<String> ports = new HashSet<>();
         List<BluetoothDevice> devices = scan(params.portNamePrefix, params.portNameTimeout, params.portNameSingle);
         for (BluetoothDevice device : devices) {
-            ports.add(device.getAddress() + " " + device.getName());
+            String name = device.getName();
+            ports.add(device.getAddress() + " " + (name != null ? name : ""));
         }
         return ports.toArray(new String[0]);
     }
 
     public List<BluetoothDevice> scan(String deviceName, int timeout, boolean singleDevice) throws Exception
     {
+        AndroidCompat.ensureBluetoothScanPermission(StaticContext.checkContext());
         scanSingle = singleDevice;
         scanDevices.clear();
         scanDeviceName = deviceName;

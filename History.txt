@@ -7,6 +7,19 @@
     
 ********************************************************************************
 
+  30.07.2026
+  deviceServiceVersion = 1013717
+  
+  [+] Android Bluetooth / BLE:
+      - AndroidCompat: BLUETOOTH_CONNECT/SCAN checks, registerReceiver flags,
+        USB permission before openDevice, connectGatt(TRANSPORT_LE)
+      - BLE connectGatt with autoConnect=false for reliable direct connect
+      - Serialized GATT characteristic writes (one outstanding write)
+      - Default portOpenTimeout = 10000 ms
+      - BLE port open/connect failures reported as IOException (JPOS 112)
+
+********************************************************************************
+
   18.02.2026
   deviceServiceVersion = 1013716
   

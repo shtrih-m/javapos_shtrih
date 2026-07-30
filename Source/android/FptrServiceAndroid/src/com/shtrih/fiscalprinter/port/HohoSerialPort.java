@@ -18,6 +18,7 @@ import com.shtrih.util.Localizer;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.hoho.android.usbserial.driver.*;
 import com.shtrih.util.StaticContext;
+import com.shtrih.util.AndroidCompat;
 
 import android.hardware.usb.UsbDeviceConnection;
 import android.content.Context;
@@ -34,7 +35,6 @@ public class HohoSerialPort implements PrinterPort {
     private String portName = "";
     private UsbSerialPort port = null;
     private static CompositeLogger logger = CompositeLogger.getLogger(HohoSerialPort.class);
-    private static final String ACTION_USB_PERMISSION = "com.shtrih.fiscalprinter.port.USB_PERMISSION";
 
     /**
      * Creates a new instance of PrinterPort
@@ -106,8 +106,13 @@ public class HohoSerialPort implements PrinterPort {
             if (driver == null) {
                 throw new Exception("Driver not found");
             }
+            UsbDevice device = driver.getDevice();
+            AndroidCompat.ensureUsbPermission(context, usbManager, device);
+            UsbDeviceConnection connection = usbManager.openDevice(device);
+            if (connection == null) {
+                throw new Exception("UsbManager.openDevice returned null");
+            }
             port = driver.getPorts().get(0);
-            UsbDeviceConnection connection = usbManager.openDevice(driver.getDevice());
             port.open(connection);
             port.setParameters(baudRate, UsbSerialPort.DATABITS_8, UsbSerialPort.STOPBITS_1,
                     UsbSerialPort.PARITY_NONE);

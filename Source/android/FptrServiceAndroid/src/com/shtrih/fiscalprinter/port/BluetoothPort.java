@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
+import com.shtrih.util.AndroidCompat;
 import com.shtrih.util.CompositeLogger;
 import com.shtrih.util.StaticContext;
 import com.shtrih.util.Localizer;
@@ -94,6 +95,7 @@ public class BluetoothPort implements PrinterPort2 {
     public void openPort(int timeout) throws Exception
     {
         Thread.sleep(0); // check thread interrupted
+        AndroidCompat.ensureBluetoothConnectPermission(StaticContext.getContext());
         BluetoothAdapter adapter = getBluetoothAdapter();
         if (BluetoothAdapter.checkBluetoothAddress(portName)) {
             // portName is valid MAC address
@@ -103,13 +105,14 @@ public class BluetoothPort implements PrinterPort2 {
             // portName is deviceName prefix, for example "SHTRIH-NANO-F"
             Set<BluetoothDevice> devices = adapter.getBondedDevices();
             for (BluetoothDevice device : devices) {
-                if (device.getName().startsWith(portName)) {
+                String name = device.getName();
+                if (name != null && name.startsWith(portName)) {
                     try {
                         connectDevice(device);
                         return;
                     } catch (Exception e) {
                         logger.error("Failed to connect device " +
-                                device.getName() + ", " + device.getAddress());
+                                name + ", " + device.getAddress());
                     }
                 }
             }
@@ -239,6 +242,9 @@ public class BluetoothPort implements PrinterPort2 {
     {
         logger.debug("registerReceiver");
         try {
+            if (receiverRegistered) {
+                return;
+            }
             // events
             IntentFilter filter = new IntentFilter();
             filter.addAction(BluetoothDevice.ACTION_FOUND);
@@ -249,7 +255,7 @@ public class BluetoothPort implements PrinterPort2 {
 
             Context context = StaticContext.getContext();
             if (context != null) {
-                context.registerReceiver(mBroadcastReceiver, filter);
+                AndroidCompat.registerReceiver(context, mBroadcastReceiver, filter);
                 receiverRegistered = true;
                 logger.debug("Receiver registered");
             }
@@ -414,11 +420,13 @@ public class BluetoothPort implements PrinterPort2 {
 
     public String[] getPortNames() throws Exception
     {
+        AndroidCompat.ensureBluetoothConnectPermission(StaticContext.getContext());
         Set<String> ports = new HashSet<>();
         Set<BluetoothDevice> devices = getBluetoothAdapter().getBondedDevices();
         for (BluetoothDevice device : devices)
         {
-            ports.add(device.getAddress() + " " + device.getName());
+            String name = device.getName();
+            ports.add(device.getAddress() + " " + (name != null ? name : ""));
         }
         return ports.toArray(new String[0]);
     }
