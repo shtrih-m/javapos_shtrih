@@ -8,6 +8,17 @@
 ********************************************************************************
 
   31.07.2026
+  deviceServiceVersion = 1013718
+  
+  [-] Android PPP over BLE / kktnetd:
+      - Patched libkktnetd.so (ARM_32/64, x86_32/64): fsm_timeout_time 6→1 s
+      - Settle after PPP_PHASE_RUNNING before fiscal TCP: 3000→1000 ms
+        (post-connect wait 500→200 ms)
+  [+] Verified: BLE connect ~26 s on emulator API 31, ~9.4 s on SM-X306B (API 34)
+
+********************************************************************************
+
+  31.07.2026
   deviceServiceVersion = 1013717
   
   [+] Android Bluetooth / BLE:

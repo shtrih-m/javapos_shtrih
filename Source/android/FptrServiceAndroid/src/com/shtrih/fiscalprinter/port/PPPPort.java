@@ -124,13 +124,13 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
      * An immediate connect gets RST and leaves a dead kktnetd resender session.
      */
     private void openSocketWithRetry(int timeout) throws Exception {
-        final int settleMs = 3000;
+        final int settleMs = 1000;
         logger.debug("openSocketWithRetry: settle " + settleMs + " ms before fiscal TCP");
         Thread.sleep(settleMs);
         closeSocket();
         openSocket();
         // Allow kktnetd async_connect(peer:7778) to complete before first frame.
-        Thread.sleep(500);
+        Thread.sleep(200);
         logger.debug("openSocketWithRetry: OK");
     }
 
