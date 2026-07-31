@@ -24,6 +24,8 @@
       - Faster PPPThread status/phase polling (50 ms)
   [+] tinyJavaPosTester: AcceptanceConnectActivity (headless BLE connect test)
   [+] Android scripts: BLE acceptance runner, RTK Bumble HCI bridge
+  [+] BLE acceptance verified on emulator API 31/32/33/36 (Bumble/RTK HCI)
+      and physical device API 34 (SM-X306B)
 
 ********************************************************************************
 
