@@ -83,4 +83,21 @@ public class LogbackConfig {
 		root.addAppender(asyncAppender);
 		root.addAppender(logcatAppender);
 	}
+
+	/**
+	 * Turn off SLF4J/logback for headless acceptance runs.
+	 * Avoids EPERM when assets/logback.xml tries to write under {@code /storage/emulated/0/}.
+	 */
+	public static void disable() {
+		try {
+			System.setProperty("logback.statusListenerClass", "ch.qos.logback.core.status.NopStatusListener");
+		} catch (Exception ignored) {
+		}
+		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+		lc.reset();
+		ch.qos.logback.classic.Logger root =
+				(ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+		root.detachAndStopAllAppenders();
+		root.setLevel(ch.qos.logback.classic.Level.OFF);
+	}
 }

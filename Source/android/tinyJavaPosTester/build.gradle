@@ -7,7 +7,7 @@ task prepareKotlinBuildScriptModel {
 android {
     compileSdkVersion 23
     defaultConfig {
-        applicationId "com.example.tinyjavaposttester"
+        applicationId "com.shtrih.tinyjavapostester"
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 1

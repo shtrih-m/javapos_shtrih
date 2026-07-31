@@ -84,13 +84,20 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         printerPort.setTimeout(params.byteTimeout);
         printerPort.open(timeout);
         printerPort.setPortEvents(this);
+        // Start kktnetd, then attach BLE<->PPP forwarder ASAP so the first LCP
+        // frames are not lost (pppos_write "output failed" before localSocket).
         startPPPThread();
         openLocalSocket(timeout);
         startDispatchThread();
+        if (!pppThread.waitForStatus("RUNNING", 5000)) {
+            throw new IOException("kktnetd failed to start");
+        }
         if (!pppThread.waitForPhase("PPP_PHASE_RUNNING", 60000)){
             noConnectionError();
         }
-        openSocket();
+        // Printer fiscal TCP (:7778) often is not listening immediately after
+        // IPCP; an early connect gets RST and leaves a dead resender session.
+        openSocketWithRetry(timeout);
         if (events != null) {
             events.onConnect();
         }
@@ -110,6 +117,21 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
         }
+    }
+
+    /**
+     * Give the peer time to bind fiscal TCP after PPP_PHASE_RUNNING.
+     * An immediate connect gets RST and leaves a dead kktnetd resender session.
+     */
+    private void openSocketWithRetry(int timeout) throws Exception {
+        final int settleMs = 3000;
+        logger.debug("openSocketWithRetry: settle " + settleMs + " ms before fiscal TCP");
+        Thread.sleep(settleMs);
+        closeSocket();
+        openSocket();
+        // Allow kktnetd async_connect(peer:7778) to complete before first frame.
+        Thread.sleep(500);
+        logger.debug("openSocketWithRetry: OK");
     }
 
     public void startPPPThread() throws Exception
@@ -132,7 +154,11 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         }
         pppThread = new PPPThread(config);
         pppThread.start();
-        pppThread.waitForStatus("RUNNING", 5000);
+        // Wait only until api_init sets ctx so the unix listener is about to
+        // start; caller must openLocalSocket before waiting for PPP RUNNING.
+        if (!pppThread.waitForContext(5000, 50)) {
+            throw new IOException("kktnetd failed to initialize");
+        }
         logger.debug("startPPPThread(): OK");
     }
 
@@ -251,6 +277,8 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
             }
             socket = null;
         }
+        inputStream = null;
+        outputStream = null;
         logger.debug("closeSocket: OK");
     }
 
@@ -316,6 +344,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     public byte[] readBytes(int len) throws Exception
     {
         checkConnected();
+        openSocket();
         long time = Calendar.getInstance().getTimeInMillis() + readTimeout + 10000; // !!!
         byte[] data = new byte[len];
         int offset = 0;
@@ -326,7 +355,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
             if (count > 0) {
                 count = inputStream.read(data, offset, count);
                 if (count == -1) {
-                    disconnect();
+                    closeSocket();
                     throw new ClosedConnectionException("Connection closed");
                 }
                 len -= count;
@@ -334,6 +363,9 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
             }
             long lastTimeInMillis = Calendar.getInstance().getTimeInMillis();
             if (lastTimeInMillis > time) {
+                // Drop dead localhost:7778 session so the next write() recreates
+                // the resender tunnel (peer may have RST the first attempt).
+                closeSocket();
                 noConnectionError();
             }
             Thread.sleep(0);
@@ -346,7 +378,7 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         checkConnected();
         for (int i = 0; i < 2; i++) {
             try {
-                open();
+                openSocket();
                 //logger.debug("=>> write: " + Hex.toHex(b));
                 outputStream.write(b);
                 return;

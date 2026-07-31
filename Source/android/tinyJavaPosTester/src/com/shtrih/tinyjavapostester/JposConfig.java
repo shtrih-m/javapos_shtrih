@@ -31,21 +31,19 @@ public class JposConfig {
 
         JposEntryRegistry registry = JposServiceLoader.getManager()
                 .getEntryRegistry();
-        if (registry.hasJposEntry(deviceName)) {
-            JposEntry jposEntry = registry.getJposEntry(deviceName);
-            if (jposEntry != null) {
-                for (Map.Entry<String, String> entry : props.entrySet()) {
-                    String key = entry.getKey();
-                    String value = entry.getValue();
-                    if (jposEntry.hasPropertyWithName(key))
-                        jposEntry.modifyPropertyValue(key, value);
-                    else
-                        jposEntry.addProperty(key, value);
-                }
-            }
+        if (!registry.hasJposEntry(deviceName)) {
+            throw new Exception("JposEntry not found after loading jpos.xml: " + deviceName
+                    + " (url=" + fileURL + ")");
         }
-
-        // TODO: throw?
+        JposEntry jposEntry = registry.getJposEntry(deviceName);
+        for (Map.Entry<String, String> entry : props.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if (jposEntry.hasPropertyWithName(key))
+                jposEntry.modifyPropertyValue(key, value);
+            else
+                jposEntry.addProperty(key, value);
+        }
     }
 
     public static void copyAsset(String assetFileName, String destFile, Context context)

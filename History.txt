@@ -7,7 +7,7 @@
     
 ********************************************************************************
 
-  30.07.2026
+  31.07.2026
   deviceServiceVersion = 1013717
   
   [+] Android Bluetooth / BLE:
@@ -17,6 +17,13 @@
       - Serialized GATT characteristic writes (one outstanding write)
       - Default portOpenTimeout = 10000 ms
       - BLE port open/connect failures reported as IOException (JPOS 112)
+  [-] Android PPP over BLE:
+      - Attach BLE<->PPP localSocket before waiting for PPP RUNNING
+      - Settle ~3s after PPP_PHASE_RUNNING before fiscal TCP :7778
+      - Close/recreate localhost:7778 socket on read timeout
+      - Faster PPPThread status/phase polling (50 ms)
+  [+] tinyJavaPosTester: AcceptanceConnectActivity (headless BLE connect test)
+  [+] Android scripts: BLE acceptance runner, RTK Bumble HCI bridge
 
 ********************************************************************************
 

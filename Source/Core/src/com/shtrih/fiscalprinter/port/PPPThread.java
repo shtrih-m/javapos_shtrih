@@ -135,7 +135,7 @@ public class PPPThread implements Runnable {
             if (Calendar.getInstance().getTimeInMillis() > time){
                 return false;
             }
-            Thread.sleep(1000);
+            Thread.sleep(50);
         }
     }
 
@@ -154,7 +154,7 @@ public class PPPThread implements Runnable {
             if (Calendar.getInstance().getTimeInMillis() > time){
                 return false;
             }
-            Thread.sleep(1000);
+            Thread.sleep(50);
         }
     }
 
@@ -173,7 +173,7 @@ public class PPPThread implements Runnable {
             if (Calendar.getInstance().getTimeInMillis() > time){
                 return false;
             }
-            Thread.sleep(1000);
+            Thread.sleep(50);
         }
     }
 

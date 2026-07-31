@@ -1,370 +1,242 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE JposEntries PUBLIC "-//JavaPOS//DTD//EN" "jpos/res/jcl.dtd">
 <JposEntries>
-	<!--Saved by JavaPOS jpos.config/loader (JCL) version 2.1.0-RC3 on 10/26/04 8:17 AM-->
-	<JposEntry logicalName="VirtualLineDisplay">
-		<creation factoryClass="com.xyz.jpos.XyzJposServiceInstanceFactory" serviceClass="com.xyz.jpos.LineDisplayService"/>
-		<vendor name="Xyz, Corp." url="http://www.javapos.com"/>
-		<jpos category="LineDisplay" version="1.5"/>
-		<product description="Example virtual LineDisplay JavaPOS Service from virtual Xyz Corporation" name="Xyz Virtual LineDisplay Service for JavaPOS(TM) Standard" url="http://www.javapos.com"/>
-		<!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
-	</JposEntry>
-	<JposEntry logicalName="ShtrihFptr">
-		<creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.fiscalprinter.FiscalPrinterService"/>
-		<vendor name="SHTRIH-M" url="http://www.shtrih-m.com"/>
-		<jpos category="FiscalPrinter" version="1.9"/>
-		<product description="Fiscal printer service" name="ShtrihFptr" url="http://www.javapos.com"/>
-		<!-- Тип порта:
-		     0 - последовательный(COM)
-		     2 - TCP-подключение
-		     3 - класс из параметра protClass
+  <!--Saved by JavaPOS jpos.config/loader (JCL) version 2.1.0-RC3 on 10/26/04 8:17 AM-->
+  <JposEntry logicalName="VirtualLineDisplay">
+    <creation factoryClass="com.xyz.jpos.XyzJposServiceInstanceFactory" serviceClass="com.xyz.jpos.LineDisplayService"/>
+    <vendor name="Xyz, Corp." url="http://www.javapos.com"/>
+    <jpos category="LineDisplay" version="1.5"/>
+    <product description="Example virtual LineDisplay JavaPOS Service from virtual Xyz Corporation" name="Xyz Virtual LineDisplay Service for JavaPOS(TM) Standard" url="http://www.javapos.com"/>
+    <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+  </JposEntry>
+  <JposEntry logicalName="ShtrihFptr">
+    <creation factoryClass="com.shtrih.jpos.ShtrihJposServiceInstanceFactory" serviceClass="com.shtrih.jpos.fiscalprinter.FiscalPrinterService"/>
+    <vendor name="SHTRIH-M" url="http://www.shtrih-m.com"/>
+    <jpos category="FiscalPrinter" version="1.9"/>
+    <product description="Fiscal printer service" name="ShtrihFptr" url="http://www.javapos.com"/>
+    <!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass -->
+    <prop name="portType" type="String" value="4"/>
+    <!-- portClass  -->
+    <!--<prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.FtdiPrinterPort"/>  -->
+    <prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.BluetoothPort"/>
+    <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+    <!-- ProtocolType, 0 - protocol 1, 1 - protocol 2 -->
+    <prop name="protocolType" type="String" value="1"/>
+    <!--Port name-->
+    <!--For serial ports - COM1, for TCP ports: host:port - "10.11.7.210:12345" -->
+    <!--<prop name="portName" type="String" value="10.11.7.210:12345"/> -->
+    <prop name="portName" type="String" value="30:AE:A4:95:F3:7E"/>
+    <!--Baudrate 2400;4800;9600;19200;38400;57600;115200;230400;460800 -->
+    <prop name="baudRate" type="String" value="115200"/>
+    <!--Default department-->
+    <prop name="department" type="String" value="1"/>
+    <!-- Default font number -->
+    <prop name="fontNumber" type="String" value="1"/>
+    <!-- Close receipt text -->
+    <prop name="closeReceiptText" type="String" value=""/>
+    <!-- Subtotal text -->
+    <prop name="subtotalText" type="String" value="РџРћР”РРўРћР“:"/>
+    <!-- Driver byte receive timeout -->
+    <prop name="byteTimeout" type="String" value="3000"/>
+    <prop name="portOpenTimeout" type="String" value="20000"/>
+    <!-- Device byte receive timeout -->
+    <prop name="deviceByteTimeout" type="String" value="5000"/>
+    <!-- Device search enabled for all serial ports -->
+    <prop name="searchByPortEnabled" type="String" value="0"/>
+    <!-- Device search enabled for all baud rates -->
+    <prop name="searchByBaudRateEnabled" type="String" value="0"/>
+    <!-- Tax officer password -->
+    <prop name="taxPassword" type="String" value="0"/>
+    <!-- Operator password -->
+    <prop name="operatorPassword" type="String" value="1"/>
+    <!-- System administrator password -->
+    <prop name="sysAdminPassword" type="String" value="30"/>
+    <!-- device state polling enabled -->
+    <prop name="pollEnabled" type="String" value="1"/>
+    <!-- device state polling interval in milliseconds -->
+    <prop name="pollInterval" type="String" value="10000"/>
+    <!-- Amount coefficient -->
+    <prop name="amountFactor" type="String" value="1"/>
+    <!-- Quantity coefficient -->
+    <prop name="quantityFactor" type="String" value="1000"/>
+    <!-- Strings encoding -->
+    <prop name="stringEncoding" type="String" value=""/>
+    <!-- Statistics file name -->
+    <prop name="statisticFileName" type="String" value="ShtrihFiscalPrinter.xml"/>
+    <!-- Barcode print time -->
+    <prop name="graphicsLineDelay" type="String" value="0"/>
+    <!-- fieldsFileName to initialize printer tables -->
+    <prop name="fieldsFileName" type="String" value="Tables.csv"/>
+    <!-- Number of header lines -->
+    <prop name="numHeaderLines" type="String" value="4"/>
+    <!-- Number of trailer lines -->
+    <prop name="numTrailerLines" type="String" value="2"/>
+    <!-- Device to print report, 0 - fiscal memory (FM), 1 - electronic journal (EJ)  -->
+    <prop name="reportDevice" type="String" value="0"/>
+    <!-- Report type, 0 - short, 1 - full -->
+    <prop name="reportType" type="String" value="1"/>
+    <!-- Status command:   -->
+    <!-- 0 - command 10h, short status request  -->
+    <!-- 1 - command 11h, long status request  -->
+    <!-- 2 - status command selected by driver -->
+    <prop name="statusCommand" type="String" value="2"/>
+    <!-- Localization file name -->
+    <prop name="messagesFileName" type="String" value="shtrihjavapos_ru.properties"/>
+    <!-- Wrap text enabled -->
+    <prop name="wrapText" type="String" value="1"/>
+    <!-- Sleep time after receipt close -->
+    <prop name="recCloseSleepTime" type="String" value="0"/>
+    <!-- Receipt close wait count -->
+    <prop name="recCloseWaitCount" type="String" value="1"/>
+    <!-- Cut type, 0 - full cut, 1 - partial cut -->
+    <prop name="cutType" type="String" value="1"/>
+    <!-- Cut mode, 0 - auto, 1 - disabled -->
+    <prop name="cutMode" type="String" value="0"/>
+    <!-- maxEnqNumber -->
+    <prop name="maxEnqNumber" type="String" value="3"/>
+    <!-- maxNakCommandNumber -->
+    <prop name="maxNakCommandNumber" type="String" value="3"/>
+    <!-- maxNakAnswerNumber -->
+    <prop name="maxNakAnswerNumber" type="String" value="3"/>
+    <!-- maxAckNumber -->
+    <prop name="maxAckNumber" type="String" value="3"/>
+    <!-- maxRepeatCount -->
+    <prop name="maxRepeatCount" type="String" value="3"/>
+    <!-- Payment types -->
+    <prop name="payType0" type="String" value="0"/>
+    <prop name="payType1" type="String" value="1"/>
+    <prop name="payType2" type="String" value="2"/>
+    <prop name="payType3" type="String" value="3"/>
+    <prop name="payType4" type="String" value="4"/>
+    <prop name="payType5" type="String" value="5"/>
+    <prop name="payType6" type="String" value="6"/>
+    <prop name="payType7" type="String" value="7"/>
+    <prop name="payType8" type="String" value="8"/>
+    <prop name="payType9" type="String" value="9"/>
+    <prop name="payType10" type="String" value="10"/>
+    <prop name="payType11" type="String" value="11"/>
+    <prop name="payType12" type="String" value="12"/>
+    <prop name="payType13" type="String" value="13"/>
+    <prop name="payType14" type="String" value="14"/>
+    <prop name="payType15" type="String" value="15"/>
+    <!-- Payment names -->
+    <!-- <prop name="paymentName1" type="String" value="РќРђР›РР§РќР«РњР"/> -->
+    <!-- <prop name="paymentName2" type="String" value="paymentName2"/> -->
+    <!-- <prop name="paymentName3" type="String" value="paymentName3"/> -->
+    <!-- <prop name="paymentName4" type="String" value="paymentName4"/> -->
+    <!-- ZeroPriceFilter -->
+    <prop name="ZeroPriceFilterEnabled" type="String" value="0"/>
+    <prop name="ZeroPriceFilterTime1" type="String" value="15:00"/>
+    <prop name="ZeroPriceFilterTime2" type="String" value="16:00"/>
+    <prop name="ZeroPriceFilterErrorText" type="String" value="РџСЂРѕРґР°Р¶Р° СЃРїРёСЂС‚РЅРѕРіРѕ Р·Р°РїСЂРµС‰РµРЅР°"/>
+    <!-- create Z-report in XML format -->
+    <prop name="XmlZReportEnabled" type="String" value="0"/>
+    <!-- Add day number to Z report filename - ZReport_0001.xml -->
+    <prop name="ZReportDayNumber" type="String" value="1"/>
+    <!-- XML Z-report file name -->
+    <prop name="XmlZReportFileName" type="String" value="ZReport.xml"/>
+    <!-- create Z-report in CSV format -->
+    <prop name="CsvZReportEnabled" type="String" value="0"/>
+    <!-- CSV Z-report file name -->
+    <prop name="CsvZReportFileName" type="String" value="ZReport.csv"/>
+    <!-- maxReceiptNumber -->
+    <prop name="maxReceiptNumber" type="String" value="9999"/>
+    <!-- autoOpenDrawer -->
+    <prop name="autoOpenDrawer" type="String" value="0"/>
+    <!-- create discount filter -->
+    <prop name="DiscountFilterEnabled" type="String" value="0"/>
+    <!-- ESC commands enabled -->
+    <prop name="escCommandsEnabled" type="String" value="0"/>
+    <!-- Table mode, 0 - auto, 1 - disabled -->
+    <prop name="tableMode" type="String" value="1"/>
+    <!-- Logo mode, 0 - feed paper, 1 - split image -->
+    <prop name="logoMode" type="String" value="1"/>
+    <!-- SearchMode, 0 - none, 1 - search on error -->
+    <prop name="searchMode" type="String" value="1"/>
+    <!-- stringEncoding -->
+    <prop name="stringEncoding" type="String" value=""/>
+    <!-- Paper cut delay in milliseconds -->
+    <prop name="cutPaperDelay" type="String" value="0"/>
+    <!-- Sales receipt type, 0 - normal, 1 - GLOBUS -->
+    <prop name="salesReceiptType" type="String" value="0"/>
+    <!-- Amount field length -->
+    <prop name="RFAmountLength" type="String" value="8"/>
+    <!-- Quantity field length -->
+    <prop name="RFQuantityLength" type="String" value="10"/>
+    <!-- Monitoring server port -->
+    <prop name="MonitoringPort" type="String" value="50000"/>
+    <!-- Monitoring enabled -->
+    <prop name="MonitoringEnabled" type="String" value="0"/>
+    <!-- Receipt report enabled -->
+    <prop name="receiptReportEnabled" type="String" value="1"/>
+    <!-- Receipt report file name -->
+    <prop name="receiptReportFileName" type="String" value="ZCheckReport.xml"/>
+    <!-- openReceiptType, 0 - open receipt on item print, 1 - open receipt on beginFiscalReceipt -->
+    <prop name="openReceiptType" type="String" value="1"/>
+    <prop name="licFilePath" type="String" value="mptks"/>
+    <!-- headerMode, the way how to print header and trailer lines -->
+    <!-- 0 - header stored and printed with driver -->
+    <!-- 1 - header stored and printed by printer, numHeaderLine and numTrailerLines are fixed -->
+    <!-- 2 - header stored and printed with driver, header printed on receipt begin -->
+    <!-- 3 - header will be printed when printer configured to do so -->
+    <prop name="headerMode" type="String" value="3"/>
+    <!-- Text report enabled -->
+    <prop name="textReportEnabled" type="String" value="0"/>
+    <!-- Text report file name -->
+    <prop name="textReportFileName" type="String" value="archive.txt"/>
+    <!-- Text report empty lines enabled -->
+    <prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
 
-		     Значение по умолчанию - 0. -->
-		<prop name="portType" type="String" value="3"/>
+    <!-- РџРµС‡Р°С‚СЊ РѕРїРёСЃР°РЅРё РїРµСЂРµРґР°РЅРЅС‹С… РІ РїСЂРёРЅС‚РµСЂ С‚СЌРіРѕРІ СЃСЂРµРґСЃС‚РІР°РјРё РґСЂР°Р№РІРµСЂР° -->
+    <prop name="FSPrintTags" type="String" value="0"/>
 
-		<!-- Класс порта, используется, если portType = 3.  -->
-		<prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.BluetoothPort"/>
-
-		<!-- Протокол обмена.
-		     0 - стандартный.
-		     1 - протокол ККТ 2.0, протокол реализуемый некоторыми устройствами, оптимизирован для
-		     работы по TCP/Bluetooth.
-
-		     Значение по умолчанию - 0. -->
-		<prop name="protocolType" type="String" value="1"/>
-
-		<!-- Имя порта. Зависит от значениея portType:
-		     0 - имя последовательного порта, например, COM8, /dev/tty1
-		     2 - IP и порт, например, 192.168.137.111:7778
-		     3 - зависит от класс порта
-		     -->
-
-		<!--
-		<prop name="portName" type="String" value="30:AE:A4:95:60:3E"/>
-		     -->
-		<prop name="portName" type="String" value="SHTRIH-NANO-F"/>
-
-		<!--Скорость обмена при работе по COM-порту.
-		    Возможные значениея 2400;4800;9600;19200;38400;57600;115200;230400;460800.
-
-		     Значение по умолчанию - 4800.-->
-		<prop name="baudRate" type="String" value="115200"/>
-
-		<!-- Отдел с указанием которого будут осуществляться опеации в чеке.
-
-		     Значение по умолчанию - 1. -->
-		<prop name="department" type="String" value="0"/>
-
-		<!-- Номер шрифта используемого для печати строк без указания номера шрифта.
-
-             Значение по умолчанию - 1. -->
-		<prop name="fontNumber" type="String" value="1"/>
-
-		<!-- Close receipt text -->
-		<prop name="closeReceiptText" type="String" value=""/>
-		<!-- Subtotal text -->
-		<prop name="subtotalText" type="String" value="ПОДИТОГ:"/>
-
-		<!-- Таймаут чтения данных, мс -->
-		<prop name="byteTimeout" type="String" value="500"/>
-		<prop name="portOpenTimeout" type="String" value="20000"/>
-
-		<!-- Device byte receive timeout -->
-		<prop name="deviceByteTimeout" type="String" value="5000"/>
-		<!-- Флаг включает поиск устройств в случае с последовательным портом по списку COM`ов,
-		     в случае с Bluetooth - по списку спаренных устройств чье название начинается со строки указанной в portName -->
-		<prop name="searchByPortEnabled" type="String" value="0"/>
-		<!-- Device search enabled for all baud rates -->
-		<prop name="searchByBaudRateEnabled" type="String" value="0"/>
-
-		<!-- Пароль налогового инспектора.
-
-		     Значение по умолчанию - 0. -->
-		<prop name="taxPassword" type="String" value="0"/>
-
-		<!-- Пароль оператора. Если нет необходимости использовать встроенный в ФР механизм
-		     с пользователями, то проще всего указать operatorPassword равный sysAdminPassword.
-
-		     Значение по умолчанию - 1. -->
-		<prop name="operatorPassword" type="String" value="30"/>
-
-		<!-- Пароль системного администратора.
-
-		     Значение по умолчанию - 30. -->
-		<prop name="sysAdminPassword" type="String" value="30"/>
-
-		<!-- device state polling enabled -->
-		<prop name="pollEnabled" type="String" value="0"/>
-		<!-- device state polling interval in milliseconds -->
-		<prop name="pollInterval" type="String" value="5000"/>
-		<!-- Amount coefficient -->
-		<prop name="amountFactor" type="String" value="1"/>
-		<!-- Quantity coefficient -->
-		<prop name="quantityFactor" type="String" value="1"/>
-		<!-- Strings encoding -->
-		<prop name="stringEncoding" type="String" value=""/>
-		<!-- Statistics file name -->
-		<prop name="statisticFileName" type="String" value="ShtrihFiscalPrinter.xml"/>
-		<!-- Barcode print time -->
-		<prop name="grapclohicsLineDelay" type="String" value="0"/>
-		<!-- fieldsFileName to initialize printer tables -->
-		<prop name="fieldsFileName" type="String" value="Tables.csv"/>
-		<!-- Number of header lines -->
-		<prop name="numHeaderLines" type="String" value="4"/>
-		<!-- Number of trailer lines -->
-		<prop name="numTrailerLines" type="String" value="2"/>
-		<!-- Device to print report, 0 - fiscal memory (FM), 1 - electronic journal (EJ)  -->
-		<prop name="reportDevice" type="String" value="0"/>
-		<!-- Report type, 0 - short, 1 - full -->
-		<prop name="reportType" type="String" value="1"/>
-		<!-- Status command:   -->
-		<!-- 0 - command 10h, short status request  -->
-		<!-- 1 - command 11h, long status request  -->
-		<!-- 2 - status command selected by driver -->
-		<prop name="statusCommand" type="String" value="0"/>
-		<!-- Localization file name -->
-		<prop name="messagesFileName" type="String" value="shtrihjavapos_ru.properties"/>
-		<!-- Wrap text enabled -->
-		<prop name="wrapText" type="String" value="1"/>
-		<!-- Sleep time after receipt close -->
-		<prop name="recCloseSleepTime" type="String" value="0"/>
-		<!-- Receipt close wait count -->
-		<prop name="recCloseWaitCount" type="String" value="1"/>
-		<!-- Cut type, 0 - full cut, 1 - partial cut -->
-		<prop name="cutType" type="String" value="1"/>
-		<!-- Cut mode, 0 - auto, 1 - disabled -->
-		<prop name="cutMode" type="String" value="0"/>
-		<!-- maxEnqNumber -->
-		<prop name="maxEnqNumber" type="String" value="3"/>
-		<!-- maxNakCommandNumber -->
-		<prop name="maxNakCommandNumber" type="String" value="3"/>
-		<!-- maxNakAnswerNumber -->
-		<prop name="maxNakAnswerNumber" type="String" value="3"/>
-		<!-- maxAckNumber -->
-		<prop name="maxAckNumber" type="String" value="3"/>
-		<!-- maxRepeatCount -->
-		<prop name="maxRepeatCount" type="String" value="3"/>
-		<!-- Payment types -->
-		<prop name="payType0" type="String" value="0"/>
-		<prop name="payType1" type="String" value="1"/>
-		<prop name="payType2" type="String" value="2"/>
-		<prop name="payType3" type="String" value="3"/>
-		<prop name="payType4" type="String" value="4"/>
-		<prop name="payType5" type="String" value="5"/>
-		<prop name="payType6" type="String" value="6"/>
-		<prop name="payType7" type="String" value="7"/>
-		<prop name="payType8" type="String" value="8"/>
-		<prop name="payType9" type="String" value="9"/>
-		<prop name="payType10" type="String" value="10"/>
-		<prop name="payType11" type="String" value="11"/>
-		<prop name="payType12" type="String" value="12"/>
-		<prop name="payType13" type="String" value="13"/>
-		<prop name="payType14" type="String" value="14"/>
-		<prop name="payType15" type="String" value="15"/>
-		<!-- Payment names -->
-		<!-- <prop name="paymentName1" type="String" value="НАЛИЧНЫМИ"/> -->
-		<!-- <prop name="paymentName2" type="String" value="paymentName2"/> -->
-		<!-- <prop name="paymentName3" type="String" value="paymentName3"/> -->
-		<!-- <prop name="paymentName4" type="String" value="paymentName4"/> -->
-		<!-- ZeroPriceFilter -->
-		<prop name="ZeroPriceFilterEnabled" type="String" value="0"/>
-		<prop name="ZeroPriceFilterTime1" type="String" value="15:00"/>
-		<prop name="ZeroPriceFilterTime2" type="String" value="16:00"/>
-		<prop name="ZeroPriceFilterErrorText" type="String" value="Продажа спиртного запрещена"/>
-		<!-- create Z-report in XML format -->
-		<prop name="XmlZReportEnabled" type="String" value="0"/>
-		<!-- Add day number to Z report filename - ZReport_0001.xml -->
-		<prop name="ZReportDayNumber" type="String" value="1"/>
-		<!-- XML Z-report file name -->
-		<prop name="XmlZReportFileName" type="String" value="ZReport.xml"/>
-		<!-- create Z-report in CSV format -->
-		<prop name="CsvZReportEnabled" type="String" value="0"/>
-		<!-- CSV Z-report file name -->
-		<prop name="CsvZReportFileName" type="String" value="ZReport.csv"/>
-		<!-- maxReceiptNumber -->
-		<prop name="maxReceiptNumber" type="String" value="9999"/>
-		<!-- autoOpenDrawer -->
-		<prop name="autoOpenDrawer" type="String" value="0"/>
-		<!-- create discount filter -->
-		<prop name="DiscountFilterEnabled" type="String" value="0"/>
-		<!-- ESC commands enabled -->
-		<prop name="escCommandsEnabled" type="String" value="0"/>
-		<!-- Table mode, 0 - auto, 1 - disabled -->
-		<prop name="tableMode" type="String" value="1"/>
-		<!-- Logo mode, 0 - feed paper, 1 - split image -->
-		<prop name="logoMode" type="String" value="1"/>
-		<!-- SearchMode, 0 - none, 1 - search on error -->
-		<prop name="searchMode" type="String" value="1"/>
-		<!-- stringEncoding -->
-		<prop name="stringEncoding" type="String" value=""/>
-		<!-- Paper cut delay in milliseconds -->
-		<prop name="cutPaperDelay" type="String" value="0"/>
-		<!-- Sales receipt type, 0 - normal, 1 - GLOBUS -->
-		<prop name="salesReceiptType" type="String" value="0"/>
-		<!-- Amount field length -->
-		<prop name="RFAmountLength" type="String" value="8"/>
-		<!-- Quantity field length -->
-		<prop name="RFQuantityLength" type="String" value="10"/>
-		<!-- Monitoring server port -->
-		<prop name="MonitoringPort" type="String" value="50000"/>
-		<!-- Monitoring enabled -->
-		<prop name="MonitoringEnabled" type="String" value="0"/>
-		<!-- Receipt report enabled -->
-		<prop name="receiptReportEnabled" type="String" value="0"/>
-		<!-- Receipt report file name -->
-		<prop name="receiptReportFileName" type="String" value="ZCheckReport.xml"/>
-		<!-- openReceiptType, 0 - open receipt on item print, 1 - open receipt on beginFiscalReceipt -->
-		<prop name="openReceiptType" type="String" value="1"/>
-		<prop name="licFilePath" type="String" value="mptks"/>
-		<prop name="barcodePrefix" type="String" value=""/>
-		<!-- headerMode, the way how to print header and trailer lines -->
-		<!-- 0 - header stored and printed with driver -->
-		<!-- 1 - header stored and printed by printer, numHeaderLine and numTrailerLines are fixed -->
-		<!-- 2 - header stored and printed with driver, header printed on receipt begin -->
-		<!-- 3 - header will be printed when printer configured to do so -->
-		<prop name="headerMode" type="String" value="0"/>
-		<!-- Text report enabled -->
-		<prop name="textReportEnabled" type="String" value="0"/>
-		<!-- Text report file name -->
-		<prop name="textReportFileName" type="String" value="archive.txt"/>
-		<!-- Text report empty lines enabled -->
-		<prop name="textReportEmptyLinesEnabled" type="String" value="0"/>
-
-		<!-- Печать описания переданных в принтер тэгов средствами драйвера.
-		     Не все принтеры имеют встроенный механизм печати тэгов, в виду этого необходима данная
-		     настройка.
-
-		     Значение по умолчанию - 1. -->
-		<prop name="FSPrintTags" type="String" value="1"/>
-
-		<!-- Место печати тэгов в документе, если включена опция FSPrintTags:
-		     0 - после закрытия
-		     1 - в месте отправки, например, если тэг был отправлен до печати любой позиции
-		         он будет напечатан сразу после заголовка чека.
-
-		     Рекомендуется использовать значение 1. Значение 0 осталвено для обратной совместимости.
-
-		     Значение по умолчанию - 0.
+    <!-- РњРµСЃС‚Рѕ РїРµС‡Р°С‚Рё С‚СЌРіРѕРІ РІ РґРѕРєСѓРјРµРЅС‚Рµ, РµСЃР»Рё РІРєР»СЋС‡РµРЅР° РѕРїС†РёСЏ FSPrintTags:
+		     0 - РїРѕСЃР»Рµ Р·Р°РєСЂС‹С‚РёСЏ
+		     1 - РІ РјРµСЃС‚Рµ РѕС‚РїСЂР°РІРєРё, РЅР°РїСЂРёРјРµСЂ, РµСЃР»Рё С‚СЌРі Р±С‹Р» РѕС‚РїСЂР°РІР»РµРЅ РґРѕ РїРµС‡Р°С‚Рё Р»СЋР±РѕР№ РїРѕР·РёС†РёРё
+		         РѕРЅ Р±СѓРґРµС‚ РЅР°РїРµС‡Р°С‚Р°РЅ СЃСЂР°Р·Сѓ РїРѕСЃР»Рµ Р·Р°РіРѕР»РѕРІРєР° С‡РµРєР°.
 		-->
-		<prop name="FSTagsPlacement" type="String" value="1"/>
+    <prop name="FSTagsPlacement" type="String" value="1"/>
 
-        <!-- В драйвере по какой-то не вполне очевидной исторической причине существуе 2 реализации
-             DIO-команд, они различаются порядком параметров. Обертка ShtrihFiscalPrinter работает
-             с compatibilityLevel = 0, в виду этого его и рекомендуется выставлять.
+    <prop name="compatibilityLevel" type="String" value="0"/>
 
-             Значение по умолчанию - 1. -->
-		<prop name="compatibilityLevel" type="String" value="0"/>
+    <!-- РћС‚РїСЂР°РІРєР° РґР°РЅРЅС‹С… РІ РћР¤Р” СЃСЂРµРґСЃС‚РІР°РјРё РґСЂР°Р№РІРµСЂР°, РµСЃР»Рё РґР°РЅРЅР°СЏ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ 
+             РїРѕРґРґРµСЂР¶Р°РЅР°/РІРєР»СЋС‡РµРЅР° РІ Р¤Р :
+             0 - РІС‹РєР».
+             1 - РІРєР». -->
+    <prop name="FSServiceEnabled" type="String" value="1"/>
 
-        <!-- Отправка данных в ОФД средствами драйвера, если данная возможность 
-             поддержана/включена в ФР:
-             0 - выкл.ExportOnShiftClose
-             1 - вкл.
+    <!-- РўР°Р№РјР°СѓС‚ РѕР¶РёРґР°РЅРёСЏ РѕС‚РІРµС‚Р° РѕС‚ РћР¤Р” РІ РјСЃ. РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё РІРєР»СЋС‡РµРЅРЅРѕР№ РѕС‚РїС†РёРё FSServiceEnabled. -->
+    <prop name="FSConnectTimeout" type="String" value="10000"/>
 
-             Значение по умолчанию - 0. -->
-		<prop name="FSServiceEnabled" type="String" value="0"/>
+    <!-- Log file enabled  -->
+    <prop name="logEnabled" type="String" value="1"/>
 
-		<!-- Таймаут ожидания ответа от ОФД в мс. Используется при включенной отпции
-		     FSServiceEnabled.
+    <!-- Hide internal exception details  -->
+    <prop name="stripExceptionDetails" type="String" value="0"/>
 
-		     Значение по умолчанию - 3000 мс. -->
-		<prop name="FSConnectTimeout" type="String" value="30000"/>
+    <!-- РѕС‚РєСЂС‹РІР°С‚СЊ С‡РµРє РїСЂРё РІС‹Р·РѕРІРµ РјРµС‚РѕРґР° beginFiscalReceipt, 
+         Р° РЅРµ РїРѕ РїРµСЂРІРѕРјСѓ РІС‹Р·РѕРІСѓ printRecItem -->
+    <prop name="openReceiptOnBegin" type="String" value="1"/>
 
-        <!-- Писать лог, на десктопе управляет записью лога в файл, на Андроиде - выводом лога в
-             logcat в дополнение к настраиваемому приложением логированию. Т.к. в примере настройки
-             логирования вывод идет в logcat, то что б не дублировался вывод отключаем.
+    <prop name="tagsBeforeItem" type="String" value="1"/>
 
-             Значение по умолчанию - 1. -->
-        <prop name="logEnabled" type="String" value="0"/>
+    <!-- validTimeDiffInSecs -->
+    <prop name="validTimeDiffInSecs" type="String" value="5"/>
 
-		<!-- Прямтать детали исключений. Зачем комуто может быть нужно такое поведение остается только
-		     догадываться. Настоятельно рекомендуемое значение 0, значение 1 оставлено для обратной
-		     совместимости.
+    <!--footerFlagEnabled-->
+    <prop name="footerFlagEnabled" type="String" value="0"/>
 
-		     Значнеие по умолчанию - 1. -->
-		<prop name="stripExceptionDetails" type="String" value="0"/>
+    <!--fdoMode-->
+    <prop name="fdoMode" type="String" value="0"/>
 
-		<!-- Открывать чек при вызове метода beginFiscalReceipt, а не по первому вызову
-		     printRecItem.
+    <!--pppConnection-->
+    <prop name="pppConnection" type="String" value="1"/>
 
-		     Значение по умолчанию - 0. -->
-		<prop name="openReceiptOnBegin" type="String" value="1"/>
+    <!-- Operator password -->
+    <prop name="operatorPassword" type="String" value="30"/>
 
-        <!-- Быстрое подключение, данная настройка заставляет драйвер при подключении выполнять лишь
-             самые необходимые действия. На текущий момент работает только в сочетании с
-             headerMode = 3 и передача данных в ОФД средствами драйвера(FSServiceEnabled) будет
-             работать только с устройствами сообщаяющими, что они поддерживают EoD в расширенном
-             запросе параметров.
+    <!-- System administrator password -->
+    <prop name="sysAdminPassword" type="String" value="30"/>
 
-             Значение по умолчанию - 0. -->
-		<prop name="fastConnect" type="String" value="1"/>
-
-        <!-- Включить механизм обновления прошивки. Выключение этой настройки позволяет избежать
-             лишних действий при подключении.
-
-             Значение по умолчанию - 1. -->
-		<prop name="capUpdateFirmware" type="String" value="1"/>
-
-        <!-- Включить механизм автообновления прошивки через сервер СКоК.
-             Если обновление прошивки поддерживается устройством, то обновление производится после
-             закрытия смены.
-             Во время обновления категорически не рекомендуется отключать питание ККТ и
-             закрывать приложение.
-
-             Значение по умолчанию - 0. -->
-        <prop name="capScocUpdateFirmware" type="String" value="1"/>
-
-        <!-- Параметр определяет будет ли сохраняться статистика JPOS, для многих приложений она
-             не нужна, а ее отключение даст прирость скорости печати чеков/подключения.
-
-             Значение по умолчанию - 1. -->
-		<prop name="statisticEnabled" type="String" value="0"/>
-
-        <!-- Автооткрытие смены перед печатью чека. Может быть нежелательно, т.к. в ФФД 1.05 нужно
-             передавать ИНН кассира, чего в случае с автооткрытием сделано не будет.
-             
-             Значение по умолчанию - 1. -->
-		<prop name="autoOpenShift" type="String" value="1"/>
-
-        <!-- Если при попытке снять Z-отчет смена закрыта, то она будет предварительно открыта.
-             Это может быть нежелательным поведением, если нужно в отчет об открытии смены
-             нужно передавать ИНН кассира.
-
-             Значение по умолчанию - 1. -->
-		<prop name="forceOpenShiftOnZReport" type="String" value="0"/>
-
-		<!-- Automatic Z report printing -->
-		<prop name="autoPrintZReport" type="String" value="0"/>
-
-        <!-- Разрешить коррекцию суммы оплаты.
-             При закрытии чека в случае если указанная сумма безналичным типом оплаты больше итога чека,
-             она будет скорректирована и станет равна итогу чека, что б избежать ошибки ККМ
-              "Сумма безналичных типов оплаты больше суммы чека".
-
-             Значение по умолчанию - 0. -->
-		<prop name="paymentSumCorrectionEnabled" type="String" value="0"/>
-
-        <!-- Разрешить коррекцию количества.
-             При регистрации позиации если quantity * unitPrice != price драйвер попробует подобрать
-             такое количество, что б это неравенствено исправить.
-             Эффект от включения этой опции может быть крайне непредсказуемым.
-
-             Значение по умолчанию - 0. -->
-		<prop name="quantityCorrectionEnabled" type="String" value="0"/>
-
-		<!-- Опрашивать принтер на предмет завершения печати после отправки команды печати штрих-кода.
-
-			 Значение по умолчанию - 1
-		-->
-		<prop name="waitForBarcodePrinting" type="String" value="1"/>
-
-		<!-- validTimeDiffInSecs -->
-		<prop name="validTimeDiffInSecs" type="String" value="0"/>
-
-		<prop name="commandTimeoutE0" type="String" value="100000"/>
-
-		<!-- fdoMode, 0 - disabled, 1 - enabled, 2 - on z report, 3 - disable in receipt  -->
-		<prop name="fdoMode" type="String" value="3"/>
-
-		<prop name="duplicateReceipt" type="String" value="1"/>
-	</JposEntry>
+  </JposEntry>
 </JposEntries>

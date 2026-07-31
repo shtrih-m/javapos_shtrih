@@ -10,9 +10,10 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
 
-    <!-- Location only needed for BLE scan on Android 6..11 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="30"/>
+    <!-- Location needed for BLE scan results on API 31 when BLUETOOTH_SCAN
+         lacks neverForLocation (AAPT/SDK23 cannot set usesPermissionFlags). -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -24,7 +25,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
@@ -46,6 +47,11 @@
         <activity
             android:name=".search.tcp.TcpDeviceSearchActivity"
             android:exported="false"/>
+        <activity
+            android:name=".AcceptanceConnectActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="AcceptanceConnect"/>
     </application>
 
 </manifest>
