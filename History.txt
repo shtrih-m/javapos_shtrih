@@ -7,6 +7,21 @@
     
 ********************************************************************************
 
+  11.08.2026
+  deviceServiceVersion = 1013719
+  
+  [-] Android PPP / BLE connect speedup:
+      - Rebuilt libkktnetd.so (ARM_32/64, x86_32/64) from kktnetd api_v2
+        with FSM_DEFTIMEOUT/UPAP/CHAP = 1 s (replaces binary patch from 718)
+      - BluetoothLEPort: request CONNECTION_PRIORITY_HIGH after GATT connect
+      - PPPPort: attach localSocket+dispatch before waiting on PPP phase
+        (avoids ~10 s first-attempt PPPERR_CONNECT from lost LCP)
+      - PPPPort: settle before :7778 reduced 1000→500 ms
+      - AcceptanceConnect: skip unused 20 s pre-connect LE scan
+  [+] Verified: BLE+PPP connect ~6.4 s on SM-T575 (API 33)
+
+********************************************************************************
+
   31.07.2026
   deviceServiceVersion = 1013718
   

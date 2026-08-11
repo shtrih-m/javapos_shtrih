@@ -84,11 +84,15 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
         printerPort.setTimeout(params.byteTimeout);
         printerPort.open(timeout);
         printerPort.setPortEvents(this);
-        // Start kktnetd, then attach BLE<->PPP forwarder ASAP so the first LCP
-        // frames are not lost (pppos_write "output failed" before localSocket).
+        // Start kktnetd, then attach BLE<->PPP forwarder before LCP starts.
+        // Waiting for api_init alone is too late: api_run enters ESTABLISH and
+        // first ConfReqs are lost until localSocket+dispatch are up (~10s PPPERR).
         startPPPThread();
         openLocalSocket(timeout);
         startDispatchThread();
+        if (!pppThread.waitForContext(5000, 10)) {
+            throw new IOException("kktnetd failed to initialize");
+        }
         if (!pppThread.waitForStatus("RUNNING", 5000)) {
             throw new IOException("kktnetd failed to start");
         }
@@ -109,28 +113,31 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
     {
         if (socket == null)
         {
-            socket = new Socket();
+            // Direct localhost — never via SOCKS/HTTP proxy (setSoTimeout does not limit connect).
+            socket = new Socket(java.net.Proxy.NO_PROXY);
             socket.setTcpNoDelay(true);
-            socket.setSoTimeout(connectTimeout);
-            socket.connect(new InetSocketAddress("127.0.0.1", 7778));
+            logger.debug("openSocket: connect 127.0.0.1:7778 timeout=" + connectTimeout);
+            socket.connect(new InetSocketAddress("127.0.0.1", 7778), connectTimeout);
             socket.setSoTimeout(readTimeout);
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
+            logger.debug("openSocket: connected");
         }
     }
 
     /**
-     * Give the peer time to bind fiscal TCP after PPP_PHASE_RUNNING.
-     * An immediate connect gets RST and leaves a dead kktnetd resender session.
+     * Peer fiscal TCP (:7778) may not accept immediately after IPCP.
+     * Fixed short settle (aggressive multi-retry SYN waits can wedge localhost
+     * listen on some Samsung builds until reboot).
      */
     private void openSocketWithRetry(int timeout) throws Exception {
-        final int settleMs = 1000;
+        final int settleMs = 500;
         logger.debug("openSocketWithRetry: settle " + settleMs + " ms before fiscal TCP");
         Thread.sleep(settleMs);
         closeSocket();
         openSocket();
         // Allow kktnetd async_connect(peer:7778) to complete before first frame.
-        Thread.sleep(200);
+        Thread.sleep(150);
         logger.debug("openSocketWithRetry: OK");
     }
 
@@ -153,12 +160,9 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
             config.load(params.pppConfigFile);
         }
         pppThread = new PPPThread(config);
+        // Do not wait for context here: attach localSocket+dispatch first so
+        // LCP is not lost when api_run enters ESTABLISH.
         pppThread.start();
-        // Wait only until api_init sets ctx so the unix listener is about to
-        // start; caller must openLocalSocket before waiting for PPP RUNNING.
-        if (!pppThread.waitForContext(5000, 50)) {
-            throw new IOException("kktnetd failed to initialize");
-        }
         logger.debug("startPPPThread(): OK");
     }
 
@@ -167,21 +171,26 @@ public class PPPPort implements PrinterPort, PrinterPort.IPortEvents {
             return;
         }
         logger.debug("openLocalSocket");
-        localSocket = new LocalSocket();
         long time = Calendar.getInstance().getTimeInMillis() + timeout;
         for (; ; ) {
+            LocalSocket candidate = new LocalSocket();
             try {
-                localSocket.connect(new LocalSocketAddress(localSocketName));
+                candidate.connect(new LocalSocketAddress(localSocketName));
+                localSocket = candidate;
                 lsInputStream = localSocket.getInputStream();
                 lsOutputStream = localSocket.getOutputStream();
-
                 break;
             } catch (IOException e) {
-                logger.error("openLocalSocket", e);
+                try {
+                    candidate.close();
+                } catch (Exception ignored) {
+                }
                 if (Calendar.getInstance().getTimeInMillis() > time) {
+                    logger.error("openLocalSocket", e);
                     throw e;
                 }
-                Thread.sleep(100);
+                // Listener appears when api_run binds the forwarder; poll tightly.
+                Thread.sleep(10);
             }
         }
         logger.debug("openLocalSocket: OK");

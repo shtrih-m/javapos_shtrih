@@ -79,15 +79,8 @@ public class AcceptanceConnectActivity extends Activity {
             waitBluetoothEnabled(60000);
             AndroidCompat.ensureBluetoothConnectAndScan(getApplicationContext());
             ensureLocationForBleScan(getApplicationContext());
-            // Soft LE probe only: driver connects by MAC via getRemoteDevice+GATT.
-            // On API<=30 empty scan results are common right after BT enable / without
-            // a stable location provider; do not fail the acceptance test here.
-            try {
-                scanForPrinter(PRINTER_MAC, 20000);
-            } catch (Exception scanError) {
-                Log.w(TAG, "Pre-connect LE scan miss (continuing to GATT connect): "
-                        + scanError.getMessage());
-            }
+            // Driver connects by MAC via getRemoteDevice+GATT; a full LE scan
+            // only burns ~20s and often misses right after BT enable.
 
             Map<String, String> props = new HashMap<String, String>();
             props.put("portName", PRINTER_MAC);

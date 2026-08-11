@@ -203,8 +203,19 @@ public class BluetoothLEPort implements PrinterPort2 {
         setState(ConnectState.ConnectGatt);
         if (Build.VERSION.SDK_INT >= 21) // Build.VERSION_CODES.LOLLIPOP
         {
-            int mtu = BLE_MTU + 3; // Maximum allowed 517 - 3 bytes of BLE
             if (bluetoothGatt == null) return;
+            // Keep short connection interval during PPP bring-up; otherwise the
+            // stack often switches to interval~36 and LCP/IPCP stalls for seconds.
+            try {
+                if (!bluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)) {
+                    logger.error("Failed to request CONNECTION_PRIORITY_HIGH");
+                } else {
+                    loggerDebug("Requested CONNECTION_PRIORITY_HIGH");
+                }
+            } catch (Exception e) {
+                logger.error("requestConnectionPriority failed", e);
+            }
+            int mtu = BLE_MTU + 3; // Maximum allowed 517 - 3 bytes of BLE
             setState(ConnectState.RequestMtu);
             if (!bluetoothGatt.requestMtu(mtu)){
                 logger.error("Failed to configure MTU");
