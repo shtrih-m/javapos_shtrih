@@ -236,12 +236,6 @@ public class BluetoothLEPort implements PrinterPort2 {
     private void startReconnect() {
         if (portOpened) {
             loggerDebug("Start scan");
-            try {
-                AndroidCompat.ensureBluetoothScanPermission(StaticContext.getContext());
-            } catch (Exception e) {
-                logger.error("BLE reconnect scan skipped: " + e.getMessage());
-                return;
-            }
             scanState = ScanState.ScanStarted;
             List<ScanFilter> filters = new ArrayList<>();
             filters.add(new ScanFilter.Builder().setDeviceAddress(device.getAddress()).build());
@@ -508,7 +502,6 @@ public class BluetoothLEPort implements PrinterPort2 {
         if (isOpened()) return;
 
         Context context = StaticContext.checkContext();
-        AndroidCompat.ensureBluetoothConnectAndScan(context);
 
         registerReceiver();
         if (state == ConnectState.Disconnected)
@@ -840,7 +833,6 @@ public class BluetoothLEPort implements PrinterPort2 {
 
     public String[] getPortNames() throws Exception
     {
-        AndroidCompat.ensureBluetoothConnectAndScan(StaticContext.checkContext());
         Set<String> ports = new HashSet<>();
         List<BluetoothDevice> devices = scan(params.portNamePrefix, params.portNameTimeout, params.portNameSingle);
         for (BluetoothDevice device : devices) {
@@ -852,7 +844,6 @@ public class BluetoothLEPort implements PrinterPort2 {
 
     public List<BluetoothDevice> scan(String deviceName, int timeout, boolean singleDevice) throws Exception
     {
-        AndroidCompat.ensureBluetoothScanPermission(StaticContext.checkContext());
         scanSingle = singleDevice;
         scanDevices.clear();
         scanDeviceName = deviceName;

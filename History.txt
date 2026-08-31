@@ -7,6 +7,17 @@
     
 ********************************************************************************
 
+  31.08.2026
+  deviceServiceVersion = 1013720
+  
+  [-] Android Bluetooth / BLE:
+      - BluetoothPort / BluetoothLEPort: do not call ensureBluetoothConnectPermission
+        / ensureBluetoothScanPermission (apps with targetSdk 30 never get
+        BLUETOOTH_CONNECT/SCAN at runtime; driver was failing with JPOS 111)
+  [+] USB: ensureUsbPermission before openDevice unchanged
+
+********************************************************************************
+
   11.08.2026
   deviceServiceVersion = 1013719
   

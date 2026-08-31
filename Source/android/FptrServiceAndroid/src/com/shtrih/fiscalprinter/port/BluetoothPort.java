@@ -95,7 +95,6 @@ public class BluetoothPort implements PrinterPort2 {
     public void openPort(int timeout) throws Exception
     {
         Thread.sleep(0); // check thread interrupted
-        AndroidCompat.ensureBluetoothConnectPermission(StaticContext.getContext());
         BluetoothAdapter adapter = getBluetoothAdapter();
         if (BluetoothAdapter.checkBluetoothAddress(portName)) {
             // portName is valid MAC address
@@ -420,7 +419,6 @@ public class BluetoothPort implements PrinterPort2 {
 
     public String[] getPortNames() throws Exception
     {
-        AndroidCompat.ensureBluetoothConnectPermission(StaticContext.getContext());
         Set<String> ports = new HashSet<>();
         Set<BluetoothDevice> devices = getBluetoothAdapter().getBondedDevices();
         for (BluetoothDevice device : devices)
