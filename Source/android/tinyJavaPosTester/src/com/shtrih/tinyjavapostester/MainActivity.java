@@ -1629,6 +1629,8 @@ public class MainActivity extends AppCompatActivity
 
         log.debug("Found " + usbs.size() + " USB devices");
 
+        UsbPrinterPort.Context = this;
+        
         int deviceId = usbs.get(0).getDevice().getDeviceId();
         ConnectionParameters params = getConnectionParams();
         params.portName = String.format(Locale.ENGLISH, "%d", deviceId);
